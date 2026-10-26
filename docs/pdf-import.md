@@ -40,10 +40,30 @@ development tool run from a checkout; it is installed by the editable install on
 
 ### Input
 
-A PDF path or a directory containing exactly one PDF. Discovery is non-recursive, case-
-insensitive for `.pdf`, and ignores hidden and macOS `._` files. A symlinked PDF is
-refused. Empty or multi-PDF directories fail clearly; multi-file processing and per-file
-status are deferred to Milestone 25.
+A PDF path, or a directory of PDFs. Discovery is non-recursive, sorted by name,
+case-insensitive for `.pdf`, and ignores hidden and macOS `._` files. A symlinked PDF
+refuses the whole run before anything is processed. An empty directory fails clearly.
+
+### Batch export
+
+`--export` on a directory processes every PDF in it, one status line per file:
+
+```text
+[1/3] 2002free-ohiostate.pdf: ok
+[2/3] other.pdf: FAILED - chart is incomplete
+[3/3] third.pdf: ok
+summary: 2 succeeded, 1 failed
+```
+
+- A failing PDF never blocks the others. The run exits `1` if any PDF failed.
+- Every PDF is validated before anything is written. A team that appears in two PDFs
+  (same season and folder slug) is refused in both, never merged.
+- Each PDF's files are written all-or-nothing, as for a single PDF.
+- `--dry-run` prints the status line and destinations for each PDF and writes nothing.
+- Failure reasons never include chart text, filenames, or local paths. An unexpected
+  failure prints a fixed message.
+
+Inspection mode (without `--export`) still takes exactly one PDF and writes one report.
 
 ### Exit codes
 
@@ -89,9 +109,7 @@ out like Paydirt: `seasons/<season>/<team-slug>/` with `offense.csv`, `defense.c
 `special.csv`, and `team.yaml`, plus `seasons/<season>/provenance/<team-slug>.csv` (for
 example `seasons/2002/ohio-state/`). `--export --output seasons` writes them; see
 [Team file format](team-bundle.md). Both
-`private-data/` and historical `seasons/` contents are git-ignored; `seasons/` is not
-packaged. Only the two [original fictional samples](sample-teams.md) have explicit
-public tracking exceptions. No
+`private-data/` and `seasons/` are git-ignored, and `seasons/` is not packaged. No
 historical team data, PDF, detailed report, or extracted source text may be committed.
 Public tests generate synthetic PDFs and never read private files.
 

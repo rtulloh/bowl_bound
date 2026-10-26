@@ -70,7 +70,8 @@ def inspect_document(path: Path) -> DocumentInspection:
         from pdfplumber.utils.exceptions import PdfminerException
     except ImportError as error:
         raise ImportInspectionError(
-            "PDF inspection requires the optional pdf dependency; install bowl_bound[pdf]"
+            "PDF inspection requires the optional PDF tools; install them with "
+            '`python -m pip install -e ".[pdf]"` from the project folder'
         ) from error
 
     try:

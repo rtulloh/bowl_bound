@@ -77,9 +77,13 @@ def test_single_pdf_directory_supported(source: Path, tmp_path: Path) -> None:
     assert cli.main([str(source.parent), "--output", str(tmp_path / "report.json")]) == 0
 
 
-def test_batch_is_explicitly_deferred(source: Path, tmp_path: Path) -> None:
+def test_inspection_mode_takes_one_pdf_and_points_to_export(
+    source: Path, tmp_path: Path, capsys: pytest.CaptureFixture
+) -> None:
+    """Batch processing is export-only; inspection of several PDFs would need a second report."""
     (source.parent / "second.PDF").write_bytes(b"pdf")
     assert cli.main([str(source.parent), "--output", str(tmp_path / "report.json")]) == 1
+    assert "--export" in capsys.readouterr().err
     assert not (tmp_path / "report.json").exists()
 
 

@@ -7,8 +7,14 @@ import sys
 import tempfile
 from dataclasses import asdict
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+from bowl_bound.team_csv import team_folder_name  # noqa: E402 - engine codec, no PDF libraries
 
 from .inspection import ImportInspectionError, inspect_document
+
+if TYPE_CHECKING:  # the type only; importing .export at runtime would pull in the PDF libraries
+    from .export import ExportedTeam
 
 
 def export_document(path: Path) -> list:
@@ -18,7 +24,12 @@ def export_document(path: Path) -> list:
     return run_export(path)
 
 
-def _source_path(path: Path) -> Path:
+def _sources(path: Path) -> list[Path]:
+    """Return the PDFs to process: the one file given, or every PDF in a directory.
+
+    Directory discovery is non-recursive, sorted by name, and ignores hidden files. A symlink
+    among the candidates refuses the whole run before any PDF is processed.
+    """
     if path.is_dir():
         candidates = sorted(
             entry
@@ -27,16 +38,13 @@ def _source_path(path: Path) -> Path:
         )
         if any(entry.is_symlink() for entry in candidates):
             raise ValueError("Refusing a symlinked PDF in the input directory")
-        candidates = [entry for entry in candidates if entry.is_file()]
-        if len(candidates) != 1:
-            raise ValueError(
-                "Directory input currently requires exactly one PDF; "
-                "multi-file batch import is not yet supported"
-            )
-        return candidates[0]
+        files = [entry for entry in candidates if entry.is_file()]
+        if not files:
+            raise ValueError("Input directory contains no PDF files")
+        return files
     if path.is_symlink() or not path.is_file() or path.suffix.lower() != ".pdf":
-        raise ValueError("Input must be an existing, non-symlink PDF or a directory with one PDF")
-    return path
+        raise ValueError("Input must be an existing, non-symlink PDF or a directory of PDFs")
+    return [path]
 
 
 def _refuse_symlinked_parents(output: Path) -> None:
@@ -215,6 +223,65 @@ def _summary(teams: list, targets: list[TeamTarget] | None = None) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _failure_reason(error: Exception) -> str:
+    """A one-line reason that never carries chart text, filenames, or local paths."""
+    if isinstance(error, OSError):
+        return error.strerror or "file operation failed"
+    if isinstance(error, (ValueError, ImportInspectionError)):
+        return str(error)
+    return (
+        "unexpected failure while exporting the document; "
+        "the document may use an unsupported layout"
+    )
+
+
+def _run_batch(sources: list[Path], output: Path, force: bool, dry_run: bool) -> int:
+    """Export every PDF; one PDF's failure never blocks the others.
+
+    Phase 1 validates every PDF and checks for teams repeated across the batch, so a repeat
+    is refused rather than merged. Phase 2 writes each PDF's files all-or-nothing; a failure
+    there is reported and the other PDFs still run. Returns 0 only if every PDF succeeded.
+    """
+    total = len(sources)
+    failures = 0
+    planned: list[tuple[int, Path, list[ExportedTeam], list[TeamTarget]]] = []
+    seen: set[tuple[int, str]] = set()
+    for index, source in enumerate(sources, 1):
+        label = f"[{index}/{total}] {source.name}"
+        try:
+            teams = export_document(source)
+            _verify_teams(teams)
+            targets = _team_targets(output, teams)
+            keys = {(team.chart.season, team_folder_name(team.chart.name)) for team in teams}
+            if keys & seen:
+                raise ValueError(
+                    "a team in this PDF also appears in an earlier PDF; refusing to merge them"
+                )
+            seen |= keys
+            planned.append((index, source, teams, targets))
+        except Exception as error:  # noqa: BLE001 - reason is sanitized; document text never printed
+            failures += 1
+            print(f"{label}: FAILED - {_failure_reason(error)}", file=sys.stderr)
+    if dry_run:
+        for index, source, teams, targets in planned:
+            print(f"[{index}/{total}] {source.name}: ok (dry run)")
+            print(_summary(teams, targets), end="")
+        print(f"summary: {len(planned)} succeeded, {failures} failed")
+        return 0 if failures == 0 else 1
+    succeeded = 0
+    for index, source, _teams, targets in planned:
+        label = f"[{index}/{total}] {source.name}"
+        try:
+            _write_teams(source, output, targets, force)
+            succeeded += 1
+            print(f"{label}: ok")
+        except Exception as error:  # noqa: BLE001 - reason is sanitized
+            failures += 1
+            print(f"{label}: FAILED - {_failure_reason(error)}", file=sys.stderr)
+    print(f"summary: {succeeded} succeeded, {failures} failed")
+    return 0 if failures == 0 else 1
+
+
 def main(argv: list[str] | None = None) -> int:
     """Inspect or export a supported PDF; return 0 on success, 1 on document/I/O errors.
 
@@ -223,7 +290,7 @@ def main(argv: list[str] | None = None) -> int:
     writes Paydirt-style CSV files into ``<output>/<season>/<team>/``. All of it is private.
     """
     parser = argparse.ArgumentParser(description="Inspect or export Bowl Bound team PDFs")
-    parser.add_argument("input", type=Path, help="PDF or directory containing exactly one PDF")
+    parser.add_argument("input", type=Path, help="A PDF, or a directory of PDFs")
     parser.add_argument(
         "--output",
         "-o",
@@ -238,21 +305,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     arguments = parser.parse_args(argv)
     try:
-        source = _source_path(arguments.input)
+        sources = _sources(arguments.input)
         output = arguments.output
         if arguments.export:
-            teams = export_document(source)
-            _verify_teams(teams)
-            targets = _team_targets(output, teams)
-            if arguments.dry_run:
-                print(_summary(teams, targets), end="")
-                return 0
-            _write_teams(source, output, targets, arguments.force)
-            print(
-                f"Wrote {len(teams)} private validated team(s) as {len(targets)} files under "
-                f"{output}."
-            )
-            return 0
+            return _run_batch(sources, output, arguments.force, arguments.dry_run)
+        source = sources[0]
+        if len(sources) != 1:
+            raise ValueError("Inspection mode takes exactly one PDF; use --export for a directory")
         if not arguments.dry_run:
             _validate_output(source, output, arguments.force)
         inspection = inspect_document(source)
