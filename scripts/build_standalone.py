@@ -17,6 +17,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
+from .native_notices import add_native_notices, verify_native_notices
 from .release_package import (
     PUBLIC_FILES,
     ReleaseError,
@@ -51,6 +52,8 @@ RUNTIME_DISTS = (
     "annotated-doc",
     "opentelemetry-api",
     "pyinstaller",
+    "setuptools",
+    "packaging",
 )
 
 
@@ -127,6 +130,7 @@ def _sha(path: Path) -> str:
 
 def archive_bundle(bundle: Path, runtime: Path, output: Path, target: str) -> Path:
     """Inspect resources and archive an exact inventory with a SHA256 sidecar."""
+    verify_native_notices(bundle, target)
     hashes = _runtime_files(runtime)
     version = (runtime / "VERSION").read_text(encoding="utf-8").strip()
     archive = output / f"BowlBound-{version}-{target}.zip"
@@ -317,6 +321,7 @@ def build(source: Path, output: Path, target: str) -> None:
                     if name.endswith(".sh"):
                         destination.chmod(0o755)
             shutil.copytree(work / "notices", bundle / "THIRD_PARTY")
+            add_native_notices(source, bundle, target, python_version=platform.python_version())
             archive_bundle(bundle, runtime, artifacts, target)
 
 

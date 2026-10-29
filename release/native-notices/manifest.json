@@ -1,0 +1,184 @@
+{
+  "schema": 1,
+  "python": "3.13.17",
+  "notices": {
+    "openssl-license.txt": {
+      "source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/LICENSE.txt",
+      "sha256": "7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a"
+    },
+    "openssl-authors.txt": {
+      "source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/AUTHORS.md",
+      "sha256": "b9f638dfc06b59c2d3b808186c3b30f713805a5db390f5b77b1703ac58acb83e"
+    },
+    "cpython-history-and-license.txt": {
+      "source": "https://raw.githubusercontent.com/python/cpython/v3.13.17/Doc/license.rst",
+      "sha256": "952ac05720d7f1dcb63589b35eb0931b1442eb250230a4ad31198eddf0ad6abc"
+    },
+    "libffi.txt": {
+      "source": "https://raw.githubusercontent.com/libffi/libffi/v3.4.4/LICENSE",
+      "sha256": "2c9c2acb9743e6b007b91350475308aee44691d96aa20eacef8e199988c8c388"
+    },
+    "libyaml.txt": {
+      "source": "https://raw.githubusercontent.com/yaml/libyaml/0.2.5/License",
+      "sha256": "c40112449f254b9753045925248313e9270efa36d226b22d82d4cc6c43c57f29"
+    },
+    "bzip2.txt": {
+      "source": "https://raw.githubusercontent.com/python/cpython-source-deps/bzip2-1.0.8/LICENSE",
+      "sha256": "c6dbbf828498be844a89eaa3b84adbab3199e342eb5cb2ed2f0d4ba7ec0f38a3"
+    },
+    "xz-5.2.3.txt": {
+      "source": "https://raw.githubusercontent.com/tukaani-project/xz/v5.2.3/COPYING",
+      "sha256": "c4f8e14fafe458d84808a4cd8b69f94673ebe2bf8fc992291629a69ac12218f8"
+    },
+    "xz-5.2.5.txt": {
+      "source": "https://raw.githubusercontent.com/tukaani-project/xz/v5.2.5/COPYING",
+      "sha256": "bcb02973ef6e87ea73d331b3a80df7748407f17efdb784b61b47e0e610d3bb5c"
+    },
+    "zlib.txt": {
+      "source": "https://raw.githubusercontent.com/madler/zlib/v1.3.1/LICENSE",
+      "sha256": "845efc77857d485d91fb3e0b884aaa929368c717ae8186b66fe1ed2495753243"
+    },
+    "mpdecimal-4.0.0.txt": {
+      "source": "https://raw.githubusercontent.com/python/cpython-source-deps/mpdecimal-4.0.0/COPYRIGHT.txt",
+      "sha256": "2713324211652ce4a60e6e21e54f9dc3004299e591b0933a352f1a89c5fb53c2"
+    },
+    "pyinstaller.txt": {
+      "source": "https://raw.githubusercontent.com/pyinstaller/pyinstaller/v6.22.3/COPYING.txt",
+      "sha256": "0598064c7d2718e38d7914a7d08343b2fa008e3bea9ebba2aa7a6ffa5900dd64"
+    },
+    "pyyaml.txt": {
+      "source": "https://raw.githubusercontent.com/yaml/pyyaml/6.0.3/LICENSE",
+      "sha256": "8d3928f9dc4490fd635707cb88eb26bd764102a7282954307d3e5167a577e8a4"
+    },
+    "rust-compiler-builtins.txt": {
+      "source": "https://raw.githubusercontent.com/rust-lang/rust/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/compiler-builtins/LICENSE.txt",
+      "sha256": "ab6eec6caf0fa5775e411c7a8bc6a45c4ef2956b0980b157ab74fc5cd62a928b"
+    },
+    "ncurses.txt": {
+      "source": "https://ftp.gnu.org/gnu/ncurses/ncurses-6.5.tar.gz",
+      "sha256": "b2feb54f39529abe226f709a292584fde48a2e5721559fee417d2cdd51cb7cc1"
+    },
+    "mpdecimal-4.0.1.txt": {
+      "source": "https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-4.0.1.tar.gz",
+      "sha256": "dba079e24a0286052f9f36a5e0b4f6cc95bc83ada657eb26bef8c0b6473f6512"
+    },
+    "openssl-copyright.txt": {
+      "source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/include/openssl/opensslv.h.in",
+      "sha256": "ec368a39fe8d31b6ed740075969a6ab7dd5128f4ab876e682352128f7551c6e2"
+    },
+    "expat.txt": {
+      "source": "https://raw.githubusercontent.com/python/cpython/v3.13.17/Modules/expat/expat.h",
+      "sha256": "35883851640b9a48c95e8bdaa9895081e4d1dc16526099d55886e6803b31580f"
+    },
+    "rust-dependencies.txt": {
+      "sha256": "5390fd0b1a9bafa14d161587d36353c53725e8949b26c21213c8874b9a614af0",
+      "source": "https://raw.githubusercontent.com/rust-lang/rust/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/Cargo.lock"
+    },
+    "rust-crates.json": {
+      "sha256": "77db01b612cce930d8419c7a01b342be32e9870b17a765b9cbf8b70a25e40067",
+      "source": "https://raw.githubusercontent.com/rust-lang/rust/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/Cargo.lock"
+    }
+  },
+  "components": {
+    "cpython": {
+      "version": "3.13.17",
+      "notices": [
+        "cpython-history-and-license.txt"
+      ],
+      "provenance": "Official CPython installer; Doc/license.rst includes embedded stdlib notices, not all external libraries."
+    },
+    "openssl": {
+      "version": "3.5.9",
+      "binary_marker": "OpenSSL 3.5.9",
+      "notices": [
+        "openssl-license.txt",
+        "openssl-authors.txt",
+        "openssl-copyright.txt"
+      ],
+      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat"
+    },
+    "ncurses": {
+      "version": "6.5",
+      "binary_marker": "ncurses 6.5.20240427",
+      "notices": [
+        "ncurses.txt"
+      ],
+      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat; COPYING from archive SHA256 136d91bc269a9a5785e5f9e980bc76ab57428f604ce3e5a5a90cebc767971cc6"
+    },
+    "libffi": {
+      "version": "3.4.4 (Windows); Apple system library (macOS, not redistributed)",
+      "notices": [
+        "libffi.txt"
+      ],
+      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat"
+    },
+    "libyaml": {
+      "version": "0.2.5",
+      "notices": [
+        "libyaml.txt"
+      ],
+      "provenance": "PyYAML 6.0.3 official wheel statically links libyaml 0.2.5; retain the libyaml copyright and permission notice."
+    },
+    "pyyaml": {
+      "version": "6.0.3",
+      "notices": [
+        "pyyaml.txt"
+      ],
+      "provenance": "release/requirements-native.txt; official PyYAML wheel."
+    },
+    "pydantic-core": {
+      "version": "2.50.1",
+      "binary_marker": "/rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/",
+      "notices": [
+        "rust-dependencies.txt",
+        "rust-crates.json",
+        "rust-compiler-builtins.txt"
+      ],
+      "provenance": "Verified PyPI sdist e50d7b94baac6c7d09927fa5ca5800a0c7ee5015c7fcff65beb3a1931b5a6e09; compiler marker b940084d7eb6a299eb4bfeb8e34901bc051e7ac4 observed on all three wheels. Registry notice superset is not a complete static-link audit; see DEV-041."
+    },
+    "pyinstaller": {
+      "version": "6.22.3",
+      "notices": [
+        "pyinstaller.txt"
+      ],
+      "provenance": "release/requirements-native.txt; GPL with bootloader distribution exception retained."
+    },
+    "bzip2": {
+      "version": "1.0.8 (Windows); Apple system library (macOS, not redistributed)",
+      "notices": [
+        "bzip2.txt"
+      ],
+      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat"
+    },
+    "xz": {
+      "version": "5.2.3 (macOS); 5.2.5 (Windows)",
+      "notices": [
+        "xz-5.2.3.txt",
+        "xz-5.2.5.txt"
+      ],
+      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat; liblzma public-domain library, not GPL xz command-line tools."
+    },
+    "mpdecimal": {
+      "version": "4.0.1 (macOS); 4.0.0 (Windows)",
+      "notices": [
+        "mpdecimal-4.0.1.txt",
+        "mpdecimal-4.0.0.txt"
+      ],
+      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat; 4.0.1 COPYRIGHT.txt from archive SHA256 96d33abb4bb0070c7be0fed4246cd38416188325f820468214471938545b1ac8"
+    },
+    "expat": {
+      "version": "vendored in CPython v3.13.17",
+      "notices": [
+        "expat.txt"
+      ],
+      "provenance": "CPython v3.13.17 Modules/expat/expat.h leading copyright/license comment."
+    },
+    "zlib": {
+      "version": "1.3.1 (Windows); Apple system library (macOS, not redistributed)",
+      "notices": [
+        "zlib.txt"
+      ],
+      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat"
+    }
+  }
+}

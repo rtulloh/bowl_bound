@@ -636,3 +636,151 @@ tests/test_release_player_docs.py tests/test_build_workflow.py` passed all
 38 checks in 0.43s. No new behavioral tests needed: only evidence and ticket
 status changed after the fully green tested commit. Reviewed evidence against
 actual runner logs/downloaded artifacts before committing it separately.
+
+## Owner alpha release request and publication hold — 2026-10-29
+
+Owner explicitly requested creating the alpha release. Reconsulted local
+Paydirt .github/workflows/release.yml for release orchestration; retain the
+Bowl Bound manual approval and exact three-target privacy selection, not its
+automatic tag-release mechanism or broader artifact selection. No existing
+GitHub release was listed. Build artifacts remain those tested at e08542a;
+36f5ede records subsequent documentation-only acceptance locally.
+
+Final native-notice inventory review found a concrete DEV-041 blocker:
+both macOS artifacts contain libssl.3.dylib, libcrypto.3.dylib and
+libncurses.6.dylib, but none of the collected THIRD_PARTY texts mention
+OpenSSL or ncurses. Windows contains libssl-3.dll/libcrypto-3.dll and no
+OpenSSL notice in collected texts. Python LICENSE is not a substitute for
+all bundled native-library notices. Package-level notice collection remains
+incomplete; do not treat previous passing smoke as redistribution clearance.
+No packaging behavior changed and no native notice was guessed or fabricated.
+
+Created an unpublished draft prerelease via `gh release create
+v0.1.0-alpha.1 --repo rtulloh/bowl_bound --target <full-e08542a-sha>
+--title "Bowl Bound 0.1.0-alpha.1" --draft --prerelease --notes <player-safe-text>`.
+The draft describes features/three intended downloads, unsigned security
+caveats, fictional-only teams, support email and explicit publication hold.
+No binaries attached. `gh release view ... --json
+url,isDraft,isPrerelease,tagName,targetCommitish,assets` confirmed draft=true,
+prerelease=true, assets=[], and the e08542a target. The target must be updated
+to the corrected tested build before publishing; do not publish this draft as-is.
+
+Draft URL: https://github.com/rtulloh/bowl_bound/releases/tag/untagged-cdccb231ddd35820099c
+
+DEV-041 tracks missing native notices and complete inventory/redistribution
+review. DEV-036/037 remain open; fresh-machine acceptance is still pending.
+Public alpha publication is held, not silently waived by the release request.
+
+## DEV-041 native-notice implementation candidate — 2026-10-29
+
+### Design input and scope
+
+Consulted local Paydirt licensing/notice searches and `paydirt.spec:5-73`,
+plus its release workflow previously reviewed for this milestone. Its spec
+copies the project LICENSE and uses broad dependency collection, season/docs
+selection and onefile bundling, but has no native notice inventory to adapt.
+Retain the principle of shipping notices beside the app; deliberately do not
+reuse its broad data collection, runtime code, or implied licensing coverage.
+No Paydirt team material was copied, and it remains no runtime dependency.
+
+This change addresses missing bundled-dependency notices, not the original
+project MIT LICENSE (unchanged). Exactly the same three native targets,
+Windows BowlBound.exe, Node 24.22.1, difficulty defaults/odds, sample bytes,
+engine profile and save format are retained. No gameplay/frontend behavior
+changed. Player notice guidance and maintainer audit instructions change
+with the packaging behavior.
+
+### Red / review / green evidence
+
+Reviewed self-contained synthetic tests before each red run. The initial
+`tests/test_native_notices.py` run failed collection because the new helper
+did not exist. After adding the helper, 15 tests passed. More importantly,
+`pytest -q tests/test_standalone_build.py -k
+"without_notices or vendor_licenses"` demonstrated four meaningful failures
+against unchanged archive/package collection: all three targets allowed
+unnoticed native payloads and setuptools/packaging notices were absent.
+`pytest -q tests/test_native_notices.py -k version_or_compiler` demonstrated
+three further failures before provenance-marker enforcement. Reviewed the
+implementation before focused green runs; no assertions weakened or skips
+added. The isolated-import synthetic-freezer regression mocks only the new
+notice-collection side effect, retaining all its import/cache assertions.
+
+The offline catalog records 19 hash-pinned upstream notice/inventory texts,
+versions and source references. CPython v3.13.17 Mac build recipes and Windows
+get_externals.bat establish relevant dependency versions. ncurses COPYING
+and mpdecimal 4.0.1 COPYRIGHT.txt were extracted in memory from archives whose
+SHA256 matched the upstream recipe. Header excerpts preserve the complete
+leading upstream copyright/license comment for Expat/OpenSSL. No runtime
+network license download is added. Exact-byte checkout policy is unchanged.
+
+The Rust collection comes from the PyPI pydantic-core 2.50.1 sdist verified
+against SHA256 e50d7b94baac6c7d09927fa5ca5800a0c7ee5015c7fcff65beb3a1931b5a6e09,
+and the observed compiler commit library/Cargo.lock. All 127 unique registry
+crate archives were verified against their lock checksums. Identical notice
+texts are deduplicated with original filename references retained. Compiler
+builtins licensing is separately preserved. This is a conservative notice
+superset, NOT proof of the selected static-link graph. Seven upstream archives
+provide no license files; they are explicitly identified for applicability
+review, not silently assigned generic permission.
+
+The collector validates the entire notice set before copying, rejects unknown
+native families, and writes per-native-file hashes/component references.
+Both top-level and internal notice copies are revalidated before archiving.
+Synthetic positive archive/extraction and Windows exact install/uninstall
+list checks retain the notice bytes; native installer execution awaits CI.
+
+### Local validation and limitations
+
+- Focused packaging/native/installer/workflow/player-doc command:
+  `.venv/bin/python -m pytest -q tests/test_native_notices.py
+  tests/test_standalone_build.py tests/test_windows_installer.py
+  tests/test_release_package.py tests/test_build_workflow.py
+  tests/test_release_player_docs.py`: **104 passed in 1.40s**.
+- Earlier cumulative `.venv/bin/python -m pytest --cov`: **2,350 passed
+  in 448.83s; 93.41% branch-inclusive coverage**. Further provenance/positive
+  archive tests were then added; final cumulative rerun recorded below.
+- `.venv/bin/python -m ruff check .`: passed.
+- `.venv/bin/python -m ruff format --check .`: 374 files formatted.
+- `.venv/bin/python -m pip check`: passed.
+- With `PATH=/Users/rtulloh/.nvm/versions/node/v24.22.1/bin:$PATH`,
+  `npm test`, `npm run build`, `npm audit` from frontend: **122 tests
+  passed**, production build passed, **0 vulnerabilities**. npm printed an
+  update-available notice; Node/npm pins were not changed.
+- Browser gate initially failed all 33 before execution because the local
+  Playwright Chromium headless executable was absent. Installed it with
+  `env PATH=<Node24.22.1>:$PATH npx playwright install chromium`; repeated
+  `env PATH=<Node24.22.1>:$PATH BB_E2E_SEASONS=<approved-temp-sample-path>
+  npm run test:e2e`: **33 passed in 3.0m**, no skips/expectation changes.
+- Reverified downloaded run 40909408275 ZIPs, extracted only temporary copies,
+  applied the new notices, and passed final marker/inventory guards for **65
+  native files per macOS target and 69 Windows files**. All three expose
+  OpenSSL 3.5.9/Rust b940084d7eb6a299eb4bfeb8e34901bc051e7ac4; macOS
+  exposes ncurses 6.5.20240427. ARM temporary-copy smoke passed version,
+  UI/assets, exact samples, snap, save/load and shutdown. Original ZIP bytes
+  and sidecars unchanged: these are NOT newly rebuilt release deliverables.
+
+DEV-041 remains open pending corrected native builds/artifact acceptance and
+completion of static dependency/target applicability and Microsoft runtime
+redistribution review. DEV-037 fresh-machine/owner publication gates remain.
+The draft remains unpublished with zero assets; no push or workflow dispatch
+was performed for this candidate without separate approval. Local ignored
+OpenCode command allowances were updated only as explicitly requested and
+retain push approval rules; that configuration is not part of this commit.
+
+### DEV-041 final local regression and commit checkpoint
+
+Final `.venv/bin/python -m pytest --cov -q`: **2,374 passed in
+443.42s**, **93.41% branch-inclusive coverage** (75% required); no skips
+or warnings reported. Expanded focused packaging/documentation/issue command
+(`tests/test_native_notices.py`, `test_standalone_build.py`,
+`test_standalone_smoke.py`, `test_windows_installer.py`,
+`test_release_package.py`, `test_release_archive.py`,
+`test_release_metadata.py`, `test_build_workflow.py`,
+`test_release_player_docs.py`, `test_issue_tracker.py`,
+`test_create_issue.py`): **161 passed in 2.97s**.
+
+Owner subsequently requested committing all pending work before implementing
+CLI-046. Keep the native-notice candidate and owner-feedback ticket changes
+in separate local commits. DEV-041 remains open for the documented native
+build/licensing gates; committing this candidate does not declare release
+acceptance complete. No push, workflow dispatch or publication authorized.

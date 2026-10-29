@@ -187,6 +187,8 @@ def test_freezer_imports_cannot_mutate_verified_runtime(
     monkeypatch.setattr(native, "verify_environment", lambda source: None)
     monkeypatch.setattr(native, "build_frontend", fake_frontend)
     monkeypatch.setattr(native, "write_notices", lambda stage, destination: destination.mkdir())
+    # This regression isolates Python import side effects, not native notice collection.
+    monkeypatch.setattr(native, "add_native_notices", lambda *args, **kwargs: None)
 
     def freeze(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
         work = Path(kwargs["cwd"])
@@ -220,3 +222,114 @@ def test_freezer_imports_cannot_mutate_verified_runtime(
     with ZipFile(archive) as zipped:
         assert "BowlBound/BowlBound.exe" in zipped.namelist()
         assert not any("__pycache__" in name for name in zipped.namelist())
+
+
+@pytest.mark.parametrize("target", ["macos-arm64", "macos-x86_64", "windows-x64"])
+def test_archive_refuses_native_payload_without_notices(
+    runtime: Path, tmp_path: Path, target: str
+) -> None:
+    bundle = fake_bundle(runtime, tmp_path / "bundle")
+    if target == "windows-x64":
+        (bundle / "Bowl-Bound").rename(bundle / "BowlBound.exe")
+        (bundle / "BowlBound.exe").write_bytes(b"MZsynthetic PE executable")
+    else:
+        (bundle / "Bowl-Bound").write_bytes(b"\xcf\xfa\xed\xfeSynthetic Mach-O")
+    output = tmp_path / "output"
+    output.mkdir()
+    with pytest.raises(ReleaseError, match="native notice"):
+        native.archive_bundle(bundle, runtime, output, target)
+    assert not list(output.iterdir())
+
+
+def test_notices_include_analyzed_packaging_and_setuptools_vendor_licenses(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from types import SimpleNamespace
+
+    stage = tmp_path / "stage"
+    for name in ("react", "react-dom", "scheduler"):
+        put(stage, f"frontend/node_modules/{name}/package.json", '{"version":"1.0.0"}')
+        put(stage, f"frontend/node_modules/{name}/LICENSE", "Synthetic frontend permission")
+    python = tmp_path / "python"
+    put(python, "LICENSE.txt", "Synthetic Python permission")
+    monkeypatch.setattr(native.sysconfig, "get_path", lambda name: str(python))
+
+    def distribution(name: str) -> SimpleNamespace:
+        root = tmp_path / "installed" / name
+        put(root, "LICENSE", f"Synthetic {name} permission")
+        files = [Path("LICENSE")]
+        if name == "setuptools":
+            vendor = "_vendor/fake.dist-info/LICENSE"
+            put(root, vendor, "Synthetic vendored permission")
+            files.append(Path(vendor))
+        return SimpleNamespace(files=files, locate_file=lambda p: root / p, version="1.0.0")
+
+    monkeypatch.setattr(native.metadata, "distribution", distribution)
+    destination = tmp_path / "notices"
+    native.write_notices(stage, destination)
+    inventory = json.loads((destination / "DEPENDENCIES.json").read_text())
+    assert {"setuptools", "packaging"} <= inventory.keys()
+    assert len(inventory["setuptools"]["notices"]) == 2
+    assert any(
+        (destination / path).read_text() == "Synthetic vendored permission"
+        for path in inventory["setuptools"]["notices"]
+    )
+
+
+@pytest.mark.parametrize("target", ["macos-arm64", "macos-x86_64", "windows-x64"])
+def test_native_archive_and_installer_include_exact_notice_bytes(
+    runtime: Path, tmp_path: Path, target: str
+) -> None:
+    from scripts.native_notices import add_native_notices
+    from scripts.smoke_standalone import extract_verified
+    from scripts.windows_installer import write_file_lists
+
+    bundle = fake_bundle(runtime, tmp_path / "bundle")
+    executable = "BowlBound.exe" if target == "windows-x64" else "Bowl-Bound"
+    if target == "windows-x64":
+        (bundle / "Bowl-Bound").rename(bundle / executable)
+    (bundle / executable).write_bytes(
+        b"MZsynthetic" if target == "windows-x64" else b"\xcf\xfa\xed\xfe"
+    )
+    notice = "Synthetic native copyright and permission\n"
+    source = tmp_path / "notice source"
+    put(source, "release/native-notices/bootloader.txt", notice)
+    catalog = {
+        "schema": 1,
+        "python": "3.13.17",
+        "notices": {
+            "bootloader.txt": {
+                "sha256": hashlib.sha256(notice.encode()).hexdigest(),
+                "source": "https://example.org/synthetic/LICENSE",
+            }
+        },
+        "components": {
+            "pyinstaller": {
+                "version": "1.0",
+                "notices": ["bootloader.txt"],
+                "provenance": "Synthetic fixture",
+            }
+        },
+    }
+    put(source, "release/native-notices/manifest.json", json.dumps(catalog))
+    add_native_notices(source, bundle, target, python_version="3.13.17")
+    output = tmp_path / "output"
+    output.mkdir()
+    archive = native.archive_bundle(bundle, runtime, output, target)
+    extracted = tmp_path / "extracted"
+    report = extract_verified(archive, extracted)
+    for prefix in ("THIRD_PARTY", "_internal/THIRD_PARTY"):
+        name = prefix + "/NATIVE/bootloader.txt"
+        assert report["files"][name] == hashlib.sha256(notice.encode()).hexdigest()
+        assert (extracted / "BowlBound" / name).read_bytes() == notice.encode()
+    if target == "windows-x64":
+        work = tmp_path / "installer"
+        work.mkdir()
+        write_file_lists(extracted / "BowlBound", work)
+        install = (work / "install-files.nsh").read_text()
+        uninstall = (work / "uninstall-files.nsh").read_text()
+        for prefix in ("THIRD_PARTY", "_internal/THIRD_PARTY"):
+            path = prefix.replace("/", "\\") + "\\NATIVE\\bootloader.txt"
+            assert path in uninstall
+        assert install.count('File "/oname=bootloader.txt"') == 2
+        assert "RMDir /r" not in uninstall

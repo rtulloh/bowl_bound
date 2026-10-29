@@ -134,3 +134,42 @@ These are unsigned workflow artifacts, not a public release or platform
 support certification. Publication still requires three-platform native
 acceptance, bundled native-library license review, fresh-machine testing and
 explicit owner approval. Never publish the temporary local prototype builds.
+
+## Native notices and provenance guard (DEV-041)
+
+`release/native-notices/manifest.json` is the offline notice catalog. Entries
+reference reviewed upstream URLs, exact SHA256 notice bytes, dependency
+versions and Python build recipes. `acquisition.json` preserves direct source
+URLs; extracted archive/header provenance is described by the manifest and
+milestone notes. Build-time network retrieval or substituting a generic license
+for a missing copyright/NOTICE file is not allowed. The Windows LF checkout
+policy applies to these pinned texts as well as to the fictional samples.
+
+After materializing the freezer output, `scripts.native_notices` validates
+every selected notice before copying it to both `THIRD_PARTY/NATIVE/` and
+`_internal/THIRD_PARTY/NATIVE/`. It scans native suffixes and Mach-O/PE/ELF
+magic (including extensionless framework/bootloader files), requires reviewed
+component families, and writes matching `NATIVE-LIBRARIES.json` reports with
+relative paths and binary/notice hashes. OpenSSL, ncurses and pydantic-core
+compiler markers must match the reviewed provenance, not just the filenames.
+The archive step revalidates notices and the complete native-file inventory
+before writing a ZIP. The installer consumes that exact verified inventory,
+so it cannot silently drop the notices. Package notice collection also includes
+setuptools/vendor and packaging code captured during analysis.
+
+An unknown library, missing/changed text, unreviewed Python version or changed
+version/compiler marker requires investigation and catalog/test updates, not
+a wildcard exception. Read the native manifest alongside dependency versions
+and source recipes whenever upgrading Python, wheels or PyInstaller. Binary
+hashes and markers are engineering consistency checks, not legal clearance or
+a cryptographic attestation of static dependency provenance.
+
+The Rust collection records a conservative superset from the checksum-verified
+pydantic-core 2.50.1 sdist Cargo.lock and the observed compiler commit
+`b940084d7eb6a299eb4bfeb8e34901bc051e7ac4` library/Cargo.lock. It retains
+upstream texts with per-archive provenance and explicitly identifies entries
+without license files. Do not interpret this superset as the selected target
+graph, or its gaps as silently waived. Complete target-applicability/static
+linkage review and Windows runtime redistribution authority remain open in
+DEV-041/DEV-037. A verification build may exercise these guards, but must not
+be published until the outstanding audit and fresh-machine gates are met.
