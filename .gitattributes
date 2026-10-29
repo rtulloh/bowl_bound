@@ -1,0 +1,3 @@
+# Keep tracked text byte-stable across native build checkouts.
+# Binary files retain their bytes through Git automatic text detection.
+* text=auto eol=lf

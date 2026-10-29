@@ -240,3 +240,64 @@ def test_failed_frontend_command_cannot_issue_build_receipt(source: Path, tmp_pa
         with pytest.raises(subprocess.CalledProcessError):
             build_frontend(stage)
     assert not (stage / "frontend-build.json").exists()
+
+
+@pytest.mark.parametrize("autocrlf", ["true", "input", "false"])
+def test_git_checkout_preserves_release_inputs_with_windows_line_endings(
+    source: Path, tmp_path: Path, autocrlf: str
+) -> None:
+    """Exercise Git conversion with synthetic content, never real chart bytes."""
+    root = Path(__file__).resolve().parents[1]
+    manifest_path = source / "release/manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    approved_names = json.loads((root / "release/manifest.json").read_text())["sample_sha256"]
+    for name in approved_names:
+        content = b"Fictional release checkout fixture\nSynthetic second line\n"
+        path = source / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
+        if name not in manifest["runtime"]:
+            manifest["runtime"].append(name)
+        manifest["sample_sha256"][name] = hashlib.sha256(content).hexdigest()
+    manifest_path.write_bytes(json.dumps(manifest).encode())
+    attributes = root / ".gitattributes"
+    if attributes.exists():
+        (source / ".gitattributes").write_bytes(attributes.read_bytes())
+    names = [*manifest["runtime"], *manifest["frontend"], "release/manifest.json"]
+    if attributes.exists():
+        names.append(".gitattributes")
+    expected = {name: (source / name).read_bytes() for name in names}
+    # Explicit configuration avoids depending on the developer host defaults.
+    git = ["git", "-c", "core.autocrlf=false", "-c", "core.attributesfile="]
+    subprocess.run([*git, "init", "--quiet", str(source)], check=True, capture_output=True)
+    subprocess.run([*git, "add", "--", *names], cwd=source, check=True, capture_output=True)
+    checkout = tmp_path / "Windows checkout with spaces"
+    checkout.mkdir()
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            f"core.autocrlf={autocrlf}",
+            "-c",
+            "core.attributesfile=",
+            "checkout-index",
+            "--all",
+            f"--prefix={checkout.as_posix()}/",
+        ],
+        cwd=source,
+        check=True,
+        capture_output=True,
+    )
+    stage = tmp_path / "verified checkout stage"
+    stage_sources(checkout, stage)
+    for name, content in expected.items():
+        assert (checkout / name).read_bytes() == content, name
+    for name in manifest["runtime"]:
+        assert (stage / name).read_bytes() == expected[name], name
+    # A real byte change remains forbidden after a successful checkout/stage.
+    sample = checkout / "seasons/SAMPLE-LICENSE.md"
+    sample.write_bytes(sample.read_bytes() + b"Not approved\n")
+    rejected = tmp_path / "rejected tampered stage"
+    with pytest.raises(ReleaseError, match="Public sample hash mismatch"):
+        stage_sources(checkout, rejected)
+    assert not rejected.exists()

@@ -425,3 +425,58 @@ retains the original limits and adds a reproducible wider-font case. Player
 guidance now describes wrapping; issue UI-040 remains open pending a tested
 commit reference and Linux CI confirmation. Local `opencode.json` is ignored
 and must not be staged. No new push, dispatch, tag or release in this fix yet.
+
+## Second GitHub run and DEV-038 checkout follow-up — 2026-10-29
+
+Owner approved pushing a8346b0 and rerunning the workflow. Run 40864663857
+passed the full Ubuntu test gate, including all 33 browser cases, confirming
+UI-040 on Linux. Both native macOS 26 jobs (arm64 and Intel x86_64) built
+with Python 3.13.17 and passed extracted-app smoke/upload. Windows stopped
+during staging: `Public sample hash mismatch: seasons/SAMPLE-LICENSE.md`;
+no Windows executable, installer or smoke result exists. Native-library
+license review and fresh-machine acceptance still remain; no release/tag.
+
+Consulted local Paydirt `.github/workflows/release.yml` before this follow-up:
+it uses ordinary native checkout, with no byte-pinned sample inventory or
+line-ending safeguards. Search found no relevant autocrlf/eol policy to reuse.
+Do not copy its best-effort installer steps or automatic release behavior.
+
+DEV-038 adds a real Git checkout regression with all approved public sample
+paths but entirely synthetic bytes; it never reads historical chart content.
+Reviewed before red: with `core.autocrlf=true`, staging rejects the changed
+sample bytes; `input` and `false` pass. Reproduction: 1 failed/2 passed, same
+hash-mismatch error class as Windows CI. The test also checks all selected
+input bytes and preserves rejection of tampered content after staging.
+
+Fix is repository metadata only: `* text=auto eol=lf` in `.gitattributes`.
+Git checks out tracked text consistently; binary detection preserves binaries.
+No manifest hash, chart, engine, verifier, dependency, workflow target or
+installer code changes. Ignored private files are not rewritten. No need to
+renormalize or bulk-stage the existing worktree. Native Windows CI remains
+required to validate the rest of the packaging/installer path.
+
+### DEV-038 verification checkpoint
+
+- `.venv/bin/python -m pytest -q tests/test_release_package.py -k git_checkout`:
+  before policy: 1 failed/2 passed; after policy: 3 passed.
+- `.venv/bin/python -m ruff format tests/test_release_package.py`: formatted.
+- `.venv/bin/python -m ruff check .`: passed.
+- `.venv/bin/python -m ruff format --check .`: 369 files formatted.
+- `.venv/bin/python -m pip check`: passed.
+- Node 24.22.1 `npm --prefix frontend test`: 122 passed.
+- Node 24.22.1 `npm --prefix frontend run build`: passed.
+- Node 24.22.1 `npm --prefix frontend audit`: 0 vulnerabilities.
+- `.venv/bin/python -m pytest --cov --cov-report=term-missing -q`: 2,324 passed
+  in 445.72s, 93.41% branch-aware coverage; no skips/warnings reported.
+- Node 24.22.1, `BB_E2E_CHANNEL=chrome`, fresh temporary synthetic library,
+  `npm run test:e2e` in frontend/: 33 passed in 3.7m.
+
+Both macOS artifacts downloaded from run 40864663857 were verified locally
+using extract_verified: ZIP sidecars, every file hash/path and exact
+internal/external manifest equality, 176 files and all 11 pinned sample files
+per target. Both checksums are recorded in DEV-036. Downloaded ARM artifact
+passed local smoke with `TMPDIR` set to the approved OpenCode directory:
+`.venv/bin/python -m scripts.smoke_standalone <downloaded-arm-artifact-dir>`.
+Native Intel smoke passed in CI; no local Intel-machine claim. This is artifact
+integrity/runtime evidence, not full bundled-library licensing or fresh-machine
+acceptance. There is still no Windows artifact or release/tag.

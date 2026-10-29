@@ -26,6 +26,12 @@ a pinned SHA256; changing samples requires deliberate manifest review. No roster
 is selected. Unknown file categories, traversal, duplicate entries, missing
 inputs and symlinked files/ancestors fail before output creation.
 
+Keep the repository `.gitattributes` policy when checking out release inputs:
+tracked text uses LF even when Windows Git has `core.autocrlf=true`; binary
+files retain their bytes. This preserves pinned sample hashes and version
+metadata across hosts. Do not rewrite samples, update approved hashes, or
+normalize bytes inside the verifier to work around a checkout mismatch.
+
 The frontend step checks exact Node/npm versions, runs `npm ci --ignore-scripts`
 and `npm run build` from selected staged sources. It never copies the worktree
 dist or node_modules. A pre-existing dist/receipt is refused. Failed builds do
