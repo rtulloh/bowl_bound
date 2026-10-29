@@ -85,7 +85,12 @@ creates a separate environment, installs only the exact graph in
 `pip check`. Do not install Bowl Bound into that environment, including
 editably. The orchestrator runs from the checkout, but PyInstaller runs with
 isolated imports from a temporary directory and analyzes only the assembled
-allowlisted runtime. Application modules and selected resources are inspected.
+allowlisted runtime. Analysis runs with `-I -B` and passes
+`PYTHONDONTWRITEBYTECODE=1` to hook children so imports cannot add caches to
+verified inputs (`-I` ignores Python environment settings in the parent).
+Unexpected/missing inventory errors list relative paths; investigate them
+rather than deleting or ignoring files in the verifier. Application modules
+and selected resources are inspected.
 This is exact application/data selection, not an exact allowlist of every
 third-party binary. Build logs and the native dependency/license inventory
 need review before publication.

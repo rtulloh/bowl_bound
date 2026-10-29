@@ -172,3 +172,51 @@ def test_environment_ignores_checkout_metadata_but_refuses_installed_project(
             native.verify_environment(source)
     else:
         native.verify_environment(source)
+
+
+@pytest.mark.parametrize("import_process", ["analysis", "hook-child"])
+def test_freezer_imports_cannot_mutate_verified_runtime(
+    source: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, import_process: str
+) -> None:
+    """Run real isolated imports through a synthetic freezer, without PyInstaller."""
+    import subprocess
+
+    run = subprocess.run
+    monkeypatch.delenv("PYTHONDONTWRITEBYTECODE", raising=False)
+    monkeypatch.setattr(native, "check_target", lambda *args: "BowlBound.exe")
+    monkeypatch.setattr(native, "verify_environment", lambda source: None)
+    monkeypatch.setattr(native, "build_frontend", fake_frontend)
+    monkeypatch.setattr(native, "write_notices", lambda stage, destination: destination.mkdir())
+
+    def freeze(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        work = Path(kwargs["cwd"])
+        runtime = work / "runtime"
+        probe = f"import sys; sys.path.insert(0, {str(runtime)!r}); import bowl_bound"
+        if import_process == "hook-child":
+            # PyInstaller 6.22.3 hook children inherit env, not parent -I/-B flags.
+            probe = (
+                "import subprocess, sys; "
+                f"subprocess.run([sys.executable, '-c', {probe!r}], check=True)"
+            )
+        result = run(
+            [command[0], *command[1 : command.index("-m")], "-c", probe],
+            **kwargs,
+        )
+        dist = work / "dist"
+        dist.mkdir()
+        frozen = fake_bundle(runtime, dist / "BowlBound")
+        (frozen / "Bowl-Bound").rename(frozen / "BowlBound.exe")
+        return result
+
+    def inspect(executable: Path, runtime: Path) -> None:
+        native._runtime_files(runtime)
+        assert not list(runtime.rglob("*.pyc"))
+
+    monkeypatch.setattr(native.subprocess, "run", freeze)
+    monkeypatch.setattr(native, "inspect_modules", inspect)
+    output = tmp_path / "native output"
+    native.build(source, output, "windows-x64")
+    archive = output / "BowlBound-0.1.0-alpha.1-windows-x64.zip"
+    with ZipFile(archive) as zipped:
+        assert "BowlBound/BowlBound.exe" in zipped.namelist()
+        assert not any("__pycache__" in name for name in zipped.namelist())

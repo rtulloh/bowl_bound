@@ -304,8 +304,12 @@ def archive_runtime(runtime: Path, destination: Path) -> None:
         _plain(path)
         if not path.is_dir():
             actual.add(path.relative_to(runtime).as_posix())
-    if actual != {*hashes, "MANIFEST.json"}:
-        raise ReleaseError("Unexpected or missing runtime files")
+    expected = {*hashes, "MANIFEST.json"}
+    if actual != expected:
+        raise ReleaseError(
+            "Unexpected or missing runtime files: "
+            f"extra={sorted(actual - expected)!r}, missing={sorted(expected - actual)!r}"
+        )
     contents = {name: _read(runtime, name) for name in sorted(actual)}
     if any(_sha(contents[name]) != digest for name, digest in hashes.items()):
         raise ReleaseError("Runtime file changed since assembly")

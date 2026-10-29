@@ -51,3 +51,28 @@ def test_archive_rejects_injected_files_and_does_not_create_output(
     with pytest.raises(ReleaseError):
         archive_runtime(runtime, output)
     assert not output.exists()
+
+
+@pytest.mark.parametrize("mutation", ["extra-cache", "missing-license"])
+def test_inventory_mismatch_identifies_relative_paths_without_creating_output(
+    source: Path, tmp_path: Path, mutation: str
+) -> None:
+    stage, runtime = tmp_path / "stage", tmp_path / "runtime"
+    stage_sources(source, stage)
+    fake_frontend(stage)
+    assemble_runtime(stage, runtime)
+    if mutation == "extra-cache":
+        name = "bowl_bound/__pycache__/__init__.cpython-313.pyc"
+        put(runtime, name, "Synthetic cache bytes")
+        expected = "extra="
+    else:
+        name = "LICENSE"
+        (runtime / name).unlink()
+        expected = "missing="
+    output = tmp_path / "rejected.zip"
+    with pytest.raises(ReleaseError) as error:
+        archive_runtime(runtime, output)
+    assert expected in str(error.value)
+    assert name in str(error.value)
+    assert str(runtime) not in str(error.value)
+    assert not output.exists()

@@ -284,10 +284,13 @@ def build(source: Path, output: Path, target: str) -> None:
                 if key not in {"PYTHONPATH", "PYTHONHOME"}
             }
             environment["PYTHONNOUSERSITE"] = "1"
+            # Hook children inherit env, while -I makes the parent ignore it.
+            environment["PYTHONDONTWRITEBYTECODE"] = "1"
             subprocess.run(
                 [
                     sys.executable,
                     "-I",
+                    "-B",  # Keep the verified runtime pristine during analysis.
                     "-m",
                     "PyInstaller",
                     "--noconfirm",

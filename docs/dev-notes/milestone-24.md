@@ -480,3 +480,64 @@ passed local smoke with `TMPDIR` set to the approved OpenCode directory:
 Native Intel smoke passed in CI; no local Intel-machine claim. This is artifact
 integrity/runtime evidence, not full bundled-library licensing or fresh-machine
 acceptance. There is still no Windows artifact or release/tag.
+
+## Third GitHub run and DEV-039 freezer follow-up — 2026-10-29
+
+Run 40882820635 at fbf2fd3 passed the complete Ubuntu gate and both native
+macOS builds/smokes/uploads. Windows passed exact sample verification and
+built BowlBound.exe, confirming the DEV-038 checkout fix, then failed
+post-freeze runtime inventory verification: Unexpected or missing runtime files.
+No Windows portable/installer smoke or upload occurred. Optional hidden-import
+tzdata warning and whatwg-encoding deprecation remain visible, not suppressed.
+
+Reconsulted Paydirt freezer specs and searched for bytecode-write safeguards;
+no equivalent pristine-input/hash inventory or PYTHONDONTWRITEBYTECODE policy
+was found. Do not reuse broad data selection or bypass inventory checks.
+Examined installed pinned PyInstaller 6.22.3 isolated/_parent.py and compat.py:
+hook children inherit environment but do not propagate parent -I/-B flags.
+Python -I ignores PYTHONDONTWRITEBYTECODE in the analysis parent.
+
+Reviewed new synthetic regressions before red. A substituted freezer runs real
+Python using the production launch flags/env and imports an invented staged
+package either directly or through a hook-like child. Both imports create
+cache files and reproduce the same post-freeze inventory error. Separate
+extra-cache and missing-license cases demonstrate the lack of path diagnostics.
+Focused red: all 4 failed as intended. This reproduces a mechanism matching
+Windows, not proof of its unreported extra file names; the real rerun remains
+necessary, and improved diagnostics will expose any different cause.
+
+Smallest fix: keep -I, add -B for analysis and PYTHONDONTWRITEBYTECODE=1 for
+children. Keep optimize=0, exact hashes, inventory guards and build isolation.
+Report sorted extra/missing relative inventory paths without host paths or
+file contents. No deleting caches, forgiving extras or widening sample rules.
+Reviewed implementation before green: all 4 focused cases now pass. No engine,
+chart, difficulty, dice, save, runtime dependency or platform target changes.
+
+### DEV-039 validation checkpoint
+
+- `.venv/bin/python -m pytest -q tests/test_standalone_build.py tests/test_release_archive.py -k "freezer_imports or inventory_mismatch"`:
+  4 expected failures before implementation; 4 passed after.
+- `.venv/bin/python -m pytest -q tests/test_issue_tracker.py tests/test_create_issue.py tests/test_release_player_docs.py tests/test_build_workflow.py tests/test_release_package.py tests/test_release_archive.py tests/test_standalone_build.py tests/test_standalone_smoke.py tests/test_windows_installer.py`:
+  113 passed in 1.84s.
+- `.venv/bin/python -m ruff check .`: passed.
+- `.venv/bin/python -m ruff format --check .`: 370 files formatted.
+- `.venv/bin/python -m pip check`: passed.
+- Node 24.22.1 `npm --prefix frontend test`: 122 passed; Vitest performance
+  advice remains visible.
+- Node 24.22.1 `npm --prefix frontend run build`: passed.
+- Node 24.22.1 `npm --prefix frontend audit`: 0 vulnerabilities.
+- `.venv/bin/python scripts/build_issue_index.py`: regenerated.
+- `.venv/bin/python -m pytest --cov --cov-report=term-missing -q`: 2,328 passed
+  in 442.55s with 93.41% branch-aware application coverage; no skips/warnings.
+- Node 24.22.1, Chrome, fresh temporary synthetic library, frontend/
+  `npm run test:e2e`: 33 passed in 3.7m.
+- Isolated local native-build environment `python -m scripts.build_standalone
+  --target macos-arm64 --output <approved-temporary-artifacts-directory>`:
+  passed; local Python 3.12.8 engineering evidence only, not a shipped build.
+- `TMPDIR=<approved-temp-dir> .venv/bin/python -m scripts.smoke_standalone
+  <DEV-039-local-artifact-directory>`: passed version/UI/assets/two samples/
+  snap/save-load/graceful shutdown. Build showed existing whatwg-encoding
+  deprecation; it remains unsuppressed.
+
+No source/module privacy guard, expectation or supported target relaxed.
+Actual Windows CI and installer/runtime acceptance still pending.
