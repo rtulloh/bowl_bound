@@ -268,3 +268,102 @@ Linux artifact, broad staging or automatic public release. DEV-036 and player
 installation guidance updated; 77 focused release/launcher/metadata/tracker
 checks passed after the documentation-only change. Native implementation and
 smoke evidence are still outstanding; this source push creates no builds/tag.
+
+## DEV-036 workflow implementation plan
+
+Reconsulted Paydirt spec and release.yml before this phase. Adapt native
+ARM/Intel/Windows matrix, not broad collect_all, full-tree data copying,
+unpinned installs, optional failing installers or automatic release publication.
+Add a manually dispatched test-gated workflow, isolated pinned native build
+environment, onedir portable ZIPs, dependency notices/inventory, exact resource
+and module inspection, SHA256/manifest, and extracted executable API/save smoke.
+Keep native support provisional until actual runners pass; no tag/release job.
+Tests first cover architecture/name contracts, selected resources, stale/private
+inputs, ZIP inventory/checksums and workflow permissions/action pins.
+
+### DEV-036 Windows installer extension and local evidence
+
+Owner requested a Windows installer like Paydirt. Reconsulted
+`packaging/windows/installer.nsi` and `docs/installation.md`: adapt NSIS
+shortcuts, installed executable and uninstall registration, but not HKLM/admin
+installation or recursive uninstallation. Use per-user LocalAppData/HKCU, an
+empty destination and exact packaged-file removal; preserve personal files.
+
+Tests preceded implementation: missing native/installer modules and absent
+workflow/lock reds; added malformed archive/Windows wildcard/path cases failed
+before guards. A real isolated build found checkout egg-info was incorrectly
+treated as an installed project; synthetic regression failed before scoping
+the installed-project check to environment site-packages. Workflow review
+found the Playwright harness requires `.venv/bin/python`; the corresponding
+workflow regression failed before aligning the Ubuntu test environment.
+No existing assertions, skips, coverage floor or engine behavior changed.
+
+Validation so far:
+
+- Isolated native graph installed with `pip install --only-binary=:all:
+  --no-deps -r release/requirements-native.txt`; `pip check` passed.
+- Real local macOS arm64 PyInstaller build and extracted executable smoke
+  passed: version, UI/assets, exact fictional samples, snap, save/load, graceful
+  shutdown. This prototype used local Python **3.12.8**, not workflow-pinned
+  **3.13.17**; it is not approved for shipping.
+- 79 focused native/smoke/installer/workflow/release/launcher tests passed
+  before the final workflow-harness regression was added.
+- Full Python gate: **2,318 passed in 432.13s**, **93.38%** branch-aware
+  application coverage; no skips/warnings. Build scripts remain outside the
+  established application coverage list, not silently counted by that gate.
+- Frontend Node24.22.1: **122 tests passed**, production build passed, npm
+  audit **0**. Retained Vitest informational pool advice and staged npm
+  whatwg-encoding deprecation; no suppression.
+- actionlint **1.7.12** passed (`-shellcheck=` because ShellCheck is not part
+  of this local check); executable download matched release asset SHA256.
+  This validates workflow syntax/types, not successful native runner execution.
+
+Manual-only test-gated workflow has exactly three native jobs, read-only
+contents permission, SHA-pinned actions and no tag/release publication. Actual
+Windows/Intel and pinned-runtime ARM runner evidence, installed Windows smoke,
+bundled native-library licensing and owner acceptance remain open under
+DEV-036/DEV-037. No native support claim or release has been made.
+
+### DEV-036 final local review checkpoint — 2026-10-29
+
+Reviewed staged changes before commit. Keep PyInstaller optimize=0 (regression
+failed before changing the recipe) to retain normal engine assertions. Windows
+shutdown review found Uvicorn replays SIGBREAK after graceful shutdown; a
+synthetic replay failed before temporary Ctrl+C-equivalent handling and
+handler restoration were added to the launcher. Paydirt has no SIGBREAK
+implementation to reuse; actual Windows process-group behavior is still a
+native acceptance gate. This does not change football rules or save formats.
+
+Final commands/results:
+
+- `.venv/bin/python -m pytest --cov --cov-report=term-missing -q`: **2,321
+  passed in 439.89s**, **93.41%** branch-aware application coverage; no
+  skips/warnings. Same established 75% floor and coverage source list.
+- `.venv/bin/python -m pytest tests/test_standalone_build.py
+  tests/test_standalone_smoke.py tests/test_windows_installer.py
+  tests/test_build_workflow.py tests/test_release_package.py
+  tests/test_launcher.py tests/test_release_metadata.py
+  tests/test_release_player_docs.py tests/test_issue_tracker.py -q`: **103 passed**.
+- `.venv/bin/python -m ruff check .` and
+  `.venv/bin/python -m ruff format --check .`: passed (**367 files**).
+- `.venv/bin/python -m pip check`: no broken requirements.
+- `npm --prefix frontend test`: **122 passed**;
+  `npm --prefix frontend run build`: passed; `npm --prefix frontend audit`: **0**.
+- From frontend, with Node24.22.1, an external synthetic sample directory and
+  `BB_E2E_CHANNEL=chrome`, `npm run test:e2e`: **32 passed in 3.8m**, no retries
+  or skips. Vitest informational pool advice remains unsuppressed.
+- Rebuilt the final local ARM prototype with the clean build-environment
+  interpreter: `python -m scripts.build_standalone --target macos-arm64
+  --output "$ABSENT_EXTERNAL_OUTPUT"`; then
+  `python -m scripts.smoke_standalone "$ABSENT_EXTERNAL_OUTPUT"`: passed.
+  This still uses local3.12.8, not the approved workflow runtime3.13.17.
+- actionlint1.7.12 (`-shellcheck=`) passed after the final workflow change.
+- Dependency-marker graph checked for workflow Python3.13.17: Windows22
+  selected distributions, each Mac21, no unsatisfied default dependency edges.
+  This metadata check is not a Windows/Intel wheel installation or native run.
+- `.venv/bin/python scripts/build_issue_index.py`: regenerated, no index delta.
+
+Milestone24 and DEV-036 remain open for actual three-runner evidence, Windows
+installed/uninstall smoke, full bundled native-library license audit and owner
+acceptance. No push, workflow dispatch, tag or release occurred in this step.
+Local permission configuration remains ignored and outside the staged changes.

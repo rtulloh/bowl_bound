@@ -40,3 +40,7 @@ The launcher binds only to this computer by default. Remote binding requires
 multiplayer service. Do not expose the game to the Internet or open router
 ports. A desktop firewall exception for public networks is not needed for
 ordinary local play.
+
+On Windows, Ctrl+Break is also handled as a graceful stop, like Ctrl+C. Save
+before stopping. Closing the console window or ending the process through Task
+Manager is not the same as a graceful stop.

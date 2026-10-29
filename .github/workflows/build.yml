@@ -1,0 +1,131 @@
+name: Build standalone apps
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: standalone-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PYTHON_VERSION: '3.13.17'
+  NODE_VERSION: '24.22.1'
+  PYTHONNOUSERSITE: '1'
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - name: Install source test dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -e ".[dev,web,pdf]"
+      - name: Python tests, lint and formatting
+        run: |
+          .venv/bin/python -m pytest --cov --cov-report=term-missing -q
+          .venv/bin/python -m ruff check .
+          .venv/bin/python -m ruff format --check .
+          .venv/bin/python -m pip check
+      - name: Frontend tests, build and audit
+        working-directory: frontend
+        run: |
+          npm ci --ignore-scripts
+          npm test
+          npm run build
+          npm audit
+      - name: Real-engine browser regression
+        working-directory: frontend
+        env:
+          BB_E2E_SEASONS: ${{ runner.temp }}/bowl-bound-browser-samples
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:e2e
+
+  build:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-26
+            arch: arm64
+            target: macos-arm64
+          - os: windows-2025
+            arch: x64
+            target: windows-x64
+          - os: macos-26-intel
+            arch: x64
+            target: macos-x86_64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          architecture: ${{ matrix.arch }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - name: Create isolated native build environment
+        run: |
+          python -m venv "$RUNNER_TEMP/native-env"
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            echo "BUILD_PYTHON=$RUNNER_TEMP/native-env/Scripts/python.exe" >> "$GITHUB_ENV"
+          else
+            echo "BUILD_PYTHON=$RUNNER_TEMP/native-env/bin/python" >> "$GITHUB_ENV"
+          fi
+      - name: Install exact build and runtime graph (never editable project)
+        run: |
+          "$BUILD_PYTHON" -m pip install --only-binary=:all: --no-deps -r release/requirements-native.txt
+          "$BUILD_PYTHON" -m pip check
+      - name: Stage approved sources and build portable app
+        env:
+          BUILD_TARGET: ${{ matrix.target }}
+        run: |
+          "$BUILD_PYTHON" -m scripts.build_standalone --target "$BUILD_TARGET" --output "$RUNNER_TEMP/bowl-bound-artifacts"
+      - name: Smoke verified extracted executable
+        run: '"$BUILD_PYTHON" -m scripts.smoke_standalone "$RUNNER_TEMP/bowl-bound-artifacts"'
+      - name: Install pinned Windows installer compiler
+        if: matrix.target == 'windows-x64'
+        shell: pwsh
+        run: |
+          choco upgrade nsis --version=3.11 --allow-downgrade --yes --no-progress
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Compile installer and test installed app and uninstall
+        if: matrix.target == 'windows-x64'
+        shell: pwsh
+        run: |
+          & $env:BUILD_PYTHON -m scripts.windows_installer "$env:RUNNER_TEMP/bowl-bound-artifacts" --makensis "${env:ProgramFiles(x86)}/NSIS/makensis.exe" --smoke
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Upload inspected build artifacts (not a release)
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: BowlBound-${{ matrix.target }}-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/bowl-bound-artifacts/*.zip
+            ${{ runner.temp }}/bowl-bound-artifacts/*.sha256
+            ${{ runner.temp }}/bowl-bound-artifacts/*.manifest.json
+            ${{ runner.temp }}/bowl-bound-artifacts/*.exe
+          if-no-files-found: error
+          retention-days: 14

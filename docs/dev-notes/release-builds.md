@@ -60,3 +60,63 @@ artifact inspection and explicit owner go/no-go cannot be inferred from a clean
 manifest or npm audit. Preserve historical files locally; never delete them to
 make a build pass. Do not publish developer notes or local audit evidence as
 player release notes.
+
+## Manual native workflow and Windows installer
+
+`.github/workflows/build.yml` is manually dispatched from GitHub Actions →
+**Build standalone apps** → **Run workflow** after the workflow is approved and
+pushed. It does not create tags or GitHub releases. `contents: read`, pinned
+action SHAs and disabled checkout credentials limit the workflow permissions.
+The Ubuntu gate runs coverage, lint/format, frontend unit/build/audit and real
+engine Chromium tests. Native builds depend on that gate and run on macOS 26
+arm64, Windows Server 2025 x64 and macOS 26 Intel x86_64. These runner labels
+were checked against actions/runner-images; availability is still exercised
+by the first actual run. Linux is a test host, not an artifact target.
+
+The workflow uses Python **3.13.17** and Node **24.22.1**. Each native job
+creates a separate environment, installs only the exact graph in
+`release/requirements-native.txt` with `--only-binary=:all: --no-deps`, and runs
+`pip check`. Do not install Bowl Bound into that environment, including
+editably. The orchestrator runs from the checkout, but PyInstaller runs with
+isolated imports from a temporary directory and analyzes only the assembled
+allowlisted runtime. Application modules and selected resources are inspected.
+This is exact application/data selection, not an exact allowlist of every
+third-party binary. Build logs and the native dependency/license inventory
+need review before publication.
+
+Equivalent native commands (use the matching platform interpreter and target):
+
+```sh
+python -m venv "$BUILD_ENV"
+"$BUILD_PYTHON" -m pip install --only-binary=:all: --no-deps -r release/requirements-native.txt
+"$BUILD_PYTHON" -m pip check
+"$BUILD_PYTHON" -m scripts.build_standalone --target macos-arm64 --output "$OUTPUT"
+"$BUILD_PYTHON" -m scripts.smoke_standalone "$OUTPUT"
+```
+
+Set `BUILD_PYTHON` to the new environment executable (`bin/python` on macOS;
+`Scripts/python.exe` on Windows). Use `macos-x86_64` or `windows-x64` for the
+other native targets; cross-builds are refused. The output must be absent
+and outside the source checkout, under an existing nonsymlink parent. ZIPs
+include an exact `ARTIFACT-MANIFEST.json`, an external matching manifest and a
+SHA256 sidecar. Extracted executables must serve the UI/assets, list only the
+two fictional teams, play a snap, round-trip a save and shut down gracefully.
+The local macOS prototype may use the installed interpreter for engineering
+validation; it is not a substitute for the workflow-pinned shipped runtime.
+
+The Windows job additionally installs pinned **NSIS 3.11**, compiles
+`release/windows/installer.nsi` via `scripts.windows_installer --smoke` and
+requires successful silent installation, registry/version inspection, installed
+app/game/save smoke, and uninstall preserving an unrelated user file. Compiler
+or smoke failures fail the job; installers are not an optional best-effort step.
+The installer is per-user (`LocalAppData/Programs/BowlBound`, HKCU), installs
+`BowlBound.exe` with Start menu/desktop shortcuts and uses exact generated
+uninstall lists, never recursive installation-directory deletion. It requires
+an empty destination; uninstall the prior version first.
+
+Successful jobs upload the portable ZIP/checksum/manifest plus the Windows
+`BowlBoundSetup-VERSION-windows-x64.exe` and checksum, retained for 14 days.
+These are unsigned workflow artifacts, not a public release or platform
+support certification. Publication still requires three-platform native
+acceptance, bundled native-library license review, fresh-machine testing and
+explicit owner approval. Never publish the temporary local prototype builds.

@@ -1,0 +1,25 @@
+# Exact native-build/runtime graph. Install in a clean, non-editable environment.
+# --no-deps plus pip check makes an incomplete lock fail rather than resolve silently.
+PyYAML==6.0.3
+fastapi==0.162.0
+starlette==1.10.0
+pydantic==2.14.1
+pydantic-core==2.50.1
+uvicorn==0.54.0
+h11==0.16.0
+click==8.5.0
+anyio==4.15.1
+idna==3.20
+typing-extensions==4.16.0
+annotated-types==0.8.0
+typing-inspection==0.4.4
+annotated-doc==0.0.5
+opentelemetry-api==1.45.1
+pyinstaller==6.22.3
+pyinstaller-hooks-contrib==2026.9
+altgraph==0.17.5
+packaging==26.3
+setuptools==84.2.1
+macholib==1.16.4 ; sys_platform == "darwin"
+pefile==2024.8.26 ; sys_platform == "win32"
+pywin32-ctypes==0.2.3 ; sys_platform == "win32"

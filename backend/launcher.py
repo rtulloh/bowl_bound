@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import signal
 import socket
 import sys
 import webbrowser
@@ -113,11 +114,19 @@ def main(argv: Sequence[str] | None = None) -> int:
         if not args.no_browser:
             worker = Thread(target=open_when_ready, args=(server, done, url), daemon=True)
             worker.start()
+        # Uvicorn replays captured signals after shutdown. Treat Windows Ctrl+Break
+        # like Ctrl+C, rather than restoring SIG_DFL and terminating with failure.
+        sigbreak = getattr(signal, "SIGBREAK", None)
+        previous_break_handler = (
+            signal.signal(sigbreak, signal.default_int_handler) if sigbreak is not None else None
+        )
         try:
             server.run(sockets=[listener])
         except KeyboardInterrupt:
             return 0
         finally:
+            if sigbreak is not None:
+                signal.signal(sigbreak, previous_break_handler)
             done.set()
             if worker is not None:
                 worker.join(timeout=1)

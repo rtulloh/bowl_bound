@@ -26,6 +26,9 @@ Pydantic, Uvicorn and their dependencies. The web interface uses React and
 React DOM. These retain their respective licenses. Native standalone builds
 must include the applicable dependency license texts and Python notices for
 the exact versions bundled; the summary here does not replace those notices.
-The standalone dependency-license inventory is still being prepared along with
-the first native builds. This source/preparation notice is not a claim that a
-completed standalone distribution has already been licensed or published.
+Native build tooling collects Python, installed package and React license texts
+under `THIRD_PARTY/`, with exact versions in `DEPENDENCIES.json`. Windows
+installers also include the NSIS compiler notice. The bundled native-library
+license review and three-platform build verification remain release gates;
+these generated notices alone do not establish a completed license audit or
+published standalone distribution.

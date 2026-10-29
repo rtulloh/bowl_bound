@@ -11,9 +11,19 @@ Standalone archives include Python, the built web interface and the two
 fictional sample teams; players do not need Python or Node.js installed.
 An Internet connection is needed to download, not for ordinary local play.
 
-Extract the **entire** archive into a user-writable folder. Do not run from
-inside the ZIP or move only the executable away from its supporting files.
-Open a terminal in the extracted folder:
+For Windows, the planned **installer** is
+`BowlBoundSetup-0.1.0-alpha.1-windows-x64.exe`. Verify its checksum first, then
+run it and follow the setup wizard. It installs `BowlBound.exe` for the current
+user under `%LOCALAPPDATA%\Programs\BowlBound`, without administrator access,
+and creates Start menu and desktop shortcuts. Uninstall through Windows
+Settings → Apps → Installed apps → Bowl Bound. Close the game first; uninstall
+before installing a replacement version. The installer requires an empty
+destination. Personal saves and external team libraries are not removed.
+
+The **portable ZIP** remains an alternative on Windows and the planned format
+on macOS. Extract the **entire** archive into a user-writable folder. Do not run
+from inside the ZIP or move only the executable away from its supporting files.
+Open a terminal in the extracted `BowlBound` folder:
 
 | Platform build, when available | Run | Alternative |
 | --- | --- | --- |
@@ -32,13 +42,15 @@ enter the displayed address manually. See [startup options](startup.md).
 
 ### Verify downloads before overriding a warning
 
-Compare the archive SHA256 against the checksum published with that same
+Compare the installer or archive SHA256 against the checksum published with that same
 release. A matching checksum detects corruption; trust also depends on obtaining
 both from the genuine release page. Do not bypass antivirus detections or
 organization security policy.
 
 ```powershell
 # Windows PowerShell: replace the filename with your download.
+Get-FileHash .\BowlBoundSetup-0.1.0-alpha.1-windows-x64.exe -Algorithm SHA256
+# Or check the portable ZIP instead.
 Get-FileHash .\BowlBound-0.1.0-alpha.1-windows-x64.zip -Algorithm SHA256
 ```
 
@@ -47,8 +59,8 @@ On macOS use `shasum -a 256 FILE.zip`.
 ### Windows: downloaded-file blocking and SmartScreen
 
 Unsigned early builds may show an unknown-publisher warning. After verifying
-the download, right-click the downloaded ZIP → **Properties** → **Unblock**
-(if present) → **Apply**, then extract it again into a new folder. If
+the download, right-click the downloaded installer or ZIP → **Properties** →
+**Unblock** (if present) → **Apply**. For a ZIP, extract it again into a new folder. If
 SmartScreen still blocks a verified build, **More info → Run anyway** may be
 available. If it is not, contact your administrator or support rather than
 disabling protections. Stop if an antivirus product reports a threat.

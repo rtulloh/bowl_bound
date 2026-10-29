@@ -164,3 +164,43 @@ def test_windows_starter_uses_owner_requested_executable_name() -> None:
     starter = (Path(__file__).resolve().parents[1] / "start.bat").read_text(encoding="utf-8")
     assert starter.count("BowlBound.exe") == 2
     assert "Bowl-Bound.exe" not in starter
+
+
+@pytest.mark.parametrize("startup_failure", [False, True])
+def test_windows_ctrl_break_is_clean_and_previous_handler_is_restored(
+    resources: Path, monkeypatch: pytest.MonkeyPatch, startup_failure: bool
+) -> None:
+    import signal
+
+    # Model Uvicorn replaying SIGBREAK after completing graceful shutdown.
+    sigbreak = 21
+    handlers = {sigbreak: signal.SIG_DFL}
+
+    def set_handler(number: int, handler: object) -> object:
+        previous = handlers[number]
+        handlers[number] = handler
+        return previous
+
+    def run_server(**kwargs: object) -> None:
+        if startup_failure:
+            raise ValueError("synthetic startup failure")
+        handler = handlers[sigbreak]
+        if handler == signal.SIG_DFL:
+            raise SystemExit("Windows default SIGBREAK terminates with failure")
+        handler(sigbreak, None)
+
+    monkeypatch.setattr(signal, "SIGBREAK", sigbreak, raising=False)
+    monkeypatch.setattr(signal, "signal", set_handler)
+    with socket.create_server(("127.0.0.1", 0)) as probe:
+        port = probe.getsockname()[1]
+    with (
+        patch.object(launcher, "resource_root", return_value=resources),
+        patch("uvicorn.Server") as server,
+    ):
+        server.return_value.run.side_effect = run_server
+        if startup_failure:
+            with pytest.raises(ValueError, match="synthetic startup failure"):
+                launcher.main(["--no-browser", "--port", str(port)])
+        else:
+            assert launcher.main(["--no-browser", "--port", str(port)]) == 0
+    assert handlers[sigbreak] == signal.SIG_DFL
