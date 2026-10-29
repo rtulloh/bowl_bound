@@ -242,25 +242,37 @@ test('a complete regulation game shows quarter and half transitions and cannot r
 })
 
 
-test('optional modifiers fit desktop/mobile without a routine Continue step', async ({ page }) => {
-  await start(page)
-  await snapPlay(page)
-  const controls = page.getByRole('region', { name: 'Play modifiers' })
-  await expect(page.getByTestId('clock-controls')).toBeVisible()
-  await expect(controls).toBeVisible()
-  await expect(page.getByRole('radio', { name: 'None', exact: true })).toBeChecked()
-  await expect(page.getByTestId('offense-play-1')).toBeEnabled()
-  await expect(page.getByTestId('defense-play-a')).toBeEnabled()
-  await expect(page.getByTestId('clock-continue')).toHaveCount(0)
-  expect((await controls.boundingBox()).height).toBeLessThan(85)
-  await page.setViewportSize({ width: 390, height: 844 })
-  const mobile = await controls.boundingBox()
-  expect(mobile.height).toBeLessThan(130)
-  expect(mobile.x + mobile.width).toBeLessThanOrEqual(390)
-  await snapPlay(page)
-  await expect(page.getByTestId('offense-play-1')).toBeVisible()
-  await expect(page.getByTestId('game-clock')).toHaveText('14:20')
-})
+for (const fontFamily of [null, 'Verdana, sans-serif']) {
+  test(`optional modifiers fit desktop/mobile without a routine Continue step (${fontFamily || 'native fonts'})`, async ({ page }) => {
+    await start(page)
+    await snapPlay(page)
+    if (fontFamily) await page.locator('body').evaluate((body, font) => { body.style.fontFamily = font }, fontFamily)
+    const controls = page.getByRole('region', { name: 'Play modifiers' })
+    await expect(page.getByTestId('clock-controls')).toBeVisible()
+    await expect(controls).toBeVisible()
+    await expect(page.getByRole('radio', { name: 'None', exact: true })).toBeChecked()
+    await expect(page.getByTestId('offense-play-1')).toBeEnabled()
+    await expect(page.getByTestId('defense-play-a')).toBeEnabled()
+    await expect(page.getByTestId('clock-continue')).toHaveCount(0)
+    expect((await controls.boundingBox()).height).toBeLessThan(85)
+    await page.setViewportSize({ width: 390, height: 844 })
+    const mobile = await controls.boundingBox()
+    expect(mobile.height).toBeLessThan(130)
+    expect(mobile.x + mobile.width).toBeLessThanOrEqual(390)
+    for (const target of await controls.locator('label, button').all()) {
+      const box = await target.boundingBox()
+      expect(box.x).toBeGreaterThanOrEqual(mobile.x)
+      expect(box.x + box.width).toBeLessThanOrEqual(mobile.x + mobile.width)
+      expect(await target.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
+    }
+    for (const button of await controls.getByRole('button').all()) {
+      expect((await button.boundingBox()).height).toBeGreaterThanOrEqual(24)
+    }
+    await snapPlay(page)
+    await expect(page.getByTestId('offense-play-1')).toBeVisible()
+    await expect(page.getByTestId('game-clock')).toHaveText('14:20')
+  })
+}
 
 
 test('tied regulation continues into untimed overtime and finishes without a kickoff', async ({ page }) => {

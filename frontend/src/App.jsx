@@ -253,7 +253,7 @@ export default function App() {
       {view.phase === "kickoff" && playPanels}
       <FootballField state={view.state} home={view.home} away={view.away} />
       <ResultPanel report={report} />
-      <section aria-label="Play modifiers" className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+      <section aria-label="Play modifiers" className="play-modifiers flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
         <label className="inline-flex items-center gap-2">
           <input type="checkbox" checked={hurryMode} disabled={busy} onChange={(e) => setHurryMode(e.target.checked)} />
           Hurry-up mode

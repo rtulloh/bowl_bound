@@ -49,7 +49,9 @@ The clock advances through engine decisions, not real elapsed time. Ordinary
 runoff normally commits with your next call. Timeouts and spikes are one-shot
 choices; Hurry-up mode stays selected until turned off but applies only where
 legal. New/loaded games reset Hurry-up mode. IB/OOB declaration controls are
-not implemented and remain disabled.
+not implemented and remain disabled. The modifier controls wrap onto compact
+rows on smaller screens and with wider system fonts; their labels and actions
+remain the same.
 
 Expand Team statistics, the scoring summary, Play log and Dice and chart audit
 to inspect recorded events. Commentary player names, when local rosters are

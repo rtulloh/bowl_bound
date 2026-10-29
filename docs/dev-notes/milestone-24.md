@@ -367,3 +367,61 @@ Milestone24 and DEV-036 remain open for actual three-runner evidence, Windows
 installed/uninstall smoke, full bundled native-library license audit and owner
 acceptance. No push, workflow dispatch, tag or release occurred in this step.
 Local permission configuration remains ignored and outside the staged changes.
+
+## First GitHub build gate and UI-040 follow-up — 2026-10-29
+
+Owner explicitly approved pushing 7b97ce7 and dispatching the manual workflow.
+Run 40822200799 passed Python and frontend unit/build/audit gates; browser gate
+reported 31 passed/1 failed: optional controls measured 88px against existing
+<85px desktop limit. Native jobs were skipped as designed. Source publication
+and a local ARM prototype are not alpha readiness. React act(...) warnings
+in passing frontend CI tests remain visible; they did not cause the failure.
+
+Consulted Paydirt PlayModifiers.jsx compact padding/wrapping before this fix;
+adapt presentation spacing only, not NFL rules, copied chart data or hidden
+actions. UI-040 belongs to current milestone 24 as a newly exposed alpha
+blocker, not a reopened prior milestone. Local native font passed unchanged;
+wider Verdana metrics reproduced exactly 88px, from two 40px rows plus 8px gap.
+
+Reviewed expanded browser test before red: native passed, wide-font failed 88px.
+Scoped modifier-button padding reduces current button height 40px to 36px,
+leaving main play selectors, engine actions/labels, difficulty, dice and saves
+unchanged. Retain <85px desktop/<130px mobile checks; add unclipped/no-overflow
+label checks and >=24px button targets. Both focused cases, all 122 frontend
+unit tests, build, and all 33 browser tests (3.7m) passed. Ruff lint/format and
+pip check passed; all 2,321 Python tests passed with 93.41% branch-aware
+coverage in 443.08s. The 102 focused packaging/workflow/docs/tracker checks
+also passed. Full local gates are green before the separate fix commit/push
+and new workflow dispatch.
+Do not claim the alpha is ready until all three native jobs and artifact/license
+acceptance pass.
+
+### UI-040 validation commands
+
+Commands use Node 24.22.1 via
+`PATH=/Users/rtulloh/.nvm/versions/node/v24.22.1/bin:$PATH` for npm.
+Browser commands run in `frontend/` with `BB_E2E_CHANNEL=chrome` and
+`BB_E2E_SEASONS` set to a fresh synthetic library under the approved
+OpenCode temporary directory.
+
+- `npm run test:e2e -- --grep "optional modifiers fit"`: red 1 passed/1 failed
+  (88px); after the production fix and rebuild, 2 passed.
+- `npm run test:e2e`: 33 passed in 3.7m.
+- `npm --prefix frontend test`: 122 passed.
+- `npm --prefix frontend run build`: passed.
+- `npm --prefix frontend audit`: 0 vulnerabilities.
+- `.venv/bin/python -m ruff check .`: passed.
+- `.venv/bin/python -m ruff format --check .`: 368 files formatted.
+- `.venv/bin/python -m pip check`: no broken requirements.
+- `.venv/bin/python scripts/build_issue_index.py`: regenerated index.
+- `.venv/bin/python -m pytest --cov --cov-report=term-missing -q`: 2,321 passed
+  in 443.08s, 93.41% branch-aware coverage; no skips or warnings reported.
+- `.venv/bin/python -m pytest -q tests/test_issue_tracker.py tests/test_create_issue.py tests/test_release_player_docs.py tests/test_build_workflow.py tests/test_release_package.py tests/test_standalone_build.py tests/test_standalone_smoke.py tests/test_windows_installer.py`:
+  102 passed in 1.29s.
+
+Final implementation review: only modifier-panel button padding changes; the
+main selector size and engine/API behavior are untouched. Browser coverage
+retains the original limits and adds a reproducible wider-font case. Player
+guidance now describes wrapping; issue UI-040 remains open pending a tested
+commit reference and Linux CI confirmation. Local `opencode.json` is ignored
+and must not be staged. No new push, dispatch, tag or release in this fix yet.

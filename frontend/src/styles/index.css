@@ -22,6 +22,11 @@ body {
     box-shadow: 0 4px 0 #333;
   }
 
+  /* Keep wrapped modifier rows compact across platform font metrics. */
+  .play-modifiers .play-button {
+    @apply py-1.5;
+  }
+
   .play-button:active {
     transform: translateY(2px);
     box-shadow: 0 2px 0 #333;
