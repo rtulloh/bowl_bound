@@ -45,7 +45,7 @@ def write_file_lists(bundle: Path, work: Path) -> None:
         install.append(
             'SetOutPath "$INSTDIR' + ("\\" + _quoted(parent) if parent != "." else "") + '"'
         )
-        install.append(f'File /oname="{_quoted(relative.name)}" "{_quoted(str(bundle / name))}"')
+        install.append(f'File "/oname={_quoted(relative.name)}" "{_quoted(str(bundle / name))}"')
         uninstall.append(f'Delete "$INSTDIR\\{_quoted(windows_name)}"')
         folders.update(str(p).replace("/", "\\") for p in relative.parents if str(p) != ".")
     uninstall.extend(

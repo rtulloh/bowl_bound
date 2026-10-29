@@ -541,3 +541,54 @@ chart, difficulty, dice, save, runtime dependency or platform target changes.
 
 No source/module privacy guard, expectation or supported target relaxed.
 Actual Windows CI and installer/runtime acceptance still pending.
+
+## Fourth GitHub run and DEV-040 NSIS quoting — 2026-10-29
+
+Run 40889867822 at 7101e6f passed the full Ubuntu test gate and both native
+macOS build/smoke/upload jobs. Windows passed portable assembly, exact runtime
+inventory and extracted-executable version/UI/assets/sample/snap/save/shutdown
+smoke. This confirms the DEV-039 fix on Windows. NSIS 3.11 then rejected the
+generated install-files.nsh line 2 because /oname="value" begins its output
+name with a quote. No installer or installed-app/uninstall acceptance yet;
+Windows artifact upload did not run.
+
+Reconsulted Paydirt packaging/windows/installer.nsi: plain File commands, no
+generated /oname reference to adapt. Retain Bowl Bound per-user/HKCU and exact
+nonrecursive uninstall; do not inherit elevation or broad recursive selection.
+NSIS official File reference explicitly requires quoting the whole /oname=
+parameter for spaced names (https://nsis.sourceforge.io/Docs/Chapter4.html#file).
+Reviewed pinned v311 Source/script.cpp rejection of an initial quote in the
+output name. Local makensis is unavailable, so native compiler acceptance
+remains required rather than inferred from string tests.
+
+Reviewed tests before red: corrected two old expectations that encoded invalid
+compiler syntax and added synthetic ordinary/spaced/literal-dollar filenames
+with a spaced/dollar source path. Preserve exact File count, dollar escaping
+and exact nonrecursive uninstall assertions. Unchanged implementation: 4 failed,
+8 passed. One-line generator fix quotes the whole /oname= option, preserving
+source quoting and escaping. Reviewed implementation before green: 12 passed.
+No application, chart, save, difficulty, dice, dependency, target, verifier or
+installer destination/uninstall policy changed.
+
+### DEV-040 validation checkpoint
+
+- `.venv/bin/python -m pytest -q tests/test_windows_installer.py`: red 4
+  failed/8 passed; green 12 passed in 0.32s.
+- `.venv/bin/python -m pytest -q tests/test_issue_tracker.py tests/test_create_issue.py tests/test_release_player_docs.py tests/test_build_workflow.py tests/test_release_package.py tests/test_release_archive.py tests/test_standalone_build.py tests/test_standalone_smoke.py tests/test_windows_installer.py`:
+  116 passed in 2.28s.
+- `.venv/bin/python -m ruff check .`: passed after formatting the new
+  overlong test decorator; no behavior/assertion change.
+- `.venv/bin/python -m ruff format --check .`: 371 files formatted.
+- `.venv/bin/python -m pip check`: passed.
+- Node 24.22.1 `npm --prefix frontend test`: 122 passed; existing Vitest
+  performance advice remains visible.
+- Node 24.22.1 `npm --prefix frontend run build`: passed.
+- Node 24.22.1 `npm --prefix frontend audit`: 0 vulnerabilities.
+- `.venv/bin/python scripts/build_issue_index.py`: regenerated.
+- `.venv/bin/python -m pytest --cov --cov-report=term-missing -q`: 2,331 passed
+  in 446.64s with 93.41% branch-aware application coverage; no skips/warnings.
+- In frontend/, Node 24.22.1, `BB_E2E_CHANNEL=chrome`, fresh temporary
+  synthetic library: `npm run test:e2e`: 33 passed in 3.7m.
+
+No local compiler installed and no Windows acceptance claimed. A separate
+reviewed commit and approved push/rerun are needed for actual NSIS evidence.

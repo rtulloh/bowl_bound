@@ -123,7 +123,10 @@ or smoke failures fail the job; installers are not an optional best-effort step.
 The installer is per-user (`LocalAppData/Programs/BowlBound`, HKCU), installs
 `BowlBound.exe` with Start menu/desktop shortcuts and uses exact generated
 uninstall lists, never recursive installation-directory deletion. It requires
-an empty destination; uninstall the prior version first.
+an empty destination; uninstall the prior version first. Generated `File`
+commands quote the entire `/oname=filename` option, not just its value; this
+is required by NSIS for names with spaces. Keep literal-dollar escaping and
+exact file selection when changing generated lists.
 
 Successful jobs upload the portable ZIP/checksum/manifest plus the Windows
 `BowlBoundSetup-VERSION-windows-x64.exe` and checksum, retained for 14 days.

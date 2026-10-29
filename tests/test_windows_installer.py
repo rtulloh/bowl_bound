@@ -21,8 +21,8 @@ def test_installer_lists_every_file_and_only_uninstalls_known_files(tmp_path: Pa
     installer.write_file_lists(bundle, work)
     install = (work / "install-files.nsh").read_text()
     uninstall = (work / "uninstall-files.nsh").read_text()
-    assert 'File /oname="BowlBound.exe"' in install
-    assert 'File /oname="example.dat"' in install
+    assert 'File "/oname=BowlBound.exe"' in install
+    assert 'File "/oname=example.dat"' in install
     assert 'Delete "$INSTDIR\\BowlBound.exe"' in uninstall
     assert 'Delete "$INSTDIR\\_internal\\example.dat"' in uninstall
     assert 'Delete "$INSTDIR\\ARTIFACT-MANIFEST.json"' in uninstall
@@ -65,3 +65,26 @@ def test_installer_rejects_windows_aliases_and_wildcards(tmp_path: Path, name: s
     put(bundle, "ARTIFACT-MANIFEST.json", json.dumps({"files": {name: "a" * 64}}))
     with pytest.raises(ReleaseError, match="path"):
         installer.write_file_lists(bundle, tmp_path)
+
+
+@pytest.mark.parametrize(
+    "name", ["BowlBound.exe", "file with spaces.dat", "sub dir/literal $name.dat"]
+)
+def test_output_name_is_one_quoted_nsis_option(tmp_path: Path, name: str) -> None:
+    """NSIS requires quotes around the whole /oname= option, not its value."""
+    bundle = tmp_path / "bundle with $literal spaces"
+    put(bundle, name, "synthetic payload")
+    put(bundle, "ARTIFACT-MANIFEST.json", json.dumps({"files": {name: "a" * 64}}))
+    work = tmp_path / "recipe"
+    work.mkdir()
+    installer.write_file_lists(bundle, work)
+    install = (work / "install-files.nsh").read_text()
+    filename = Path(name).name.replace("$", "$$")
+    source = str(bundle / name).replace("$", "$$")
+    assert f'File "/oname={filename}" "{source}"' in install.splitlines()
+    assert 'File /oname="' not in install
+    assert len([line for line in install.splitlines() if line.startswith("File ")]) == 2
+    uninstall = (work / "uninstall-files.nsh").read_text()
+    escaped_name = name.replace("/", "\\").replace("$", "$$")
+    assert f'Delete "$INSTDIR\\{escaped_name}"' in uninstall.splitlines()
+    assert "*" not in uninstall and "RMDir /r" not in uninstall
