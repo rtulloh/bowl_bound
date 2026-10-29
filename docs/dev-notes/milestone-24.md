@@ -592,3 +592,47 @@ installer destination/uninstall policy changed.
 
 No local compiler installed and no Windows acceptance claimed. A separate
 reviewed commit and approved push/rerun are needed for actual NSIS evidence.
+
+## Fully green native workflow — 2026-10-29
+
+Run https://github.com/rtulloh/bowl_bound/actions/runs/40909408275 tested
+e08542a and passed the Ubuntu source gate plus all three native jobs.
+Windows compiled with NSIS 3.11 and passed silent install, registry/version,
+installed-game/save, uninstall and unrelated-user-file preservation checks.
+All three jobs uploaded inspected artifacts, not a release. Workflow Python
+3.13.17 / Node 24.22.1 pins remain unchanged.
+
+CI source evidence: 2,331 Python tests passed in 879.42s with 93.39% coverage;
+122 frontend tests/build/audit (0 vulnerabilities) and full browser gate passed.
+CI React act(...) warnings remain visible, as do whatwg-encoding deprecation,
+optional Windows tzdata hidden-import warning and runner capacity annotation.
+No tests skipped to achieve this result; macOS correctly skips Windows-only
+installer steps. Local source coverage was 93.41%; CI coverage is 93.39%.
+
+Downloaded with `gh run download 40909408275 --repo rtulloh/bowl_bound --dir
+<approved-temporary-directory>`; local Python verification used extract_verified
+on each ZIP, compared internal/external manifests, required exactly the 11
+release/manifest.json sample paths/hashes and rejected private development path
+components. Both macOS inventories have 176 files; Windows has 177. Verified
+the installer SHA256 sidecar and 14,185,998-byte size. See DEV-036 for all four
+SHA256 values. These checks verify inventoried application/data selection, not
+a completed audit of every bundled binary or installer byte.
+
+`TMPDIR=<approved-temp-dir> .venv/bin/python -m scripts.smoke_standalone
+<downloaded-ARM-artifact-directory>` passed version/UI/assets/two fictional
+samples/snap/save-load/shutdown. Intel and Windows runtime execution evidence
+is native CI, not local machine acceptance. No private charts were exported.
+
+DEV-038 (fbf2fd3), DEV-039 (7101e6f) and DEV-040 (e08542a) now have committed
+fixes and native portable/installer evidence and are resolved, pending owner
+play-test closure. DEV-036/037 remain open for full native-library licensing/
+privacy and fresh-machine acceptance. No tag, release or final publication
+approval is inferred from green CI.
+
+Documentation-only acceptance recording: `.venv/bin/python
+scripts/build_issue_index.py` regenerated the index; `.venv/bin/python -m
+pytest -q tests/test_issue_tracker.py tests/test_create_issue.py
+tests/test_release_player_docs.py tests/test_build_workflow.py` passed all
+38 checks in 0.43s. No new behavioral tests needed: only evidence and ticket
+status changed after the fully green tested commit. Reviewed evidence against
+actual runner logs/downloaded artifacts before committing it separately.
