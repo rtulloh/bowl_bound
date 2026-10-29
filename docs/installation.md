@@ -18,13 +18,13 @@ Open a terminal in the extracted folder:
 | Platform build, when available | Run | Alternative |
 | --- | --- | --- |
 | Windows x64 | `.\BowlBound.exe` in PowerShell | `start.bat` |
-| macOS Apple Silicon | `./Bowl-Bound` | `./start.sh` |
-| macOS Intel | `./Bowl-Bound` | `./start.sh` |
-| Linux x64 | `./Bowl-Bound` | `./start.sh` |
+| macOS Apple Silicon (arm64) | `./Bowl-Bound` | `./start.sh` |
+| macOS Intel (x86_64) | `./Bowl-Bound` | `./start.sh` |
 
-macOS Apple Silicon and Intel builds are different; use the right one. Linux
-compatibility depends on the release build baseline, which must be stated with
-the actual download. No untested platform is promised by this table.
+These are the three planned standalone builds. Apple Silicon and Intel Mac
+builds are different; use the right one. Intel means 64-bit x86_64, not 32-bit
+x86. Linux is source-only for the initial alpha. Native testing must pass
+before a platform download is offered; this table is not a support claim.
 
 The browser opens <http://127.0.0.1:8000>. Keep the terminal open while playing;
 save your game before pressing Ctrl+C to stop. If the browser does not open,
@@ -42,7 +42,7 @@ organization security policy.
 Get-FileHash .\BowlBound-0.1.0-alpha.1-windows-x64.zip -Algorithm SHA256
 ```
 
-On macOS use `shasum -a 256 FILE.zip`; on Linux use `sha256sum FILE.zip`.
+On macOS use `shasum -a 256 FILE.zip`.
 
 ### Windows: downloaded-file blocking and SmartScreen
 
@@ -75,7 +75,7 @@ Never apply it to an untrusted download, your home directory, the whole Download
 folder or system files. Do not disable Gatekeeper globally or use sudo. If your
 organization blocks the build, ask its administrator.
 
-### Linux: executable permission
+### macOS portable build: executable permission
 
 If extraction lost executable permissions, in the verified game folder run:
 

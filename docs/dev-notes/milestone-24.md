@@ -66,7 +66,7 @@ application gate before final milestone commit/publication recommendation.
    inspected logs/save; never request chart PDFs, raw chart dumps, personal data
    or secrets. Email remains a publication blocker until owner supplies it.
 6. [DEV-036](issues/DEV/DEV-036.md): PyInstaller and draft build workflow using
-   only staged inputs. Target macOS arm64/Intel, Windows x64 and Linux x64; no
+   only staged inputs. Target macOS arm64, Windows x64 and macOS Intel x86_64; no
    support claim until native runner smoke passes. Initial portable archives may
    avoid installers/signing complexity; document unsigned/platform caveats honestly.
    Pin reviewed tool/action versions; build from locked dependencies. Produce
@@ -257,3 +257,14 @@ informational jsdom pool-performance advice; pip reports an available update.
 No warnings were suppressed and no assertions/skips/coverage thresholds changed.
 Native builds, exact bundled dependency notices and platform acceptance remain
 open under DEV-036/DEV-037. Source publication is not a standalone alpha release.
+
+### Owner clarification: three native build targets
+
+During source publication the owner requested macOS Apple Silicon arm64,
+Windows x64 (BowlBound.exe) and macOS Intel x86_64 ("ix86"). No 32-bit macOS
+or Linux standalone target is planned for the initial alpha. Reconsulted
+Paydirt release.yml: adapt its separate ARM/Intel native builds, not its extra
+Linux artifact, broad staging or automatic public release. DEV-036 and player
+installation guidance updated; 77 focused release/launcher/metadata/tracker
+checks passed after the documentation-only change. Native implementation and
+smoke evidence are still outstanding; this source push creates no builds/tag.
