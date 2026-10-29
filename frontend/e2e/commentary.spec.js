@@ -20,7 +20,9 @@ for (const arrangement of ['named', 'reversed', 'missing']) {
     await page.getByTestId('defense-play-a').click()
     const body = await (await snapped).json()
     const text = body.report.commentary
-    expect(text.includes('Illustrative players')).toBe(arrangement !== 'missing')
+    expect(text).not.toContain('Illustrative players')
+    expect(text).not.toContain('runner:')
+    expect(text).not.toBe(body.report.description)
     if (arrangement !== 'missing') expect(text).toContain(arrangement === 'named' ? 'Home Fictional' : 'Away Fictional')
     await expect(page.getByTestId("result-description")).toHaveText(text, { useInnerText: false })
     await expect(page.getByTestId('play-log')).toContainText(text)

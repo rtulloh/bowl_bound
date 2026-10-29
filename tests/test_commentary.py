@@ -18,7 +18,8 @@ def report(kind: StatKind = StatKind.RUSH, side: str = "home") -> PlayReport:
     original = game.snap("1", "A")
     return replace(
         original,
-        statistics=PlayStatistics(kind, Possession(side), 4),
+        statistics=PlayStatistics(kind, Possession(side), -4 if kind is StatKind.SACK else 4),
+        outcome="defensive_recovery" if kind is StatKind.INTERCEPTION else "advance",
         state_before=replace(original.state_before, possession=side),
         description="Recorded engine facts.",
     )
@@ -40,11 +41,11 @@ def roster(prefix: str) -> Roster:
 @pytest.mark.parametrize(
     "kind,expected,absent",
     [
-        (StatKind.RUSH, "runner: H Bolt", "H Quill"),
-        (StatKind.COMPLETE, "receiver: H Finch", "H Bolt"),
-        (StatKind.INCOMPLETE, "passer: H Quill", "H Finch"),
-        (StatKind.SACK, "quarterback: H Quill", "H Finch"),
-        (StatKind.INTERCEPTION, "passer: H Quill", "H Finch"),
+        (StatKind.RUSH, "H Bolt", "H Quill"),
+        (StatKind.COMPLETE, "H Finch", "H Bolt"),
+        (StatKind.INCOMPLETE, "H Quill", "H Finch"),
+        (StatKind.SACK, "H Quill", "H Finch"),
+        (StatKind.INTERCEPTION, "H Quill", "H Finch"),
     ],
 )
 def test_structured_credit_selects_illustrative_roles(
@@ -57,10 +58,11 @@ def test_structured_credit_selects_illustrative_roles(
     rendered = narrate_report(before, home, away)
     assert expected in rendered and absent not in rendered
     if kind is StatKind.COMPLETE:
-        assert "passer: H Quill" in rendered
+        assert "H Quill" in rendered
     assert "defender:" not in rendered and "tackler:" not in rendered
-    assert "A " not in rendered
-    assert rendered.endswith(before.commentary)
+    assert all(name not in rendered for name in ("A Quill", "A Reed", "A Bolt", "A Finch"))
+    assert "Illustrative players" not in rendered
+    assert before.commentary not in rendered
     assert before.description == "Recorded engine facts."
 
 
@@ -84,13 +86,16 @@ def test_active_qb_branch_names_quarterback_not_running_back(section: str) -> No
     from bowl_bound.commentary import narrate_report
 
     value = replace(report(), trace=(TraceEntry(section, "Home", "", None, {}, ""),))
-    assert "runner: H Quill" in narrate_report(value, roster("H"))
+    assert "H Quill" in narrate_report(value, roster("H"))
+    assert "H Bolt" not in narrate_report(value, roster("H"))
     discarded = replace(
         value, trace=value.trace + (TraceEntry("penalty_reroll", "Home", "", None, {}, ""),)
     )
-    assert "runner: H Bolt" in narrate_report(discarded, roster("H"))
+    assert "H Bolt" in narrate_report(discarded, roster("H"))
+    assert "H Quill" not in narrate_report(discarded, roster("H"))
     active = replace(discarded, trace=discarded.trace + value.trace)
-    assert "runner: H Quill" in narrate_report(active, roster("H"))
+    assert "H Quill" in narrate_report(active, roster("H"))
+    assert "H Bolt" not in narrate_report(active, roster("H"))
 
 
 def test_fumble_actor_is_not_guessed_from_rushing_credit() -> None:
@@ -104,10 +109,10 @@ def test_generic_fallback_and_partial_rosters() -> None:
     from bowl_bound.commentary import narrate_report
 
     value = report(StatKind.COMPLETE)
-    assert narrate_report(value) == value.commentary
-    assert narrate_report(value, parse_roster("{}")) == value.commentary
+    assert "The quarterback finds the receiver for 4 yards." == narrate_report(value)
+    assert narrate_report(value, parse_roster("{}")) == narrate_report(value)
     partial = parse_roster('{"qb":["Alex Quill"]}')
-    assert "passer: Alex Quill; receiver: the receiver" in narrate_report(value, partial)
+    assert "Alex Quill finds the receiver for 4 yards." == narrate_report(value, partial)
 
 
 def test_names_use_report_index_without_mutating_report_roster_or_rng() -> None:

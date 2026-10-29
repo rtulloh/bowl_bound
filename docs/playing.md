@@ -54,8 +54,12 @@ rows on smaller screens and with wider system fonts; their labels and actions
 remain the same.
 
 Expand Team statistics, the scoring summary, Play log and Dice and chart audit
-to inspect recorded events. Commentary player names, when local rosters are
-installed, are illustrative labels rather than individual-player statistics.
+to inspect recorded events. CLI and web share natural engine-generated
+play-by-play, with technical calls and traces kept separate. Commentary player
+names, when local rosters are installed, are illustrative labels rather than
+individual-player statistics. Names never affect dice, results or player ratings.
+Without names, the announcer uses generic roles. Pending decisions, penalties
+and ambiguous recoveries retain complete factual wording.
 
 ## Save and resume
 

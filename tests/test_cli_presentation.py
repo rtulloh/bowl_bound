@@ -6,6 +6,7 @@ from dataclasses import replace
 import pytest
 
 from bowl_bound import coaching_session
+from bowl_bound.save_game import SavedGame
 from tests.test_cli import new_game, saved_facts, terminal
 from tests.test_cli_shortcuts import live, regulation
 
@@ -112,9 +113,10 @@ def test_commentary_brackets_results_without_fabricating_or_leaking_calls() -> N
     assert text.startswith("\n")
     assert f"  Offense: {report.called_play}" in text
     assert f"  Defense: {report.defense}" in text
-    assert f"► {report.commentary}\n  (" in text
+    commentary = app.game.commentary(report)
+    assert f"► {commentary}\n  (" in text
     assert ")\n\nBeta State" in text
-    assert text.count(report.description) == 1
+    assert text.count(commentary) == 1
 
 
 def test_regulation_scoreboard_after_a_play_uses_new_engine_clock_and_state() -> None:
@@ -165,16 +167,20 @@ def test_computer_runoff_does_not_repeat_the_same_play_commentary() -> None:
     assert len(app.game.view().log) == 2
     assert len({report.description for report in app.game.view().log}) == 2
     for report in app.game.view().log:
-        assert app.output.getvalue().count("► " + report.description) == 1
+        assert app.output.getvalue().count("► " + app.game.commentary(report)) == 1
     before = saved_facts(app.game)
     output = app.output.getvalue()
     assert not app.command("log")
     assert app.output.getvalue().startswith(output)
-    assert app.game.view().log[-1].description in app.output.getvalue()[len(output) :]
+    assert app.game.commentary(app.game.view().log[-1]) in app.output.getvalue()[len(output) :]
     assert saved_facts(app.game) == before
 
 
-def test_changed_report_is_still_shown_and_trace_remains_inspectable() -> None:
+def test_changed_report_is_still_shown_and_trace_remains_inspectable(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Test report transport/deduplication independently of the narration templates.
+    monkeypatch.setattr(SavedGame, "commentary", lambda self, report: report.description)
     app = terminal(new_game(), "home")
     assert app.command("1")
     report = app.last_report

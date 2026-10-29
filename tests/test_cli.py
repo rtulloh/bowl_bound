@@ -113,7 +113,7 @@ def test_solitaire_call_renders_recorded_faces_not_new_rolls() -> None:
     reference = new_game()
     report = reference.coach_step("home", "1")[0]
     assert saved_facts(game) == saved_facts(reference)
-    assert report.description in app.output.getvalue()
+    assert reference.commentary(report) in app.output.getvalue()
     for entry in report.trace:
         assert str(entry.roll["total"]) in app.output.getvalue()
     before = saved_facts(game)

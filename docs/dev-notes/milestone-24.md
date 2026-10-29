@@ -784,3 +784,107 @@ CLI-046. Keep the native-notice candidate and owner-feedback ticket changes
 in separate local commits. DEV-041 remains open for the documented native
 build/licensing gates; committing this candidate does not declare release
 acceptance complete. No push, workflow dispatch or publication authorized.
+
+## CLI-046 announcer-style commentary — implementation scope
+
+Owner authorized CLI-046 after observing dry alpha narration in CLI and web,
+and explicitly required committing pending work first. Clean checkpoints:
+61a2dc9 (native notices) and 6a04ed6 (feedback tickets). Release push/build/
+publication stays paused; CLI-047 helper behavior is out of scope.
+
+Consulted local Paydirt `paydirt/commentary.py:150-250` again before this
+work, alongside prior full-file review recorded in CLI-046. Adapt phrase
+families for no gain/loss/short-big gain/completion/incompletion/scoring,
+not NFL result types, private roster data, random selection or embellishments
+claiming routes, tackle breaks, dropped passes or named defenders. No runtime
+Paydirt dependency. Bowl Bound structured reports remain authoritative.
+
+Reviewed synthetic test matrices before running unchanged production code:
+`pytest -q tests/test_commentary_announcer.py` demonstrated **31 failures,
+6 passes**; the added kick matrix separately demonstrated **10 failures**.
+Then implemented engine-only phrase selection and reviewed the implementation
+before focused green runs. Same report number selects the same phrase/name;
+no random stream or mutable narration state is used. Names/disclosure move
+from every result prefix to the existing player/roster/API guidance. Both
+named and missing-roster games get natural narration.
+
+Changed expectations: old actor-prefix assertions now require integrated names
+and exclude uncredited/opposing names; missing-roster assertions require
+generic-role sentences rather than raw statistical descriptions. Fixtures
+use negative sack credit and interception outcomes consistent with their stat
+kind. A broad opposing-prefix check (`A `) now checks actual fictional names,
+so the article in `A loss` is not mistaken for an opponent. CLI transport tests
+compare `SavedGame.commentary` instead of legacy descriptions; the isolated
+report-dedup test stubs narration only. All trace, save, RNG, attribution,
+pending/ambiguous fallback and semantic-digest assertions remain.
+
+Penalty reports (including no-foul return rerolls) retain **all** original
+enforcement wording instead of actor prefixes that might lose context. The
+return-reroll regression now explicitly verifies the complete factual text,
+penalty flag, trace count and report immutability. No skip or loosened
+football assertion. Special-team distances remain unspoken where no structured
+distance exists, rather than parsing chart strings or deriving a return.
+
+### Broader regression findings and corrections
+
+First cumulative pass: **2,435 passed, 1 failed in 457.87s**, 93.40%
+coverage. The failure correctly caught a new link from packaged playing.md
+to unpackaged rosters.md; removed that link and retained the disclosure in
+the packaged page itself. Do not broaden the release allowlist for this fix.
+
+First full browser pass: **30 passed, 3 failed**. Two failures exposed real
+narration omissions: kick calls had dropped exact engine distance details,
+and automatic kneels were described as defended running plays. Added real
+engine regressions for kicks and both kneel/spike actions, demonstrating
+**3 failures** before correcting production behavior. Automatic clock plays
+now retain their full factual wording and intent. Kick calls integrate names
+and preserve the engine's entire factual text afterward, including distances
+and final spot; this supersedes the initial unspoken-distance approach above.
+No prose/chart-token parsing or field-position inference was introduced.
+
+The third browser failure expected the old statistical play/formation string
+in the spoken call. Updated it to require the exact natural sentence while
+additionally verifying the called play and formation remain in the chart audit.
+All state/clock/yardage/trace/visibility assertions remain; no retries/skips
+were added to mask failures. Capitalized generic returner sentences correctly.
+
+Reviewed corrections before green: focused engine/lifecycle/replay/CLI/API/
+player-doc/issue command **232 passed in 14.66s**. Final cumulative Python
+and unchanged-size 33-test browser gates restarted against the corrected code.
+Frontend unit gate already passed **122 tests**; production build passed
+using Node 24.22.1. Initial Ruff check found only import ordering in the new
+test file; corrected it without changing test behavior.
+
+Corrected full browser gate: `env
+PATH=/Users/rtulloh/.nvm/versions/node/v24.22.1/bin:$PATH
+BB_E2E_SEASONS=/private/var/folders/rl/kscrrjc578x2zgpkntgg8v9m0000gp/T/opencode/bowl-bound-dev041-browser-samples
+npm run test:e2e` from frontend: **33 passed in 3.1m**. This includes
+named/reversed/missing-roster mobile narration, exact engine-text transport,
+save/load stability, kick details, kneel/spike, full regulation games and
+overtime. No skips/retries. Final cumulative Python result pending.
+
+Final corrected `.venv/bin/python -m pytest --cov -q`: **2,439 passed in
+447.92s**, **93.41% branch-inclusive coverage**. Full browser **33 passed
+in 3.1m**; frontend **122 passed**, build passed, Ruff/pip checks passed.
+No skips or warnings reported in Python/browser output.
+
+Owner web sanity-check initially used generic role fallbacks because the
+public checkout lacked the original checkout's ignored fictional rosters.
+Verified both teams' ten chart/metadata/provenance files are byte-identical
+to `/Users/rtulloh/work/bowl_bound`; reused the existing CC0 fictional rosters
+and provenance locally at owner request. No new team versions or names, no
+chart changes, and no release allowlist changes. Roster installation is
+local ignored data, not a change in Python behavior. Live games snapshot names
+at creation/load; owner must new/load to pick up the installed rosters.
+
+### CLI-046 owner acceptance and release request
+
+Owner confirmed the web commentary looks good after local roster installation
+and requested a release for outside alpha play-testing. CLI/API use the same
+engine narration validated by focused transport and replay tests. Commentary
+acceptance is satisfied; no gameplay, save, difficulty or dependency pins changed.
+The existing release currently excludes optional rosters, including these
+fictional samples: address that explicit packaging scope decision before
+promising that released downloads match the owner's named-commentary game.
+Release request authorizes proceeding with the push/build/release preparation,
+not silently declaring open dependency-license gates satisfied.

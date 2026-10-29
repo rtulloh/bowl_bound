@@ -51,10 +51,11 @@ def test_missing_rosters_and_empty_positions_are_generic(tmp_path: Path) -> None
     game, _ = setup_game(tmp_path)
     value = game.snap("1", "A")
     game.load_rosters(tmp_path)
-    assert game.commentary(value) == value.commentary
+    expected = "The running back picks up 4 yards on the ground."
+    assert game.commentary(value) == expected
     (tmp_path / "2007/home/roster.json").write_text("{}")
     game.load_rosters(tmp_path)
-    assert game.commentary(value) == value.commentary
+    assert game.commentary(value) == expected
 
 
 @pytest.mark.parametrize("fault", ["malformed", "symlink_root", "symlink_file"])

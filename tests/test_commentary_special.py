@@ -33,10 +33,10 @@ def names(prefix: str) -> Roster:
 @pytest.mark.parametrize(
     "action,outcome,role",
     [
-        ("punt", "punt_fair_catch", "punter: H Punt"),
-        ("field_goal", "field_goal_good", "kicker: H Boot"),
-        ("kickoff", "touchback", "kicker: H Boot"),
-        ("pat", "pat_good", "kicker: H Boot"),
+        ("punt", "punt_fair_catch", "H Punt"),
+        ("field_goal", "field_goal_good", "H Boot"),
+        ("kickoff", "touchback", "H Boot"),
+        ("pat", "pat_good", "H Boot"),
     ],
 )
 def test_kicking_side_is_not_the_final_possessor(
@@ -54,6 +54,7 @@ def test_kicking_side_is_not_the_final_possessor(
     home, away = (names("H"), names("A")) if side == "home" else (names("A"), names("H"))
     text = narrate_report(value, home, away)
     assert role in text and "returner:" not in text
+    assert "Illustrative players" not in text
     assert text.endswith(value.commentary)
 
 
@@ -74,9 +75,9 @@ def test_actual_return_stage_labels_opposite_team(action: str, side: str) -> Non
     home, away = (names("H"), names("A")) if side == "home" else (names("A"), names("H"))
     text = narrate_report(value, home, away)
     assert "H Boot" in text or "H Punt" in text
-    assert "returner: A Return" in text and "returner: H Return" not in text
+    assert "A Return" in text and "H Return" not in text
     touchdown = replace(value, outcome="return_touchdown", state_after=None)
-    assert "returner: A Return" in narrate_report(touchdown, home, away)
+    assert "A Return" in narrate_report(touchdown, home, away)
 
 
 @pytest.mark.parametrize("outcome", ["kick_replay", "kick_penalty_accepted", "conversion_ready"])
@@ -110,7 +111,8 @@ def test_completed_interception_return_uses_original_defending_team(side: str) -
         trace=(TraceEntry("turnover_return", "ignored", "", None, {}, ""),),
     )
     home, away = (names("H"), names("A")) if side == "home" else (names("A"), names("H"))
-    assert "passer: H Quill; returner: A Return" in narrate_report(value, home, away)
+    text = narrate_report(value, home, away)
+    assert "H Quill" in text and "A Return" in text and "returns the interception" in text
     assert "defender:" not in narrate_report(value, home, away)
 
 
@@ -124,7 +126,7 @@ def test_real_engine_kicks_and_pending_results_preserve_facts() -> None:
     assert narrate_report(pending, names("H"), names("A")) == pending.commentary
     fair = game.decide("kick:fair_catch")
     before = asdict(fair)
-    assert "punter: H Punt" in narrate_report(fair, names("H"), names("A"))
+    assert "H Punt" in narrate_report(fair, names("H"), names("A"))
     assert "returner:" not in narrate_report(fair, names("H"), names("A"))
     assert asdict(fair) == before
     for action in ("field_goal", "kickoff"):
@@ -135,7 +137,7 @@ def test_real_engine_kicks_and_pending_results_preserve_facts() -> None:
         value = game.kick(action, dice=ScriptedDice([OffensiveRoll(1, 0, 0)]))
         assert not value.pending
         assert value.outcome == ("touchback" if action == "kickoff" else "field_goal_good")
-        assert "kicker: A Boot" in narrate_report(value, names("H"), names("A"))
+        assert "A Boot" in narrate_report(value, names("H"), names("A"))
         assert "returner:" not in narrate_report(value, names("H"), names("A"))
 
 
@@ -149,7 +151,7 @@ def test_supported_interception_return_stages(section: str, outcome: str) -> Non
     )
     if outcome == "defensive_touchdown":
         value = replace(value, state_after=None)
-    assert "returner: A Return" in narrate_report(value, names("H"), names("A"))
+    assert "A Return" in narrate_report(value, names("H"), names("A"))
     assert (
         narrate_report(replace(value, pending=True), names("H"))
         == replace(value, pending=True).commentary
@@ -183,7 +185,7 @@ def test_real_aborted_punt_safety_without_recovery_roll_is_generic(bad_snap: boo
 
 
 @pytest.mark.parametrize("action", ["punt", "kickoff"])
-def test_real_no_foul_return_reroll_retains_one_returner(action: str) -> None:
+def test_real_no_foul_return_reroll_retains_complete_penalty_narrative(action: str) -> None:
     from bowl_bound.models import PenaltyCode, PenaltyTeam, SpecialTeamsColumn
     from tests.test_hurry import foul
 
@@ -221,7 +223,9 @@ def test_real_no_foul_return_reroll_retains_one_returner(action: str) -> None:
     assert not value.pending and value.outcome == action + "_return"
     assert [e.section for e in value.trace].count(action + "_return") == 2
     original = asdict(value)
-    assert "returner: A Return" in narrate_report(value, names("H"), names("A"))
+    # Even a no-foul reroll retains its complete enforcement narrative.
+    assert value.timing.penalty
+    assert narrate_report(value, names("H"), names("A")) == value.commentary
     assert asdict(value) == original
 
 
@@ -245,7 +249,8 @@ def test_real_return_touchdown_preserves_scoring_and_rng(action: str) -> None:
         value = game.decide("kick:return")
     assert value.outcome == "return_touchdown" and game.view().score.away == 6
     before, rng = asdict(game.view()), getstate()
-    assert "returner: A Return" in narrate_report(value, names("H"), names("A"))
+    text = narrate_report(value, names("H"), names("A"))
+    assert "A Return" in text and "TOUCHDOWN" in text
     assert asdict(game.view()) == before and getstate() == rng
 
 

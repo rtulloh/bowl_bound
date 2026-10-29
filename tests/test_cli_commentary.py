@@ -43,7 +43,8 @@ def test_solitaire_live_log_and_reload_use_engine_narration(
     if named:
         assert ("A " if reverse else "H ") in expected
     else:
-        assert expected == value.commentary
+        assert "the running back" in expected.lower() or "the quarterback" in expected.lower()
+        assert "Illustrative players" not in expected
     before = json.loads(dumps_game(game))
     for command in ("help", "stats"):
         app.command(command)

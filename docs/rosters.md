@@ -78,18 +78,38 @@ and milestone acceptance remain separate from implementation verification.
 
 ## Engine narration foundation (21a)
 
-`bowl_bound.commentary.narrate_report` derives optional illustrative player labels
-from committed structured offensive credit. It preserves the original report
-and generic turnover commentary. Pending/unsupported and ambiguous fumble actors
-remain generic. Name selection uses report number minus one (clamped to zero),
-never randomness or display order. Roster labels do not create player statistics.
-CLI/API new/load paths attach private snapshots; browser/terminal display engine text.
+`bowl_bound.commentary.narrate_report` uses committed structured offensive
+credit and explicit kick/return stages to produce natural play-by-play.
+CLI-046 replaces mechanical actor-label prefixes with varied announcer-style
+calls, shared by CLI/API/browser live reports and logs. Missing rosters or
+positions use generic roles in the same phrase families.
 
-Supported committed kick/PAT reports may label the kicker or punter on the
-original kicking side. A single explicit completed kickoff/punt/interception
-return may label the opposite-side returner, including a return touchdown.
-Fair catches and touchbacks do not imply a return. Penalty-only/replayed kicks,
-blocked recoveries and fumble chains remain generic rather than inventing actors.
+Names remain **illustrative**, not simulated player identities or individual
+statistics. That disclosure is documented here and in player guidance, not
+repeated before every call. Name selection uses report number minus one
+(clamped to zero); phrase selection cycles within each outcome family using
+the same index. No randomness, display order or mutable narration stream is
+used. Original reports and saved semantic descriptions remain unchanged.
+
+Runs, completions, incompletions, sacks, touchdowns and interceptions use
+only established credit/outcome facts, with goal-line-clipped credited yards.
+First-down and turnover-on-downs calls require the corresponding outcome;
+yardage alone never implies a first down. No tackler, route, broken tackle,
+dropped pass or player statistic is invented.
+
+Committed kick/PAT calls can name the original kicker or punter. An explicit
+completed kickoff/punt/interception return can name the opposite-side
+returner, including a return touchdown; fair catches/touchbacks do not imply
+a return. Kicks retain the engine's complete factual detail after the natural
+call, including recorded distances and final team/spot. These details have no
+separate structured report fields, so narration preserves the text without
+parsing chart tokens or inferring return distances.
+
+Automatic kneels/spikes, pending/unsupported reports, penalties, blocked
+recoveries, fumble chains and unknown outcome classifications retain the
+complete factual commentary
+rather than losing enforcement details or inventing actors. CLI/API new/load
+paths attach private snapshots; browser/terminal display engine text.
 
 ### Optional roster lifecycle
 
