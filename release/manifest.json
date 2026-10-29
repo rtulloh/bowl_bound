@@ -57,10 +57,14 @@
     "seasons/2007/cedar-valley/offense.csv",
     "seasons/2007/cedar-valley/defense.csv",
     "seasons/2007/cedar-valley/special.csv",
+    "seasons/2007/cedar-valley/roster.json",
+    "seasons/2007/cedar-valley/roster-sources.md",
     "seasons/2007/harbor-tech/team.yaml",
     "seasons/2007/harbor-tech/offense.csv",
     "seasons/2007/harbor-tech/defense.csv",
     "seasons/2007/harbor-tech/special.csv",
+    "seasons/2007/harbor-tech/roster.json",
+    "seasons/2007/harbor-tech/roster-sources.md",
     "seasons/2007/provenance/cedar-valley.csv",
     "seasons/2007/provenance/harbor-tech.csv"
   ],
@@ -91,7 +95,11 @@
     "frontend/src/components/TeamStatistics.jsx"
   ],
   "sample_sha256": {
-    "seasons/SAMPLE-LICENSE.md": "853bf76c82eb7763b97ad05b02e983f5a2dda379a05866dd2b07baee8ae80f22",
+    "seasons/SAMPLE-LICENSE.md": "75cb4838502ef53322cd77f97c45e202b6322b24e7f7524c2384ce923894d87a",
+    "seasons/2007/cedar-valley/roster.json": "41b750b98b93744168ae8f77c69567b752902a5c63503b3e2a308bf1c6e2d679",
+    "seasons/2007/cedar-valley/roster-sources.md": "4b8b86c7dd684dd2dfa12dc9156f726c891f592facdd3545f38e0690f55bc570",
+    "seasons/2007/harbor-tech/roster.json": "fed6277bba96d97a41123d633920c6c773115c1a4750b0d68ef853a70c5bf9b2",
+    "seasons/2007/harbor-tech/roster-sources.md": "4b8b86c7dd684dd2dfa12dc9156f726c891f592facdd3545f38e0690f55bc570",
     "seasons/2007/cedar-valley/team.yaml": "13248f8eba43bb3e580167eae07c163223192452048d33544e48bd5a90a9b475",
     "seasons/2007/cedar-valley/offense.csv": "817492bb14e883c0d6a7964ae29c8b9331dbe374f812b7f36641c4ae7ea60004",
     "seasons/2007/cedar-valley/defense.csv": "a203b623f88deb24234bcc3c63e534de873ce03c93fc51eab139d2afb581aa8e",

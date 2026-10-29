@@ -110,10 +110,13 @@ Do not include private comparisons or chart-derived examples in public docs.
 ## Original public fictional teams
 
 Cedar Valley and Harbor Tech (2007) are independently authored synthetic teams.
-Their chart bundles and provenance are narrowly tracked under
+Their chart bundles, original fictional rosters and provenance are narrowly tracked under
 [`seasons/2007/`](../seasons/README.md),
 not derived from PDFs, historical charts, or Paydirt chart values. The generation
-recipe in `bowl_bound/sample_teams.py` reproduces them byte-for-byte. Original sample
+recipe in `bowl_bound/sample_teams.py` reproduces the charts byte-for-byte. The
+existing fictional roster names were authored separately on 2026-10-27 and
+approved for public tracking/release on 2026-10-29 (DEV-042). Their
+`roster-sources.md` files record that no historical roster source was used. Original sample
 content is dedicated under [CC0-1.0](../seasons/SAMPLE-LICENSE.md); all historical material
 remains subject to its separate privacy and redistribution restrictions.
 

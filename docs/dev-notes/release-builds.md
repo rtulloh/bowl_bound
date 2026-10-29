@@ -21,10 +21,12 @@ python scripts/release_package.py archive "$RUNTIME" "$ARCHIVE"
 
 `release/manifest.json` is the reviewed inventory, not a glob or a Git ignore
 filter. Only its exact runtime and frontend input files are copied to a new
-transactional stage. Every selected fictional chart/provenance/license file has
-a pinned SHA256; changing samples requires deliberate manifest review. No roster
-is selected. Unknown file categories, traversal, duplicate entries, missing
-inputs and symlinked files/ancestors fail before output creation.
+transactional stage. Every selected fictional chart/roster/provenance/license
+file has a pinned SHA256; changing samples requires deliberate manifest review.
+Exactly the two original 2007 sample rosters and their CC0 source notes are
+selected with owner approval (DEV-042); every other roster remains excluded.
+Unknown file categories, traversal, duplicate entries, missing inputs and
+symlinked files/ancestors fail before output creation.
 
 Keep the repository `.gitattributes` policy when checking out release inputs:
 tracked text uses LF even when Windows Git has `core.autocrlf=true`; binary

@@ -15,7 +15,7 @@ discoverable by the ordinary web catalog (`--seasons seasons`).
 
 The fictional teams use 2007 because the engine supports historical rules through
 2023; using the current year would require a separately approved rules profile.
-To restore missing identical sample files or install into an isolated catalog:
+To restore missing identical chart files or install charts into an isolated catalog:
 
 ```sh
 .venv/bin/python -m bowl_bound.sample_teams
@@ -26,8 +26,12 @@ Cedar Valley (2007) and Harbor Tech (2007) in the normal team picker. The stable
 IDs are 2007/cedar-valley and 2007/harbor-tech. The current runtime contract is
 team.yaml with offense.csv, defense.csv, special.csv and season-level provenance
 CSV, not team.json. The tracked recipe in bowl_bound/sample_teams.py reproduces
-all public files; tests compare their bytes and load them through the normal
-catalog. No historical/private folder is distributed or broadly unignored.
+the chart and synthetic chart-provenance files; tests compare their bytes and
+load them through the normal catalog. The two original fictional `roster.json`
+files and their `roster-sources.md` notes are separately authored CC0 content
+included in checkout/release samples (owner approval, DEV-042). The chart
+recipe does not generate names: copy those exact files for named commentary
+in an isolated catalog. No historical/private folder is distributed or broadly unignored.
 
 Existing differing files or symlink destinations are refused, never overwritten.
 Identical samples may be installed repeatedly. Historical folders are untouched.
@@ -37,8 +41,9 @@ identifies the versioned recipe, not a historical PDF.
 
 ## Redistribution
 
-To the extent permitted by law, the original sample-team recipe and its generated
-chart values are dedicated to the public domain under CC0 1.0 Universal:
+To the extent permitted by law, the original sample-team recipe, generated
+chart values, fictional roster names and their provenance are dedicated to
+the public domain under CC0 1.0 Universal:
 https://creativecommons.org/publicdomain/zero/1.0/ . They may be used, modified and
 redistributed without restriction, without warranty. This dedication applies only
 to this original sample content, not the Bowl Bound game/rules, historical teams,
@@ -78,4 +83,5 @@ historical teams or engine chart interpretations change.
 GitHub release packaging must include only these two original fictional teams,
 not copy the entire local `seasons/` tree. The owner directed that Ohio State and
 Miami remain unpublished in game packages; their local charts are not deleted.
-Milestone 24 must verify chart, provenance and roster exclusions in built artifacts.
+Milestone 24 must verify the exact two approved sample rosters and provenance
+are included, while historical charts, provenance and all other rosters stay excluded.

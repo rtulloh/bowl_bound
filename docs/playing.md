@@ -56,10 +56,11 @@ remain the same.
 Expand Team statistics, the scoring summary, Play log and Dice and chart audit
 to inspect recorded events. CLI and web share natural engine-generated
 play-by-play, with technical calls and traces kept separate. Commentary player
-names, when local rosters are installed, are illustrative labels rather than
-individual-player statistics. Names never affect dice, results or player ratings.
-Without names, the announcer uses generic roles. Pending decisions, penalties
-and ambiguous recoveries retain complete factual wording.
+names are illustrative labels rather than individual-player statistics.
+The included Cedar Valley and Harbor Tech samples have fictional player
+rosters; other teams use generic roles unless optional rosters are installed.
+Names never affect dice, results or player ratings. Pending decisions,
+penalties and ambiguous recoveries retain complete factual wording.
 
 ## Save and resume
 

@@ -24,7 +24,14 @@ SAMPLES = frozenset(
     + [
         f"seasons/2007/{team}/{name}"
         for team in ("cedar-valley", "harbor-tech")
-        for name in ("team.yaml", "offense.csv", "defense.csv", "special.csv")
+        for name in (
+            "team.yaml",
+            "offense.csv",
+            "defense.csv",
+            "special.csv",
+            "roster.json",
+            "roster-sources.md",
+        )
     ]
     + [f"seasons/2007/provenance/{team}.csv" for team in ("cedar-valley", "harbor-tech")]
 )

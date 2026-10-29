@@ -895,3 +895,50 @@ acceptance in the tracker independently. Corrected source gate covers
 2,439 Python tests/93.41% coverage, 122 frontend tests/build, 33 browser
 tests, Ruff/pip checks and npm audit (0 vulnerabilities). Native notices
 remain at 61a2dc9; DEV-041 release gates are not closed by commentary work.
+
+## DEV-042 exact fictional roster publication — owner-approved scope
+
+Owner explicitly selected inclusion of the existing sample rosters so downloads
+match accepted named commentary. Consulted local Paydirt `paydirt.spec:5-73`
+before this packaging subtask: it copies a broad seasons directory. Reuse no
+files/data or broad collection; Bowl Bound retains exact reviewed paths, hash
+pins, immutable charts and historical exclusions. The prior no-roster release
+direction is superseded only for the two original 2007 fictional CC0 rosters
+and their provenance, not for any historical/other roster.
+
+Tracked as DEV-042. Tests reviewed first: four synthetic roster/provenance
+stage/runtime/archive cases failed against the unchanged allowlist; two hash
+requirement checks and real manifest selection also failed (7 failures/4 passes).
+Corrected the metadata-test path filter to exclude the engine roster.py module
+and repeated its meaningful empty-selection failure before production edits.
+Implemented only four exact Git/manifest/selection exceptions; retained original
+roster JSON bytes and every chart byte. Updated provenance to record current
+owner publication approval, sample CC0 scope and player/maintainer guidance.
+
+DEV-042 focused gate: **63 passed in 2.98s**. Real isolated exact-source
+stage, npm clean install/build, runtime assembly, ZIP inspection and normal
+roster loading passed with exactly four approved roster/source paths. Original
+roster JSON bytes and chart bytes unchanged; Git text-auto/LF covers all four
+approved roster/source files on Windows too. The Windows installer derives
+its file list from the verified portable inventory, so selected roster paths
+inherit installation/uninstallation without a second allowlist.
+
+Current frontend **122 passed**, production build passed, npm audit **zero
+vulnerabilities**, Ruff lint/format and pip check passed (380 formatted files).
+Clean stage npm install reports the pre-existing `whatwg-encoding@3.1.1`
+deprecation; no dependency changes made to suppress it. Full Python/browser
+reruns are in progress. Draft prerelease 428225397 remains unpublished with
+zero assets while native licensing and fresh-artifact gates are outstanding.
+
+DEV-042 corrected final browser gate: **33 passed in 3.0m**; no skips or
+warnings reported. Python cumulative run remains in progress; no push, build
+dispatch, draft assets or publication yet.
+
+Final DEV-042 source gate: `.venv/bin/python -m pytest --cov -q` **2,450
+passed in 446.25s**, **93.41% coverage**, no skips/warnings reported.
+Frontend 122 tests/build/audit, browser 33 tests, Ruff lint/format and pip check
+passed. Reviewed tracked/unpublished paths: no private-data, PDFs or ignored
+opencode config selected; original charts and roster JSON match original
+checkout. Owner release request authorizes pushing reviewed source and
+dispatching the corrected three-target build. Native artifact verification,
+static licensing review and fresh-machine acceptance remain publication gates.

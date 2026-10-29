@@ -8,8 +8,12 @@ seasons/<season>/<team-slug>/roster.json
 seasons/<season>/<team-slug>/roster-sources.md     # where the names came from
 ```
 
-Historical rosters gathered by hand are **private**: roster files under `seasons/`
-are git-ignored and never packaged. Public tests use invented names only.
+Historical rosters gathered by hand are **private**: historical roster files
+under `seasons/` remain ignored and never packaged. Public tests use invented
+names only. On 2026-10-29 the owner approved exactly the existing fictional
+Cedar Valley and Harbor Tech (2007) `roster.json` files and their
+`roster-sources.md` provenance for public tracking and alpha distribution.
+Those CC0 samples are the only roster exceptions; do not add wildcard rules.
 
 ## Format
 
@@ -66,15 +70,16 @@ slug)`, and `player_name(roster, position, index=0)`.
    ```
 
    This prints only `ok` or `no roster`, never a name.
-5. Do the Ohio State and Miami (Florida) 2002 teams first. Rosters are never committed.
+5. Historical rosters, including Ohio State and Miami (Florida) 2002, remain local only; never commit them.
 
 ## Scope
 
 The importer does not produce rosters. Milestone 9b delivered the loader and
 format; [Milestone 21a](dev-notes/project-plan.md#21a-add-roster-backed-player-commentary)
 adds engine-generated illustrative labels in CLI/API/browser live reports and logs.
-Local fictional sample rosters remain ignored and unpackaged. Owner play-test
-and milestone acceptance remain separate from implementation verification.
+The two original fictional sample rosters are included in alpha bundles
+under the exact sample allowlist (DEV-042). Other local rosters remain private.
+Release artifact verification and milestone acceptance remain separate from implementation verification.
 
 ## Engine narration foundation (21a)
 

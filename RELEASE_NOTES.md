@@ -13,9 +13,10 @@ availability is announced yet.
 - Human-versus-computer play and local two-sided manual control.
 - Easy, Medium (default) and Hard coaching; difficulty never changes dice odds.
 - Save/resume, including pending decisions, with matching installed team charts.
-- Play logs and recorded dice/chart audits. Optional installed rosters supply
-  illustrative commentary names, not individual-player statistics.
-- Original fictional Cedar Valley and Harbor Tech sample teams.
+- Play logs and recorded dice/chart audits, with natural engine-generated
+  play-by-play shared by browser and terminal.
+- Original fictional Cedar Valley and Harbor Tech sample teams, including
+  fictional rosters for illustrative commentary names, not individual-player statistics.
 - A separate source-installed terminal game and optional PDF chart extractor.
 
 ### Known limitations

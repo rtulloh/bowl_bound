@@ -301,3 +301,98 @@ def test_git_checkout_preserves_release_inputs_with_windows_line_endings(
     with pytest.raises(ReleaseError, match="Public sample hash mismatch"):
         stage_sources(checkout, rejected)
     assert not rejected.exists()
+
+
+APPROVED_ROSTERS = tuple(
+    f"seasons/2007/{team}/{name}"
+    for team in ("cedar-valley", "harbor-tech")
+    for name in ("roster.json", "roster-sources.md")
+)
+
+
+@pytest.mark.parametrize("name", APPROVED_ROSTERS)
+def test_approved_sample_rosters_survive_stage_runtime_and_archive(
+    source: Path, tmp_path: Path, name: str
+) -> None:
+    from zipfile import ZipFile
+
+    from scripts.release_package import archive_runtime
+
+    content = (
+        '{"qb":["Synthetic Quill"],"wr":["Synthetic Finch"]}\n'
+        if name.endswith(".json")
+        else "Original fictional names, CC0-1.0\n"
+    )
+    put(source, name, content)
+    path = source / "release/manifest.json"
+    manifest = json.loads(path.read_text())
+    manifest["runtime"].append(name)
+    manifest["sample_sha256"][name] = hashlib.sha256(content.encode()).hexdigest()
+    path.write_text(json.dumps(manifest))
+    stage, runtime = tmp_path / "stage", tmp_path / "runtime"
+    stage_sources(source, stage)
+    assert (stage / name).read_bytes() == content.encode()
+    fake_frontend(stage)
+    assemble_runtime(stage, runtime)
+    assert (runtime / name).read_bytes() == content.encode()
+    archive = tmp_path / "runtime.zip"
+    archive_runtime(runtime, archive)
+    with ZipFile(archive) as package:
+        assert package.read("Bowl-Bound-0.1.0-alpha.1/" + name) == content.encode()
+        assert not any(
+            "private-team" in entry or "opencode" in entry for entry in package.namelist()
+        )
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "seasons/1900/private-team/roster.json",
+        "seasons/2007/other-team/roster.json",
+        "seasons/2007/cedar-valley/extra-roster.json",
+        "seasons/2007/harbor-tech/private-report.md",
+    ],
+)
+def test_unapproved_rosters_and_provenance_remain_forbidden(
+    source: Path, tmp_path: Path, name: str
+) -> None:
+    put(source, name, "Never ship")
+    path = source / "release/manifest.json"
+    manifest = json.loads(path.read_text())
+    manifest["runtime"].append(name)
+    path.write_text(json.dumps(manifest))
+    with pytest.raises(ReleaseError, match="Not an approved"):
+        stage_sources(source, tmp_path / "output")
+    assert not (tmp_path / "output").exists()
+
+
+@pytest.mark.parametrize("tamper", [False, True])
+def test_sample_rosters_require_matching_pinned_bytes(
+    source: Path, tmp_path: Path, tamper: bool
+) -> None:
+    name = APPROVED_ROSTERS[0]
+    put(source, name, '{"qb":["Synthetic Quill"]}\n')
+    path = source / "release/manifest.json"
+    manifest = json.loads(path.read_text())
+    manifest["runtime"].append(name)
+    if tamper:
+        manifest["sample_sha256"][name] = "0" * 64
+    path.write_text(json.dumps(manifest))
+    with pytest.raises(ReleaseError, match="pinned hash|sample hash mismatch"):
+        stage_sources(source, tmp_path / "output")
+    assert not (tmp_path / "output").exists()
+
+
+def test_real_manifest_selects_exactly_the_two_original_rosters_and_sources() -> None:
+    root = Path(__file__).resolve().parents[1]
+    manifest = json.loads((root / "release/manifest.json").read_text())
+    selected = {
+        name for name in manifest["runtime"] if name.startswith("seasons/") and "roster" in name
+    }
+    assert selected == set(APPROVED_ROSTERS)
+    assert selected <= manifest["sample_sha256"].keys()
+    for name in selected:
+        assert (
+            hashlib.sha256((root / name).read_bytes()).hexdigest()
+            == manifest["sample_sha256"][name]
+        )
