@@ -888,3 +888,10 @@ fictional samples: address that explicit packaging scope decision before
 promising that released downloads match the owner's named-commentary game.
 Release request authorizes proceeding with the push/build/release preparation,
 not silently declaring open dependency-license gates satisfied.
+
+CLI-046 tested implementation committed as **fced1aa**. Owner web
+play-test confirmation above satisfies closure; record that commit and
+acceptance in the tracker independently. Corrected source gate covers
+2,439 Python tests/93.41% coverage, 122 frontend tests/build, 33 browser
+tests, Ruff/pip checks and npm audit (0 vulnerabilities). Native notices
+remain at 61a2dc9; DEV-041 release gates are not closed by commentary work.
