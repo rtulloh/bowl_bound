@@ -1,0 +1,63 @@
+# Private by default: historical team PDFs, converted team data, saves, and local reports/logs.
+# See AGENTS.md "Privacy, team data, and source provenance".
+private-data/
+
+# Historical team data stays private. Only these exact original fictional files
+# are public; never add wildcard exceptions for historical charts or provenance.
+/seasons/*
+!/seasons/README.md
+!/seasons/SAMPLE-LICENSE.md
+!/seasons/2007/
+/seasons/2007/*
+!/seasons/2007/cedar-valley/
+!/seasons/2007/harbor-tech/
+!/seasons/2007/provenance/
+/seasons/2007/cedar-valley/*
+!/seasons/2007/cedar-valley/team.yaml
+!/seasons/2007/cedar-valley/offense.csv
+!/seasons/2007/cedar-valley/defense.csv
+!/seasons/2007/cedar-valley/special.csv
+/seasons/2007/harbor-tech/*
+!/seasons/2007/harbor-tech/team.yaml
+!/seasons/2007/harbor-tech/offense.csv
+!/seasons/2007/harbor-tech/defense.csv
+!/seasons/2007/harbor-tech/special.csv
+/seasons/2007/provenance/*
+!/seasons/2007/provenance/cedar-valley.csv
+!/seasons/2007/provenance/harbor-tech.csv
+# seasons/ is not packaged (setuptools includes only bowl_bound* and tools*).
+
+# Defense in depth: never track source PDFs, saves, or audit/play logs wherever they land.
+*.pdf
+*.save
+*_save.json
+bowl-bound-save*.json
+*.audit.log
+*.play.log
+audit-reports/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Frontend
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
+node_modules/
+
+# OS/editor
+.DS_Store
+
+# Local agent tooling configuration is not part of the public repository.
+opencode.json

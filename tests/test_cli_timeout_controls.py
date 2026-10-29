@@ -1,0 +1,96 @@
+"""Timeout controls use offense/defense roles, never home/away key aliases."""
+
+import pytest
+
+from bowl_bound.save_game import dumps_game, loads_game
+from tests.test_cli import saved_facts
+from tests.test_cli_shortcuts import live, regulation
+
+
+@pytest.mark.parametrize("role", ["offense", "defense"])
+def test_single_human_timeout_key_on_either_side_of_ball(role: str) -> None:
+    app = regulation()
+    live(app)
+    assert app.command("1")
+    possession = app.game.view().state.possession
+    app.human_side = (
+        possession if role == "offense" else ("away" if possession == "home" else "home")
+    )
+    if app.public_view()[1].automatic:
+        app.advance_computer()
+    view, turn = app.public_view()
+    binding = app._shortcuts(view, turn)["T"]
+    before = saved_facts(app.game)
+    assert not app.command("?")
+    text = app.output.getvalue()
+    assert "[T]" in text and "[TH]" not in text and "[TA]" not in text
+    for legacy in ("TH", "TA", "TO", "TD"):
+        assert not app.command(legacy)
+        assert saved_facts(app.game) == before
+    reference = loads_game(dumps_game(app.game), app.load_team)
+    operation = "decide" if binding[0] == "choose" else binding[0]
+    reference.coach_execute(app.human_side, operation, binding[1])
+    assert app.command("T")
+    assert saved_facts(app.game) == saved_facts(reference)
+
+
+def test_no_two_sided_timeout_shortcuts_are_advertised() -> None:
+    app = regulation()
+    live(app)
+    assert app.command("1")
+    before = saved_facts(app.game)
+    assert not app.command("?")
+    text = app.output.getvalue()
+    assert "[T]" in text and "[TO]" not in text and "[TD]" not in text
+    assert "[TH]" not in text and "[TA]" not in text
+    assert not app.command("TH") and not app.command("TA")
+    assert saved_facts(app.game) == before
+
+
+def test_defender_can_stop_runoff_that_would_end_the_period() -> None:
+    from bowl_bound.timing import Clock
+
+    app = regulation(Clock(1, 20))
+    live(app)
+    assert app.command("1")
+    possession = app.game.view().state.possession
+    app.human_side = "away" if possession == "home" else "home"
+    view, turn = app.public_view()
+    assert not view.clock_optional and turn.human_role == "decision" and not turn.automatic
+    assert {c.id for c in turn.pending.choices} == {
+        "clock:runoff",
+        f"clock:timeout:{app.human_side}",
+    }
+    reference = loads_game(dumps_game(app.game), app.load_team)
+    reference.coach_execute(app.human_side, "decide", f"clock:timeout:{app.human_side}")
+    assert app.command("T")
+    assert saved_facts(app.game) == saved_facts(reference)
+    assert app.game.view().clock.quarter == 1 and app.game.view().clock.remaining == 10
+
+
+@pytest.mark.parametrize("cpu_role", ["offense", "defense"])
+def test_computer_can_call_only_its_own_legal_timeout(
+    cpu_role: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = regulation()
+    live(app)
+    assert app.command("1")
+    possession = app.game.view().state.possession
+    other = "away" if possession == "home" else "home"
+    app.human_side = other if cpu_role == "offense" else possession
+    cpu = possession if cpu_role == "offense" else other
+
+    def timeout(observation) -> str:
+        target = f"clock:timeout:{observation.side}"
+        return target if target in observation.choices else observation.choices[0]
+
+    monkeypatch.setattr(app.game._coach, "decision", timeout)
+    before = app.game.view()
+    reference = loads_game(dumps_game(app.game), app.load_team)
+    reference.execute_with_view("decide", [f"clock:timeout:{cpu}"])
+    app.advance_computer()
+    assert saved_facts(app.game) == saved_facts(reference)
+    after = app.game.view()
+    assert after.clock.remaining == before.clock.remaining - 10
+    assert after.clock.timeouts[0 if cpu == "home" else 1] == 2
+    assert after.clock.timeouts[0 if app.human_side == "home" else 1] == 3
