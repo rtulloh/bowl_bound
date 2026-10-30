@@ -1,0 +1,31 @@
+tests/test_pdf_batch.py
+  s_ed54ab581b3d60::t_5879b4e7c2abfe 5,132-193
+tests/test_pdf_cli.py
+  s_ed54ab581b3d60::t_95beabb19bd99a 3,22-25,148-229
+tests/test_pdf_export.py
+  s_ed54ab581b3d60::t_ff38167ad57c91 8-9,71-85
+tools/pdf_import/cli.py
+  s_ed54ab581b3d60::t_4c1d335beaf853 6,16-17,23-26,47,50,53,61,69,71,73,76,78,159,166,204,221,223,269-282,284-291,293,327,386-388,405,408
+tools/pdf_import/errors.py
+  s_ed54ab581b3d60::t_030bf34b689e18 1-5
+tools/pdf_import/export.py
+  s_ed54ab581b3d60::t_9d3f598b944fbf 24,74,109
+tools/pdf_import/inspection.py
+  s_ed54ab581b3d60::t_0e053e93dfd87d 14,17-21,65,67,76,84,94-96,99,102,115,119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "0f050eba7ff000c69f0bcec630aad9785ff6ba0a",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
