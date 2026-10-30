@@ -79,3 +79,14 @@ added.
   suite: 73 passed; CLI suite: 28 passed. Ruff, format and whitespace checks passed.
 - Implementation and help-test commits: `d8c9d9c`, `03ab1d8`. Resolution evidence is in
   [IMPORT-002](issues/IMPORT/IMPORT-002.md).
+
+### 2026-10-30 — IMPORT-003
+
+- Baseline tests on the parked draft reproduced the first-winner bug: nine collision assertions
+  failed, including two-name aliases, three repeats, dry-run, and `--force`.
+- The planner now gathers all `(season, slug)` owners before writing and refuses every PDF
+  involved. It also tracks identities before rejecting an intra-PDF duplicate, preventing a
+  second PDF with that identity from being written.
+- Batch and CLI tests: 83 passed. Ruff, format and whitespace checks passed.
+- Parked-branch implementation commit: `d1a43cb`. Integration onto the active Milestone 25
+  branch remains assigned to [IMPORT-009](issues/IMPORT/IMPORT-009.md).
