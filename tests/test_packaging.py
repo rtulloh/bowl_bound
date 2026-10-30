@@ -5,6 +5,7 @@ from __future__ import annotations
 import subprocess
 import sys
 import zipfile
+from email.parser import Parser
 from pathlib import Path
 
 import pytest
@@ -16,8 +17,8 @@ WEB_PREFIXES = ("backend/", "frontend/", "node_modules/")
 
 
 @pytest.fixture(scope="module")
-def wheel_names(tmp_path_factory: pytest.TempPathFactory) -> list[str]:
-    """Build a wheel from this checkout and list its members."""
+def wheel_package(tmp_path_factory: pytest.TempPathFactory) -> tuple[list[str], str]:
+    """Build a wheel from this checkout and return its members and metadata."""
     out = tmp_path_factory.mktemp("wheel")
     result = subprocess.run(
         [sys.executable, "-m", "pip", "wheel", "--no-deps", "--quiet", "-w", str(out), str(ROOT)],
@@ -30,7 +31,14 @@ def wheel_names(tmp_path_factory: pytest.TempPathFactory) -> list[str]:
     wheels = list(out.glob("bowl_bound-*.whl"))
     assert len(wheels) == 1
     with zipfile.ZipFile(wheels[0]) as archive:
-        return archive.namelist()
+        names = archive.namelist()
+        metadata_name = next(name for name in names if name.endswith(".dist-info/METADATA"))
+        return names, archive.read(metadata_name).decode("utf-8")
+
+
+@pytest.fixture(scope="module")
+def wheel_names(wheel_package: tuple[list[str], str]) -> list[str]:
+    return wheel_package[0]
 
 
 def test_importer_modules_are_packaged(wheel_names: list[str]) -> None:
@@ -52,6 +60,20 @@ def test_roster_loader_is_packaged_but_no_roster_data_is(wheel_names: list[str])
 def test_console_script_points_at_the_importer() -> None:
     text = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert 'bowl-bound-import = "tools.pdf_import.cli:main"' in text
+
+
+def test_pdf_libraries_are_optional_wheel_extras(
+    wheel_package: tuple[list[str], str],
+) -> None:
+    requirements = Parser().parsestr(wheel_package[1]).get_all("Requires-Dist", [])
+    normalized = [requirement.lower().replace(" ", "") for requirement in requirements]
+
+    for package in ("pdfplumber", "reportlab"):
+        package_requirements = [item for item in normalized if item.startswith(package)]
+        assert package_requirements
+        assert all(';extra=="' in item for item in package_requirements)
+    assert any(item.startswith("pdfplumber") and ';extra=="pdf"' in item for item in normalized)
+    assert any(item.startswith("reportlab") and ';extra=="dev"' in item for item in normalized)
 
 
 def test_no_private_or_team_data_is_packaged(wheel_names: list[str]) -> None:

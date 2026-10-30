@@ -426,7 +426,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--export", action="store_true", help="Validate and export team data")
     parser.add_argument("--dry-run", action="store_true", help="Process without filesystem writes")
     parser.add_argument(
-        "--force", action="store_true", help="Explicitly replace an existing output file"
+        "--force", action="store_true", help="Replace existing report or team files"
     )
     arguments = parser.parse_args(argv)
     try:

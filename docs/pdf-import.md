@@ -1,123 +1,93 @@
-# PDF importer CLI (Milestones 5a-5c)
+# PDF chart importer
 
-A development-only tool for digitally generated Bowl Bound PDFs. By default it only
-*inspects* a document and writes an inspection report. With `--export` it validates every
-chart cell and PAT outcome and writes each team as Paydirt-style CSV and YAML files (see
-[Team file format](team-bundle.md)).
-An inspection report is not proof that the chart is valid; only `--export` validates it.
+This source-checkout tool inspects one PDF or exports charts from one PDF or a
+directory. It is separate from the game engine and standalone app. Export validates
+every chart cell and PAT outcome; inspection alone does not establish that a chart is
+playable. See [team file format](team-bundle.md) for the exported data.
 
-## Installation and use
+## Install and choose a mode
 
-Python 3.10+. The PDF libraries are an optional extra and never a dependency of the
-engine (`bowl_bound` does not import them or `tools`). The `dev` extra includes them so
-the test suite runs unskipped:
+Use Python 3.10 or newer. Install the optional `pdf` extra to import charts; the `dev`
+extra also installs the synthetic-PDF test tools. The game runtime requires only
+PyYAML, and native release requirements do not include PDF libraries.
 
-```bash
-.venv/bin/python -m pip install -e ".[dev]"        # developers
-.venv/bin/python -m pip install -e ".[pdf]"        # importer only
-.venv/bin/bowl-bound-import private-data/source-pdfs/example.pdf \
-  --output private-data/reports/inspection.json --dry-run
-.venv/bin/bowl-bound-import private-data/source-pdfs/example.pdf \
-  --output private-data/reports/inspection.json
+```sh
+python3 -m pip install -e ".[pdf]"
 ```
 
-Equivalent: `.venv/bin/python -m tools.pdf_import.cli ...`. The `tools` package is a
-development tool run from a checkout; it is installed by the editable install only.
+The install provides `bowl-bound-import`. From a source checkout,
+`.venv/bin/python -m tools.pdf_import.cli` is equivalent.
 
-### Output safety
+Inspection accepts exactly one non-symlink PDF. It prints the report without writing in
+dry-run mode; omit `--dry-run` to save the private JSON report:
 
-- `--output` is required, including in dry-run mode. Dry-run inspects, validates the
-  output path, prints the JSON to stdout, and creates no files or directories.
-- An existing output is refused unless `--force` is given. `--force` replaces the file
-  atomically (temporary file in the same directory, then rename), so a failed write
-  keeps the previous report and a hard link to another file is never truncated.
-- The source PDF can never be the output (same path or same file). Output symlinks,
-  dangling symlinks, loops, and paths through symlinked directories are refused.
-- Reports are always created with owner-only permissions (0600), including when a
-  looser-permission file is replaced with `--force`.
-- Parent directories are created only after inspection succeeds, and removed again if
-  the write fails.
+```sh
+bowl-bound-import "$PDF" --output "$REPORT.json" --dry-run
+bowl-bound-import "$PDF" --output "$REPORT.json"
+```
 
-### Input
+Export accepts one PDF or a directory. `--output` is the seasons library root.
+Preview and export a directory with:
 
-Inspection accepts one non-symlink PDF file. Export accepts one non-symlink PDF or a
-directory of PDFs. Discovery is non-recursive, sorts filenames case-insensitively with the
-original spelling as the tie-breaker, accepts `.pdf` suffixes case-insensitively, and ignores
-hidden and macOS `._` files. A symlinked input directory or PDF refuses the run before
-anything is processed. An empty export directory fails clearly.
+```sh
+bowl-bound-import "$PDF_DIR" --export --output "$TEAMS" --dry-run
+bowl-bound-import "$PDF_DIR" --export --output "$TEAMS"
+```
 
-### Batch export
+Use `--help` for the complete option list. `--output` is required in every mode.
 
-`--export` on a directory processes every PDF in it, one status line per file:
+## Batch results and overwrite behavior
+
+Directory discovery is nonrecursive, ignores hidden files and macOS `._` files, and
+accepts `.pdf` case-insensitively. Files sort case-insensitively, with original spelling
+as a stable tie-breaker. The CLI prints one status per input and a summary, for example:
 
 ```text
-[1/3] 2002free-ohiostate.pdf: ok
-[2/3] other.pdf: FAILED - chart is incomplete
-[3/3] third.pdf: ok
-summary: 2 succeeded, 1 failed
+[1/2] sample-a.pdf: ok
+[2/2] sample-b.pdf: FAILED - chart is incomplete
+summary: 1 succeeded, 1 failed
 ```
 
-- A failing PDF never blocks the others. The run exits `1` if any PDF failed.
-- Every PDF is validated before anything is written. A team that appears in two PDFs
-  (same season and folder slug) is refused in both, never merged.
-- Each PDF's files are written all-or-nothing, as for a single PDF.
-- `--dry-run` runs the same destination preflight as export: it checks the output root,
-  target file types, source-file aliases, symlinked roots/parents, and existing targets
-  against `--force`. It prints per-file status and destinations without creating or
-  replacing files. It cannot predict a later disk or permission failure during writing.
-- Failure reasons never include chart text, filenames, or local paths. An unexpected
-  failure prints a fixed message.
+Each PDF is independent: a failure does not stop the others. Writes for one PDF are
+transactional; on a write error, the importer attempts to restore that PDF's prior files
+before continuing. Every input is validated and collisions are resolved before writes
+begin. Successful PDFs can be exported even when another fails. The command exits `0`
+only if all inputs succeed, `1` for any input, validation or write failure, and `2` for
+invalid arguments.
 
-Inspection mode (without `--export`) requires a PDF file and writes one report. It does not
-scan directories, even when they contain only one PDF.
+If multiple PDFs contain the same season and team identity, every PDF in that collision
+is refused; the importer never merges them.
+`--dry-run` checks generated destinations, aliases, symlinks, and existing files without
+writing. It cannot predict later disk or permission failures.
 
-### Exit codes
+Existing reports or team files require `--force` to replace. Back up the team library
+before using it: changing charts can make saves that refer to the old team incompatible.
+Source aliases and unsafe symlink paths are refused even with `--force`.
 
-`0` success; `1` document, input, or output error (including a missing or unsupported
-input, an existing output without `--force`, and unexpected failures); `2` invalid
-arguments. Unexpected failures print a fixed message and never a traceback or document
-text.
+## Supported layout and privacy
 
-## Supported layout (profile assumptions)
+The importer supports digitally generated offense/defense page pairs in the documented
+Bowl Bound layout. Page order pairs a school's offense with the following defense; the
+offense name and season identify the team. A defense mascot is only a display label and
+cannot confirm school identity. Check that each pair belongs together and review exported
+charts against the original before use.
 
-The first profile is the digitally generated two-team layout of the local 2002 source:
+Scans, photos, encrypted or malformed files, incomplete pairs, and unsupported layouts
+are rejected. OCR is not provided. Missing or ambiguous cells fail validation and are
+never converted to zero-yard results.
 
-- Pages come in offense/defense pairs: a portrait letter-like offense page, then a
-  landscape letter-like defense/special-teams page.
-- Each page has a rotated left-edge header `<season> <name> <offense|defense>`. The role
-  word must match the page position. Names use letters, spaces, and `. & ' ( ) -`.
-- Each page has at least 20 vector rectangles and the expected labels, found as same-
-  line or stacked phrases in the upright body text (the rotated header cannot satisfy a
-  label).
+Keep source PDFs, converted teams and reports private. Status output and reports can
+identify source files and teams; do not share them publicly. Do not commit historical
+charts, PDFs, report text, or extracted values. Public tests use synthetic PDFs only.
 
-Scans, encrypted or malformed files, incomplete pairs, and other layouts are rejected
-with an actionable error.
+## Troubleshooting
 
-### Team identity
-
-A team's identity is its **offense-page school name plus season**, compared without
-regard to case or spacing. The defense-page header is a **mascot display label only**:
-mascots are not unique (LSU, Clemson, and Missouri are all Tigers), so a mascot is never
-used to identify or pair teams. A defense page is paired with the preceding offense page
-by page order and season. Two offense pages with the same school and season are
-rejected as duplicates.
-
-**Known limit:** because a mascot cannot prove which school a defense page belongs to,
-a wrong-team defense page in the same season goes unnoticed if it sits next to the
-wrong offense page. Page adjacency in the supported layout is the only pairing evidence
-at this stage; cell extraction and validation (5b/5c) add content checks.
-
-## Private seasons
-
-Store source PDFs in `private-data/source-pdfs/` and inspection reports in
-`private-data/reports/`. Converted team files go in the top-level `seasons/` folder, laid
-out like Paydirt: `seasons/<season>/<team-slug>/` with `offense.csv`, `defense.csv`,
-`special.csv`, and `team.yaml`, plus `seasons/<season>/provenance/<team-slug>.csv` (for
-example `seasons/2002/ohio-state/`). `--export --output seasons` writes them; see
-[Team file format](team-bundle.md). Both
-`private-data/` and `seasons/` are git-ignored, and `seasons/` is not packaged. No
-historical team data, PDF, detailed report, or extracted source text may be committed.
-Public tests generate synthetic PDFs and never read private files.
-
-Console output and JSON reveal team identity and document details. Keep logs local; do
-not upload them to public CI, telemetry, or issue reports.
+| Problem | What to check |
+| --- | --- |
+| Unsupported or scanned PDF | Use a digitally generated file in the documented layout; OCR and arbitrary layouts are unsupported. |
+| Missing or ambiguous cell | Check the source PDF and use a supported copy. Do not fill the result with zero or edit exported values to bypass validation. |
+| Some batch files fail | Read each status locally. Correct the failed inputs and rerun; successful PDFs may already have been exported. |
+| Duplicate team collision | Check the school names and seasons in the source PDFs. Every PDF involved must be corrected or separated before export. |
+| Symlink or input error | Pass a regular PDF file; directories are accepted only with `--export`. Symlinked PDFs, input directories, and output paths are refused. |
+| Destination already exists | Preview with `--dry-run`; back up the library before deliberately replacing files with `--force`. |
+| Private source or report | Keep it local under an ignored private path. Share only a generic error description, never chart text, files, or report excerpts. |

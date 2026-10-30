@@ -174,6 +174,7 @@ def test_help_explains_that_directory_input_requires_export(
     assert help_result.value.code == 0
     help_text = " ".join(capsys.readouterr().out.split())
     assert "with --export, a directory of PDFs is also accepted" in help_text
+    assert "Replace existing report or team files" in help_text
 
 
 def test_hardlinked_source_cannot_be_destroyed(source: Path, tmp_path: Path) -> None:
