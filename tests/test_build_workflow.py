@@ -1,5 +1,6 @@
 """The build workflow is manual, least-privilege and architecture-specific."""
 
+import json
 import re
 from pathlib import Path
 
@@ -41,6 +42,17 @@ def test_native_requirements_are_exact_pins_not_editable_source() -> None:
     assert len(requirements) >= 20
     assert all(re.match(r"[A-Za-z0-9_.-]+==[0-9][^ ]*(?: ; .*)?$", line) for line in requirements)
     assert not any("bowl_bound" in line or "pytest" in line for line in requirements)
+
+
+def test_pdf_importer_is_not_part_of_native_runtime() -> None:
+    requirements = (ROOT / "release/requirements-native.txt").read_text().splitlines()
+    package_names = {line.split("==", 1)[0].lower() for line in requirements if "==" in line}
+    assert package_names.isdisjoint({"pdfplumber", "reportlab", "pdfminer.six"})
+
+    manifest = json.loads((ROOT / "release/manifest.json").read_text())
+    runtime_files = manifest["runtime"]
+    assert not any(path.startswith(("tools/", "tests/")) for path in runtime_files)
+    assert "docs/pdf-import.md" not in runtime_files
 
 
 def test_browser_job_provides_the_interpreter_expected_by_the_harness() -> None:

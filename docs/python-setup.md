@@ -1,6 +1,6 @@
 # Python, pip and environment setup
 
-[Player guide](README.md) · [Installation](installation.md) · [Import teams](importing-teams.md)
+[Player guide](README.md) · [Installation](installation.md) · [Optional chart import](importing-teams.md)
 
 **Standalone players do not need Python, pip or Node.js.** Python is needed
 only for running from source or using the separate PDF chart extractor. The

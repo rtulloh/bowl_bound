@@ -14,7 +14,7 @@ Tech teams; no historical teams or chart PDFs are bundled.
 
 - [Install and launch](docs/installation.md): standalone and source instructions.
 - [How to play](docs/playing.md): setup, controls, difficulty, saving and limits.
-- [Import your own teams](docs/importing-teams.md): extractor and platform folders.
+- [Optional: import your own team charts](docs/importing-teams.md) (advanced).
 - [Troubleshooting](docs/troubleshooting.md) and [report a bug](docs/reporting-bugs.md).
 - [Release notes](RELEASE_NOTES.md) and [all player documentation](docs/README.md).
 

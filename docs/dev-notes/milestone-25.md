@@ -149,3 +149,19 @@ added.
   suite: 203 passed. Ruff check, format check and `git diff --check` passed.
 - Parked-branch implementation commit: `824b0c6`. Final integration remains assigned to
   [IMPORT-009](issues/IMPORT/IMPORT-009.md).
+
+### 2026-10-30 — IMPORT-008
+
+- Replaced the stale 5a–5c importer heading with a concise reference for one-file inspection,
+  directory preview/export, per-file status, partial success, aggregate exit codes, collision
+  handling, overwrites, symlinks, privacy and troubleshooting.
+- Clarified `--force` in CLI help and added a help regression. Wheel metadata coverage confirms
+  `pdfplumber` is in the `pdf` extra and `reportlab` is test-only in `dev`. The public native
+  dependency lock and runtime manifest continue to exclude PDF libraries and importer tools.
+- Shortened the player import walkthrough and marked it optional/advanced; detailed layout
+  internals remain in the source-only reference. Packaged player links resolve within the exact
+  release allowlist. Broader installation/onboarding work remains tracked by DEV-045.
+- Synthetic importer, CLI and wheel tests: 208 passed. Native build workflow tests: 4 passed.
+  Ruff, format, whitespace and packaged-link checks passed.
+- Parked-branch implementation commit: `b0ad58d`. Root player-guide, release-boundary and
+  acceptance evidence commits are recorded in [IMPORT-008](issues/IMPORT/IMPORT-008.md).

@@ -4,7 +4,7 @@ Start with [installation](installation.md), then [how to play](playing.md).
 
 - [Python and pip setup](python-setup.md) — official Windows/macOS/Homebrew links.
 - [Starting and stopping](startup.md) — local server, launcher options and version.
-- [Importing your own teams](importing-teams.md) — chart extractor, folder paths and selecting a library.
+- [Optional team chart import](importing-teams.md) — an advanced, source-installed tool.
 - [Troubleshooting](troubleshooting.md) — downloads, ports, saves and team problems.
 - [Reporting bugs](reporting-bugs.md) — email contact, logs and privacy checklist.
 - [Version information](versioning.md) — public version and save compatibility.

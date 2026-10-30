@@ -12,7 +12,7 @@ Dice and chart audits let you inspect how a result was reached.
 
 The initial distribution includes **Cedar Valley** and **Harbor Tech**, original
 fictional teams for the 2007 season. They are not historical-team recreations.
-You can [import your own authorized charts](importing-teams.md) separately.
+You can optionally [import your own authorized charts](importing-teams.md) separately.
 
 ## Start a web game
 
