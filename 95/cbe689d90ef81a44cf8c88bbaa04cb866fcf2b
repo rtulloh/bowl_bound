@@ -1,0 +1,27 @@
+docs/pdf-import.md
+  s_ed54ab581b3d60::t_5172b28c4318ca 62-65
+tests/test_export_hardening.py
+  s_ed54ab581b3d60::t_b2687e14042874 118-119
+tests/test_pdf_batch.py
+  s_ed54ab581b3d60::t_7d58e4f2350b81 272-391
+tests/test_pdf_cli_export.py
+  s_ed54ab581b3d60::t_cc236c8c410e1a 164-166,170-172
+tools/pdf_import/cli.py
+  s_ed54ab581b3d60::t_770133bd6b7337 111-112,115-117,119-124,129,133,136,139-140,144,149,155-197,199,201,206,209,212-213,218,220-224,250,253-254,256-257,259,289-290,294-296,317
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "95cbe689d90ef81a44cf8c88bbaa04cb866fcf2b",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
