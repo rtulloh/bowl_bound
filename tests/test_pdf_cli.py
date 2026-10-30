@@ -112,13 +112,14 @@ def test_inspection_failure_never_writes_output(
     assert not output.exists()
 
 
-def test_argument_errors_and_help() -> None:
+def test_argument_errors_and_help(capsys: pytest.CaptureFixture) -> None:
     with pytest.raises(SystemExit) as error:
         cli.main([])
     assert error.value.code == 2
     with pytest.raises(SystemExit) as help_result:
         cli.main(["--help"])
     assert help_result.value.code == 0
+    assert "5d" not in capsys.readouterr().out
 
 
 def test_hardlinked_source_cannot_be_destroyed(source: Path, tmp_path: Path) -> None:
