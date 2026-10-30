@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from bowl_bound.team_csv import TEAM_FILES, load_team
+from bowl_bound.team_csv import TEAM_FILES, load_team, team_folder_name
 from tests.synthetic_chart_pdf import write_chart_pdf
 from tests.test_pdf_cli_export import _team
 from tools.pdf_import import cli
@@ -128,22 +128,78 @@ def test_os_errors_do_not_echo_paths(
     assert "/Users/secret" not in err and "No such file or directory" in err
 
 
-def test_the_same_team_in_two_pdfs_is_never_merged(
-    pdfs: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+@pytest.mark.parametrize(
+    ("first_name", "second_name"),
+    [
+        ("Ohio State", "OHIO  STATE"),
+        ("Miami (Florida)", "Miami Florida"),
+        ("Texas A&M", "Texas A M"),
+    ],
+)
+@pytest.mark.parametrize("flags", [(), ("--force",)])
+def test_every_pdf_with_a_repeated_team_is_refused(
+    pdfs: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+    first_name: str,
+    second_name: str,
+    flags: tuple[str, ...],
 ) -> None:
-    first, second = _team("Ohio State"), _team("OHIO  STATE")
+    first, second = _team(first_name), _team(second_name)
     _install(
         monkeypatch,
         {"a.pdf": [first], "b.pdf": [second], "c.pdf": [_team("Texas A&M", 2003)]},
     )
     root = tmp_path / "seasons"
 
-    assert _run(pdfs, root) == 1
+    assert _run(pdfs, root, *flags) == 1
 
-    assert load_team(root / "2002", "ohio-state")[0].name == "Ohio State"
-    assert sorted(p.name for p in (root / "2002" / "ohio-state").iterdir()) == sorted(TEAM_FILES)
-    err = capsys.readouterr().err
-    assert "[2/3] b.pdf: FAILED" in err and "refusing to merge" in err
+    assert not (root / "2002" / team_folder_name(first_name)).exists()
+    assert load_team(root / "2003", "texas-a-m")[0].name == "Texas A&M"
+    captured = capsys.readouterr()
+    err = captured.err
+    assert "[1/3] a.pdf: FAILED" in err and "[2/3] b.pdf: FAILED" in err
+    assert "refusing to merge" in err
+    assert "summary: 1 succeeded, 2 failed" in captured.out
+
+
+def test_three_pdfs_with_the_same_team_are_all_refused(
+    pdfs: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    _install(monkeypatch, {name: [_team("Ohio State")] for name in ("a.pdf", "b.pdf", "c.pdf")})
+    root = tmp_path / "seasons"
+
+    assert _run(pdfs, root) == 1
+    assert not root.exists()
+    captured = capsys.readouterr()
+    error = captured.err
+    assert all(
+        f"[{index}/3] {name}: FAILED" in error
+        for index, name in enumerate(("a.pdf", "b.pdf", "c.pdf"), 1)
+    )
+    assert "summary: 0 succeeded, 3 failed" in captured.out
+
+
+def test_a_colliding_pdf_does_not_export_its_other_unique_team(
+    pdfs: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    _install(
+        monkeypatch,
+        {
+            "a.pdf": [_team("Ohio State"), _team("Tennessee")],
+            "b.pdf": [_team("OHIO  STATE")],
+            "c.pdf": [_team("Texas A&M", 2003)],
+        },
+    )
+    root = tmp_path / "seasons"
+
+    assert _run(pdfs, root) == 1
+    assert not (root / "2002" / "ohio-state").exists()
+    assert not (root / "2002" / "tennessee").exists()
+    assert load_team(root / "2003", "texas-a-m")[0].name == "Texas A&M"
+    error = capsys.readouterr().err
+    assert "[1/3] a.pdf: FAILED" in error and "[2/3] b.pdf: FAILED" in error
 
 
 def test_existing_team_fails_only_its_own_pdf_unless_forced(
@@ -225,7 +281,51 @@ def test_dry_run_still_detects_a_team_repeated_across_pdfs(
         },
     )
     assert _run(pdfs, tmp_path / "seasons", "--dry-run") == 1
-    assert "[2/3] b.pdf: FAILED" in capsys.readouterr().err
+    captured = capsys.readouterr()
+    assert "[1/3] a.pdf: FAILED" in captured.err
+    assert "[2/3] b.pdf: FAILED" in captured.err
+    assert "[3/3] c.pdf: ok (dry run)" in captured.out
+
+
+def test_two_same_season_slug_teams_in_one_pdf_refuse_that_pdf_only(
+    pdfs: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    _install(
+        monkeypatch,
+        {
+            "a.pdf": [_team("Ohio State"), _team("OHIO  STATE")],
+            "b.pdf": [_team("Miami (Florida)")],
+            "c.pdf": [_team("Texas A&M", 2003)],
+        },
+    )
+    root = tmp_path / "seasons"
+
+    assert _run(pdfs, root) == 1
+    assert not (root / "2002" / "ohio-state").exists()
+    assert load_team(root / "2002", "miami-florida")[0].name == "Miami (Florida)"
+    assert load_team(root / "2003", "texas-a-m")[0].name == "Texas A&M"
+    assert "[1/3] a.pdf: FAILED" in capsys.readouterr().err
+
+
+def test_duplicate_inside_one_pdf_still_refuses_other_matching_pdfs(
+    pdfs: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    _install(
+        monkeypatch,
+        {
+            "a.pdf": [_team("Ohio State"), _team("OHIO  STATE")],
+            "b.pdf": [_team("Ohio State")],
+            "c.pdf": [_team("Texas A&M", 2003)],
+        },
+    )
+    root = tmp_path / "seasons"
+
+    assert _run(pdfs, root) == 1
+    assert not (root / "2002" / "ohio-state").exists()
+    assert load_team(root / "2003", "texas-a-m")[0].name == "Texas A&M"
+    error = capsys.readouterr().err
+    assert "[1/3] a.pdf: FAILED" in error
+    assert "[2/3] b.pdf: FAILED" in error
 
 
 def test_files_are_processed_in_sorted_order_and_non_pdfs_are_ignored(

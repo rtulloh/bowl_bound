@@ -1,11 +1,14 @@
 """Safe CLI boundary for the development-only PDF inspection pipeline."""
 
+from __future__ import annotations
+
 import argparse
 import json
 import os
 import sys
 import tempfile
-from dataclasses import asdict
+from collections.abc import Sequence
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -121,6 +124,18 @@ def _verify_teams(teams: list) -> None:
 
 
 TeamTarget = tuple[Path, str]
+TeamIdentity = tuple[int, str]
+
+
+@dataclass(frozen=True)
+class PlannedPDF:
+    """One validated PDF and all team identities and destinations it owns."""
+
+    index: int
+    source: Path
+    teams: tuple[ExportedTeam, ...]
+    targets: tuple[TeamTarget, ...]
+    identities: frozenset[TeamIdentity]
 
 
 def _team_targets(root: Path, teams: list) -> list[TeamTarget]:
@@ -163,7 +178,7 @@ def _team_targets(root: Path, teams: list) -> list[TeamTarget]:
     return targets
 
 
-def _write_teams(source: Path, root: Path, targets: list[TeamTarget], force: bool) -> None:
+def _write_teams(source: Path, root: Path, targets: Sequence[TeamTarget], force: bool) -> None:
     """Write every file or none: a failure restores files already created or replaced."""
     if root.is_symlink() or (root.exists() and not root.is_dir()):
         raise ValueError("Export root must be a directory, not a file or symlink")
@@ -200,7 +215,7 @@ def _write_teams(source: Path, root: Path, targets: list[TeamTarget], force: boo
         raise
 
 
-def _summary(teams: list, targets: list[TeamTarget] | None = None) -> str:
+def _summary(teams: Sequence[ExportedTeam], targets: Sequence[TeamTarget] | None = None) -> str:
     """Counts and destinations only: dry-run output must not echo chart contents."""
     from bowl_bound.team_csv import team_folder_name
 
@@ -244,35 +259,48 @@ def _run_batch(sources: list[Path], output: Path, force: bool, dry_run: bool) ->
     """
     total = len(sources)
     failures = 0
-    planned: list[tuple[int, Path, list[ExportedTeam], list[TeamTarget]]] = []
-    seen: set[tuple[int, str]] = set()
+    plans: list[PlannedPDF] = []
+    failures_by_index: dict[int, Exception] = {}
+    owners: dict[TeamIdentity, set[int]] = {}
     for index, source in enumerate(sources, 1):
-        label = f"[{index}/{total}] {source.name}"
         try:
             teams = export_document(source)
             _verify_teams(teams)
+            identities = frozenset(
+                (team.chart.season, team_folder_name(team.chart.name)) for team in teams
+            )
+            for identity in identities:
+                owners.setdefault(identity, set()).add(index)
             targets = _team_targets(output, teams)
-            keys = {(team.chart.season, team_folder_name(team.chart.name)) for team in teams}
-            if keys & seen:
-                raise ValueError(
-                    "a team in this PDF also appears in an earlier PDF; refusing to merge them"
-                )
-            seen |= keys
-            planned.append((index, source, teams, targets))
+            plans.append(PlannedPDF(index, source, tuple(teams), tuple(targets), identities))
         except Exception as error:  # noqa: BLE001 - reason is sanitized; document text never printed
-            failures += 1
-            print(f"{label}: FAILED - {_failure_reason(error)}", file=sys.stderr)
+            failures_by_index[index] = error
+
+    colliding_indices = {
+        index for indices in owners.values() if len(indices) > 1 for index in indices
+    }
+    for index in colliding_indices:
+        failures_by_index[index] = ValueError(
+            "a team in this PDF also appears in another PDF; refusing to merge either PDF"
+        )
+    for index, error in sorted(failures_by_index.items()):
+        source = sources[index - 1]
+        label = f"[{index}/{total}] {source.name}"
+        print(f"{label}: FAILED - {_failure_reason(error)}", file=sys.stderr)
+
+    planned = [plan for plan in plans if plan.index not in failures_by_index]
+    failures = len(failures_by_index)
     if dry_run:
-        for index, source, teams, targets in planned:
-            print(f"[{index}/{total}] {source.name}: ok (dry run)")
-            print(_summary(teams, targets), end="")
+        for plan in planned:
+            print(f"[{plan.index}/{total}] {plan.source.name}: ok (dry run)")
+            print(_summary(plan.teams, plan.targets), end="")
         print(f"summary: {len(planned)} succeeded, {failures} failed")
         return 0 if failures == 0 else 1
     succeeded = 0
-    for index, source, _teams, targets in planned:
-        label = f"[{index}/{total}] {source.name}"
+    for plan in planned:
+        label = f"[{plan.index}/{total}] {plan.source.name}"
         try:
-            _write_teams(source, output, targets, force)
+            _write_teams(plan.source, output, plan.targets, force)
             succeeded += 1
             print(f"{label}: ok")
         except Exception as error:  # noqa: BLE001 - reason is sanitized
