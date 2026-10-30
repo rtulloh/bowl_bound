@@ -41,9 +41,10 @@ development tool run from a checkout; it is installed by the editable install on
 ### Input
 
 Inspection accepts one non-symlink PDF file. Export accepts one non-symlink PDF or a
-directory of PDFs. Directory discovery is non-recursive, sorted by name, case-insensitive
-for `.pdf`, and ignores hidden and macOS `._` files. A symlinked input directory or PDF
-refuses the run before anything is processed. An empty export directory fails clearly.
+directory of PDFs. Discovery is non-recursive, sorts filenames case-insensitively with the
+original spelling as the tie-breaker, accepts `.pdf` suffixes case-insensitively, and ignores
+hidden and macOS `._` files. A symlinked input directory or PDF refuses the run before
+anything is processed. An empty export directory fails clearly.
 
 ### Batch export
 

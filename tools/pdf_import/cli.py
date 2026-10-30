@@ -45,9 +45,12 @@ def _sources(path: Path, *, allow_directory: bool) -> list[Path]:
                 "Inspection mode requires a single PDF file; use --export for directory input"
             )
         candidates = sorted(
-            entry
-            for entry in path.iterdir()
-            if entry.suffix.lower() == ".pdf" and not entry.name.startswith(".")
+            (
+                entry
+                for entry in path.iterdir()
+                if entry.suffix.lower() == ".pdf" and not entry.name.startswith(".")
+            ),
+            key=lambda entry: (entry.name.casefold(), entry.name),
         )
         if any(entry.is_symlink() for entry in candidates):
             raise SafeCLIError("Refusing a symlinked PDF in the input directory")
@@ -141,14 +144,32 @@ class PreparedTeam:
 
 @dataclass(frozen=True)
 class PlannedPDF:
-    """One validated PDF with its team data, identities, destinations and summary."""
+    """One PDF's validated export targets and user-safe summary."""
+
+    targets: tuple[TeamTarget, ...]
+    summary: str
+
+
+@dataclass(frozen=True)
+class PDFPlanResult:
+    """Planning outcome for one source PDF, including identities found before failure."""
 
     index: int
     source: Path
-    teams: tuple[PreparedTeam, ...]
-    targets: tuple[TeamTarget, ...]
     identities: frozenset[TeamIdentity]
-    summary: str
+    plan: PlannedPDF | None
+    error: Exception | None
+
+
+@dataclass(frozen=True)
+class PDFResult:
+    """Final per-PDF outcome used to report status and calculate the batch exit code."""
+
+    index: int
+    source: Path
+    succeeded: bool
+    error: Exception | None = None
+    summary: str | None = None
 
 
 def _verify_teams(teams: Sequence[ExportedTeam]) -> tuple[PreparedTeam, ...]:
@@ -315,54 +336,71 @@ def _run_batch(sources: list[Path], output: Path, force: bool, dry_run: bool) ->
     is refused rather than merged. Phase 2 writes each PDF's files all-or-nothing; a failure
     there is reported and the other PDFs still run. Returns 0 only if every PDF succeeded.
     """
-    total = len(sources)
-    failures = 0
-    plans: list[PlannedPDF] = []
-    failures_by_index: dict[int, Exception] = {}
-    owners: dict[TeamIdentity, set[int]] = {}
+    plan_results: list[PDFPlanResult] = []
     for index, source in enumerate(sources, 1):
+        identities: frozenset[TeamIdentity] = frozenset()
+        plan: PlannedPDF | None = None
+        error: Exception | None = None
         try:
             teams = _verify_teams(export_document(source))
             identities = frozenset(team.identity for team in teams)
-            for identity in identities:
-                owners.setdefault(identity, set()).add(index)
             targets = _team_targets(output, teams)
             _preflight_teams(source, output, targets, force)
             summary = _summary(teams, output)
-            plans.append(PlannedPDF(index, source, teams, targets, identities, summary))
-        except Exception as error:  # noqa: BLE001 - reason is sanitized; document text never printed
-            failures_by_index[index] = error
+            plan = PlannedPDF(targets, summary)
+        except Exception as caught:  # noqa: BLE001 - reason is sanitized at the CLI boundary
+            error = caught
+        plan_results.append(PDFPlanResult(index, source, identities, plan, error))
 
-    colliding_indices = {
-        index for indices in owners.values() if len(indices) > 1 for index in indices
+    owners: dict[TeamIdentity, set[Path]] = {}
+    for item in plan_results:
+        for identity in item.identities:
+            owners.setdefault(identity, set()).add(item.source)
+    colliding_sources = {
+        source
+        for sources_with_identity in owners.values()
+        if len(sources_with_identity) > 1
+        for source in sources_with_identity
     }
-    for index in colliding_indices:
-        failures_by_index[index] = SafeCLIError(
-            "a team in this PDF also appears in another PDF; refusing to merge either PDF"
-        )
-    for index, error in sorted(failures_by_index.items()):
-        source = sources[index - 1]
-        label = f"[{index}/{total}] {source.name}"
-        print(f"{label}: FAILED - {_failure_reason(error)}", file=sys.stderr)
+    results: list[PDFResult] = []
+    total = len(plan_results)
+    for item in plan_results:
+        label = f"[{item.index}/{total}] {item.source.name}"
+        error = item.error
+        if item.source in colliding_sources:
+            error = SafeCLIError(
+                "a team in this PDF also appears in another PDF; refusing to merge either PDF"
+            )
+        if error is not None:
+            result = PDFResult(item.index, item.source, False, error)
+        elif item.plan is None:
+            result = PDFResult(
+                item.index,
+                item.source,
+                False,
+                RuntimeError("batch planning produced no result"),
+            )
+        elif dry_run:
+            result = PDFResult(item.index, item.source, True, summary=item.plan.summary)
+        else:
+            try:
+                _write_teams(item.source, output, item.plan.targets, force)
+                result = PDFResult(item.index, item.source, True)
+            except Exception as caught:  # noqa: BLE001 - reason is sanitized at the CLI boundary
+                result = PDFResult(item.index, item.source, False, caught)
+        results.append(result)
 
-    planned = [plan for plan in plans if plan.index not in failures_by_index]
-    failures = len(failures_by_index)
-    if dry_run:
-        for plan in planned:
-            print(f"[{plan.index}/{total}] {plan.source.name}: ok (dry run)")
-            print(plan.summary, end="")
-        print(f"summary: {len(planned)} succeeded, {failures} failed")
-        return 0 if failures == 0 else 1
-    succeeded = 0
-    for plan in planned:
-        label = f"[{plan.index}/{total}] {plan.source.name}"
-        try:
-            _write_teams(plan.source, output, plan.targets, force)
-            succeeded += 1
-            print(f"{label}: ok")
-        except Exception as error:  # noqa: BLE001 - reason is sanitized
-            failures += 1
-            print(f"{label}: FAILED - {_failure_reason(error)}", file=sys.stderr)
+        if result.succeeded:
+            suffix = " (dry run)" if dry_run else ""
+            print(f"{label}: ok{suffix}")
+            if result.summary is not None:
+                print(result.summary, end="")
+        else:
+            failure = result.error or RuntimeError("batch item failed without a reason")
+            print(f"{label}: FAILED - {_failure_reason(failure)}", file=sys.stderr)
+
+    succeeded = sum(result.succeeded for result in results)
+    failures = len(results) - succeeded
     print(f"summary: {succeeded} succeeded, {failures} failed")
     return 0 if failures == 0 else 1
 

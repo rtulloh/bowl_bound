@@ -534,7 +534,8 @@ def test_files_are_processed_in_sorted_order_and_non_pdfs_are_ignored(
         for line in capsys.readouterr().out.splitlines()
         if line.startswith("[")
     ]
-    assert names == sorted(names) == ["D.PDF", "a.pdf", "b.pdf", "c.pdf"]
+    assert [name.casefold() for name in names] == sorted(name.casefold() for name in names)
+    assert names == ["a.pdf", "b.pdf", "c.pdf", "D.PDF"]
 
 
 def test_a_symlinked_pdf_refuses_the_whole_run(
