@@ -4,15 +4,15 @@
 
 ## Standalone downloads
 
-The first alpha is under preparation; downloads are not yet published. Once
-released, use only the project release page and select your operating system
-and processor. Do not confuse a GitHub source ZIP with a standalone app.
+The second alpha is available from the project release page. Select your
+operating system and processor, and do not confuse a GitHub source ZIP with a
+standalone app.
 Standalone archives include Python, the built web interface and the two
 fictional sample teams; players do not need Python or Node.js installed.
 An Internet connection is needed to download, not for ordinary local play.
 
-For Windows, the planned **installer** is
-`BowlBoundSetup-0.1.0-alpha.1-windows-x64.exe`. Verify its checksum first, then
+For Windows, the **installer** is
+`BowlBoundSetup-0.1.0-alpha.2-windows-x64.exe`. Verify its checksum first, then
 run it and follow the setup wizard. It installs `BowlBound.exe` for the current
 user under `%LOCALAPPDATA%\Programs\BowlBound`, without administrator access,
 and creates Start menu and desktop shortcuts. Uninstall through Windows
@@ -20,21 +20,19 @@ Settings → Apps → Installed apps → Bowl Bound. Close the game first; unins
 before installing a replacement version. The installer requires an empty
 destination. Personal saves and external team libraries are not removed.
 
-The **portable ZIP** remains an alternative on Windows and the planned format
+The **portable ZIP** is an alternative on Windows and the distribution format
 on macOS. Extract the **entire** archive into a user-writable folder. Do not run
 from inside the ZIP or move only the executable away from its supporting files.
 Open a terminal in the extracted `BowlBound` folder:
 
-| Platform build, when available | Run | Alternative |
+| Platform build | Run | Alternative |
 | --- | --- | --- |
 | Windows x64 | `.\BowlBound.exe` in PowerShell | `start.bat` |
 | macOS Apple Silicon (arm64) | `./Bowl-Bound` | `./start.sh` |
 | macOS Intel (x86_64) | `./Bowl-Bound` | `./start.sh` |
 
-These are the three planned standalone builds. Apple Silicon and Intel Mac
-builds are different; use the right one. Intel means 64-bit x86_64, not 32-bit
-x86. Linux is source-only for the initial alpha. Native testing must pass
-before a platform download is offered; this table is not a support claim.
+Apple Silicon and Intel Mac builds are different; use the right one. Intel means
+64-bit x86_64, not 32-bit x86. Linux is source-only for this alpha.
 
 The browser opens <http://127.0.0.1:8000>. Keep the terminal open while playing;
 save your game before pressing Ctrl+C to stop. If the browser does not open,
@@ -49,9 +47,9 @@ organization security policy.
 
 ```powershell
 # Windows PowerShell: replace the filename with your download.
-Get-FileHash .\BowlBoundSetup-0.1.0-alpha.1-windows-x64.exe -Algorithm SHA256
+Get-FileHash .\BowlBoundSetup-0.1.0-alpha.2-windows-x64.exe -Algorithm SHA256
 # Or check the portable ZIP instead.
-Get-FileHash .\BowlBound-0.1.0-alpha.1-windows-x64.zip -Algorithm SHA256
+Get-FileHash .\BowlBound-0.1.0-alpha.2-windows-x64.zip -Algorithm SHA256
 ```
 
 On macOS use `shasum -a 256 FILE.zip`.
@@ -79,7 +77,7 @@ this narrowly removes the quarantine attribute from **that extracted game
 folder only** (replace the example path with the real folder):
 
 ```sh
-xattr -dr com.apple.quarantine "$HOME/Downloads/BowlBound-0.1.0-alpha.1-macos-arm64"
+xattr -dr com.apple.quarantine "$HOME/Downloads/BowlBound-0.1.0-alpha.2-macos-arm64"
 ```
 
 This changes the download security marker; it is not a repair or a signature.

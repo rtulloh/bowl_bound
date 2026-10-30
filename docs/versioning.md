@@ -1,8 +1,7 @@
 # Version information
 
-The initial alpha under preparation is **0.1.0-alpha.1**. Python packaging uses
-the equivalent PEP440 form **0.1.0a1**. A future approved release tag would be
-`v0.1.0-alpha.1`; preparing this metadata does not create or publish that tag.
+The current prerelease is **0.1.0-alpha.2**. Python packaging uses the equivalent
+PEP 440 form **0.1.0a2**. Its immutable Git tag is `v0.1.0-alpha.2`.
 
 `bowl_bound.__version__`, project metadata and API OpenAPI metadata use the
 Python form. Frontend package/lock metadata and `bowl_bound.DISPLAY_VERSION`

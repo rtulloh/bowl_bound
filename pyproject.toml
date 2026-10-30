@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bowl_bound"
-version = "0.1.0a1"
+version = "0.1.0a2"
 description = "A Python implementation of the Bowl Bound college-football board game"
 readme = "README.md"
 license = {file = "LICENSE"}

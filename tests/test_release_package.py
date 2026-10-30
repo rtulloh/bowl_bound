@@ -27,14 +27,14 @@ def source(tmp_path: Path) -> Path:
     root = tmp_path / "source with spaces"
     sample = "seasons/2007/cedar-valley/team.yaml"
     files = {
-        "bowl_bound/__init__.py": '__version__ = "0.1.0a1"\nDISPLAY_VERSION = "0.1.0-alpha.1"\n',
+        "bowl_bound/__init__.py": '__version__ = "0.1.0a2"\nDISPLAY_VERSION = "0.1.0-alpha.2"\n',
         "LICENSE": "Synthetic license",
         sample: "Synthetic chart",
-        "frontend/package.json": '{"version":"0.1.0-alpha.1"}',
+        "frontend/package.json": '{"version":"0.1.0-alpha.2"}',
         "frontend/package-lock.json": json.dumps(
             {
-                "version": "0.1.0-alpha.1",
-                "packages": {"": {"version": "0.1.0-alpha.1"}},
+                "version": "0.1.0-alpha.2",
+                "packages": {"": {"version": "0.1.0-alpha.2"}},
             }
         ),
         "frontend/src/App.jsx": "Synthetic UI",
@@ -104,7 +104,7 @@ def test_allowlisted_stage_and_runtime_exclude_injected_private_files(
         "MANIFEST.json",
     }
     manifest = json.loads((runtime / "MANIFEST.json").read_text())
-    assert manifest["version"] == "0.1.0-alpha.1"
+    assert manifest["version"] == "0.1.0-alpha.2"
     for name, digest in manifest["files"].items():
         assert hashlib.sha256((runtime / name).read_bytes()).hexdigest() == digest
 
@@ -216,7 +216,7 @@ def test_malformed_frontend_metadata_is_actionable(
         "frontend/package-lock.json",
         json.dumps(
             {
-                "version": "0.1.0-alpha.1",
+                "version": "0.1.0-alpha.2",
                 "packages": packages,
             }
         ),
@@ -338,7 +338,7 @@ def test_approved_sample_rosters_survive_stage_runtime_and_archive(
     archive = tmp_path / "runtime.zip"
     archive_runtime(runtime, archive)
     with ZipFile(archive) as package:
-        assert package.read("Bowl-Bound-0.1.0-alpha.1/" + name) == content.encode()
+        assert package.read("Bowl-Bound-0.1.0-alpha.2/" + name) == content.encode()
         assert not any(
             "private-team" in entry or "opencode" in entry for entry in package.namelist()
         )

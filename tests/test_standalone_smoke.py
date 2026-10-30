@@ -15,7 +15,7 @@ def write_archive(
 ) -> Path:
     archive = tmp_path / "app.zip"
     manifest = {
-        "version": "0.1.0-alpha.1",
+        "version": "0.1.0-alpha.2",
         "target": "macos-arm64",
         "files": {
             (name.removeprefix("BowlBound/") if mirror_name else "Bowl-Bound"): hashlib.sha256(
@@ -41,7 +41,7 @@ def test_verified_extract_restores_executable_permission(tmp_path: Path) -> None
     archive = write_archive(tmp_path, "BowlBound/Bowl-Bound", b"synthetic", mode=0o100755)
     destination = tmp_path / "extracted"
     manifest = extract_verified(archive, destination)
-    assert manifest["version"] == "0.1.0-alpha.1"
+    assert manifest["version"] == "0.1.0-alpha.2"
     assert (destination / "BowlBound/Bowl-Bound").read_bytes() == b"synthetic"
     assert (destination / "BowlBound/Bowl-Bound").stat().st_mode & 0o111
 

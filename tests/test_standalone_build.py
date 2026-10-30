@@ -99,7 +99,7 @@ def test_archive_checksums_exact_manifest_and_safe_extraction(
     output = tmp_path / "output"
     output.mkdir()
     archive = native.archive_bundle(bundle, runtime, output, "macos-arm64")
-    assert archive.name == "BowlBound-0.1.0-alpha.1-macos-arm64.zip"
+    assert archive.name == "BowlBound-0.1.0-alpha.2-macos-arm64.zip"
     checksum = archive.with_suffix(".zip.sha256").read_text().strip().split()
     assert checksum == [hashlib.sha256(archive.read_bytes()).hexdigest(), archive.name]
     with ZipFile(archive) as zipped:
@@ -218,7 +218,7 @@ def test_freezer_imports_cannot_mutate_verified_runtime(
     monkeypatch.setattr(native, "inspect_modules", inspect)
     output = tmp_path / "native output"
     native.build(source, output, "windows-x64")
-    archive = output / "BowlBound-0.1.0-alpha.1-windows-x64.zip"
+    archive = output / "BowlBound-0.1.0-alpha.2-windows-x64.zip"
     with ZipFile(archive) as zipped:
         assert "BowlBound/BowlBound.exe" in zipped.namelist()
         assert not any("__pycache__" in name for name in zipped.namelist())

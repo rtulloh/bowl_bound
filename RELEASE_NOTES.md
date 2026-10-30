@@ -1,10 +1,21 @@
 # Bowl Bound release notes
 
-## 0.1.0-alpha.1 — Initial alpha (unreleased)
+## 0.1.0-alpha.2 — Second alpha
 
-An early version of the Bowl Bound college-football strategy game for community
-testing. Standalone downloads are being prepared; no release date or platform
-availability is announced yet.
+A follow-up prerelease of the Bowl Bound college-football strategy game for
+community testing. It includes the verified Windows x64 installer/portable build
+and portable macOS Apple Silicon and Intel builds introduced with alpha 1, plus
+the latest reviewed documentation and issue inventory.
+
+### Changes since alpha 1
+
+- Publishes the current reviewed source and issue inventory after the milestone 25
+  draft/current-alpha code review.
+- Records importer safety, launcher, release-manifest, documentation and frontend
+  test-hygiene follow-up tickets without changing game rules or save compatibility.
+- Updates player-facing version, installation and release guidance for alpha 2.
+- Retains the alpha 1 fictional sample rosters and announcer-style engine
+  commentary; no private or historical team charts are added.
 
 ### Included
 
@@ -29,8 +40,11 @@ availability is announced yet.
   unavailable. Unsupported controls stay disabled.
 - Historical charts, PDFs and rosters are not included. Importing your own teams
   requires the separate Python extractor and permission to use the source material.
-- Standalone signing, platform requirements and download availability will be
-  stated with the actual release artifacts.
+- Standalone builds are unsigned. Verify the published SHA256 files before use;
+  Windows SmartScreen or macOS Gatekeeper may require the documented local
+  approval.
+- Linux does not yet have a standalone alpha build; source installation remains
+  available.
 
 ### Getting started and feedback
 
