@@ -59,7 +59,10 @@ summary: 2 succeeded, 1 failed
 - Every PDF is validated before anything is written. A team that appears in two PDFs
   (same season and folder slug) is refused in both, never merged.
 - Each PDF's files are written all-or-nothing, as for a single PDF.
-- `--dry-run` prints the status line and destinations for each PDF and writes nothing.
+- `--dry-run` runs the same destination preflight as export: it checks the output root,
+  target file types, source-file aliases, symlinked roots/parents, and existing targets
+  against `--force`. It prints per-file status and destinations without creating or
+  replacing files. It cannot predict a later disk or permission failure during writing.
 - Failure reasons never include chart text, filenames, or local paths. An unexpected
   failure prints a fixed message.
 

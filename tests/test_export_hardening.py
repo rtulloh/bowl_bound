@@ -115,6 +115,7 @@ def test_documented_exit_codes() -> None:
 def test_default_summary_reports_counts_not_chart_text() -> None:
     from tests.test_pdf_cli_export import _team
 
-    text = cli._summary([_team("Synthetic State")])
+    teams = cli._verify_teams([_team("Synthetic State")])
+    text = cli._summary(teams, Path("seasons"))
     assert "810 chart cells, 30 PAT outcomes" in text
     assert "yards" not in text and "Synths" not in text

@@ -269,6 +269,126 @@ def test_dry_run_checks_every_pdf_and_writes_nothing(
     assert "[2/3] b.pdf: FAILED" in captured.err
 
 
+def test_dry_run_requires_force_for_existing_targets_and_never_changes_them(
+    pdfs: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    _three(monkeypatch)
+    real_root = tmp_path / "real-seasons"
+    dry_root = tmp_path / "dry-seasons"
+    for root in (real_root, dry_root):
+        team = root / "2002" / "miami-florida"
+        team.mkdir(parents=True)
+        (team / "team.yaml").write_text("keep me")
+
+    real_status = _run(pdfs, real_root)
+    real_error = capsys.readouterr().err
+    dry_status = _run(pdfs, dry_root, "--dry-run")
+    dry_capture = capsys.readouterr()
+
+    assert real_status == dry_status == 1
+    assert dry_capture.err == real_error
+    assert "[2/3] b.pdf: FAILED" in dry_capture.err
+    assert (dry_root / "2002" / "miami-florida" / "team.yaml").read_text() == "keep me"
+    assert not (dry_root / "2002" / "ohio-state").exists()
+
+    assert _run(pdfs, dry_root, "--dry-run", "--force") == 0
+    assert (dry_root / "2002" / "miami-florida" / "team.yaml").read_text() == "keep me"
+    assert not (dry_root / "2002" / "ohio-state").exists()
+
+
+@pytest.mark.parametrize("conflict", ["root-file", "target-directory"])
+def test_dry_run_matches_real_run_for_root_and_target_type_conflicts(
+    pdfs: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+    conflict: str,
+) -> None:
+    _three(monkeypatch)
+    roots = (tmp_path / "real-seasons", tmp_path / "dry-seasons")
+    for root in roots:
+        if conflict == "root-file":
+            root.write_text("keep root")
+        else:
+            target = root / "2002" / "ohio-state" / "offense.csv"
+            target.mkdir(parents=True)
+            (target / "keep.txt").write_text("keep target")
+
+    real_status = _run(pdfs, roots[0])
+    real_error = capsys.readouterr().err
+    dry_status = _run(pdfs, roots[1], "--dry-run")
+    dry_capture = capsys.readouterr()
+
+    assert real_status == dry_status == 1
+    assert dry_capture.err == real_error
+    if conflict == "root-file":
+        assert all(
+            f"[{index}/3] {name}: FAILED" in dry_capture.err
+            for index, name in enumerate(("a.pdf", "b.pdf", "c.pdf"), 1)
+        )
+        assert roots[1].read_text() == "keep root"
+    else:
+        assert "[1/3] a.pdf: FAILED" in dry_capture.err
+        assert (
+            roots[1] / "2002" / "ohio-state" / "offense.csv" / "keep.txt"
+        ).read_text() == "keep target"
+        assert not (roots[1] / "2002" / "miami-florida").exists()
+
+
+@pytest.mark.parametrize("symlink_kind", ["root", "parent"])
+def test_dry_run_refuses_symlinked_root_and_parent_like_real_export(
+    pdfs: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+    symlink_kind: str,
+) -> None:
+    _three(monkeypatch)
+    roots = [tmp_path / "real-seasons", tmp_path / "dry-seasons"]
+    for index, root in enumerate(roots):
+        destination = tmp_path / f"real-destination-{index}"
+        destination.mkdir()
+        if symlink_kind == "root":
+            root.symlink_to(destination, target_is_directory=True)
+        else:
+            parent = tmp_path / f"linked-parent-{index}"
+            parent.symlink_to(destination, target_is_directory=True)
+            roots[index] = parent / "seasons"
+
+    real_status = _run(pdfs, roots[0])
+    real_error = capsys.readouterr().err
+    dry_status = _run(pdfs, roots[1], "--dry-run")
+    dry_capture = capsys.readouterr()
+
+    assert real_status == dry_status == 1
+    assert dry_capture.err == real_error
+
+
+def test_dry_run_refuses_a_hardlink_to_the_source_even_with_force(
+    pdfs: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    import os
+
+    _three(monkeypatch)
+    roots = (tmp_path / "real-seasons", tmp_path / "dry-seasons")
+    for root in roots:
+        target = root / "2002" / "ohio-state" / "offense.csv"
+        target.parent.mkdir(parents=True)
+        os.link(pdfs / "a.pdf", target)
+
+    real_status = _run(pdfs, roots[0], "--force")
+    real_error = capsys.readouterr().err
+    dry_status = _run(pdfs, roots[1], "--dry-run", "--force")
+    dry_capture = capsys.readouterr()
+
+    assert real_status == dry_status == 1
+    assert dry_capture.err == real_error
+    assert "must not replace the source PDF" in dry_capture.err
+    assert (roots[1] / "2002" / "ohio-state" / "offense.csv").read_bytes() == (
+        pdfs / "a.pdf"
+    ).read_bytes()
+
+
 def test_dry_run_still_detects_a_team_repeated_across_pdfs(
     pdfs: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
 ) -> None:

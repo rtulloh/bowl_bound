@@ -12,8 +12,6 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from bowl_bound.team_csv import team_folder_name  # noqa: E402 - engine codec, no PDF libraries
-
 from .inspection import ImportInspectionError, inspect_document
 
 if TYPE_CHECKING:  # the type only; importing .export at runtime would pull in the PDF libraries
@@ -111,81 +109,120 @@ def _write_report(source: Path, output: Path, rendered: str | bytes, force: bool
         raise
 
 
-def _verify_teams(teams: list) -> None:
-    """Round-trip every team through the strict file codec so nothing unreadable is written."""
-    from bowl_bound.team_csv import provenance_to_csv, team_from_files, team_to_files
-
-    for team in teams:
-        decoded = team_from_files(
-            team_to_files(team.chart, team.metadata), provenance_to_csv(team.chart, team.metadata)
-        )
-        if decoded != (team.chart, team.metadata):
-            raise ValueError("team does not survive a file round trip")
-
-
 TeamTarget = tuple[Path, str]
 TeamIdentity = tuple[int, str]
 
 
 @dataclass(frozen=True)
+class PreparedTeam:
+    """One team whose serialized files have passed the strict bundle round trip."""
+
+    team: ExportedTeam
+    identity: TeamIdentity
+    files: tuple[tuple[str, str], ...]
+    provenance_csv: str
+    cell_count: int
+    pat_count: int
+
+
+@dataclass(frozen=True)
 class PlannedPDF:
-    """One validated PDF and all team identities and destinations it owns."""
+    """One validated PDF with its team data, identities, destinations and summary."""
 
     index: int
     source: Path
-    teams: tuple[ExportedTeam, ...]
+    teams: tuple[PreparedTeam, ...]
     targets: tuple[TeamTarget, ...]
     identities: frozenset[TeamIdentity]
+    summary: str
 
 
-def _team_targets(root: Path, teams: list) -> list[TeamTarget]:
-    """Map every team to its Paydirt-style files; returns (path, text) for each file.
+def _verify_teams(teams: Sequence[ExportedTeam]) -> tuple[PreparedTeam, ...]:
+    """Serialize and round-trip each team once, retaining verified content for export."""
+    from bowl_bound.team_csv import (
+        provenance_to_csv,
+        team_folder_name,
+        team_from_files,
+        team_to_files,
+        validate_team_name,
+    )
+
+    prepared: list[PreparedTeam] = []
+    for team in teams:
+        season = team.chart.season
+        if type(season) is not int or season < 1:
+            raise ValueError("Team season must be a positive integer")
+        validate_team_name(team.chart.name)
+        identity = (season, team_folder_name(team.chart.name))
+        files = team_to_files(team.chart, team.metadata)
+        provenance_csv = provenance_to_csv(team.chart, team.metadata)
+        decoded = team_from_files(files, provenance_csv)
+        if decoded != (team.chart, team.metadata):
+            raise ValueError("team does not survive a file round trip")
+        cell_count = sum(
+            len(group)
+            for group in (
+                team.chart.offense,
+                team.chart.supplemental,
+                team.chart.defense,
+                team.chart.special_teams,
+            )
+        )
+        prepared.append(
+            PreparedTeam(
+                team,
+                identity,
+                tuple(files.items()),
+                provenance_csv,
+                cell_count,
+                len(team.chart.pat_outcomes),
+            )
+        )
+    return tuple(prepared)
+
+
+def _team_targets(root: Path, teams: Sequence[PreparedTeam]) -> tuple[TeamTarget, ...]:
+    """Map verified serialized files to destinations, rejecting intra-PDF collisions.
 
     Layout: ``<root>/<season>/<team-slug>/{offense,defense,special}.csv`` and ``team.yaml``,
     plus ``<root>/<season>/provenance/<team-slug>.csv`` kept outside the team folder. The slug
     is lowercase and hyphenated (``Miami (Florida)`` -> ``miami-florida``); the real name is
     stored in ``team.yaml``.
     """
-    from bowl_bound.team_csv import (
-        PROVENANCE_DIR,
-        provenance_to_csv,
-        team_folder_name,
-        team_to_files,
-        validate_team_name,
-    )
+    from bowl_bound.team_csv import PROVENANCE_DIR
 
-    seen: set[tuple[int, str]] = set()
+    seen: set[TeamIdentity] = set()
     targets: list[TeamTarget] = []
-    for team in teams:
-        season = team.chart.season
-        if type(season) is not int or season < 1:
-            raise ValueError("Team season must be a positive integer")
-        validate_team_name(team.chart.name)
-        slug = team_folder_name(team.chart.name)
-        key = (season, slug)
-        if key in seen:
+    for prepared in teams:
+        season, slug = prepared.identity
+        if prepared.identity in seen:
             raise ValueError("Two teams map to the same season folder; refusing to merge them")
-        seen.add(key)
+        seen.add(prepared.identity)
         folder = root / str(season) / slug
-        for filename, text in team_to_files(team.chart, team.metadata).items():
+        for filename, text in prepared.files:
             targets.append((folder / filename, text))
         targets.append(
             (
                 root / str(season) / PROVENANCE_DIR / f"{slug}.csv",
-                provenance_to_csv(team.chart, team.metadata),
+                prepared.provenance_csv,
             )
         )
-    return targets
+    return tuple(targets)
 
 
-def _write_teams(source: Path, root: Path, targets: Sequence[TeamTarget], force: bool) -> None:
-    """Write every file or none: a failure restores files already created or replaced."""
+def _preflight_teams(source: Path, root: Path, targets: Sequence[TeamTarget], force: bool) -> None:
+    """Validate every batch destination without creating directories or writing files."""
     if root.is_symlink() or (root.exists() and not root.is_dir()):
         raise ValueError("Export root must be a directory, not a file or symlink")
     if root.resolve() == source.resolve():
         raise ValueError("Output must not replace the source PDF")
-    for path, _ in targets:  # validate everything before the first write
+    for path, _ in targets:
         _validate_output(source, path, force)
+
+
+def _write_teams(source: Path, root: Path, targets: Sequence[TeamTarget], force: bool) -> None:
+    """Write every file or none: a failure restores files already created or replaced."""
+    _preflight_teams(source, root, targets, force)
     # Every directory this run may create, parents included, so a failure can remove them.
     candidates = {root}
     for path, _ in targets:
@@ -215,26 +252,16 @@ def _write_teams(source: Path, root: Path, targets: Sequence[TeamTarget], force:
         raise
 
 
-def _summary(teams: Sequence[ExportedTeam], targets: Sequence[TeamTarget] | None = None) -> str:
+def _summary(teams: Sequence[PreparedTeam], root: Path) -> str:
     """Counts and destinations only: dry-run output must not echo chart contents."""
-    from bowl_bound.team_csv import team_folder_name
-
     lines = ["status: validated", f"teams: {len(teams)}"]
-    folders = set() if targets is None else {p.parent for p, _ in targets}
-    for team in teams:
-        chart = team.chart
-        cells = sum(
-            len(group)
-            for group in (chart.offense, chart.supplemental, chart.defense, chart.special_teams)
-        )
+    for prepared in teams:
+        chart = prepared.team.chart
         lines.append(
-            f"  {chart.name} {chart.season}: {cells} chart cells, "
-            f"{len(chart.pat_outcomes)} PAT outcomes"
+            f"  {chart.name} {chart.season}: {prepared.cell_count} chart cells, "
+            f"{prepared.pat_count} PAT outcomes"
         )
-        slug = team_folder_name(chart.name)
-        for folder in sorted(folders, key=str):
-            if folder.name == slug and folder.parent.name == str(chart.season):
-                lines.append(f"    -> {folder}")
+        lines.append(f"    -> {root / str(chart.season) / prepared.identity[1]}")
     return "\n".join(lines) + "\n"
 
 
@@ -264,15 +291,14 @@ def _run_batch(sources: list[Path], output: Path, force: bool, dry_run: bool) ->
     owners: dict[TeamIdentity, set[int]] = {}
     for index, source in enumerate(sources, 1):
         try:
-            teams = export_document(source)
-            _verify_teams(teams)
-            identities = frozenset(
-                (team.chart.season, team_folder_name(team.chart.name)) for team in teams
-            )
+            teams = _verify_teams(export_document(source))
+            identities = frozenset(team.identity for team in teams)
             for identity in identities:
                 owners.setdefault(identity, set()).add(index)
             targets = _team_targets(output, teams)
-            plans.append(PlannedPDF(index, source, tuple(teams), tuple(targets), identities))
+            _preflight_teams(source, output, targets, force)
+            summary = _summary(teams, output)
+            plans.append(PlannedPDF(index, source, teams, targets, identities, summary))
         except Exception as error:  # noqa: BLE001 - reason is sanitized; document text never printed
             failures_by_index[index] = error
 
@@ -293,7 +319,7 @@ def _run_batch(sources: list[Path], output: Path, force: bool, dry_run: bool) ->
     if dry_run:
         for plan in planned:
             print(f"[{plan.index}/{total}] {plan.source.name}: ok (dry run)")
-            print(_summary(plan.teams, plan.targets), end="")
+            print(plan.summary, end="")
         print(f"summary: {len(planned)} succeeded, {failures} failed")
         return 0 if failures == 0 else 1
     succeeded = 0

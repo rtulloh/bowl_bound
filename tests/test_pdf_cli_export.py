@@ -168,11 +168,15 @@ def test_dry_run_prints_counts_and_destinations_and_writes_nothing(
     assert "seasons/2002/synthetic-state" in printed
 
 
-def test_dry_run_does_not_refuse_existing_folders(source: Path, tmp_path: Path) -> None:
+def test_dry_run_validates_existing_targets_but_force_does_not_write(
+    source: Path, tmp_path: Path, capsys: pytest.CaptureFixture
+) -> None:
     team = tmp_path / "seasons" / "2002" / "synthetic-state"
     team.mkdir(parents=True)
     (team / "offense.csv").write_text("keep")
-    assert _run(source, tmp_path / "seasons", "--dry-run") == 0
+    assert _run(source, tmp_path / "seasons", "--dry-run") == 1
+    assert "Output exists" in capsys.readouterr().err
+    assert _run(source, tmp_path / "seasons", "--dry-run", "--force") == 0
     assert (team / "offense.csv").read_text() == "keep"
 
 
