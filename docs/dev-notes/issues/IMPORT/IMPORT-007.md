@@ -19,7 +19,7 @@ links:
 - IMPORT-006
 - IMPORT-008
 - IMPORT-009
-commits: [824b0c6]
+commits: [824b0c6, 28169cd]
 ---
 
 ## Description
@@ -41,7 +41,8 @@ Implemented and committed on `wip/5d-batch-import` as `824b0c6`.
 - Existing synthetic tests cover complete success, mixed failures, empty input, hidden/non-PDF filtering, status order, summaries, dry-run, and aggregate exit codes.
 - Reconsulted Paydirt `extract_charts.py:462-475`, `docs/chart-generator.md`, and the AI audit batch helper/test. Adapted independent-item failure isolation and result aggregation. Rejected lowercase-only discovery, raw errors/tracebacks, partial output, and zero exit on partial failure; no Excel layout, NFL behavior, or Paydirt dependency was reused.
 - Verification: `tests/test_pdf_*.py tests/test_export_hardening.py` — 203 passed; Ruff check, Ruff format check and `git diff --check` passed.
-- IMPORT-002 through IMPORT-006 are resolved with tested commits. Final integration remains tracked by IMPORT-009.
+- IMPORT-002 through IMPORT-006 are resolved with tested commits. Final integration is recorded
+  under IMPORT-009.
 
 ## Comments
 
@@ -49,6 +50,6 @@ Implemented and committed on `wip/5d-batch-import` as `824b0c6`.
 Created with scripts/create_issue.py. Keep evidence public-safe.
 
 --- 2026-10-30 00:00 ---
-Deterministic batch discovery and per-PDF result aggregation are committed in `824b0c6`.
-Final integration remains tracked by IMPORT-009; do not close before the integrated milestone
-gate passes.
+Deterministic batch discovery and per-PDF result aggregation are integrated in `28169cd`. Final
+Milestone 25 gate evidence is in [IMPORT-009](IMPORT-009.md); keep this issue resolved, not
+closed, pending owner play-test.

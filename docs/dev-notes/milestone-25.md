@@ -3,10 +3,11 @@
 ## Scope and starting point
 
 The canonical scope is [Milestone 25 in the project plan](project-plan.md#25-add-batch-import-and-documentation-deferred-from-5d).
-Resume the parked `wip/5d-batch-import` draft at `2822c3b`; it is a starting point,
-not an accepted milestone. The draft adds directory input and per-file statuses,
-but review reproduced defects in rollback, collision handling, dry-run validation,
-diagnostics and input contracts.
+The parked `wip/5d-batch-import` draft at `2822c3b` was a starting point, not an
+accepted milestone. Because that branch predates Milestones 6–24, its implementation
+was selectively integrated and tested on the current public lineage rather than
+merging the branch wholesale. The draft's rollback, collision, dry-run, diagnostics
+and input-contract defects were fixed before acceptance.
 
 Work is tracked by [IMPORT-001](issues/IMPORT/IMPORT-001.md) through
 [IMPORT-009](issues/IMPORT/IMPORT-009.md). Keep each ticket test-first, commit its
@@ -89,7 +90,7 @@ added.
   second PDF with that identity from being written.
 - Batch and CLI tests: 83 passed. Ruff, format and whitespace checks passed.
 - Parked-branch implementation commit: `d1a43cb`. Integration onto the active Milestone 25
-  branch remains assigned to [IMPORT-009](issues/IMPORT/IMPORT-009.md).
+  branch: `89c4308`.
 
 ### 2026-10-30 — IMPORT-004
 
@@ -102,8 +103,7 @@ added.
 - Updated maintainer and player documentation to state the checks and the limits of dry-run.
 - Focused batch/CLI/export-hardening suite: 97 passed. Ruff check, format check and
   `git diff --check` passed.
-- Parked-branch implementation commit: `95cbe68`. Final integration remains assigned to
-  [IMPORT-009](issues/IMPORT/IMPORT-009.md).
+- Parked-branch implementation commit: `95cbe68`; integrated implementation: `e583902`.
 
 ### 2026-10-30 — IMPORT-005
 
@@ -116,8 +116,7 @@ added.
   they assert both output streams are free of source sentinels and that unrelated PDFs continue.
 - PDF importer and export-hardening tests: 194 passed. Ruff check, format check and
   `git diff --check` passed.
-- Parked-branch implementation commit: `0f050eb`. Final integration remains assigned to
-  [IMPORT-009](issues/IMPORT/IMPORT-009.md).
+- Parked-branch implementation commit: `0f050eb`; integrated implementation: `24eae29`.
 
 ### 2026-10-30 — IMPORT-006
 
@@ -131,8 +130,7 @@ added.
   and without creating output. Updated CLI help, importer reference and player guide.
 - PDF importer and export-hardening tests: 203 passed. Ruff check, format check and
   `git diff --check` passed.
-- Parked-branch implementation commit: `a052138`. Final integration remains assigned to
-  [IMPORT-009](issues/IMPORT/IMPORT-009.md).
+- Parked-branch implementation commit: `a052138`; integrated implementation: `4c81fa6`.
 
 ### 2026-10-30 — IMPORT-007
 
@@ -147,8 +145,7 @@ added.
 - Existing synthetic tests cover full success, mixed failures, empty directories, status ordering,
   hidden/non-PDF filtering, dry-run and aggregate exit codes. Focused importer/export-hardening
   suite: 203 passed. Ruff check, format check and `git diff --check` passed.
-- Parked-branch implementation commit: `824b0c6`. Final integration remains assigned to
-  [IMPORT-009](issues/IMPORT/IMPORT-009.md).
+- Parked-branch implementation commit: `824b0c6`; integrated implementation: `28169cd`.
 
 ### 2026-10-30 — IMPORT-008
 
@@ -164,4 +161,29 @@ added.
 - Synthetic importer, CLI and wheel tests: 208 passed. Native build workflow tests: 4 passed.
   Ruff, format, whitespace and packaged-link checks passed.
 - Parked-branch implementation commit: `b0ad58d`; root player-guide and release-boundary
-  commit: `b1e4b44`. Acceptance evidence is recorded in [IMPORT-008](issues/IMPORT/IMPORT-008.md).
+  commit: `b1e4b44`; integrated maintainer documentation: `7da0b51`. Acceptance evidence is
+  recorded in [IMPORT-008](issues/IMPORT/IMPORT-008.md).
+
+### 2026-10-30 — IMPORT-009 and milestone acceptance
+
+- Integrated the reviewed batch importer by selectively applying the 5d draft and ticket
+  fixes to the current public lineage: `8767ec2`, `89c4308`, `e583902`, `24eae29`,
+  `4c81fa6`, `28169cd`, and `7da0b51`. Adapted the importer tests and synthetic fixture
+  provenance in `a865eb5`, `3db98a5`, and `e573c74`. No private or MaysFootball charts,
+  converted teams, or reports were used.
+- Integration exposed two API test fixtures that forced all PAT results to good while
+  retaining a red source color, and a synthetic CSV fixture that attempted to serialize
+  an engine-only negative variable multiplier. Updated the fixtures to preserve chart
+  provenance and represent the unsupported CSV-only case correctly; assertions were
+  retained. Browser E2E setup received the same PAT provenance correction.
+- Full Python suite with branch coverage: `.venv/bin/python -m pytest --cov
+  --cov-report=term-missing -q` — 2,548 passed; 93.48% coverage against the 75% floor.
+- Repository quality: `ruff check .`, `ruff format --check .`, `.venv/bin/python -m pip
+  check`, and `git diff --check` passed.
+- Frontend: `npm ci --ignore-scripts`, `npm test` (122 passed across 16 files),
+  `npm run build`, and `npm audit` (zero vulnerabilities) passed.
+- Real-engine browser gate: `BB_E2E_SEASONS=/private/tmp/bb-m25-integration-e2e-seasons
+  npm run test:e2e` — 33 passed. It used fictional synthetic teams only.
+- Ticket acceptance and regenerated index are recorded in
+  [IMPORT-009](issues/IMPORT/IMPORT-009.md). All Milestone 25 tickets are resolved;
+  keep them unclosed until the owner completes the play-test.

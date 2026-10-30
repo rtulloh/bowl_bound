@@ -14,7 +14,7 @@ tags:
 links:
 - IMPORT-007
 - IMPORT-009
-commits: [d1a43cb]
+commits: [d1a43cb, 89c4308]
 ---
 
 ## Description
@@ -40,8 +40,8 @@ Implemented and committed on `wip/5d-batch-import` as `d1a43cb`.
   an unrelated successful PDF. The prior first-winner expectation was replaced.
 - Verification: `tests/test_pdf_batch.py tests/test_pdf_cli.py tests/test_pdf_cli_export.py`
   — 83 passed; Ruff check, Ruff format check and `git diff --check` passed.
-- The fix is on the parked draft branch pending final integration under IMPORT-009; do not
-  close this issue before that integration is verified.
+- The fix is integrated in `89c4308`; full milestone gate evidence is recorded under
+  IMPORT-009. Keep this issue resolved, not closed, pending owner play-test.
 
 ## Comments
 
@@ -49,5 +49,5 @@ Implemented and committed on `wip/5d-batch-import` as `d1a43cb`.
 Created with scripts/create_issue.py. Keep evidence public-safe.
 
 --- 2026-10-30 00:00 ---
-Collision behavior is corrected and committed in `d1a43cb`. Final integration into the active
-Milestone 25 branch remains tracked by IMPORT-009.
+Collision behavior is integrated in `89c4308`. Final Milestone 25 gate evidence is in
+[IMPORT-009](IMPORT-009.md); keep this issue resolved, not closed, pending owner play-test.

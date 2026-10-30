@@ -15,7 +15,7 @@ links:
 - IMPORT-007
 - IMPORT-008
 - IMPORT-009
-commits: [a052138]
+commits: [a052138, 4c81fa6]
 ---
 
 ## Description
@@ -35,7 +35,8 @@ Implemented and committed on `wip/5d-batch-import` as `a052138`.
 - Synthetic tests cover empty, one-PDF and multi-PDF directories in both modes, plus symlinked directories/files and dangling links in both modes. Refused input is not scanned or parsed and creates no output. Existing export tests preserve sorted, nonrecursive, case-insensitive discovery and hidden-file handling.
 - Updated CLI help, the importer reference and the player guide. The prior single-PDF directory inspection expectation was replaced by the explicit file-only contract.
 - Verification: `tests/test_pdf_*.py tests/test_export_hardening.py` — 203 passed; Ruff check, Ruff format check and `git diff --check` passed.
-- Final integration onto the active Milestone 25 branch remains tracked by IMPORT-009.
+- Integrated implementation: `4c81fa6`. Full milestone gate evidence is recorded under
+  IMPORT-009; keep this issue resolved, not closed, pending owner play-test.
 
 ## Comments
 
@@ -43,5 +44,5 @@ Implemented and committed on `wip/5d-batch-import` as `a052138`.
 Created with scripts/create_issue.py. Keep evidence public-safe.
 
 --- 2026-10-30 00:00 ---
-Input mode and symlink boundaries are tested and fixed in `a052138`. Final integration remains
-tracked by IMPORT-009; do not close before the integrated milestone gate passes.
+Input mode and symlink boundaries are integrated in `4c81fa6`. Final Milestone 25 gate evidence
+is in [IMPORT-009](IMPORT-009.md); keep this issue resolved, not closed, pending owner play-test.

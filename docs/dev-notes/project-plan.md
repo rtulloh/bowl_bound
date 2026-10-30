@@ -378,7 +378,9 @@ publication remains a separate explicit review.
 
 ### 25. Add batch import and documentation (deferred from 5d)
 
-Deferred by decision: batch support is not needed while only two teams are in use. A working draft is parked on the `wip/5d-batch-import` branch (directory input, per-file status lines, 476 tests passing). Resume from it rather than starting over.
+Completed 2026-10-30. The parked `wip/5d-batch-import` draft was selectively integrated
+and the repaired workflow passed the full milestone acceptance gate. See the
+[Milestone 25 work log](milestone-25.md) and [IMPORT-001–009](issue-tracker.md).
 
 **Deliver:** directory processing, per-file status, examples, troubleshooting guide, and isolated PDF-tool dependencies. Fix the open review findings from the draft first:
 
@@ -389,7 +391,9 @@ Deferred by decision: batch support is not needed while only two teams are in us
 - Inspection mode must require a single PDF file, and a symlinked input directory must be refused.
 - Add tests for a team repeated in three PDFs, a collision inside one PDF, a non-UTF-8 rollback, and dry-run against an existing target.
 
-**Validate:** test batch success, partial failures, and overwrite safety.
+**Validate:** batch success, partial failures and overwrite safety, plus the synthetic
+collision, dry-run, rollback, diagnostics, input-contract, dependency and release checks
+recorded in the milestone work log.
 
 Tracked work: [IMPORT-001](issues/IMPORT/IMPORT-001.md) through
 [IMPORT-009](issues/IMPORT/IMPORT-009.md), covering color/provenance integrity,

@@ -18,6 +18,7 @@ links:
 commits:
 - b0ad58d
 - b1e4b44
+- 7da0b51
 ---
 
 ## Description
@@ -51,3 +52,8 @@ Created with scripts/create_issue.py. Keep evidence public-safe.
   optional/advanced. General installation and onboarding cleanup remains tracked by DEV-045.
 - No MaysFootball or other historical chart files were imported, committed or packaged.
   Keep this ticket resolved, not closed, until the milestone play-test confirmation.
+
+--- 2026-10-30 00:00 ---
+The maintainer reference and dependency guidance are integrated in `7da0b51`; player
+guidance remains recorded in `b1e4b44`. Final milestone gate evidence is in
+[IMPORT-009](IMPORT-009.md). Keep this issue resolved, not closed, pending owner play-test.

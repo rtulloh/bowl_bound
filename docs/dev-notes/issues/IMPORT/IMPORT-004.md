@@ -14,7 +14,7 @@ tags:
 links:
 - IMPORT-007
 - IMPORT-009
-commits: [95cbe68]
+commits: [95cbe68, e583902]
 ---
 
 ## Description
@@ -35,7 +35,8 @@ Implemented and committed on `wip/5d-batch-import` as `95cbe68`.
 - A typed `PreparedTeam` retains round-tripped serialized files, canonical identity and summary counts. The batch plan reuses these values instead of serializing teams and deriving folder names again. PDF imports remain lazy.
 - Updated maintainer and player docs with the preflight scope and its limit: later disk or permission failures cannot be predicted.
 - Verification: `tests/test_pdf_batch.py tests/test_pdf_cli.py tests/test_pdf_cli_export.py tests/test_export_hardening.py` — 97 passed; Ruff check, Ruff format check and `git diff --check` passed.
-- Final integration onto the active Milestone 25 branch remains tracked by IMPORT-009.
+- Integrated implementation: `e583902`. Full milestone gate evidence is recorded under
+  IMPORT-009; keep this issue resolved, not closed, pending owner play-test.
 
 ## Comments
 
@@ -43,6 +44,5 @@ Implemented and committed on `wip/5d-batch-import` as `95cbe68`.
 Created with scripts/create_issue.py. Keep evidence public-safe.
 
 --- 2026-10-30 00:00 ---
-Dry-run destination validation is corrected and committed in `95cbe68`. The fix remains on the
-parked batch branch pending integration under IMPORT-009; do not close before the integrated
-Milestone 25 regression gate passes.
+Dry-run destination validation is integrated in `e583902`. Final Milestone 25 gate evidence is
+in [IMPORT-009](IMPORT-009.md); keep this issue resolved, not closed, pending owner play-test.

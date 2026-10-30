@@ -14,7 +14,7 @@ tags:
 links:
 - IMPORT-007
 - IMPORT-009
-commits: [0f050eb]
+commits: [0f050eb, 24eae29]
 ---
 
 ## Description
@@ -34,7 +34,8 @@ Implemented and committed on `wip/5d-batch-import` as `0f050eb`.
 - Added synthetic coverage for `ValueError`, `UnicodeDecodeError`, parser exceptions and custom `OSError` details across inspection, batch export and write failures. Batch processing still continues for unrelated PDFs. Tests capture stdout and stderr together.
 - Existing validation guidance and the optional PDF dependency install hint remain visible.
 - Verification: `tests/test_pdf_*.py tests/test_export_hardening.py` — 194 passed; Ruff check, Ruff format check and `git diff --check` passed.
-- Final integration onto the active Milestone 25 branch remains tracked by IMPORT-009.
+- Integrated implementation: `24eae29`. Full milestone gate evidence is recorded under
+  IMPORT-009; keep this issue resolved, not closed, pending owner play-test.
 
 ## Comments
 
@@ -42,6 +43,5 @@ Implemented and committed on `wip/5d-batch-import` as `0f050eb`.
 Created with scripts/create_issue.py. Keep evidence public-safe.
 
 --- 2026-10-30 00:00 ---
-The CLI now redacts untrusted exception details and the regression tests pass in `0f050eb`.
-Final integration remains tracked by IMPORT-009; do not close before the integrated Milestone
-25 regression gate passes.
+The CLI redaction fix is integrated in `24eae29`. Final Milestone 25 gate evidence is in
+[IMPORT-009](IMPORT-009.md); keep this issue resolved, not closed, pending owner play-test.
