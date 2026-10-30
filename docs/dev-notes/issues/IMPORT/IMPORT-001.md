@@ -1,15 +1,15 @@
 ---
 id: IMPORT-001
 title: Cross-check CSV cell colors against provenance and share one legend table
-status: open
+status: resolved
 priority: Medium
 milestone: "25"
 created-at: 2026-10-26
-resolved-at:
+resolved-at: 2026-10-30
 closed-at:
 tags: [importer, data-integrity]
 links: []
-commits: []
+commits: [8f6f759]
 ---
 
 ## Description
@@ -30,6 +30,25 @@ rules for the whole file, hiding issues such as the `re`/`l` names at line 535.
   inference and the exporter's RGB mapping from it.
 - Replace the whole-file noqa with targeted suppressions or fixes; keep the round-trip tests
   green and update docs/team-bundle.md.
+
+Implemented and committed as `8f6f759`.
+
+- Baseline: the new synthetic reader regression failed against the unchanged implementation
+  with `DID NOT RAISE TeamFormatError` after the CSV token was paired with red RGB provenance.
+- After the fix: the reader reports only CSV file/row and PDF page, and writer validation
+  rejects the same mismatch before emitting files. Synthetic token/color cases cover yardage,
+  named results, events, penalties, blank/no-change and incomplete markers.
+- The shared legend now supplies normalization token meanings, canonical CSV names, token
+  color inference and exact RGB values used by PDF export. Whole-file Ruff suppression was
+  removed; ambiguous local names were clarified and zipped chart columns now require equal
+  lengths.
+- Fictional sample provenance now carries legend-compatible synthetic RGB values; release
+  manifest hashes were refreshed. Documentation distinguishes these placeholders from PDF
+  measurements.
+- Verification: `.venv/bin/python -m pytest tests/test_team_csv.py tests/test_pdf_export.py
+  tests/test_sample_teams.py tests/test_pdf_cli_export.py tests/test_pdf_export_e2e.py
+  tests/test_release_package.py tests/test_release_archive.py -q` — 161 passed;
+  Ruff check, Ruff format check and `git diff --check` passed.
 
 ## Comments
 

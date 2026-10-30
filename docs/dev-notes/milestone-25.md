@@ -52,5 +52,14 @@ added.
 
 ## Work log
 
-No ticket is resolved in this initial scope record. Add dated sections below as
-each ticket's tests, fix, verification and commits are completed.
+### 2026-10-30 — IMPORT-001
+
+- Baseline synthetic provenance mismatch test failed against unchanged code as expected:
+  the reader did not raise `TeamFormatError`.
+- Implemented shared color/token/RGB legend, reader and writer provenance checks, and removed
+  the file-wide Ruff suppression. Regenerated only the fictional public sample provenance;
+  refreshed its allowlist hashes and clarified the synthetic RGB documentation.
+- Focused bundle, PDF import/export, sample and release packaging checks: 161 passed. Ruff,
+  format and whitespace checks passed.
+- Implementation commit: `8f6f759`. Resolution evidence is recorded in
+  [IMPORT-001](issues/IMPORT/IMPORT-001.md); it remains resolved pending any required play test.
