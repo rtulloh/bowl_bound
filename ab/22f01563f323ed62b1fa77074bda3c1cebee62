@@ -1,0 +1,47 @@
+docs/dev-notes/issues/DEV/DEV-004.md
+  s_ed54ab581b3d60::t_ffca03af150202 11
+docs/dev-notes/issues/DEV/DEV-012.md
+  s_ed54ab581b3d60::t_953ede5aa341ed 13
+docs/dev-notes/issues/DEV/DEV-034.md
+  s_ed54ab581b3d60::t_19ac8b1b0bb100 12
+docs/dev-notes/issues/DEV/DEV-035.md
+  s_ed54ab581b3d60::t_d34d2070743a15 12
+docs/dev-notes/issues/DEV/DEV-043.md
+  s_ed54ab581b3d60::t_f061ab3407ef45 1-39
+docs/dev-notes/issues/DEV/DEV-044.md
+  s_ed54ab581b3d60::t_7bf3e597ad49a4 1-38
+docs/dev-notes/issues/DEV/DEV-045.md
+  s_ed54ab581b3d60::t_77af6c093b9cc1 1-33
+docs/dev-notes/issues/DEV/DEV-046.md
+  s_ed54ab581b3d60::t_a31a88e1f032f9 1-32
+docs/dev-notes/issues/DEV/DEV-047.md
+  s_ed54ab581b3d60::t_6bb6cd26ddd879 1-31
+docs/dev-notes/issues/DEV/DEV-048.md
+  s_ed54ab581b3d60::t_93f7dd78647b73 1-31
+docs/dev-notes/issues/DEV/DEV-049.md
+  s_ed54ab581b3d60::t_0bd694327e757a 1-32
+docs/dev-notes/issues/IMPORT/IMPORT-003.md
+  s_ed54ab581b3d60::t_72b408bec0c70c 1-31
+docs/dev-notes/issues/IMPORT/IMPORT-004.md
+  s_ed54ab581b3d60::t_9d6f3710fd4479 1-32
+docs/dev-notes/issues/IMPORT/IMPORT-005.md
+  s_ed54ab581b3d60::t_5d14609ccb1c25 1-31
+docs/dev-notes/issues/IMPORT/IMPORT-006.md
+  s_ed54ab581b3d60::t_4e1ab0d48f1bc8 1-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "ab22f01563f323ed62b1fa77074bda3c1cebee62",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
