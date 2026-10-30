@@ -115,8 +115,10 @@ and existing files that require `--force`. It cannot predict later disk or permi
 failures during the actual write. **`--export` is essential**: without it, `--output`
 means an inspection-report filename, not a playable team library.
 A PDF may contain multiple supported page pairs; all validated teams are
-exported. Process multiple PDFs one at a time. A directory input is accepted
-only when it contains exactly one nonhidden PDF; discovery is not recursive.
+exported. Inspection without `--export` requires one non-symlink PDF file.
+With `--export`, a directory is accepted and every top-level nonhidden `.pdf`
+file is processed; discovery is case-insensitive and nonrecursive. Symlinked
+input directories and symlinked PDF files are refused before processing.
 
 Existing destination files are refused. Do not add `--force` as a routine fix:
 back up the library first and only replace a team deliberately. Changing a

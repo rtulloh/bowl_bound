@@ -118,3 +118,18 @@ added.
   `git diff --check` passed.
 - Parked-branch implementation commit: `0f050eb`. Final integration remains assigned to
   [IMPORT-009](issues/IMPORT/IMPORT-009.md).
+
+### 2026-10-30 — IMPORT-006
+
+- Baseline input-contract tests failed five times: inspection accepted/scanned directories,
+  and symlinked directory inputs reached inspection and export processing.
+- Input discovery now rejects direct symlinks before directory checks. Inspection requires a
+  single non-symlink PDF file; export accepts one file or a PDF directory. Existing sorted,
+  nonrecursive, case-insensitive and hidden-file discovery behavior remains covered.
+- Added both-mode tests for empty, one-PDF and multi-PDF directories, plus symlinked
+  directory/file and dangling inputs. Refusals are verified to happen before scanning/parsing
+  and without creating output. Updated CLI help, importer reference and player guide.
+- PDF importer and export-hardening tests: 203 passed. Ruff check, format check and
+  `git diff --check` passed.
+- Parked-branch implementation commit: `a052138`. Final integration remains assigned to
+  [IMPORT-009](issues/IMPORT/IMPORT-009.md).
