@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import errno
 import json
 import os
 import sys
@@ -12,10 +13,15 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from .inspection import ImportInspectionError, inspect_document
+from .errors import ImportValidationError
+from .inspection import ImportInspectionError, SafeImportInspectionError, inspect_document
 
 if TYPE_CHECKING:  # the type only; importing .export at runtime would pull in the PDF libraries
     from .export import ExportedTeam
+
+
+class SafeCLIError(ValueError):
+    """A project-authored CLI validation failure safe to display as written."""
 
 
 def export_document(path: Path) -> list:
@@ -38,13 +44,13 @@ def _sources(path: Path) -> list[Path]:
             if entry.suffix.lower() == ".pdf" and not entry.name.startswith(".")
         )
         if any(entry.is_symlink() for entry in candidates):
-            raise ValueError("Refusing a symlinked PDF in the input directory")
+            raise SafeCLIError("Refusing a symlinked PDF in the input directory")
         files = [entry for entry in candidates if entry.is_file()]
         if not files:
-            raise ValueError("Input directory contains no PDF files")
+            raise SafeCLIError("Input directory contains no PDF files")
         return files
     if path.is_symlink() or not path.is_file() or path.suffix.lower() != ".pdf":
-        raise ValueError("Input must be an existing, non-symlink PDF or a directory of PDFs")
+        raise SafeCLIError("Input must be an existing, non-symlink PDF or a directory of PDFs")
     return [path]
 
 
@@ -52,7 +58,7 @@ def _refuse_symlinked_parents(output: Path) -> None:
     absolute = Path(os.path.abspath(output))
     for parent in absolute.parents:
         if parent.is_symlink() and parent != Path(parent.anchor):
-            raise ValueError("Refusing an output path that passes through a symlinked directory")
+            raise SafeCLIError("Refusing an output path that passes through a symlinked directory")
 
 
 def _validate_output(source: Path, output: Path, force: bool) -> None:
@@ -60,16 +66,16 @@ def _validate_output(source: Path, output: Path, force: bool) -> None:
         same_path = output.resolve() == source.resolve()
         same_file = output.exists() and os.path.samefile(source, output)
     except (OSError, RuntimeError) as error:
-        raise ValueError("Output path cannot be resolved safely") from error
+        raise SafeCLIError("Output path cannot be resolved safely") from error
     if same_path or same_file:
-        raise ValueError("Output must not replace the source PDF")
+        raise SafeCLIError("Output must not replace the source PDF")
     if output.is_symlink():
-        raise ValueError("Refusing a symlink output path")
+        raise SafeCLIError("Refusing a symlink output path")
     _refuse_symlinked_parents(output)
     if output.exists() and not output.is_file():
-        raise ValueError("Output must be a file, not a directory")
+        raise SafeCLIError("Output must be a file, not a directory")
     if output.exists() and not force:
-        raise ValueError("Output exists; pass --force to explicitly replace it")
+        raise SafeCLIError("Output exists; pass --force to explicitly replace it")
 
 
 def _write_report(source: Path, output: Path, rendered: str | bytes, force: bool) -> None:
@@ -151,14 +157,14 @@ def _verify_teams(teams: Sequence[ExportedTeam]) -> tuple[PreparedTeam, ...]:
     for team in teams:
         season = team.chart.season
         if type(season) is not int or season < 1:
-            raise ValueError("Team season must be a positive integer")
+            raise SafeCLIError("Team season must be a positive integer")
         validate_team_name(team.chart.name)
         identity = (season, team_folder_name(team.chart.name))
         files = team_to_files(team.chart, team.metadata)
         provenance_csv = provenance_to_csv(team.chart, team.metadata)
         decoded = team_from_files(files, provenance_csv)
         if decoded != (team.chart, team.metadata):
-            raise ValueError("team does not survive a file round trip")
+            raise SafeCLIError("team does not survive a file round trip")
         cell_count = sum(
             len(group)
             for group in (
@@ -196,7 +202,7 @@ def _team_targets(root: Path, teams: Sequence[PreparedTeam]) -> tuple[TeamTarget
     for prepared in teams:
         season, slug = prepared.identity
         if prepared.identity in seen:
-            raise ValueError("Two teams map to the same season folder; refusing to merge them")
+            raise SafeCLIError("Two teams map to the same season folder; refusing to merge them")
         seen.add(prepared.identity)
         folder = root / str(season) / slug
         for filename, text in prepared.files:
@@ -213,9 +219,9 @@ def _team_targets(root: Path, teams: Sequence[PreparedTeam]) -> tuple[TeamTarget
 def _preflight_teams(source: Path, root: Path, targets: Sequence[TeamTarget], force: bool) -> None:
     """Validate every batch destination without creating directories or writing files."""
     if root.is_symlink() or (root.exists() and not root.is_dir()):
-        raise ValueError("Export root must be a directory, not a file or symlink")
+        raise SafeCLIError("Export root must be a directory, not a file or symlink")
     if root.resolve() == source.resolve():
-        raise ValueError("Output must not replace the source PDF")
+        raise SafeCLIError("Output must not replace the source PDF")
     for path, _ in targets:
         _validate_output(source, path, force)
 
@@ -265,14 +271,31 @@ def _summary(teams: Sequence[PreparedTeam], root: Path) -> str:
     return "\n".join(lines) + "\n"
 
 
-def _failure_reason(error: Exception) -> str:
-    """A one-line reason that never carries chart text, filenames, or local paths."""
-    if isinstance(error, OSError):
-        return error.strerror or "file operation failed"
-    if isinstance(error, (ValueError, ImportInspectionError)):
+_SAFE_OS_ERROR_MESSAGES = {
+    errno.EACCES: "Permission denied",
+    errno.EPERM: "Permission denied",
+    errno.EEXIST: "Output already exists",
+    errno.ENOENT: "No such file or directory",
+    errno.ENOTDIR: "A path component is not a directory",
+    errno.EISDIR: "Output path is a directory",
+    errno.ENOSPC: "No space left on device",
+}
+
+
+def _failure_reason(error: Exception, action: str = "exporting") -> str:
+    """Return project-authored text only; never echo arbitrary exception details."""
+    if isinstance(error, SafeCLIError):
         return str(error)
+    if isinstance(error, SafeImportInspectionError):
+        return str(error)
+    if isinstance(error, ImportValidationError):
+        return str(error)
+    if isinstance(error, ImportInspectionError):
+        return "PDF could not be inspected; it may be malformed, encrypted, or unsupported"
+    if isinstance(error, OSError):
+        return _SAFE_OS_ERROR_MESSAGES.get(error.errno, "File operation failed")
     return (
-        "unexpected failure while exporting the document; "
+        f"unexpected failure while {action} the document; "
         "the document may use an unsupported layout"
     )
 
@@ -306,7 +329,7 @@ def _run_batch(sources: list[Path], output: Path, force: bool, dry_run: bool) ->
         index for indices in owners.values() if len(indices) > 1 for index in indices
     }
     for index in colliding_indices:
-        failures_by_index[index] = ValueError(
+        failures_by_index[index] = SafeCLIError(
             "a team in this PDF also appears in another PDF; refusing to merge either PDF"
         )
     for index, error in sorted(failures_by_index.items()):
@@ -365,7 +388,9 @@ def main(argv: list[str] | None = None) -> int:
             return _run_batch(sources, output, arguments.force, arguments.dry_run)
         source = sources[0]
         if len(sources) != 1:
-            raise ValueError("Inspection mode takes exactly one PDF; use --export for a directory")
+            raise SafeCLIError(
+                "Inspection mode takes exactly one PDF; use --export for a directory"
+            )
         if not arguments.dry_run:
             _validate_output(source, output, arguments.force)
         inspection = inspect_document(source)
@@ -382,14 +407,10 @@ def main(argv: list[str] | None = None) -> int:
         _write_report(source, output, rendered, arguments.force)
         print("Wrote private inspection report; playable team export needs --export.")
         return 0
-    except (OSError, ValueError, ImportInspectionError) as error:
-        print(f"PDF import error: {error}", file=sys.stderr)
-        return 1
-    except Exception:  # noqa: BLE001 - a fixed message avoids leaking document text
+    except Exception as error:  # noqa: BLE001 - sanitize every failure at the CLI boundary
         action = "exporting" if arguments.export else "inspecting"
         print(
-            f"PDF import error: unexpected failure while {action} the document; "
-            "the document may use an unsupported layout",
+            f"PDF import error: {_failure_reason(error, action)}",
             file=sys.stderr,
         )
         return 1

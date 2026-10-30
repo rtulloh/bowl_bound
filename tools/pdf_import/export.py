@@ -21,6 +21,7 @@ from bowl_bound.normalization import CELL_LEGEND, ChartColor, NormalizationError
 from bowl_bound.team_csv import TeamFileMetadata
 
 from .cells import ExtractedCell, extract_cells
+from .errors import ImportValidationError
 from .inspection import inspect_document
 from .layout import CellPosition, locate_cells
 from .metadata import TeamMetadata, extract_metadata
@@ -32,10 +33,6 @@ class ExportedTeam:
 
     chart: TeamChart
     metadata: TeamFileMetadata
-
-
-class ImportValidationError(ValueError):
-    """An incomplete or inconsistent chart cannot become an exported team."""
 
 
 _COLORS = {legend.rgb_color: color for color, legend in CELL_LEGEND.items()}
@@ -78,7 +75,7 @@ def build_team(
         try:
             cell = normalize_cell(raw.provenance, _COLORS[raw.rgb_color])
         except NormalizationError as error:
-            raise ImportValidationError(str(error)) from error
+            raise ImportValidationError("chart cell data is invalid") from error
         if position.section == "offense":
             offense.append(OffensiveCell(Play(int(position.column)), position.roll, cell))
         elif position.section == "supplemental":
@@ -113,7 +110,7 @@ def build_team(
             metadata.recovery_range,
         )
     except (ValueError, TypeError) as error:
-        raise ImportValidationError(f"chart is incomplete or inconsistent: {error}") from error
+        raise ImportValidationError("chart is incomplete or inconsistent") from error
 
 
 def export_document(source: Path) -> list[ExportedTeam]:

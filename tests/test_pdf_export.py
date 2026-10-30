@@ -5,7 +5,8 @@ from types import SimpleNamespace
 import pytest
 
 from bowl_bound.models import BoundingBox, Provenance
-from bowl_bound.normalization import CELL_LEGEND, ChartColor
+from bowl_bound.normalization import CELL_LEGEND, ChartColor, NormalizationError
+from tools.pdf_import import export as pdf_export
 from tools.pdf_import.export import _COLORS, ImportValidationError, build_team
 from tools.pdf_import.metadata import TeamMetadata
 
@@ -70,6 +71,21 @@ def test_incomplete_cells_and_bad_pat_evidence_are_rejected() -> None:
     items[-1][1].text = "38"
     with pytest.raises(ImportValidationError, match="PAT"):
         build_team("Synthetic", 2002, items, metadata)
+
+
+def test_source_normalization_details_are_not_copied_into_export_errors(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def reject_source_cell(*args: object, **kwargs: object) -> None:
+        raise NormalizationError("SYNTHETIC_PRIVATE_SENTINEL", 1, BoundingBox(0, 0, 1, 1))
+
+    monkeypatch.setattr(pdf_export, "normalize_cell", reject_source_cell)
+
+    with pytest.raises(ImportValidationError) as error:
+        build_team("Synthetic State", 2002, records(), TeamMetadata(200, range(10, 26), (), ()))
+
+    assert str(error.value) == "chart cell data is invalid"
+    assert "SYNTHETIC_PRIVATE_SENTINEL" not in str(error.value)
 
 
 def test_build_team_uses_the_canonical_order_the_csv_reader_produces() -> None:

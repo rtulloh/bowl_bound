@@ -11,10 +11,14 @@ from typing import Literal
 
 
 class ImportInspectionError(Exception):
-    """Raised when a source PDF cannot be read safely for import."""
+    """Base error for a source PDF that cannot be read safely for import."""
 
 
-class UnsupportedDocumentError(ImportInspectionError):
+class SafeImportInspectionError(ImportInspectionError):
+    """A project-authored inspection message safe to show to the user."""
+
+
+class UnsupportedDocumentError(SafeImportInspectionError):
     """Raised when a readable PDF is not the supported chart layout."""
 
 
@@ -58,9 +62,9 @@ def inspect_document(path: Path) -> DocumentInspection:
     try:
         source = path.read_bytes()
     except FileNotFoundError as error:
-        raise ImportInspectionError(f"PDF source does not exist: {path}") from error
+        raise SafeImportInspectionError("PDF source does not exist") from error
     except OSError as error:
-        raise ImportInspectionError(f"PDF source cannot be read: {path}") from error
+        raise SafeImportInspectionError("PDF source cannot be read") from error
 
     try:
         import pdfplumber
@@ -69,7 +73,7 @@ def inspect_document(path: Path) -> DocumentInspection:
         from pdfminer.psparser import PSEOF
         from pdfplumber.utils.exceptions import PdfminerException
     except ImportError as error:
-        raise ImportInspectionError(
+        raise SafeImportInspectionError(
             "PDF inspection requires the optional PDF tools; install them with "
             '`python -m pip install -e ".[pdf]"` from the project folder'
         ) from error
@@ -77,7 +81,7 @@ def inspect_document(path: Path) -> DocumentInspection:
     try:
         with pdfplumber.open(BytesIO(source)) as document:
             if getattr(document.doc, "encryption", None):
-                raise ImportInspectionError("PDF source is encrypted and cannot be inspected")
+                raise SafeImportInspectionError("PDF source is encrypted and cannot be inspected")
             if not document.pages or len(document.pages) % 2:
                 raise UnsupportedDocumentError(
                     "Supported chart documents must contain complete offense/defense page pairs"
@@ -87,13 +91,15 @@ def inspect_document(path: Path) -> DocumentInspection:
                 for index, page in enumerate(document.pages)
             )
     except PDFPasswordIncorrect as error:
-        raise ImportInspectionError("PDF source is encrypted and cannot be inspected") from error
+        raise SafeImportInspectionError(
+            "PDF source is encrypted and cannot be inspected"
+        ) from error
     except PdfminerException as error:
         if error.args and isinstance(error.args[0], PDFPasswordIncorrect):
-            raise ImportInspectionError(
+            raise SafeImportInspectionError(
                 "PDF source is encrypted and cannot be inspected"
             ) from error
-        raise ImportInspectionError(
+        raise SafeImportInspectionError(
             "PDF source is malformed or cannot be parsed by pdfplumber"
         ) from error
     except ImportInspectionError:
@@ -106,11 +112,11 @@ def inspect_document(path: Path) -> DocumentInspection:
         ValueError,
         AttributeError,
     ) as error:
-        raise ImportInspectionError(
+        raise SafeImportInspectionError(
             "PDF source is malformed or cannot be parsed by pdfplumber"
         ) from error
     except Exception as error:  # noqa: BLE001 - keep document text out of messages
-        raise ImportInspectionError(
+        raise SafeImportInspectionError(
             "PDF source could not be inspected; the layout may be unsupported"
         ) from error
 

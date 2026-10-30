@@ -1,5 +1,6 @@
 """CLI boundary tests; document inspection is independently tested with synthetic PDFs."""
 
+import errno
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -16,6 +17,10 @@ class SyntheticPage:
     role: str = "offense"
     team_name: str = "Synthetic State"
     season: int = 2002
+
+
+class SyntheticParserError(Exception):
+    """Represents an exception raised by a PDF parser dependency."""
 
 
 @pytest.fixture
@@ -150,6 +155,88 @@ def test_document_error_has_nonzero_exit(
     output = tmp_path / "report.json"
     assert cli.main([str(source), "--output", str(output)]) == 1
     assert not output.exists()
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [
+        ValueError("SYNTHETIC_PRIVATE_SENTINEL /private/chart.pdf\nforged diagnostic"),
+        UnicodeDecodeError(
+            "utf-8",
+            b"SYNTHETIC_PRIVATE_SENTINEL",
+            0,
+            1,
+            "SYNTHETIC_PRIVATE_SENTINEL /private/chart.pdf\nforged diagnostic",
+        ),
+        cli.ImportInspectionError(
+            "SYNTHETIC_PRIVATE_SENTINEL /private/chart.pdf\nforged diagnostic"
+        ),
+        SyntheticParserError("SYNTHETIC_PRIVATE_SENTINEL /private/chart.pdf\nforged diagnostic"),
+    ],
+    ids=["value-error", "decode-error", "inspection-error", "parser-error"],
+)
+def test_untrusted_inspection_errors_never_appear_in_cli_output(
+    source: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+    failure: Exception,
+) -> None:
+    def fail(path: Path) -> None:
+        raise failure
+
+    monkeypatch.setattr(cli, "inspect_document", fail)
+    output = tmp_path / "report.json"
+
+    assert cli.main([str(source), "--output", str(output)]) == 1
+
+    captured = capsys.readouterr()
+    assert "SYNTHETIC_PRIVATE_SENTINEL" not in captured.out + captured.err
+    assert "/private/chart.pdf" not in captured.out + captured.err
+    assert "forged diagnostic" not in captured.out + captured.err
+    assert "PDF import error:" in captured.err
+    assert not output.exists()
+
+
+def test_safe_missing_dependency_error_keeps_install_hint(
+    source: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    message = 'PDF inspection requires optional tools; run `python -m pip install -e ".[pdf]"`.'
+
+    def fail(path: Path) -> None:
+        raise cli.SafeImportInspectionError(message)
+
+    monkeypatch.setattr(cli, "inspect_document", fail)
+
+    assert cli.main([str(source), "--output", str(tmp_path / "report.json")]) == 1
+
+    captured = capsys.readouterr()
+    assert message in captured.err
+    assert "pip install" in captured.err
+
+
+def test_output_oserror_does_not_echo_message_or_path(
+    source: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+) -> None:
+    output = tmp_path / "report.json"
+    output.write_text("keep")
+
+    def explode(*args: object, **kwargs: object) -> None:
+        raise OSError(errno.EIO, "SYNTHETIC_PRIVATE_SENTINEL /private/output\nforged diagnostic")
+
+    monkeypatch.setattr(cli.os, "replace", explode)
+
+    assert cli.main([str(source), "--output", str(output), "--force"]) == 1
+
+    captured = capsys.readouterr()
+    assert "SYNTHETIC_PRIVATE_SENTINEL" not in captured.out + captured.err
+    assert "/private/output" not in captured.out + captured.err
+    assert "forged diagnostic" not in captured.out + captured.err
+    assert "File operation failed" in captured.err
+    assert output.read_text() == "keep"
 
 
 def test_new_reports_are_private(source: Path, tmp_path: Path) -> None:

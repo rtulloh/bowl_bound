@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 import subprocess
 import sys
 from dataclasses import replace
@@ -126,6 +127,68 @@ def test_os_errors_do_not_echo_paths(
     assert _run(pdfs, tmp_path / "seasons") == 1
     err = capsys.readouterr().err
     assert "/Users/secret" not in err and "No such file or directory" in err
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [
+        ValueError("SYNTHETIC_PRIVATE_SENTINEL /private/chart.pdf\nforged diagnostic"),
+        OSError(errno.EIO, "SYNTHETIC_PRIVATE_SENTINEL /private/chart.pdf\nforged diagnostic"),
+    ],
+    ids=["value-error", "os-error"],
+)
+def test_untrusted_batch_export_errors_are_redacted_and_do_not_stop_other_pdfs(
+    pdfs: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+    failure: Exception,
+) -> None:
+    _install(
+        monkeypatch,
+        {
+            "a.pdf": failure,
+            "b.pdf": [_team("Miami (Florida)")],
+            "c.pdf": [_team("Texas A&M", 2003)],
+        },
+    )
+
+    assert _run(pdfs, tmp_path / "seasons") == 1
+
+    captured = capsys.readouterr()
+    assert "SYNTHETIC_PRIVATE_SENTINEL" not in captured.out + captured.err
+    assert "/private/chart.pdf" not in captured.out + captured.err
+    assert "forged diagnostic" not in captured.out + captured.err
+    assert "summary: 2 succeeded, 1 failed" in captured.out
+    assert "[2/3] b.pdf: ok" in captured.out and "[3/3] c.pdf: ok" in captured.out
+
+
+def test_batch_output_oserror_is_redacted_and_other_pdfs_continue(
+    pdfs: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+) -> None:
+    _three(monkeypatch)
+    write_report = cli._write_report
+
+    def fail_first_pdf(source: Path, output: Path, rendered: str, force: bool) -> None:
+        if source.name == "a.pdf":
+            raise OSError(
+                errno.EIO,
+                "SYNTHETIC_PRIVATE_SENTINEL /private/output\nforged diagnostic",
+            )
+        write_report(source, output, rendered, force)
+
+    monkeypatch.setattr(cli, "_write_report", fail_first_pdf)
+
+    assert _run(pdfs, tmp_path / "seasons") == 1
+
+    captured = capsys.readouterr()
+    assert "SYNTHETIC_PRIVATE_SENTINEL" not in captured.out + captured.err
+    assert "/private/output" not in captured.out + captured.err
+    assert "forged diagnostic" not in captured.out + captured.err
+    assert "summary: 2 succeeded, 1 failed" in captured.out
 
 
 @pytest.mark.parametrize(
