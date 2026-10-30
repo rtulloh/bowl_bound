@@ -109,8 +109,11 @@ $InputPDF = Join-Path $PDFs 'team-charts.pdf'
 .\.venv\Scripts\python.exe -m tools.pdf_import.cli $InputPDF --export --output $Teams
 ```
 
-`--dry-run` validates without writing. **`--export` is essential**: without it,
-`--output` means an inspection-report filename, not a playable team library.
+`--dry-run` checks the same destination conditions as export without creating or
+replacing files: the output root and generated paths, symlinks, source-file aliases,
+and existing files that require `--force`. It cannot predict later disk or permission
+failures during the actual write. **`--export` is essential**: without it, `--output`
+means an inspection-report filename, not a playable team library.
 A PDF may contain multiple supported page pairs; all validated teams are
 exported. Process multiple PDFs one at a time. A directory input is accepted
 only when it contains exactly one nonhidden PDF; discovery is not recursive.

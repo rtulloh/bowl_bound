@@ -90,3 +90,17 @@ added.
 - Batch and CLI tests: 83 passed. Ruff, format and whitespace checks passed.
 - Parked-branch implementation commit: `d1a43cb`. Integration onto the active Milestone 25
   branch remains assigned to [IMPORT-009](issues/IMPORT/IMPORT-009.md).
+
+### 2026-10-30 — IMPORT-004
+
+- Baseline tests reproduced that dry-run accepted existing targets and unsafe root/target types
+  where export failed: six new assertions failed against the unchanged batch draft.
+- Added a shared destination preflight for planning and the immediate write check. Dry-run now
+  validates existing files, `--force`, root and target types, source aliases/hardlinks, and
+  symlinked roots/parents without writing. Prepared serialized teams and summary metadata are
+  reused across planning and export.
+- Updated maintainer and player documentation to state the checks and the limits of dry-run.
+- Focused batch/CLI/export-hardening suite: 97 passed. Ruff check, format check and
+  `git diff --check` passed.
+- Parked-branch implementation commit: `95cbe68`. Final integration remains assigned to
+  [IMPORT-009](issues/IMPORT/IMPORT-009.md).
