@@ -1,0 +1,21 @@
+frontend/e2e/serve_backend.py
+  s_ed54ab581b3d60::t_482582b1760373 19,27
+tests/synthetic_teams.py
+  s_ed54ab581b3d60::t_1da534c48ec40a 48-63,81,100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "e573c74e79efdc8763789c2a8c8c6145894aa86b",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
