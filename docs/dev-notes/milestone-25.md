@@ -163,5 +163,5 @@ added.
   release allowlist. Broader installation/onboarding work remains tracked by DEV-045.
 - Synthetic importer, CLI and wheel tests: 208 passed. Native build workflow tests: 4 passed.
   Ruff, format, whitespace and packaged-link checks passed.
-- Parked-branch implementation commit: `b0ad58d`. Root player-guide, release-boundary and
-  acceptance evidence commits are recorded in [IMPORT-008](issues/IMPORT/IMPORT-008.md).
+- Parked-branch implementation commit: `b0ad58d`; root player-guide and release-boundary
+  commit: `b1e4b44`. Acceptance evidence is recorded in [IMPORT-008](issues/IMPORT/IMPORT-008.md).

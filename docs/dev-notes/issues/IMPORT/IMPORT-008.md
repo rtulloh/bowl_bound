@@ -1,11 +1,11 @@
 ---
 id: IMPORT-008
 title: Document batch import troubleshooting and isolate optional PDF dependencies
-status: open
+status: resolved
 priority: Medium
 milestone: '25'
 created-at: 2026-10-30
-resolved-at: null
+resolved-at: 2026-10-30
 closed-at: null
 tags:
 - importer
@@ -15,7 +15,9 @@ links:
 - IMPORT-006
 - IMPORT-007
 - IMPORT-009
-commits: []
+commits:
+- b0ad58d
+- b1e4b44
 ---
 
 ## Description
@@ -34,3 +36,18 @@ Deliver the Milestone 25 player and maintainer guidance for batch imports. Keep 
 
 --- 2026-10-30 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+### 2026-10-30 — Resolution evidence
+
+- `b0ad58d` updates importer help and the source-only reference, and adds wheel metadata
+  coverage for optional PDF dependencies. `b1e4b44` streamlines the player guide and tests
+  that the native release lock and manifest exclude the importer.
+- The unchanged CLI failed the new `--force` help assertion; after the wording fix, the
+  complete synthetic importer, CLI and wheel slice passed (208 tests). Native workflow
+  tests passed (4 tests). Ruff, formatting, whitespace and packaged player-link checks passed.
+- `pdfplumber` remains in the optional `pdf` extra; `reportlab` remains in `dev`; neither
+  is in native requirements. The release allowlist excludes `tools/` and `docs/pdf-import.md`.
+- The player import page is 100 lines, down from 196, and now labels the extractor as
+  optional/advanced. General installation and onboarding cleanup remains tracked by DEV-045.
+- No MaysFootball or other historical chart files were imported, committed or packaged.
+  Keep this ticket resolved, not closed, until the milestone play-test confirmation.
