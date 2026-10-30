@@ -126,15 +126,14 @@ def test_inspection_mode_takes_one_pdf_and_points_to_export(
     assert not (tmp_path / "report.json").exists()
 
 
-def test_directory_error_does_not_reference_retired_milestone(
+def test_inspection_directory_requires_export_mode(
     source: Path, tmp_path: Path, capsys: pytest.CaptureFixture
 ) -> None:
     (source.parent / "second.PDF").write_bytes(b"second synthetic PDF")
     assert cli.main([str(source.parent), "--output", str(tmp_path / "report.json")]) == 1
     error = capsys.readouterr().err
-    assert "Milestone 5d" not in error
-    assert "Milestone 25" not in error
-    assert "not yet supported" in error.lower()
+    assert "inspection mode requires a single pdf file" in error.lower()
+    assert "--export" in error
 
 
 def test_missing_input_and_empty_directory_fail(tmp_path: Path) -> None:

@@ -267,7 +267,8 @@ def test_force_export_attempts_remaining_restores_and_preserves_original_error(
         original(source_path, output, rendered, force)
 
     monkeypatch.setattr(cli, "_write_report", fail_write_and_one_restore)
-    targets = cli._team_targets(root, [_team("Synthetic State")])
+    prepared = cli._verify_teams([_team("Synthetic State")])
+    targets = cli._team_targets(root, prepared)
     with pytest.raises(OSError, match="synthetic original write failure"):
         cli._write_teams(source, root, targets, True)
     assert restore_attempts == ["defense.csv", "offense.csv"]
