@@ -942,3 +942,30 @@ opencode config selected; original charts and roster JSON match original
 checkout. Owner release request authorizes pushing reviewed source and
 dispatching the corrected three-target build. Native artifact verification,
 static licensing review and fresh-machine acceptance remain publication gates.
+
+### DEV-042 native archive guard correction
+
+Run 40976854895 at 554776e passed the full CI source gate but all three native
+targets failed before smoke/upload. The native archive scanner still rejected
+every roster.json, including the newly approved samples. Source runtime ZIP
+coverage was insufficient for that independent native guard. Reconsulted local
+Paydirt `paydirt.spec` seasons collection; broad copying remains deliberately
+not reused. Recorded this finding under DEV-042 before changing production.
+
+Added synthetic native archive/extraction/Windows installer coverage across
+all three targets: **6 expected failures / 7 exclusion cases passed** against
+the unchanged native implementation. Exempt only exact selected SAMPLES
+roster paths under `_internal/`; retain hashes and the blanket private/development
+checks for every other path. Three-target changed-byte tests require hash
+rejection before any archive creation. Focused native/release/installer/notice
+regressions: **123 passed in 2.45s**. Full Python cumulative rerun is in progress;
+frontend/browser inputs are unchanged from their passing 122/33-test gates.
+
+Native guard correction cumulative gate: `.venv/bin/python -m pytest --cov -q`
+**2,463 passed in 439.05s**, **93.41% coverage**, no skips/warnings reported.
+Focused native/release/installer/notice/tracker checks **140 passed in 2.38s**;
+Ruff lint/format passed. No frontend, gameplay or dependency changes; retain
+previous green 122 frontend tests/build/audit and 33 real-engine browser tests.
+Ready for dedicated correction commit and owner-authorized fresh three-target
+build. DEV-042 stays open until native payload inspection; DEV-041 licensing
+and fresh-machine acceptance publication gates remain open.

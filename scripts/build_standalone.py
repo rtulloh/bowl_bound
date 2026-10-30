@@ -20,6 +20,7 @@ from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 from .native_notices import add_native_notices, verify_native_notices
 from .release_package import (
     PUBLIC_FILES,
+    SAMPLES,
     ReleaseError,
     _destination,
     _plain,
@@ -142,10 +143,20 @@ def archive_bundle(bundle: Path, runtime: Path, output: Path, target: str) -> Pa
         if path.is_dir():
             continue
         name = path.relative_to(bundle).as_posix()
-        if re.search(
-            r"(^|/)(private-data|dev-notes|opencode.json|roster.json|node_modules)(/|$)|[.]pdf$",
-            name,
-            re.I,
+        resource = name.removeprefix("_internal/")
+        approved_roster = (
+            name.startswith("_internal/")
+            and name.endswith("/roster.json")
+            and resource in SAMPLES
+            and resource in hashes
+        )
+        if (
+            re.search(
+                r"(^|/)(private-data|dev-notes|opencode.json|roster.json|node_modules)(/|$)|[.]pdf$",
+                name,
+                re.I,
+            )
+            and not approved_roster
         ):
             raise ReleaseError("Forbidden private/development file in native output")
         if name.startswith("_internal/seasons/") and name.removeprefix("_internal/") not in hashes:

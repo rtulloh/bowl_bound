@@ -333,3 +333,104 @@ def test_native_archive_and_installer_include_exact_notice_bytes(
             assert path in uninstall
         assert install.count('File "/oname=bootloader.txt"') == 2
         assert "RMDir /r" not in uninstall
+
+
+@pytest.fixture
+def roster_runtime(source: Path, tmp_path: Path) -> Path:
+    """Stage invented, hash-pinned rosters through the real sample selector."""
+    manifest_path = source / "release/manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    for team in ("cedar-valley", "harbor-tech"):
+        for filename, text in (
+            ("roster.json", '{"qb":["Synthetic Quill"],"wr":["Synthetic Finch"]}\n'),
+            ("roster-sources.md", "Original synthetic test names, CC0-1.0\n"),
+        ):
+            name = f"seasons/2007/{team}/{filename}"
+            put(source, name, text)
+            manifest["runtime"].append(name)
+            manifest["sample_sha256"][name] = hashlib.sha256(text.encode()).hexdigest()
+    manifest_path.write_text(json.dumps(manifest))
+    stage = tmp_path / "roster-stage"
+    stage_sources(source, stage)
+    fake_frontend(stage)
+    destination = tmp_path / "roster-runtime"
+    assemble_runtime(stage, destination)
+    return destination
+
+
+@pytest.mark.parametrize("target", list(native.TARGETS))
+def test_native_sample_rosters_survive_archive_extraction_and_installer(
+    roster_runtime: Path, tmp_path: Path, target: str
+) -> None:
+    from scripts.smoke_standalone import extract_verified
+    from scripts.windows_installer import write_file_lists
+
+    bundle = fake_bundle(roster_runtime, tmp_path / "bundle")
+    executable = native.TARGETS[target][2]
+    if executable != "Bowl-Bound":
+        (bundle / "Bowl-Bound").rename(bundle / executable)
+    output = tmp_path / "output"
+    output.mkdir()
+    archive = native.archive_bundle(bundle, roster_runtime, output, target)
+    destination = tmp_path / "extracted"
+    report = extract_verified(archive, destination)
+    roster_paths = {
+        f"_internal/seasons/2007/{team}/{filename}"
+        for team in ("cedar-valley", "harbor-tech")
+        for filename in ("roster.json", "roster-sources.md")
+    }
+    assert {name for name in report["files"] if "roster" in name} == roster_paths
+    for name in roster_paths:
+        expected = (roster_runtime / name.removeprefix("_internal/")).read_bytes()
+        assert (destination / "BowlBound" / name).read_bytes() == expected
+        assert report["files"][name] == hashlib.sha256(expected).hexdigest()
+    if target == "windows-x64":
+        work = tmp_path / "installer"
+        work.mkdir()
+        write_file_lists(destination / "BowlBound", work)
+        install = (work / "install-files.nsh").read_text()
+        uninstall = (work / "uninstall-files.nsh").read_text()
+        assert install.count('File "/oname=roster.json"') == 2
+        assert install.count('File "/oname=roster-sources.md"') == 2
+        for name in roster_paths:
+            assert name.replace("/", "\\") in uninstall
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "roster.json",
+        "seasons/2007/cedar-valley/roster.json",
+        "_internal/elsewhere/roster.json",
+        "_internal/seasons/1900/private-team/roster.json",
+        "_internal/seasons/2007/other-team/roster.json",
+        "_internal/seasons/2007/cedar-valley/ROSTER.JSON",
+        "_internal/seasons/2007/cedar-valley/private.pdf",
+    ],
+)
+def test_native_roster_exception_does_not_allow_unselected_files(
+    runtime: Path, tmp_path: Path, name: str
+) -> None:
+    bundle = fake_bundle(runtime, tmp_path / "bundle")
+    put(bundle, name, "DO NOT SHIP")
+    output = tmp_path / "output"
+    output.mkdir()
+    with pytest.raises(ReleaseError):
+        native.archive_bundle(bundle, runtime, output, "macos-arm64")
+    assert not list(output.iterdir())
+
+
+@pytest.mark.parametrize("target", list(native.TARGETS))
+def test_native_selected_roster_still_requires_unchanged_bytes(
+    roster_runtime: Path, tmp_path: Path, target: str
+) -> None:
+    bundle = fake_bundle(roster_runtime, tmp_path / "bundle")
+    executable = native.TARGETS[target][2]
+    if executable != "Bowl-Bound":
+        (bundle / "Bowl-Bound").rename(bundle / executable)
+    put(bundle, "_internal/seasons/2007/cedar-valley/roster.json", "changed")
+    output = tmp_path / "output"
+    output.mkdir()
+    with pytest.raises(ReleaseError, match="Native resource missing or changed"):
+        native.archive_bundle(bundle, roster_runtime, output, target)
+    assert not list(output.iterdir())
