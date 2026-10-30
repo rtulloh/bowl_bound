@@ -1,0 +1,21 @@
+tests/synthetic_teams.py
+  s_ed54ab581b3d60::t_7886e07548c5c3 18,21,33-39,55,64-74,93
+tests/test_api_scoring.py
+  s_ed54ab581b3d60::t_11e67077c00384 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "3db98a5dfa18cc141f5000d348330caa6faf7654",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
