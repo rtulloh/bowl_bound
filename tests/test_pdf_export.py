@@ -5,7 +5,8 @@ from types import SimpleNamespace
 import pytest
 
 from bowl_bound.models import BoundingBox, Provenance
-from tools.pdf_import.export import ImportValidationError, build_team
+from bowl_bound.normalization import CELL_LEGEND, ChartColor
+from tools.pdf_import.export import _COLORS, ImportValidationError, build_team
 from tools.pdf_import.metadata import TeamMetadata
 
 
@@ -47,6 +48,11 @@ def records() -> list[object]:
                         )
                     )
     return result
+
+
+def test_pdf_color_classification_uses_the_shared_cell_legend() -> None:
+    assert set(CELL_LEGEND) == set(ChartColor)
+    assert _COLORS == {legend.rgb_color: color for color, legend in CELL_LEGEND.items()}
 
 
 def test_build_team_from_complete_synthetic_evidence() -> None:

@@ -1,6 +1,7 @@
 """Convert classified chart color and source text into semantic facts, never rules."""
 
 import re
+from dataclasses import dataclass
 from enum import Enum
 
 from .models import (
@@ -26,6 +27,18 @@ class ChartColor(str, Enum):
     YELLOW = "yellow"
 
 
+@dataclass(frozen=True)
+class ColorLegend:
+    """One chart color's source tokens, CSV spelling, and PDF RGB evidence."""
+
+    rgb_color: tuple[int, int, int]
+    named_tokens: tuple[tuple[str, ResultKind], ...] = ()
+    csv_marker: tuple[str, ResultKind] | None = None
+    csv_aliases: tuple[str, ...] = ()
+    token_patterns: tuple[re.Pattern[str], ...] = ()
+    yardage_sign: int | None = None
+
+
 class NormalizationError(ValueError):
     """Missing, ambiguous, or unsupported source evidence.
 
@@ -49,19 +62,101 @@ _VARIABLE_KINDS = {
     VariableReference.T2: ResultKind.VARIABLE_T2,
     VariableReference.T3: ResultKind.VARIABLE_T3,
 }
-_NAMED = {
-    "B": (ResultKind.BREAKAWAY, ChartColor.GREEN),
-    "QR": (ResultKind.QUARTERBACK_RUN, ChartColor.WHITE),
-    "QT": (ResultKind.QUARTERBACK_TRAPPED, ChartColor.RED),
-    "SOP": (ResultKind.SPRINT_OUT_PASS, ChartColor.WHITE),
-    "BLP": (ResultKind.BOOTLEG_PASS, ChartColor.WHITE),
-    "TD": (ResultKind.TOUCHDOWN, ChartColor.GREEN),
-    "FG": (ResultKind.FIELD_GOAL_REFERENCE, ChartColor.RED),
-    "KO": (ResultKind.KICKOFF_REFERENCE, ChartColor.GREEN),
-    "NG": (ResultKind.NO_GOOD_FIELD_GOAL, ChartColor.RED),
-    "INC": (ResultKind.INCOMPLETE, ChartColor.BLACK),
-}
 _DISTANCE = re.compile(r"([+-]?)([0-9]+|DS|X|T[0-3])")
+_EVENT_TOKEN = re.compile(r"(?:INT|BK|F)(?:\s*[+-]?\s*(?:[0-9]+|DS|X|T[0-3]))?")
+_PENALTY_TOKEN = re.compile(r"(?:OFF|DEF|PI)\s+(?:[0-9]+|S|R|5Y|5X|[+-]?(?:DS|X|T[0-3]))")
+
+# Single source for token meaning, serialized spelling, and exact PDF fill RGB.
+CELL_LEGEND: dict[ChartColor, ColorLegend] = {
+    ChartColor.RED: ColorLegend(
+        (255, 0, 0),
+        named_tokens=(
+            ("QT", ResultKind.QUARTERBACK_TRAPPED),
+            ("FG", ResultKind.FIELD_GOAL_REFERENCE),
+            ("NG", ResultKind.NO_GOOD_FIELD_GOAL),
+        ),
+        token_patterns=(_EVENT_TOKEN,),
+        yardage_sign=-1,
+    ),
+    ChartColor.GREEN: ColorLegend(
+        (0, 255, 0),
+        named_tokens=(
+            ("B", ResultKind.BREAKAWAY),
+            ("TD", ResultKind.TOUCHDOWN),
+            ("KO", ResultKind.KICKOFF_REFERENCE),
+        ),
+        yardage_sign=1,
+    ),
+    ChartColor.WHITE: ColorLegend(
+        (255, 255, 255),
+        named_tokens=(
+            ("QR", ResultKind.QUARTERBACK_RUN),
+            ("SOP", ResultKind.SPRINT_OUT_PASS),
+            ("BLP", ResultKind.BOOTLEG_PASS),
+        ),
+        csv_marker=("", ResultKind.NO_CHANGE),
+        csv_aliases=("*",),
+    ),
+    ChartColor.BLACK: ColorLegend(
+        (0, 0, 0),
+        named_tokens=(("INC", ResultKind.INCOMPLETE),),
+        csv_marker=("BLACK", ResultKind.INCOMPLETE),
+    ),
+    ChartColor.YELLOW: ColorLegend(
+        (255, 255, 0),
+        token_patterns=(_PENALTY_TOKEN,),
+    ),
+}
+
+_NAMED = {
+    token: (kind, color)
+    for color, legend in CELL_LEGEND.items()
+    for token, kind in legend.named_tokens
+}
+_CSV_NAMED = {kind: token for legend in CELL_LEGEND.values() for token, kind in legend.named_tokens}
+_CSV_NAMED.update(
+    {
+        kind: token
+        for legend in CELL_LEGEND.values()
+        if legend.csv_marker
+        for token, kind in (legend.csv_marker,)
+    }
+)
+
+
+def chart_color_for_csv_token(token: str) -> ChartColor:
+    """Return the legend color implied by a canonical serialized chart cell."""
+    bare = token.translate(str.maketrans("", "", "*()[]"))
+    for color, legend in CELL_LEGEND.items():
+        if legend.csv_marker is not None and token == legend.csv_marker[0]:
+            return color
+        if token in legend.csv_aliases:
+            return color
+        if any(bare == named for named, _ in legend.named_tokens):
+            return color
+        if any(
+            pattern.fullmatch(token) or pattern.fullmatch(bare) for pattern in legend.token_patterns
+        ):
+            return color
+        if legend.yardage_sign is not None and _DISTANCE.fullmatch(bare):
+            sign = -1 if bare.startswith("-") else 1
+            if sign == legend.yardage_sign:
+                return color
+            return next(
+                candidate for candidate, other in CELL_LEGEND.items() if other.yardage_sign == sign
+            )
+    raise ValueError("unsupported serialized chart token")
+
+
+def canonical_csv_token(kind: ResultKind) -> str:
+    """Return the canonical fixed CSV token for a named result kind."""
+    for legend in CELL_LEGEND.values():
+        if legend.csv_marker is not None and legend.csv_marker[1] is kind:
+            return legend.csv_marker[0]
+    try:
+        return _CSV_NAMED[kind]
+    except KeyError as error:
+        raise ValueError("result kind has no fixed chart token") from error
 
 
 def _distance(text: str) -> tuple[int | None, VariableReference | None, int | None]:

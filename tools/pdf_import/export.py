@@ -17,7 +17,7 @@ from bowl_bound.models import (
     SupplementalColumn,
     TeamChart,
 )
-from bowl_bound.normalization import ChartColor, NormalizationError, normalize_cell
+from bowl_bound.normalization import CELL_LEGEND, ChartColor, NormalizationError, normalize_cell
 from bowl_bound.team_csv import TeamFileMetadata
 
 from .cells import ExtractedCell, extract_cells
@@ -38,13 +38,7 @@ class ImportValidationError(ValueError):
     """An incomplete or inconsistent chart cannot become an exported team."""
 
 
-_COLORS = {
-    (255, 0, 0): ChartColor.RED,
-    (0, 255, 0): ChartColor.GREEN,
-    (255, 255, 0): ChartColor.YELLOW,
-    (255, 255, 255): ChartColor.WHITE,
-    (0, 0, 0): ChartColor.BLACK,
-}
+_COLORS = {legend.rgb_color: color for color, legend in CELL_LEGEND.items()}
 
 
 def build_team(
@@ -65,9 +59,19 @@ def build_team(
         if position.section == "pat":
             if raw.text.strip() != str(position.roll):
                 raise ImportValidationError("PAT source text must match the printed roll")
-            if raw.rgb_color not in {(255, 0, 0), (255, 255, 255)}:
+            pat_colors = {
+                CELL_LEGEND[ChartColor.RED].rgb_color,
+                CELL_LEGEND[ChartColor.WHITE].rgb_color,
+            }
+            if raw.rgb_color not in pat_colors:
                 raise ImportValidationError("PAT background must be red or white")
-            pats.append(PatOutcome(position.roll, raw.rgb_color == (255, 255, 255), raw.provenance))
+            pats.append(
+                PatOutcome(
+                    position.roll,
+                    raw.rgb_color == CELL_LEGEND[ChartColor.WHITE].rgb_color,
+                    raw.provenance,
+                )
+            )
             continue
         if raw.rgb_color not in _COLORS:
             raise ImportValidationError("Unknown chart background; no color guessing allowed")

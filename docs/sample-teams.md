@@ -37,7 +37,9 @@ Existing differing files or symlink destinations are refused, never overwritten.
 Identical samples may be installed repeatedly. Historical folders are untouched.
 Provenance identifies sample-teams-v2; page/coordinates are explicitly synthetic
 schema placeholders and are not assertions that a PDF exists. The source digest
-identifies the versioned recipe, not a historical PDF.
+identifies the versioned recipe, not a historical PDF. Synthetic RGB values match
+each serialized cell's legend color for strict bundle validation; they are not
+measurements from a source document.
 
 ## Redistribution
 

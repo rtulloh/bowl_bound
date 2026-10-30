@@ -25,6 +25,7 @@ from .models import (
     SupplementalColumn,
     TeamChart,
 )
+from .normalization import CELL_LEGEND, chart_color_for_csv_token
 from .team_csv import (
     TeamFileMetadata,
     parse_cell,
@@ -37,13 +38,21 @@ RECIPE = "Original fictional Bowl Bound sample-teams-v2: Cedar Valley / Harbor T
 SOURCE_HASH = sha256(RECIPE.encode()).hexdigest()
 
 
-def _evidence(text: str) -> Provenance:
+def _evidence(text: str, rgb_color: tuple[int, int, int] = (0, 0, 0)) -> Provenance:
     # Coordinates/page are schema-required synthetic placeholders, never PDF evidence.
-    return Provenance(SOURCE_HASH, "sample-teams-v2", 1, BoundingBox(0, 0, 1, 1), text, (0, 0, 0))
+    return Provenance(SOURCE_HASH, "sample-teams-v2", 1, BoundingBox(0, 0, 1, 1), text, rgb_color)
 
 
 def _cell(text: str) -> NormalizedCell:
-    return parse_cell(text, _evidence(text))
+    color = chart_color_for_csv_token(text)
+    return parse_cell(text, _evidence(text, CELL_LEGEND[color].rgb_color))
+
+
+def _pat_outcome(roll: int, team_index: int) -> PatOutcome:
+    good = roll not in (10, 11 + team_index)
+    token = "G" if good else "NG"
+    color = chart_color_for_csv_token("" if good else "NG")
+    return PatOutcome(roll, good, _evidence(token, CELL_LEGEND[color].rgb_color))
 
 
 def sample_teams() -> tuple[TeamChart, TeamChart]:
@@ -128,14 +137,7 @@ def sample_teams() -> tuple[TeamChart, TeamChart]:
                 supplemental=supplemental,
                 defense=defense,
                 special_teams=tuple(special),
-                pat_outcomes=tuple(
-                    PatOutcome(
-                        roll,
-                        roll not in (10, 11 + index),
-                        _evidence("NG" if roll in (10, 11 + index) else "G"),
-                    )
-                    for roll in range(10, 40)
-                ),
+                pat_outcomes=tuple(_pat_outcome(roll, index) for roll in range(10, 40)),
                 recovery_range=range(10, 26 + index),
             )
         )

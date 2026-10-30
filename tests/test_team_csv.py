@@ -1,6 +1,9 @@
 # ruff: noqa: E501, E701, E702, I001
 from __future__ import annotations
 
+import csv
+import io
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -21,12 +24,15 @@ from bowl_bound.models import (
     SupplementalColumn,
     TeamChart,
 )
+from bowl_bound.normalization import CELL_LEGEND, ChartColor, chart_color_for_csv_token
 from bowl_bound.team_csv import (
     PROVENANCE_DIR,
     TEAM_FILES,
     TeamFileMetadata,
     TeamFormatError,
+    format_cell,
     load_team,
+    parse_cell,
     provenance_to_csv,
     team_from_files,
     team_to_files,
@@ -37,8 +43,8 @@ from bowl_bound.team_csv import (
 SHA = "a" * 64
 
 
-def evidence(text: str = "source") -> Provenance:
-    return Provenance(SHA, "synthetic.pdf", 1, BoundingBox(-0.0, 0.0, 1.0, 1.0), text, (1, 2, 3))
+def evidence(text: str = "source", rgb: tuple[int, int, int] = (0, 255, 0)) -> Provenance:
+    return Provenance(SHA, "synthetic.pdf", 1, BoundingBox(-0.0, 0.0, 1.0, 1.0), text, rgb)
 
 
 def chart(name: str = "Ohio State") -> TeamChart:
@@ -55,7 +61,14 @@ def chart(name: str = "Ohio State") -> TeamChart:
         ),
         tuple(DefensiveCell(d, p, r, cell) for d in Defense for p in Play for r in range(1, 6)),
         tuple(SpecialTeamsCell(c, r, cell) for c in SpecialTeamsColumn for r in range(10, 40)),
-        tuple(PatOutcome(r, r % 2 == 0, evidence()) for r in range(10, 40)),
+        tuple(
+            PatOutcome(
+                r,
+                r % 2 == 0,
+                evidence(rgb=(255, 255, 255) if r % 2 == 0 else (255, 0, 0)),
+            )
+            for r in range(10, 40)
+        ),
         range(10, 27),
     )
 
@@ -74,6 +87,62 @@ def test_paydirt_layout_round_trip_and_positions() -> None:
     row = files["offense.csv"].splitlines()[1].split(",")
     assert row[1:10] == ["1"] * 9 and row[10:13] == ["B", "B", "R"]
     assert team_from_files(files, provenance_to_csv(chart(), metadata())) == (chart(), metadata())
+
+
+def test_reader_rejects_cell_color_that_disagrees_with_provenance() -> None:
+    team = chart()
+    files = team_to_files(team, metadata())
+    rows = list(csv.reader(io.StringIO(provenance_to_csv(team, metadata()), newline="")))
+    evidence_row = next(row for row in rows if row[:4] == ["offense", "1", "", "10"])
+    evidence_row[10:13] = ["255", "0", "0"]
+    provenance = io.StringIO(newline="")
+    csv.writer(provenance, lineterminator="\n").writerows(rows)
+
+    with pytest.raises(TeamFormatError, match=r"offense\.csv row 2: page 1: cell color") as error:
+        team_from_files(files, provenance.getvalue())
+
+    assert "synthetic.pdf" not in str(error.value)
+    assert "source" not in str(error.value)
+
+
+def test_writer_rejects_cell_color_that_disagrees_with_provenance() -> None:
+    team = chart()
+    first = team.offense[0]
+    mismatched = replace(
+        first.cell,
+        provenance=replace(first.cell.provenance, rgb_color=CELL_LEGEND[ChartColor.RED].rgb_color),
+    )
+    edited = replace(team, offense=(replace(first, cell=mismatched), *team.offense[1:]))
+
+    with pytest.raises(TeamFormatError, match="page 1: cell color disagrees with provenance"):
+        team_to_files(edited, metadata())
+
+
+@pytest.mark.parametrize(
+    ("token", "color", "kind"),
+    [
+        ("5", ChartColor.GREEN, ResultKind.YARDS),
+        ("-5", ChartColor.RED, ResultKind.YARDS),
+        ("B", ChartColor.GREEN, ResultKind.BREAKAWAY),
+        ("QR", ChartColor.WHITE, ResultKind.QUARTERBACK_RUN),
+        ("QT", ChartColor.RED, ResultKind.QUARTERBACK_TRAPPED),
+        ("SOP", ChartColor.WHITE, ResultKind.SPRINT_OUT_PASS),
+        ("TD", ChartColor.GREEN, ResultKind.TOUCHDOWN),
+        ("NG", ChartColor.RED, ResultKind.NO_GOOD_FIELD_GOAL),
+        ("OFF 5", ChartColor.YELLOW, ResultKind.PENALTY),
+        ("F", ChartColor.RED, ResultKind.FUMBLE),
+        ("INT 28", ChartColor.RED, ResultKind.INTERCEPTION),
+        ("BLACK", ChartColor.BLACK, ResultKind.INCOMPLETE),
+        ("", ChartColor.WHITE, ResultKind.NO_CHANGE),
+    ],
+)
+def test_cell_codec_uses_the_shared_color_legend(
+    token: str, color: ChartColor, kind: ResultKind
+) -> None:
+    assert chart_color_for_csv_token(token) is color
+    cell = parse_cell(token, evidence(token, CELL_LEGEND[color].rgb_color))
+    assert cell.kind is kind
+    assert format_cell(cell) == token
 
 
 @pytest.mark.parametrize(

@@ -36,13 +36,13 @@ BB_OFFENSE_HEADER = (
 )
 
 
-def _provenance(text: str = "") -> Provenance:
-    return Provenance(SHA, "synthetic.pdf", 1, BoundingBox(0, 0, 1, 1), text, (255, 255, 255))
+def _provenance(text: str = "", rgb_color: tuple[int, int, int] = (0, 255, 0)) -> Provenance:
+    return Provenance(SHA, "synthetic.pdf", 1, BoundingBox(0, 0, 1, 1), text, rgb_color)
 
 
 def _team(name: str, season: int = 2002) -> ExportedTeam:
     cell = NormalizedCell(ResultKind.YARDS, _provenance("3"), yards=3)
-    blank = NormalizedCell(ResultKind.NO_CHANGE, _provenance(""))
+    blank = NormalizedCell(ResultKind.NO_CHANGE, _provenance("", (255, 255, 255)))
     chart = TeamChart(
         1,
         name,
@@ -51,7 +51,14 @@ def _team(name: str, season: int = 2002) -> ExportedTeam:
         tuple(SupplementalCell(c, r, cell) for c in SupplementalColumn for r in range(10, 40)),
         tuple(DefensiveCell(d, p, r, blank) for d in Defense for p in Play for r in range(1, 6)),
         tuple(SpecialTeamsCell(c, r, cell) for c in SpecialTeamsColumn for r in range(10, 40)),
-        tuple(PatOutcome(r, r != 16, _provenance(str(r))) for r in range(10, 40)),
+        tuple(
+            PatOutcome(
+                r,
+                r != 16,
+                _provenance(str(r), (255, 255, 255) if r != 16 else (255, 0, 0)),
+            )
+            for r in range(10, 40)
+        ),
         range(10, 27),
     )
     return ExportedTeam(chart, TeamFileMetadata(200.5, ("W",), "Synths", SHA, ()))

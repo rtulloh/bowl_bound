@@ -1,7 +1,7 @@
-# ruff: noqa: E501, E701, E702, B905, I001, E741
 """Paydirt-layout CSV and YAML interchange; chart colors remain provenance evidence."""
 
 from __future__ import annotations
+
 import csv
 import io
 import re
@@ -10,7 +10,9 @@ from collections.abc import Mapping
 from dataclasses import dataclass, replace
 from math import isfinite
 from pathlib import Path
+
 import yaml
+
 from .models import (
     BoundingBox,
     Defense,
@@ -30,11 +32,21 @@ from .models import (
     SupplementalColumn,
     TeamChart,
 )
-from .normalization import ChartColor, NormalizationError, normalize_cell
+from .normalization import (
+    CELL_LEGEND,
+    ChartColor,
+    NormalizationError,
+    canonical_csv_token,
+    chart_color_for_csv_token,
+    normalize_cell,
+)
 
 TEAM_FILES: tuple[str, ...] = ("offense.csv", "defense.csv", "special.csv", "team.yaml")
 PROVENANCE_DIR = "provenance"
 _PRIV = {"W", "FBO", "SPBO", "XWC"}
+_NAMED_RESULT_KINDS = frozenset(
+    kind for legend in CELL_LEGEND.values() for _, kind in legend.named_tokens
+)
 _SPECIAL = (
     SpecialTeamsColumn.KICKOFF,
     SpecialTeamsColumn.KICKOFF_RETURN,
@@ -181,26 +193,14 @@ def _dist(c: NormalizedCell) -> str:
 
 
 def format_cell(c: NormalizedCell) -> str:
-    names = {
-        ResultKind.BREAKAWAY: "B",
-        ResultKind.QUARTERBACK_RUN: "QR",
-        ResultKind.QUARTERBACK_TRAPPED: "QT",
-        ResultKind.SPRINT_OUT_PASS: "SOP",
-        ResultKind.BOOTLEG_PASS: "BLP",
-        ResultKind.FIELD_GOAL_REFERENCE: "FG",
-        ResultKind.KICKOFF_REFERENCE: "KO",
-        ResultKind.NO_GOOD_FIELD_GOAL: "NG",
-    }
     if c.kind is ResultKind.NO_CHANGE:
-        t = ""
+        return canonical_csv_token(c.kind)
     elif c.kind is ResultKind.INCOMPLETE:
-        return "BLACK"
+        return canonical_csv_token(c.kind)
     elif c.kind is ResultKind.YARDS or c.kind.name.startswith("VARIABLE_"):
         t = _dist(c)
-    elif c.kind is ResultKind.TOUCHDOWN:
-        t = "TD"
-    elif c.kind in names:
-        t = names[c.kind]
+    elif c.kind in _NAMED_RESULT_KINDS:
+        t = canonical_csv_token(c.kind)
     elif c.kind in {ResultKind.FUMBLE, ResultKind.INTERCEPTION, ResultKind.BLOCKED_KICK}:
         n = {ResultKind.FUMBLE: "F", ResultKind.INTERCEPTION: "INT", ResultKind.BLOCKED_KICK: "BK"}[
             c.kind
@@ -246,27 +246,12 @@ def format_cell(c: NormalizedCell) -> str:
 
 
 def parse_cell(text: str, p: Provenance) -> NormalizedCell:
-    bare = text.translate(str.maketrans("", "", "*()[]"))
-    if text == "BLACK":
-        color, source = ChartColor.BLACK, ""
-    elif text in {"", "*"}:
-        color, source = ChartColor.WHITE, text
-    elif text.startswith(("F", "INT", "BK")):
-        color, source = ChartColor.RED, text
-    elif text.startswith(("OFF ", "DEF ", "PI ")):
-        color, source = ChartColor.YELLOW, text
-    elif bare in {"TD", "B", "KO", "DS", "X", "T1", "T2", "T3"}:
-        color, source = ChartColor.GREEN, text
-    elif bare in {"QR", "SOP", "BLP"}:
-        color, source = ChartColor.WHITE, text
-    elif bare in {"QT", "FG", "NG"} or bare.startswith("-"):
-        color, source = ChartColor.RED, text
-    else:
-        color, source = ChartColor.GREEN, text
     try:
+        color = chart_color_for_csv_token(text)
+        source = "" if text == canonical_csv_token(ResultKind.INCOMPLETE) else text
         r = replace(normalize_cell(replace(p, original_text=source), color), provenance=p)
-    except (NormalizationError, ValueError, TypeError) as e:
-        raise TeamFormatError("cell: invalid grammar") from e
+    except (NormalizationError, ValueError, TypeError) as error:
+        raise TeamFormatError("cell: invalid grammar") from error
     if format_cell(r) != text:
         raise TeamFormatError("cell: noncanonical grammar")
     return r
@@ -291,7 +276,27 @@ def _facts(chart: TeamChart, meta: TeamFileMetadata) -> tuple[list[Provenance], 
         raise TeamFormatError("provenance: hash mismatch")
     if any(x.filename != ps[0].filename for x in ps):
         raise TeamFormatError("provenance: filename mismatch")
+    serialized_cells = [
+        (format_cell(item.cell), item.cell.provenance)
+        for item in (*chart.offense, *chart.supplemental, *chart.defense, *chart.special_teams)
+    ]
+    serialized_cells.extend(
+        ("" if item.good else "NG", item.provenance) for item in chart.pat_outcomes
+    )
+    for token, provenance in serialized_cells:
+        _validate_cell_color(token, provenance)
     return ps, ps[0].filename
+
+
+def _validate_cell_color(token: str, provenance: Provenance) -> ChartColor:
+    """Require serialized semantics to agree with the RGB evidence in provenance."""
+    try:
+        color = chart_color_for_csv_token(token)
+    except ValueError as error:
+        raise TeamFormatError("provenance: unsupported chart token") from error
+    if provenance.rgb_color != CELL_LEGEND[color].rgb_color:
+        raise TeamFormatError(f"page {provenance.page}: cell color disagrees with provenance")
+    return color
 
 
 def team_to_files(chart: TeamChart, meta: TeamFileMetadata) -> dict[str, str]:
@@ -391,6 +396,29 @@ def provenance_to_csv(chart: TeamChart, meta: TeamFileMetadata) -> str:
 
 def _err(file: str, row: int, reason: str) -> TeamFormatError:
     return TeamFormatError(f"{file} row {row}: {reason}")
+
+
+def _validate_cell_at(token: str, provenance: Provenance, file: str, row: int) -> None:
+    try:
+        color = chart_color_for_csv_token(token)
+    except ValueError as error:
+        raise _err(file, row, f"page {provenance.page}: invalid cell") from error
+    if provenance.rgb_color != CELL_LEGEND[color].rgb_color:
+        raise _err(
+            file,
+            row,
+            f"page {provenance.page}: cell color disagrees with provenance",
+        )
+
+
+def _parse_cell_at(text: str, provenance: Provenance, file: str, row: int) -> NormalizedCell:
+    try:
+        _validate_cell_at(text, provenance, file, row)
+        return parse_cell(text, provenance)
+    except TeamFormatError as error:
+        if str(error).startswith(file + " row "):
+            raise
+        raise _err(file, row, f"page {provenance.page}: invalid cell") from error
 
 
 def _rows(text: object, file: str) -> list[list[str]]:
@@ -532,10 +560,29 @@ def team_from_files(
     for n, row in enumerate(pr, 2):
         if len(row) != 13:
             raise _err("provenance.csv", n, "incorrect columns")
-        a, b, c, r, page, l, bo, ri, t, orig, re, gr, bl = row
-        key = (a, b, c, "" if not r else _num(r, "provenance.csv", n))
-        if a == "metadata":
-            if c or r:
+        (
+            section,
+            column,
+            defense,
+            roll,
+            page,
+            left,
+            bottom,
+            right,
+            top,
+            original,
+            red,
+            green,
+            blue,
+        ) = row
+        key = (
+            section,
+            column,
+            defense,
+            "" if not roll else _num(roll, "provenance.csv", n),
+        )
+        if section == "metadata":
+            if defense or roll:
                 raise _err("provenance.csv", n, "invalid metadata key")
         elif key not in expected or key in prov:
             raise _err("provenance.csv", n, "unexpected provenance key")
@@ -544,14 +591,14 @@ def team_from_files(
                 y["source_sha256"],
                 y["source_filename"],
                 _num(page, "provenance.csv", n, True),
-                BoundingBox(*(float(z) for z in (l, bo, ri, t))),
-                orig,
-                tuple(_num(z, "provenance.csv", n) for z in (re, gr, bl)),
+                BoundingBox(*(float(value) for value in (left, bottom, right, top))),
+                original,
+                tuple(_num(value, "provenance.csv", n) for value in (red, green, blue)),
             )
         except (TypeError, ValueError) as e:
             raise _err("provenance.csv", n, "invalid provenance") from e
-        if a == "metadata":
-            ev.append((b, p))
+        if section == "metadata":
+            ev.append((column, p))
         else:
             prov[key] = p
     if set(prov) != expected:
@@ -566,8 +613,14 @@ def team_from_files(
             raise _err("offense.csv", n, "invalid recovery")
         if row[12] == "R":
             rec.append(r)
-        for p, z in zip(Play, row[1:10]):
-            off.append(OffensiveCell(p, r, parse_cell(z, prov["offense", str(p.value), "", r])))
+        for p, z in zip(Play, row[1:10], strict=True):
+            off.append(
+                OffensiveCell(
+                    p,
+                    r,
+                    _parse_cell_at(z, prov["offense", str(p.value), "", r], "offense.csv", n),
+                )
+            )
         for c, z in zip(
             (
                 SupplementalColumn.BREAKAWAY,
@@ -575,8 +628,15 @@ def team_from_files(
                 SupplementalColumn.QUARTERBACK_RUN,
             ),
             (row[10], row[11], row[13]),
+            strict=True,
         ):
-            sup.append(SupplementalCell(c, r, parse_cell(z, prov["supplemental", c.value, "", r])))
+            sup.append(
+                SupplementalCell(
+                    c,
+                    r,
+                    _parse_cell_at(z, prov["supplemental", c.value, "", r], "offense.csv", n),
+                )
+            )
     if not rec or rec != list(range(10, max(rec) + 1)) or not 10 <= max(rec) < 39:
         raise _err("offense.csv", 0, "invalid recovery range")
     de = []
@@ -585,9 +645,14 @@ def team_from_files(
         r = (n - 2) % 5 + 1
         if row[:3] != [f"{x.value}-{r}", x.value, str(r)]:
             raise _err("defense.csv", n, "invalid defense row")
-        for p, z in zip(Play, row[3:]):
+        for p, z in zip(Play, row[3:], strict=True):
             de.append(
-                DefensiveCell(x, p, r, parse_cell(z, prov["defense", str(p.value), x.value, r]))
+                DefensiveCell(
+                    x,
+                    p,
+                    r,
+                    _parse_cell_at(z, prov["defense", str(p.value), x.value, r], "defense.csv", n),
+                )
             )
     sp = []
     pa = []
@@ -595,9 +660,17 @@ def team_from_files(
         r = _num(row[0], "special.csv", n)
         if r != n + 8 or row[-1] not in {"", "NG"}:
             raise _err("special.csv", n, "invalid special row")
-        for c, z in zip(_SPECIAL, row[1:7]):
-            sp.append(SpecialTeamsCell(c, r, parse_cell(z, prov["special_teams", c.value, "", r])))
-        pa.append(PatOutcome(r, row[-1] == "", prov["pat", "pat", "", r]))
+        for c, z in zip(_SPECIAL, row[1:7], strict=True):
+            sp.append(
+                SpecialTeamsCell(
+                    c,
+                    r,
+                    _parse_cell_at(z, prov["special_teams", c.value, "", r], "special.csv", n),
+                )
+            )
+        pat_provenance = prov["pat", "pat", "", r]
+        _validate_cell_at(row[-1], pat_provenance, "special.csv", n)
+        pa.append(PatOutcome(r, row[-1] == "", pat_provenance))
     try:
         return TeamChart(
             1,

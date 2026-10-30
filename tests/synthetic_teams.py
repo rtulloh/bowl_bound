@@ -15,8 +15,10 @@ from bowl_bound.models import (
     SupplementalCell,
     TeamChart,
 )
+from bowl_bound.normalization import CELL_LEGEND, chart_color_for_csv_token
 from bowl_bound.team_csv import (
     TeamFileMetadata,
+    format_cell,
     provenance_to_csv,
     team_folder_name,
     team_to_files,
@@ -24,6 +26,12 @@ from bowl_bound.team_csv import (
 from tests.test_models import complete_chart, provenance
 
 SHA = "a" * 64
+
+
+def _with_legend_color(cell: NormalizedCell) -> NormalizedCell:
+    color = chart_color_for_csv_token(format_cell(cell))
+    evidence = replace(cell.provenance, rgb_color=CELL_LEGEND[color].rgb_color)
+    return replace(cell, provenance=evidence)
 
 
 def yards(value: int) -> NormalizedCell:
@@ -50,7 +58,12 @@ def team_chart(
         name=name,
         season=season,
         offense=tuple(
-            OffensiveCell(r.play, r.roll, plays.get(r.play, yards(offense))) for r in chart.offense
+            OffensiveCell(
+                r.play,
+                r.roll,
+                _with_legend_color(plays.get(r.play, yards(offense))),
+            )
+            for r in chart.offense
         ),
         supplemental=tuple(
             SupplementalCell(r.column, r.roll, yards(offense)) for r in chart.supplemental

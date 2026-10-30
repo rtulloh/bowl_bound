@@ -36,7 +36,7 @@ def provenance() -> Provenance:
         page=1,
         bounding_box=BoundingBox(0.0, 0.0, 1.0, 1.0),
         original_text="synthetic",
-        rgb_color=(1, 2, 3),
+        rgb_color=(0, 255, 0),
     )
 
 
@@ -68,7 +68,14 @@ def complete_chart() -> TeamChart:
             for roll in range(10, 40)
         ),
         pat_outcomes=tuple(
-            PatOutcome(roll, good=roll != 16, provenance=provenance()) for roll in range(10, 40)
+            PatOutcome(
+                roll,
+                good=roll != 16,
+                provenance=replace(
+                    provenance(), rgb_color=(255, 255, 255) if roll != 16 else (255, 0, 0)
+                ),
+            )
+            for roll in range(10, 40)
         ),
         recovery_range=range(10, 27),
     )

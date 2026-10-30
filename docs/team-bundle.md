@@ -179,6 +179,9 @@ returns. Nothing is coerced, and error messages never contain cell text.
 - Any missing or duplicated chart position (the 810 + 30 address set must be exact).
 - A cell whose text and background cannot be normalized (see the normalization doc),
   including unknown backgrounds and rotated text. Colors are never guessed.
+- A serialized cell token whose implied color disagrees with the RGB evidence in its
+  provenance row. The reader reports the CSV row and PDF page without exposing source
+  text or filenames.
 - A PAT dice-number cell whose text differs from its printed roll, or whose background is
   neither white (good) nor red (no good).
 - Missing, ambiguous, or inconsistent metadata: an absent, malformed, or implausible rating
