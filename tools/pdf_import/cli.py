@@ -31,13 +31,19 @@ def export_document(path: Path) -> list:
     return run_export(path)
 
 
-def _sources(path: Path) -> list[Path]:
-    """Return the PDFs to process: the one file given, or every PDF in a directory.
+def _sources(path: Path, *, allow_directory: bool) -> list[Path]:
+    """Return input PDFs while enforcing inspection and export input contracts.
 
-    Directory discovery is non-recursive, sorted by name, and ignores hidden files. A symlink
-    among the candidates refuses the whole run before any PDF is processed.
+    Direct input symlinks are rejected before directory checks. Inspection requires one PDF;
+    export may scan a directory non-recursively, sorted by name, ignoring hidden files.
     """
+    if path.is_symlink():
+        raise SafeCLIError("Input must not be a symlink")
     if path.is_dir():
+        if not allow_directory:
+            raise SafeCLIError(
+                "Inspection mode requires a single PDF file; use --export for directory input"
+            )
         candidates = sorted(
             entry
             for entry in path.iterdir()
@@ -49,8 +55,10 @@ def _sources(path: Path) -> list[Path]:
         if not files:
             raise SafeCLIError("Input directory contains no PDF files")
         return files
-    if path.is_symlink() or not path.is_file() or path.suffix.lower() != ".pdf":
-        raise SafeCLIError("Input must be an existing, non-symlink PDF or a directory of PDFs")
+    if not path.is_file() or path.suffix.lower() != ".pdf":
+        if allow_directory:
+            raise SafeCLIError("Input must be a non-symlink PDF or directory of PDFs")
+        raise SafeCLIError("Inspection mode requires an existing, non-symlink PDF file")
     return [path]
 
 
@@ -360,14 +368,16 @@ def _run_batch(sources: list[Path], output: Path, force: bool, dry_run: bool) ->
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Inspect or export a supported PDF; return 0 on success, 1 on document/I/O errors.
+    """Inspect one PDF or export charts from a PDF or directory.
 
     Argument errors use argparse exit code 2. The default mode writes one inspection
-    report to ``--output``. ``--export`` validates every chart cell and PAT outcome and
-    writes Paydirt-style CSV files into ``<output>/<season>/<team>/``. All of it is private.
+    report to ``--output`` and requires one PDF file. ``--export`` accepts a PDF or directory,
+    validates every chart cell and PAT outcome, and writes private CSV files.
     """
     parser = argparse.ArgumentParser(description="Inspect or export Bowl Bound team PDFs")
-    parser.add_argument("input", type=Path, help="A PDF, or a directory of PDFs")
+    parser.add_argument(
+        "input", type=Path, help="A PDF; with --export, a directory of PDFs is also accepted"
+    )
     parser.add_argument(
         "--output",
         "-o",
@@ -382,15 +392,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     arguments = parser.parse_args(argv)
     try:
-        sources = _sources(arguments.input)
+        sources = _sources(arguments.input, allow_directory=arguments.export)
         output = arguments.output
         if arguments.export:
             return _run_batch(sources, output, arguments.force, arguments.dry_run)
         source = sources[0]
-        if len(sources) != 1:
-            raise SafeCLIError(
-                "Inspection mode takes exactly one PDF; use --export for a directory"
-            )
         if not arguments.dry_run:
             _validate_output(source, output, arguments.force)
         inspection = inspect_document(source)

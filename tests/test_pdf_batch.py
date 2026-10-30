@@ -547,11 +547,25 @@ def test_a_symlinked_pdf_refuses_the_whole_run(
     assert not root.exists()
 
 
-def test_an_empty_directory_is_a_clear_error(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
+def test_an_empty_directory_is_a_clear_error(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     empty = tmp_path / "empty"
     empty.mkdir()
-    assert _run(empty, tmp_path / "seasons") == 1
+    output = tmp_path / "seasons"
+    processed: list[Path] = []
+
+    def record_export(path: Path) -> list[object]:
+        processed.append(path)
+        raise AssertionError("empty input must fail before export")
+
+    monkeypatch.setattr(cli, "export_document", record_export)
+    assert _run(empty, output) == 1
     assert "no PDF" in capsys.readouterr().err
+    assert processed == []
+    assert not output.exists()
 
 
 def test_inspection_mode_still_covers_exactly_one_pdf(
@@ -561,6 +575,23 @@ def test_inspection_mode_still_covers_exactly_one_pdf(
     assert cli.main([str(pdfs), "--output", str(report)]) == 1
     assert "--export" in capsys.readouterr().err
     assert not report.exists()
+
+
+def test_export_accepts_a_directory_with_one_pdf(
+    tmp_path: Path, capsys: pytest.CaptureFixture
+) -> None:
+    folder = tmp_path / "pdfs"
+    folder.mkdir()
+    write_chart_pdf(
+        folder / "only.pdf",
+        [{"school": "Synthetic State", "mascot": "Synths", "season": 2002}],
+    )
+    output = tmp_path / "seasons"
+
+    assert _run(folder, output) == 0
+
+    assert (output / "2002" / "synthetic-state").is_dir()
+    assert "summary: 1 succeeded, 0 failed" in capsys.readouterr().out
 
 
 def test_a_single_pdf_is_processed_with_the_same_status_lines(

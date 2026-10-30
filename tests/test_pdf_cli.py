@@ -2,6 +2,7 @@
 
 import errno
 import json
+from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 from types import SimpleNamespace
@@ -78,8 +79,41 @@ def test_symlink_output_is_never_followed(source: Path, tmp_path: Path) -> None:
     assert target.read_text() == "keep"
 
 
-def test_single_pdf_directory_supported(source: Path, tmp_path: Path) -> None:
-    assert cli.main([str(source.parent), "--output", str(tmp_path / "report.json")]) == 0
+@pytest.mark.parametrize("pdf_count", [0, 1, 2], ids=["empty", "one-pdf", "multiple-pdfs"])
+def test_inspection_rejects_directories_before_parsing(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+    pdf_count: int,
+) -> None:
+    folder = tmp_path / "input"
+    folder.mkdir()
+    for index in range(pdf_count):
+        (folder / f"{index}.pdf").write_bytes(b"placeholder")
+    real_iterdir = Path.iterdir
+    scanned: list[Path] = []
+
+    def track_scan(path: Path) -> Iterator[Path]:
+        if path == folder:
+            scanned.append(path)
+        return real_iterdir(path)
+
+    monkeypatch.setattr(Path, "iterdir", track_scan)
+    inspected: list[Path] = []
+
+    def inspect(path: Path) -> object:
+        inspected.append(path)
+        raise AssertionError("inspection must not run for directory input")
+
+    monkeypatch.setattr(cli, "inspect_document", inspect)
+    output = tmp_path / "report.json"
+
+    assert cli.main([str(folder), "--output", str(output)]) == 1
+
+    assert "single PDF file" in capsys.readouterr().err
+    assert scanned == []
+    assert inspected == []
+    assert not output.exists()
 
 
 def test_inspection_mode_takes_one_pdf_and_points_to_export(
@@ -129,6 +163,17 @@ def test_argument_errors_and_help(capsys: pytest.CaptureFixture) -> None:
         cli.main(["--help"])
     assert help_result.value.code == 0
     assert "5d" not in capsys.readouterr().out
+
+
+def test_help_explains_that_directory_input_requires_export(
+    capsys: pytest.CaptureFixture,
+) -> None:
+    with pytest.raises(SystemExit) as help_result:
+        cli.main(["--help"])
+
+    assert help_result.value.code == 0
+    help_text = " ".join(capsys.readouterr().out.split())
+    assert "with --export, a directory of PDFs is also accepted" in help_text
 
 
 def test_hardlinked_source_cannot_be_destroyed(source: Path, tmp_path: Path) -> None:
@@ -352,18 +397,60 @@ def test_symlink_loop_output_is_a_clean_error(source: Path, tmp_path: Path) -> N
     assert cli.main([str(source), "--output", str(loop), "--force"]) == 1
 
 
-def test_directory_ignores_hidden_and_resource_fork_files(source: Path, tmp_path: Path) -> None:
-    (source.parent / "._synthetic.pdf").write_bytes(b"resource fork")
-    assert cli.main([str(source.parent), "--output", str(tmp_path / "out" / "r.json")]) == 0
-
-
 def test_directory_rejects_symlinked_pdf(tmp_path: Path) -> None:
     folder = tmp_path / "in"
     folder.mkdir()
     real = tmp_path / "real.pdf"
     real.write_bytes(b"pdf")
     (folder / "linked.pdf").symlink_to(real)
-    assert cli.main([str(folder), "--output", str(tmp_path / "r.json")]) == 1
+    assert cli.main([str(folder), "--output", str(tmp_path / "seasons"), "--export"]) == 1
+
+
+@pytest.mark.parametrize("mode_flags", [[], ["--export"]], ids=["inspection", "export"])
+@pytest.mark.parametrize("link_kind", ["directory", "file", "dangling"])
+def test_symlink_input_is_refused_before_processing(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    mode_flags: list[str],
+    link_kind: str,
+) -> None:
+    target = tmp_path / f"real-{link_kind}"
+    if link_kind == "directory":
+        target.mkdir()
+        (target / "team.pdf").write_bytes(b"placeholder")
+    elif link_kind == "file":
+        target = target.with_suffix(".pdf")
+        target.write_bytes(b"placeholder")
+    linked_input = tmp_path / f"linked-{link_kind}.pdf"
+    linked_input.symlink_to(target, target_is_directory=(link_kind == "directory"))
+    scanned: list[Path] = []
+    real_iterdir = Path.iterdir
+
+    def track_scan(path: Path) -> Iterator[Path]:
+        if path == linked_input:
+            scanned.append(path)
+        return real_iterdir(path)
+
+    monkeypatch.setattr(Path, "iterdir", track_scan)
+    processed: list[Path] = []
+
+    def record_inspection(path: Path) -> object:
+        processed.append(path)
+        raise AssertionError("refused symlink input must not be inspected")
+
+    def record_export(path: Path) -> list[object]:
+        processed.append(path)
+        raise AssertionError("refused symlink input must not be exported")
+
+    monkeypatch.setattr(cli, "inspect_document", record_inspection)
+    monkeypatch.setattr(cli, "export_document", record_export)
+    output = tmp_path / ("seasons" if mode_flags else "report.json")
+
+    assert cli.main([str(linked_input), "--output", str(output), *mode_flags]) == 1
+
+    assert processed == []
+    assert scanned == []
+    assert not output.exists()
 
 
 def test_error_messages_do_not_echo_document_text(

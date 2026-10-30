@@ -40,9 +40,10 @@ development tool run from a checkout; it is installed by the editable install on
 
 ### Input
 
-A PDF path, or a directory of PDFs. Discovery is non-recursive, sorted by name,
-case-insensitive for `.pdf`, and ignores hidden and macOS `._` files. A symlinked PDF
-refuses the whole run before anything is processed. An empty directory fails clearly.
+Inspection accepts one non-symlink PDF file. Export accepts one non-symlink PDF or a
+directory of PDFs. Directory discovery is non-recursive, sorted by name, case-insensitive
+for `.pdf`, and ignores hidden and macOS `._` files. A symlinked input directory or PDF
+refuses the run before anything is processed. An empty export directory fails clearly.
 
 ### Batch export
 
@@ -66,7 +67,8 @@ summary: 2 succeeded, 1 failed
 - Failure reasons never include chart text, filenames, or local paths. An unexpected
   failure prints a fixed message.
 
-Inspection mode (without `--export`) still takes exactly one PDF and writes one report.
+Inspection mode (without `--export`) requires a PDF file and writes one report. It does not
+scan directories, even when they contain only one PDF.
 
 ### Exit codes
 
