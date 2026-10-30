@@ -405,6 +405,8 @@ Before creating a shared Paydirt library, demonstrate a real stable overlap. Pre
 
 Complete Milestones 1–2, review the rules profile, then proceed to chart models and exact dice behavior. The PDF importer is deliberately split into Milestones 5a–5c (with batch support deferred to Milestone 25) so it becomes a reusable, tested Python program rather than a one-off conversion.
 
+Full milestone 25/current-alpha review: [2026-10-30 review](full-review-2026-10-30.md).
+
 ## Early alpha publication preparation — owner direction 2026-10-28
 
 After M21a implementation/audit commit `d030974`, the owner requested early

@@ -1,5 +1,7 @@
 # Milestone 24 — Initial alpha publication preparation
 
+Follow-up code/documentation review: [2026-10-30 review](full-review-2026-10-30.md).
+
 ## Owner direction and boundaries
 
 On 2026-10-28 the owner requested GitHub/release preparation after the M21a
