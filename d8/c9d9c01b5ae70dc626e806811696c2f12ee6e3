@@ -1,0 +1,55 @@
+bowl_bound/models.py
+  s_ed54ab581b3d60::t_55b247e15cc47e 139,146,163-169,224-225,339-340
+bowl_bound/team_csv.py
+  s_ed54ab581b3d60::t_c3532d25c6ecd7 45,339,377,537,591-599,606
+docs/chart-schema.md
+  s_ed54ab581b3d60::t_f5c7d20853884a 13-16
+docs/normalization.md
+  s_ed54ab581b3d60::t_e0567ac0c41f0e 37-41,43-45
+docs/team-bundle.md
+  s_ed54ab581b3d60::t_50d036ffd802c3 123,136,164-167
+release/manifest.json
+  s_ed54ab581b3d60::t_2b73ec75d71657 103,107
+scripts/build_issue_index.py
+  s_ed54ab581b3d60::t_6ad973d031f972 51-56
+seasons/2007/cedar-valley/team.yaml
+  s_ed54ab581b3d60::t_83441cdd3895fc 9
+seasons/2007/harbor-tech/team.yaml
+  s_ed54ab581b3d60::t_43ca188eaf45fc 9
+tests/test_issue_tracker.py
+  s_ed54ab581b3d60::t_e59b5d68bd46d0 66-72
+tests/test_models.py
+  s_ed54ab581b3d60::t_d4cd785909be63 471-478
+tests/test_pdf_cli.py
+  s_ed54ab581b3d60::t_988076c79c9b0e 86-96
+tests/test_pdf_cli_export.py
+  s_ed54ab581b3d60::t_075d206c3fc0e3 108,111,115-116,121,218-273
+tests/test_pdf_metadata.py
+  s_ed54ab581b3d60::t_f774da9c50994e 11,13,157-167
+tests/test_team_csv.py
+  s_ed54ab581b3d60::t_67b73693986f03 92-121,212-214
+tools/pdf_import/cells.py
+  s_ed54ab581b3d60::t_e3b643f2aa8146 11-12,310-313
+tools/pdf_import/cli.py
+  s_ed54ab581b3d60::t_671bc1b7f3a9b0 34,66,79-81,179-186
+tools/pdf_import/colors.py
+  s_ed54ab581b3d60::t_42270377b694f0 1-24
+tools/pdf_import/metadata.py
+  s_ed54ab581b3d60::t_af1b76dfb1d468 10-11,32,34-37,84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "d8c9d9c01b5ae70dc626e806811696c2f12ee6e3",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
