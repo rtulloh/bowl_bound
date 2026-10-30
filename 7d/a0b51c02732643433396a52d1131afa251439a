@@ -1,0 +1,23 @@
+tests/test_packaging.py
+  s_ed54ab581b3d60::t_4374115a1c52d9 8,20-21,34-41,65-78
+tests/test_pdf_cli.py
+  s_ed54ab581b3d60::t_751dcc8b3756bd 177
+tools/pdf_import/cli.py
+  s_ed54ab581b3d60::t_1f3f2e01f8b383 429
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "7da0b51c02732643433396a52d1131afa251439a",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
