@@ -8,7 +8,9 @@ import pdfplumber
 import pytest
 from reportlab.pdfgen import canvas
 
+from tools.pdf_import.cells import _rgb as cell_rgb
 from tools.pdf_import.metadata import MetadataError, extract_metadata
+from tools.pdf_import.metadata import _color as metadata_color
 
 
 def pages(
@@ -152,7 +154,17 @@ def test_evidence_uses_measured_fill_or_page_background() -> None:
     colored_fact = next(f for f in colored.evidence if f.label == "power_rating")
     assert colored_fact.provenance.rgb_color == (0, 255, 0)
     plain_fact = next(f for f in plain.evidence if f.label == "power_rating")
-    assert plain_fact.provenance.rgb_color == (255, 255, 255)
+    assert plain_fact.provenance.rgb_color is None
+
+
+@pytest.mark.parametrize(
+    "value",
+    [0.25, (0.25,), [0.25], (0.25, 0.25, 0.25), [0.25, 0.25, 0.25]],
+)
+def test_metadata_and_chart_color_parsers_share_rgb_shapes(value: object) -> None:
+    expected = (64, 64, 64)
+    assert cell_rgb(value) == expected
+    assert metadata_color({"non_stroking_color": value}) == expected
 
 
 @pytest.mark.parametrize("rating", ["0200", "49.9", "500.1", "٢٠٠"])

@@ -468,6 +468,14 @@ def test_provenance_rejects_more_invalid_evidence(changes: dict[str, object]) ->
         replace(provenance(), **changes)
 
 
+def test_normalized_chart_cell_requires_measured_rgb_provenance() -> None:
+    evidence = replace(provenance(), rgb_color=None)
+    with pytest.raises(ValueError, match="require measured RGB provenance"):
+        NormalizedCell(ResultKind.YARDS, evidence, yards=1)
+    with pytest.raises(ValueError, match="PAT outcomes require measured RGB provenance"):
+        PatOutcome(10, True, evidence)
+
+
 @pytest.mark.parametrize("roll", [0, 9, 40, True, 10.0])
 def test_offense_supplemental_special_and_pat_reject_out_of_range_rolls(roll: object) -> None:
     with pytest.raises((TypeError, ValueError)):

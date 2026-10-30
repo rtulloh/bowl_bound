@@ -42,6 +42,7 @@ from .normalization import (
 )
 
 TEAM_FILES: tuple[str, ...] = ("offense.csv", "defense.csv", "special.csv", "team.yaml")
+TEAM_FILE_VERSION = 2
 PROVENANCE_DIR = "provenance"
 _PRIV = {"W", "FBO", "SPBO", "XWC"}
 _NAMED_RESULT_KINDS = frozenset(
@@ -335,7 +336,7 @@ def team_to_files(chart: TeamChart, meta: TeamFileMetadata) -> dict[str, str]:
         "privileges": list(meta.privileges),
         "source_sha256": meta.source_sha256,
         "source_filename": fn,
-        "team_file_version": 1,
+        "team_file_version": TEAM_FILE_VERSION,
         "status": "validated",
     }
     y = (
@@ -373,7 +374,7 @@ def provenance_to_csv(chart: TeamChart, meta: TeamFileMetadata) -> str:
                 repr(p.bounding_box.right),
                 repr(p.bounding_box.top),
                 p.original_text,
-                *p.rgb_color,
+                *(p.rgb_color if p.rgb_color is not None else ("", "", "")),
             ]
         )
 
@@ -533,7 +534,7 @@ def team_from_files(
         or type(y["source_filename"]) is not str
         or not y["source_filename"]
         or type(y["team_file_version"]) is not int
-        or y["team_file_version"] != 1
+        or y["team_file_version"] not in {1, TEAM_FILE_VERSION}
         or y["status"] != "validated"
     ):
         raise _err("team.yaml", 0, "invalid metadata")
@@ -587,13 +588,22 @@ def team_from_files(
         elif key not in expected or key in prov:
             raise _err("provenance.csv", n, "unexpected provenance key")
         try:
+            rgb_color = (
+                None
+                if (
+                    y["team_file_version"] == TEAM_FILE_VERSION
+                    and section == "metadata"
+                    and (red, green, blue) == ("", "", "")
+                )
+                else tuple(_num(value, "provenance.csv", n) for value in (red, green, blue))
+            )
             p = Provenance(
                 y["source_sha256"],
                 y["source_filename"],
                 _num(page, "provenance.csv", n, True),
                 BoundingBox(*(float(value) for value in (left, bottom, right, top))),
                 original,
-                tuple(_num(value, "provenance.csv", n) for value in (red, green, blue)),
+                rgb_color,
             )
         except (TypeError, ValueError) as e:
             raise _err("provenance.csv", n, "invalid provenance") from e

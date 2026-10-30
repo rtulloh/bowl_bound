@@ -31,7 +31,7 @@ def _source_path(path: Path) -> Path:
         if len(candidates) != 1:
             raise ValueError(
                 "Directory input currently requires exactly one PDF; "
-                "multi-file batch processing arrives in Milestone 5d"
+                "multi-file batch import is not yet supported"
             )
         return candidates[0]
     if path.is_symlink() or not path.is_file() or path.suffix.lower() != ".pdf":
@@ -63,7 +63,7 @@ def _validate_output(source: Path, output: Path, force: bool) -> None:
         raise ValueError("Output exists; pass --force to explicitly replace it")
 
 
-def _write_report(source: Path, output: Path, rendered: str, force: bool) -> None:
+def _write_report(source: Path, output: Path, rendered: str | bytes, force: bool) -> None:
     """Write a private report atomically; never modify any pre-existing inode in place."""
     _validate_output(source, output, force)  # re-check immediately before writing
     created: list[Path] = []
@@ -76,8 +76,9 @@ def _write_report(source: Path, output: Path, rendered: str, force: bool) -> Non
     try:
         descriptor, name = tempfile.mkstemp(prefix=".inspection-", suffix=".tmp", dir=parent)
         temporary = Path(name)
-        with os.fdopen(descriptor, "w", encoding="utf-8", newline="") as stream:
-            stream.write(rendered)
+        data = rendered.encode("utf-8") if isinstance(rendered, str) else rendered
+        with os.fdopen(descriptor, "wb") as stream:
+            stream.write(data)
             stream.flush()
             os.fsync(stream.fileno())
         os.chmod(temporary, 0o600)
@@ -175,10 +176,14 @@ def _write_teams(source: Path, root: Path, targets: list[TeamTarget], force: boo
             done.append((path, previous))
     except BaseException:
         for path, previous in reversed(done):
-            if previous is not None:
-                _write_report(source, path, previous.decode("utf-8"), True)
-            else:
-                path.unlink(missing_ok=True)
+            try:
+                if previous is not None:
+                    _write_report(source, path, previous, True)
+                else:
+                    path.unlink(missing_ok=True)
+            except BaseException:
+                # Continue best-effort rollback and preserve the original write error.
+                pass
         for directory in sorted(created_dirs, key=lambda d: len(d.parts), reverse=True):
             try:
                 directory.rmdir()

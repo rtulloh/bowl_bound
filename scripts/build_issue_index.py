@@ -48,9 +48,12 @@ def _validate(fields: dict[str, Any], text: str, path: Path) -> None:
     fields["milestone"] = str(fields.get("milestone", ""))
     if fields["milestone"] not in milestones():
         raise ValueError(f"{path}: milestone must exist in project-plan.md")
-    created, resolved, closed = (
-        _day(fields.get(key)) for key in ("created-at", "resolved-at", "closed-at")
-    )
+    try:
+        created, resolved, closed = (
+            _day(fields.get(key)) for key in ("created-at", "resolved-at", "closed-at")
+        )
+    except ValueError as error:
+        raise ValueError(f"{path}: invalid ticket date") from error
     if (
         created is None
         or (resolved and resolved < created)

@@ -8,6 +8,8 @@ from typing import TYPE_CHECKING
 
 from bowl_bound.models import BoundingBox, Provenance
 
+from .colors import PDFColorError, rgb_from_pdf_color
+
 if TYPE_CHECKING:
     from pdfplumber.page import Page
 
@@ -305,19 +307,10 @@ def _rect_color(rect: dict) -> tuple[int, int, int]:
 
 
 def _rgb(value: object) -> tuple[int, int, int]:
-    if type(value) in (int, float):
-        channels = (value, value, value)
-    elif isinstance(value, (tuple, list)) and len(value) == 1:
-        channels = (value[0],) * 3
-    elif isinstance(value, (tuple, list)) and len(value) == 3:
-        channels = tuple(value)
-    else:
-        raise CellExtractionError("background has unsupported color space")
-    if any(type(channel) not in (int, float) or not isfinite(channel) for channel in channels):
-        raise CellExtractionError("background has unsupported color values")
-    if not all(0 <= channel <= 1 for channel in channels):
-        raise CellExtractionError("background has unsupported color values")
-    return tuple(round(channel * 255) for channel in channels)
+    try:
+        return rgb_from_pdf_color(value)
+    except PDFColorError as error:
+        raise CellExtractionError(f"background has {error}") from error
 
 
 def _inset(cell: CellBounds) -> CellBounds:

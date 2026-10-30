@@ -120,7 +120,7 @@ power_rating: 100.0
 privileges: []
 source_sha256: <64 lowercase hex characters>
 source_filename: synthetic.pdf
-team_file_version: 1
+team_file_version: 2
 status: validated
 ```
 
@@ -133,7 +133,7 @@ status: validated
 | `privileges` | Printed markers (`W`, `FBO`, `SPBO`, `XWC`), unique. Empty means none were printed. |
 | `source_sha256` | SHA-256 of the exact PDF bytes that were parsed. |
 | `source_filename` | The PDF's file name. |
-| `team_file_version` | Integer `1`. A reader rejects any other value. |
+| `team_file_version` | Writers use integer `2`; readers also accept legacy version `1`. Version 2 allows empty RGB fields on metadata provenance rows when no fill was measured. |
 | `status` | `validated`. |
 
 A marker is recorded as printed. **No privilege is ever defaulted**, and an absent marker is
@@ -161,8 +161,10 @@ section,column,defense,roll,page,left,bottom,right,top,original_text,red,green,b
 `section` is `offense`, `supplemental`, `defense`, `special_teams`, `pat`, or `metadata`.
 Each row keeps the one-based page, the PDF-space bounding box (floats written exactly,
 including `-0.0`), the original text exactly as extracted, and the measured RGB background.
-RGB is evidence, not a rules input. Every row must carry the `source_sha256` and filename
-recorded in `team.yaml`; the writer rejects a mismatch.
+For metadata rows only, three empty RGB fields mean no fill was measured; white is not
+invented as a default. Chart-cell and PAT rows always require measured RGB. RGB is evidence,
+not a rules input. Every row must carry the `source_sha256` and filename recorded in
+`team.yaml`; the writer rejects a mismatch.
 
 ## Reading
 

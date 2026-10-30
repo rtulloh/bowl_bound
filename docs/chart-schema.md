@@ -10,8 +10,10 @@ fields below.
 A TeamChart has a non-empty team name and positive integer season. Every
 NormalizedCell and each dedicated PatOutcome has immutable Provenance: exactly
 64 hexadecimal SHA-256 characters, filename, one-based page, finite
-positive-area PDF bounding box, original text, and RGB evidence. RGB belongs
-to provenance, not semantics; engines must not inspect PDF colors.
+positive-area PDF bounding box, original text, and measured RGB evidence. A
+metadata provenance row may have no measured fill, represented explicitly as
+three empty RGB fields in the bundle; chart cells and PAT outcomes always require
+RGB. RGB belongs to provenance, not semantics; engines must not inspect PDF colors.
 
 ## Semantic facts
 

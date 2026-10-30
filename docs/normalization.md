@@ -34,13 +34,15 @@ whitespace in digits or alphabetic tokens is rejected, not joined. Compact forms
 like F+6, FX, and DEF5 are accepted deliberately; whitespace is not required where
 the prefix and location are unambiguous. Other dash glyphs are unsupported.
 Malformed wrappers, repeated markers, unknown forms, and unsupported color/token
-combinations raise `NormalizationError` with filename, page, bounds, and original
-text. Legacy graphical circled priority is not decoded from a text glyph; an importer
-for that layout must supply explicit evidence or reject the layout.
+combinations raise `NormalizationError` with a safe page-and-reason message; its
+attributes retain the page and bounding box. The caller's `Provenance` retains the
+filename and original text for private local review. Legacy graphical circled priority
+is not decoded from a text glyph; an importer for that layout must supply explicit
+evidence or reject the layout.
 
-Detailed errors include private filenames and source text: keep them in ignored
-local import reports, never public logs or telemetry. API/UI adapters must sanitize
-them before external display. Priority wrappers are supported only on numeric,
+Keep provenance and local import reports private; do not log or display source filenames
+or source text. API/UI adapters should expose only the safe error message. Priority
+wrappers are supported only on numeric,
 variable, and TD entries (including [TD], explicitly listed in the legend). PI means
 defensive pass interference per the legend; no inference from NFL behavior is used.
 Leading zeros and signed zero are accepted as integer forms; explicit signs must

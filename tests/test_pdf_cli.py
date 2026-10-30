@@ -83,6 +83,17 @@ def test_batch_is_explicitly_deferred(source: Path, tmp_path: Path) -> None:
     assert not (tmp_path / "report.json").exists()
 
 
+def test_directory_error_does_not_reference_retired_milestone(
+    source: Path, tmp_path: Path, capsys: pytest.CaptureFixture
+) -> None:
+    (source.parent / "second.PDF").write_bytes(b"second synthetic PDF")
+    assert cli.main([str(source.parent), "--output", str(tmp_path / "report.json")]) == 1
+    error = capsys.readouterr().err
+    assert "Milestone 5d" not in error
+    assert "Milestone 25" not in error
+    assert "not yet supported" in error.lower()
+
+
 def test_missing_input_and_empty_directory_fail(tmp_path: Path) -> None:
     output = tmp_path / "report.json"
     assert cli.main([str(tmp_path / "missing.pdf"), "--output", str(output)]) == 1

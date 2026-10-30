@@ -136,14 +136,14 @@ class BoundingBox:
 
 @dataclass(frozen=True)
 class Provenance:
-    """PDF source evidence; RGB color is not a semantic engine input."""
+    """PDF evidence; ``rgb_color=None`` denotes no measured metadata fill."""
 
     source_sha256: str
     filename: str
     page: int
     bounding_box: BoundingBox
     original_text: str
-    rgb_color: tuple[int, int, int]
+    rgb_color: tuple[int, int, int] | None
 
     def __post_init__(self) -> None:
         if (
@@ -160,10 +160,13 @@ class Provenance:
             raise TypeError("bounding_box must be a BoundingBox")
         if not isinstance(self.original_text, str):
             raise TypeError("original_text must be a string")
-        if type(self.rgb_color) is not tuple or len(self.rgb_color) != 3:
-            raise TypeError("rgb_color must be a three-channel tuple")
-        if any(type(channel) is not int or not 0 <= channel <= 255 for channel in self.rgb_color):
-            raise ValueError("rgb_color channels must be integers from 0 through 255")
+        if self.rgb_color is not None:
+            if type(self.rgb_color) is not tuple or len(self.rgb_color) != 3:
+                raise TypeError("rgb_color must be a three-channel tuple or None")
+            if any(
+                type(channel) is not int or not 0 <= channel <= 255 for channel in self.rgb_color
+            ):
+                raise ValueError("rgb_color channels must be integers from 0 through 255")
 
 
 @dataclass(frozen=True)
@@ -218,6 +221,8 @@ class NormalizedCell:
             raise TypeError("kind must be a ResultKind")
         if not isinstance(self.provenance, Provenance):
             raise TypeError("provenance must be Provenance")
+        if self.provenance.rgb_color is None:
+            raise ValueError("normalized chart cells require measured RGB provenance")
         if type(self.priority) is not Priority or type(self.out_of_bounds) is not bool:
             raise TypeError("priority and out_of_bounds must have their declared types")
         if self.yards is not None and type(self.yards) is not int:
@@ -331,6 +336,8 @@ class PatOutcome:
             raise TypeError("good must be a bool")
         if not isinstance(self.provenance, Provenance):
             raise TypeError("provenance must be Provenance")
+        if self.provenance.rgb_color is None:
+            raise ValueError("PAT outcomes require measured RGB provenance")
 
 
 @dataclass(frozen=True)

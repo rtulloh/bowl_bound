@@ -105,20 +105,20 @@ def test_chart_csvs_use_paydirt_names_and_bowl_bound_plays(source: Path, tmp_pat
 def test_files_are_written_without_newline_translation(
     source: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Windows would write CRLF, which the strict reader rejects and which breaks byte identity."""
+    """Binary output avoids platform newline translation and preserves previous bytes exactly."""
     import os
 
-    seen: list[object] = []
+    seen: list[str] = []
     real = os.fdopen
 
     def spy(fd: int, mode: str = "r", *args: object, **kwargs: object) -> object:
-        if "w" in mode:
-            seen.append(kwargs.get("newline", "<default>"))
+        if "w" in mode or "b" in mode:
+            seen.append(mode)
         return real(fd, mode, *args, **kwargs)  # type: ignore[arg-type]
 
     monkeypatch.setattr(os, "fdopen", spy)
     assert _run(source, tmp_path / "seasons") == 0
-    assert seen and set(seen) == {""}
+    assert seen and set(seen) == {"wb"}
 
 
 def test_exported_files_load_back_exactly(source: Path, tmp_path: Path) -> None:
@@ -213,6 +213,62 @@ def test_failed_run_restores_everything_written_earlier(
     root = tmp_path / "seasons"
     assert _run(source, root) == 1
     assert not root.exists() or not [p for p in root.rglob("*") if p.is_file()]
+
+
+def test_failed_force_export_restores_non_utf8_previous_bytes(
+    source: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = tmp_path / "seasons"
+    team = root / "2002" / "synthetic-state"
+    team.mkdir(parents=True)
+    offense = team / "offense.csv"
+    previous = b"\xffsynthetic prior bytes"
+    offense.write_bytes(previous)
+    original = cli._write_report
+
+    def fail_special(source_path: Path, output: Path, rendered: str, force: bool) -> None:
+        if output.name == "special.csv":
+            raise OSError("synthetic write failure")
+        original(source_path, output, rendered, force)
+
+    monkeypatch.setattr(cli, "_write_report", fail_special)
+    assert _run(source, root, "--force") == 1
+    assert offense.read_bytes() == previous
+
+
+def test_force_export_attempts_remaining_restores_and_preserves_original_error(
+    source: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = tmp_path / "seasons"
+    team = root / "2002" / "synthetic-state"
+    team.mkdir(parents=True)
+    offense = team / "offense.csv"
+    defense = team / "defense.csv"
+    offense_before = b"\xffsynthetic prior bytes"
+    defense_before = b"prior defense bytes"
+    offense.write_bytes(offense_before)
+    defense.write_bytes(defense_before)
+    original = cli._write_report
+    restore_attempts: list[str] = []
+
+    def fail_write_and_one_restore(
+        source_path: Path, output: Path, rendered: str | bytes, force: bool
+    ) -> None:
+        if output.name == "special.csv" and isinstance(rendered, str):
+            raise OSError("synthetic original write failure")
+        if isinstance(rendered, bytes):
+            restore_attempts.append(output.name)
+            if output.name == "defense.csv":
+                raise OSError("synthetic restore failure")
+        original(source_path, output, rendered, force)
+
+    monkeypatch.setattr(cli, "_write_report", fail_write_and_one_restore)
+    targets = cli._team_targets(root, [_team("Synthetic State")])
+    with pytest.raises(OSError, match="synthetic original write failure"):
+        cli._write_teams(source, root, targets, True)
+    assert restore_attempts == ["defense.csv", "offense.csv"]
+    assert offense.read_bytes() == offense_before
+    assert defense.read_bytes() != defense_before
 
 
 def test_validation_failure_writes_nothing_and_exits_one(

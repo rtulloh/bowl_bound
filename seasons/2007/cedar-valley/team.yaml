@@ -6,5 +6,5 @@ power_rating: 5.0
 privileges: []
 source_sha256: 9154e07d6dffd6604beb472d60a32f3f6463f4f7801493f923911f6b3007d717
 source_filename: sample-teams-v2
-team_file_version: 1
+team_file_version: 2
 status: validated

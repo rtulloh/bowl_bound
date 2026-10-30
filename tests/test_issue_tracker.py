@@ -63,6 +63,13 @@ def test_invalid_metadata_is_rejected(tmp_path: Path, field: str, value: str) ->
         load_issues(tmp_path)
 
 
+def test_invalid_date_error_names_ticket_path(tmp_path: Path) -> None:
+    path = ticket(tmp_path, **{"created-at": "2026-02-30"})
+    with pytest.raises(ValueError) as error:
+        load_issues(tmp_path)
+    assert str(path) in str(error.value)
+
+
 def test_resolved_requires_a_commit_and_closed_requires_playtest_evidence(tmp_path: Path) -> None:
     path = ticket(tmp_path, status="resolved", **{"resolved-at": "2026-10-26"})
     with pytest.raises(ValueError, match="commit"):

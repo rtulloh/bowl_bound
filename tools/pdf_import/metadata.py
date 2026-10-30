@@ -7,6 +7,8 @@ from typing import Any
 
 from bowl_bound.models import BoundingBox, Provenance
 
+from .colors import PDFColorError, rgb_from_pdf_color
+
 
 class MetadataError(ValueError):
     """Required metadata is absent, ambiguous, or inconsistent."""
@@ -27,14 +29,12 @@ class TeamMetadata:
 
 
 def _color(rect: dict[str, Any]) -> tuple[int, int, int]:
-    value = rect.get("non_stroking_color")
-    if (
-        type(value) is not tuple
-        or len(value) != 3
-        or any(not isinstance(channel, (int, float)) or not 0 <= channel <= 1 for channel in value)
-    ):
+    if rect.get("ncs") not in (None, "DeviceRGB", "DeviceGray"):
         raise MetadataError("Background color is unsupported")
-    return tuple(round(channel * 255) for channel in value)
+    try:
+        return rgb_from_pdf_color(rect.get("non_stroking_color"))
+    except PDFColorError as error:
+        raise MetadataError("Background color is unsupported") from error
 
 
 def _contains(rect: dict[str, Any], chars: list[dict[str, Any]]) -> bool:
@@ -81,7 +81,7 @@ def _evidence(
         max(char["x1"] for char in chars),
         page.height - min(char["top"] for char in chars),
     )
-    rgb = _background(page, chars) or (255, 255, 255)
+    rgb = _background(page, chars)
     return MetadataFact(label, Provenance(digest, filename, page_number, box, text, rgb))
 
 
