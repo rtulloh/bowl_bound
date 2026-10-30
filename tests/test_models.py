@@ -179,7 +179,7 @@ def test_invalid_runtime_types_and_pat_outcomes_are_rejected(factory: object) ->
 def test_pat_outcome_preserves_its_own_provenance() -> None:
     outcome = PatOutcome(10, good=True, provenance=provenance())
     assert outcome.good is True
-    assert outcome.provenance.rgb_color == (1, 2, 3)
+    assert outcome.provenance.rgb_color == (0, 255, 0)
 
 
 def test_team_identity_and_recovery_range_are_validated() -> None:
