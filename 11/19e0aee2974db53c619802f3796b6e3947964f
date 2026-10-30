@@ -1,0 +1,37 @@
+docs/dev-notes/issue-tracker.md
+  s_ed54ab581b3d60::t_c220ff201a3f4e 8,10,102,114,371
+docs/dev-notes/issues/IMPORT/IMPORT-003.md
+  s_ed54ab581b3d60::t_a0167c08165396 17,43-44,52-53
+docs/dev-notes/issues/IMPORT/IMPORT-004.md
+  s_ed54ab581b3d60::t_ca320100d16b04 17,38-39,47-48
+docs/dev-notes/issues/IMPORT/IMPORT-005.md
+  s_ed54ab581b3d60::t_41d3aa2b639c55 17,37-38,46-47
+docs/dev-notes/issues/IMPORT/IMPORT-006.md
+  s_ed54ab581b3d60::t_dc3c213ff3f99b 18,38-39,47-48
+docs/dev-notes/issues/IMPORT/IMPORT-007.md
+  s_ed54ab581b3d60::t_f28036ed2bf361 22,44-45,53-55
+docs/dev-notes/issues/IMPORT/IMPORT-008.md
+  s_ed54ab581b3d60::t_eda9a4eeafe8b3 21,55-59
+docs/dev-notes/issues/IMPORT/IMPORT-009.md
+  s_ed54ab581b3d60::t_80170b5822309f 4,8,22-43,58-79,84-88
+docs/dev-notes/milestone-25.md
+  s_ed54ab581b3d60::t_6fa3c86152cb9f 6-10,93,106,119,133,148,164-189
+docs/dev-notes/project-plan.md
+  s_ed54ab581b3d60::t_5556f84ba674f8 381-383,394-396
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "1119e0aee2974db53c619802f3796b6e3947964f",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
