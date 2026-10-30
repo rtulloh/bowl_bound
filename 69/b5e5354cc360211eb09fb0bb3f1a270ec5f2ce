@@ -1,0 +1,33 @@
+docs/dev-notes/issues/IMPORT/IMPORT-002.md
+  s_ed54ab581b3d60::t_8d46421f724044 6,8-15
+docs/dev-notes/issues/IMPORT/IMPORT-003.md
+  s_ed54ab581b3d60::t_3e907d8e0f0ea5 14-16
+docs/dev-notes/issues/IMPORT/IMPORT-004.md
+  s_ed54ab581b3d60::t_97cb549d802ed4 14-16
+docs/dev-notes/issues/IMPORT/IMPORT-005.md
+  s_ed54ab581b3d60::t_3d23d6363f7796 14-16
+docs/dev-notes/issues/IMPORT/IMPORT-006.md
+  s_ed54ab581b3d60::t_5da690ef516e31 14-17
+docs/dev-notes/issues/IMPORT/IMPORT-007.md
+  s_ed54ab581b3d60::t_6b22a0cd62cd12 1-40
+docs/dev-notes/issues/IMPORT/IMPORT-008.md
+  s_ed54ab581b3d60::t_2477bd577006d4 1-36
+docs/dev-notes/issues/IMPORT/IMPORT-009.md
+  s_ed54ab581b3d60::t_e3218f67e13c85 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "69b5e5354cc360211eb09fb0bb3f1a270ec5f2ce",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
