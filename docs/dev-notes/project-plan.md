@@ -391,6 +391,12 @@ Deferred by decision: batch support is not needed while only two teams are in us
 
 **Validate:** test batch success, partial failures, and overwrite safety.
 
+Tracked work: [IMPORT-001](issues/IMPORT/IMPORT-001.md) through
+[IMPORT-009](issues/IMPORT/IMPORT-009.md), covering color/provenance integrity,
+rollback, collision refusal, dry-run parity, safe diagnostics, input contracts,
+the positive batch workflow, documentation/dependency isolation and final
+milestone acceptance. See the [Milestone 25 work log](milestone-25.md).
+
 **Commit:** `milestone 25: support batch team PDF imports`
 
 ## Decision gates

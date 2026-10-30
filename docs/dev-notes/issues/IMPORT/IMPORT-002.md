@@ -3,12 +3,16 @@ id: IMPORT-002
 title: Refresh importer documentation drift and small robustness gaps
 status: open
 priority: Low
-milestone: "25"
+milestone: '25'
 created-at: 2026-10-26
-resolved-at:
-closed-at:
-tags: [importer, documentation]
-links: []
+resolved-at: null
+closed-at: null
+tags:
+- importer
+- documentation
+links:
+- IMPORT-007
+- IMPORT-009
 commits: []
 ---
 
