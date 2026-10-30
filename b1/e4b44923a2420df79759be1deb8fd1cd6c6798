@@ -1,0 +1,29 @@
+README.md
+  s_ed54ab581b3d60::t_800a5b7888a5ff 17
+docs/README.md
+  s_ed54ab581b3d60::t_13a56a558ae4c2 7
+docs/importing-teams.md
+  s_ed54ab581b3d60::t_4c9e382511300b 1,5-7,9-10,12,14-15,38-40,42,44,46,49-50,53,56-57,60-64,66-68,70-74,76,78-79,94-100
+docs/playing.md
+  s_ed54ab581b3d60::t_d2e91d7b61d65f 15
+docs/python-setup.md
+  s_ed54ab581b3d60::t_566342b5e72371 3
+tests/test_build_workflow.py
+  s_ed54ab581b3d60::t_cd46c0670f507c 3,47-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "b1e4b44923a2420df79759be1deb8fd1cd6c6798",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
