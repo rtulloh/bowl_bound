@@ -1,6 +1,5 @@
 """Thin API conversion flow and scoring reconciliation with synthetic charts."""
 
-from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -12,8 +11,7 @@ from tests.synthetic_teams import team_chart, write_team
 
 @pytest.mark.parametrize("choice", ["conversion:kick", "conversion:two"])
 def test_conversion_end_to_end_and_duplicate_refusal(tmp_path: Path, choice: str) -> None:
-    home = team_chart("Home", offense=3)
-    home = replace(home, pat_outcomes=tuple(replace(row, good=True) for row in home.pat_outcomes))
+    home = team_chart("Home", offense=3, pat_good=True)
     for chart in (home, team_chart("Away", defense=0)):
         write_team(tmp_path, chart)
     client = TestClient(create_app(tmp_path))

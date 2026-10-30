@@ -15,9 +15,10 @@ from bowl_bound.models import (
     SupplementalCell,
     TeamChart,
 )
-from bowl_bound.normalization import CELL_LEGEND, chart_color_for_csv_token
+from bowl_bound.normalization import CELL_LEGEND, ChartColor, chart_color_for_csv_token
 from bowl_bound.team_csv import (
     TeamFileMetadata,
+    TeamFormatError,
     format_cell,
     provenance_to_csv,
     team_folder_name,
@@ -29,7 +30,13 @@ SHA = "a" * 64
 
 
 def _with_legend_color(cell: NormalizedCell) -> NormalizedCell:
-    color = chart_color_for_csv_token(format_cell(cell))
+    try:
+        color = chart_color_for_csv_token(format_cell(cell))
+    except TeamFormatError:
+        # Engine-only tests may use factors the on-disk chart grammar cannot encode.
+        if not cell.kind.name.startswith("VARIABLE_") or cell.variable_multiplier is None:
+            raise
+        color = ChartColor.RED if cell.variable_multiplier < 0 else ChartColor.GREEN
     evidence = replace(cell.provenance, rgb_color=CELL_LEGEND[color].rgb_color)
     return replace(cell, provenance=evidence)
 
@@ -45,6 +52,7 @@ def team_chart(
     offense: int = 4,
     defense: int = 3,
     plays: dict[Play, NormalizedCell] | None = None,
+    pat_good: bool | None = None,
 ) -> TeamChart:
     """A complete chart where every offense cell gains 'offense' and every defense 'defense'.
 
@@ -53,6 +61,17 @@ def team_chart(
     """
     chart = complete_chart()
     plays = plays or {}
+    pat_outcomes = chart.pat_outcomes
+    if pat_good is not None:
+        color = CELL_LEGEND[ChartColor.WHITE if pat_good else ChartColor.RED].rgb_color
+        pat_outcomes = tuple(
+            replace(
+                outcome,
+                good=pat_good,
+                provenance=replace(outcome.provenance, rgb_color=color),
+            )
+            for outcome in chart.pat_outcomes
+        )
     return replace(
         chart,
         name=name,
@@ -71,6 +90,7 @@ def team_chart(
         defense=tuple(
             DefensiveCell(r.defense, r.play, r.roll, yards(defense)) for r in chart.defense
         ),
+        pat_outcomes=pat_outcomes,
     )
 
 
