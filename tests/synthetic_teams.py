@@ -45,6 +45,22 @@ def yards(value: int) -> NormalizedCell:
     return NormalizedCell(ResultKind.YARDS, provenance(), yards=value)
 
 
+def with_pat_result(chart: TeamChart, good: bool) -> TeamChart:
+    """Set a synthetic PAT result and keep its RGB evidence consistent with CSV output."""
+    color = CELL_LEGEND[ChartColor.WHITE if good else ChartColor.RED].rgb_color
+    return replace(
+        chart,
+        pat_outcomes=tuple(
+            replace(
+                outcome,
+                good=good,
+                provenance=replace(outcome.provenance, rgb_color=color),
+            )
+            for outcome in chart.pat_outcomes
+        ),
+    )
+
+
 def team_chart(
     name: str,
     *,
@@ -61,17 +77,8 @@ def team_chart(
     """
     chart = complete_chart()
     plays = plays or {}
-    pat_outcomes = chart.pat_outcomes
     if pat_good is not None:
-        color = CELL_LEGEND[ChartColor.WHITE if pat_good else ChartColor.RED].rgb_color
-        pat_outcomes = tuple(
-            replace(
-                outcome,
-                good=pat_good,
-                provenance=replace(outcome.provenance, rgb_color=color),
-            )
-            for outcome in chart.pat_outcomes
-        )
+        chart = with_pat_result(chart, pat_good)
     return replace(
         chart,
         name=name,
@@ -90,7 +97,7 @@ def team_chart(
         defense=tuple(
             DefensiveCell(r.defense, r.play, r.roll, yards(defense)) for r in chart.defense
         ),
-        pat_outcomes=pat_outcomes,
+        pat_outcomes=chart.pat_outcomes,
     )
 
 

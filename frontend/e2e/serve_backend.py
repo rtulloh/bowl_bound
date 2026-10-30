@@ -16,7 +16,7 @@ sys.path.insert(0, str(ROOT))
 
 from backend.app import create_app  # noqa: E402
 from bowl_bound.sample_teams import install_samples  # noqa: E402
-from tests.synthetic_teams import default_teams, write_team  # noqa: E402
+from tests.synthetic_teams import default_teams, with_pat_result, write_team  # noqa: E402
 from tests.test_special_teams import special_chart, yards  # noqa: E402
 
 
@@ -24,13 +24,13 @@ def main() -> None:
     seasons = Path(sys.argv[1])
     port = int(sys.argv[2])
     for chart in default_teams():
+        chart = with_pat_result(chart, True)
         chart = replace(
             chart,
             season=2002,
             special_teams=special_chart(
                 chart.name, kickoff=yards(40), kickoff_return=yards(10)
             ).special_teams,
-            pat_outcomes=tuple(replace(row, good=True) for row in chart.pat_outcomes),
         )
         write_team(seasons, chart)
     for label in ("Home", "Away"):
