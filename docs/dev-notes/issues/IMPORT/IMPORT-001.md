@@ -9,7 +9,7 @@ resolved-at: 2026-10-30
 closed-at:
 tags: [importer, data-integrity]
 links: []
-commits: [8f6f759]
+commits: [8f6f759, f9a31b9]
 ---
 
 ## Description
@@ -49,6 +49,9 @@ Implemented and committed as `8f6f759`.
   tests/test_sample_teams.py tests/test_pdf_cli_export.py tests/test_pdf_export_e2e.py
   tests/test_release_package.py tests/test_release_archive.py -q` — 161 passed;
   Ruff check, Ruff format check and `git diff --check` passed.
+- Cumulative follow-up: the broader M25 regression run exposed one model test still expecting
+  the old generic RGB fixture. Updated it to the new synthetic green evidence and committed
+  as `f9a31b9`; `tests/test_models.py` — 111 passed.
 
 ## Comments
 
@@ -56,3 +59,7 @@ Implemented and committed as `8f6f759`.
 Opened from the Milestone 18 full code review (engine, web, importer/tooling and
 test-suite passes). Evidence uses synthetic charts only. Milestone assignment is
 planned scope for review; re-scope with a timestamped reason if the roadmap changes.
+
+--- 2026-10-30 00:00 ---
+Cumulative model tests found a stale RGB fixture expectation after the synthetic sample color
+change. Updated that expectation in `f9a31b9`; all 111 model tests passed.

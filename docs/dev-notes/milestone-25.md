@@ -63,3 +63,5 @@ added.
   format and whitespace checks passed.
 - Implementation commit: `8f6f759`. Resolution evidence is recorded in
   [IMPORT-001](issues/IMPORT/IMPORT-001.md); it remains resolved pending any required play test.
+- The wider cumulative model check found and corrected one stale generic RGB fixture
+  expectation in `f9a31b9`; all 111 model tests passed.
