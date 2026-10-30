@@ -104,3 +104,17 @@ added.
   `git diff --check` passed.
 - Parked-branch implementation commit: `95cbe68`. Final integration remains assigned to
   [IMPORT-009](issues/IMPORT/IMPORT-009.md).
+
+### 2026-10-30 — IMPORT-005
+
+- Baseline tests reproduced seven CLI leaks from arbitrary `ValueError` and `OSError` messages;
+  the generic parser-exception path already used a fixed message.
+- Added typed project-owned CLI/inspection errors, a safe errno message map, and a fixed fallback
+  for other failures. Removed path text from source-read errors and raw exception text from
+  normalization and chart-construction validation errors. Kept the optional PDF install hint.
+- Synthetic tests cover single-file inspection, batch export, and batch/single output failures;
+  they assert both output streams are free of source sentinels and that unrelated PDFs continue.
+- PDF importer and export-hardening tests: 194 passed. Ruff check, format check and
+  `git diff --check` passed.
+- Parked-branch implementation commit: `0f050eb`. Final integration remains assigned to
+  [IMPORT-009](issues/IMPORT/IMPORT-009.md).
