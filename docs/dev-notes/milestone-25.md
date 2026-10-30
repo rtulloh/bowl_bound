@@ -133,3 +133,19 @@ added.
   `git diff --check` passed.
 - Parked-branch implementation commit: `a052138`. Final integration remains assigned to
   [IMPORT-009](issues/IMPORT/IMPORT-009.md).
+
+### 2026-10-30 — IMPORT-007
+
+- Reconsulted Paydirt `extract_charts.py:462-475`, `docs/chart-generator.md`, and
+  `tests/ai_audit.py:197-199` / `tests/test_ai_audit.py:167-172`. Adapted serial independent-item
+  failure isolation and structured result aggregation. Rejected lowercase-only `.xls` discovery,
+  raw errors/tracebacks, unsafe partial output, and success exit after partial failure; no Excel
+  layouts, NFL behavior, or runtime dependency was reused.
+- Regression-first ordering assertion failed against case-sensitive `Path` sorting. Discovery
+  now sorts case-insensitively with original filename as a deterministic tie-breaker. Per-PDF
+  plan/result records replace positional index-to-error maps and recomputed aggregate state.
+- Existing synthetic tests cover full success, mixed failures, empty directories, status ordering,
+  hidden/non-PDF filtering, dry-run and aggregate exit codes. Focused importer/export-hardening
+  suite: 203 passed. Ruff check, format check and `git diff --check` passed.
+- Parked-branch implementation commit: `824b0c6`. Final integration remains assigned to
+  [IMPORT-009](issues/IMPORT/IMPORT-009.md).
