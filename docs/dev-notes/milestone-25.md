@@ -65,3 +65,17 @@ added.
   [IMPORT-001](issues/IMPORT/IMPORT-001.md); it remains resolved pending any required play test.
 - The wider cumulative model check found and corrected one stale generic RGB fixture
   expectation in `f9a31b9`; all 111 model tests passed.
+
+### 2026-10-30 — IMPORT-002
+
+- Baseline synthetic regressions failed for non-UTF-8 rollback, a failed restore aborting
+  remaining recovery, grayscale metadata color parsing, invented white metadata RGB, stale
+  CLI milestone wording, invalid ticket dates without their path, and unversioned empty RGB.
+- Implemented byte-exact best-effort rollback; one shared PDF RGB parser; explicit missing-fill
+  metadata evidence; team-file version 2 with version-1 read compatibility; corrected docs and
+  CLI wording; and path-qualified ticket date errors.
+- Updated fictional sample YAMLs and release manifest hashes for the new bundle version.
+- Focused importer/model/codec/issue/release regression slice: 404 passed; updated bundle
+  suite: 73 passed; CLI suite: 28 passed. Ruff, format and whitespace checks passed.
+- Implementation and help-test commits: `d8c9d9c`, `03ab1d8`. Resolution evidence is in
+  [IMPORT-002](issues/IMPORT/IMPORT-002.md).
