@@ -1,18 +1,19 @@
 ---
 id: IMPORT-017
 title: Support alternate fumble-recovery metadata profiles
-status: open
+status: resolved
 priority: Medium
 milestone: '26'
 created-at: 2026-10-30
-resolved-at: null
+resolved-at: 2026-10-30
 closed-at: null
 tags:
 - importer
 - metadata
 - maysfootball
 links: []
-commits: []
+commits:
+- def1311132006903792ef5620e3e6d04d986e5be
 ---
 
 ## Description
@@ -39,3 +40,5 @@ Added synthetic regressions for both verified left-shift positions; they failed 
 threshold change and pass now. The seven local PDFs all pass recovery-metadata extraction;
 the batch dry run proceeds to separate geometry or decorated-result blockers. No endpoints
 or team data are recorded here.
+--- 2026-10-30 22:31 ---
+Resolved in tested milestone commit `def1311132006903792ef5620e3e6d04d986e5be`. Full gate: `.venv/bin/python -m pytest --cov -q` — 2,595 passed, 93.37% coverage; the frontend tests/build and quality checks also pass. All seven local PDFs export successfully to 18 temporary bundles. No historical source files were committed. Keep resolved pending owner play-test confirmation; close only after that confirmation.

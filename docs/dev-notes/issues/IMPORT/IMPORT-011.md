@@ -1,18 +1,19 @@
 ---
 id: IMPORT-011
 title: Support alternate offense grid profiles in free MaysFootball PDFs
-status: open
+status: resolved
 priority: Medium
 milestone: '26'
 created-at: 2026-10-30
-resolved-at: null
+resolved-at: 2026-10-30
 closed-at: null
 tags:
 - importer
 - maysfootball
 - pdf-layout
 links: []
-commits: []
+commits:
+- def1311132006903792ef5620e3e6d04d986e5be
 ---
 
 ## Description
@@ -42,3 +43,5 @@ failed against the previous locator and passes with explicit row bounds and 30-a
 validation. The current batch dry run now validates all seven local PDFs, and all 18
 historical team bundles pass strict team-file/provenance verification. Resolution remains
 pending the milestone commit.
+--- 2026-10-30 22:31 ---
+Resolved in tested milestone commit `def1311132006903792ef5620e3e6d04d986e5be`. Full gate: `.venv/bin/python -m pytest --cov -q` — 2,595 passed, 93.37% coverage; the frontend tests/build and quality checks also pass. All seven local PDFs export successfully to 18 temporary bundles. No historical source files were committed. Keep resolved pending owner play-test confirmation; close only after that confirmation.

@@ -1,11 +1,11 @@
 ---
 id: IMPORT-013
 title: Resolve Mays 2002 red-filled defensive yardage cells safely
-status: open
+status: resolved
 priority: High
 milestone: '26'
 created-at: 2026-10-30
-resolved-at: null
+resolved-at: 2026-10-30
 closed-at: null
 tags:
 - importer
@@ -13,7 +13,8 @@ tags:
 - provenance
 - chart-semantics
 links: []
-commits: []
+commits:
+- def1311132006903792ef5620e3e6d04d986e5be
 ---
 
 ## Description
@@ -40,3 +41,5 @@ Synthetic tests show red and green zero-yard cells round-trip while preserving t
 RGB. Both local 2002 teams now pass the current exporter dry run and strict team-file reader;
 the existing red/green validation remains in place for all other tokens. The fix remains
 uncommitted pending Milestone 26 acceptance.
+--- 2026-10-30 22:31 ---
+Resolved in tested milestone commit `def1311132006903792ef5620e3e6d04d986e5be`. Full gate: `.venv/bin/python -m pytest --cov -q` — 2,595 passed, 93.37% coverage; the frontend tests/build and quality checks also pass. All seven local PDFs export successfully to 18 temporary bundles. No historical source files were committed. Keep resolved pending owner play-test confirmation; close only after that confirmation.

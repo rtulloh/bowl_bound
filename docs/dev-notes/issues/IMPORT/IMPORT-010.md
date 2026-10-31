@@ -1,18 +1,19 @@
 ---
 id: IMPORT-010
 title: Support portrait pages with rotated MaysFootball defense charts
-status: open
+status: resolved
 priority: Medium
 milestone: '26'
 created-at: 2026-10-30
-resolved-at: null
+resolved-at: 2026-10-30
 closed-at: null
 tags:
 - importer
 - maysfootball
 - pdf-layout
 links: []
-commits: []
+commits:
+- def1311132006903792ef5620e3e6d04d986e5be
 ---
 
 ## Description
@@ -43,3 +44,5 @@ recovery-metadata and decorated-result questions; no chart values are recorded.
 The recovery metadata position is now verified for all seven local PDFs (IMPORT-017).
 Rotated 2008 team export remains blocked by decorated named results; coordinates and fill
 round trips are covered synthetically.
+--- 2026-10-30 22:31 ---
+Resolved in tested milestone commit `def1311132006903792ef5620e3e6d04d986e5be`. Full gate: `.venv/bin/python -m pytest --cov -q` — 2,595 passed, 93.37% coverage; the frontend tests/build and quality checks also pass. All seven local PDFs export successfully to 18 temporary bundles. No historical source files were committed. Keep resolved pending owner play-test confirmation; close only after that confirmation.

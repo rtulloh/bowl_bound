@@ -1,16 +1,17 @@
 ---
 id: FLOW-006
 title: Use verified starters for roster-backed commentary names
-status: open
+status: resolved
 priority: Medium
 milestone: '26'
 created-at: 2026-10-30
-resolved-at: null
+resolved-at: 2026-10-30
 closed-at: null
 tags:
 - reproduced
 links: []
-commits: []
+commits:
+- def1311132006903792ef5620e3e6d04d986e5be
 ---
 
 ## Description
@@ -35,3 +36,5 @@ commentary pool. Historical file contents remain private.
 
 --- 2026-10-30 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+--- 2026-10-30 22:31 ---
+Resolved in tested milestone commit `def1311132006903792ef5620e3e6d04d986e5be`. Full gate: `.venv/bin/python -m pytest --cov -q` — 2,595 passed, 93.37% coverage; the frontend tests/build and quality checks also pass. The local terminal startup and all 18 ignored roster validations also pass. Starter metadata is synthetic-tested and source-backed. No historical source files were committed. Keep resolved pending owner play-test confirmation; close only after that confirmation.

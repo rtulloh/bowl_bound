@@ -1,11 +1,11 @@
 ---
 id: IMPORT-015
 title: Support or clearly refuse four-component PDF cell colors
-status: open
+status: resolved
 priority: Medium
 milestone: '26'
 created-at: 2026-10-30
-resolved-at: null
+resolved-at: 2026-10-30
 closed-at: null
 tags:
 - importer
@@ -13,7 +13,8 @@ tags:
 - provenance
 - color
 links: []
-commits: []
+commits:
+- def1311132006903792ef5620e3e6d04d986e5be
 ---
 
 ## Description
@@ -45,3 +46,5 @@ metadata and two decorated named results remain unresolved. No chart values are 
 --- 2026-10-30 21:55 ---
 Recovery metadata is now supported on the local 2008 pages (IMPORT-017). The remaining
 reason the 2008 teams are refused is decorated named-result semantics (IMPORT-016).
+--- 2026-10-30 22:31 ---
+Resolved in tested milestone commit `def1311132006903792ef5620e3e6d04d986e5be`. Full gate: `.venv/bin/python -m pytest --cov -q` — 2,595 passed, 93.37% coverage; the frontend tests/build and quality checks also pass. All seven local PDFs export successfully to 18 temporary bundles. No historical source files were committed. Keep resolved pending owner play-test confirmation; close only after that confirmation.

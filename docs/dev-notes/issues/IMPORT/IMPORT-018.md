@@ -1,18 +1,19 @@
 ---
 id: IMPORT-018
 title: Preserve out-of-bounds markers on no-change chart cells
-status: open
+status: resolved
 priority: High
 milestone: '26'
 created-at: 2026-10-30
-resolved-at: null
+resolved-at: 2026-10-30
 closed-at: null
 tags:
 - importer
 - serialization
 - timing
 links: []
-commits: []
+commits:
+- def1311132006903792ef5620e3e6d04d986e5be
 ---
 
 ## Description
@@ -35,3 +36,5 @@ A synthetic no-change cell with a valid out-of-bounds marker is accepted by the 
 
 --- 2026-10-30 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+--- 2026-10-30 22:31 ---
+Resolved in tested milestone commit `def1311132006903792ef5620e3e6d04d986e5be`. Full gate: `.venv/bin/python -m pytest --cov -q` — 2,595 passed, 93.37% coverage; the frontend tests/build and quality checks also pass. All seven local PDFs export successfully to 18 temporary bundles. No historical source files were committed. Keep resolved pending owner play-test confirmation; close only after that confirmation.

@@ -1,11 +1,11 @@
 ---
 id: IMPORT-012
 title: Resolve power-rating metadata for free MaysFootball chart PDFs
-status: open
+status: resolved
 priority: High
 milestone: '26'
 created-at: 2026-10-30
-resolved-at: null
+resolved-at: 2026-10-30
 closed-at: null
 tags:
 - importer
@@ -13,7 +13,8 @@ tags:
 - metadata
 - local-only-override
 links: []
-commits: []
+commits:
+- def1311132006903792ef5620e3e6d04d986e5be
 ---
 
 ## Description
@@ -41,3 +42,5 @@ The explicit flag, versioned local-only marker, printed-rating preservation, and
 round-trip tests are implemented. All seven local PDFs pass rating extraction with the
 approved fallback where needed; the remaining batch failures occur at later validations.
 Keep the issue open until the milestone change is committed.
+--- 2026-10-30 22:31 ---
+Resolved in tested milestone commit `def1311132006903792ef5620e3e6d04d986e5be`. Full gate: `.venv/bin/python -m pytest --cov -q` — 2,595 passed, 93.37% coverage; the frontend tests/build and quality checks also pass. All seven local PDFs export successfully to 18 temporary bundles. No historical source files were committed. Keep resolved pending owner play-test confirmation; close only after that confirmation.

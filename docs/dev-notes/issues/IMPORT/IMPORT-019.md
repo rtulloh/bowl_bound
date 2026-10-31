@@ -1,18 +1,19 @@
 ---
 id: IMPORT-019
 title: Resolve chart text crossing cell boundaries safely
-status: open
+status: resolved
 priority: Medium
 milestone: '26'
 created-at: 2026-10-30
-resolved-at: null
+resolved-at: 2026-10-30
 closed-at: null
 tags:
 - importer
 - pdf-layout
 - maysfootball
 links: []
-commits: []
+commits:
+- def1311132006903792ef5620e3e6d04d986e5be
 ---
 
 ## Description
@@ -36,3 +37,5 @@ Added a synthetic PDF regression that assigns a glyph with a small edge overhang
 once based on its unique center cell. Tests still reject ambiguous centers and larger
 overhangs. The 2007 source now passes the complete dry run and strict team-file/provenance
 verification; resolution remains pending the milestone commit.
+--- 2026-10-30 22:31 ---
+Resolved in tested milestone commit `def1311132006903792ef5620e3e6d04d986e5be`. Full gate: `.venv/bin/python -m pytest --cov -q` — 2,595 passed, 93.37% coverage; the frontend tests/build and quality checks also pass. All seven local PDFs export successfully to 18 temporary bundles. No historical source files were committed. Keep resolved pending owner play-test confirmation; close only after that confirmation.
