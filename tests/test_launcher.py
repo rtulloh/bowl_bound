@@ -31,7 +31,7 @@ def test_version_exits_without_web_dependencies_or_resources(
     with pytest.raises(SystemExit) as result:
         launcher.main(["--version"])
     assert result.value.code == 0
-    assert capsys.readouterr().out.strip() == "Bowl Bound 0.1.0-alpha.2"
+    assert capsys.readouterr().out.strip() == "Bowl Bound 0.1.0-alpha.3"
 
 
 @pytest.mark.parametrize("args", [["--port", "0"], ["--port", "65536"], ["--host", "0.0.0.0"]])

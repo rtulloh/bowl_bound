@@ -1,7 +1,7 @@
 # Version information
 
-The current prerelease is **0.1.0-alpha.2**. Python packaging uses the equivalent
-PEP 440 form **0.1.0a2**. Its immutable Git tag is `v0.1.0-alpha.2`.
+The current prerelease is **0.1.0-alpha.3**. Python packaging uses the equivalent
+PEP 440 form **0.1.0a3**. Its immutable Git tag is `v0.1.0-alpha.3`.
 
 `bowl_bound.__version__`, project metadata and API OpenAPI metadata use the
 Python form. Frontend package/lock metadata and `bowl_bound.DISPLAY_VERSION`

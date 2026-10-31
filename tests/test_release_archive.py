@@ -23,7 +23,7 @@ def test_archive_inspection_and_reproducible_content(source: Path, tmp_path: Pat
     archive_runtime(runtime, second)
     assert first.read_bytes() == second.read_bytes()
     with ZipFile(first) as archive:
-        assert all(n.startswith("Bowl-Bound-0.1.0-alpha.2/") for n in archive.namelist())
+        assert all(n.startswith("Bowl-Bound-0.1.0-alpha.3/") for n in archive.namelist())
         assert not any(b"DO NOT SHIP" in archive.read(n) for n in archive.namelist())
         for name in archive.namelist():
             assert archive.read(name) == (runtime / name.split("/", 1)[1]).read_bytes()

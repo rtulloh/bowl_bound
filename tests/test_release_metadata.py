@@ -14,8 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_alpha_version_agrees_across_package_api_and_frontend(tmp_path: Path) -> None:
-    python_version = "0.1.0a2"
-    display_version = "0.1.0-alpha.2"
+    python_version = "0.1.0a3"
+    display_version = "0.1.0-alpha.3"
     assert bowl_bound.__version__ == python_version
     metadata = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert re.search(r'^version = "([^"]+)"$', metadata, re.MULTILINE)[1] == python_version
