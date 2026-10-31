@@ -1,0 +1,85 @@
+RELEASE_NOTES.md
+  s_ed54ab581b3d60::t_6f39caae3877d7 3-10
+bowl_bound/chart_coaching.py
+  s_ed54ab581b3d60::t_686060ea4b7aac 133,146
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_d407792579ca64 71-72,292,370-381,462-479,488-494,511
+bowl_bound/coaching.py
+  s_ed54ab581b3d60::t_cc4415c333d194 139
+bowl_bound/coaching_session.py
+  s_ed54ab581b3d60::t_376d1ee2aa2e54 93,95-102,104,109-122,129
+bowl_bound/player_coaching.py
+  s_ed54ab581b3d60::t_78221007c064aa 187
+bowl_bound/regulation.py
+  s_ed54ab581b3d60::t_4bfeccca687cf5 117,158,169,179-180,219-226,262-272,305,310,365-366,370-374,376-378,382-383,389-392,406,422,439-445,472,496,541,608
+docs/cli.md
+  s_ed54ab581b3d60::t_9b29d35a03dbcc 103,108,111-115,131,198-201,266-268
+docs/dev-notes/compact-clock-controls.md
+  s_ed54ab581b3d60::t_bf145b3d500853 73-74,77-81,94-96
+docs/dev-notes/issue-tracker.md
+  s_ed54ab581b3d60::t_2d14d0b6483844 8,10,46,76,397-401
+docs/dev-notes/issues/CLI/CLI-038.md
+  s_ed54ab581b3d60::t_4276935e13a1eb 3,5-6,17,21-25,37-48
+docs/dev-notes/issues/RULE/RULE-017.md
+  s_ed54ab581b3d60::t_4bea7b0409fa0f 1-30
+docs/dev-notes/issues/UI/UI-012.md
+  s_ed54ab581b3d60::t_d9c1b22a85eb99 62-68
+docs/dev-notes/milestone-27.md
+  s_ed54ab581b3d60::t_a2e8409386322f 1-56
+docs/dev-notes/project-plan.md
+  s_ed54ab581b3d60::t_ed7ef25957e2a3 439-466
+docs/playing.md
+  s_ed54ab581b3d60::t_212d96f6ae19eb 48-50,53,88-92
+docs/rules-profile.md
+  s_ed54ab581b3d60::t_38275a993fdad7 412-416
+docs/web-demo.md
+  s_ed54ab581b3d60::t_639a9e11fda2e9 115-121,129,239-241
+frontend/e2e/milestone19.spec.js
+  s_ed54ab581b3d60::t_069481a69535e4 52,54
+frontend/e2e/milestone20.spec.js
+  s_ed54ab581b3d60::t_493051cb70d87b 67-68
+frontend/e2e/web.spec.js
+  s_ed54ab581b3d60::t_f216d22b2e5e8b 53-59,92,96,152,180,184,227-228,254,308-309
+frontend/src/App.jsx
+  s_ed54ab581b3d60::t_6ae25f572d25ee 66-68,264
+frontend/src/components/ClockChoices.jsx
+  s_ed54ab581b3d60::t_744606bbfb674c 1,3-4,6-7,15,17
+frontend/src/test/clockChoices.test.jsx
+  s_ed54ab581b3d60::t_55d4df9047c513 10,12,14-16,24,38,40-42
+frontend/src/test/clockFlow.test.jsx
+  s_ed54ab581b3d60::t_b54aa3bc72331b 16,19-20,28-29
+frontend/src/test/milestone19.test.jsx
+  s_ed54ab581b3d60::t_1276d9cbe373cc 48
+tests/test_api_regulation.py
+  s_ed54ab581b3d60::t_6cf6f8e23e8873 45-46,59
+tests/test_chart_coaching.py
+  s_ed54ab581b3d60::t_11520822352140 51,147,150-153
+tests/test_cli_kick_election.py
+  s_ed54ab581b3d60::t_3986e85059ed72 73-75
+tests/test_cli_shortcuts.py
+  s_ed54ab581b3d60::t_b7262abdc134b6 262
+tests/test_cli_timeout_controls.py
+  s_ed54ab581b3d60::t_ab351816db6e4a 6,11-74,115,124-125
+tests/test_engine_hardening.py
+  s_ed54ab581b3d60::t_87faeed0456cb0 325,330,336-337,340
+tests/test_optional_clock.py
+  s_ed54ab581b3d60::t_519a032c926046 5,17,38-41,44-59,61-63,65-67,106-107,117-150
+tests/test_regulation.py
+  s_ed54ab581b3d60::t_18ffd88027ed85 222
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "52c7d088a6a625f6809dae723e00afb99170f412",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
