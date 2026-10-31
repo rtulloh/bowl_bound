@@ -50,5 +50,5 @@ that old digest while keeping the current live controls unchanged.
   rerun.
 
 Milestone commit: `9d0678d` (`milestone 28: preserve pre-timing save replay`).
-CLI-048 is resolved against this tested commit. Owner play-test confirmation is
-still required before closing the ticket.
+CLI-048 was resolved against this tested commit and closed after the owner
+confirmed resuming and playing through a quarter transition.
