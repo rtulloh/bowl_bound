@@ -1,6 +1,7 @@
 """Versioned private saves use synthetic teams and resume actual engine procedures."""
 
 import json
+import sys
 from dataclasses import replace
 from pathlib import Path
 
@@ -287,6 +288,12 @@ def seal(data: dict) -> str:
     return json.dumps(data)
 
 
+def legacy_fixture_for_current_runtime(fixture: Path) -> str:
+    data = json.loads(fixture.read_text(encoding="utf-8"))
+    data["python"] = [sys.version_info.major, sys.version_info.minor]
+    return seal(data)
+
+
 @pytest.mark.parametrize(
     "path,value",
     [
@@ -417,7 +424,7 @@ def test_pre_m27_normal_timing_digest_remains_loadable() -> None:
     fixture = Path(__file__).parent / "fixtures" / "legacy_pre_m27_normal.json"
     teams = charts(cell=NormalizedCell(ResultKind.INCOMPLETE, provenance()))
     restored = loads_game(
-        fixture.read_text(encoding="utf-8"),
+        legacy_fixture_for_current_runtime(fixture),
         lambda key: teams[0 if key.endswith("home") else 1],
     )
 
@@ -434,7 +441,7 @@ def test_pre_m27_normal_timing_digest_remains_loadable() -> None:
 def test_pre_m27_clock_choice_save_loads_without_restoring_runoff_action() -> None:
     fixture = Path(__file__).parent / "fixtures" / "legacy_pre_m27_clock.json"
     restored = loads_game(
-        fixture.read_text(encoding="utf-8"),
+        legacy_fixture_for_current_runtime(fixture),
         lambda key: charts()[0 if key.endswith("home") else 1],
     )
 
@@ -447,6 +454,14 @@ def test_pre_m27_clock_choice_save_loads_without_restoring_runoff_action() -> No
         choice.id != "clock:runoff"
         for choice in restored.view().clock_modifiers + restored.view().pending.choices
     )
+
+
+def test_save_from_different_python_minor_version_is_rejected() -> None:
+    data = json.loads(dumps_game(new()))
+    data["python"] = [sys.version_info.major, sys.version_info.minor + 1]
+
+    with pytest.raises(SaveFormatError):
+        loads_game(seal(data), lambda _: pytest.fail("incompatible save must not load teams"))
 
 
 def test_hurry_state_and_timeout_counts_survive_resume() -> None:

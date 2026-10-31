@@ -536,6 +536,28 @@ Tracked work: [RULE-018](issues/RULE/RULE-018.md). See the
 
 **Commit:** `milestone 30: fix second-half kickoff order`
 
+### 31. Make legacy save tests runtime-neutral
+
+Added 2026-10-31 after the standalone workflow failed on Python 3.13: two legacy
+save fixtures record Python 3.12, while the documented save contract rejects
+different Python major/minor pairs. This is test-fixture drift; preserve the
+runtime compatibility guard.
+
+**Deliver:** adapt only legacy test-fixture runtime metadata to the active Python
+major/minor and recompute the fixture integrity checksum. Keep historical
+commands, rolls, engine profile and semantic state digest unchanged. Add explicit
+coverage that a real cross-minor save remains rejected.
+
+**Validate:** reproduce the upstream failure on Python 3.13; then verify both
+legacy digest fixtures load after test-only metadata adaptation and confirm
+mismatched runtime saves remain rejected. Run the full regression gate on
+Python 3.13.17.
+
+Tracked work: [DEV-050](issues/DEV/DEV-050.md). See the
+[Milestone 31 work log](milestone-31.md).
+
+**Commit:** `milestone 31: make legacy save tests runtime-neutral`
+
 ## Decision gates
 
 Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.
