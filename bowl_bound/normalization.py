@@ -108,6 +108,30 @@ CELL_LEGEND: dict[ChartColor, ColorLegend] = {
     ),
 }
 
+# Verified DeviceCMYK fills converted to byte RGB by the PDF importer. These exact
+# signatures supplement the canonical RGB legend without accepting arbitrary colors.
+CONVERTED_CMYK_PALETTE: dict[tuple[int, int, int], ChartColor] = {
+    (255, 2, 0): ChartColor.RED,
+    (95, 255, 0): ChartColor.GREEN,
+    (239, 255, 1): ChartColor.YELLOW,
+    (6, 8, 8): ChartColor.BLACK,
+}
+
+
+def chart_color_for_rgb(rgb: object) -> ChartColor | None:
+    """Classify only canonical legend colors and the verified converted PDF palette."""
+    if (
+        not isinstance(rgb, tuple)
+        or len(rgb) != 3
+        or any(type(channel) is not int or not 0 <= channel <= 255 for channel in rgb)
+    ):
+        return None
+    for color, legend in CELL_LEGEND.items():
+        if rgb == legend.rgb_color:
+            return color
+    return CONVERTED_CMYK_PALETTE.get(rgb)
+
+
 _NAMED = {
     token: (kind, color)
     for color, legend in CELL_LEGEND.items()
@@ -261,7 +285,14 @@ def _normalize(provenance: Provenance, color: ChartColor) -> NormalizedCell:
         kind, expected_color = _NAMED[text]
         if color is not expected_color:
             raise ValueError(f"named result requires a {expected_color.value} background")
-        if priority is not Priority.NORMAL and kind is not ResultKind.TOUCHDOWN:
+        parenthesized_breakaway = (
+            kind is ResultKind.BREAKAWAY and priority is Priority.PARENTHESIZED
+        )
+        if (
+            priority is not Priority.NORMAL
+            and kind is not ResultKind.TOUCHDOWN
+            and not parenthesized_breakaway
+        ):
             raise ValueError("priority decoration is unsupported on this named result")
         return build(kind)
 

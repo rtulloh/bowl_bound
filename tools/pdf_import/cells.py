@@ -8,12 +8,13 @@ from typing import TYPE_CHECKING
 
 from bowl_bound.models import BoundingBox, Provenance
 
-from .colors import PDFColorError, rgb_from_pdf_color
+from .colors import PDFColorError, pdf_color_shape_matches, rgb_from_pdf_color
 
 if TYPE_CHECKING:
     from pdfplumber.page import Page
 
 _EPSILON = 0.01
+_CHAR_OVERHANG_TOLERANCE = 0.5
 
 
 class CellExtractionError(ValueError):
@@ -75,17 +76,22 @@ def extract_cells(
     _validate_objects(lines, "line")
     _validate_objects(curves, "curve")
     _validate_objects(images, "image")
+    chars_by_cell = _assign_cell_chars(chars, bounds)
     result = []
     for cell in bounds:
         interior = _inset(cell)
         _reject_interior_lines(lines, cell)
         _reject_unsupported(curves, interior, "curve")
         _reject_unsupported(images, interior, "image")
-        selected = _cell_chars(chars, cell)
+        selected = chars_by_cell[cell]
         rotation = _rotation(selected)
         text = _text(selected, rotation)
         color = _background(page, rectangles, cell)
-        box = BoundingBox(cell.x0, height - cell.bottom, cell.x1, height - cell.top)
+        source_bbox = getattr(page, "source_bbox", None)
+        if callable(source_bbox):
+            box = source_bbox(cell.x0, cell.top, cell.x1, cell.bottom)
+        else:
+            box = BoundingBox(cell.x0, height - cell.bottom, cell.x1, height - cell.top)
         provenance = Provenance(source_sha256, filename, page_number, box, text, color)
         result.append(ExtractedCell(cell, text, color, rotation, provenance))
     return tuple(result)
@@ -130,21 +136,71 @@ def _validate_objects(objects: tuple[dict, ...], label: str) -> None:
             raise CellExtractionError(f"{label} has invalid geometry")
 
 
-def _cell_chars(chars: tuple[dict, ...], cell: CellBounds) -> list[dict]:
-    selected = []
+def _assign_cell_chars(
+    chars: tuple[dict, ...], bounds: tuple[CellBounds, ...]
+) -> dict[CellBounds, list[dict]]:
+    """Assign each glyph to one cell, allowing only a tiny unambiguous edge overhang."""
+    assigned = {cell: [] for cell in bounds}
     for char in chars:
         try:
-            intersects = _intersects(char, cell)
-            contained = _contains(cell, char)
+            intersecting = [cell for cell in bounds if _intersects(char, cell)]
+            containing = [cell for cell in intersecting if _contains(cell, char)]
         except (KeyError, TypeError, ValueError) as error:
             raise CellExtractionError("character has invalid geometry") from error
-        if intersects and not contained:
+        if not intersecting:
+            continue
+        if len(containing) == 1:
+            owner = containing[0]
+        elif containing:
             raise CellExtractionError("character crosses a cell boundary")
-        if contained:
-            if not isinstance(char.get("text"), str):
-                raise CellExtractionError("character has non-text content")
-            selected.append(char)
-    return selected
+        else:
+            owner = _unambiguous_overhang_owner(char, intersecting, bounds)
+        if not isinstance(char.get("text"), str):
+            raise CellExtractionError("character has non-text content")
+        assigned[owner].append(char)
+    return assigned
+
+
+def _unambiguous_overhang_owner(
+    char: dict, intersecting: list[CellBounds], bounds: tuple[CellBounds, ...]
+) -> CellBounds:
+    x0, top, x1, bottom = (float(char[key]) for key in ("x0", "top", "x1", "bottom"))
+    center_x, center_y = (x0 + x1) / 2, (top + bottom) / 2
+    owners = [
+        cell
+        for cell in bounds
+        if cell.x0 + _EPSILON < center_x < cell.x1 - _EPSILON
+        and cell.top + _EPSILON < center_y < cell.bottom - _EPSILON
+    ]
+    if len(owners) != 1 or len(intersecting) > 2:
+        raise CellExtractionError("character crosses a cell boundary")
+    owner = owners[0]
+    if owner not in intersecting or any(
+        not _share_edge(owner, cell) for cell in intersecting if cell != owner
+    ):
+        raise CellExtractionError("character crosses a cell boundary")
+    overhang = max(
+        owner.x0 - x0,
+        x1 - owner.x1,
+        owner.top - top,
+        bottom - owner.bottom,
+        0,
+    )
+    if overhang > _CHAR_OVERHANG_TOLERANCE:
+        raise CellExtractionError("character crosses a cell boundary")
+    return owner
+
+
+def _share_edge(left: CellBounds, right: CellBounds) -> bool:
+    vertical_overlap = min(left.bottom, right.bottom) - max(left.top, right.top)
+    horizontal_overlap = min(left.x1, right.x1) - max(left.x0, right.x0)
+    return (
+        vertical_overlap > _EPSILON
+        and (abs(left.x1 - right.x0) <= _EPSILON or abs(right.x1 - left.x0) <= _EPSILON)
+    ) or (
+        horizontal_overlap > _EPSILON
+        and (abs(left.bottom - right.top) <= _EPSILON or abs(right.bottom - left.top) <= _EPSILON)
+    )
 
 
 def _contains(cell: CellBounds, item: dict) -> bool:
@@ -301,9 +357,12 @@ def _ordered_rects(page: object, rects: tuple[dict, ...]) -> list[int] | None:
 
 def _rect_color(rect: dict) -> tuple[int, int, int]:
     color_space = rect.get("ncs")
-    if color_space not in (None, "DeviceRGB", "DeviceGray"):
+    if color_space not in (None, "DeviceRGB", "DeviceGray", "DeviceCMYK"):
         raise CellExtractionError("background has unsupported color space")
-    return _rgb(rect.get("non_stroking_color"))
+    value = rect.get("non_stroking_color")
+    if not pdf_color_shape_matches(value, color_space):
+        raise CellExtractionError("background color shape does not match its color space")
+    return _rgb(value)
 
 
 def _rgb(value: object) -> tuple[int, int, int]:

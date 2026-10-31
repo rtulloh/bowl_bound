@@ -78,23 +78,23 @@ class Source(str, Enum):
     CHART = "priority_chart"
 
 
-# Columns: +#, -#, blank, (#), (-#), [#], [-#], TD, QR, QT, INT, F, INC.
+# Columns: +#, -#, blank, (#), (-#), [#], [-#], TD, QR, QT, INT, F, INC, defensive (B).
 # The printed chart combines (TD) and [TD]; the p.38 correction gives both TD priority.
 _BASE = "ADD ADD ADD D D D D D D D D D INC"
 _PRIORITY_TABLE = {
-    "positive": _BASE,
-    "negative": _BASE,
-    "B": _BASE,
-    "blank": _BASE,
-    "parenthesized": "O O O O O D D D O O O O O",
-    "TD": "O O O D D D D D D D D D INC",
-    "QR": _BASE,
-    "QT": "O O O D D D D D D D D D INC",
-    "INC": "INC INC INC D D D D D D D D D INC",
-    "INT": "O O O INC INT_MIN INC INT_MIN INC QT O INT_MIN O O",
-    "F": "O O O F_DEF F_MIN F_DEF F_MIN F_ENDZONE O O D F_MIN O",
-    "OPTION": " ".join(["OPTION"] * 13),
-    "PENALTY": " ".join(["PENALTY"] * 13),
+    "positive": _BASE + " D",
+    "negative": _BASE + " D",
+    "B": _BASE + " D",
+    "blank": _BASE + " D",
+    "parenthesized": "O O O O O D D D O O O O O O",
+    "TD": "O O O D D D D D D D D D INC D",
+    "QR": _BASE + " D",
+    "QT": "O O O D D D D D D D D D INC D",
+    "INC": "INC INC INC D D D D D D D D D INC D",
+    "INT": "O O O INC INT_MIN INC INT_MIN INC QT O INT_MIN O O D",
+    "F": "O O O F_DEF F_MIN F_DEF F_MIN F_ENDZONE O O D F_MIN O D",
+    "OPTION": " ".join(["OPTION"] * 14),
+    "PENALTY": " ".join(["PENALTY"] * 14),
 }
 _COLUMNS = (
     "positive",
@@ -110,6 +110,7 @@ _COLUMNS = (
     "INT",
     "F",
     "INC",
+    "paren_breakaway",
 )
 _VARIABLES = {
     ResultKind.VARIABLE_DS,
@@ -191,6 +192,8 @@ def _category(cell: NormalizedCell, defensive: bool) -> str:
             Priority.BRACKETED: "bracket_",
         }[cell.priority]
         return prefix + sign
+    if defensive and kind is ResultKind.BREAKAWAY and cell.priority is Priority.PARENTHESIZED:
+        return "paren_breakaway"
     if cell.priority is not Priority.NORMAL and kind is not ResultKind.TOUCHDOWN:
         raise ChartResolutionError("priority decoration is unsupported for this result")
     if kind is ResultKind.TOUCHDOWN:

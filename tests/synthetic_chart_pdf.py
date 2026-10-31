@@ -105,6 +105,7 @@ def _draw_cells(
     pitch: float,
     groups: tuple[tuple[str, tuple[str, ...], tuple[float, ...]], ...],
     spec: Spec,
+    overrides: dict[tuple[str, str, int, str | None], tuple[str, Color]],
     bad_token: bool,
     unknown_fill: bool,
 ) -> None:
@@ -116,6 +117,9 @@ def _draw_cells(
             roll = row % 5 + 1 if section == "defense" else row + 10
             for index, column in enumerate(columns):
                 text, color = _token(section, column, roll, defense)
+                override = overrides.get((section, column, roll, defense))
+                if override is not None:
+                    text, color = override
                 if bad_token and (section, column, roll, defense) == ("offense", "1", 10, None):
                     text = "NOPE"
                 if unknown_fill and (section, column, roll, defense) == ("offense", "2", 10, None):
@@ -141,7 +145,7 @@ def _offense(pdf: canvas.Canvas, team: dict[str, typing.Any], spec: Spec) -> Non
     if not team.get("missing_rating"):
         pdf.setFillColorRGB(0, 0, 0)
         pdf.setFont("Helvetica", 10)
-        pdf.drawString(510, 720, "200.5")
+        pdf.drawString(510, 720, str(team.get("rating_text", "200.5")))
     pdf.saveState()
     pdf.translate(590, 180)
     pdf.rotate(90)
@@ -161,6 +165,7 @@ def _offense(pdf: canvas.Canvas, team: dict[str, typing.Any], spec: Spec) -> Non
             ("supplemental", ("QT", "QR", "B"), OFFENSE_EDGES[11:15]),
         ),
         spec,
+        team.get("cell_overrides", {}),
         bool(team.get("bad_token")),
         bool(team.get("unknown_fill")),
     )
@@ -172,10 +177,23 @@ def _offense(pdf: canvas.Canvas, team: dict[str, typing.Any], spec: Spec) -> Non
     pdf.showPage()
 
 
-def _defense(pdf: canvas.Canvas, team: dict[str, typing.Any], spec: Spec, team_index: int) -> None:
+def _defense(
+    pdf: canvas.Canvas,
+    team: dict[str, typing.Any],
+    spec: Spec,
+    team_index: int,
+    *,
+    rotated: bool = False,
+) -> None:
     height, top, pitch = 612.0, 112.56, 14.52
-    pdf.setPageSize((792, 612))
-    _header(pdf, str(team["mascot"]), int(team["season"]), "defense")
+    if rotated:
+        pdf.setPageSize((612, 792))
+        pdf.saveState()
+        pdf.translate(612, 0)
+        pdf.rotate(90)
+    else:
+        pdf.setPageSize((792, 612))
+        _header(pdf, str(team["mascot"]), int(team["season"]), "defense")
     _grid(pdf, height, DEFENSE_EDGES, top, 548.16, pitch, False)
     pdf.setFillColorRGB(1, 0, 0)
     pdf.rect(66, 529, 47, 34, fill=1, stroke=0)
@@ -205,6 +223,7 @@ def _defense(pdf: canvas.Canvas, team: dict[str, typing.Any], spec: Spec, team_i
             ),
         ),
         spec,
+        team.get("cell_overrides", {}),
         False,
         False,
     )
@@ -224,6 +243,8 @@ def _defense(pdf: canvas.Canvas, team: dict[str, typing.Any], spec: Spec, team_i
         printed = str(roll + 1) if team.get("bad_pat") and roll == 16 else str(roll)
         pdf.drawString(754, height - y - 2, printed)
         pdf.drawString(118, height - y - 2, str(row % 5 + 1))
+    if rotated:
+        pdf.restoreState()
     pdf.showPage()
 
 
@@ -234,6 +255,6 @@ def write_chart_pdf(path: Path, teams: list[dict[str, typing.Any]]) -> Spec:
     for index, team in enumerate(teams):
         _offense(pdf, team, spec)
         if not team.get("drop_defense"):
-            _defense(pdf, team, spec, index)
+            _defense(pdf, team, spec, index, rotated=bool(team.get("rotated_defense")))
     pdf.save()
     return spec

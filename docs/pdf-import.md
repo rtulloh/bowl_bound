@@ -34,6 +34,12 @@ bowl-bound-import "$PDF_DIR" --export --output "$TEAMS" --dry-run
 bowl-bound-import "$PDF_DIR" --export --output "$TEAMS"
 ```
 
+If a chart has no printed power rating, export normally refuses it. For an owner-approved
+private play-test only, `--use-local-rating-200-for-missing` supplies rating 200 when the
+supported rating box is empty. It does not replace a printed rating and does not mask an
+ambiguous value. The resulting `team.yaml` records
+`power_rating_origin: local-only-placeholder`; keep that team folder private.
+
 Use `--help` for the complete option list. `--output` is required in every mode.
 
 ## Batch results and overwrite behavior
@@ -71,6 +77,15 @@ Bowl Bound layout. Page order pairs a school's offense with the following defens
 offense name and season identify the team. A defense mascot is only a display label and
 cannot confirm school identity. Check that each pair belongs together and review exported
 charts against the original before use.
+
+Supported offense pages include the 17.40-point and 20.28-point row grids. The importer
+checks all 30 printed roll anchors against one of these profiles before locating cells. A
+glyph that extends a small amount past one cell edge is assigned once to the cell containing
+its center only when that assignment is unique; larger or ambiguous overlaps are rejected.
+
+DeviceRGB and grayscale fills convert directly to byte RGB. The tested DeviceCMYK palette
+uses the standard deterministic CMYK-to-RGB conversion and exact supported signatures;
+arbitrary colors and color spaces are rejected rather than rounded to a nearby legend color.
 
 Scans, photos, encrypted or malformed files, incomplete pairs, and unsupported layouts
 are rejected. OCR is not provided. Missing or ambiguous cells fail validation and are

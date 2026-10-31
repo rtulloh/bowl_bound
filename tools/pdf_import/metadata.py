@@ -6,12 +6,18 @@ from math import isfinite
 from typing import Any
 
 from bowl_bound.models import BoundingBox, Provenance
+from bowl_bound.normalization import ChartColor, chart_color_for_rgb
+from bowl_bound.team_csv import LOCAL_PLACEHOLDER_POWER_RATING
 
-from .colors import PDFColorError, rgb_from_pdf_color
+from .colors import PDFColorError, pdf_color_shape_matches, rgb_from_pdf_color
 
 
 class MetadataError(ValueError):
     """Required metadata is absent, ambiguous, or inconsistent."""
+
+
+class MissingPowerRatingError(MetadataError):
+    """The supported rating box contains no printed power rating."""
 
 
 @dataclass(frozen=True)
@@ -26,13 +32,18 @@ class TeamMetadata:
     recovery_range: range
     privileges: tuple[str, ...]
     evidence: tuple[MetadataFact, ...]
+    power_rating_is_placeholder: bool = False
 
 
 def _color(rect: dict[str, Any]) -> tuple[int, int, int]:
-    if rect.get("ncs") not in (None, "DeviceRGB", "DeviceGray"):
+    color_space = rect.get("ncs")
+    if color_space not in (None, "DeviceRGB", "DeviceGray", "DeviceCMYK"):
+        raise MetadataError("Background color is unsupported")
+    value = rect.get("non_stroking_color")
+    if not pdf_color_shape_matches(value, color_space):
         raise MetadataError("Background color is unsupported")
     try:
-        return rgb_from_pdf_color(rect.get("non_stroking_color"))
+        return rgb_from_pdf_color(value)
     except PDFColorError as error:
         raise MetadataError("Background color is unsupported") from error
 
@@ -75,12 +86,15 @@ def _evidence(
 ) -> MetadataFact:
     if not chars:
         raise MetadataError(f"Missing {label} evidence")
-    box = BoundingBox(
-        min(char["x0"] for char in chars),
-        page.height - max(char["bottom"] for char in chars),
-        max(char["x1"] for char in chars),
-        page.height - min(char["top"] for char in chars),
-    )
+    x0 = min(char["x0"] for char in chars)
+    top = min(char["top"] for char in chars)
+    x1 = max(char["x1"] for char in chars)
+    bottom = max(char["bottom"] for char in chars)
+    source_bbox = getattr(page, "source_bbox", None)
+    if callable(source_bbox):
+        box = source_bbox(x0, top, x1, bottom)
+    else:
+        box = BoundingBox(x0, page.height - bottom, x1, page.height - top)
     rgb = _background(page, chars)
     return MetadataFact(label, Provenance(digest, filename, page_number, box, text, rgb))
 
@@ -93,9 +107,11 @@ def _rating(page: object) -> tuple[list[dict[str, Any]], str, float]:
     ]
     chars.sort(key=lambda char: char["x0"])
     text = "".join(char["text"] for char in chars)
+    has_numeric_glyph = any(char["text"].isascii() and char["text"].isdigit() for char in chars)
+    if not has_numeric_glyph:
+        raise MissingPowerRatingError("No numeric power rating in the supported header box")
     if (
-        not chars
-        or max(char["top"] for char in chars) - min(char["top"] for char in chars) > 1
+        max(char["top"] for char in chars) - min(char["top"] for char in chars) > 1
         or any(right["x0"] - left["x1"] > 3 for left, right in zip(chars, chars[1:], strict=False))
         or not re.fullmatch(r"[0-9]+(?:\.[0-9]+)?", text)
         or (text.startswith("0") and not text.startswith("0."))
@@ -108,7 +124,7 @@ def _rating(page: object) -> tuple[list[dict[str, Any]], str, float]:
 
 
 def _recovery(page: object) -> tuple[list[dict[str, Any]], str, int]:
-    chars = [char for char in page.chars if not char["upright"] and char["x0"] > 575]
+    chars = [char for char in page.chars if not char["upright"] and char["x0"] > page.width * 0.90]
     if (
         not chars
         or max(char["x0"] for char in chars) - min(char["x0"] for char in chars) > 2
@@ -137,30 +153,48 @@ def extract_metadata(
     source_sha256: str,
     filename: str,
     offense_page: int,
+    *,
+    use_local_rating_placeholder: bool = False,
 ) -> TeamMetadata:
     """Extract rating, recovery endpoints, and privilege markers without enforcing options."""
-    rating_chars, rating_text, rating = _rating(offense)
+    if type(use_local_rating_placeholder) is not bool:
+        raise TypeError("use_local_rating_placeholder must be a boolean")
+    try:
+        rating_chars, rating_text, rating = _rating(offense)
+        rating_is_placeholder = False
+    except MissingPowerRatingError:
+        if not use_local_rating_placeholder:
+            raise
+        rating_chars, rating_text = [], ""
+        rating = LOCAL_PLACEHOLDER_POWER_RATING
+        rating_is_placeholder = True
     recovery_chars, recovery_text, end = _recovery(offense)
-    facts = [
-        _evidence(
-            offense,
-            rating_chars,
-            source_sha256,
-            filename,
-            offense_page,
-            "power_rating",
-            rating_text,
-        ),
-        _evidence(
-            offense,
-            recovery_chars,
-            source_sha256,
-            filename,
-            offense_page,
-            "recovery",
-            recovery_text,
-        ),
-    ]
+    facts = []
+    if not rating_is_placeholder:
+        facts.append(
+            _evidence(
+                offense,
+                rating_chars,
+                source_sha256,
+                filename,
+                offense_page,
+                "power_rating",
+                rating_text,
+            )
+        )
+    facts.extend(
+        [
+            _evidence(
+                offense,
+                recovery_chars,
+                source_sha256,
+                filename,
+                offense_page,
+                "recovery",
+                recovery_text,
+            ),
+        ]
+    )
     marker_chars = [
         char
         for char in defense.chars
@@ -181,16 +215,19 @@ def extract_metadata(
                 and rect["bottom"] - rect["top"] <= 80
             )
         ]
-        if any(_color(rect) in {(255, 0, 0), (0, 255, 0)} for rect in header_rects):
+        if any(
+            chart_color_for_rgb(_color(rect)) in {ChartColor.RED, ChartColor.GREEN}
+            for rect in header_rects
+        ):
             raise MetadataError("Privilege marker box is present without text")
-        return TeamMetadata(rating, range(10, end + 1), (), tuple(facts))
+        return TeamMetadata(rating, range(10, end + 1), (), tuple(facts), rating_is_placeholder)
     if marker not in {"W", "FBO", "SPBO", "XWC"}:
         raise MetadataError("Unrecognized privilege marker in supported header box")
     rgb = _background(defense, marker_chars, tight=True)
     if rgb is None:
         raise MetadataError("Privilege background evidence is missing")
-    expected = (0, 255, 0) if marker == "XWC" else (255, 0, 0)
-    if rgb != expected:
+    expected = ChartColor.GREEN if marker == "XWC" else ChartColor.RED
+    if chart_color_for_rgb(rgb) is not expected:
         raise MetadataError("Privilege marker conflicts with its background")
     facts.append(
         _evidence(
@@ -203,4 +240,4 @@ def extract_metadata(
             marker,
         )
     )
-    return TeamMetadata(rating, range(10, end + 1), (marker,), tuple(facts))
+    return TeamMetadata(rating, range(10, end + 1), (marker,), tuple(facts), rating_is_placeholder)

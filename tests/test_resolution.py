@@ -62,6 +62,57 @@ def test_defensive_touchdown_correction_and_interception_exception() -> None:
     assert result.yards is None and not result.pending
 
 
+def test_defensive_parenthesized_breakaway_overrides_and_triggers_offensive_b_column() -> None:
+    defensive_breakaway = cell(ResultKind.BREAKAWAY, None, Priority.PARENTHESIZED)
+    result = resolve_cells(cell(yards=4), defensive_breakaway)
+    assert (result.operation, result.source, result.kind, result.pending) == (
+        Operation.DEFENSE,
+        Source.DEFENSE,
+        ResultKind.BREAKAWAY,
+        True,
+    )
+    parenthesized_offense = cell(yards=4, priority=Priority.PARENTHESIZED)
+    result = resolve_cells(parenthesized_offense, defensive_breakaway)
+    assert (result.operation, result.source, result.yards) == (
+        Operation.OFFENSE,
+        Source.OFFENSE,
+        4,
+    )
+    penalty = NormalizedCell(
+        ResultKind.PENALTY,
+        provenance(),
+        penalty=PenaltyData(PenaltyTeam.OFFENSE, PenaltyCode.S),
+    )
+    assert resolve_cells(penalty, defensive_breakaway).operation is Operation.PENALTY
+
+    offense = replace(complete_chart(), name="Synthetic Offense")
+    defense_chart = replace(complete_chart(), name="Synthetic Defense")
+    target = defense_chart.defense[0]
+    defense_chart = replace(
+        defense_chart,
+        defense=(replace(target, cell=defensive_breakaway), *defense_chart.defense[1:]),
+    )
+    initial_offense_roll = OffensiveRoll(1, 0, 0)
+    initial_defense_roll = DefensiveRoll(1, 0)
+    breakaway_roll = OffensiveRoll(2, 0, 0)
+    dice = ScriptedDice([initial_offense_roll, initial_defense_roll, breakaway_roll])
+
+    play = resolve_play(offense, defense_chart, Play.ONE, Defense.A, dice)
+
+    assert (play.result.source, play.result.kind, play.result.yards, play.result.pending) == (
+        Source.BOTH,
+        ResultKind.YARDS,
+        1,
+        False,
+    )
+    assert [trace.section for trace in play.trace] == [
+        "offense",
+        "defense",
+        "supplemental:B",
+    ]
+    assert play.trace[2].team_name == offense.name
+
+
 @pytest.mark.parametrize("kind", [ResultKind.SPRINT_OUT_PASS, ResultKind.BOOTLEG_PASS])
 def test_option_branch_cancels_defense_without_inventing_a_reroll(kind: ResultKind) -> None:
     result = resolve_cells(cell(kind, None), cell(ResultKind.INTERCEPTION, 22))

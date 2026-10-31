@@ -5,9 +5,11 @@ Milestone 4 implements `normalize_cell(provenance, ChartColor)` in
 the local rulebook identified in [the rules profile](rules-profile.md).
 
 The caller supplies an explicitly classified red, green, white, black, or yellow
-background. RGB extraction, matching tolerances, and unsupported-layout detection
-belong to the PDF importer; this module never guesses a color from RGB. Original
-text, source hash, filename, page, bounds, and RGB remain unchanged in provenance.
+background. PDF color extraction, supported color signatures, and unsupported-layout
+detection belong to the PDF importer. It accepts exact canonical RGB colors and a small,
+verified DeviceCMYK palette after deterministic conversion; it does not choose a nearest
+color or guess from arbitrary RGB values. Original text, source hash, filename, page,
+bounds, and normalized RGB evidence remain unchanged in provenance.
 
 ## Supported facts
 
@@ -42,9 +44,12 @@ evidence or reject the layout.
 
 Keep provenance and local import reports private; do not log or display source filenames
 or source text. API/UI adapters should expose only the safe error message. Priority
-wrappers are supported only on numeric,
-variable, and TD entries (including [TD], explicitly listed in the legend). PI means
-defensive pass interference per the legend; no inference from NFL behavior is used.
+wrappers are supported on numeric and variable entries, TD entries (including [TD],
+explicitly listed in the legend), and parenthesized `B` only in defensive chart cells.
+The owner-approved Milestone 26 interpretation treats that defensive result as an
+override that gives the offense a Breakaway reroll; other decorated named results remain
+unsupported. PI means defensive pass interference per the legend; no inference from NFL
+behavior is used.
 Leading zeros and signed zero are accepted as integer forms; explicit signs must
 still agree with the color. No artificial yardage magnitude limit is imposed here.
 PUNT_REFERENCE is reserved in the schema and is not produced by this grammar.

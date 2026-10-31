@@ -17,7 +17,13 @@ from bowl_bound.models import (
     SupplementalColumn,
     TeamChart,
 )
-from bowl_bound.normalization import CELL_LEGEND, ChartColor, NormalizationError, normalize_cell
+from bowl_bound.normalization import (
+    CELL_LEGEND,
+    CONVERTED_CMYK_PALETTE,
+    ChartColor,
+    NormalizationError,
+    normalize_cell,
+)
 from bowl_bound.team_csv import TeamFileMetadata
 
 from .cells import ExtractedCell, extract_cells
@@ -25,6 +31,7 @@ from .errors import ImportValidationError
 from .inspection import inspect_document
 from .layout import CellPosition, locate_cells
 from .metadata import TeamMetadata, extract_metadata
+from .page_view import rotate_portrait_page
 
 
 @dataclass(frozen=True)
@@ -35,7 +42,9 @@ class ExportedTeam:
     metadata: TeamFileMetadata
 
 
-_COLORS = {legend.rgb_color: color for color, legend in CELL_LEGEND.items()}
+_COLORS = {
+    legend.rgb_color: color for color, legend in CELL_LEGEND.items()
+} | CONVERTED_CMYK_PALETTE
 
 
 def build_team(
@@ -56,24 +65,22 @@ def build_team(
         if position.section == "pat":
             if raw.text.strip() != str(position.roll):
                 raise ImportValidationError("PAT source text must match the printed roll")
-            pat_colors = {
-                CELL_LEGEND[ChartColor.RED].rgb_color,
-                CELL_LEGEND[ChartColor.WHITE].rgb_color,
-            }
-            if raw.rgb_color not in pat_colors:
+            pat_color = _COLORS.get(raw.rgb_color)
+            if pat_color not in {ChartColor.RED, ChartColor.WHITE}:
                 raise ImportValidationError("PAT background must be red or white")
             pats.append(
                 PatOutcome(
                     position.roll,
-                    raw.rgb_color == CELL_LEGEND[ChartColor.WHITE].rgb_color,
+                    pat_color is ChartColor.WHITE,
                     raw.provenance,
                 )
             )
             continue
-        if raw.rgb_color not in _COLORS:
+        color = _COLORS.get(raw.rgb_color)
+        if color is None:
             raise ImportValidationError("Unknown chart background; no color guessing allowed")
         try:
-            cell = normalize_cell(raw.provenance, _COLORS[raw.rgb_color])
+            cell = normalize_cell(raw.provenance, color)
         except NormalizationError as error:
             raise ImportValidationError("chart cell data is invalid") from error
         if position.section == "offense":
@@ -113,7 +120,9 @@ def build_team(
         raise ImportValidationError("chart is incomplete or inconsistent") from error
 
 
-def export_document(source: Path) -> list[ExportedTeam]:
+def export_document(
+    source: Path, *, use_local_rating_placeholder: bool = False
+) -> list[ExportedTeam]:
     """Return validated teams in document order; the caller controls writing or dry-run."""
     inspection = inspect_document(source)
     data = source.read_bytes()
@@ -126,16 +135,25 @@ def export_document(source: Path) -> list[ExportedTeam]:
         for offense_info, defense_info in zip(
             inspection.pages[::2], inspection.pages[1::2], strict=True
         ):
+            offense_page = pdf.pages[offense_info.page - 1]
+            defense_page = pdf.pages[defense_info.page - 1]
+            if offense_info.rotation == 90:
+                offense_page = rotate_portrait_page(offense_page)
+            if defense_info.rotation == 90:
+                defense_page = rotate_portrait_page(defense_page)
             metadata = extract_metadata(
-                pdf.pages[offense_info.page - 1],
-                pdf.pages[defense_info.page - 1],
+                offense_page,
+                defense_page,
                 inspection.source_sha256,
                 source.name,
                 offense_info.page,
+                use_local_rating_placeholder=use_local_rating_placeholder,
             )
             records = []
             for info in (offense_info, defense_info):
                 page = pdf.pages[info.page - 1]
+                if info.rotation == 90:
+                    page = rotate_portrait_page(page)
                 positions = locate_cells(page, info.role)
                 cells = extract_cells(
                     page,
@@ -155,6 +173,7 @@ def export_document(source: Path) -> list[ExportedTeam]:
                         defense_info.team_name,
                         inspection.source_sha256,
                         tuple((fact.label, fact.provenance) for fact in metadata.evidence),
+                        metadata.power_rating_is_placeholder,
                     ),
                 )
             )

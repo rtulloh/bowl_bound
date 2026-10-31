@@ -52,6 +52,19 @@ def _draw_defense(pdf: canvas.Canvas, name: str, season: int) -> None:
     pdf.showPage()
 
 
+def _draw_rotated_defense_portrait(pdf: canvas.Canvas) -> None:
+    """Draw a landscape defense chart rotated onto a portrait sheet."""
+    pdf.setPageSize(letter)
+    pdf.saveState()
+    pdf.translate(612, 0)
+    pdf.rotate(90)
+    _draw_grid(pdf)
+    pdf.setFont("Helvetica", 10)
+    pdf.drawString(45, 470, "Defense   Kickoff   Punt   Field Goal")
+    pdf.restoreState()
+    pdf.showPage()
+
+
 def _write_document(path: Path, pairs: list[tuple[str, str, int]]) -> None:
     pdf = canvas.Canvas(str(path), pagesize=letter)
     for school, mascot, season in pairs:
@@ -73,6 +86,18 @@ def test_inspect_document_returns_rotated_paired_page_metadata(tmp_path: Path) -
         PageInfo(3, "offense", "Example U", 2003),
         PageInfo(4, "defense_special", "Examples", 2003),
     )
+
+
+def test_inspect_document_accepts_rotated_defense_on_portrait_sheet(tmp_path: Path) -> None:
+    path = tmp_path / "portrait-defense.pdf"
+    pdf = canvas.Canvas(str(path), pagesize=letter)
+    _draw_offense(pdf, "Synthetic State", 2002)
+    _draw_rotated_defense_portrait(pdf)
+    pdf.save()
+
+    inspection = inspect_document(path)
+
+    assert inspection.pages[1] == PageInfo(2, "defense_special", "Synthetic State", 2002, 90)
 
 
 def test_inspect_document_rejects_odd_page_count(tmp_path: Path) -> None:

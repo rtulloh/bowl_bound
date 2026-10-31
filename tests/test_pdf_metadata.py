@@ -18,6 +18,7 @@ def pages(
     recovery: str = "Fumble Recovered 10-25; Fumble Lost 26-39",
     marker: str = "W",
     rating_background: tuple[float, float, float] | None = None,
+    recovery_x: float = 590,
 ) -> bytes:
     """Build two synthetic vector pages containing supported metadata."""
     stream = BytesIO()
@@ -28,7 +29,7 @@ def pages(
         pdf.setFillColorRGB(0, 0, 0)
     pdf.drawString(510, 720, rating)
     pdf.saveState()
-    pdf.translate(590, 180)
+    pdf.translate(recovery_x, 180)
     pdf.rotate(90)
     pdf.drawString(0, 0, recovery)
     pdf.restoreState()
@@ -82,6 +83,12 @@ def test_metadata_is_extracted_with_own_evidence() -> None:
     assert result.privileges == ("W",)
     assert {fact.label for fact in result.evidence} == {"power_rating", "recovery", "W"}
     assert all(fact.provenance.source_sha256 == "a" * 64 for fact in result.evidence)
+
+
+@pytest.mark.parametrize("recovery_x", [582, 584.8])
+def test_recovery_metadata_with_verified_left_shift_is_recognized(recovery_x: float) -> None:
+    result = extract(pages(recovery_x=recovery_x))
+    assert result.recovery_range == range(10, 26)
 
 
 @pytest.mark.parametrize(
@@ -159,10 +166,17 @@ def test_evidence_uses_measured_fill_or_page_background() -> None:
 
 @pytest.mark.parametrize(
     "value",
-    [0.25, (0.25,), [0.25], (0.25, 0.25, 0.25), [0.25, 0.25, 0.25]],
+    [
+        0.25,
+        (0.25,),
+        [0.25],
+        (0.25, 0.25, 0.25),
+        [0.25, 0.25, 0.25],
+        (0.2, 0.3, 0.4, 0.1),
+    ],
 )
 def test_metadata_and_chart_color_parsers_share_rgb_shapes(value: object) -> None:
-    expected = (64, 64, 64)
+    expected = (184, 161, 138) if isinstance(value, tuple) and len(value) == 4 else (64, 64, 64)
     assert cell_rgb(value) == expected
     assert metadata_color({"non_stroking_color": value}) == expected
 
@@ -181,6 +195,7 @@ def test_rating_chars_on_different_baselines_do_not_merge() -> None:
         offense = SimpleNamespace(
             chars=chars + [stray],
             height=pdf.pages[0].height,
+            width=pdf.pages[0].width,
             rects=pdf.pages[0].rects,
             objects=pdf.pages[0].objects,
         )
@@ -197,6 +212,7 @@ def test_rating_char_gap_is_rejected() -> None:
         offense = SimpleNamespace(
             chars=chars,
             height=pdf.pages[0].height,
+            width=pdf.pages[0].width,
             rects=pdf.pages[0].rects,
             objects=pdf.pages[0].objects,
         )
@@ -225,6 +241,7 @@ def test_recovery_chars_must_share_a_column_and_chart_region() -> None:
         offense = SimpleNamespace(
             chars=chars,
             height=pdf.pages[0].height,
+            width=pdf.pages[0].width,
             rects=pdf.pages[0].rects,
             objects=pdf.pages[0].objects,
         )

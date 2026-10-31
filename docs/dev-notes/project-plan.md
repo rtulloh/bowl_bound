@@ -403,6 +403,39 @@ milestone acceptance. See the [Milestone 25 work log](milestone-25.md).
 
 **Commit:** `milestone 25: support batch team PDF imports`
 
+### 26. Support local play-testing from free MaysFootball chart PDFs
+
+Added 2026-10-30 after Milestone 25 acceptance. The owner authorized retrieving the
+MaysFootball files listed as free downloads for private exporter testing. This does
+not grant redistribution rights: source PDFs, converted historical charts, and reports
+remain private and excluded from source control, runtime bundles, and releases.
+The owner approved rating 200 as a clearly marked local-only placeholder when a chart
+has no numeric rating; printed ratings remain unchanged.
+
+**Deliver:** support the distinct page geometry and metadata used by the MaysFootball
+2002–2008 free-download PDFs. Keep each profile explicit and evidence-based. Do not
+guess missing cell values or colors. Also create private rosters for every imported team
+from public internet sources and record those sources beside each roster. Where reliable
+lineup evidence is available, order verified QB, RB, WR, and TE starters first and give
+commentary an explicit starter pool so listed reserves are not selected in their place.
+Document source limits rather than guessing starter status.
+
+**Validate:** add synthetic PDF regressions before production changes for every newly
+supported page profile and metadata rule. Run the exporter against all seven source
+PDFs outside ordinary test collection, round-trip every exported team through the team
+reader, and verify source provenance and required game data. Confirm each roster is for
+the matching season and team; verify starter metadata with synthetic tests and source
+evidence. Keep rosters, source URLs/notes, PDFs, converted teams, and detailed reports in
+ignored/private locations pending a separate rights review. Re-run the full regression gate
+and local real-chart and roster checks before the dedicated milestone commit.
+
+Tracked work: [IMPORT-010](issues/IMPORT/IMPORT-010.md) through
+[IMPORT-019](issues/IMPORT/IMPORT-019.md), plus
+[FLOW-006](issues/FLOW/FLOW-006.md). See the
+[Milestone 26 work log](milestone-26.md).
+
+**Commit:** `milestone 26: support local MaysFootball chart testing`
+
 ## Decision gates
 
 Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.

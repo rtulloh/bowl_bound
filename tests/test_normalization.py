@@ -11,11 +11,31 @@ from bowl_bound.models import (
     ResultKind,
     VariableReference,
 )
-from bowl_bound.normalization import ChartColor, NormalizationError, normalize_cell
+from bowl_bound.normalization import (
+    ChartColor,
+    NormalizationError,
+    chart_color_for_rgb,
+    normalize_cell,
+)
 
 
 def source(text: str) -> Provenance:
     return Provenance("a" * 64, "synthetic.pdf", 1, BoundingBox(0, 0, 1, 1), text, (1, 2, 3))
+
+
+@pytest.mark.parametrize(
+    ("rgb", "color"),
+    [
+        ((255, 2, 0), ChartColor.RED),
+        ((95, 255, 0), ChartColor.GREEN),
+        ((239, 255, 1), ChartColor.YELLOW),
+        ((6, 8, 8), ChartColor.BLACK),
+    ],
+)
+def test_verified_cmyk_rgb_signatures_map_to_chart_legend(
+    rgb: tuple[int, int, int], color: ChartColor
+) -> None:
+    assert chart_color_for_rgb(rgb) is color
 
 
 @pytest.mark.parametrize(
@@ -141,6 +161,7 @@ def test_variable_pi_is_not_negated_by_color() -> None:
         ("FG*", ChartColor.RED, ResultKind.FIELD_GOAL_REFERENCE),
         ("KO†", ChartColor.GREEN, ResultKind.KICKOFF_REFERENCE),
         ("NG", ChartColor.RED, ResultKind.NO_GOOD_FIELD_GOAL),
+        ("(B)", ChartColor.GREEN, ResultKind.BREAKAWAY),
         ("[TD]", ChartColor.GREEN, ResultKind.TOUCHDOWN),
     ],
 )

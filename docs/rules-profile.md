@@ -208,6 +208,13 @@ return, so it does not eliminate the second attempt. Do not substitute NFL sudde
   Priority Chart's INT/TD = incomplete, F/TD = fumble one yard into the defensive
   end zone, and SOP/BLP exceptions still apply; the correction's broad "always"
   wording does not override those specific chart cells and worked examples.
+- **Defensive parenthesized Breakaway:** The published Priority Chart has no defensive
+  Breakaway column. By the owner's 2026-10-30 ruling for this unusual imported result,
+  treat a parenthesized defensive Breakaway as an override except against offensive
+  parenthesized yardage or penalties. If it wins, roll the offense's B column. Keep this
+  interpretation limited to defensive chart cells; do not generalize to other decorated
+  named results. The Mays rules define Breakaway rerolls and defensive parentheses
+  separately but do not state this combination.
 - **Parentheses conflict:** Follow the printed Priority Chart p.34: offensive
   `(4)` versus defensive `(-1)` retains the offensive 4. Disregard the p.3 prose
   example saying parentheses offset and produce 3.

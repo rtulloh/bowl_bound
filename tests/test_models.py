@@ -330,6 +330,16 @@ def test_option_results_only_belong_to_offensive_play_five(kind: ResultKind) -> 
         _special(SpecialTeamsColumn.PUNT, kind)
 
 
+def test_parenthesized_breakaway_is_supported_only_on_defensive_charts() -> None:
+    result = NormalizedCell(ResultKind.BREAKAWAY, provenance(), priority=Priority.PARENTHESIZED)
+
+    assert DefensiveCell(Defense.A, Play.ONE, 1, result).cell is result
+    with pytest.raises(ValueError, match="defensive charts"):
+        OffensiveCell(Play.ONE, 10, result)
+    with pytest.raises(ValueError, match="defensive charts"):
+        SupplementalCell(SupplementalColumn.BREAKAWAY, 10, result)
+
+
 LEGEND_FACTS = [
     # (legend token, expected normalized fields)
     ("-5", dict(kind=ResultKind.YARDS, yards=-5)),

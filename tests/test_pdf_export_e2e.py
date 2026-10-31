@@ -46,6 +46,136 @@ def test_export_complete_two_team_synthetic_document(tmp_path: Path) -> None:
         assert (cell.kind.value, cell.yards, cell.priority.value) == ("yards", -int(text), "normal")
 
 
+def test_export_rotated_defense_page_preserves_team_and_source_coordinates(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "rotated-defense.pdf"
+    team_spec = {**_teams()[0], "rotated_defense": True}
+    raw_cells = write_chart_pdf(path, [team_spec])
+
+    teams = export_document(path)
+
+    assert len(teams) == 1
+    exported = teams[0]
+    assert exported.chart.name == "Synthetic State"
+    assert exported.chart.season == 2002
+    assert exported.metadata.defense_label == "Synthetic State"
+    source_cell = exported.chart.defense[0].cell.provenance
+    assert source_cell.page == 2
+    assert source_cell.original_text == raw_cells[("defense", "1", 1, "A")][0]
+    assert source_cell.bounding_box.left == pytest.approx(112.56)
+    assert source_cell.bounding_box.bottom == pytest.approx(133.44)
+    assert source_cell.bounding_box.right == pytest.approx(127.08)
+    assert source_cell.bounding_box.top == pytest.approx(172.92)
+
+
+def test_export_preserves_parenthesized_breakaway_on_defense_page(tmp_path: Path) -> None:
+    path = tmp_path / "defensive-breakaway.pdf"
+    write_chart_pdf(
+        path,
+        [
+            {
+                **_teams()[0],
+                "cell_overrides": {
+                    ("defense", "1", 1, "A"): ("(B)", (0, 255, 0)),
+                },
+            }
+        ],
+    )
+
+    exported = export_document(path)[0]
+    cell = exported.chart.defense[0].cell
+
+    assert (cell.kind.value, cell.priority.value, cell.provenance.original_text) == (
+        "B",
+        "parenthesized",
+        "(B)",
+    )
+
+
+def test_missing_rating_uses_only_explicit_labeled_local_placeholder(
+    tmp_path: Path,
+) -> None:
+    from bowl_bound.team_csv import provenance_to_csv, team_from_files, team_to_files
+
+    path = tmp_path / "missing-rating.pdf"
+    write_chart_pdf(path, [{**_teams()[0], "missing_rating": True}])
+
+    with pytest.raises(MetadataError, match="power rating"):
+        export_document(path)
+
+    exported = export_document(path, use_local_rating_placeholder=True)[0]
+
+    assert exported.metadata.power_rating == 200
+    assert exported.metadata.power_rating_is_placeholder is True
+    assert "power_rating" not in {label for label, _ in exported.metadata.evidence}
+    files = team_to_files(exported.chart, exported.metadata)
+    assert "team_file_version: 3" in files["team.yaml"]
+    assert "power_rating_origin: local-only-placeholder" in files["team.yaml"]
+    provenance = provenance_to_csv(exported.chart, exported.metadata)
+    assert team_from_files(files, provenance) == (exported.chart, exported.metadata)
+
+
+def test_local_rating_placeholder_does_not_override_a_printed_rating(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "printed-rating.pdf"
+    write_chart_pdf(path, [_teams()[0]])
+
+    exported = export_document(path, use_local_rating_placeholder=True)[0]
+
+    assert exported.metadata.power_rating == 200.5
+    assert exported.metadata.power_rating_is_placeholder is False
+
+
+def test_local_rating_placeholder_accepts_a_header_label_without_numeric_rating(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "rating-label-only.pdf"
+    write_chart_pdf(path, [{**_teams()[0], "rating_text": "Rating"}])
+
+    exported = export_document(path, use_local_rating_placeholder=True)[0]
+
+    assert exported.metadata.power_rating == 200
+    assert exported.metadata.power_rating_is_placeholder is True
+
+
+def test_local_rating_placeholder_does_not_hide_ambiguous_printed_rating(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "ambiguous-rating.pdf"
+    write_chart_pdf(path, [{**_teams()[0], "rating_text": "200A"}])
+
+    with pytest.raises(MetadataError, match="power rating"):
+        export_document(path, use_local_rating_placeholder=True)
+
+
+def test_cli_marks_approved_local_rating_placeholder_in_team_files(tmp_path: Path) -> None:
+    from bowl_bound.team_csv import load_team
+    from tools.pdf_import import cli
+
+    path = tmp_path / "missing-rating.pdf"
+    write_chart_pdf(path, [{**_teams()[0], "missing_rating": True}])
+    root = tmp_path / "seasons"
+
+    assert (
+        cli.main(
+            [
+                str(path),
+                "--export",
+                "--use-local-rating-200-for-missing",
+                "--output",
+                str(root),
+            ]
+        )
+        == 0
+    )
+
+    _, metadata = load_team(root / "2002", "synthetic-state")
+    assert metadata.power_rating == 200
+    assert metadata.power_rating_is_placeholder is True
+
+
 def test_exported_teams_are_paydirt_style_files_through_the_cli(tmp_path: Path) -> None:
     from bowl_bound.team_csv import TEAM_FILES, load_team
     from tools.pdf_import import cli

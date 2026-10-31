@@ -9,7 +9,7 @@ import pdfplumber
 import pytest
 from reportlab.pdfgen import canvas
 
-from tools.pdf_import.cells import CellBounds, CellExtractionError, extract_cells
+from tools.pdf_import.cells import CellBounds, CellExtractionError, _rgb, extract_cells
 
 SHA = "a" * 64
 
@@ -59,6 +59,21 @@ def test_extracts_rotated_text_and_merged_background() -> None:
     assert [cell.rgb_color for cell in cells] == [(0, 255, 0), (0, 255, 0)]
 
 
+def test_device_cmyk_background_converts_to_rgb_without_losing_fill() -> None:
+    def draw(pdf: canvas.Canvas) -> None:
+        pdf.setFillColorCMYK(0.2, 0.3, 0.4, 0.1)
+        pdf.rect(20, 140, 80, 30, fill=1, stroke=0)
+        pdf.setFillColorRGB(0, 0, 0)
+        pdf.drawString(25, 150, "5")
+
+    cell = _extract(_page(draw), CellBounds(20, 30, 100, 60))[0]
+    assert cell.text == "5"
+    assert cell.rgb_color == (184, 161, 138)
+    assert cell.provenance.rgb_color == (184, 161, 138)
+    with pytest.raises(CellExtractionError, match="color values"):
+        _rgb((1.1, 1.2, 1.3, 1.4))
+
+
 def test_blank_white_requires_explicit_fill_or_enclosing_grid() -> None:
     explicit = _page(lambda pdf: (pdf.setFillColorRGB(1, 1, 1), pdf.rect(20, 140, 80, 30, fill=1)))
     assert _extract(explicit, CellBounds(20, 30, 100, 60))[0].text == ""
@@ -97,6 +112,44 @@ def test_rejects_cross_cell_characters_and_grid_lines() -> None:
         _extract(_page(draw_line), CellBounds(20, 30, 100, 60))
 
 
+def test_assigns_small_cross_boundary_glyph_to_the_cell_containing_its_center() -> None:
+    def draw(pdf: canvas.Canvas) -> None:
+        pdf.setFillColorRGB(1, 1, 1)
+        pdf.rect(20, 140, 160, 30, fill=1)
+        pdf.setFillColorRGB(0, 0, 0)
+        pdf.setFont("Helvetica", 8)
+        pdf.drawString(97.9, 150, "I")
+
+    cells = _extract(_page(draw), CellBounds(20, 30, 100, 60), CellBounds(100, 30, 180, 60))
+
+    assert [cell.text for cell in cells] == ["I", ""]
+    assert sum(cell.text.count("I") for cell in cells) == 1
+
+
+def test_rejects_cross_boundary_glyph_with_ambiguous_center() -> None:
+    left = CellBounds(20, 30, 100, 60)
+    right = CellBounds(100, 30, 180, 60)
+    character = {
+        "text": "X",
+        "x0": 97.5,
+        "x1": 102.5,
+        "top": 40,
+        "bottom": 50,
+        "matrix": (1, 0, 0, 1, 0, 0),
+    }
+    white = {
+        "x0": 20,
+        "top": 30,
+        "x1": 180,
+        "bottom": 60,
+        "fill": True,
+        "non_stroking_color": 1,
+    }
+
+    with pytest.raises(CellExtractionError, match="crosses"):
+        _extract(FakePage(chars=[character], rects=[white]), left, right)
+
+
 @dataclass
 class FakePage:
     width: float = 200
@@ -125,7 +178,7 @@ def test_rejects_ambiguous_or_unsupported_paint_and_rotation() -> None:
     with pytest.raises(CellExtractionError, match="partial"):
         _extract(FakePage(rects=[left, right]), bound)
     with pytest.raises(CellExtractionError, match="color"):
-        _extract(FakePage(rects=[full | {"non_stroking_color": (0, 0, 0, 1)}]), bound)
+        _extract(FakePage(rects=[full | {"non_stroking_color": (0, 0, 0, 1, 1)}]), bound)
 
     character = {
         "text": "x",
@@ -307,6 +360,11 @@ def test_color_space_and_rotated_text_evidence_are_not_guessed() -> None:
         _extract(FakePage(rects=[unit_white | {"non_stroking_color": (255, 0, 0)}]), bound)
     with pytest.raises(CellExtractionError, match="color"):
         _extract(FakePage(rects=[unit_white | {"ncs": "DeviceCMYK"}]), bound)
+    with pytest.raises(CellExtractionError, match="color shape"):
+        _extract(
+            FakePage(rects=[unit_white | {"ncs": "DeviceRGB", "non_stroking_color": (0, 0, 0, 1)}]),
+            bound,
+        )
 
     matrix = (0, 1, -1, 0, 0, 0)
     chars = [

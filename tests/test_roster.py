@@ -49,6 +49,42 @@ def test_sample_roster_loads_and_round_trips() -> None:
     assert parse_roster(roster_to_json(roster)) == roster
 
 
+def test_verified_starter_lists_drive_commentary_name_rotation() -> None:
+    data = {
+        **SAMPLE,
+        "qb": ["Alex Quill", "Sam Rook", "Pat Reserve"],
+        "rb": ["Ray Bolt", "Rex Backup"],
+        "starters": {"qb": ["Sam Rook", "Alex Quill"]},
+    }
+    roster = parse_roster(text(data))
+
+    assert player_name(roster, "qb", 0) == "Sam Rook"
+    assert player_name(roster, "qb", 1) == "Alex Quill"
+    assert player_name(roster, "qb", 2) == "Sam Rook"
+    assert player_name(roster, "rb", 0) == "Ray Bolt"
+    assert player_name(roster, "rb", 1) == "Rex Backup"
+    assert parse_roster(roster_to_json(roster)) == roster
+
+
+@pytest.mark.parametrize(
+    "starters",
+    [
+        None,
+        [],
+        {"coach": ["ZZ-Secret-Player"]},
+        {"quarterback": ["ZZ-Secret-Player"]},
+        {"qb": "ZZ-Secret-Player"},
+        {"qb": ["ZZ-Secret-Player"]},
+        {"qb": ["Alex Quill", "Alex Quill"]},
+    ],
+)
+def test_invalid_starter_metadata_is_rejected_without_echoing_names(starters: object) -> None:
+    secret = "ZZ-Secret-Player"
+    with pytest.raises(RosterFormatError) as info:
+        parse_roster(text({**SAMPLE, "starters": starters}))
+    assert secret not in str(info.value)
+
+
 def test_missing_positions_are_empty_not_errors() -> None:
     roster = parse_roster(text({"qb": ["Alex Quill"]}))
     assert roster.players["rb"] == ()

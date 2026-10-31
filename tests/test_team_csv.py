@@ -15,6 +15,7 @@ from bowl_bound.models import (
     NormalizedCell,
     OffensiveCell,
     PatOutcome,
+    Priority,
     Play,
     Provenance,
     ResultKind,
@@ -89,6 +90,67 @@ def test_paydirt_layout_round_trip_and_positions() -> None:
     assert team_from_files(files, provenance_to_csv(chart(), metadata())) == (chart(), metadata())
 
 
+@pytest.mark.parametrize("rgb", [(255, 0, 0), (0, 255, 0)])
+def test_zero_yard_cell_round_trips_with_either_proven_chart_fill(
+    rgb: tuple[int, int, int],
+) -> None:
+    team = chart()
+    zero = NormalizedCell(ResultKind.YARDS, evidence("zero", rgb), yards=0)
+    team = replace(team, defense=(replace(team.defense[0], cell=zero), *team.defense[1:]))
+    meta = metadata()
+
+    files = team_to_files(team, meta)
+
+    assert team_from_files(files, provenance_to_csv(team, meta)) == (team, meta)
+
+
+def test_verified_converted_rgb_fill_round_trips_without_canonicalizing_provenance() -> None:
+    team = chart()
+    rgb = (95, 255, 0)
+    cell = NormalizedCell(ResultKind.YARDS, evidence("5", rgb), yards=5)
+    team = replace(team, defense=(replace(team.defense[0], cell=cell), *team.defense[1:]))
+    meta = metadata()
+
+    files = team_to_files(team, meta)
+
+    assert team_from_files(files, provenance_to_csv(team, meta)) == (team, meta)
+
+
+def test_parenthesized_breakaway_round_trips_as_a_defensive_override() -> None:
+    team = chart()
+    defensive_breakaway = NormalizedCell(
+        ResultKind.BREAKAWAY,
+        evidence("(B)"),
+        priority=Priority.PARENTHESIZED,
+    )
+    team = replace(
+        team,
+        defense=(replace(team.defense[0], cell=defensive_breakaway), *team.defense[1:]),
+    )
+    meta = metadata()
+
+    files = team_to_files(team, meta)
+
+    assert format_cell(defensive_breakaway) == "(B)"
+    assert team_from_files(files, provenance_to_csv(team, meta)) == (team, meta)
+
+
+@pytest.mark.parametrize("section", ["offense", "defense", "special_teams"])
+def test_out_of_bounds_marker_survives_blank_cell_round_trip(section: str) -> None:
+    team = chart()
+    marker_cell = NormalizedCell(
+        ResultKind.NO_CHANGE, evidence("marker", (255, 255, 255)), out_of_bounds=True
+    )
+    rows = getattr(team, section)
+    updated = (replace(rows[0], cell=marker_cell), *rows[1:])
+    team = replace(team, **{section: updated})
+    meta = metadata()
+
+    assert format_cell(marker_cell) == "*"
+    files = team_to_files(team, meta)
+    assert team_from_files(files, provenance_to_csv(team, meta)) == (team, meta)
+
+
 def test_metadata_provenance_without_measured_color_round_trips_as_blank_rgb() -> None:
     team = chart()
     no_color = Provenance(SHA, "synthetic.pdf", 1, BoundingBox(0, 0, 1, 1), "note", None)
@@ -108,6 +170,24 @@ def test_metadata_provenance_without_measured_color_round_trips_as_blank_rgb() -
     )
     with pytest.raises(TeamFormatError, match="invalid provenance"):
         team_from_files(version_one, provenance_csv)
+
+
+def test_local_power_rating_placeholder_uses_version_three_marker() -> None:
+    team = chart()
+    meta = replace(metadata(), power_rating=200.0, power_rating_is_placeholder=True)
+
+    files = team_to_files(team, meta)
+    provenance = provenance_to_csv(team, meta)
+
+    assert "power_rating_origin: local-only-placeholder" in files["team.yaml"]
+    assert "team_file_version: 3" in files["team.yaml"]
+    assert team_from_files(files, provenance) == (team, meta)
+
+    files["team.yaml"] = files["team.yaml"].replace(
+        "power_rating_origin: local-only-placeholder", "power_rating_origin: source"
+    )
+    with pytest.raises(TeamFormatError, match="invalid metadata"):
+        team_from_files(files, provenance)
 
 
 def test_version_one_bundle_with_measured_metadata_rgb_remains_readable() -> None:
@@ -211,7 +291,7 @@ def _with_yaml(text_edit: object) -> dict[str, str]:
         lambda y: y.replace("team_name: Ohio State", "<<: {team_name: Foo}\nteam_name: Ohio State"),
         lambda y: y.replace("team_file_version: 2", "team_file_version: true"),
         lambda y: y.replace("team_file_version: 2", "team_file_version: 2.0"),
-        lambda y: y.replace("team_file_version: 2", "team_file_version: 3"),
+        lambda y: y.replace("team_file_version: 2", "team_file_version: 4"),
     ],
 )
 def test_yaml_rejects_duplicate_keys_merge_keys_and_non_integer_versions(edit: object) -> None:

@@ -1,11 +1,17 @@
 """Synthetic extraction-to-chart validation and export assembly."""
 
+from dataclasses import replace
 from types import SimpleNamespace
 
 import pytest
 
 from bowl_bound.models import BoundingBox, Provenance
-from bowl_bound.normalization import CELL_LEGEND, ChartColor, NormalizationError
+from bowl_bound.normalization import (
+    CELL_LEGEND,
+    CONVERTED_CMYK_PALETTE,
+    ChartColor,
+    NormalizationError,
+)
 from tools.pdf_import import export as pdf_export
 from tools.pdf_import.export import _COLORS, ImportValidationError, build_team
 from tools.pdf_import.metadata import TeamMetadata
@@ -53,7 +59,25 @@ def records() -> list[object]:
 
 def test_pdf_color_classification_uses_the_shared_cell_legend() -> None:
     assert set(CELL_LEGEND) == set(ChartColor)
-    assert _COLORS == {legend.rgb_color: color for color, legend in CELL_LEGEND.items()}
+    assert _COLORS == {
+        **{legend.rgb_color: color for color, legend in CELL_LEGEND.items()},
+        **CONVERTED_CMYK_PALETTE,
+    }
+
+
+def test_build_team_preserves_verified_converted_fill_evidence() -> None:
+    items = records()
+    raw = items[0][1]
+    rgb = (95, 255, 0)
+    raw.text = "5"
+    raw.rgb_color = rgb
+    raw.provenance = replace(raw.provenance, original_text="5", rgb_color=rgb)
+
+    chart = build_team("Synthetic State", 2002, items, TeamMetadata(200, range(10, 26), (), ()))
+
+    cell = chart.offense[0].cell
+    assert cell.yards == 5
+    assert cell.provenance.rgb_color == rgb
 
 
 def test_build_team_from_complete_synthetic_evidence() -> None:

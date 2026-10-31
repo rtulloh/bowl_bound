@@ -24,10 +24,12 @@ class SafeCLIError(ValueError):
     """A project-authored CLI validation failure safe to display as written."""
 
 
-def export_document(path: Path) -> list:
+def export_document(path: Path, *, use_local_rating_placeholder: bool = False) -> list:
     """Load the export pipeline lazily so inspection never needs it."""
     from .export import export_document as run_export
 
+    if use_local_rating_placeholder:
+        return run_export(path, use_local_rating_placeholder=True)
     return run_export(path)
 
 
@@ -313,12 +315,25 @@ _SAFE_OS_ERROR_MESSAGES = {
 
 def _failure_reason(error: Exception, action: str = "exporting") -> str:
     """Return project-authored text only; never echo arbitrary exception details."""
+    from bowl_bound.normalization import NormalizationError
+    from bowl_bound.team_csv import TeamFormatError
+
+    from .cells import CellExtractionError
+    from .layout import LayoutError
+    from .metadata import MetadataError
+
     if isinstance(error, SafeCLIError):
         return str(error)
     if isinstance(error, SafeImportInspectionError):
         return str(error)
     if isinstance(error, ImportValidationError):
+        if isinstance(error.__cause__, NormalizationError):
+            return str(error.__cause__)
         return str(error)
+    if isinstance(error, (CellExtractionError, LayoutError, MetadataError)):
+        return str(error)
+    if isinstance(error, TeamFormatError):
+        return "team-file validation failed; chart data or source provenance is inconsistent"
     if isinstance(error, ImportInspectionError):
         return "PDF could not be inspected; it may be malformed, encrypted, or unsupported"
     if isinstance(error, OSError):
@@ -329,7 +344,13 @@ def _failure_reason(error: Exception, action: str = "exporting") -> str:
     )
 
 
-def _run_batch(sources: list[Path], output: Path, force: bool, dry_run: bool) -> int:
+def _run_batch(
+    sources: list[Path],
+    output: Path,
+    force: bool,
+    dry_run: bool,
+    use_local_rating_placeholder: bool = False,
+) -> int:
     """Export every PDF; one PDF's failure never blocks the others.
 
     Phase 1 validates every PDF and checks for teams repeated across the batch, so a repeat
@@ -342,7 +363,11 @@ def _run_batch(sources: list[Path], output: Path, force: bool, dry_run: bool) ->
         plan: PlannedPDF | None = None
         error: Exception | None = None
         try:
-            teams = _verify_teams(export_document(source))
+            if use_local_rating_placeholder:
+                exported = export_document(source, use_local_rating_placeholder=True)
+            else:
+                exported = export_document(source)
+            teams = _verify_teams(exported)
             identities = frozenset(team.identity for team in teams)
             targets = _team_targets(output, teams)
             _preflight_teams(source, output, targets, force)
@@ -426,14 +451,27 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--export", action="store_true", help="Validate and export team data")
     parser.add_argument("--dry-run", action="store_true", help="Process without filesystem writes")
     parser.add_argument(
+        "--use-local-rating-200-for-missing",
+        action="store_true",
+        help="Use the approved local-only rating 200 only when no rating is printed",
+    )
+    parser.add_argument(
         "--force", action="store_true", help="Replace existing report or team files"
     )
     arguments = parser.parse_args(argv)
+    if arguments.use_local_rating_200_for_missing and not arguments.export:
+        parser.error("--use-local-rating-200-for-missing requires --export")
     try:
         sources = _sources(arguments.input, allow_directory=arguments.export)
         output = arguments.output
         if arguments.export:
-            return _run_batch(sources, output, arguments.force, arguments.dry_run)
+            return _run_batch(
+                sources,
+                output,
+                arguments.force,
+                arguments.dry_run,
+                arguments.use_local_rating_200_for_missing,
+            )
         source = sources[0]
         if not arguments.dry_run:
             _validate_output(source, output, arguments.force)

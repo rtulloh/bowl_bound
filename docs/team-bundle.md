@@ -94,6 +94,7 @@ writer produces, and anything else is rejected.
 | --- | --- |
 | `7`, `-3`, `0` | Yards. |
 | `(7)`, `[7]` | Yards with parenthesized or bracketed priority. |
+| `(B)` | Defensive chart only: a parenthesized Breakaway override; if it wins, the offense rolls its B column. |
 | `42*` | Yards, out of bounds. |
 | `TD` | Touchdown. |
 | `F`, `F + 6`, `F - 4` | Fumble (bare `F` means `F + 0`). |
@@ -129,12 +130,17 @@ status: validated
 | `team_name` | The offense-page school name. This identifies the team, with `season`. |
 | `nickname` | The defense-page header (usually a mascot). Display only; never an identifier. |
 | `season` | Positive integer. Must equal the season folder's name. |
-| `power_rating` | Printed power rating (50-500). Recorded only; yardage factors stay deferred. |
+| `power_rating` | Printed rating or a marked local placeholder (50-500). Recorded only; the game does not use it. |
+| `power_rating_origin` | Present only in version 3 with the exact value `local-only-placeholder`; identifies an owner-approved private testing value. |
 | `privileges` | Printed markers (`W`, `FBO`, `SPBO`, `XWC`), unique. Empty means none were printed. |
 | `source_sha256` | SHA-256 of the exact PDF bytes that were parsed. |
 | `source_filename` | The PDF's file name. |
-| `team_file_version` | Writers use integer `2`; readers also accept legacy version `1`. Version 2 allows empty RGB fields on metadata provenance rows when no fill was measured. |
+| `team_file_version` | Writers use integer `2` for source ratings and `3` for marked local placeholders. Readers also accept legacy version `1`. Versions 2 and 3 allow empty RGB fields on metadata provenance rows when no fill was measured. |
 | `status` | `validated`. |
+
+Version 3 is reserved for private exports that use the importer's explicit local rating
+option. It requires `power_rating_origin: local-only-placeholder` and has no PDF rating
+provenance row. Never treat that value as printed source data or publish the team bundle.
 
 A marker is recorded as printed. **No privilege is ever defaulted**, and an absent marker is
 not an entitlement. The importer decides nothing from a marker. Per the rulebook, `FBO`
@@ -151,8 +157,9 @@ privileges all fail. Strings that look like numbers or booleans (a team called `
 
 ## `provenance/<team-slug>.csv`
 
-One row per chart cell and PAT outcome, plus one `metadata` row for each piece of metadata
-evidence (rating, recovery text, privilege marker):
+One row per chart cell and PAT outcome, plus one `metadata` row for each piece of measured
+metadata evidence (printed rating, recovery text, privilege marker). A local placeholder
+rating has no PDF evidence row:
 
 ```text
 section,column,defense,roll,page,left,bottom,right,top,original_text,red,green,blue
@@ -160,7 +167,9 @@ section,column,defense,roll,page,left,bottom,right,top,original_text,red,green,b
 
 `section` is `offense`, `supplemental`, `defense`, `special_teams`, `pat`, or `metadata`.
 Each row keeps the one-based page, the PDF-space bounding box (floats written exactly,
-including `-0.0`), the original text exactly as extracted, and the measured RGB background.
+including `-0.0`), the original text exactly as extracted, and RGB background evidence.
+DeviceCMYK fills use deterministic conversion to byte RGB; only the verified converted
+chart palette is accepted. Other color spaces or unknown colors fail closed.
 For metadata rows only, three empty RGB fields mean no fill was measured; white is not
 invented as a default. Chart-cell and PAT rows always require measured RGB. RGB is evidence,
 not a rules input. Every row must carry the `source_sha256` and filename recorded in

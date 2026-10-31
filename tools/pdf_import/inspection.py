@@ -9,6 +9,8 @@ from io import BytesIO
 from pathlib import Path
 from typing import Literal
 
+from .page_view import rotate_portrait_page
+
 
 class ImportInspectionError(Exception):
     """Base error for a source PDF that cannot be read safely for import."""
@@ -30,6 +32,7 @@ class PageInfo:
     role: Literal["offense", "defense_special"]
     team_name: str
     season: int
+    rotation: int = 0
 
 
 @dataclass(frozen=True)
@@ -86,10 +89,17 @@ def inspect_document(path: Path) -> DocumentInspection:
                 raise UnsupportedDocumentError(
                     "Supported chart documents must contain complete offense/defense page pairs"
                 )
-            pages = tuple(
-                _inspect_page(page, index + 1, "offense" if index % 2 == 0 else "defense_special")
-                for index, page in enumerate(document.pages)
-            )
+            inspected: list[PageInfo] = []
+            for index, page in enumerate(document.pages):
+                page_number = index + 1
+                role = "offense" if index % 2 == 0 else "defense_special"
+                if role == "defense_special" and _is_rotated_portrait(page):
+                    view = rotate_portrait_page(page)
+                    _inspect_rotated_defense(view, page_number)
+                    inspected.append(PageInfo(page_number, role, "", 0, 90))
+                else:
+                    inspected.append(_inspect_page(page, page_number, role))
+            pages = _validate_pairs(tuple(inspected))
     except PDFPasswordIncorrect as error:
         raise SafeImportInspectionError(
             "PDF source is encrypted and cannot be inspected"
@@ -120,7 +130,6 @@ def inspect_document(path: Path) -> DocumentInspection:
             "PDF source could not be inspected; the layout may be unsupported"
         ) from error
 
-    _validate_pairs(pages)
     return DocumentInspection(hashlib.sha256(source).hexdigest(), pages)
 
 
@@ -142,8 +151,38 @@ def _inspect_page(
 
 def _body_words(page: object) -> list[dict]:
     """Upright words only: the rotated left-edge header must not satisfy chart labels."""
-    upright = page.filter(lambda obj: obj.get("object_type") != "char" or obj.get("upright", True))
-    return upright.extract_words()
+    if hasattr(page, "filter"):
+        upright = page.filter(
+            lambda obj: obj.get("object_type") != "char" or obj.get("upright", True)
+        )
+        return upright.extract_words()
+    return page.extract_words()
+
+
+def _is_rotated_portrait(page: object) -> bool:
+    """Recognize only portrait pages whose vector text is predominantly quarter-turned."""
+    width, height = page.width, page.height
+    if not (height > width and 0.70 <= width / height <= 0.85):
+        return False
+    chars = tuple(getattr(page, "chars", ()))
+    if len(chars) < 20:
+        return False
+    rotated = sum(not char.get("upright", True) for char in chars)
+    return rotated / len(chars) >= 0.90
+
+
+def _inspect_rotated_defense(page: object, page_number: int) -> None:
+    """Validate the explicit portrait-sheet/rotated-content defense profile."""
+    _validate_geometry(page, page_number, "defense_special")
+    if len(page.rects) < _MIN_CHART_RECTANGLES:
+        raise UnsupportedDocumentError(
+            f"Page {page_number} has too few vector chart rectangles to be a chart"
+        )
+    words = _body_words(page)
+    if not all(_has_label(words, label) for label in _DEFENSE_LABELS):
+        raise UnsupportedDocumentError(
+            f"Page {page_number} is missing required labels for defense_special"
+        )
 
 
 def _validate_geometry(
@@ -209,11 +248,20 @@ def _identity(name: str, season: int) -> tuple[str, int]:
     return " ".join(name.split()).casefold(), season
 
 
-def _validate_pairs(pages: tuple[PageInfo, ...]) -> None:
-    """Pair by page order and season only; defense headers are display labels."""
+def _validate_pairs(pages: tuple[PageInfo, ...]) -> tuple[PageInfo, ...]:
+    """Pair by page order and season; rotated Mays pages inherit paired team identity."""
     offense_identities: set[tuple[str, int]] = set()
+    validated = list(pages)
     for offense, defense in zip(pages[::2], pages[1::2], strict=True):
-        if offense.season != defense.season:
+        if defense.rotation == 90 and not defense.team_name:
+            validated[defense.page - 1] = PageInfo(
+                defense.page,
+                defense.role,
+                offense.team_name,
+                offense.season,
+                defense.rotation,
+            )
+        elif offense.season != defense.season:
             raise UnsupportedDocumentError(
                 f"Pages {offense.page} and {defense.page} must identify the same season"
             )
@@ -223,3 +271,4 @@ def _validate_pairs(pages: tuple[PageInfo, ...]) -> None:
                 f"Duplicate offense team and season header in pages {offense.page}-{defense.page}"
             )
         offense_identities.add(identity)
+    return tuple(validated)

@@ -34,15 +34,19 @@ from .models import (
 )
 from .normalization import (
     CELL_LEGEND,
+    CONVERTED_CMYK_PALETTE,
     ChartColor,
     NormalizationError,
     canonical_csv_token,
     chart_color_for_csv_token,
+    chart_color_for_rgb,
     normalize_cell,
 )
 
 TEAM_FILES: tuple[str, ...] = ("offense.csv", "defense.csv", "special.csv", "team.yaml")
 TEAM_FILE_VERSION = 2
+PLACEHOLDER_TEAM_FILE_VERSION = 3
+LOCAL_PLACEHOLDER_POWER_RATING = 200.0
 PROVENANCE_DIR = "provenance"
 _PRIV = {"W", "FBO", "SPBO", "XWC"}
 _NAMED_RESULT_KINDS = frozenset(
@@ -126,6 +130,7 @@ class TeamFileMetadata:
     defense_label: str
     source_sha256: str
     evidence: tuple[tuple[str, Provenance], ...]
+    power_rating_is_placeholder: bool = False
 
     def __post_init__(self) -> None:
         if (
@@ -150,6 +155,10 @@ class TeamFileMetadata:
             for x in self.evidence
         ):
             raise TypeError("invalid evidence")
+        if type(self.power_rating_is_placeholder) is not bool:
+            raise TypeError("invalid power rating source")
+        if self.power_rating_is_placeholder and self.power_rating != LOCAL_PLACEHOLDER_POWER_RATING:
+            raise ValueError("invalid local placeholder rating")
 
 
 def _sha(x: object) -> bool:
@@ -195,9 +204,9 @@ def _dist(c: NormalizedCell) -> str:
 
 def format_cell(c: NormalizedCell) -> str:
     if c.kind is ResultKind.NO_CHANGE:
-        return canonical_csv_token(c.kind)
+        t = canonical_csv_token(c.kind)
     elif c.kind is ResultKind.INCOMPLETE:
-        return canonical_csv_token(c.kind)
+        t = canonical_csv_token(c.kind)
     elif c.kind is ResultKind.YARDS or c.kind.name.startswith("VARIABLE_"):
         t = _dist(c)
     elif c.kind in _NAMED_RESULT_KINDS:
@@ -232,14 +241,16 @@ def format_cell(c: NormalizedCell) -> str:
         return f"{pre} {v}"
     else:
         raise TeamFormatError("cell: unsupported")
-    decor = (
+    numeric_or_touchdown = (
         c.kind is ResultKind.YARDS
         or c.kind.name.startswith("VARIABLE_")
         or c.kind is ResultKind.TOUCHDOWN
     )
-    if c.priority is Priority.PARENTHESIZED and decor:
+    if c.priority is Priority.PARENTHESIZED and (
+        numeric_or_touchdown or c.kind is ResultKind.BREAKAWAY
+    ):
         t = f"({t})"
-    elif c.priority is Priority.BRACKETED and decor:
+    elif c.priority is Priority.BRACKETED and numeric_or_touchdown:
         t = f"[{t}]"
     elif c.priority is not Priority.NORMAL:
         raise TeamFormatError("cell: priority")
@@ -248,7 +259,7 @@ def format_cell(c: NormalizedCell) -> str:
 
 def parse_cell(text: str, p: Provenance) -> NormalizedCell:
     try:
-        color = chart_color_for_csv_token(text)
+        color = _chart_color_with_provenance(text, p)
         source = "" if text == canonical_csv_token(ResultKind.INCOMPLETE) else text
         r = replace(normalize_cell(replace(p, original_text=source), color), provenance=p)
     except (NormalizationError, ValueError, TypeError) as error:
@@ -292,12 +303,25 @@ def _facts(chart: TeamChart, meta: TeamFileMetadata) -> tuple[list[Provenance], 
 def _validate_cell_color(token: str, provenance: Provenance) -> ChartColor:
     """Require serialized semantics to agree with the RGB evidence in provenance."""
     try:
-        color = chart_color_for_csv_token(token)
+        color = _chart_color_with_provenance(token, provenance)
     except ValueError as error:
         raise TeamFormatError("provenance: unsupported chart token") from error
-    if provenance.rgb_color != CELL_LEGEND[color].rgb_color:
+    if chart_color_for_rgb(provenance.rgb_color) is not color:
         raise TeamFormatError(f"page {provenance.page}: cell color disagrees with provenance")
     return color
+
+
+def _chart_color_with_provenance(token: str, provenance: Provenance) -> ChartColor:
+    """Use a recognized measured fill when the canonical token does not identify it."""
+    source_color = chart_color_for_rgb(provenance.rgb_color)
+    if provenance.rgb_color in CONVERTED_CMYK_PALETTE and source_color is not None:
+        return source_color
+    if token.translate(str.maketrans("", "", "*()[]")) == "0" and source_color in {
+        ChartColor.RED,
+        ChartColor.GREEN,
+    }:
+        return source_color
+    return chart_color_for_csv_token(token)
 
 
 def team_to_files(chart: TeamChart, meta: TeamFileMetadata) -> dict[str, str]:
@@ -333,10 +357,17 @@ def team_to_files(chart: TeamChart, meta: TeamFileMetadata) -> dict[str, str]:
         "nickname": meta.defense_label,
         "season": chart.season,
         "power_rating": float(meta.power_rating),
+        **(
+            {"power_rating_origin": "local-only-placeholder"}
+            if meta.power_rating_is_placeholder
+            else {}
+        ),
         "privileges": list(meta.privileges),
         "source_sha256": meta.source_sha256,
         "source_filename": fn,
-        "team_file_version": TEAM_FILE_VERSION,
+        "team_file_version": (
+            PLACEHOLDER_TEAM_FILE_VERSION if meta.power_rating_is_placeholder else TEAM_FILE_VERSION
+        ),
         "status": "validated",
     }
     y = (
@@ -401,10 +432,10 @@ def _err(file: str, row: int, reason: str) -> TeamFormatError:
 
 def _validate_cell_at(token: str, provenance: Provenance, file: str, row: int) -> None:
     try:
-        color = chart_color_for_csv_token(token)
+        color = _chart_color_with_provenance(token, provenance)
     except ValueError as error:
         raise _err(file, row, f"page {provenance.page}: invalid cell") from error
-    if provenance.rgb_color != CELL_LEGEND[color].rgb_color:
+    if chart_color_for_rgb(provenance.rgb_color) is not color:
         raise _err(
             file,
             row,
@@ -492,12 +523,19 @@ def _yaml(text: str) -> dict[str, object]:
         "nickname",
         "season",
         "power_rating",
-        "privileges",
-        "source_sha256",
-        "source_filename",
-        "team_file_version",
-        "status",
     ]
+    version = data.get("team_file_version") if isinstance(data, dict) else None
+    if type(version) is int and version == PLACEHOLDER_TEAM_FILE_VERSION:
+        keys.append("power_rating_origin")
+    keys.extend(
+        [
+            "privileges",
+            "source_sha256",
+            "source_filename",
+            "team_file_version",
+            "status",
+        ]
+    )
     if type(data) is not dict or list(data) != keys:
         raise _err("team.yaml", 0, "invalid metadata")
     return data
@@ -534,13 +572,25 @@ def team_from_files(
         or type(y["source_filename"]) is not str
         or not y["source_filename"]
         or type(y["team_file_version"]) is not int
-        or y["team_file_version"] not in {1, TEAM_FILE_VERSION}
+        or y["team_file_version"] not in {1, TEAM_FILE_VERSION, PLACEHOLDER_TEAM_FILE_VERSION}
+        or (
+            y["team_file_version"] == PLACEHOLDER_TEAM_FILE_VERSION
+            and (
+                y["power_rating_origin"] != "local-only-placeholder"
+                or y["power_rating"] != LOCAL_PLACEHOLDER_POWER_RATING
+            )
+        )
         or y["status"] != "validated"
     ):
         raise _err("team.yaml", 0, "invalid metadata")
     try:
         meta = TeamFileMetadata(
-            float(y["power_rating"]), tuple(y["privileges"]), y["nickname"], y["source_sha256"], ()
+            float(y["power_rating"]),
+            tuple(y["privileges"]),
+            y["nickname"],
+            y["source_sha256"],
+            (),
+            y["team_file_version"] == PLACEHOLDER_TEAM_FILE_VERSION,
         )
     except (TypeError, ValueError) as e:
         raise _err("team.yaml", 0, "invalid metadata") from e
@@ -591,7 +641,7 @@ def team_from_files(
             rgb_color = (
                 None
                 if (
-                    y["team_file_version"] == TEAM_FILE_VERSION
+                    y["team_file_version"] in {TEAM_FILE_VERSION, PLACEHOLDER_TEAM_FILE_VERSION}
                     and section == "metadata"
                     and (red, green, blue) == ("", "", "")
                 )

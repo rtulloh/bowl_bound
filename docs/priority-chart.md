@@ -61,6 +61,12 @@ signed spotting, but does not define the chart's `< #` notation independently.
   statement does not erase the chart's INT/TD -> INC, F/TD -> F_ENDZONE, or
   SOP/BLP exceptions. Printed p.4 explicitly confirms INT/TD -> INC; printed p.3
   confirms F/TD is a fumble one yard deep.
+- The published Priority Chart has no defensive Breakaway column. For this unusual
+  imported result, the owner ruled on 2026-10-30 that a parenthesized defensive
+  Breakaway overrides the offense except for an offensive parenthesized yardage result
+  or a penalty. When it wins, the offense rolls its own B column, as for any Breakaway.
+  This is limited to parenthesized Breakaway facts in defensive cells; it does not
+  generalize priority decoration to other named results.
 - Basic VI-12 names advanced defensive exceptions II.1-II.3, whereas the chart
   mentions Wild Card only. None is enabled in Milestone 7.
 

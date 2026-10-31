@@ -9,7 +9,7 @@ Rosters are private by default and are not packaged. Errors never echo file cont
 
 import json
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from .team_csv import team_folder_name
@@ -41,9 +41,10 @@ class RosterFormatError(ValueError):
 
 @dataclass(frozen=True)
 class Roster:
-    """Player names by position; every position is present, possibly empty."""
+    """Player names by position, with optional verified starter groups."""
 
     players: dict[str, tuple[str, ...]]
+    starters: dict[str, tuple[str, ...]] = field(default_factory=dict)
 
 
 def parse_roster(text: str) -> Roster:
@@ -62,18 +63,36 @@ def parse_roster(text: str) -> Roster:
         raise RosterFormatError("roster: not valid JSON") from error
     if type(data) is not dict:
         raise RosterFormatError("roster: top level must be an object")
-    unknown = set(data) - set(POSITIONS)
+    unknown = set(data) - set(POSITIONS) - {"starters"}
     if unknown:
         raise RosterFormatError("roster: unknown position key")
     players: dict[str, tuple[str, ...]] = {}
     for position in POSITIONS:
         players[position] = _names(data.get(position, []))
-    return Roster(players)
+    starter_data = data.get("starters", {})
+    if type(starter_data) is not dict:
+        raise RosterFormatError("roster: starters must be an object")
+    if set(starter_data) - set(POSITIONS):
+        raise RosterFormatError("roster: unknown starter position")
+    starters: dict[str, tuple[str, ...]] = {position: () for position in POSITIONS}
+    for position, value in starter_data.items():
+        names = _names(value)
+        if any(name not in players[position] for name in names):
+            raise RosterFormatError("roster: starter must appear in the position roster")
+        starters[position] = names
+    return Roster(players, starters)
 
 
 def roster_to_json(roster: Roster) -> str:
     """Write a roster canonically, omitting empty positions."""
     data = {p: list(roster.players[p]) for p in POSITIONS if roster.players[p]}
+    starters = {
+        position: list(roster.starters[position])
+        for position in POSITIONS
+        if roster.starters.get(position)
+    }
+    if starters:
+        data["starters"] = starters
     return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
 
 
@@ -108,14 +127,16 @@ def load_roster(season_dir: Path, folder_name: str) -> Roster | None:
 def player_name(roster: Roster | None, position: str, index: int = 0) -> str:
     """Return a player's name, or generic wording when there is no roster entry.
 
-    The index wraps around the position's list. No randomness is used, so naming
-    cannot perturb the gameplay random stream.
+    The index wraps around verified starters when present, or otherwise the full
+    position list. No randomness is used, so naming cannot perturb gameplay.
     """
     if type(position) is not str or position not in _GENERIC:
         raise ValueError("unknown roster position")
     if type(index) is not int or index < 0:
         raise ValueError("index must be a non-negative integer")
-    names = roster.players.get(position, ()) if roster is not None else ()
+    names: tuple[str, ...] = ()
+    if roster is not None:
+        names = roster.starters.get(position, ()) or roster.players.get(position, ())
     if not names:
         return _GENERIC[position]
     return names[index % len(names)]

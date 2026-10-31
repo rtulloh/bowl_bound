@@ -10,11 +10,16 @@ from pathlib import Path
 
 import pytest
 
-from bowl_bound.team_csv import TEAM_FILES, load_team, team_folder_name
+from bowl_bound.models import BoundingBox
+from bowl_bound.normalization import NormalizationError
+from bowl_bound.team_csv import TEAM_FILES, TeamFormatError, load_team, team_folder_name
 from tests.synthetic_chart_pdf import write_chart_pdf
 from tests.test_pdf_cli_export import _team
 from tools.pdf_import import cli
+from tools.pdf_import.cells import CellExtractionError
 from tools.pdf_import.export import ImportValidationError
+from tools.pdf_import.layout import LayoutError
+from tools.pdf_import.metadata import MetadataError
 
 ROOT = Path(__file__).resolve().parents[1]
 SECRET = "PRIVATE-CHART-TOKEN"
@@ -111,6 +116,55 @@ def test_unexpected_failure_in_one_pdf_leaks_nothing_and_continues(
     assert SECRET not in captured.err + captured.out
     assert "[1/3] a.pdf: FAILED - unexpected failure while exporting" in captured.err
     assert "summary: 2 succeeded, 1 failed" in captured.out
+
+
+@pytest.mark.parametrize(
+    ("failure", "safe_reason"),
+    [
+        (LayoutError("Missing, duplicate, or displaced roll anchors"), "roll anchors"),
+        (MetadataError("Missing or ambiguous fumble recovery endpoints"), "fumble recovery"),
+        (CellExtractionError("Four-component fill color is unsupported"), "fill color"),
+        (TeamFormatError("page 2: cell color disagrees with provenance"), "provenance"),
+    ],
+)
+def test_typed_import_failures_show_safe_actionable_reasons(
+    pdfs: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+    failure: Exception,
+    safe_reason: str,
+) -> None:
+    _install(monkeypatch, {"a.pdf": failure})
+
+    assert _run(pdfs, tmp_path / "seasons") == 1
+
+    captured = capsys.readouterr()
+    assert safe_reason in captured.err
+    assert str(tmp_path) not in captured.err
+    assert SECRET not in captured.err
+
+
+def test_normalization_failures_report_safe_page_reason_without_cell_text(
+    pdfs: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+) -> None:
+    error = ImportValidationError("chart is incomplete or inconsistent")
+    error.__cause__ = NormalizationError(
+        "page 4: priority decoration is unsupported on this named result",
+        4,
+        BoundingBox(1, 1, 2, 2),
+    )
+    _install(monkeypatch, {"a.pdf": error})
+
+    assert _run(pdfs, tmp_path / "seasons") == 1
+
+    captured = capsys.readouterr()
+    assert "page 4: priority decoration is unsupported" in captured.err
+    assert SECRET not in captured.err
+    assert str(tmp_path) not in captured.err
 
 
 def test_os_errors_do_not_echo_paths(

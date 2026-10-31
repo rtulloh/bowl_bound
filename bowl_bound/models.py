@@ -429,6 +429,9 @@ def _validate_placement(cell: NormalizedCell, container: str, key: object) -> No
     in_field_goal = container == "special_teams" and key is SpecialTeamsColumn.FIELD_GOAL
     in_punt = container == "special_teams" and key is SpecialTeamsColumn.PUNT
     in_play_five = container == "offense" and key is Play.FIVE
+    if kind is ResultKind.BREAKAWAY and cell.priority is not Priority.NORMAL:
+        if container != "defense" or cell.priority is not Priority.PARENTHESIZED:
+            raise ValueError("parenthesized Breakaway results belong only in defensive charts")
     if kind is ResultKind.NO_GOOD_FIELD_GOAL and not in_field_goal:
         raise ValueError("NG results belong only in the field-goal column")
     if kind in _PUNT_COLUMN_REDIRECTS and not in_punt:

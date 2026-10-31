@@ -9,7 +9,9 @@ from reportlab.pdfgen import canvas
 from tools.pdf_import.layout import LayoutError, locate_cells
 
 
-def page_bytes(role: str, missing: bool = False, variant: bool = False) -> bytes:
+def page_bytes(
+    role: str, missing: bool = False, variant: bool = False, mays_profile: str | None = None
+) -> bytes:
     stream = BytesIO()
     size = (612, 792) if role == "offense" else (792, 612)
     pdf = canvas.Canvas(stream, pagesize=size)
@@ -50,6 +52,44 @@ def page_bytes(role: str, missing: bool = False, variant: bool = False) -> bytes
             556.08,
             575.76,
         )
+    if mays_profile == "2007":
+        offense_edges = (
+            66.24,
+            86.76,
+            126.96,
+            165.60,
+            208.20,
+            250.80,
+            293.40,
+            336.00,
+            378.60,
+            421.20,
+            463.80,
+            474.84,
+            500.88,
+            526.92,
+            548.16,
+            567.84,
+        )
+    elif mays_profile == "2008":
+        offense_edges = (
+            63.84,
+            84.36,
+            124.56,
+            163.20,
+            205.80,
+            248.40,
+            291.00,
+            333.60,
+            376.20,
+            418.80,
+            461.40,
+            477.12,
+            503.16,
+            529.20,
+            550.44,
+            570.12,
+        )
     defense_edges = (
         66.36,
         112.92,
@@ -72,14 +112,18 @@ def page_bytes(role: str, missing: bool = False, variant: bool = False) -> bytes
         750.12,
         769.80,
     )
-    top, bottom = (112.8, 634.8) if role == "offense" else (112.56, 548.16)
+    wide_offense = role == "offense" and mays_profile in {"2005", "2006"}
+    if role == "offense":
+        top, bottom, pitch = (112.8, 721.2, 20.28) if wide_offense else (112.8, 634.8, 17.4)
+    else:
+        top, bottom, pitch = 112.56, 548.16, 14.52
     for edge in offense_edges if role == "offense" else defense_edges:
         pdf.rect(edge - 0.48, size[1] - bottom, 0.96, bottom - top, fill=1, stroke=0)
     pdf.setFont("Helvetica", 8)
     for index in range(30):
         if missing and index == 5:
             continue
-        y = 122.23 + index * 17.4 if role == "offense" else 120.46 + index * 14.52
+        y = 122.23 + index * pitch if role == "offense" else 120.46 + index * pitch
         x = 70 if role == "offense" else 754
         pdf.drawString(x, size[1] - y - 2, str(10 + index))
         if role != "offense":
@@ -104,6 +148,47 @@ def test_offense_and_supplemental_coordinate_mapping() -> None:
     assert first.column == "1" and first.roll == 10
     assert first.bounds.x0 == pytest.approx(86.76)
     assert first.bounds.x1 == pytest.approx(126.96)
+
+
+@pytest.mark.parametrize(
+    ("profile", "supplemental_edges"),
+    [
+        ("2007", (474.84, 500.88, 526.92, 548.16)),
+        ("2008", (477.12, 503.16, 529.20, 550.44)),
+    ],
+)
+def test_verified_mays_offense_profiles_preserve_all_cell_columns(
+    profile: str, supplemental_edges: tuple[float, ...]
+) -> None:
+    with pdfplumber.open(BytesIO(page_bytes("offense", mays_profile=profile))) as pdf:
+        cells = locate_cells(pdf.pages[0], "offense")
+
+    assert len(cells) == 360
+    supplemental = [cell for cell in cells if cell.section == "supplemental" and cell.roll == 10]
+    assert [(cell.column, cell.bounds.x0, cell.bounds.x1) for cell in supplemental] == [
+        ("QT", pytest.approx(supplemental_edges[0]), pytest.approx(supplemental_edges[1])),
+        ("QR", pytest.approx(supplemental_edges[1]), pytest.approx(supplemental_edges[2])),
+        ("B", pytest.approx(supplemental_edges[2]), pytest.approx(supplemental_edges[3])),
+    ]
+
+
+@pytest.mark.parametrize("profile", ["2005", "2006"])
+def test_verified_tall_mays_offense_profiles_preserve_all_rows(profile: str) -> None:
+    with pdfplumber.open(BytesIO(page_bytes("offense", mays_profile=profile))) as pdf:
+        cells = locate_cells(pdf.pages[0], "offense")
+
+    assert len(cells) == 360
+    first = next(cell for cell in cells if cell.section == "offense" and cell.column == "1")
+    last = next(
+        cell
+        for cell in cells
+        if cell.section == "supplemental" and cell.column == "B" and cell.roll == 39
+    )
+    assert first.bounds.top == pytest.approx(112.8)
+    assert first.bounds.bottom == pytest.approx(133.08)
+    assert first.roll == 10
+    assert last.bounds.top == pytest.approx(700.92)
+    assert last.bounds.bottom == pytest.approx(721.2)
 
 
 def test_defense_special_and_pat_coordinate_mapping() -> None:
