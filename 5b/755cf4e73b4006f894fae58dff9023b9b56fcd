@@ -1,0 +1,57 @@
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_de8c5f1e3399c3 598
+bowl_bound/regulation.py
+  s_ed54ab581b3d60::t_7a7b78671a4dcf 32,122-134,414,434,453,510,593-600
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_01189779a4b7d9 438-445,652-662,664
+docs/cli.md
+  s_ed54ab581b3d60::t_00da022b82751b 170-173
+docs/dev-notes/issues/RULE/RULE-018.md
+  s_ed54ab581b3d60::t_e2820ac4390c2c 1-31
+docs/dev-notes/milestone-15.md
+  s_ed54ab581b3d60::t_f06843a548cbc0 7-8,51-60,98-99
+docs/dev-notes/milestone-18.md
+  s_ed54ab581b3d60::t_f3d83ad5c2ebb1 10
+docs/dev-notes/project-plan.md
+  s_ed54ab581b3d60::t_12c7695607732b 209,513-538
+docs/rules-profile.md
+  s_ed54ab581b3d60::t_d3017dd253d2e7 28,259-261
+docs/web-demo.md
+  s_ed54ab581b3d60::t_d460d11727ff76 229-230,238-240,242
+frontend/e2e/milestone19.spec.js
+  s_ed54ab581b3d60::t_88cd6f87c02870 23,27-31,40-41,59
+frontend/e2e/milestone20.spec.js
+  s_ed54ab581b3d60::t_13e17623cdd836 67
+frontend/e2e/web.spec.js
+  s_ed54ab581b3d60::t_85e66b919e2cc7 201,205-209,214
+tests/test_cli_kick_election.py
+  s_ed54ab581b3d60::t_021053defdf5f2 65,68-77
+tests/test_engine_hardening.py
+  s_ed54ab581b3d60::t_ff78d71a164d11 340-343
+tests/test_optional_clock.py
+  s_ed54ab581b3d60::t_2b644edb9209b1 66-71
+tests/test_regulation.py
+  s_ed54ab581b3d60::t_782401b8282ded 146-152,154,157-165,285
+tests/test_sample_teams.py
+  s_ed54ab581b3d60::t_ca8007d4743cb1 97,101-104,107-108
+tests/test_save_game.py
+  s_ed54ab581b3d60::t_a6dcb76882f698 9,156-157,166-212,561,566-573,584-586,596,688
+tests/test_statistics.py
+  s_ed54ab581b3d60::t_328ba4d0690f50 235
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "5b755cf4e73b4006f894fae58dff9023b9b56fcd",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
