@@ -1,0 +1,105 @@
+bowl_bound/models.py
+  s_ed54ab581b3d60::t_987e993fe1f130 432-434
+bowl_bound/normalization.py
+  s_ed54ab581b3d60::t_8f3eb46173771f 111-134,288-295
+bowl_bound/resolution.py
+  s_ed54ab581b3d60::t_efb18dbbeeb1e8 81,85-97,113,195-196
+bowl_bound/roster.py
+  s_ed54ab581b3d60::t_55000b29b6f93a 12,44,47,66,72-83,89-95,130-131,137-139
+bowl_bound/team_csv.py
+  s_ed54ab581b3d60::t_8240d50b1dbf58 37,42,48-49,133,158-161,207,209,244,249-251,253,262,306,309,314-326,360-364,368-370,435,438,527-538,575-582,588-593,644
+docs/dev-notes/issue-tracker.md
+  s_ed54ab581b3d60::t_cc3679a1d790a8 8,10,20-22,73-80,383-396
+docs/dev-notes/issues/FLOW/FLOW-006.md
+  s_ed54ab581b3d60::t_581045bbd41a24 1-37
+docs/dev-notes/issues/IMPORT/IMPORT-010.md
+  s_ed54ab581b3d60::t_cd112a6036d67d 1-45
+docs/dev-notes/issues/IMPORT/IMPORT-011.md
+  s_ed54ab581b3d60::t_9b5f0cc40bc5a5 1-44
+docs/dev-notes/issues/IMPORT/IMPORT-012.md
+  s_ed54ab581b3d60::t_91d8ccf8665e9a 1-43
+docs/dev-notes/issues/IMPORT/IMPORT-013.md
+  s_ed54ab581b3d60::t_4a6593d9093fb4 1-42
+docs/dev-notes/issues/IMPORT/IMPORT-014.md
+  s_ed54ab581b3d60::t_4133b0ec71c4ba 1-37
+docs/dev-notes/issues/IMPORT/IMPORT-015.md
+  s_ed54ab581b3d60::t_7760f628d182fe 1-47
+docs/dev-notes/issues/IMPORT/IMPORT-016.md
+  s_ed54ab581b3d60::t_35d307b6c672bb 1-54
+docs/dev-notes/issues/IMPORT/IMPORT-017.md
+  s_ed54ab581b3d60::t_84f8ddb5cf6608 1-41
+docs/dev-notes/issues/IMPORT/IMPORT-018.md
+  s_ed54ab581b3d60::t_5e391b9ed0755e 1-37
+docs/dev-notes/issues/IMPORT/IMPORT-019.md
+  s_ed54ab581b3d60::t_239aa4c359d7fc 1-38
+docs/dev-notes/project-plan.md
+  s_ed54ab581b3d60::t_b7f30e528ce526 406-438
+docs/normalization.md
+  s_ed54ab581b3d60::t_c0c500cce4a0b4 8-12,47-52
+docs/pdf-import.md
+  s_ed54ab581b3d60::t_a7b3213925c4aa 37-42,81-89
+docs/priority-chart.md
+  s_ed54ab581b3d60::t_3835a24abe58ad 64-69
+docs/rosters.md
+  s_ed54ab581b3d60::t_a0af9156b22ccb 20-22,28-32,37-43,46-47,67-71,77-80
+docs/rules-profile.md
+  s_ed54ab581b3d60::t_f9728d24e1aceb 211-217
+docs/team-bundle.md
+  s_ed54ab581b3d60::t_d5ecc6d8b00545 97,133-134,138,141-144,160-162,170-172
+tests/synthetic_chart_pdf.py
+  s_ed54ab581b3d60::t_5e7d97dbfc5193 108,120-122,148,168,180-187,189-196,226,246-247,258
+tests/test_models.py
+  s_ed54ab581b3d60::t_f40d11845a52dc 333-342
+tests/test_normalization.py
+  s_ed54ab581b3d60::t_4f97a16ace17d5 14-19,26-40,164
+tests/test_pdf_batch.py
+  s_ed54ab581b3d60::t_10e590d5eaf1e3 13-15,19,21-22,121-169
+tests/test_pdf_cells.py
+  s_ed54ab581b3d60::t_74633d83278c43 12,62-76,115-152,181,363-367
+tests/test_pdf_export.py
+  s_ed54ab581b3d60::t_cbb561c06b7c8b 3,9-14,62-80
+tests/test_pdf_export_e2e.py
+  s_ed54ab581b3d60::t_04d1cdb203af70 49-178
+tests/test_pdf_inspection.py
+  s_ed54ab581b3d60::t_702cd88b7c864a 55-67,91-102
+tests/test_pdf_layout.py
+  s_ed54ab581b3d60::t_53603496b153e1 12-14,55-92,115-119,126,153-193
+tests/test_pdf_metadata.py
+  s_ed54ab581b3d60::t_4ed2ae8a59ce31 21,32,88-93,169-176,179,198,215,244
+tests/test_resolution.py
+  s_ed54ab581b3d60::t_602ce9f6492168 65-115
+tests/test_roster.py
+  s_ed54ab581b3d60::t_7caaed7e8a716d 52-87
+tests/test_team_csv.py
+  s_ed54ab581b3d60::t_9cb7b04986aed3 18,93-153,175-192,294
+tools/pdf_import/cells.py
+  s_ed54ab581b3d60::t_50dfdaeb3c5b4d 11,17,79,86,90-94,139-143,146-147,150-154,156-203,360,362-365
+tools/pdf_import/cli.py
+  s_ed54ab581b3d60::t_05beff78d5a602 27,31-32,318-324,330-333,335-336,347-353,366-370,453-457,462-463,468-474
+tools/pdf_import/colors.py
+  s_ed54ab581b3d60::t_442bcd13e43745 1,10-19,21,28-36
+tools/pdf_import/export.py
+  s_ed54ab581b3d60::t_013dddd94fc430 20-26,34,45-47,68-69,74,79-80,83,123-125,138-143,145-146,150,155-156,176
+tools/pdf_import/inspection.py
+  s_ed54ab581b3d60::t_2cf60cc80cb147 12-13,35,92-102,154-185,251-252,254,256-264,274
+tools/pdf_import/layout.py
+  s_ed54ab581b3d60::t_0443169ac6fa57 24-148,169-173,175,193-200,206,211-214,216-234,252-261,266
+tools/pdf_import/page_view.py
+  s_ed54ab581b3d60::t_9d4e594169e13b 1-111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "def1311132006903792ef5620e3e6d04d986e5be",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
