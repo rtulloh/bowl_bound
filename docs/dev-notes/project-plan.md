@@ -491,6 +491,25 @@ Tracked work: [CLI-048](issues/CLI/CLI-048.md). See the
 
 **Commit:** `milestone 28: preserve pre-timing save replay`
 
+### 29. Clarify blank chart cells in terminal traces
+
+Added 2026-10-31 after play-testing exposed a valid no-change chart cell printed
+as an empty `cell` value, which can look like missing trace data.
+
+**Deliver:** render an explicit blank marker for normalized `NO_CHANGE` cells in
+terminal chart traces. Keep the canonical empty CSV token, chart contents, and
+game resolution unchanged.
+
+**Validate:** add synthetic CLI coverage showing that no-change cells have a
+visible marker and ordinary chart values retain their current display. Do not use
+historical chart data in tests. Update documentation only if the trace notation
+needs explanation.
+
+Tracked work: [CLI-049](issues/CLI/CLI-049.md). See the
+[Milestone 29 work log](milestone-29.md).
+
+**Commit:** `milestone 29: clarify blank chart trace cells`
+
 ## Decision gates
 
 Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.
