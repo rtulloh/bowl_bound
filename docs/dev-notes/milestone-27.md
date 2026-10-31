@@ -51,6 +51,6 @@ Reviewed the local Paydirt checkout before planning and implementation:
   Playwright emitted one environment color-variable warning; no tests were skipped.
 - Focused engine/CLI/API checks passed (177); the milestone issue index test passed.
 
-The tested milestone commit and ticket resolution remain pending. Tickets will be
-resolved after commit with its hash; owner play-test confirmation is required
-before closing them.
+Milestone commit: `52c7d08` (`milestone 27: apply play timing automatically`).
+CLI-038 and RULE-017 are resolved against this tested commit. Owner play-test
+confirmation is still required before closing either ticket.

@@ -1,16 +1,16 @@
 ---
 id: RULE-017
 title: Advance periods without a separate runoff choice
-status: open
+status: resolved
 priority: Medium
 milestone: '27'
 created-at: 2026-10-30
-resolved-at: null
+resolved-at: 2026-10-30
 closed-at: null
 tags:
 - requested
 links: []
-commits: []
+commits: [52c7d08]
 ---
 
 ## Description
@@ -28,3 +28,9 @@ Owner requested removal of the separate normal clock:runoff choice. Standard tim
 
 --- 2026-10-30 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-10-30 ---
+Resolved in tested commit `52c7d08`: no player-facing runoff/Continue action;
+Q1/Q3 advance into the next selected play, and halftime/final transitions add no
+play, dice, log entry, or statistics credit. Full Python, frontend, build, audit,
+and real-engine browser gates pass. Awaiting owner play-test confirmation before closure.
