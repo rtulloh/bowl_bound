@@ -409,10 +409,11 @@ actual penalty enforcement and keeps penalty/defensive-return yards out of offen
 - Field goals are not offered from own 7 or closer (the hold would be outside
   the field); an invalid direct request is refused before rolling. A fourth-down
   clock choice does not offer a spike, but hurry-up remains independently eligible.
-- A requested next snap/kick/kneel that only completes period-ending runoff returns
-  `period_boundary`, with no new dice, trace, play/statistical credit or log entry.
-  The report retains the prior play number; its description explicitly says no
-  new play ran. The updated view supplies halftime/final/next-period choices.
+- A requested next snap/kick/kneel first commits the prior play's standard timing.
+  If that crosses Q1/Q3, the engine advances and then runs the selected play in the
+  next quarter. If it ends a half/game, the request returns `period_boundary`
+  without new dice, trace, play/statistical credit or log entry; the updated view
+  supplies halftime/final/overtime choices.
 - Save profile is `bowl-bound-m18a-v1`; old-profile replay is rejected, not silently
   migrated under corrected rules. The running old backend is not altered.
 

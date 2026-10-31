@@ -70,7 +70,9 @@ def test_halftime_kick_election_also_proceeds_without_duplicate_confirmation(
     app = regulation(Clock(2, 10), seed=seed)
     live(app)
     assert app.command("1")
-    assert app.command("choose clock:runoff")
+    view, turn = app.public_view()
+    next_call = "1" if turn.human_role == "offense" else "A"
+    assert app.command(next_call)
     assert app.game.view().phase == "halftime_choice"
     owner = app.game.view().pending.chooser_side
     app.human_side = owner

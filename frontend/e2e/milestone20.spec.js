@@ -64,8 +64,8 @@ for (const human of ['home', 'away']) {
         let button
         if (turn.human_role === 'decision') {
           const enabled = turn.pending.choices.filter((c) => c.enabled)
-          const choice = ['clock:runoff', 'toss:receive', 'half:receive', 'ot:offense', 'conversion:kick', 'kick:touchback'].map((id) => enabled.find((c) => c.id === id)).find(Boolean) || enabled[0]
-          button = view.phase === 'clock_choice' ? page.getByTestId('clock-continue') : page.getByTestId('penalty-choice-' + choice.id)
+          const choice = ['toss:receive', 'half:receive', 'ot:offense', 'conversion:kick', 'kick:touchback'].map((id) => enabled.find((c) => c.id === id)).find(Boolean) || enabled[0]
+          button = page.getByTestId('penalty-choice-' + choice.id)
         } else if (!turn.actions.offense.length && turn.human_role === 'offense') {
           button = page.getByTestId('special-play-' + turn.actions.special[0].key)
         } else {

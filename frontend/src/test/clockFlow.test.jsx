@@ -13,11 +13,11 @@ beforeEach(() => {
   api.listTeams.mockResolvedValue({ teams: [{ id: 'a', name: 'Alpha', season: 2002 }, { id: 'b', name: 'Beta', season: 2002 }] })
 })
 
-it('allows the next snap with None selected and no separate clock request', async () => {
+it('allows the next snap without a separate clock request', async () => {
   api.newGame.mockResolvedValue({ game_id: 'synthetic', seed: 1, view: view({
     phase: 'clock_choice', clock_optional: true, log: [report()],
-    pending: { choices: [{ id: 'clock:runoff', label: 'Run 30 seconds', enabled: true }] },
-    clock_modifiers: [{ id: 'clock:runoff', label: 'None', enabled: true }],
+    pending: { choices: [{ id: 'clock:timeout:home', label: 'Home timeout', enabled: true }] },
+    clock_modifiers: [{ id: 'clock:timeout:home', label: 'Home timeout', enabled: true }],
   }) })
   api.snap.mockResolvedValue({ report: report(), view: view({ pending: null }) })
   render(<App />)
@@ -25,7 +25,8 @@ it('allows the next snap with None selected and no separate clock request', asyn
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
   fireEvent.click(screen.getByTestId('start-game'))
   expect(await screen.findByTestId('clock-controls')).toBeInTheDocument()
-  expect(screen.getByRole('radio', { name: 'None' })).toBeChecked()
+  expect(screen.getByRole('radio', { name: 'Home timeout' })).not.toBeChecked()
+  expect(screen.queryByRole('radio', { name: /runoff|none/i })).toBeNull()
   expect(screen.queryByTestId('clock-continue')).toBeNull()
   expect(screen.queryByTestId('penalty-choices')).toBeNull()
   fireEvent.click(screen.getByTestId('offense-play-1'))

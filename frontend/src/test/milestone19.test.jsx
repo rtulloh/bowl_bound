@@ -45,7 +45,7 @@ it('clears both selections after possession changes and names the selecting team
 
 it('keeps hurry mode enabled, using only offered legal hurry choices', async () => {
   const clock = view({ phase: 'clock_choice', clock_optional: true, pending: { choices: [
-    { id: 'clock:runoff', label: 'None', enabled: true }, { id: 'clock:hurry', label: 'Hurry', enabled: true },
+    { id: 'clock:hurry', label: 'Hurry', enabled: true },
   ] }, clock_modifiers: [{ id: 'clock:hurry', label: 'Hurry-up', enabled: true }] })
   api.newGame.mockResolvedValue({ game_id: 'game', seed: 1, view: clock })
   api.decide.mockResolvedValue({ report: null, view: view() })

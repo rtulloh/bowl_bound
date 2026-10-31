@@ -1,5 +1,13 @@
 # Bowl Bound release notes
 
+## 0.1.0-alpha.3 — Planned
+
+- Applies standard clock timing automatically; Q1/Q3 transitions continue with
+  the selected play, while halftime and game-end transitions run no extra play.
+- Adds terminal `7T`/`AT` input to request an engine-offered timeout after a play.
+- Uses kneeldown as the play for intentionally running down the clock; no separate
+  runoff or Continue control is needed.
+
 ## 0.1.0-alpha.2 — Second alpha
 
 A follow-up prerelease of the Bowl Bound college-football strategy game for

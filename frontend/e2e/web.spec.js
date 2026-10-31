@@ -50,13 +50,13 @@ async function snapPlay(page, offense = '1', defense = 'a') {
   await response
 }
 
-async function continueClock(page, choice = 'clock:runoff') {
-  if (choice === 'clock:runoff') {
-    // Explicit compatibility decisions are exercised elsewhere; ordinary UI play needs no click.
-    await expect(page.getByRole('radio', { name: 'None', exact: true })).toBeChecked()
-  } else {
-    await page.locator(`input[type="radio"][value="${choice}"]`).click()
-  }
+async function expectImplicitTiming(page) {
+  await expect(page.getByRole('radio', { name: 'None', exact: true })).toHaveCount(0)
+  await expect(page.getByTestId('clock-continue')).toHaveCount(0)
+}
+
+async function chooseClockModifier(page, choice) {
+  await page.locator(`input[type="radio"][value="${choice}"]`).click()
 }
 
 test('ordinary next snaps need no clock confirmation and timeout does not persist', async ({ page }) => {
@@ -89,11 +89,11 @@ test('ordinary next snaps need no clock confirmation and timeout does not persis
   await expect(page.getByTestId('offense-play-1')).toHaveAttribute('aria-pressed', 'false')
   await expect(page.getByTestId('defense-play-a')).toHaveAttribute('aria-pressed', 'false')
   await expect(page.getByTestId('clock-continue')).toHaveCount(0)
-  await continueClock(page, 'clock:timeout:away')
+  await chooseClockModifier(page, 'clock:timeout:away')
   await expect(page.getByTestId('game-clock')).toHaveText('14:40')
   await expect(page.getByTestId('away-timeouts')).toContainText('2')
   await snapPlay(page)
-  await expect(page.getByRole('radio', { name: 'None', exact: true })).toBeChecked()
+  await expectImplicitTiming(page)
   await snapPlay(page)
   await expect(page.getByTestId('game-clock')).toHaveText('14:20')
   await expect(page.getByTestId('away-timeouts')).toContainText('2')
@@ -149,7 +149,7 @@ for (const conversion of ['kick', 'two']) {
     for (let number = 1; number <= 11; number++) {
       await snapPlay(page)
       await expect(page.getByTestId('log-entry')).toHaveCount(number + 1)
-      if (number < 11) await continueClock(page)
+      if (number < 11) await expectImplicitTiming(page)
     }
     await expect(page.getByTestId('home-score')).toHaveText('6')
     await expect(page.getByTestId('result-panel').getByText('Touchdown', { exact: true })).toBeVisible()
@@ -177,11 +177,11 @@ for (const conversion of ['kick', 'two']) {
 test('hurry and spike are exclusive engine choices, with automatic kneel available', async ({ page }) => {
   await start(page)
   await snapPlay(page)
-  await continueClock(page, 'clock:hurry')
+  await chooseClockModifier(page, 'clock:hurry')
   await expect(page.getByTestId('game-clock')).toHaveText('14:30')
   await expect(page.getByTestId('clock-controls')).toHaveCount(0)
   await snapPlay(page)
-  await continueClock(page, 'clock:spike')
+  await chooseClockModifier(page, 'clock:spike')
   await expect(page.getByTestId('game-clock')).toHaveText('14:20')
   await expect(page.getByTestId('situation')).toHaveText('2nd and 10')
   await page.getByTestId('game-play-kneel').click()
@@ -224,10 +224,8 @@ test('a complete regulation game shows quarter and half transitions and cannot r
         expect(view.pending.chooser).toBe('Alpha Tech')
         expect(view.clock.remaining).toBe(0)
       }
-      const choice = view.pending.choices.find((c) => c.id === 'clock:runoff') || view.pending.choices.find((c) => c.enabled)
-      button = view.phase === 'clock_choice'
-        ? page.getByTestId('clock-continue')
-        : page.getByTestId('penalty-choice-' + choice.id)
+      const choice = view.pending.choices.find((c) => c.enabled)
+      button = page.getByTestId('penalty-choice-' + choice.id)
     } else if (view.phase === 'kickoff') {
       button = page.getByTestId('special-play-kickoff')
     } else if (view.overtime?.series_number === 2 && view.phase === 'scrimmage') {
@@ -253,7 +251,7 @@ for (const fontFamily of [null, 'Verdana, sans-serif']) {
     const controls = page.getByRole('region', { name: 'Play modifiers' })
     await expect(page.getByTestId('clock-controls')).toBeVisible()
     await expect(controls).toBeVisible()
-    await expect(page.getByRole('radio', { name: 'None', exact: true })).toBeChecked()
+    await expectImplicitTiming(page)
     await expect(page.getByTestId('offense-play-1')).toBeEnabled()
     await expect(page.getByTestId('defense-play-a')).toBeEnabled()
     await expect(page.getByTestId('clock-continue')).toHaveCount(0)
@@ -307,8 +305,8 @@ test('tied regulation continues into untimed overtime and finishes without a kic
       await expect(page.getByTestId('clock-controls')).toHaveCount(0)
       button = page.getByTestId('game-play-timeout:home')
     } else if (view.pending && !view.clock_optional) {
-      const choice = view.pending.choices.find((c) => c.id === 'clock:runoff') || view.pending.choices.find((c) => c.enabled)
-      button = view.phase === 'clock_choice' ? page.getByTestId('clock-continue') : page.getByTestId('penalty-choice-' + choice.id)
+      const choice = view.pending.choices.find((c) => c.enabled)
+      button = page.getByTestId('penalty-choice-' + choice.id)
     } else if (view.phase === 'kickoff') {
       button = page.getByTestId('special-play-kickoff')
     } else {

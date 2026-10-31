@@ -100,17 +100,19 @@ Without `--compact`, the expanded menu is shown at each turn.
 | `R` | Receive or return, as labeled in the current decision |
 | `TB`, `FC` | Touchback or fair catch when offered |
 | `N`, `S` | Apply an offered hurry or spike clock choice |
-| `T` | Your offered timeout, on offense or defense, in human/computer mode |
+| `T` | Your offered timeout, on offense or defense; append to a call as `7T` or `AT` |
 | `W` | Save immediately to a new private file; `W PATH` selects an explicit new filename |
 | `Z` | Toggle Easy-only coaching at play selection (on by default) |
 
 During required decisions, numbers select the displayed choices, not scrimmage
-plays. During optional clock management, `1`–`9` remain offensive calls. Disabled
+plays. During optional clock modifiers, `1`–`9` remain offensive calls. Disabled
 choices have no shortcut. Enter submits a **displayed default** in human/computer
 mode (see below); otherwise it does nothing.
-No Paydirt rules, heads/tails call, onside kick, QB sneak, or unsupported clock
-suffixes are added. In particular, an `O` shown for an overtime offense-first
-choice is not an onside-kick command. Follow the current menu, not another phase.
+Append `T` to an offensive or defensive call (for example, `7T` or `AT`) to use
+your timeout after that play when the engine offers it. The call still applies if
+the timeout is unavailable; the terminal reports that no timeout was used. An `O`
+shown for an overtime offense-first choice is not an onside-kick command. Follow
+the current menu, not another phase.
 
 Enter one offensive number or defensive letter from your current menu. Paired
 calls such as `1 A` and `snap 1 A` are rejected without advancing the game.
@@ -126,7 +128,7 @@ Q1 14:50 | Harbor Tech 0 (3) - Cedar Valley 0 (3) | 1st and 10 @ own 32 | Harbor
 
 Blank lines separate play results and the next summary. The `►` line emphasizes
 the engine's own commentary; committed offense/defense labels appear only after
-resolution. Unchanged reports returned again by clock management are not repeated;
+resolution. Unchanged reports returned again by clock modifiers are not repeated;
 updated reports still appear, and explicit `log`/`trace` remains available.
 
 Turnover commentary comes from the engine's structured recovery traces and
@@ -193,12 +195,13 @@ between phases; disabled choices include the engine's reason.
   Ctrl-C exits with status 130. Neither chooses a pending football decision.
 
 Computer-only turns advance at startup and after successful gameplay or loading.
-They stop at human decisions. Ordinary optional runoff waits for the next snap,
-without an extra confirmation, leaving either side its legal timeout window.
+They stop at human decisions. Standard timing is applied with the next action;
+there is no separate runoff or Continue action. At a Q1/Q3 boundary, that next
+play runs in the new quarter. At halftime or game end, the engine transitions
+without running another play.
 Use `T` for your team whether attacking or defending; the computer can call its
 own legal timeout too. `TO`, `TD`, `TH` and `TA` are not commands.
 Hurry/spike belong to the offense only.
-When runoff would end a period, explicitly choose continue or an offered timeout.
 The opposing scrimmage call remains concealed until resolution. Inspection and invalid
 commands never restart a stopped computer turn; inspect/save, then use `retry`.
 
@@ -260,10 +263,9 @@ terminal captures or historical team data. Use only fictional samples in shared 
 
 Report problems with synthetic examples via the [issue workflow](dev-notes/issues/README.md).
 
-Routine play-selection instructions are omitted from the terminal display: the
-OFF/DEF summary or expanded play menu and visible default identify the next input.
-Required decisions, clock-management instructions, errors and final status remain
-visible. This is a presentation-only change; engine/web statuses are unchanged.
+Routine instructions stay out of the terminal play display. Use `?` or `help` to
+review legal controls and timeout suffix guidance; required choices and game status
+remain visible.
 
 Live reports and play logs display engine-generated
 [optional player labels](terminal-play.md) from local rosters. See

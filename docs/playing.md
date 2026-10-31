@@ -45,13 +45,12 @@ selected. A touchdown awards six, then a one-point kick or two-point try is
 offered as appropriate. Kicks/returns and extra decisions resolve only when
 the engine offers them; do not infer a result from an animation or die face.
 
-The clock advances through engine decisions, not real elapsed time. Ordinary
-runoff normally commits with your next call. Timeouts and spikes are one-shot
+The clock advances through engine decisions, not real elapsed time. Standard
+play timing applies automatically with your next call; there is no separate
+runoff action. Kneel to run down the clock. Timeouts and spikes are one-shot
 choices; Hurry-up mode stays selected until turned off but applies only where
 legal. New/loaded games reset Hurry-up mode. IB/OOB declaration controls are
-not implemented and remain disabled. The modifier controls wrap onto compact
-rows on smaller screens and with wider system fonts; their labels and actions
-remain the same.
+not implemented and remain disabled. Modifier controls wrap on smaller screens.
 
 Expand Team statistics, the scoring summary, Play log and Dice and chart audit
 to inspect recorded events. CLI and web share natural engine-generated
@@ -86,7 +85,11 @@ and `trace` shows recorded dice/chart evidence without advancing play.
 `W` saves to a new local file and prints its path/resume command. `W PATH` uses
 a new filename you choose; existing files are not overwritten. Resume using
 `--load PATH` without new-game difficulty/seed/team overrides. `T` uses your
-team’s offered timeout. On Easy only, `Z` toggles the default-on coaching helper;
+team’s offered timeout. Append it to an offensive or defensive call, such as `7T`
+or `AT`, to request the timeout after that play. The play is submitted first; the
+timeout is used only if the engine offers it afterward. If not, the play still
+applies and the terminal says no timeout was used. On Easy only, `Z` toggles the
+default-on coaching helper;
 there is no browser helper panel. `quit` exits without automatically saving.
 
 ## Alpha limitations

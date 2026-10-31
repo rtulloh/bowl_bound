@@ -42,7 +42,8 @@ def test_regulation_creation_toss_kick_and_clock_action(tmp_path: Path) -> None:
     assert result.json()["report"]["yards"] == -2
     clock_view = result.json()["view"]
     assert clock_view["clock_optional"]
-    assert clock_view["clock_modifiers"][0]["label"] == "None"
+    assert all(choice["id"] != "clock:runoff" for choice in clock_view["pending"]["choices"])
+    assert all(choice["id"] != "clock:runoff" for choice in clock_view["clock_modifiers"])
     timed = client.post(path + "/decision", json={"choice": "clock:timeout:home"})
     assert timed.status_code == 200
     assert timed.json()["view"]["clock"]["remaining"] == 890
@@ -55,7 +56,7 @@ def test_regulation_creation_toss_kick_and_clock_action(tmp_path: Path) -> None:
     assert continued.status_code == 200
     view = continued.json()["view"]
     assert view["timing_log"][2]["seconds"] == 30
-    assert view["timing_log"][2]["method"] == "clock:runoff"
+    assert view["timing_log"][2]["method"] == "standard"
     assert view["clock"]["timeouts"] == [2, 3]
 
 

@@ -90,46 +90,43 @@ def plan_turn(view: GameView, human_side: str, coach: BaselineCoach) -> _Plan:
     if pending is not None:
         if pending.chooser_side not in {"home", "away"}:
             raise ValueError("engine decision is missing explicit side ownership")
-        if pending.chooser_side == human_side and any(
-            c.id == "clock:runoff" for c in pending.choices
-        ):
+        if view.phase == "clock_choice":
             observation = observe_game(view, cpu)
-            choice = _selection(coach, coach.decision(observation), observation.choices)
-            # Either team may use its own engine-offered timeout. A computer
-            # defender must never apply offensive hurry/spike choices here.
-            if choice.key == f"clock:timeout:{cpu}":
-                return _Plan(
-                    CoachingTurn(human_side, "computer", True, "Computer calls timeout."),
-                    "decide",
-                    (choice.key,),
-                    computer_choice=choice,
-                )
-        if pending.chooser_side == cpu:
-            observation = observe_game(view, cpu)
-            choice = _selection(coach, coach.decision(observation), observation.choices)
-            if choice.key != "clock:runoff":
+            legal = observation.choices + ("clock:standard",)
+            if pending.chooser_side == human_side:
+                # A computer defender can use only its own timeout, not offensive
+                # hurry-up or spike. Normal timing is the implicit default.
+                legal = tuple(key for key in observation.choices if key == f"clock:timeout:{cpu}")
+                legal += ("clock:standard",)
+            choice = _selection(coach, coach.decision(replace(observation, choices=legal)), legal)
+            if choice.key != "clock:standard":
                 return _Plan(
                     CoachingTurn(human_side, "computer", True, "Computer is deciding."),
                     "decide",
                     (choice.key,),
                     computer_choice=choice,
                 )
-        allowed = observe_game(view, human_side).choices
-        if pending.chooser_side == cpu:
-            # Normal runoff is a shared timeout window, not a hidden offensive
-            # decision. Leave optional runoff to the next actual snap; when it
-            # would end a period, offer continue as well as the defender timeout.
-            allowed = tuple(
-                key
-                for key in allowed
-                if key == f"clock:timeout:{human_side}"
-                or (key == "clock:runoff" and not getattr(view, "clock_optional", False))
+            allowed = observe_game(view, human_side).choices
+            if pending.chooser_side != human_side:
+                allowed = tuple(key for key in allowed if key == f"clock:timeout:{human_side}")
+            pending = replace(
+                pending,
+                chooser_side=human_side,
+                choices=tuple(c for c in pending.choices if c.id in allowed),
             )
-        pending = replace(
-            pending,
-            chooser_side=human_side,
-            choices=tuple(c for c in pending.choices if c.id in allowed),
-        )
+            if not pending.choices:
+                pending = None
+        else:
+            if pending.chooser_side == cpu:
+                observation = observe_game(view, cpu)
+                choice = _selection(coach, coach.decision(observation), observation.choices)
+                return _Plan(
+                    CoachingTurn(human_side, "computer", True, "Computer is deciding."),
+                    "decide",
+                    (choice.key,),
+                    computer_choice=choice,
+                )
+            return _Plan(CoachingTurn(human_side, "decision", False, view.status, pending=pending))
         if not getattr(view, "clock_optional", False):
             return _Plan(CoachingTurn(human_side, "decision", False, view.status, pending=pending))
     if view.state is None:

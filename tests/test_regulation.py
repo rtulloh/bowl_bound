@@ -219,7 +219,7 @@ def test_complete_regulation_reconciles_ledger_clock_and_immutable_end() -> None
         view = game.view()
         if view.finished:
             break
-        if view.pending:
+        if view.pending and not view.clock_optional:
             ids = {c.id for c in view.pending.choices}
             choice = next(
                 (

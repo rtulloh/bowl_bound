@@ -3,8 +3,73 @@
 import pytest
 
 from bowl_bound.save_game import dumps_game, loads_game
+from bowl_bound.timing import Clock
 from tests.test_cli import saved_facts
 from tests.test_cli_shortcuts import live, regulation
+
+
+@pytest.mark.parametrize("call,role", [("7", "offense"), ("A", "defense")])
+def test_call_timeout_suffix_matches_separate_engine_offered_timeout(call: str, role: str) -> None:
+    app = regulation(Clock(1, 30))
+    reference = regulation(Clock(1, 30))
+    live(app)
+    live(reference)
+    if role == "defense":
+        possession = app.game.view().state.possession
+        app.human_side = "away" if possession == "home" else "home"
+        reference.human_side = app.human_side
+
+    side_index = 0 if app.human_side == "home" else 1
+    remaining = app.game.view().clock.timeouts[side_index]
+    app.display()
+    assert "Add T to a play" not in app.output.getvalue()
+
+    assert app.command(f"{call}T")
+    assert reference.command(call)
+    reference.advance_computer()
+    assert "T" in reference._shortcuts(*reference.public_view())
+    assert reference.command("T")
+
+    assert saved_facts(app.game) == saved_facts(reference.game)
+    assert app.game.view().clock.timeouts[side_index] == remaining - 1
+
+
+def test_call_timeout_suffix_does_not_invent_an_unavailable_timeout() -> None:
+    app = regulation(Clock(1, 30, (0, 0)))
+    live(app)
+    before = len(app.game.view().log)
+    app.display()
+    assert "Append T to your call" not in app.output.getvalue()
+
+    assert app.command("7T")
+
+    assert len(app.game.view().log) == before + 1
+    assert app.game.view().clock.timeouts == (0, 0)
+    assert "Play applied; your timeout was not offered" in app.output.getvalue()
+
+
+@pytest.mark.parametrize("suffix", ["0T", "7TT", "GT", "7Z"])
+def test_invalid_timeout_suffix_does_not_change_game(suffix: str) -> None:
+    app = regulation()
+    live(app)
+    before = saved_facts(app.game)
+
+    assert not app.command(suffix)
+
+    assert saved_facts(app.game) == before
+    assert "Not applied:" in app.output.getvalue()
+
+
+def test_timeout_suffix_is_documented_in_both_help_views() -> None:
+    app = regulation()
+    live(app)
+
+    app.display()
+    assert "Add T to a play" not in app.output.getvalue()
+    assert not app.command("?")
+    assert "Add T to a play or formation key" in app.output.getvalue()
+    assert not app.command("commands")
+    assert "7T or AT" in app.output.getvalue()
 
 
 @pytest.mark.parametrize("role", ["offense", "defense"])
@@ -47,7 +112,7 @@ def test_no_two_sided_timeout_shortcuts_are_advertised() -> None:
     assert saved_facts(app.game) == before
 
 
-def test_defender_can_stop_runoff_that_would_end_the_period() -> None:
+def test_defender_can_still_call_timeout_when_normal_timing_would_end_the_period() -> None:
     from bowl_bound.timing import Clock
 
     app = regulation(Clock(1, 20))
@@ -56,11 +121,8 @@ def test_defender_can_stop_runoff_that_would_end_the_period() -> None:
     possession = app.game.view().state.possession
     app.human_side = "away" if possession == "home" else "home"
     view, turn = app.public_view()
-    assert not view.clock_optional and turn.human_role == "decision" and not turn.automatic
-    assert {c.id for c in turn.pending.choices} == {
-        "clock:runoff",
-        f"clock:timeout:{app.human_side}",
-    }
+    assert view.clock_optional and turn.human_role == "defense" and not turn.automatic
+    assert {c.id for c in turn.pending.choices} == {f"clock:timeout:{app.human_side}"}
     reference = loads_game(dumps_game(app.game), app.load_team)
     reference.coach_execute(app.human_side, "decide", f"clock:timeout:{app.human_side}")
     assert app.command("T")

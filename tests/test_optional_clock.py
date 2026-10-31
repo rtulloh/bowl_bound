@@ -2,7 +2,7 @@
 
 import pytest
 
-from bowl_bound.dice import OffensiveRoll, ScriptedDice
+from bowl_bound.dice import DefensiveRoll, OffensiveRoll, ScriptedDice
 from bowl_bound.session import InvalidDecisionError
 from bowl_bound.timing import Clock
 from tests.test_regulation import kickoff, new_game, snap
@@ -14,7 +14,7 @@ def test_next_snap_commits_normal_runoff_once_without_a_separate_choice() -> Non
     snap(game)
     view = game.view()
     assert view.clock_optional and view.actions.offense and view.actions.defense
-    assert [c.label for c in view.clock_modifiers][0] == "None"
+    assert all(c.id != "clock:runoff" for c in view.clock_modifiers)
     snap(game)
     assert game.view().clock.remaining == 870
     assert len(game.view().log) == 3
@@ -35,17 +35,36 @@ def test_other_next_plays_also_commit_prior_runoff(action: str) -> None:
     assert game.view().timing_log[1].seconds == 30
 
 
-@pytest.mark.parametrize("quarter", [1, 2, 3, 4])
-def test_expiring_runoff_never_executes_a_requested_next_snap(quarter: int) -> None:
+@pytest.mark.parametrize(("quarter", "next_quarter"), [(1, 2), (3, 4)])
+def test_q1_q3_boundary_runs_the_requested_play_in_the_next_quarter(
+    quarter: int, next_quarter: int
+) -> None:
     game = new_game(clock=Clock(quarter, 20))
     kickoff(game)
-    report = snap(game)
-    assert not game.view().clock_optional and not game.view().actions.offense
+    prior = snap(game)
+    result = game.snap("1", "A", dice=ScriptedDice([OffensiveRoll(1, 0, 0), DefensiveRoll(1, 0)]))
+    assert result.number == prior.number + 1
+    assert result.outcome != "period_boundary"
+    assert len(game.view().log) == 3
+    assert game.view().log[-1] == result
+    assert game.view().clock.quarter == next_quarter
+    assert game.view().clock.remaining == 900
+    assert game.view().timing_log[-1].play_number == prior.number
+
+
+@pytest.mark.parametrize("quarter", [2, 4])
+def test_half_or_game_boundary_does_not_roll_or_log_another_play(quarter: int) -> None:
+    game = new_game(clock=Clock(quarter, 20))
+    kickoff(game)
+    prior = snap(game)
     result = game.snap("1", "A", dice=ScriptedDice([]))
-    assert result.outcome == "period_boundary" and result.number == report.number
+    assert result.outcome == "period_boundary" and result.number == prior.number
+    assert result.called_play == "Period end"
+    assert "prior play's normal timing" in result.description
     assert result.trace == () and len(game.view().log) == 2
-    assert game.view().log[-1] == report
-    assert game.view().clock.remaining == (900 if quarter in {1, 3} else 0)
+    assert game.view().log[-1] == prior
+    assert game.view().clock.remaining == 0
+    assert game.view().phase in {"halftime_choice", "overtime_choice"}
 
 
 def test_bad_next_play_does_not_commit_pending_time() -> None:
@@ -84,8 +103,8 @@ def test_implicit_and_explicit_runoff_produce_identical_engine_results() -> None
     assert implicit.view() == explicit.view()
 
 
-@pytest.mark.parametrize("quarter", [1, 2, 3, 4])
-def test_expiring_runoff_before_a_kick_uses_no_new_dice(quarter: int) -> None:
+@pytest.mark.parametrize("quarter", [2, 4])
+def test_expiring_timing_before_a_kick_ends_half_or_game_without_dice(quarter: int) -> None:
     game = new_game(clock=Clock(quarter, 20))
     kickoff(game)
     report = snap(game)
@@ -93,6 +112,40 @@ def test_expiring_runoff_before_a_kick_uses_no_new_dice(quarter: int) -> None:
     assert result.outcome == "period_boundary" and result.number == report.number
     assert result.trace == () and game.view().log[-1] == report
     assert len(game.view().log) == 2
+
+
+def test_q1_timing_advances_before_the_next_play_instead_of_blocking_it() -> None:
+    game = new_game()
+    kickoff(game)
+    game._clock = Clock(1, 20)
+    snap(game)
+
+    view = game.view()
+    assert view.clock_optional
+    assert all(choice.id != "clock:runoff" for choice in view.pending.choices)
+    assert "punt" in {action.key for action in view.actions.special}
+
+    report = game.kick("punt", dice=ScriptedDice([OffensiveRoll(1, 0, 0)]))
+
+    assert report.called_play == "Punt"
+    assert game.view().clock.quarter == 2
+    assert game.view().clock.remaining <= 900
+    assert report.outcome == "special_teams_pending"
+
+
+@pytest.mark.parametrize("quarter", [2, 4])
+def test_period_end_advances_without_offering_a_runoff_choice(quarter: int) -> None:
+    game = new_game(clock=Clock(quarter, 20))
+    kickoff(game)
+    game._clock = Clock(quarter, 20)
+    snap(game)
+
+    view = game.view()
+    assert view.clock_optional
+    assert all(choice.id != "clock:runoff" for choice in view.pending.choices)
+    result = game.kick("punt", dice=ScriptedDice([]))
+    assert result.outcome == "period_boundary"
+    assert result.called_play == "Period end"
 
 
 def test_optional_modifiers_only_include_available_timeouts() -> None:

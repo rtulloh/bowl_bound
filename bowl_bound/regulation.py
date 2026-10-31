@@ -114,7 +114,7 @@ class RegulationGame:
         self._phase = RegulationPhase.OPENING
         self._hurried = False
         self._untimed = False
-        self._runoff = 0
+        self._pending_timing_seconds = 0
         self._last_report: PlayReport | None = None
         self._kick_after: tuple[Possession, bool] | None = None
         self._timing_log: tuple[TimeCharge, ...] = ()
@@ -155,9 +155,7 @@ class RegulationGame:
                 chooser_side=chooser.value,
             )
         if self._phase is RegulationPhase.CLOCK:
-            choices = [
-                PenaltyChoice("clock:runoff", f"Run {self._runoff} seconds off the clock", True)
-            ]
+            choices = []
             for team, available in zip(Possession, self._clock.timeouts, strict=True):
                 if available:
                     choices.append(
@@ -168,7 +166,7 @@ class RegulationGame:
                         )
                     )
             if self._can_adjust_offense():
-                if self._runoff == 30 and self._clock.remaining > 20:
+                if self._pending_timing_seconds == 30 and self._clock.remaining > 20:
                     choices.append(
                         PenaltyChoice("clock:hurry", "Hurry next snap; play takes 20 seconds", True)
                     )
@@ -178,6 +176,8 @@ class RegulationGame:
                             "clock:spike", "Spike next; combined plays save 10 seconds", True
                         )
                     )
+            if not choices:
+                return None
             return PendingDecisionView(
                 "Clock management",
                 tuple(choices),
@@ -216,10 +216,15 @@ class RegulationGame:
                     for c in pending.choices
                 ),
             )
-        clock_optional = (
-            self._phase is RegulationPhase.CLOCK and self._clock.remaining > self._runoff
+        clock_optional = self._phase is RegulationPhase.CLOCK
+        normal_timing_ends_period = (
+            clock_optional and self._clock.remaining <= self._pending_timing_seconds
         )
-        effective_clock = self._clock.elapse(self._runoff) if clock_optional else self._clock
+        effective_clock = (
+            self._clock.elapse(self._pending_timing_seconds)
+            if clock_optional and not normal_timing_ends_period
+            else self._clock
+        )
         finished = self._phase is RegulationPhase.FINAL
         phase = (
             base.phase
@@ -254,12 +259,17 @@ class RegulationGame:
         elif self._phase is RegulationPhase.KICKOFF:
             status = "Kickoff required before scrimmage play."
         elif self._phase is RegulationPhase.CLOCK:
-            status = (
-                "Choose the next play; normal timing applies automatically. "
-                "Optional clock modifiers are available."
-                if clock_optional
-                else "Normal runoff ends this period. Continue, or use an available clock modifier."
-            )
+            if normal_timing_ends_period and self._clock.quarter in {1, 3}:
+                status = (
+                    "Normal timing ends this quarter; the next play starts in the next quarter."
+                )
+            elif normal_timing_ends_period:
+                status = "Normal timing ends this period before another play can run."
+            else:
+                status = (
+                    "Choose the next play; normal timing applies automatically. "
+                    "Optional clock modifiers are available."
+                )
         elif self._phase is RegulationPhase.HALFTIME:
             status = f"Halftime: {self._names[self._toss_winner.other]} chooses kick or receive."
         elif self._phase is RegulationPhase.FINAL:
@@ -292,12 +302,12 @@ class RegulationGame:
             status = "Untimed down: the quarter cannot end on an accepted defensive penalty."
         if self._hurried:
             status += " Hurry-up is committed for the next snap."
-        labels = {"clock:runoff": "None", "clock:hurry": "Hurry-up", "clock:spike": "Spike"}
+        labels = {"clock:hurry": "Hurry-up", "clock:spike": "Spike"}
         for team, available in zip(Possession, self._clock.timeouts, strict=True):
             labels[f"clock:timeout:{team.value}"] = f"{self._names[team]} timeout ({available})"
         modifiers = (
             tuple(PenaltyChoice(c.id, labels[c.id], c.enabled, c.reason) for c in pending.choices)
-            if self._phase is RegulationPhase.CLOCK
+            if self._phase is RegulationPhase.CLOCK and pending
             else ()
         )
         values = {field.name: getattr(base, field.name) for field in fields(SessionView)}
@@ -352,24 +362,34 @@ class RegulationGame:
         if self._own_pending() is not None:
             raise PendingDecisionError("resolve the pending regulation choice first")
 
-    def _continue_normal_clock(self) -> PlayReport | None:
-        """Commit prior timing; a period boundary never consumes a new snap or dice."""
+    def _commit_pending_timing(self) -> PlayReport | None:
+        """Commit prior-play timing; Q1/Q3 transitions continue with the selected play."""
         if self._phase is not RegulationPhase.CLOCK:
             return None
         quarter = self._clock.quarter
-        report = self.decide("clock:runoff")
+        self._phase = RegulationPhase.LIVE
+        self._charge(self._pending_timing_seconds, "standard")
+        self._advance()
+        if self._clock.quarter != quarter and quarter in {1, 3}:
+            return None
         if self._clock.quarter != quarter or self._phase is not RegulationPhase.LIVE:
+            report = self._last_report
+            if report is None:
+                return None
             return replace(
                 report,
                 outcome="period_boundary",
-                called_play="Clock runoff",
-                resolved_play="Clock runoff",
+                called_play="Period end",
+                resolved_play="Period end",
                 defense="No formation",
                 yards=None,
                 trace=(),
                 state_before=report.state_after or report.state_before,
                 state_after=self._session.view().state,
-                description=f"Period ended; no new play was run. {self.view().status}",
+                description=(
+                    "The prior play's normal timing ended this period; no new play was run. "
+                    f"{self.view().status}"
+                ),
                 timing=TimingFacts(),
                 statistics=PlayStatistics(),
                 extends_quarter=False,
@@ -383,7 +403,7 @@ class RegulationGame:
                 a.key for a in actions.defense
             }:
                 raise InvalidDecisionError("choose a legal play and defense before continuing")
-            stopped = self._continue_normal_clock()
+            stopped = self._commit_pending_timing()
             if stopped is not None:
                 return stopped
         self._guard()
@@ -399,7 +419,7 @@ class RegulationGame:
         if self._phase is RegulationPhase.CLOCK:
             if action not in {a.key for a in self._session.view().actions.special}:
                 raise InvalidDecisionError("that special-teams action is unavailable")
-            stopped = self._continue_normal_clock()
+            stopped = self._commit_pending_timing()
             if stopped is not None:
                 return stopped
         self._guard()
@@ -416,6 +436,13 @@ class RegulationGame:
     def decide(self, choice: str, *, dice: DiceSource | None = None) -> PlayReport | None:
         if self.view().finished:
             raise SessionFinishedError("regulation has ended")
+        if self._phase is RegulationPhase.CLOCK and choice == "clock:runoff":
+            # Keep replay compatibility for older saves; this is no longer an
+            # offered game action. Normal timing commits when the next action is submitted.
+            self._phase = RegulationPhase.LIVE
+            self._charge(self._pending_timing_seconds, "standard")
+            self._advance()
+            return self._last_report
         if self._phase is RegulationPhase.OVERTIME and choice == "conversion:kick":
             if self._ot_profile.mandatory_two(self._overtime.round_number):
                 raise InvalidDecisionError("this overtime round requires a two-point try")
@@ -442,7 +469,7 @@ class RegulationGame:
                 self._session.prepare_kickoff(kicker)
                 self._phase = RegulationPhase.KICKOFF
                 return self._last_report
-            seconds = self._runoff
+            seconds = self._pending_timing_seconds
             if choice.startswith("clock:timeout:"):
                 self._clock = self._clock.timeout(Possession(choice.split(":")[-1]))
                 seconds = 10
@@ -466,7 +493,7 @@ class RegulationGame:
         if self._phase is RegulationPhase.CLOCK:
             if action not in {a.key for a in self.view().game_actions}:
                 raise InvalidDecisionError("that game action is unavailable")
-            stopped = self._continue_normal_clock()
+            stopped = self._commit_pending_timing()
             if stopped is not None:
                 return stopped
         self._guard()
@@ -511,7 +538,7 @@ class RegulationGame:
         if self._phase is RegulationPhase.KICKOFF:
             self._phase = RegulationPhase.LIVE
         if seconds > 10 and not conversion:
-            self._runoff = seconds
+            self._pending_timing_seconds = seconds
             self._phase = RegulationPhase.CLOCK
         else:
             self._charge(seconds, "standard")
@@ -578,7 +605,7 @@ class RegulationGame:
         self._phase = RegulationPhase.OVERTIME_CHOICE
         self._hurried = False
         self._untimed = False
-        self._runoff = 0
+        self._pending_timing_seconds = 0
 
     def _start_ot_series(self) -> None:
         ot = self._overtime

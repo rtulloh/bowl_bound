@@ -62,13 +62,14 @@ _CHOICE_KEYS = {
     "return": "R",
     "touchback": "TB",
     "fair_catch": "FC",
-    "runoff": "C",
     "hurry": "N",
     "spike": "S",
 }
 HELP = (
     "Shortcuts: use the bracketed keys in the current menu (case-insensitive).\n"
     "Solitaire vs computer: 1-9 offense, A-F defense; control one team only.\n"
+    "Add T to a play or formation key (for example, 7T or AT) to request a timeout after "
+    "the play. The game uses it only if offered.\n"
     "When offered: P punt, F field goal, K kickoff/kneel, H Hail Mary; R receive.\n"
     "Full commands still work: call KEY; choose ID; kick KEY; action KEY.\n"
     "Inspect: status, stats (/), log, trace, help (?). Enter submits a displayed default only.\n"
@@ -288,6 +289,7 @@ class TerminalGame:
         turn: CoachingTurn | None,
         *,
         compact: bool,
+        show_help: bool = False,
     ) -> None:
         """Render full or compact controls using the same bindings as command dispatch."""
         if view.finished:
@@ -365,6 +367,18 @@ class TerminalGame:
             for choice in pending.choices:
                 unavailable = "" if choice.enabled else f" [unavailable: {choice.reason}]"
                 self._print("    " + label("choose", choice.id, choice.label) + unavailable)
+        clock = getattr(view, "clock", None)
+        timeout_index = 0 if self.human_side == "home" else 1
+        if (
+            show_help
+            and (actions.offense or actions.defense)
+            and clock
+            and clock.timeouts[timeout_index]
+        ):
+            self._print(
+                "    Add T to a play or formation key (for example, 7T or AT) to request "
+                "a timeout after the play. The game uses it only if offered."
+            )
         if self.game.player_advice_available(self.human_side):
             self._print("    [Z] Easy helper                - Toggle coaching (terminal-local)")
         self._print("    [W] Save Game                  - New private save file")
@@ -445,6 +459,24 @@ class TerminalGame:
             self._print(f"Not applied: {error}")
             return False
 
+    def _call_with_timeout(self, key: str) -> bool:
+        """Submit one legal call, then use the human timeout only if the engine offers it."""
+        view, turn = self.public_view()
+        actions = turn.actions if turn else view.actions
+        if turn is None or key not in {a.key for a in actions.offense + actions.defense}:
+            raise ValueError("Use an offered play or formation before requesting its timeout.")
+        self._report(self.game.coach_step(self.human_side, key)[0])
+        self.advance_computer()
+        view, turn = self.public_view()
+        timeout = self._shortcuts(view, turn).get("T")
+        if timeout is None:
+            self._print("Play applied; your timeout was not offered after that play.")
+            return True
+        operation = "decide" if timeout[0] == "choose" else timeout[0]
+        report = self.game.coach_execute(self.human_side, operation, timeout[1])[0]
+        self._report(report)
+        return True
+
     def _command(self, words: list[str]) -> bool:
         if not words:
             view, turn = self.public_view()
@@ -453,6 +485,13 @@ class TerminalGame:
                 return False
             words = ["call", default.key]
         verb, *args = words
+        if (
+            len(words) == 1
+            and len(verb) == 2
+            and verb[1].upper() == "T"
+            and verb[0].upper() in "123456789ABCDEF"
+        ):
+            return self._call_with_timeout(verb[0].upper())
         verb = {"?": "help", "/": "stats"}.get(verb, verb)
         if not args and verb.lower() == "z":
             if self.game.coach_policy != "easy-v1":
@@ -469,7 +508,7 @@ class TerminalGame:
         if not args and verb in {"help", "commands", "status", "stats", "log", "trace"}:
             view = self.game.view()
             if verb == "help":
-                self._controls(*self.public_view(), compact=False)
+                self._controls(*self.public_view(), compact=False, show_help=True)
             elif verb == "commands":
                 self._print(HELP)
             elif verb == "status":

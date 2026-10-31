@@ -112,11 +112,13 @@ A safety schedules the conceding team’s free kick from its own 20.
 
 The scoreboard shows the engine’s **quarter, game clock, and remaining timeouts**.
 The visible **Play modifiers** row keeps **Hurry-up mode**, **Timeout**, **Spike**,
-**OOB** and **IB** together (wrapping on narrow screens). After a 20/30-second
-play, engine-offered clock modifiers default to **None**. Just choose the next
-calls (or punt, attempt a field goal, or kneel); the engine commits the prior
-play’s normal timing automatically. There is no routine Continue step. Timeout
-and spike are one-shot engine decisions; unavailable controls stay disabled.
+**OOB** and **IB** together (wrapping on narrow screens). The engine applies
+standard play timing automatically when you choose the next action; there is no
+runoff or Continue control. If timing ends Q1 or Q3, the selected play starts in
+the next quarter. If it ends a half or game, the engine shows the required
+halftime, overtime or final state without running another play. Kneel is the play
+for deliberately using time. Timeout and spike remain one-shot engine decisions;
+unavailable controls stay disabled.
 IB/OOB declarations remain disabled pending their engine implementation, including
 the applicable five-yard cost and exceptions. Their approved interaction is
 mutually exclusive, for one play only, then reset—not a persistent mode.
@@ -124,9 +126,7 @@ mutually exclusive, for one play only, then reset—not a persistent mode.
 quarters and halftime until you toggle it off; unavailable situations simply
 suspend its application. Before a snap it selects the offered legal hurry action,
 never duplicates reductions or skips football decisions. The optional strip also
-retains the explicit one-snap hurry choice. At a required period-boundary clock
-choice, **Continue with hurry-up** applies an offered legal hurry when mode is on;
-otherwise **Continue** applies normal runoff. New/loaded games start with fresh
+retains the explicit one-snap hurry choice. New/loaded games start with fresh
 selections and mode off. Hurry commits next-snap S/R hazards; a spike spends
 another down without dice. Kneel
 loses two yards without dice. Hail Mary appears only with 1–20 seconds left in
@@ -236,8 +236,9 @@ next-play controls during `clock_choice`; `view.clock_modifiers` supplies compac
 labels and exact decision IDs. Next-play requests commit normal prior timing in
 the engine, once, before consuming any new dice. A period-ending runoff advances
 the period without executing the requested next play; use the returned view.
-Explicit `clock:runoff` decisions remain supported for existing clients. Toss/halftime choices may return
-a null report. Conversion IDs remain `conversion:kick` and `conversion:two`; the
+Explicit `clock:runoff` remains accepted for older clients, but is not offered in
+current engine views or user interfaces. Toss/halftime choices may return a null
+report. Conversion IDs remain `conversion:kick` and `conversion:two`; the
 two-point setup consumes neither dice nor a log entry. `ot:offense` / `ot:defense`
 select the overtime toss winner’s first-series role. `view.overtime` supplies round,
 series, first/offensive team identities, paired-try and mandatory-two flags;

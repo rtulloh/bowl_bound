@@ -130,7 +130,7 @@ class ChartAwareCoach(BaselineCoach):
 
     def decision(self, observation: CoachObservation) -> str:
         self.analysis_fallback = False
-        if observation.side != observation.possession and "clock:runoff" in observation.choices:
+        if observation.side != observation.possession and "clock:standard" in observation.choices:
             timeout = f"clock:timeout:{observation.side}"
             if (
                 not observation.overtime
@@ -143,7 +143,7 @@ class ChartAwareCoach(BaselineCoach):
             observation = replace(
                 observation,
                 choices=tuple(
-                    key for key in observation.choices if key in {"clock:runoff", timeout}
+                    key for key in observation.choices if key in {"clock:standard", timeout}
                 ),
             )
         return super().decision(observation)

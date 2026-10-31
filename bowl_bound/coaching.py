@@ -136,7 +136,7 @@ class BaselineCoach:
             if "clock:hurry" in choices:
                 return "clock:hurry"
         preferred = (
-            "clock:runoff",
+            "clock:standard",
             "toss:receive",
             "half:receive",
             "ot:offense",

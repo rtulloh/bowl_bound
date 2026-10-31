@@ -87,7 +87,6 @@ it('renders engine-supplied die labels, colors, faces and authoritative totals w
 
 it('never shows the opposing timeout control in optional clock modifiers', async () => {
   const own = [
-    { id: 'clock:runoff', label: 'None', enabled: true },
     { id: 'clock:timeout:home', label: 'Home timeout', enabled: true },
   ]
   api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7,

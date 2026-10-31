@@ -70,17 +70,15 @@ clock decision. The original football timing/score assertions remain intact.
 The user clarified that smaller mandatory Continue was not the intended Paydirt
 pattern. This follow-up supersedes the selector/Continue description above.
 
-- None is the default radio option beside usable play controls. Normal next snap,
-  punt, field goal or kneel commits prior normal timing in the engine; the browser
-  makes no separate clock request.
+- Normal timing is implicit when the next action is selected; there is no None
+  radio option or separate Continue action.
 - Clicking a team timeout, Hurry-up or Spike applies it immediately. These are
   one-shot engine decisions; no modifier selection persists to the next window.
-- The engine provides `clock_optional` and compact `clock_modifiers` labels. It
-  exposes next-play actions only when normal runoff leaves time in this period.
-- At expiration boundaries Continue remains explicit, preserving clock-saving
-  alternatives. A direct next-snap/kick API request cannot accidentally play in
-  the next period: it returns the previous report and newly advanced view without
-  using dice. The next snap must be requested separately.
+- The engine provides `clock_optional` and compact `clock_modifiers` labels.
+  Optional modifiers appear alongside legal play controls.
+- If standard timing reaches the end of Q1/Q3, the selected play runs in the
+  following quarter. At halftime or game end, the engine advances without a
+  separate Continue choice and without rolling dice for another play.
 - Hail Mary availability uses the engine’s clock after pending normal timing.
   Invalid next-action requests do not commit the pending time.
 
@@ -92,6 +90,9 @@ Explicit clock decisions remain compatible for non-browser clients.
 
 The local Bowl Bound server remains stopped at the user’s request; Paydirt is not
 modified or restarted. Browser checks use only the isolated synthetic test server.
+
+This boundary-control behavior was superseded in Milestone 27 on 2026-10-30;
+see [the milestone note](milestone-27.md) and [RULE-017](issues/RULE/RULE-017.md).
 
 Follow-up validation:
 

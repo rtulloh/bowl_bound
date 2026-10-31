@@ -322,21 +322,22 @@ def test_fourth_down_does_not_offer_a_spike_but_can_still_hurry() -> None:
     assert "clock:hurry" in choices
 
 
-def test_period_ending_runoff_returns_a_boundary_event_not_the_previous_play() -> None:
+def test_period_ending_timing_returns_a_boundary_event_not_the_previous_play() -> None:
     from bowl_bound.statistics import StatKind
     from bowl_bound.timing import Clock
     from tests.test_regulation import kickoff, new_game, snap
 
-    game = new_game(clock=Clock(1, 20), gain=0)
+    game = new_game(clock=Clock(2, 20), gain=0)
     kickoff(game)
     prior = snap(game)
     before = game.view().log
     report = game.snap("1", "A", dice=ScriptedDice([]))
     assert report.outcome == "period_boundary"
-    assert "no new play" in report.description.lower()
+    assert report.called_play == "Period end"
+    assert "prior play's normal timing" in report.description.lower()
     assert report.trace == () and report.statistics.kind is StatKind.EXCLUDED
     assert report.number == prior.number
-    assert game.view().clock.quarter == 2 and game.view().clock.remaining == 900
+    assert game.view().clock.quarter == 2 and game.view().clock.remaining == 0
     assert game.view().log == before and before[-1] == prior
 
 

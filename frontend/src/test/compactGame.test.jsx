@@ -122,12 +122,10 @@ it('defaults to human home/computer away while keeping two-sided manual play las
 it('keeps hurry-up, timeouts, spike and unavailable OOB together in the visible modifier row', async () => {
   api.newGame.mockResolvedValue({ game_id: 'game', seed: 7, view: view({ phase: 'clock_choice', clock_optional: true,
     pending: { choices: [
-      { id: 'clock:runoff', label: 'None', enabled: true },
       { id: 'clock:timeout:home', label: 'Home timeout', enabled: true },
       { id: 'clock:spike', label: 'Spike', enabled: true },
     ] },
     clock_modifiers: [
-      { id: 'clock:runoff', label: 'None', enabled: true },
       { id: 'clock:timeout:home', label: 'Home timeout', enabled: true },
       { id: 'clock:spike', label: 'Spike', enabled: true },
     ],

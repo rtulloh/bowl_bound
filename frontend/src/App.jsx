@@ -63,6 +63,9 @@ export default function App() {
     setDefense('')
     setGame((current) => ({ ...current, view: result.view, turn: result.turn }))
     if (result.report) setReport(result.report)
+    else if (["halftime_choice", "overtime_choice", "final"].includes(result.view.phase)) {
+      setReport(null)
+    }
   }
   // All gameplay requests share one synchronous guard, including automatic turns.
   const run = async (work) => {
@@ -258,7 +261,7 @@ export default function App() {
           <input type="checkbox" checked={hurryMode} disabled={busy} onChange={(e) => setHurryMode(e.target.checked)} />
           Hurry-up mode
         </label>
-        {clockChoice && <ClockChoices pending={pending} modifiers={turn ? view.clock_modifiers?.filter((c) => pending.choices.some((offered) => offered.id === c.id)) : view.clock_modifiers} optional={view.clock_optional} hurryMode={hurryMode} onChoose={choose} disabled={busy} />}
+        {clockChoice && <ClockChoices pending={pending} modifiers={turn ? view.clock_modifiers?.filter((c) => pending.choices.some((offered) => offered.id === c.id)) : view.clock_modifiers} onChoose={choose} disabled={busy} />}
         {!clockChoice && <>
           {timeoutActions.map((action) => <button key={action.key} type="button" className="play-button"
             disabled={busy || blocking || view.finished} title={action.label} data-testid={'game-play-' + action.key}

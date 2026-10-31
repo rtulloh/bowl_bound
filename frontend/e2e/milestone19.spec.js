@@ -49,9 +49,9 @@ for (const reverse of [false, true]) {
         await expect(panel).toContainText(view.pending.chooser)
         if (view.phase !== "clock_choice") await expect(panel.locator("button:not(:disabled)").first()).toBeFocused()
         const enabled = view.pending.choices.filter((c) => c.enabled)
-        const choice = ['clock:runoff', 'half:receive', 'ot:offense', 'conversion:kick', 'kick:touchback']
+        const choice = ['half:receive', 'ot:offense', 'conversion:kick', 'kick:touchback']
           .map((id) => enabled.find((c) => c.id === id)).find(Boolean) || enabled[0]
-        button = view.phase === 'clock_choice' ? page.getByTestId('clock-continue') : page.getByTestId('penalty-choice-' + choice.id)
+        button = page.getByTestId('penalty-choice-' + choice.id)
       } else if (view.phase === 'kickoff') {
         button = page.getByTestId('special-play-kickoff')
       } else {

@@ -184,6 +184,6 @@ def advice_lines(
         )
     else:
         lines.append(
-            "Clock: Review the engine clock and legal controls; advice does not predict runoff."
+            "Clock: Review the engine clock and legal controls; advice does not predict clock use."
         )
     return tuple(lines)

@@ -259,7 +259,7 @@ def test_only_t_is_offered_as_a_timeout_alias(key: str) -> None:
     assert saved_facts(app.game) == before
 
 
-def test_normal_optional_runoff_preserves_defensive_timeout_window() -> None:
+def test_normal_timing_preserves_defensive_timeout_window_and_c_is_formation() -> None:
     app = regulation()
     live(app)
     assert app.command("1")

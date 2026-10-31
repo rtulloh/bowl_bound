@@ -436,6 +436,34 @@ Tracked work: [IMPORT-010](issues/IMPORT/IMPORT-010.md) through
 
 **Commit:** `milestone 26: support local MaysFootball chart testing`
 
+### 27. Apply play timing automatically and support combined timeout input
+
+Added 2026-10-30 after Milestone 26 play-testing. The owner supplied `7T` as the
+expected offense syntax; the matching defense syntax is `AT`. The owner later
+directed that normal play timing advance periods automatically, without a separate
+no-play runoff choice; kneeldown is the play for intentionally running down time.
+
+**Deliver:** accept a legal human offensive call or defensive formation with an
+appended `T`. Apply a requested timeout only when the engine offers it after the
+play; otherwise keep the play and use standard timing. Apply standard play timing
+automatically and advance quarter, half, game, or overtime boundaries without a
+separate normal-runoff choice. Preserve kneeldown as a normal play for running
+down the clock.
+
+**Validate:** use synthetic engine, terminal, API, and browser tests for timeout
+suffixes, unavailable timeouts, period transitions, halftime, game end, and
+invalid suffixes. Verify timing and state parity, no extra snap or dice at a
+boundary, and no player-facing runoff or Continue action. Preserve replay
+compatibility for existing saved games. Explain timeout syntax only in requested
+help output, update player documentation, and run the full regression gate before
+the dedicated milestone commit.
+
+Tracked work: [CLI-038](issues/CLI/CLI-038.md) and
+[RULE-017](issues/RULE/RULE-017.md). See the
+[Milestone 27 work log](milestone-27.md).
+
+**Commit:** `milestone 27: apply play timing automatically`
+
 ## Decision gates
 
 Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.

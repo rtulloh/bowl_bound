@@ -48,7 +48,7 @@ def test_exact_baseline_decisions_and_late_kneel_remain_legal() -> None:
     assert coach.offense(obs) == "kneel"
     for choices in [
         ("conversion:kick", "conversion:two"),
-        ("clock:hurry", "clock:runoff"),
+        ("clock:hurry", "clock:standard"),
         ("ot:offense",),
     ]:
         current = replace(obs, choices=choices)
@@ -144,8 +144,10 @@ def test_chart_defender_uses_its_own_offered_late_timeout_not_offensive_hurry() 
         quarter=4,
         remaining=90,
         score_difference=-3,
-        choices=("clock:runoff", "clock:timeout:away", "clock:hurry"),
+        choices=("clock:standard", "clock:timeout:away", "clock:hurry"),
     )
     assert coach.decision(obs) == "clock:timeout:away"
-    assert coach.decision(replace(obs, choices=("clock:runoff", "clock:hurry"))) == "clock:runoff"
-    assert coach.decision(replace(obs, overtime=True)) == "clock:runoff"
+    assert (
+        coach.decision(replace(obs, choices=("clock:standard", "clock:hurry"))) == "clock:standard"
+    )
+    assert coach.decision(replace(obs, overtime=True)) == "clock:standard"
