@@ -1,0 +1,21 @@
+docs/dev-notes/issue-tracker.md
+  s_ed54ab581b3d60::t_9052e3714740b4 8,10,70,418-421
+tests/test_save_game.py
+  s_ed54ab581b3d60::t_2c76fde3a961be 4,291-296,427,444,459-466
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "0f4eab9f1fd3271583ff98458105269ac41cb577",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
