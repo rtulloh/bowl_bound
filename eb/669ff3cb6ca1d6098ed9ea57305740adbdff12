@@ -1,0 +1,25 @@
+docs/dev-notes/issue-tracker.md
+  s_ed54ab581b3d60::t_db989659ec9c2e 8,10,101,132,162,400-401
+docs/dev-notes/issues/CLI/CLI-038.md
+  s_ed54ab581b3d60::t_f3412d6c93e6b7 4,8,12,49-53
+docs/dev-notes/issues/RULE/RULE-017.md
+  s_ed54ab581b3d60::t_15e487d4865341 4,8,13,31-36
+docs/dev-notes/milestone-27.md
+  s_ed54ab581b3d60::t_6bbee657b3d603 54-56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "eb669ff3cb6ca1d6098ed9ea57305740adbdff12",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
