@@ -639,7 +639,16 @@ def loads_game(text: str, load_team: Callable[[str], TeamChart]) -> SavedGame:
                 pass  # Match the recorded error class, never infer a new outcome.
             if game._commands[-1] != record:
                 _fail()
-        if tape.position != len(tape.rolls) or _view_digest(game.view()) != data["state_digest"]:
+        if tape.position != len(tape.rolls):
+            _fail()
+        view = game.view()
+        if (
+            _view_digest(view) != data["state_digest"]
+            and _legacy_m27_view_digest(
+                view, getattr(game._engine, "_pending_timing_seconds", None)
+            )
+            != data["state_digest"]
+        ):
             _fail()
         tape.replaying = False
         return game
@@ -661,6 +670,38 @@ def loads_game(text: str, load_team: Callable[[str], TeamChart]) -> SavedGame:
 
 def _view_digest(view: SessionView | RegulationView) -> str:
     """Keep the m19 semantic digest stable when adding derived presentation facts."""
+    return _semantic_view_digest(asdict(view))
+
+
+def _legacy_m27_view_digest(
+    view: SessionView | RegulationView, pending_timing_seconds: int | None
+) -> str:
+    """Recreate the pre-M27 digest for a state replayed with implicit timing."""
+    data = asdict(view)
+    for charge in data.get("timing_log", []):
+        if charge["method"] == "standard" and charge["seconds"] > 10:
+            charge["method"] = "clock:runoff"
+    if data.get("phase") == "clock_choice" and pending_timing_seconds is not None:
+        runoff_modifier = {
+            "id": "clock:runoff",
+            "label": "None",
+            "enabled": True,
+            "reason": None,
+        }
+        data["clock_modifiers"] = [runoff_modifier, *data["clock_modifiers"]]
+        if data.get("pending") is not None:
+            data["pending"]["choices"] = [
+                {
+                    **runoff_modifier,
+                    "label": f"Run {pending_timing_seconds} seconds off the clock",
+                },
+                *data["pending"]["choices"],
+            ]
+    return _semantic_view_digest(data)
+
+
+def _semantic_view_digest(data: dict[str, Any]) -> str:
+    """Hash semantic state while excluding view-only diagnostics and labels."""
     presentation_keys = {"dice", "dice_label", "chooser_side", "toss_dice", "overtime_toss_dice"}
     legacy_defenses = {
         f"{defense.value} {label}": f"Formation {defense.value}"
@@ -691,7 +732,6 @@ def _view_digest(view: SessionView | RegulationView) -> str:
             return [semantic(item) for item in value]
         return value
 
-    data = asdict(view)
     # Selector wording is presentation; retain m19 labels in the semantic digest.
     # Canonicalize only selector/decline wording, not choice IDs or enabled state.
     for action in data["actions"]["defense"]:

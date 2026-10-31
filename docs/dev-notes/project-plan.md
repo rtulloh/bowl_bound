@@ -464,6 +464,33 @@ Tracked work: [CLI-038](issues/CLI/CLI-038.md) and
 
 **Commit:** `milestone 27: apply play timing automatically`
 
+### 28. Preserve save replay across automatic timing changes
+
+Added 2026-10-31 after an owner-reported saved game from before Milestone 27
+failed to resume. Local comparison confirmed that the previous implementation
+loads it and that the current replay reaches the same game state; only the
+normal-timing method label in the semantic view digest changed from
+`clock:runoff` to `standard`.
+
+**Deliver:** keep valid same-profile pre-Milestone 27 saves loadable by verifying
+their replay against a narrowly reconstructed legacy digest for normal timing
+labels and the removed runoff choice. Check the current digest first, and never
+restore the obsolete choice to live controls. Retain integrity, exact chart
+fingerprints, command replay, roll consumption, and state validation. Do not
+migrate or edit user saves.
+
+**Validate:** add synthetic pre-Milestone 27 saves at both a live scrimmage and a
+pending clock choice; they must fail before the fix and load after it. Confirm
+malformed digests and incompatible charts remain rejected, then resume the
+owner-provided local save without changing it. Run focused save/CLI checks and
+the applicable cumulative regression gate. Keep private save files and details
+outside tracked tests and documentation.
+
+Tracked work: [CLI-048](issues/CLI/CLI-048.md). See the
+[Milestone 28 work log](milestone-28.md).
+
+**Commit:** `milestone 28: preserve pre-timing save replay`
+
 ## Decision gates
 
 Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.

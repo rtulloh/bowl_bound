@@ -2,6 +2,7 @@
 
 import json
 from dataclasses import replace
+from pathlib import Path
 
 import pytest
 
@@ -14,7 +15,12 @@ from bowl_bound.models import (
     Play,
     ResultKind,
 )
-from bowl_bound.save_game import SavedGame, SaveFormatError, dumps_game, loads_game
+from bowl_bound.save_game import (
+    SavedGame,
+    SaveFormatError,
+    dumps_game,
+    loads_game,
+)
 from bowl_bound.session import PendingDecisionError, SessionFinishedError
 from bowl_bound.timing import Clock
 from tests.synthetic_teams import team_chart, yards
@@ -358,6 +364,42 @@ def test_loading_replays_only_observed_rolls_without_drawing_new_random_values(m
         )
         restored = loads_game(text, lambda key: charts()[0 if key.endswith("home") else 1])
     assert restored.snap("6", "A") == game.snap("6", "A")
+
+
+def test_pre_m27_normal_timing_digest_remains_loadable() -> None:
+    fixture = Path(__file__).parent / "fixtures" / "legacy_pre_m27_normal.json"
+    teams = charts(cell=NormalizedCell(ResultKind.INCOMPLETE, provenance()))
+    restored = loads_game(
+        fixture.read_text(encoding="utf-8"),
+        lambda key: teams[0 if key.endswith("home") else 1],
+    )
+
+    expected = new(mode="regulation", clock=Clock(1, 600), teams=teams)
+    opening(expected)
+    expected.snap("1", "A")
+    expected.snap("1", "A")
+    expected.snap("9", "A")
+    assert restored.view() == expected.view()
+    assert restored.snap("6", "A") == expected.snap("6", "A")
+    assert restored.view() == expected.view()
+
+
+def test_pre_m27_clock_choice_save_loads_without_restoring_runoff_action() -> None:
+    fixture = Path(__file__).parent / "fixtures" / "legacy_pre_m27_clock.json"
+    restored = loads_game(
+        fixture.read_text(encoding="utf-8"),
+        lambda key: charts()[0 if key.endswith("home") else 1],
+    )
+
+    expected = new(mode="regulation", clock=Clock(1, 600))
+    opening(expected)
+    expected.snap("1", "A")
+    assert restored.view() == expected.view()
+    assert restored.view().clock_optional
+    assert all(
+        choice.id != "clock:runoff"
+        for choice in restored.view().clock_modifiers + restored.view().pending.choices
+    )
 
 
 def test_hurry_state_and_timeout_counts_survive_resume() -> None:
