@@ -1,0 +1,31 @@
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_317d72e67d7ce4 642-651,673-704
+docs/dev-notes/issue-tracker.md
+  s_ed54ab581b3d60::t_3608cbea6daa0d 8,10,51,403-406
+docs/dev-notes/issues/CLI/CLI-048.md
+  s_ed54ab581b3d60::t_3a098498944b45 1-30
+docs/dev-notes/project-plan.md
+  s_ed54ab581b3d60::t_b05122f51254ad 467-493
+tests/fixtures/legacy_pre_m27_clock.json
+  s_ed54ab581b3d60::t_1eb558d81204ca 1
+tests/fixtures/legacy_pre_m27_normal.json
+  s_ed54ab581b3d60::t_af3986c220a98f 1
+tests/test_save_game.py
+  s_ed54ab581b3d60::t_6bb9c5c327bca3 5,18-23,369-404
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "9d0678dcdc6e4ec4a64f3c56704c2fd6b62be7e1",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
