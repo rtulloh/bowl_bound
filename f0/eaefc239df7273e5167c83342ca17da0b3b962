@@ -1,0 +1,47 @@
+README.md
+  s_ed54ab581b3d60::t_153184d6a832cf 9
+RELEASE_NOTES.md
+  s_ed54ab581b3d60::t_647cd2d9f1bb80 3,5-8
+bowl_bound/__init__.py
+  s_ed54ab581b3d60::t_5cf26bdedece7a 7-8
+docs/dev-notes/release-alpha3.md
+  s_ed54ab581b3d60::t_a0a40b166fc65b 1-21
+docs/installation.md
+  s_ed54ab581b3d60::t_a75ecf95761a9a 7,15,50,52,80
+docs/versioning.md
+  s_ed54ab581b3d60::t_865a2271708059 3-4
+frontend/package-lock.json
+  s_ed54ab581b3d60::t_f86b449d506a7d 3,9
+frontend/package.json
+  s_ed54ab581b3d60::t_a9633c2c5e0fb0 3
+pyproject.toml
+  s_ed54ab581b3d60::t_9e73065bef4e5e 7
+tests/test_launcher.py
+  s_ed54ab581b3d60::t_5c2f4ee379cbd2 34
+tests/test_release_archive.py
+  s_ed54ab581b3d60::t_6ddee8127800a0 26
+tests/test_release_metadata.py
+  s_ed54ab581b3d60::t_b9d016f40ae9c7 17-18
+tests/test_release_package.py
+  s_ed54ab581b3d60::t_d80655cc3b2b96 30,33,36-37,107,219,341
+tests/test_standalone_build.py
+  s_ed54ab581b3d60::t_ccbf667066b561 102,221
+tests/test_standalone_smoke.py
+  s_ed54ab581b3d60::t_345230768ed928 18,44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "f0eaefc239df7273e5167c83342ca17da0b3b962",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
