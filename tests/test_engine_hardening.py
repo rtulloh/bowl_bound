@@ -337,7 +337,10 @@ def test_period_ending_timing_returns_a_boundary_event_not_the_previous_play() -
     assert "prior play's normal timing" in report.description.lower()
     assert report.trace == () and report.statistics.kind is StatKind.EXCLUDED
     assert report.number == prior.number
-    assert game.view().clock.quarter == 2 and game.view().clock.remaining == 0
+    view = game.view()
+    assert view.clock.quarter == 3 and view.clock.remaining == 900
+    assert view.phase == "kickoff" and view.pending is None
+    assert view.state.possession == ("away" if view.opening_kicker == "home" else "home")
     assert game.view().log == before and before[-1] == prior
 
 

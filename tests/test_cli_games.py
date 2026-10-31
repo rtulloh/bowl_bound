@@ -31,7 +31,6 @@ def next_command(view: GameView, turn: CoachingTurn | None, step: int) -> str:
         choices = [choice.id for choice in pending.choices if choice.enabled]
         preferred = (
             "clock:runoff",
-            "half:receive",
             "ot:offense",
             "conversion:kick",
             "kick:touchback",

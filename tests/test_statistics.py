@@ -232,8 +232,7 @@ def test_complete_regulation_reconciles_independent_scripted_team_totals() -> No
         if view.finished:
             break
         if view.pending:
-            choice = "half:receive" if view.phase == "halftime_choice" else "clock:runoff"
-            game.decide(choice)
+            game.decide("clock:runoff")
         elif view.phase == "kickoff":
             game.kick("kickoff", dice=ScriptedDice([OffensiveRoll(1, 0, 0)]))
             game.decide("kick:touchback")
@@ -430,8 +429,6 @@ def test_complete_scoring_game_reconciles_nonzero_offense_and_conversion_exclusi
             break
         if view.phase == "conversion_choice":
             game.decide("conversion:kick", dice=ScriptedDice([OffensiveRoll(1, 0, 0)]))
-        elif view.phase == "halftime_choice":
-            game.decide("half:receive")
         elif view.pending:
             game.decide("clock:runoff")
         elif view.phase == "kickoff":

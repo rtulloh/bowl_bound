@@ -94,12 +94,18 @@ def test_original_samples_complete_games_and_save_continuation(reverse: bool) ->
         dumps_game(game), lambda key: teams[0] if key.endswith("home") else teams[1]
     )
     phases = set()
+    second_half_kickoff_seen = False
     for step in range(1200):
         view = game.view()
         phases.add(view.phase)
+        if not second_half_kickoff_seen and view.clock.quarter == 3 and view.phase == "kickoff":
+            second_half_kickoff_seen = True
+            assert view.pending is None
+            assert view.state.possession == ("away" if view.opening_kicker == "home" else "home")
         assert restored.view() == view
         if view.finished:
-            assert "halftime_choice" in phases
+            assert second_half_kickoff_seen
+            assert "halftime_choice" not in phases
             assert view.statistics == summarize(r.statistics for r in view.log)
             assert view.score.home == sum(e.points for e in view.scoring if e.team == view.home)
             assert view.score.away == sum(e.points for e in view.scoring if e.team == view.away)
@@ -121,7 +127,6 @@ def test_original_samples_complete_games_and_save_continuation(reverse: bool) ->
                     c
                     for c in (
                         "clock:runoff",
-                        "half:receive",
                         "ot:offense",
                         "conversion:kick",
                         "kick:touchback",

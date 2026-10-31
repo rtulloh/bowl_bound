@@ -70,7 +70,6 @@ def test_special_team_preferences_are_selected_only_when_offered(changes, expect
     "choices,expected",
     [
         (("toss:kick", "toss:receive"), "toss:receive"),
-        (("half:kick", "half:receive"), "half:receive"),
         (("ot:defense", "ot:offense"), "ot:offense"),
         (("conversion:two", "conversion:kick"), "conversion:kick"),
         (("conversion:two",), "conversion:two"),

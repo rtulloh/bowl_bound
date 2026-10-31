@@ -29,6 +29,7 @@ class RegulationPhase(str, Enum):
     KICKOFF = "kickoff"
     LIVE = "live"
     CLOCK = "clock_choice"
+    # Retained only to reconstruct and validate pre-M30 save digests.
     HALFTIME = "halftime_choice"
     FINAL = "final"
     OVERTIME_CHOICE = "overtime_choice"
@@ -118,6 +119,19 @@ class RegulationGame:
         self._last_report: PlayReport | None = None
         self._kick_after: tuple[Possession, bool] | None = None
         self._timing_log: tuple[TimeCharge, ...] = ()
+        self._legacy_halftime_view: RegulationView | None = None
+        self._legacy_halftime_choice_pending = False
+
+    def _consume_legacy_halftime_choice(self, choice: str) -> bool:
+        """Replay an old save's choice when it matches the newly fixed kickoff."""
+        if not self._legacy_halftime_choice_pending:
+            return False
+        self._legacy_halftime_choice_pending = False
+        if choice not in {"half:receive", "half:kick"} or self._opening_kicker is None:
+            return False
+        old_chooser = self._toss_winner.other
+        old_kicker = old_chooser if choice == "half:kick" else old_chooser.other
+        return old_kicker is self._opening_kicker.other
 
     @classmethod
     def new(
@@ -397,6 +411,7 @@ class RegulationGame:
         return None
 
     def snap(self, play: str, formation: str, *, dice: DiceSource | None = None) -> PlayReport:
+        self._legacy_halftime_choice_pending = False
         if self._phase is RegulationPhase.CLOCK:
             actions = self._session.view().actions
             if play not in {a.key for a in actions.offense} or formation not in {
@@ -416,6 +431,7 @@ class RegulationGame:
         return self._after(before, report)
 
     def kick(self, action: str, *, dice: DiceSource | None = None) -> PlayReport:
+        self._legacy_halftime_choice_pending = False
         if self._phase is RegulationPhase.CLOCK:
             if action not in {a.key for a in self._session.view().actions.special}:
                 raise InvalidDecisionError("that special-teams action is unavailable")
@@ -434,6 +450,7 @@ class RegulationGame:
         return self._after(before, report)
 
     def decide(self, choice: str, *, dice: DiceSource | None = None) -> PlayReport | None:
+        self._legacy_halftime_choice_pending = False
         if self.view().finished:
             raise SessionFinishedError("regulation has ended")
         if self._phase is RegulationPhase.CLOCK and choice == "clock:runoff":
@@ -490,6 +507,7 @@ class RegulationGame:
         return self._after(before, report)
 
     def action(self, action: str, *, dice: DiceSource | None = None) -> PlayReport | None:
+        self._legacy_halftime_choice_pending = False
         if self._phase is RegulationPhase.CLOCK:
             if action not in {a.key for a in self.view().game_actions}:
                 raise InvalidDecisionError("that game action is unavailable")
@@ -572,6 +590,14 @@ class RegulationGame:
             if self._clock.quarter == 2:
                 self._phase = RegulationPhase.HALFTIME
                 self._kick_after = None
+                self._legacy_halftime_view = self.view()
+                if self._opening_kicker is None:
+                    raise RuntimeError("halftime reached before the opening kickoff")
+                self._clock = self._clock.next_quarter()
+                self._session.prepare_kickoff(self._opening_kicker.other)
+                self._phase = RegulationPhase.KICKOFF
+                self._legacy_halftime_choice_pending = True
+                self._pending_timing_seconds = 0
                 return
             if self._clock.quarter == 4:
                 tied = base.score.home == base.score.away

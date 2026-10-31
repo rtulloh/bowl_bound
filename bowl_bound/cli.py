@@ -595,7 +595,7 @@ class TerminalGame:
             operation = "decide" if verb == "choose" else verb
             report = self.game.coach_execute(self.human_side, operation, args[0])[0]
             self._report(report)
-            if verb == "choose" and args[0] in {"toss:kick", "half:kick"}:
+            if verb == "choose" and args[0] == "toss:kick":
                 next_view, next_turn = self.public_view()
                 next_actions = next_turn.actions if next_turn else next_view.actions
                 if any(a.key == "kickoff" for a in next_actions.special):

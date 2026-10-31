@@ -25,6 +25,7 @@ college rules require dated sources, not Paydirt NFL behavior or a moving refere
 | Timing | Standard chart timing; shortest applicable duration; late-half out-of-bounds windows | Timing Chart, p. 34; Milestone 15 |
 | Historical overtime | Home season selects the major-college profile in the historical table below | Project decision; Milestone 16 |
 | Kickoff spot | Select the kickoff spot using the designated home team season, including mixed-season games | Project decision; Basic V-4, p. 5 documents the 2007 spot at the 30; Milestone 13 |
+| Second-half kickoff | Fixed reciprocal order: opening kicker receives; opening receiver kicks. The second-half kicker chooses normal or onside; onside kicks are unsupported, so schedule the normal kickoff without a prompt. | Basic V-3, p. 4, interpreted per owner clarification (2026-10-31); corrects the implementation's kick/receive interpretation; Milestone 30 |
 | Hail Mary | Include using Bowl Bound eligibility and outcomes, not NFL outcomes | Advanced I-3, p. 14; Milestone 15 |
 | Hurry-up, spike, kneel | Include using Bowl Bound procedures; Paydirt is a design reference only | Advanced I-4(A–B), pp. 14–15; I-6(A), p. 15; Milestone 15 |
 | Deferred options | Wild Card/advanced defenses (Advanced II), QB Sneak (I-2), yardage factors (IX), advanced kicking (III–V), Razzle-Dazzle (I-1), elected safeties (I-5), weather (VI), power ratings (VIII), guaranteed in/out-of-bounds (I-4(C), I-6(C)), intentional delay (I-6(B)) | Separate Milestone 22 scope approvals |
@@ -255,9 +256,9 @@ return, so it does not eliminate the second attempt. Do not substitute NFL sudde
   management choices. After choosing runoff, resolve quarter/half expiration once;
   never allow a finalized game to be reopened. At 0:00 complete the current play,
   required conversion, and any defensive-penalty untimed down before finalizing.
-- **Timeouts:** Three per team per half, no carryover. Record the recipient choice
-  from the opening toss and give the other team the second-half choice, as Basic V-3
-  specifies; do not blindly import NFL defer/receiver behavior.
+- **Timeouts:** Three per team per half, no carryover. Reset both budgets at
+  halftime. Opening toss selection and reciprocal second-half kickoff follow the
+  selected Bowl Bound profile; see the second-half kickoff policy above.
 - **Deferred actions:** Guaranteed in/out-of-bounds declarations, intentional delay,
   Razzle-Dazzle, QB Sneak, Wild Card and other advanced defenses, weather, elected
   safeties, rating/YF adjustments, and advanced kicking remain unavailable until

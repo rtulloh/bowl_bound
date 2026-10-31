@@ -20,9 +20,15 @@ for (const reverse of [false, true]) {
     if (reverse) ids.reverse()
     const path = await select(page, ...ids)
     const phases = new Set()
+    let secondHalfKickoffSeen = false
     for (let step = 0; step < 1200; step++) {
       const view = (await (await page.request.get(path)).json()).view
       phases.add(view.phase)
+      if (!secondHalfKickoffSeen && view.clock.quarter === 3 && view.phase === 'kickoff') {
+        secondHalfKickoffSeen = true
+        expect(view.pending?.choices.map((choice) => choice.id) || []).not.toContain('half:receive')
+        expect(view.pending?.choices.map((choice) => choice.id) || []).not.toContain('half:kick')
+      }
       if (view.phase === 'opening_choice') {
         await expect(page.getByTestId('opening-screen')).toBeVisible()
         await expect(page.getByTestId('scoreboard')).toHaveCount(0)
@@ -31,7 +37,8 @@ for (const reverse of [false, true]) {
         await expect(page.getByTestId('game-clock')).toHaveText(view.clock.label)
       }
       if (view.finished) {
-        expect(phases.has('halftime_choice')).toBe(true)
+        expect(secondHalfKickoffSeen).toBe(true)
+        expect(phases.has('halftime_choice')).toBe(false)
         expect(view.score.home).toBe(view.scoring.filter((e) => e.team === view.home).reduce((sum, e) => sum + e.points, 0))
         expect(view.score.away).toBe(view.scoring.filter((e) => e.team === view.away).reduce((sum, e) => sum + e.points, 0))
         await page.getByTestId('team-statistics').locator('summary').click()
@@ -49,7 +56,7 @@ for (const reverse of [false, true]) {
         await expect(panel).toContainText(view.pending.chooser)
         if (view.phase !== "clock_choice") await expect(panel.locator("button:not(:disabled)").first()).toBeFocused()
         const enabled = view.pending.choices.filter((c) => c.enabled)
-        const choice = ['half:receive', 'ot:offense', 'conversion:kick', 'kick:touchback']
+        const choice = ['ot:offense', 'conversion:kick', 'kick:touchback']
           .map((id) => enabled.find((c) => c.id === id)).find(Boolean) || enabled[0]
         button = page.getByTestId('penalty-choice-' + choice.id)
       } else if (view.phase === 'kickoff') {

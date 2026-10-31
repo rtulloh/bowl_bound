@@ -435,7 +435,14 @@ class SavedGame:
             elif operation == "kick":
                 result = self._engine.kick(*arguments, dice=self._tape)
             elif operation == "decide":
-                result = self._engine.decide(*arguments, dice=self._tape)
+                if (
+                    self._tape.replaying
+                    and isinstance(self._engine, RegulationGame)
+                    and self._engine._consume_legacy_halftime_choice(arguments[0])
+                ):
+                    result = None
+                else:
+                    result = self._engine.decide(*arguments, dice=self._tape)
             elif operation == "action" and isinstance(self._engine, RegulationGame):
                 result = self._engine.action(*arguments, dice=self._tape)
             else:
@@ -642,13 +649,19 @@ def loads_game(text: str, load_team: Callable[[str], TeamChart]) -> SavedGame:
         if tape.position != len(tape.rolls):
             _fail()
         view = game.view()
-        if (
-            _view_digest(view) != data["state_digest"]
-            and _legacy_m27_view_digest(
-                view, getattr(game._engine, "_pending_timing_seconds", None)
+        legacy_halftime = getattr(game._engine, "_legacy_halftime_view", None)
+        valid_digests = {
+            _view_digest(view),
+            _legacy_m27_view_digest(view, getattr(game._engine, "_pending_timing_seconds", None)),
+        }
+        if legacy_halftime is not None:
+            valid_digests.update(
+                {
+                    _view_digest(legacy_halftime),
+                    _legacy_m27_view_digest(legacy_halftime, None),
+                }
             )
-            != data["state_digest"]
-        ):
+        if data["state_digest"] not in valid_digests:
             _fail()
         tape.replaying = False
         return game

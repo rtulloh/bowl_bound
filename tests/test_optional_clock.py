@@ -63,8 +63,12 @@ def test_half_or_game_boundary_does_not_roll_or_log_another_play(quarter: int) -
     assert "prior play's normal timing" in result.description
     assert result.trace == () and len(game.view().log) == 2
     assert game.view().log[-1] == prior
-    assert game.view().clock.remaining == 0
-    assert game.view().phase in {"halftime_choice", "overtime_choice"}
+    if quarter == 2:
+        assert game.view().clock.quarter == 3 and game.view().clock.remaining == 900
+        assert game.view().phase == "kickoff"
+    else:
+        assert game.view().clock.remaining == 0
+        assert game.view().phase == "overtime_choice"
 
 
 def test_bad_next_play_does_not_commit_pending_time() -> None:

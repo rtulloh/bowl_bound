@@ -226,8 +226,8 @@ The API keeps the original `mode: "drive"` default for compatibility with focuse
 one-drive clients/tests; `start_yards_to_goal` applies only to that mode. The web
 UI explicitly requests regulation. No existing in-memory drive is converted.
 
-Regulation phases add `opening_choice`, `kickoff`, `clock_choice`, `halftime_choice`,
-`final` and `overtime_choice` around `scrimmage`, `conversion_choice` and
+Regulation phases add `opening_choice`, `kickoff`, `clock_choice`, `final` and
+`overtime_choice` around `scrimmage`, `conversion_choice` and
 `two_point_try`. `view.status` supplies display text. A null field is not finality.
 `view.finished` guards completion; overtime choices are not finished games.
 `view.clock` contains quarter/remaining seconds, formatted labels and timeout counts;
@@ -235,9 +235,11 @@ Regulation phases add `opening_choice`, `kickoff`, `clock_choice`, `halftime_cho
 next-play controls during `clock_choice`; `view.clock_modifiers` supplies compact
 labels and exact decision IDs. Next-play requests commit normal prior timing in
 the engine, once, before consuming any new dice. A period-ending runoff advances
-the period without executing the requested next play; use the returned view.
+the period without executing the requested next play; at halftime it also
+schedules the reciprocal second-half kickoff. Onside kicks are unsupported, so
+this is the only available second-half kick action.
 Explicit `clock:runoff` remains accepted for older clients, but is not offered in
-current engine views or user interfaces. Toss/halftime choices may return a null
+current engine views or user interfaces. Opening-toss choices may return a null
 report. Conversion IDs remain `conversion:kick` and `conversion:two`; the
 two-point setup consumes neither dice nor a log entry. `ot:offense` / `ot:defense`
 select the overtime toss winner’s first-series role. `view.overtime` supplies round,

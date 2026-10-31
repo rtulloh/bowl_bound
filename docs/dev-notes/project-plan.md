@@ -206,7 +206,7 @@ Implementation and acceptance evidence: [Milestone 14 review](milestone-14.md).
 
 **Deliver:** standard Bowl Bound chart timing selected in Milestone 2, timeouts, Hail Mary, hurry-up/spike/kneel, quarter/half transitions, and immutable final state. Implement Bowl Bound procedures rather than copying NFL behavior. Alternate and hybrid timing remain deferred to Milestone 22.
 
-**Validate:** first-down, incomplete, out-of-bounds, penalty, and expiration timing; correct second-half choice; Hail Mary eligibility and every outcome; hurry-up hazards, spike/kneel down consumption, non-stacking clock reductions, and no reopening final games.
+**Validate:** first-down, incomplete, out-of-bounds, penalty, and expiration timing; reciprocal second-half kickoff order (corrected in Milestone 30); Hail Mary eligibility and every outcome; hurry-up hazards, spike/kneel down consumption, non-stacking clock reductions, and no reopening final games.
 
 **Commit:** `feat: implement timing and regulation flow`
 
@@ -509,6 +509,32 @@ Tracked work: [CLI-049](issues/CLI/CLI-049.md). See the
 [Milestone 29 work log](milestone-29.md).
 
 **Commit:** `milestone 29: clarify blank chart trace cells`
+
+### 30. Fix second-half kickoff order
+
+Added 2026-10-31 after the owner identified that the current halftime choice can
+let one team kick off both halves, which is not a valid football sequence. Basic
+V-3 (printed page 4) says the other player has a choice at the beginning of the
+second half. The implementation misread that as a choice of which team kicks or
+receives, instead of a choice of kick type by the team assigned to kick.
+
+**Deliver:** the team that kicked to open the game receives the second-half
+kickoff, and the opening receiver kicks. The second-half kicker may choose a
+normal or onside kick; onside kicks are unsupported, so automatically schedule
+the only available action, a normal kickoff, without a halftime prompt. Record
+this source interpretation and unsupported option in the rules profile.
+
+**Validate:** synthetic regulation tests cover both opening elections, verify the
+fixed second-half teams and timeout reset, and show that halftime has no choice
+or extra play/dice while onside kicks are unsupported. Preserve compatible
+saved-game replay, including a save at halftime, and retain old-choice
+compatibility only where needed for saved-command replay. Update rules
+documentation and run the full regression gate.
+
+Tracked work: [RULE-018](issues/RULE/RULE-018.md). See the
+[Milestone 30 work log](milestone-30.md).
+
+**Commit:** `milestone 30: fix second-half kickoff order`
 
 ## Decision gates
 

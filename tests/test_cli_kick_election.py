@@ -62,27 +62,19 @@ def test_human_computer_loop_does_not_prompt_for_another_k_after_electing_kick(s
 
 
 @pytest.mark.parametrize("seed", [7, 39])
-@pytest.mark.parametrize("command", ["k", "choose half:kick"])
-def test_halftime_kick_election_also_proceeds_without_duplicate_confirmation(
-    seed: int,
-    command: str,
-) -> None:
+def test_halftime_schedules_the_only_supported_kick_without_an_election(seed: int) -> None:
     app = regulation(Clock(2, 10), seed=seed)
     live(app)
-    assert app.command("1")
-    view, turn = app.public_view()
-    next_call = "1" if turn.human_role == "offense" else "A"
-    assert app.command(next_call)
-    assert app.game.view().phase == "halftime_choice"
-    owner = app.game.view().pending.chooser_side
-    app.human_side = owner
-    reference = loads_game(dumps_game(app.game), app.load_team)
-    assert app.command(command)
-    reference.execute_with_view("decide", ["half:kick"])
-    reference.execute_with_view("kick", ["kickoff"])
-    assert saved_facts(app.game) == saved_facts(reference)
-    assert app.game.view().pending is not None
-    assert "kick:touchback" in {choice.id for choice in app.game.view().pending.choices}
+    app.game.snap("1", "A")
+    app.game.decide("clock:runoff")
+    view = app.game.view()
+    assert view.phase == "kickoff" and view.pending is None
+    assert view.clock.quarter == 3 and view.clock.remaining == 900
+    assert view.state.possession == ("away" if view.opening_kicker == "home" else "home")
+    before = saved_facts(app.game)
+    assert not app.command("choose half:kick")
+    assert saved_facts(app.game) == before
+    assert "Not applied:" in app.output.getvalue()
 
 
 def test_receive_and_inspection_do_not_submit_a_human_kickoff() -> None:

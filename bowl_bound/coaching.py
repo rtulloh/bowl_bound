@@ -138,7 +138,6 @@ class BaselineCoach:
         preferred = (
             "clock:standard",
             "toss:receive",
-            "half:receive",
             "ot:offense",
             "conversion:kick",
             "kick:touchback",

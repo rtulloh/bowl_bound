@@ -4,8 +4,8 @@
 
 - Immutable quarter clock with shortest-category timing, late-half out-of-bounds
   windows, no two-minute warning, and three timeouts per side/half.
-- Engine-owned opening dice toss, kick/receive choices, second-half choice for
-  the other toss participant, quarter/half transitions and kickoff scheduling.
+- Engine-owned opening dice toss and kick/receive choices, reciprocal second-half
+  kickoff scheduling (corrected in Milestone 30), and quarter/half transitions.
 - Post-TD/PAT, field-goal and safety free kicks; carried try fouls are enforced
   on the following kickoff, including half-distance.
 - Pending clock management before 20/30-second runoff: timeouts, hurry-up and
@@ -48,6 +48,16 @@ Recorded in the rules profile:
 2. DEF R total-10 dash means no foul: retain assessment roll, apply no yardage and
    resolve the return on the next chart roll, not an invented zero-yard return.
 
+### Corrected implementation policy — 2026-10-31
+
+Milestone 15 incorrectly interpreted the other player's second-half choice in
+Basic V-3 as choosing which team kicks or receives. The choice is the kick type
+(normal or onside) by the team assigned to kick. The order is reciprocal: the
+opening kicker receives the second-half kickoff, and the opening receiver kicks.
+Onside kicks remain unsupported, so the normal kickoff is automatic. See
+[Milestone 30](milestone-30.md) and the updated
+[rules profile](../rules-profile.md).
+
 ## Architecture and compatibility
 
 RegulationGame composes PlaySession rather than duplicating chart/priority rules.
@@ -85,7 +95,8 @@ UI-005 kick descriptions remain Milestone 19; UI-011 dice colors remain Mileston
 - `.venv/bin/ruff format --check .`: 111 files already formatted.
 - Frontend `npm test`: 32 passed; `npm run build`: passed.
 - Frontend `BB_E2E_CHANNEL=chrome npx playwright test`: nine passed, including a
-  complete regulation game, quarter/halftime choices, clock controls, conversions,
+  complete regulation game, quarter transitions and halftime kickoff scheduling,
+  clock controls, conversions,
   score reconciliation and final-state immutability. Installed Chrome is used
   because bundled Playwright Chromium is absent.
 

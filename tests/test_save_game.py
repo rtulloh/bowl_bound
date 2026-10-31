@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+import bowl_bound.save_game as save_codec
 from bowl_bound.dice import DefensiveRoll, OffensiveRoll, ScriptedDice
 from bowl_bound.models import (
     NormalizedCell,
@@ -152,15 +153,61 @@ def test_halftime_and_opening_kicker_resume_without_duplicate_kickoff() -> None:
     opening(game)
     game.snap("1", "A")
     game.decide("clock:runoff")
-    assert game.view().phase == "halftime_choice"
+    assert game.view().phase == "kickoff"
+    assert game.view().clock.quarter == 3
     restored = clone(game)
-    assert restored.decide("half:kick") == game.decide("half:kick")
-    restored = clone(restored)
     assert restored.kick("kickoff") == game.kick("kickoff")
     if game.view().pending:
         assert restored.decide("kick:touchback") == game.decide("kick:touchback")
     assert restored.view() == game.view()
     assert len(game.view().log) == 3
+
+
+def test_pre_m30_halftime_save_resumes_at_automatic_second_half_kickoff() -> None:
+    game = new(mode="regulation", clock=Clock(2, 1))
+    opening(game)
+    game.snap("1", "A")
+    game.decide("clock:runoff")
+    engine = game._engine
+    legacy_view = engine._legacy_halftime_view
+    assert legacy_view is not None and legacy_view.phase == "halftime_choice"
+
+    payload = json.loads(dumps_game(game))
+    payload["state_digest"] = save_codec._view_digest(legacy_view)
+    payload["integrity"] = save_codec._digest(
+        {key: value for key, value in payload.items() if key != "integrity"}
+    )
+    restored = loads_game(
+        json.dumps(payload), lambda key: charts()[0] if key.endswith("home") else charts()[1]
+    )
+
+    assert restored.view() == game.view()
+    assert restored.view().phase == "kickoff"
+    assert restored.view().clock.quarter == 3
+
+
+def test_pre_m30_halftime_choice_replays_only_when_kickoff_matches_fixed_order() -> None:
+    game = new(mode="regulation", clock=Clock(2, 1))
+    opening(game)
+    game.snap("1", "A")
+    game.decide("clock:runoff")
+    engine = game._engine
+    expected_kicker = engine._opening_kicker.other
+    legacy_chooser = engine._toss_winner.other
+    matching_choice = "half:kick" if expected_kicker is legacy_chooser else "half:receive"
+
+    payload = json.loads(dumps_game(game))
+    payload["commands"].append(
+        {"operation": "decide", "arguments": [matching_choice], "error": None}
+    )
+    payload["integrity"] = save_codec._digest(
+        {key: value for key, value in payload.items() if key != "integrity"}
+    )
+    restored = loads_game(
+        json.dumps(payload), lambda key: charts()[0] if key.endswith("home") else charts()[1]
+    )
+
+    assert restored.view() == game.view()
 
 
 def test_overtime_toss_series_timeout_and_final_guard_survive_resume() -> None:
@@ -511,10 +558,19 @@ def test_complete_regulation_resume_matches_score_clock_statistics_and_traces() 
     opening(game)
     restored = clone(game)
     phases = set()
+    second_half_kickoff_seen = False
     checkpoints = set()
     for _ in range(1000):
         view = game.view()
         phases.add(view.phase)
+        if (
+            not second_half_kickoff_seen
+            and view.clock.quarter == 3
+            and view.phase == "kickoff"
+            and view.pending is None
+        ):
+            second_half_kickoff_seen = True
+            assert view.state.possession == ("away" if view.opening_kicker == "home" else "home")
         checkpoint = (
             view.clock.quarter,
             view.phase,
@@ -525,7 +581,9 @@ def test_complete_regulation_resume_matches_score_clock_statistics_and_traces() 
             restored = clone(restored)
         assert restored.view() == view
         if view.finished:
-            assert {"halftime_choice", "overtime_choice", "final"} <= phases
+            assert {"kickoff", "overtime_choice", "final"} <= phases
+            assert second_half_kickoff_seen
+            assert "halftime_choice" not in phases
             for quarter in range(1, 5):
                 assert (
                     sum(c.before - c.after for c in view.timing_log if c.quarter == quarter) == 900
@@ -535,11 +593,7 @@ def test_complete_regulation_resume_matches_score_clock_statistics_and_traces() 
         if view.pending and not view.clock_optional:
             choices = [c.id for c in view.pending.choices if c.enabled]
             choice = next(
-                (
-                    c
-                    for c in ("clock:runoff", "half:receive", "ot:offense", "kick:touchback")
-                    if c in choices
-                ),
+                (c for c in ("clock:runoff", "ot:offense", "kick:touchback") if c in choices),
                 choices[0],
             )
             assert restored.decide(choice) == game.decide(choice)
@@ -631,11 +685,7 @@ def test_complete_variable_yardage_game_reconciles_clock_stats_and_save_continua
         if view.pending and not view.clock_optional:
             choices = [c.id for c in view.pending.choices if c.enabled]
             choice = next(
-                (
-                    c
-                    for c in ("clock:runoff", "half:receive", "ot:offense", "kick:touchback")
-                    if c in choices
-                ),
+                (c for c in ("clock:runoff", "ot:offense", "kick:touchback") if c in choices),
                 choices[0],
             )
             assert restored.decide(choice) == game.decide(choice)

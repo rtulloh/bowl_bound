@@ -167,9 +167,10 @@ computer-owned turns, finished games or paused error recovery. Optional clock
 controls do not override the displayed scrimmage default. Inspection never
 submits it or advances dice; EOF/Ctrl-C/quit remain exits, not defaults.
 
-Selecting **Kick** at the opening or halftime election also submits the offered
-normal kickoff immediately—no second `K`. This applies to the numbered choice
-and `choose toss:kick` / `choose half:kick` too. Required return/penalty
+Selecting **Kick** at the opening election also submits the offered normal
+kickoff immediately—no second `K`. This applies to the numbered choice and
+`choose toss:kick`. Halftime schedules the reciprocal normal kickoff
+automatically because onside kicks are unsupported. Required return/penalty
 choices still stop for their owner; the computer resolves only its own choices.
 Choosing Receive does not submit a human-owned kick. Loading/inspecting an
 already-pending human kickoff does not submit it either. If the follow-up kick

@@ -143,17 +143,26 @@ def test_first_quarter_expiration_is_once_and_preserves_field_and_timeouts() -> 
         game.decide("clock:runoff")
 
 
-def test_halftime_gives_the_other_toss_player_a_choice_and_resets_timeouts() -> None:
+@pytest.mark.parametrize(
+    ("opening_choice", "opening_kicker", "second_half_kicker"),
+    [("toss:receive", "away", "Home"), ("toss:kick", "home", "Away")],
+)
+def test_halftime_schedules_reciprocal_kickoff_and_resets_timeouts(
+    opening_choice: str, opening_kicker: str, second_half_kicker: str
+) -> None:
     game = new_game(clock=Clock(2, 10, (0, 1)))
-    kickoff(game)
+    kickoff(game, opening_choice)
     snap(game)
     game.decide("clock:runoff")
-    assert game.view().phase == "halftime_choice"
-    assert game.view().pending.chooser == "Away"
-    assert game.view().clock.quarter == 2 and game.view().clock.remaining == 0
-    game.decide("half:receive")
-    assert game.view().clock.quarter == 3 and game.view().clock.timeouts == (3, 3)
-    assert game.view().state.possession_name == "Home"
+    view = game.view()
+    assert view.phase == "kickoff"
+    assert view.pending is None
+    assert view.opening_kicker == opening_kicker
+    assert view.clock.quarter == 3 and view.clock.remaining == 900
+    assert view.clock.timeouts == (3, 3)
+    assert view.state.possession_name == second_half_kicker
+    assert [action.key for action in view.actions.special] == ["kickoff"]
+    assert len(view.log) == 2
 
 
 def test_expiration_waits_for_conversion_then_has_no_spurious_kickoff() -> None:
@@ -226,7 +235,6 @@ def test_complete_regulation_reconciles_ledger_clock_and_immutable_end() -> None
                     key
                     for key in (
                         "clock:runoff",
-                        "half:receive",
                         "conversion:kick",
                         "kick:touchback",
                         "kick:fair_catch",
@@ -274,7 +282,7 @@ def test_hail_mary_action_resolves_without_defensive_dice() -> None:
     assert report.called_play == "Hail Mary" and report.yards == 35
     assert game.view().phase == "clock_choice"
     game.decide("clock:runoff")
-    assert game.view().phase == "halftime_choice"
+    assert game.view().phase == "kickoff"
 
 
 @pytest.mark.parametrize("quarter", [1, 2, 3, 4])

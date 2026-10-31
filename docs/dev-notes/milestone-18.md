@@ -7,7 +7,7 @@
   scoring, statistics, clock/timeouts, opening kicker and historical overtime.
 - Synthetic cases resume pending penalties (previous/end acceptance and decline),
   interceptions (return/incomplete), punts (fair catch/return), deferred return-fumble
-  recovery after a return penalty, PAT/two-point setup and tries, halftime choices,
+  recovery after a return penalty, PAT/two-point setup and tries, halftime kickoff,
   hurry-up, overtime toss/series/timeouts/repeated rounds/paired tries, and finals.
 - Loading consumes only already-observed rolls, with strict count/kind checks. A
   test forbids fresh RandomDice calls during load, then compares the next real snap.

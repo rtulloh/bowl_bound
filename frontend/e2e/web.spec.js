@@ -198,15 +198,20 @@ test('a complete regulation game shows quarter and half transitions and cannot r
   const gameId = (await (await created).json()).game_id
   const path = '/api/games/' + gameId
   const quarters = new Set()
-  let halfSeen = false
+  let secondHalfKickoffSeen = false
   for (let step = 0; step < 600; step++) {
     const view = (await (await page.request.get(path)).json()).view
     quarters.add(view.clock.quarter)
+    if (!secondHalfKickoffSeen && view.clock.quarter === 3 && view.phase === 'kickoff') {
+      secondHalfKickoffSeen = true
+      expect(view.pending?.choices.map((choice) => choice.id) || []).not.toContain('half:receive')
+      expect(view.pending?.choices.map((choice) => choice.id) || []).not.toContain('half:kick')
+    }
     await expect(page.getByTestId('quarter')).toHaveText(view.clock.quarter_label)
     await expect(page.getByTestId('game-clock')).toHaveText(view.clock.label)
     if (view.finished) {
       expect([...quarters]).toEqual([1, 2, 3, 4])
-      expect(halfSeen).toBe(true)
+      expect(secondHalfKickoffSeen).toBe(true)
       expect(view.clock.remaining).toBe(0)
       expect(view.score.home).toBe(view.scoring.filter((e) => e.team === view.home).reduce((n, e) => n + e.points, 0))
       expect(view.score.away).toBe(view.scoring.filter((e) => e.team === view.away).reduce((n, e) => n + e.points, 0))
@@ -219,11 +224,6 @@ test('a complete regulation game shows quarter and half transitions and cannot r
     }
     let button
     if (view.pending && !view.clock_optional) {
-      if (view.phase === 'halftime_choice') {
-        halfSeen = true
-        expect(view.pending.chooser).toBe('Alpha Tech')
-        expect(view.clock.remaining).toBe(0)
-      }
       const choice = view.pending.choices.find((c) => c.enabled)
       button = page.getByTestId('penalty-choice-' + choice.id)
     } else if (view.phase === 'kickoff') {
