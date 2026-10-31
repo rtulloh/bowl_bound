@@ -51,5 +51,8 @@ Tracked work: [DEV-050](issues/DEV/DEV-050.md).
 - Browser regression: `BB_E2E_SEASONS=/private/tmp/bowl-bound-browser-samples-20261031 npm run test:e2e`
   passed all 33 tests. The isolated fixture path uses `/private/tmp` because
   macOS `/tmp` is a symlink and the sample installer refuses symlinked paths.
-- CI pins Python 3.13.17; the local full regression used Python 3.13.1. Confirm
-  the exact upstream workflow passes after the tested commit is pushed.
+- Upstream workflow [`41203334774`](https://github.com/rtulloh/bowl_bound/actions/runs/41203334774)
+  passed on commit `0f4eab9` with Python 3.13.17: 2,607 Python tests, 93.27%
+  coverage, Ruff check/format, and pip check passed; 120 frontend tests, frontend
+  build, and audit passed; all 33 browser tests passed; Apple silicon macOS,
+  Intel macOS, and Windows builds and smoke tests passed.
