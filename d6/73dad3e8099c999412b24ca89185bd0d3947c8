@@ -1,0 +1,27 @@
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_354a55e24afae4 18,20-26,210,247,300-320
+bowl_bound/difficulty.py
+  s_ed54ab581b3d60::t_0b5aaf32be8103 59-66
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_4bd736c4e50602 353-361
+docs/cli.md
+  s_ed54ab581b3d60::t_d49323c75c7cd8 180-182
+tests/test_postgame_call_summary.py
+  s_ed54ab581b3d60::t_67ccb6fb20e937 1-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "d673dad3e8099c999412b24ca89185bd0d3947c8",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
