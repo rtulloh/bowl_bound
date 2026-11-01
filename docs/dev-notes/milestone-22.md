@@ -142,6 +142,18 @@ enabled solely because Paydirt has a similarly named feature.
   policy changes their weights, not the legal menu or engine resolution. Ship as
   v6 to keep earlier policy streams intact.
 
+### Baseline decision review — 2026-11-01
+
+- Reviewed Paydirt `paydirt/computer_ai.py:1242-1359` for its decision across
+  penalty families and kick phases. Adapt explicit, legal-choice preferences;
+  do not copy Paydirt's `PlayOutcome` access or its return, field-position, and
+  penalty assumptions into Bowl Bound.
+- Bowl Bound's coaching observation currently includes legal choice IDs, not
+  prepared penalty outcomes. Do not infer acceptance value by parsing labels or
+  duplicating engine resolution. Versioned return/spot preferences and stale
+  fallback handling can be tested from current facts; penalty strategy may need
+  additional engine-provided facts before it can be meaningfully evaluated.
+
 ## Ticket coverage
 
 | Milestone 22 change or decision | Ticket |

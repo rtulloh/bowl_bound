@@ -24,7 +24,16 @@ def new(policy: str = "chart-v1") -> SavedGame:
 
 
 @pytest.mark.parametrize(
-    "policy", ["chart-v1", "chart-v2", "chart-v3", "chart-v4", "chart-v5", "chart-v6"]
+    "policy",
+    [
+        "chart-v1",
+        "chart-v2",
+        "chart-v3",
+        "chart-v4",
+        "chart-v5",
+        "chart-v6",
+        "chart-v7",
+    ],
 )
 def test_chart_policy_is_saved_and_restores_identical_future_calls_and_dice(policy: str) -> None:
     teams = default_teams()
@@ -135,7 +144,7 @@ def test_cli_hard_flag_and_legacy_chart_resume_preserve_distinct_policies(
         )
         == 0
     )
-    assert policies == ["hard-v6"]
+    assert policies == ["hard-v7"]
     path = tmp_path / "private-test.json"
     game = SavedGame.new(
         *teams,
@@ -147,11 +156,20 @@ def test_cli_hard_flag_and_legacy_chart_resume_preserve_distinct_policies(
     )
     path.write_text(dumps_game(game))
     assert main(["--seasons", str(tmp_path), "--load", str(path), "--compact"]) == 0
-    assert policies == ["hard-v6", "chart-v1"]
+    assert policies == ["hard-v7", "chart-v1"]
 
 
 @pytest.mark.parametrize(
-    "policy", ["chart-v1", "chart-v2", "chart-v3", "chart-v4", "chart-v5", "chart-v6"]
+    "policy",
+    [
+        "chart-v1",
+        "chart-v2",
+        "chart-v3",
+        "chart-v4",
+        "chart-v5",
+        "chart-v6",
+        "chart-v7",
+    ],
 )
 def test_api_can_opt_in_without_exposing_policy_plan(tmp_path: Path, policy: str) -> None:
     ids = [write_team(tmp_path, chart) for chart in default_teams()]

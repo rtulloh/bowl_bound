@@ -38,8 +38,8 @@ class DifficultyCoach(ChartAwareCoach):
     ) -> None:
         if mode not in AGGRESSION:
             raise ValueError("difficulty must be easy, medium or hard")
-        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6}:
-            raise ValueError("difficulty policy version must be 1, 2, 3, 4, 5 or 6")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7}:
+            raise ValueError("difficulty policy version must be 1, 2, 3, 4, 5, 6 or 7")
         super().__init__(seed, home, away, version=version)
         self.mode = mode
         self.behavior = behavior_for_policy(f"{mode}-v{version}")
@@ -242,6 +242,8 @@ class DifficultyCoach(ChartAwareCoach):
 
     def decision(self, observation: CoachObservation) -> str:
         """Apply versioned margin-aware try choices before the baseline fallback."""
+        if self.version >= 7:
+            self.analysis_fallback = False
         choices = observation.choices
         if (
             self.version >= 3

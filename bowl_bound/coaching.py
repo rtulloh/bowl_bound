@@ -62,8 +62,8 @@ class BaselineCoach:
     """
 
     def __init__(self, seed: int, *, version: int = 1) -> None:
-        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6}:
-            raise ValueError("baseline policy version must be 1, 2, 3, 4, 5 or 6")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7}:
+            raise ValueError("baseline policy version must be 1, 2, 3, 4, 5, 6 or 7")
         self._seed = seed
         self.version = version
         policy = "baseline" if version == 1 else "baseline-v2"
@@ -144,7 +144,25 @@ class BaselineCoach:
 
     def decision(self, observation: CoachObservation) -> str:
         """Conservative baseline preferences with engine-constrained fallback."""
+        if self.version >= 7:
+            self.analysis_fallback = False
         choices = observation.choices
+        protecting_lead = (
+            not observation.overtime
+            and observation.quarter == 4
+            and observation.remaining <= self.behavior.protect_seconds
+            and observation.score_difference >= self.behavior.large_lead_points
+        )
+        if self.version >= 7:
+            if protecting_lead:
+                for key in ("kick:fair_catch", "kick:touchback", "end_zone:touchback"):
+                    if key in choices:
+                        return key
+            for key in ("kick:return", "end_zone:return"):
+                if key in choices:
+                    return key
+            if "kick:out_of_bounds:spot" in choices:
+                return "kick:out_of_bounds:spot"
         if (
             observation.quarter == 4
             and observation.remaining <= self.behavior.late_seconds
