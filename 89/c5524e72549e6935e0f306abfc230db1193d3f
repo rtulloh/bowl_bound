@@ -1,0 +1,27 @@
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_70811a572d793d 912,920,1011-1063
+docs/dev-notes/issue-tracker.md
+  s_ed54ab581b3d60::t_88fd436ca0a1ec 8,10,58,345
+docs/dev-notes/issues/DEV/DEV-052.md
+  s_ed54ab581b3d60::t_33d78017f63279 1-28
+tests/test_coaching_contract.py
+  s_ed54ab581b3d60::t_a6342b7334adba 7,65-66,107-110
+tests/test_commentary_replay.py
+  s_ed54ab581b3d60::t_b2ae715daa4d1d 9-15,17,29-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "89c5524e72549e6935e0f306abfc230db1193d3f",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
