@@ -1,0 +1,21 @@
+docs/dev-notes/issues/DEV/DEV-007.md
+  s_ed54ab581b3d60::t_001012e1304f53 4,8,10,12,60-66
+scripts/run_local_season.py
+  s_ed54ab581b3d60::t_b53a4c12da1d5b 326,364,392
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "2bea18e57cddca69c44b98c6095eb5fa8a39e593",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
