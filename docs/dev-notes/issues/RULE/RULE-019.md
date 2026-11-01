@@ -1,16 +1,16 @@
 ---
 id: RULE-019
 title: Define and implement Bowl Bound Advanced II defensive options
-status: open
+status: resolved
 priority: Medium
 milestone: '22'
 created-at: 2026-11-01
-resolved-at: null
+resolved-at: 2026-11-01
 closed-at: null
 tags:
 - advanced-option
 links: []
-commits: []
+commits: [e0081ac, 2bea18e]
 ---
 
 ## Description
@@ -24,7 +24,10 @@ Advanced Rule II lists Wild Card, run/pass, nickel-zone, and red-zone defenses, 
 - Cover exact defensive-die ranges, Play 5 option branches, conditional yardage doubling, QR/QT classification, Red Zone eligibility, API/CLI actions, and save replay with synthetic charts.
 - Keep QR/QT pass classification limited to conditional-call correctness; fixed result cells remain keyed to the selected play and resolved SOP/BLP branch.
 - Reject malformed saved privilege arrays, including nested JSON values, through the normal invalid-save error path.
-- Full focused and cumulative regressions, formatting/lint checks, and the tested commit reference remain to be recorded before resolution.
+- Test-first evidence: all nine initial synthetic Advanced II cases failed before the engine exposed these calls. Synthetic coverage now checks eligibility, every defensive roll total, Play 5 branches, QR/QT and Screen classification, Red Zone limits, API/CLI actions, save replay, and malformed privilege data.
+- Tested commits: `e0081ac` implements Advanced II; cumulative regression was run on `2bea18e`.
+- Validation: 2,904 Python tests passed at 92.76% branch-aware coverage; 35 focused Advanced II tests; 119 frontend tests; production build; npm audit with zero vulnerabilities; 33 real-engine browser tests; Ruff lint/format, pip check, and 18 issue-index tests all passed.
+- Automated verification is complete. Owner play-test confirmation remains before closure.
 
 ## Comments
 
@@ -36,3 +39,6 @@ Created with scripts/create_issue.py. Keep evidence public-safe.
 
 --- 2026-11-01 13:52 ---
 Rulebook review clarified that QR/QT affect whether a conditional Run/Pass guess is correct, while the defense result tables remain keyed to the play row (including an SOP/BLP branch changing Play 5 to Play 7/8). Add synthetic tests for both facts.
+
+--- 2026-11-01 14:05 ---
+Resolved after synthetic tests and cumulative regression passed on `2bea18e`. The new defense-result tests distinguish conditional guess classification from fixed play-row results. Kept open for owner play-test confirmation.
