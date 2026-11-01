@@ -70,13 +70,14 @@ _CHOICE_KEYS = {
     "fair_catch": "FC",
     "hurry": "N",
     "spike": "S",
+    "delay": "D",
 }
 HELP = (
     "Shortcuts: use the bracketed keys in the current menu (case-insensitive).\n"
     "Solitaire vs computer: 1-9 or Q (QB Sneak); use an offered A-F or Advanced II defense.\n"
     "Add T to a play or formation key (for example, 7T or AT) to request a timeout after "
     "the play. The game uses it only if offered.\n"
-    "When offered: P punt, F field goal, K kickoff/kneel, O onside at kickoff, "
+    "When offered: P punt, F field goal, K kickoff/kneel, O onside at kickoff, D delay penalty, "
     "H Hail Mary; R receive.\n"
     "Before a play: O declare out of bounds or I declare in bounds when offered.\n"
     "Full commands still work: call KEY; choose ID; kick KEY; action KEY.\n"

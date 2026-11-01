@@ -54,9 +54,10 @@ uses no dice and is unavailable during a pending play decision.
 
 The clock advances through engine decisions, not real elapsed time. Standard
 play timing applies automatically with your next call; there is no separate
-runoff action. Kneel to run down the clock. Timeouts and spikes are one-shot
-choices; Hurry-up mode stays selected until turned off but applies only where
-legal. New/loaded games reset Hurry-up mode. When offered, OOB and IB declare
+runoff action. Kneel to run down the clock. Timeouts, spikes, and the intentional
+delay penalty are one-shot choices; delay is offered only after an eligible
+30-second play and adds five yards. Hurry-up mode stays selected until turned off
+but applies only where legal. New/loaded games reset Hurry-up mode. When offered, OOB and IB declare
 the next scrimmage play's bounds and clear after that play; OOB guarantees a
 10-second play. Each costs five yards only when it changes a result, subject to
 the rulebook exceptions. The terminal accepts O and I while offered, or

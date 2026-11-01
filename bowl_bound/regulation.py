@@ -217,6 +217,14 @@ class RegulationGame:
                     choices.append(
                         PenaltyChoice("clock:hurry", "Hurry next snap; play takes 20 seconds", True)
                     )
+                if self._pending_timing_seconds == 30 and self._clock.remaining > 30:
+                    choices.append(
+                        PenaltyChoice(
+                            "clock:delay",
+                            "Take 5 yards; prior play takes 40 seconds",
+                            True,
+                        )
+                    )
                 if self._session.view().state.down < 4:
                     choices.append(
                         PenaltyChoice(
@@ -417,7 +425,11 @@ class RegulationGame:
             status = "Untimed down: the quarter cannot end on an accepted defensive penalty."
         if self._hurried:
             status += " Hurry-up is committed for the next snap."
-        labels = {"clock:hurry": "Hurry-up", "clock:spike": "Spike"}
+        labels = {
+            "clock:hurry": "Hurry-up",
+            "clock:spike": "Spike",
+            "clock:delay": "Intentional delay",
+        }
         for team, available in zip(Possession, self._clock.timeouts, strict=True):
             labels[f"clock:timeout:{team.value}"] = f"{self._names[team]} timeout ({available})"
         modifiers = (
@@ -627,6 +639,14 @@ class RegulationGame:
                 self._last_report = self._session.automatic("spike")
                 if self._last_report.timing.change_of_possession:
                     seconds = min(seconds, 10)
+            elif choice == "clock:delay":
+                self._phase = RegulationPhase.LIVE
+                self._pending_timing_seconds = 0
+                self._charge(40, choice)
+                if self._clock.remaining > 0:
+                    self._last_report = self._session.intentional_delay()
+                self._advance()
+                return self._last_report
             self._phase = RegulationPhase.LIVE
             self._charge(seconds, choice)
             self._advance()

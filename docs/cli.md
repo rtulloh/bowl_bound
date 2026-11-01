@@ -105,7 +105,7 @@ Without `--compact`, the expanded menu is shown at each turn.
 | `ES` | Elect a safety when offered; the opponents score two and the conceding team receives a free kick from its own 20 |
 | `R` | Receive or return, as labeled in the current decision |
 | `TB`, `FC` | Touchback or fair catch when offered |
-| `N`, `S` | Apply an offered hurry or spike clock choice |
+| `N`, `S`, `D` | Apply an offered hurry, spike, or intentional delay clock choice |
 | `T` | Your offered timeout, on offense or defense; append to a call as `7T`, `AT` or `RUNT` |
 | `W` | Save immediately to a new private file; `W PATH` selects an explicit new filename |
 | `Z` | Toggle Easy-only coaching at play selection (on by default) |

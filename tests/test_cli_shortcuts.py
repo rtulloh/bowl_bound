@@ -157,7 +157,10 @@ def test_game_play_shortcuts_only_submit_offered_engine_actions(key: str, action
     assert saved_facts(app.game) == saved_facts(reference)
 
 
-@pytest.mark.parametrize("key,choice", [("n", "clock:hurry"), ("s", "clock:spike")])
+@pytest.mark.parametrize(
+    "key,choice",
+    [("n", "clock:hurry"), ("s", "clock:spike"), ("d", "clock:delay")],
+)
 def test_clock_shortcuts_use_legal_choices_without_reinterpreting_timing(
     key: str, choice: str
 ) -> None:

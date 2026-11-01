@@ -133,6 +133,61 @@ def test_spike_adjusts_prior_play_and_consumes_another_down_without_dice(
     assert game.view().log[-1].called_play == "Spike" and game.view().log[-1].trace == ()
 
 
+def test_intentional_delay_adds_five_yards_and_charges_forty_seconds() -> None:
+    game = new_game(clock=Clock(1, 50))
+    kickoff(game)
+    snap(game)
+
+    assert "clock:delay" in {choice.id for choice in game.view().clock_modifiers}
+    report = game.decide("clock:delay")
+
+    assert report is not None
+    assert report.called_play == "Delay of Game"
+    assert report.yards == -5 and report.trace == ()
+    assert report.state_before.yards_to_goal == 77
+    assert report.state_after.yards_to_goal == 82
+    assert report.state_after.down == 2 and report.state_after.yards_to_go == 12
+    assert game.view().clock.remaining == 10
+    assert game.view().timing_log[-1].seconds == 40
+    assert game.view().timing_log[-1].method == "clock:delay"
+
+
+def test_intentional_delay_that_expires_period_does_not_apply_penalty() -> None:
+    game = new_game(clock=Clock(1, 40))
+    kickoff(game)
+    snap(game)
+
+    assert "clock:delay" in {choice.id for choice in game.view().clock_modifiers}
+    game.decide("clock:delay")
+
+    assert game.view().clock.quarter == 2 and game.view().clock.remaining == 900
+    assert game.view().state.yards_to_goal == 77
+    assert all(report.called_play != "Delay of Game" for report in game.view().log)
+    assert game.view().timing_log[-1].seconds == 40
+
+
+def test_intentional_delay_is_not_offered_after_a_twenty_second_play() -> None:
+    game = new_game(clock=Clock(1, 80), gain=12)
+    kickoff(game)
+    snap(game)
+
+    assert game.view().phase == "clock_choice"
+    assert "clock:delay" not in {choice.id for choice in game.view().clock_modifiers}
+    with pytest.raises(InvalidDecisionError):
+        game.decide("clock:delay")
+
+
+def test_defensive_timeout_removes_intentional_delay_opportunity() -> None:
+    game = new_game(clock=Clock(1, 50))
+    kickoff(game)
+    snap(game)
+    game.decide("clock:timeout:away")
+
+    assert game.view().phase == "scrimmage"
+    with pytest.raises(PendingDecisionError):
+        game.decide("clock:delay")
+
+
 def test_kneel_loses_two_and_uses_standard_clock_choices() -> None:
     game = new_game()
     kickoff(game)

@@ -30,7 +30,7 @@ college rules require dated sources, not Paydirt NFL behavior or a moving refere
 | Hurry-up, spike, kneel | Include using Bowl Bound procedures; Paydirt is a design reference only | Advanced I-4(A–B), pp. 14–15; I-6(A), p. 15; Milestone 15 |
 | Per-play bounds declarations | OOB (I-4(C)) guarantees 10 seconds; IB (I-6(C)) removes an existing OOB marker. Each costs five yards only if it changes the result, with printed exceptions. Applies to the next scrimmage play, not a punt. | Milestone 22, RULE-010 |
 | Advanced II defenses | New games offer Wild Card, conditional Run/Pass, Nickel Zone and Red Zone. A printed W privilege makes Wild Card and Run/Pass free; otherwise they are conditional. Incorrect conditional guesses double eligible nonnegative yardage, with Rule IX exclusions. Play 6 Screen and QR/QT count as passes for conditional guesses. Nickel Zone is always available; Red Zone is available only inside the defense's 20. Wild Card Play 5 requires an exact run/SOP/BLP guess; QB Sneak can be specifically Wild Carded. | User decision 2026-11-01; RULE-019–021 |
-| Approved situational plays | Elected safety (I-5) is implemented; Razzle-Dazzle (I-1) and intentional delay (I-6(B)) remain unavailable until their tickets are verified | Owner decision 2026-11-01; RULE-022, RULE-028, RULE-029, RULE-031 |
+| Approved situational plays | Elected safety (I-5) and intentional delay (I-6(B)) are implemented; Razzle-Dazzle (I-1) remains unavailable until verified | Owner decision 2026-11-01; RULE-022, RULE-028, RULE-029, RULE-031 |
 | Power ratings | Informational chart metadata only; do not change eligibility, outcomes, or scoring | Owner decision 2026-11-01; Advanced VIII point-spread/tracking system is not part of engine play (RULE-024) |
 | Deferred options | Yardage factors (IX), advanced kicking, returns and blocks (III–V), weather (VI) | Owner decisions in Milestone 22; Basic VI-8 onside kickoff is implemented under RULE-025. Yardage factors remain excluded because their printed methods depend on power ratings and point spreads (RULE-023); fake/block options (RULE-026), advanced kicks and returns (RULE-032), and weather (RULE-030) remain unavailable. |
 | Timing | Standard chart timing only; no alternate or hybrid profile | Owner decision in Milestone 22 (RULE-027); manual runoff choices were removed under RULE-017 |
@@ -260,12 +260,18 @@ return, so it does not eliminate the second attempt. Do not substitute NFL sudde
   seconds total; previous 20-second play plus spike takes 10. Previous 10-second
   plays gain no saving. Consume a down without dice; possession must still belong
   to the offense and another down must be available.
+- **Intentional delay:** After an unmodified 30-second play, offer the offense a
+  five-yard delay-of-game penalty that makes the combined timing 40 seconds, if
+  the defense has not used a timeout. Apply the fixed penalty without a dice roll;
+  preserve the down. If the 40 seconds expire the period, end it without applying
+  the penalty. Do not offer this choice after a shorter play, a timeout, or a change
+  of possession (Advanced I-6(B); RULE-031).
 - **Kneel:** Apply Advanced I-6(A): automatic two-yard loss, no dice; 30 seconds
   unless a shorter timing category applies. If the two-yard loss reaches or crosses
   the offense’s own goal line, score a safety, including a kneel from its own 1 or 2.
-- **Expiration:** Before committing the prior play’s runoff, offer only legal clock
-  management choices. After choosing runoff, resolve quarter/half expiration once;
-  never allow a finalized game to be reopened. At 0:00 complete the current play,
+- **Expiration:** Complete the current play, apply its standard timing and any
+  selected legal clock modifier once, then resolve quarter/half expiration before
+  starting another play. Never allow a finalized game to be reopened. At 0:00 complete the current play,
   required conversion, and any defensive-penalty untimed down before finalizing.
 - **Timeouts:** Three per team per half, no carryover. Reset both budgets at
   halftime. Opening toss selection and reciprocal second-half kickoff follow the
@@ -274,9 +280,8 @@ return, so it does not eliminate the second attempt. Do not substitute NFL sudde
   defense two points. This is a no-dice, no-time action; the conceding team then
   receives a safety free kick from its own 20. It is unavailable during a
   pending decision or while the ball is free (Advanced I-5; RULE-029).
-- **Approved actions awaiting implementation:** Razzle-Dazzle and intentional
-  delay (RULE-028 and RULE-031) remain unavailable until their individual
-  Milestone 22 changes are verified.
+- **Approved actions awaiting implementation:** Razzle-Dazzle (RULE-028) remains
+  unavailable until its Milestone 22 change is verified.
 - **Deferred actions:** Weather, yardage-factor adjustments and Advanced III–V
   kicking remain unavailable pending their own Milestone 22 decisions. Power ratings
   remain informational (RULE-024).

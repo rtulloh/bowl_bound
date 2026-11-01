@@ -56,7 +56,7 @@ the stable Formation A–F identifiers; naming does not alter chart lookups or d
 Legacy save digests canonicalize only defensive selector wording back to those
 identifiers, preserving their original gameplay/trace checks.
 
-**Timeout** and **Spike** are one-shot engine decisions, not modes. They appear
+**Timeout**, **Spike**, and **Intentional delay** are one-shot engine decisions, not modes. They appear
 in the play-modifier row only when the engine offers them after an eligible play;
 there is no persistent Spike button. **OOB** and **IB** appear when offered as
 mutually exclusive declarations for the next scrimmage play. They clear after

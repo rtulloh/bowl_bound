@@ -23,7 +23,7 @@ from .game_state import (
     spot_label,
     start_drive,
 )
-from .models import Defense, Play, ResultKind, TeamChart
+from .models import Defense, PenaltyCode, PenaltyData, PenaltyTeam, Play, ResultKind, TeamChart
 from .penalties import PreparedPlay, prepare_play
 from .penalty_yardage import (
     AssessedPenalty,
@@ -552,6 +552,37 @@ class PlaySession:
                 ),
             )
         report = self._finish_report(report)
+        self._log.append(report)
+        return report
+
+    def intentional_delay(self) -> PlayReport:
+        """Enforce the Advanced I-6(B) five-yard penalty without a dice roll."""
+        if self._pending_view() is not None or self._special is not None:
+            raise PendingDecisionError("finish the live procedure before taking a delay penalty")
+        if self._phase is not SessionPhase.SCRIMMAGE or self._field is None:
+            raise SessionFinishedError("intentional delay requires a live scrimmage")
+        field = self._field
+        before = self._state_view(field)
+        penalty = AssessedPenalty(PenaltyData(PenaltyTeam.OFFENSE, PenaltyCode.FIXED, yards=5), 5)
+        self._field = enforce_penalty(field, penalty)
+        after = self._state_view(self._field)
+        yards = before.yards_to_goal - after.yards_to_goal
+        report = PlayReport(
+            len(self._log) + 1,
+            True,
+            False,
+            "intentional_delay",
+            yards,
+            "Delay of Game",
+            "Delay of Game",
+            "No formation",
+            before,
+            after,
+            f"{self._charts[field.possession].name}: intentional delay; 5-yard penalty.",
+            None,
+            (),
+            TimingFacts(penalty=True, no_elapsed_time=True),
+        )
         self._log.append(report)
         return report
 

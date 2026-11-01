@@ -909,12 +909,14 @@ def loads_game(
         legacy_halftime = getattr(game._engine, "_legacy_halftime_view", None)
         valid_digests = {
             _view_digest(view),
+            _legacy_m22_view_digest(view),
             _legacy_m27_view_digest(view, getattr(game._engine, "_pending_timing_seconds", None)),
         }
         if legacy_halftime is not None:
             valid_digests.update(
                 {
                     _view_digest(legacy_halftime),
+                    _legacy_m22_view_digest(legacy_halftime),
                     _legacy_m27_view_digest(legacy_halftime, None),
                 }
             )
@@ -947,7 +949,7 @@ def _legacy_m27_view_digest(
     view: SessionView | RegulationView, pending_timing_seconds: int | None
 ) -> str:
     """Recreate the pre-M27 digest for a state replayed with implicit timing."""
-    data = asdict(view)
+    data = _legacy_m22_view_data(view)
     if "game_actions" in data:
         data["game_actions"] = [
             action for action in data["game_actions"] if action["key"] != "elect_safety"
@@ -978,6 +980,24 @@ def _legacy_m27_view_digest(
                 *data["pending"]["choices"],
             ]
     return _semantic_view_digest(data)
+
+
+def _legacy_m22_view_digest(view: SessionView | RegulationView) -> str:
+    """Recreate M22 digests from before intentional delay added a clock choice."""
+    return _semantic_view_digest(_legacy_m22_view_data(view))
+
+
+def _legacy_m22_view_data(view: SessionView | RegulationView) -> dict[str, Any]:
+    """Project newly added M22 actions out of an older saved view."""
+    data = asdict(view)
+    if data.get("pending") is not None:
+        data["pending"]["choices"] = [
+            choice for choice in data["pending"]["choices"] if choice["id"] != "clock:delay"
+        ]
+    data["clock_modifiers"] = [
+        choice for choice in data.get("clock_modifiers", []) if choice["id"] != "clock:delay"
+    ]
+    return data
 
 
 def _semantic_view_digest(data: dict[str, Any]) -> str:

@@ -307,8 +307,9 @@ enabled solely because Paydirt has a similarly named feature.
   scope decision; [RULE-028](issues/RULE/RULE-028.md),
   [RULE-029](issues/RULE/RULE-029.md), and
   [RULE-031](issues/RULE/RULE-031.md) remain separate implementation tickets.
-- None is enabled by the scope decision. Each stays unavailable until its own
-  rulebook review, synthetic test-first implementation, and verification.
+- The elected safety and intentional delay implementations are complete and
+  remain open for owner play-test confirmation. Razzle-Dazzle stays unavailable
+  until its own rulebook review, synthetic test-first implementation, and verification.
 - Per-game settings that let players enable or disable advanced options are
   future work; Milestone 22 does not add a rules-selection screen.
 

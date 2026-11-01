@@ -2,7 +2,7 @@
 
 import json
 import sys
-from dataclasses import replace
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import pytest
@@ -372,6 +372,58 @@ def test_saves_write_defense_chart_markers_and_read_legacy_privileges() -> None:
     )
 
     assert json.loads(dumps_game(restored))["teams"]["home"]["defense_chart_markers"] == ["W"]
+
+
+def test_intentional_delay_save_replays_without_dice_or_state_drift() -> None:
+    game = new(
+        mode="regulation",
+        clock=Clock(1, 50),
+        rolls=[
+            OffensiveRoll(3, 4, 5),
+            OffensiveRoll(1, 0, 0),
+            OffensiveRoll(1, 0, 0),
+            OffensiveRoll(1, 0, 0),
+            DefensiveRoll(1, 0),
+        ],
+    )
+    opening(game)
+    game.snap("9", "A")
+    game.decide("clock:delay")
+
+    restored = clone(game)
+
+    assert restored.view() == game.view()
+
+
+def test_pre_delay_clock_choice_save_digest_remains_loadable() -> None:
+    game = new(
+        mode="regulation",
+        clock=Clock(1, 50),
+        rolls=[
+            OffensiveRoll(3, 4, 5),
+            OffensiveRoll(1, 0, 0),
+            OffensiveRoll(1, 0, 0),
+            OffensiveRoll(1, 0, 0),
+            DefensiveRoll(1, 0),
+        ],
+    )
+    opening(game)
+    game.snap("9", "A")
+    data = json.loads(dumps_game(game))
+    legacy_view = asdict(game.view())
+    legacy_view["pending"]["choices"] = [
+        choice for choice in legacy_view["pending"]["choices"] if choice["id"] != "clock:delay"
+    ]
+    legacy_view["clock_modifiers"] = [
+        choice for choice in legacy_view["clock_modifiers"] if choice["id"] != "clock:delay"
+    ]
+    data["state_digest"] = save_codec._semantic_view_digest(legacy_view)
+
+    restored = loads_game(
+        seal(data), lambda key: charts()[0] if key == "2002/home" else charts()[1]
+    )
+
+    assert restored.view() == game.view()
 
 
 def test_save_rejects_ambiguous_legacy_and_current_marker_keys() -> None:
