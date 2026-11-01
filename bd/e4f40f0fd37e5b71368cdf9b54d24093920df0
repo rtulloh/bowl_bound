@@ -1,0 +1,43 @@
+bowl_bound/regulation.py
+  s_ed54ab581b3d60::t_01912d9da44d1a 61-63,354-355,363-373
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_ab4e521302d185 725-727
+docs/api.md
+  s_ed54ab581b3d60::t_de1403de36ac97 26-31
+docs/coaching.md
+  s_ed54ab581b3d60::t_b71529e937aa79 56-62
+docs/web-demo.md
+  s_ed54ab581b3d60::t_039e161329c79b 114-116
+frontend/src/App.jsx
+  s_ed54ab581b3d60::t_61f8e78e0b22ed 204,227
+frontend/src/components/Scoreboard.jsx
+  s_ed54ab581b3d60::t_72ccb58defc89a 5,12-13,34-35
+frontend/src/test/compactGame.test.jsx
+  s_ed54ab581b3d60::t_3d30cdae8e0926 143,149,155,162-170
+frontend/src/test/components.test.jsx
+  s_ed54ab581b3d60::t_8bc5c728b067c2 131-148
+frontend/src/test/fixtures.js
+  s_ed54ab581b3d60::t_e6729aeef0f5d8 7-8
+frontend/src/test/regulation.test.jsx
+  s_ed54ab581b3d60::t_6fe5a36a312c77 7
+tests/test_api_regulation.py
+  s_ed54ab581b3d60::t_05020d59d6e1df 33-35,54-55
+tests/test_regulation.py
+  s_ed54ab581b3d60::t_3b94dfa9ab698d 68-77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "bde4f40f0fd37e5b71368cdf9b54d24093920df0",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
