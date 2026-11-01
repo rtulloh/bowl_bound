@@ -1,27 +1,27 @@
 ---
 id: RULE-010
 title: Support per-play mutually exclusive IB and OOB declarations
-status: open
+status: resolved
 priority: Medium
 milestone: '22'
 created-at: 2026-10-26
-resolved-at: null
+resolved-at: 2026-11-01
 closed-at: null
-tags:
-- requested
+tags: []
 links: []
-commits: []
+commits: [a9316e0]
 ---
 
 ## Description
 
-Owner requested per-play in-bounds (IB) and out-of-bounds (OOB) declarations beside Hurry-up, Timeout and Spike. The local Bowl Bound rulebook defines optional Advanced Rule I-4(C) OOB and I-6(C) IB declarations before the offensive dice roll. OOB guarantees a 10-second play; IB only increases the likelihood that the clock keeps running. Neither declaration is implemented in the current engine; disabled UI placeholders must not imply gameplay support.
+Owner requested per-play in-bounds (IB) and out-of-bounds (OOB) declarations beside Hurry-up, Timeout and Spike. The local Bowl Bound rulebook defines optional Advanced Rule I-4(C) OOB and I-6(C) IB declarations before the offensive dice roll. OOB guarantees a 10-second play; IB only increases the likelihood that the clock keeps running.
 
 ## Resolution / verification
 
-- Implement Advanced I-4(C) OOB and I-6(C) IB in the engine, declaring before any offensive roll. OOB guarantees a 10-second play; IB increases the likelihood that the clock continues. Apply the documented five-yard cost and exceptions; do not add clock-only browser overrides.
-- IB and OOB are mutually exclusive and clear after one play; cover failed submissions, possession changes, pending penalties/turnovers, scoring, timing, statistics, traces, coaching privacy and exact save continuation with synthetic test-first evidence.
-- Offer only legal engine IDs and reasons in the shared desktop/mobile row; retain private chart boundaries and review the approved rules profile before enabling either declaration.
+- Implemented Advanced I-4(C) OOB and I-6(C) IB in the engine. OOB guarantees a 10-second play; both declarations apply the five-yard cost only when they change the result, with the rulebook exceptions. Declarations are mutually exclusive, apply to the next scrimmage play and clear after it; kicks do not carry a declaration forward.
+- Added synthetic coverage for rejected submissions, possession changes, pending penalties/interceptions, scoring and incomplete exceptions, timing, statistics, traces, offense-only coached controls, punt reset, and exact save continuation. Legacy save digest compatibility remains covered.
+- Browser controls submit offered engine action IDs and display the selected state. Terminal shortcuts O/I and full `action bounds:oob` / `action bounds:ib` commands are offered only when legal. Private chart boundaries are unchanged.
+- Verification at `a9316e0`: `.venv/bin/python -m pytest tests/test_bounds_declarations.py tests/test_api_regulation.py tests/test_regulation.py tests/test_save_game.py tests/test_session.py tests/test_session_penalties.py tests/test_session_scoring.py tests/test_cli_shortcuts.py -q` (203 passed); frontend compact-game tests under Node 24 (12 passed); Ruff check/format and `git diff --check` passed.
 
 ## Comments
 
@@ -32,3 +32,8 @@ Created with scripts/create_issue.py. Keep evidence public-safe.
 Checked `docs/reference/bbrules2007.pdf` (printed pp. 14–15). The book describes
 the OOB and IB declarations by name, not as `7+` / `7-` chart notation. Treat those
 as a possible CLI shorthand only; confirm the command syntax before implementation.
+
+--- 2026-11-01 ---
+Resolved by tested commit `a9316e0`. The terminal uses O/I shortcuts and explicit
+action commands; it does not interpret `7+` / `7-` as declarations. Awaiting
+play-test confirmation before closure.
