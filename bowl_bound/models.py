@@ -205,10 +205,10 @@ class PenaltyData:
 
 @dataclass(frozen=True)
 class NormalizedCell:
-    """One normalized fact; this model performs neither parsing nor resolution."""
+    """One semantic fact; rule facts may omit provenance, while charts require it."""
 
     kind: ResultKind
-    provenance: Provenance
+    provenance: Provenance | None
     yards: int | None = None
     variable: VariableReference | None = None
     variable_multiplier: int | None = None
@@ -219,10 +219,10 @@ class NormalizedCell:
     def __post_init__(self) -> None:
         if type(self.kind) is not ResultKind:
             raise TypeError("kind must be a ResultKind")
-        if not isinstance(self.provenance, Provenance):
-            raise TypeError("provenance must be Provenance")
-        if self.provenance.rgb_color is None:
-            raise ValueError("normalized chart cells require measured RGB provenance")
+        if self.provenance is not None and not isinstance(self.provenance, Provenance):
+            raise TypeError("provenance must be Provenance or None")
+        if self.provenance is not None and self.provenance.rgb_color is None:
+            raise ValueError("normalized cell provenance requires measured RGB")
         if type(self.priority) is not Priority or type(self.out_of_bounds) is not bool:
             raise TypeError("priority and out_of_bounds must have their declared types")
         if self.yards is not None and type(self.yards) is not int:
@@ -389,6 +389,16 @@ class TeamChart:
             lambda record: (record.column, record.roll),
             "special_teams",
         )
+        chart_cells = (
+            [record.cell for record in self.offense]
+            + [record.cell for record in self.supplemental]
+            + [record.cell for record in self.defense]
+            + [record.cell for record in self.special_teams]
+        )
+        if any(
+            cell.provenance is None or cell.provenance.rgb_color is None for cell in chart_cells
+        ):
+            raise ValueError("team chart cells require measured RGB provenance")
         _validate_records(
             self.pat_outcomes,
             PatOutcome,

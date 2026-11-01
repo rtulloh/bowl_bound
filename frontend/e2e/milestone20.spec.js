@@ -42,7 +42,7 @@ for (const human of ['home', 'away']) {
           expect(calls.size).toBeGreaterThanOrEqual(6)
           expect(responseErrors).toEqual([])
           expect(callsSent.length).toBeGreaterThan(50)
-          for (const body of callsSent) expect(Object.keys(body).sort()).toEqual(['human_call', 'human_side'])
+          for (const body of callsSent) expect(Object.keys(body).sort()).toEqual(['expected_revision', 'human_call', 'human_side'])
           for (const quarter of [1, 2, 3, 4]) expect(view.timing_log.filter((t) => t.quarter === quarter).reduce((sum, t) => sum + t.before - t.after, 0)).toBe(900)
           for (const side of ['home', 'away']) expect(view.score[side]).toBe(view.scoring.filter((e) => e.team === view[side]).reduce((sum, e) => sum + e.points, 0))
           await page.getByTestId('team-statistics').locator('summary').click()

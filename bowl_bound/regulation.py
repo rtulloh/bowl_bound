@@ -93,10 +93,21 @@ class RegulationGame:
         clock: Clock,
         dice: DiceSource | None,
         game_type: str = "regular",
+        *,
+        advanced_ii: bool = False,
+        home_privileges: tuple[str, ...] = (),
+        away_privileges: tuple[str, ...] = (),
     ) -> None:
         if not 1940 <= home.season <= 2023:
             raise ValueError("regulation requires a supported home season (1940–2023)")
-        self._session = PlaySession.new(home, away, seed=seed)
+        self._session = PlaySession.new(
+            home,
+            away,
+            seed=seed,
+            advanced_ii=advanced_ii,
+            home_privileges=home_privileges,
+            away_privileges=away_privileges,
+        )
         self._names = {Possession.HOME: home.name, Possession.AWAY: away.name}
         self._season = home.season
         self._game_type = GameType(game_type)
@@ -152,8 +163,21 @@ class RegulationGame:
         clock: Clock | None = None,
         dice: DiceSource | None = None,
         game_type: str = "regular",
+        advanced_ii: bool = False,
+        home_privileges: tuple[str, ...] = (),
+        away_privileges: tuple[str, ...] = (),
     ) -> "RegulationGame":
-        return cls(home, away, seed, clock or Clock(), dice, game_type)
+        return cls(
+            home,
+            away,
+            seed,
+            clock or Clock(),
+            dice,
+            game_type,
+            advanced_ii=advanced_ii,
+            home_privileges=home_privileges,
+            away_privileges=away_privileges,
+        )
 
     def _own_pending(self) -> PendingDecisionView | None:
         if self._phase is RegulationPhase.OVERTIME_CHOICE:

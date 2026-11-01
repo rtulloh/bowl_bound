@@ -35,10 +35,12 @@ from .session import (
     SessionView,
 )
 from .team_catalog import TEAM_ID_MAX_LENGTH, TEAM_ID_RE
+from .team_csv import TEAM_PRIVILEGES, TeamFileMetadata
 from .timing import Clock
 
 SCHEMA_VERSION = 1
-ENGINE_PROFILE = "bowl-bound-m21-v1"
+ENGINE_PROFILE = "bowl-bound-m22-v1"
+_SUPPORTED_ENGINE_PROFILES = {"bowl-bound-m21-v1", ENGINE_PROFILE}
 MAX_SAVE_BYTES = 2 * 1024 * 1024
 MAX_COMMANDS = 10_000
 MAX_ROLLS = 50_000
@@ -65,6 +67,16 @@ class GameRevisionConflict(RuntimeError):
 
 def _fail() -> None:
     raise SaveFormatError("Save is invalid or incompatible; the current game was not replaced.")
+
+
+def _validate_privileges(value: object) -> tuple[str, ...]:
+    if (
+        type(value) is not tuple
+        or any(type(item) is not str or item not in TEAM_PRIVILEGES for item in value)
+        or len(set(value)) != len(value)
+    ):
+        raise SaveFormatError("Team rules privileges are invalid.")
+    return value
 
 
 def _json_value(value: object) -> object:
@@ -210,6 +222,9 @@ class SavedGame:
         dice: Source | None = None,
         coach_seed: int | None = None,
         coach_policy: str = "baseline",
+        advanced_ii: bool = True,
+        home_privileges: tuple[str, ...] = (),
+        away_privileges: tuple[str, ...] = (),
     ) -> "SavedGame":
         config = {
             "seed": seed,
@@ -218,12 +233,15 @@ class SavedGame:
             "game_type": game_type,
             "clock": asdict(clock or Clock()),
             "coach_seed": randbits(63) if coach_seed is None else coach_seed,
+            "advanced_ii": advanced_ii,
         }
         if coach_policy != "baseline":
             config["coach_policy"] = coach_policy
         # Run the same strict configuration checks used at the untrusted load boundary.
         config = json.loads(_json(config))
         _validate_config(config)
+        home_privileges = _validate_privileges(home_privileges)
+        away_privileges = _validate_privileges(away_privileges)
         if any(
             not isinstance(key, str)
             or len(key) > TEAM_ID_MAX_LENGTH
@@ -233,7 +251,16 @@ class SavedGame:
             raise SaveFormatError("Save team identifiers must be canonical season/team references.")
         tape = _Tape(dice if dice is not None else RandomDice(Random(seed)))
         _source_data(tape.future)  # Refuse non-restorable custom sources before any dice.
-        return cls(home, away, home_id, away_id, config, tape)
+        return cls(
+            home,
+            away,
+            home_id,
+            away_id,
+            config,
+            tape,
+            home_privileges=home_privileges,
+            away_privileges=away_privileges,
+        )
 
     def __init__(
         self,
@@ -243,12 +270,19 @@ class SavedGame:
         away_id: str,
         config: dict[str, Any],
         tape: _Tape,
+        *,
+        home_privileges: tuple[str, ...] = (),
+        away_privileges: tuple[str, ...] = (),
     ) -> None:
         self._lock = RLock()
         self._teams = {
             "home": {"id": home_id, "fingerprint": _fingerprint(home)},
             "away": {"id": away_id, "fingerprint": _fingerprint(away)},
         }
+        if home_privileges:
+            self._teams["home"]["privileges"] = list(home_privileges)
+        if away_privileges:
+            self._teams["away"]["privileges"] = list(away_privileges)
         self._charts = {"home": home, "away": away}
         self._rosters: tuple[Roster | None, Roster | None] = (None, None)
         self._config = dict(config)
@@ -320,13 +354,22 @@ class SavedGame:
                 game_type=config["game_type"],
                 clock=Clock(clock["quarter"], clock["remaining"], tuple(clock["timeouts"])),
                 dice=tape,
+                advanced_ii=config.get("advanced_ii", False),
+                home_privileges=home_privileges,
+                away_privileges=away_privileges,
             )
             # OT tosses use the owning game's default source, not a per-call override.
             self._engine._dice = tape
             self._engine._session._dice = tape
         else:
             self._engine = PlaySession.new(
-                home, away, seed=config["seed"], start_yards_to_goal=config["start_yards_to_goal"]
+                home,
+                away,
+                seed=config["seed"],
+                start_yards_to_goal=config["start_yards_to_goal"],
+                advanced_ii=config.get("advanced_ii", False),
+                home_privileges=home_privileges,
+                away_privileges=away_privileges,
             )
             self._engine._dice = tape
 
@@ -608,11 +651,17 @@ def _dumps_game(game: SavedGame) -> str:
 
 
 def _validate_config(config: Any) -> None:
-    optional = {"coach_seed", "coach_policy"} & config.keys() if isinstance(config, dict) else set()
+    optional = (
+        {"coach_seed", "coach_policy", "advanced_ii"} & config.keys()
+        if isinstance(config, dict)
+        else set()
+    )
     _keys(config, {"seed", "mode", "start_yards_to_goal", "game_type", "clock"} | optional)
     if "coach_seed" in optional and (
         type(config["coach_seed"]) is not int or not 0 <= config["coach_seed"] <= 2**63 - 1
     ):
+        _fail()
+    if "advanced_ii" in optional and type(config["advanced_ii"]) is not bool:
         _fail()
     if "coach_policy" in optional and (
         type(config["coach_policy"]) is not str
@@ -705,7 +754,7 @@ def _validate(data: Any) -> None:
     if (
         type(data["schema_version"]) is not int
         or data["schema_version"] != SCHEMA_VERSION
-        or data["engine_profile"] != ENGINE_PROFILE
+        or data["engine_profile"] not in _SUPPORTED_ENGINE_PROFILES
         or data["python"] != [sys.version_info.major, sys.version_info.minor]
         or not isinstance(data["saved_at"], str)
         or len(data["saved_at"]) > 64
@@ -713,8 +762,17 @@ def _validate(data: Any) -> None:
         _fail()
     _validate_config(data["config"])
     _keys(data["teams"], {"home", "away"})
+    if data["engine_profile"] == "bowl-bound-m21-v1" and (
+        "advanced_ii" in data["config"]
+        or any("privileges" in team for team in data["teams"].values())
+    ):
+        _fail()
     for team in data["teams"].values():
-        _keys(team, {"id", "fingerprint"})
+        if not isinstance(team, dict) or set(team) not in (
+            {"id", "fingerprint"},
+            {"id", "fingerprint", "privileges"},
+        ):
+            _fail()
         if (
             not isinstance(team["id"], str)
             or len(team["id"]) > TEAM_ID_MAX_LENGTH
@@ -722,6 +780,14 @@ def _validate(data: Any) -> None:
             or not isinstance(team["fingerprint"], str)
         ):
             _fail()
+        if "privileges" in team:
+            values = team["privileges"]
+            if (
+                type(values) is not list
+                or len(set(values)) != len(values)
+                or any(type(value) is not str or value not in TEAM_PRIVILEGES for value in values)
+            ):
+                _fail()
     if not isinstance(data["commands"], list) or len(data["commands"]) > MAX_COMMANDS:
         _fail()
     for record in data["commands"]:
@@ -742,7 +808,10 @@ def _validate(data: Any) -> None:
         _fail()
 
 
-def loads_game(text: str, load_team: Callable[[str], TeamChart]) -> SavedGame:
+def loads_game(
+    text: str,
+    load_team: Callable[[str], TeamChart | tuple[TeamChart, TeamFileMetadata]],
+) -> SavedGame:
     """Validate and reconstruct a separate game, using only matching local teams.
 
     The caller installs the returned game only after this function succeeds. Errors
@@ -755,7 +824,34 @@ def loads_game(text: str, load_team: Callable[[str], TeamChart]) -> SavedGame:
         _validate(data)
         source = _read_source(data["random_state"])
         tape = _Tape(source, [_read_roll(r) for r in data["rolls"]])
-        home, away = (load_team(data["teams"][side]["id"]) for side in ("home", "away"))
+        loaded_teams = {side: load_team(data["teams"][side]["id"]) for side in ("home", "away")}
+        charts: dict[str, TeamChart] = {}
+        privileges: dict[str, tuple[str, ...]] = {}
+        for side, loaded in loaded_teams.items():
+            metadata: TeamFileMetadata | None = None
+            if isinstance(loaded, tuple) and len(loaded) == 2:
+                chart, metadata = loaded
+                if not isinstance(metadata, TeamFileMetadata):
+                    _fail()
+            else:
+                chart = loaded
+            if not isinstance(chart, TeamChart):
+                _fail()
+            stored = tuple(data["teams"][side].get("privileges", ()))
+            if "privileges" in data["teams"][side]:
+                if metadata is None or metadata.privileges != stored:
+                    raise SaveFormatError(
+                        "Saved team rules privileges do not match the installed team."
+                    )
+            elif (
+                data["config"].get("advanced_ii", False)
+                and metadata is not None
+                and "W" in metadata.privileges
+            ):
+                _fail()
+            charts[side] = chart
+            privileges[side] = stored
+        home, away = charts["home"], charts["away"]
         if any(
             _fingerprint(chart) != data["teams"][side]["fingerprint"]
             for chart, side in ((home, "home"), (away, "away"))
@@ -770,6 +866,8 @@ def loads_game(text: str, load_team: Callable[[str], TeamChart]) -> SavedGame:
             data["teams"]["away"]["id"],
             data["config"],
             tape,
+            home_privileges=privileges["home"],
+            away_privileges=privileges["away"],
         )
         for record in data["commands"]:
             try:

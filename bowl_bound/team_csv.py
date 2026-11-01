@@ -48,7 +48,7 @@ TEAM_FILE_VERSION = 2
 PLACEHOLDER_TEAM_FILE_VERSION = 3
 LOCAL_PLACEHOLDER_POWER_RATING = 200.0
 PROVENANCE_DIR = "provenance"
-_PRIV = {"W", "FBO", "SPBO", "XWC"}
+TEAM_PRIVILEGES = frozenset({"W", "FBO", "SPBO", "XWC"})
 _NAMED_RESULT_KINDS = frozenset(
     kind for legend in CELL_LEGEND.values() for _, kind in legend.named_tokens
 )
@@ -142,7 +142,7 @@ class TeamFileMetadata:
         if (
             type(self.privileges) is not tuple
             or len(set(self.privileges)) != len(self.privileges)
-            or any(type(x) is not str or x not in _PRIV for x in self.privileges)
+            or any(type(x) is not str or x not in TEAM_PRIVILEGES for x in self.privileges)
         ):
             raise ValueError("invalid privileges")
         if not isinstance(self.defense_label, str) or not _sha(self.source_sha256):

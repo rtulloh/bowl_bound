@@ -25,8 +25,8 @@ def test_engine_and_private_defense_controls_supply_verified_formation_names() -
     game = SavedGame.new(
         *default_teams(), home_id="2026/alpha-tech", away_id="2026/beta-state", seed=7
     )
-    assert [(a.key, a.label) for a in game.view().actions.defense] == LABELS
-    assert [(a.key, a.label) for a in game.coach_view("away")[1].actions.defense] == LABELS
+    assert [(a.key, a.label) for a in game.view().actions.defense[:6]] == LABELS
+    assert [(a.key, a.label) for a in game.coach_view("away")[1].actions.defense[:6]] == LABELS
 
 
 def test_api_transports_all_six_engine_labels_without_a_client_mapping(tmp_path: Path) -> None:
@@ -39,7 +39,7 @@ def test_api_transports_all_six_engine_labels_without_a_client_mapping(tmp_path:
     )
     assert response.status_code == 200
     actions = response.json()["view"]["actions"]["defense"]
-    assert [(a["key"], a["label"]) for a in actions] == LABELS
+    assert [(a["key"], a["label"]) for a in actions[:6]] == LABELS
 
 
 def test_selector_names_do_not_change_legacy_save_digests_or_continuation() -> None:

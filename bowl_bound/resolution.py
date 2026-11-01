@@ -164,12 +164,175 @@ class LookupTrace:
 
 
 @dataclass(frozen=True)
+class AdvancedDefenseTrace:
+    """A rule-table defensive result, separate from a team-chart cell lookup."""
+
+    call: str
+    team_name: str
+    season: int
+    play: Play
+    roll: DefensiveRoll
+    cell: str
+    section: str = "advanced_defense"
+
+
+@dataclass(frozen=True)
 class PlayResolution:
     called_play: Play
     resolved_play: Play
     result: PriorityResult
-    trace: tuple[LookupTrace, ...]
+    trace: tuple[LookupTrace | AdvancedDefenseTrace, ...]
     bad_snap: bool = False
+    conditional_double: bool = False
+
+
+def _rule_cell(
+    kind: ResultKind, *, yards: int | None = None, priority: Priority = Priority.NORMAL
+) -> NormalizedCell:
+    return NormalizedCell(kind, None, yards=yards, priority=priority)
+
+
+def resolve_advanced_play(
+    offense: TeamChart,
+    defense: TeamChart,
+    play: Play,
+    call: str,
+    dice: DiceSource,
+    *,
+    free_wildcard: bool,
+) -> PlayResolution:
+    """Resolve an Advanced II call using rule facts, never another team's chart cells."""
+    wildcard_calls = {
+        *(f"WC{item.value}" for item in Play if item is not Play.FIVE),
+        "WC5",
+        "WC5SOP",
+        "WC5BLP",
+    }
+    if type(play) is not Play or call not in {"RUN", "PASS", "NICKEL", "REDZONE"} | wildcard_calls:
+        raise ValueError("unknown Advanced II defense")
+
+    wildcard = call.startswith("WC")
+    guessed = Play(int(call[2])) if wildcard else None
+    wildcard_branch = call[3:] if wildcard and play is Play.FIVE else ""
+    if wildcard and play is not Play.FIVE and guessed is play:
+        kind = ResultKind.YARDS if play.value <= 5 else ResultKind.INCOMPLETE
+        result = resolve_cells(
+            _rule_cell(kind, yards=0) if kind is ResultKind.YARDS else _rule_cell(kind),
+            _rule_cell(ResultKind.NO_CHANGE),
+        )
+        return PlayResolution(play, play, result, ())
+
+    off_roll = dice.offensive()
+    off_cell = next(
+        record.cell
+        for record in offense.offense
+        if record.play is play and record.roll == off_roll.total
+    )
+    blank = _rule_cell(ResultKind.NO_CHANGE)
+    trace: list[LookupTrace | AdvancedDefenseTrace] = [
+        LookupTrace("offense", offense.name, offense.season, play, None, off_roll, off_cell)
+    ]
+    option_branch = off_cell.kind in {
+        ResultKind.SPRINT_OUT_PASS,
+        ResultKind.BOOTLEG_PASS,
+    }
+    resolved_play = (
+        Play.SEVEN
+        if off_cell.kind is ResultKind.SPRINT_OUT_PASS
+        else Play.EIGHT
+        if off_cell.kind is ResultKind.BOOTLEG_PASS
+        else play
+    )
+    if wildcard and play is Play.FIVE:
+        actual_branch = {
+            ResultKind.SPRINT_OUT_PASS: "SOP",
+            ResultKind.BOOTLEG_PASS: "BLP",
+        }.get(off_cell.kind, "")
+        if actual_branch == wildcard_branch:
+            resolved_play = {
+                "SOP": Play.SEVEN,
+                "BLP": Play.EIGHT,
+            }.get(actual_branch, Play.FIVE)
+            kind = ResultKind.INCOMPLETE if actual_branch else ResultKind.YARDS
+            result = resolve_cells(
+                _rule_cell(kind, yards=0) if kind is ResultKind.YARDS else _rule_cell(kind),
+                blank,
+            )
+            return PlayResolution(play, resolved_play, result, tuple(trace))
+    defensive_cell = blank
+    conditional_double = wildcard and not free_wildcard
+    if not wildcard and call != "REDZONE":
+        defensive_roll = dice.defensive()
+        quarterback_pass = off_cell.kind in {
+            ResultKind.QUARTERBACK_RUN,
+            ResultKind.QUARTERBACK_TRAPPED,
+        }
+        pass_like = resolved_play.value >= 6 or quarterback_pass
+        defensive_cell = _advanced_defensive_cell(call, resolved_play, defensive_roll.total)
+        trace.append(
+            AdvancedDefenseTrace(
+                call,
+                defense.name,
+                defense.season,
+                resolved_play,
+                defensive_roll,
+                _rule_cell_label(defensive_cell),
+            )
+        )
+        conditional_double = (
+            call in {"RUN", "PASS"}
+            and ((call == "RUN" and pass_like) or (call == "PASS" and not pass_like))
+            and not free_wildcard
+        )
+
+    resolved_offense = off_cell
+    if option_branch:
+        option_roll = dice.offensive()
+        option_cell = next(
+            record.cell
+            for record in offense.offense
+            if record.play is resolved_play and record.roll == option_roll.total
+        )
+        trace.append(
+            LookupTrace(
+                "option",
+                offense.name,
+                offense.season,
+                resolved_play,
+                None,
+                option_roll,
+                option_cell,
+            )
+        )
+        resolved_offense = option_cell
+
+    result = resolve_cells(resolved_offense, defensive_cell)
+    result = _supplemental_result(offense, result, resolved_play, dice, trace)
+    result = _variable_result(result, offense, defense, resolved_play, dice, trace)
+    return PlayResolution(
+        play, resolved_play, result, tuple(trace), conditional_double=conditional_double
+    )
+
+
+def _advanced_defensive_cell(call: str, play: Play, roll: int) -> NormalizedCell:
+    """Return the printed Advanced II value for this play and defensive roll."""
+    if call == "RUN" and roll == 1 and play.value <= 5:
+        return _rule_cell(ResultKind.YARDS, yards=0, priority=Priority.PARENTHESIZED)
+    if call == "PASS" and roll == 1 and play.value >= 7:
+        return _rule_cell(ResultKind.INCOMPLETE)
+    if call == "NICKEL":
+        if roll <= 5 and play.value <= 5:
+            return _rule_cell(ResultKind.YARDS, yards=2)
+        if roll == 1 and play.value >= 7:
+            return _rule_cell(ResultKind.INCOMPLETE)
+    return _rule_cell(ResultKind.NO_CHANGE)
+
+
+def _rule_cell_label(cell: NormalizedCell) -> str:
+    if cell.kind is ResultKind.YARDS:
+        value = str(cell.yards)
+        return f"({value})" if cell.priority is Priority.PARENTHESIZED else f"+{value}"
+    return "INC" if cell.kind is ResultKind.INCOMPLETE else "blank"
 
 
 def _category(cell: NormalizedCell, defensive: bool) -> str:
@@ -326,7 +489,7 @@ def _supplemental_result(
     base: PriorityResult,
     play: Play,
     dice: DiceSource,
-    trace: list[LookupTrace],
+    trace: list[LookupTrace | AdvancedDefenseTrace],
 ) -> PriorityResult:
     """Resolve any B/QR/QT chain while retaining the original defense only for ADD."""
     result = base
@@ -366,7 +529,7 @@ def _variable_result(
     defense: TeamChart,
     play: Play,
     dice: DiceSource,
-    trace: list[LookupTrace],
+    trace: list[LookupTrace | AdvancedDefenseTrace],
 ) -> PriorityResult:
     """Materialize only distances selected by priority, retaining original chart facts."""
     operation = result.operation

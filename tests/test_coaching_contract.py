@@ -51,7 +51,13 @@ def test_opening_owner_is_explicit_even_with_identical_team_names() -> None:
 
 def test_presentation_additions_keep_pre_ai_scrimmage_digest_compatible() -> None:
     teams = default_teams()
-    game = SavedGame.new(*teams, home_id="2026/alpha-tech", away_id="2026/beta-state", seed=7)
+    game = SavedGame.new(
+        *teams,
+        home_id="2026/alpha-tech",
+        away_id="2026/beta-state",
+        seed=7,
+        advanced_ii=False,
+    )
     game.snap("1", "A")
     data = json.loads(dumps_game(game))
     # Recorded from committed m19 (57b4dd6), using only the synthetic default teams.
@@ -89,7 +95,13 @@ def test_an_actual_m19_config_without_coaching_metadata_loads_and_upgrades_once(
     from tests.test_save_game import seal
 
     teams = default_teams()
-    game = SavedGame.new(*teams, home_id="2026/alpha-tech", away_id="2026/beta-state", seed=7)
+    game = SavedGame.new(
+        *teams,
+        home_id="2026/alpha-tech",
+        away_id="2026/beta-state",
+        seed=7,
+        advanced_ii=False,
+    )
     game.snap("1", "A")
     legacy = json.loads(dumps_game(game))
     del legacy["config"]["coach_seed"]

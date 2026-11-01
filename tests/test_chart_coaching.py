@@ -127,8 +127,10 @@ def test_new_public_context_does_not_change_baseline_v1_selection_stream() -> No
             "special",
             "game_actions",
             "choices",
+            "decision_outcomes",
             "overtime",
         }
+        public.pop("decision_outcomes")  # Baseline v1 deliberately excludes this v8 field.
         encoded = dumps(public, sort_keys=True, separators=(",", ":"))
         digest = sha256(f"baseline-v1:31:defense:{encoded}".encode()).digest()
         expected = Random(int.from_bytes(digest, "big")).choice(obs.defense)

@@ -31,7 +31,7 @@ from .penalty_yardage import (
     enforce_penalty,
     enforce_return_penalty,
 )
-from .resolution import LookupTrace, PlayResolution
+from .resolution import AdvancedDefenseTrace, LookupTrace, PlayResolution
 from .return_recovery import GOAL_LINE, MAX_FIELD_SPOT, TOUCHBACK_SPOT
 from .scoring import ScoreKind, ScoreLedger, resolve_pat
 from .special_teams import SpecialTeamsPlay, SpecialTeamsResolution
@@ -109,6 +109,18 @@ class InvalidDecisionError(ValueError):
 class Action:
     key: str
     label: str
+
+
+@dataclass(frozen=True)
+class AdvancedDefenseCall:
+    """An offered Advanced II choice with its current eligibility label."""
+
+    key: str
+    label: str
+    free: bool
+
+
+DefenseCall = Defense | AdvancedDefenseCall
 
 
 @dataclass(frozen=True)
@@ -284,7 +296,7 @@ class SessionView:
 class _PendingDecision:
     prepared: PreparedPlay
     called: Play
-    defensive: Defense
+    defensive: DefenseCall
     field: FieldState
     before: StateView
     trace: tuple[TraceEntry, ...]
@@ -301,9 +313,22 @@ class PlaySession:
     """A seeded, in-memory drive that resolves one real engine play per snap."""
 
     def __init__(
-        self, home: TeamChart, away: TeamChart, seed: int, start_yards_to_goal: int
+        self,
+        home: TeamChart,
+        away: TeamChart,
+        seed: int,
+        start_yards_to_goal: int,
+        *,
+        advanced_ii: bool = False,
+        home_privileges: tuple[str, ...] = (),
+        away_privileges: tuple[str, ...] = (),
     ) -> None:
         self._charts = {Possession.HOME: home, Possession.AWAY: away}
+        self._advanced_ii = advanced_ii
+        self._privileges = {
+            Possession.HOME: home_privileges,
+            Possession.AWAY: away_privileges,
+        }
         self._dice: DiceSource = RandomDice(Random(seed))
         self._field: FieldState | None = start_drive(Possession.HOME, start_yards_to_goal)
         self._log: list[PlayReport] = []
@@ -326,12 +351,25 @@ class PlaySession:
         *,
         seed: int,
         start_yards_to_goal: int = DEFAULT_START_YARDS_TO_GOAL,
+        advanced_ii: bool = False,
+        home_privileges: tuple[str, ...] = (),
+        away_privileges: tuple[str, ...] = (),
     ) -> "PlaySession":
         if not isinstance(home, TeamChart) or not isinstance(away, TeamChart):
             raise TypeError("a session needs two TeamChart instances")
         if type(seed) is not int:
             raise TypeError("seed must be an integer")
-        return cls(home, away, seed, start_yards_to_goal)
+        if type(advanced_ii) is not bool:
+            raise TypeError("advanced_ii must be a boolean")
+        return cls(
+            home,
+            away,
+            seed,
+            start_yards_to_goal,
+            advanced_ii=advanced_ii,
+            home_privileges=home_privileges,
+            away_privileges=away_privileges,
+        )
 
     @classmethod
     def for_analysis(
@@ -379,7 +417,7 @@ class PlaySession:
             self._charts[Possession.HOME].name,
             self._charts[Possession.AWAY].name,
             state,
-            replace(_actions(), special=self._special_actions()),
+            replace(self._current_actions(), special=self._special_actions()),
             self._phase is SessionPhase.COMPLETE,
             tuple(self._log),
             self._pending_view(),
@@ -395,6 +433,21 @@ class PlaySession:
             self._kickoff_penalties,
             summarize(report.statistics for report in self._log),
         )
+
+    def _current_actions(self) -> Actions:
+        field = self._field
+        defender = field.possession.other if field is not None else Possession.AWAY
+        return _actions(
+            advanced_ii=self._advanced_ii,
+            red_zone=field is not None and field.yards_to_goal < 20,
+            free_advanced=self._has_free_advanced_defense(defender),
+        )
+
+    def _has_free_advanced_defense(self, defender: Possession) -> bool:
+        return "W" in self._privileges[defender]
+
+    def _defensive_actions(self) -> tuple[Action, ...]:
+        return self._current_actions().defense
 
     def prepare_series(self, team: Possession, *, try_only: bool = False) -> None:
         """Start an overtime series/paired try, preserving the ledger and observed history."""
@@ -642,7 +695,13 @@ class PlaySession:
         if declaration is not None and self._phase is SessionPhase.TWO_POINT_TRY:
             raise InvalidDecisionError("bounds declarations are unavailable on conversion tries")
         called = _parse_play(play)
-        defensive = _parse_formation(formation)
+        defensive = _parse_formation(
+            formation,
+            self._defensive_actions(),
+            free_advanced=self._has_free_advanced_defense(
+                self._field.possession.other if self._field is not None else Possession.AWAY
+            ),
+        )
         if self._phase is SessionPhase.CONVERSION_CHOICE:
             raise PendingDecisionError("choose the touchdown conversion first")
         if self._pending is not None or self._special is not None:
@@ -652,11 +711,20 @@ class PlaySession:
         field = self._field
         offense = self._charts[field.possession]
         defense = self._charts[field.possession.other]
+        chart_formation = defensive if isinstance(defensive, Defense) else Defense.A
         source = dice or self._dice
         self._hail_mary = hail_mary
         self._hurried_play = hurried
         prepared = prepare_play(
-            offense, defense, called, defensive, source, hurried=hurried, hail_mary=hail_mary
+            offense,
+            defense,
+            called,
+            chart_formation,
+            source,
+            hurried=hurried,
+            hail_mary=hail_mary,
+            advanced_call=defensive.key if isinstance(defensive, AdvancedDefenseCall) else None,
+            free_wildcard=defensive.free if isinstance(defensive, AdvancedDefenseCall) else False,
         )
         resolution = prepared.resolution
         before = self._state_view(field)
@@ -762,7 +830,7 @@ class PlaySession:
         self,
         prepared: PreparedPlay,
         called: Play,
-        defensive: Defense,
+        defensive: DefenseCall,
         field: FieldState,
         before: StateView,
         trace: tuple[TraceEntry, ...],
@@ -773,6 +841,16 @@ class PlaySession:
     ) -> PlayReport:
         """Continue an already prepared play; never repeat lookup after a decline."""
         resolution = _apply_bounds_declaration(prepared.resolution, bounds_declaration)
+        if (
+            resolution.conditional_double
+            and resolution.result.kind is ResultKind.YARDS
+            and resolution.result.yards is not None
+            and resolution.result.yards >= 0
+        ):
+            resolution = replace(
+                resolution,
+                result=replace(resolution.result, yards=2 * resolution.result.yards),
+            )
         offense, defense = self._charts[field.possession], self._charts[field.possession.other]
         hurried = self._hurried_play
         if resolution.result.defensive_end_zone_depth is not None:
@@ -1054,7 +1132,7 @@ class PlaySession:
         self,
         resolution: PlayResolution,
         called: Play,
-        defensive: Defense,
+        defensive: DefenseCall,
         field: FieldState,
         before: StateView,
         trace: tuple[TraceEntry, ...],
@@ -1095,7 +1173,7 @@ class PlaySession:
         self,
         resolution: PlayResolution,
         called: Play,
-        defensive: Defense,
+        defensive: DefenseCall,
         field: FieldState,
         before: StateView,
         transition: Transition,
@@ -1128,7 +1206,7 @@ class PlaySession:
         turnover: TurnoverResolution,
         resolution: PlayResolution,
         called: Play,
-        defensive: Defense,
+        defensive: DefenseCall,
         before: StateView,
         trace: tuple[TraceEntry, ...],
         prefix: str,
@@ -1415,7 +1493,7 @@ class PlaySession:
         self,
         resolution: PlayResolution,
         called: Play,
-        defensive: Defense,
+        defensive: DefenseCall,
         before: StateView,
         after: StateView | None,
         trace: tuple[TraceEntry, ...],
@@ -1454,7 +1532,10 @@ class PlaySession:
                 ),
                 change_of_possession=after is not None and after.possession != before.possession,
                 penalty=return_penalty_seen
-                or any(e.cell.kind is ResultKind.PENALTY for e in resolution.trace),
+                or any(
+                    isinstance(e, LookupTrace) and e.cell.kind is ResultKind.PENALTY
+                    for e in resolution.trace
+                ),
                 incomplete=resolution.result.kind is ResultKind.INCOMPLETE
                 or outcome == "declined_interception",
                 scoring=any(e.play_number == len(self._log) + 1 for e in self._ledger.events),
@@ -1540,10 +1621,37 @@ class PlaySession:
         )
 
 
-def _actions() -> Actions:
+def _actions(
+    *, advanced_ii: bool = False, red_zone: bool = False, free_advanced: bool = False
+) -> Actions:
+    defense = [Action(d.value, DEFENSE_LABELS[d]) for d in Defense]
+    if advanced_ii:
+        eligibility = "free" if free_advanced else "conditional"
+        for play in Play:
+            if play is Play.FIVE:
+                defense.extend(
+                    (
+                        Action("WC5", f"{eligibility.title()} Wild Card: Option run"),
+                        Action("WC5SOP", f"{eligibility.title()} Wild Card: Option SOP"),
+                        Action("WC5BLP", f"{eligibility.title()} Wild Card: Option BLP"),
+                    )
+                )
+            else:
+                defense.append(
+                    Action(f"WC{play.value}", f"{eligibility.title()} Wild Card: Play {play.value}")
+                )
+        defense.extend(
+            (
+                Action("RUN", "Run Defense" if free_advanced else "Run Defense (conditional)"),
+                Action("PASS", "Pass Defense" if free_advanced else "Pass Defense (conditional)"),
+                Action("NICKEL", "Nickel Zone"),
+            )
+        )
+        if red_zone:
+            defense.append(Action("REDZONE", "Red Zone"))
     return Actions(
         tuple(Action(str(play.value), PLAY_LABELS[play]) for play in Play),
-        tuple(Action(d.value, DEFENSE_LABELS[d]) for d in Defense),
+        tuple(defense),
     )
 
 
@@ -1809,13 +1917,26 @@ def _parse_play(play: object) -> Play:
     return Play(int(play))
 
 
-def _parse_formation(formation: object) -> Defense:
-    if type(formation) is not str or formation not in {d.value for d in Defense}:
-        raise ValueError("formation must be one of 'A' through 'F'")
-    return Defense(formation)
+def _parse_formation(
+    formation: object, offered: tuple[Action, ...], *, free_advanced: bool
+) -> DefenseCall:
+    if type(formation) is not str:
+        raise ValueError("choose an offered defensive call")
+    action = next((item for item in offered if item.key == formation), None)
+    if action is None:
+        raise ValueError("choose an offered defensive call")
+    if formation in {d.value for d in Defense}:
+        return Defense(formation)
+    return AdvancedDefenseCall(
+        formation,
+        action.label,
+        free_advanced and (formation.startswith("WC") or formation in {"RUN", "PASS"}),
+    )
 
 
-def _formation_label(defense: Defense) -> str:
+def _formation_label(defense: DefenseCall) -> str:
+    if isinstance(defense, AdvancedDefenseCall):
+        return defense.label
     return f"{defense.value} {DEFENSE_LABELS[defense]}"
 
 
@@ -1914,7 +2035,16 @@ def _unsupported_reason(resolution: PlayResolution) -> str:
     return kind.value
 
 
-def _trace_entry(entry: LookupTrace) -> TraceEntry:
+def _trace_entry(entry: LookupTrace | AdvancedDefenseTrace) -> TraceEntry:
+    if isinstance(entry, AdvancedDefenseTrace):
+        return TraceEntry(
+            section=entry.section,
+            team=entry.team_name,
+            play=PLAY_LABELS[entry.play],
+            formation=entry.call,
+            roll=roll_view(entry.roll),
+            cell=entry.cell,
+        )
     roll = entry.roll
     shown = roll_view(roll)
     return TraceEntry(

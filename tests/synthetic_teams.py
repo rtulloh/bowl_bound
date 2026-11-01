@@ -105,14 +105,18 @@ def metadata() -> TeamFileMetadata:
     return TeamFileMetadata(5.5, (), "Synthetic", SHA, (("rating", provenance()),))
 
 
-def write_team(seasons_root: Path, chart: TeamChart) -> str:
+def write_team(
+    seasons_root: Path,
+    chart: TeamChart,
+    team_metadata: TeamFileMetadata | None = None,
+) -> str:
     """Write one team in the on-disk layout and return its season/slug id."""
     slug = team_folder_name(chart.name)
     season_dir = seasons_root / str(chart.season)
     folder = season_dir / slug
     folder.mkdir(parents=True, exist_ok=True)
     (season_dir / "provenance").mkdir(parents=True, exist_ok=True)
-    meta = metadata()
+    meta = team_metadata or metadata()
     for file_name, text in team_to_files(chart, meta).items():
         (folder / file_name).write_text(text, encoding="utf-8", newline="")
     (season_dir / "provenance" / (slug + ".csv")).write_text(

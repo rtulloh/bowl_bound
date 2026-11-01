@@ -155,6 +155,7 @@ def test_terminal_pending_interception_resume_matches_api_exact_future(
         expected = jsonable_encoder(view)
         for item, report in zip(expected["log"], view.log, strict=True):
             item["commentary"] = app.game.commentary(report)
+            item["highlights"] = list(report.highlight_tags)
         return expected
 
     assert expected_api_view() == loaded.json()["view"]

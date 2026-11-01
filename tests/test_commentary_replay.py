@@ -14,11 +14,11 @@ LEGACY_DIGEST = "46f4b00853bff74f597720ecc45464e12963eddfe851b7a4f0b6b612247f23c
 
 
 def test_pre_commentary_semantic_digest_and_save_shape_remain_compatible(tmp_path: Path) -> None:
-    game, catalog = setup_game(tmp_path)
+    game, catalog = setup_game(tmp_path, advanced_ii=False)
     value = game.snap("1", "A")
     text = dumps_game(game)
     saved = json.loads(text)
-    assert saved["engine_profile"] == ENGINE_PROFILE == "bowl-bound-m21-v1"
+    assert saved["engine_profile"] == ENGINE_PROFILE == "bowl-bound-m22-v1"
     assert saved["state_digest"] == LEGACY_DIGEST
     write_rosters(tmp_path)
     restored = loads_game(text, catalog.load)

@@ -200,6 +200,9 @@ Version 6 adds Easy/Medium/Hard situational defensive preferences for goal-line,
 likely fourth-down kicks, and protecting a large late lead. It adjusts weights
 without removing any of the six formations from the engine's legal menu. Hard's
 chart analysis uses the same preferences, so it cannot override those guards.
+Advanced II calls are currently excluded from computer defense selections until
+their strategy and chart evaluation are implemented (AI-021); human-controlled
+defense can use any Advanced II call the engine offers.
 Version 7 returns kicks unless a large late lead favors a fair catch or
 touchback, selects the receiving team's guaranteed spot on a kickoff out of
 bounds, and clears stale analysis-fallback state before a decision. Version 8

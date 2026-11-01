@@ -31,9 +31,9 @@ def test_history_failure_keeps_successful_snap_journaled_and_replayable(
     before = json.loads(dumps_game(game))
     commit = game._coach.commit_call
 
-    def fail(side: str, play: str, defense: str) -> None:
+    def fail(side: str, play: str, defense: str, *, observation: object = None) -> None:
         if after_update:
-            commit(side, play, defense)
+            commit(side, play, defense, observation=observation)
         raise RuntimeError("synthetic history failure")
 
     monkeypatch.setattr(game._coach, "commit_call", fail)

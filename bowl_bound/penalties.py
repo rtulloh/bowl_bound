@@ -15,10 +15,12 @@ from .models import (
 )
 from .penalty_yardage import AssessedPenalty, assess_penalty
 from .resolution import (
+    AdvancedDefenseTrace,
     LookupTrace,
     PlayResolution,
     _supplemental_result,
     _variable_result,
+    resolve_advanced_play,
     resolve_cells,
     resolve_play,
 )
@@ -44,6 +46,8 @@ def prepare_play(
     *,
     hurried: bool = False,
     hail_mary: bool = False,
+    advanced_call: str | None = None,
+    free_wildcard: bool = False,
 ) -> PreparedPlay:
     """Resolve a snap and penalty rerolls, retaining the original effective defense.
 
@@ -51,10 +55,18 @@ def prepare_play(
     stops all offensive rerolls; pre-snap 5A and offsetting fouls also stop immediately.
     All observed cells and assessment rolls are kept in their actual order.
     """
+    if hail_mary and advanced_call is not None:
+        raise ValueError("Hail Mary cannot use an Advanced II defense")
     initial = (
         _hail_mary_resolution(offense, dice)
         if hail_mary
-        else resolve_play(offense, defense, play, formation, dice)
+        else (
+            resolve_advanced_play(
+                offense, defense, play, advanced_call, dice, free_wildcard=free_wildcard
+            )
+            if advanced_call is not None
+            else resolve_play(offense, defense, play, formation, dice)
+        )
     )
     resolution = initial
     trace = list(initial.trace)
@@ -109,13 +121,18 @@ def prepare_play(
                     resolve_cells(fumble, blank),
                     tuple(trace),
                     bad_snap=True,
+                    conditional_double=resolution.conditional_double,
                 )
             )
         if assessed.no_elapsed_time:
             blank = NormalizedCell(ResultKind.NO_CHANGE, cell.provenance)
             return PreparedPlay(
                 PlayResolution(
-                    play, resolution.resolved_play, resolve_cells(blank, blank), tuple(trace)
+                    play,
+                    resolution.resolved_play,
+                    resolve_cells(blank, blank),
+                    tuple(trace),
+                    conditional_double=resolution.conditional_double,
                 ),
                 (assessed,),
                 pre_snap=True,
@@ -133,7 +150,11 @@ def prepare_play(
             incomplete = NormalizedCell(ResultKind.INCOMPLETE, cell.provenance)
             blank = NormalizedCell(ResultKind.NO_CHANGE, effective_defense.provenance)
             resolution = PlayResolution(
-                play, resolution.resolved_play, resolve_cells(incomplete, blank), tuple(trace)
+                play,
+                resolution.resolved_play,
+                resolve_cells(incomplete, blank),
+                tuple(trace),
+                conditional_double=resolution.conditional_double,
             )
             return PreparedPlay(resolution, tuple(penalties))
         roll = dice.offensive()
@@ -169,13 +190,25 @@ def prepare_play(
         combined = resolve_cells(rerolled, effective_defense)
         combined = _supplemental_result(offense, combined, current_play, dice, trace)
         combined = _variable_result(combined, offense, defense, current_play, dice, trace)
-        resolution = PlayResolution(play, current_play, combined, tuple(trace))
+        resolution = PlayResolution(
+            play,
+            current_play,
+            combined,
+            tuple(trace),
+            conditional_double=resolution.conditional_double,
+        )
     return PreparedPlay(_with_trace(resolution, trace), tuple(penalties))
 
 
-def _with_trace(resolution: PlayResolution, trace: list[LookupTrace]) -> PlayResolution:
+def _with_trace(
+    resolution: PlayResolution, trace: list[LookupTrace | AdvancedDefenseTrace]
+) -> PlayResolution:
     return PlayResolution(
-        resolution.called_play, resolution.resolved_play, resolution.result, tuple(trace)
+        resolution.called_play,
+        resolution.resolved_play,
+        resolution.result,
+        tuple(trace),
+        conditional_double=resolution.conditional_double,
     )
 
 

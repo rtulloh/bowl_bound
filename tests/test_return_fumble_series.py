@@ -145,7 +145,7 @@ def test_changed_return_series_rules_reject_previous_replay_profile() -> None:
     from tests.test_save_game import new, seal
 
     data = json.loads(dumps_game(new()))
-    assert data["engine_profile"] == "bowl-bound-m21-v1"
+    assert data["engine_profile"] == "bowl-bound-m22-v1"
     data["engine_profile"] = "bowl-bound-m19-v1"
     with pytest.raises(SaveFormatError, match="invalid or incompatible"):
         loads_game(seal(data), lambda _: pytest.fail("old profile must fail before team lookup"))

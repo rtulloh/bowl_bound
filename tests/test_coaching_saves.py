@@ -18,7 +18,7 @@ def new(**kwargs) -> SavedGame:
 
 @pytest.mark.parametrize("human,calls", [("home", ("1", "9")), ("away", ("A", "F"))])
 def test_computer_call_does_not_depend_on_the_hidden_human_call(human, calls) -> None:
-    results = [new().coach_step(human, call) for call in calls]
+    results = [new()._coach_step_with_choice(human, call) for call in calls]
     assert results[0][3] == results[1][3]
     assert results[0][0].supported and results[1][0].supported
 
@@ -86,8 +86,8 @@ def test_complete_computer_games_and_saved_continuation(human: str, seed: int) -
                 if turn.automatic
                 else (str(step % 9 + 1) if turn.human_role == "offense" else "ABCDEF"[step % 6])
             )
-            result = game.coach_step(human, call)
-            assert result == restored.coach_step(human, call)
+            result = game._coach_step_with_choice(human, call)
+            assert result == restored._coach_step_with_choice(human, call)
             report, _, _, selected = result
             if (
                 selected

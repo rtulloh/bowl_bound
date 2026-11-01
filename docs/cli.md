@@ -72,8 +72,9 @@ In compact mode, ordinary scrimmage turns show only a shortcut summary:
 ```
 
 The keys are filtered to current legal controls; this example is not a universal
-menu. Defensive turns show `DEF: A-F` instead. Only your team's controls appear.
-Required choices remain labeled so they are actionable without another help command.
+menu. Defensive turns show `DEF: A-F,+Advanced II` when the advanced calls are
+enabled. Only your team's controls appear. Required choices remain labeled so they
+are actionable without another help command.
 
 `?` expands a titled, aligned menu: **Running / Option Plays**, **Passing Plays**,
 **Special Plays**, **Special Teams**, and **Options**, omitting groups that have no
@@ -94,14 +95,15 @@ Without `--compact`, the expanded menu is shown at each turn.
 | `7` | Sprint Out |
 | `8` | Boot-leg |
 | `9` | Drop Back |
-| `A`–`F` | Engine-labeled defense (including `F` Blitz when defending) |
+| `A`–`F` | Engine-labeled chart defense (including `F` Blitz when defending) |
+| `WC1`–`WC9`, `RUN`, `PASS`, `NICKEL`, `REDZONE` | Advanced II calls when offered; Play 5 Wild Card labels identify run, SOP or BLP |
 | `P`, `F` | Punt or field goal when choosing an offensive special play |
 | `K` | Kick off, elect to kick, or kneel—whichever the current menu offers |
 | `H` | Hail Mary when the engine offers it |
 | `R` | Receive or return, as labeled in the current decision |
 | `TB`, `FC` | Touchback or fair catch when offered |
 | `N`, `S` | Apply an offered hurry or spike clock choice |
-| `T` | Your offered timeout, on offense or defense; append to a call as `7T` or `AT` |
+| `T` | Your offered timeout, on offense or defense; append to a call as `7T`, `AT` or `RUNT` |
 | `W` | Save immediately to a new private file; `W PATH` selects an explicit new filename |
 | `Z` | Toggle Easy-only coaching at play selection (on by default) |
 

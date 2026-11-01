@@ -243,7 +243,7 @@ def test_required_and_clock_decision_instructions_remain_visible() -> None:
     assert saved_facts(app.game) == before
 
 
-@pytest.mark.parametrize("human,summary", [("home", "OFF: 1-9"), ("away", "DEF: A-F")])
+@pytest.mark.parametrize("human,summary", [("home", "OFF: 1-9"), ("away", "DEF: A-F,+Advanced II")])
 def test_compact_only_lists_shortcut_keys_until_help(human: str, summary: str) -> None:
     app = terminal(new_game(), human, compact=True)
     before = saved_facts(app.game)
@@ -273,7 +273,7 @@ def test_compact_solitaire_never_offers_both_sets_of_calls(human: str) -> None:
     app.display()
     output = app.output.getvalue()
     assert ("OFF: 1-9" in output) == (human == "home")
-    assert ("DEF: A-F" in output) == (human == "away")
+    assert ("DEF: A-F,+Advanced II" in output) == (human == "away")
     assert "1 A" not in output and "Default=" in output
     assert "[1] Line Plunge" not in output
     assert not app.command("?")

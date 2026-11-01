@@ -14,11 +14,20 @@ from bowl_bound.save_game import SavedGame, dumps_game
 from tests.synthetic_teams import team_chart, write_team
 
 
-def setup_game(root: Path, *, mode: str = "drive") -> tuple[SavedGame, TeamCatalog]:
+def setup_game(
+    root: Path, *, mode: str = "drive", advanced_ii: bool = True
+) -> tuple[SavedGame, TeamCatalog]:
     home, away = team_chart("Home", season=2007), team_chart("Away", season=2007, defense=0)
     home_id, away_id = write_team(root, home), write_team(root, away)
     return SavedGame.new(
-        home, away, home_id=home_id, away_id=away_id, seed=7, coach_seed=31, mode=mode
+        home,
+        away,
+        home_id=home_id,
+        away_id=away_id,
+        seed=7,
+        coach_seed=31,
+        mode=mode,
+        advanced_ii=advanced_ii,
     ), TeamCatalog(root)
 
 

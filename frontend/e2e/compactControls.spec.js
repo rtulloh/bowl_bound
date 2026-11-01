@@ -33,15 +33,17 @@ for (const width of [1280, 390]) {
     const modifiers = page.getByRole('region', { name: 'Play modifiers' })
     const hurry = modifiers.getByRole('checkbox', { name: 'Hurry-up mode' })
     await expect(hurry).toBeVisible()
-    for (const name of ['Timeout', 'Spike', 'OOB', 'IB']) {
-      const modifier = modifiers.getByRole('button', { name, exact: true })
-      await expect(modifier).toBeVisible()
-      await expect(modifier).toBeDisabled()
-      if (width === 1280) {
-        const box = await modifier.boundingBox()
-        const mode = await hurry.boundingBox()
-        expect(Math.abs((box.y + box.height / 2) - (mode.y + mode.height / 2))).toBeLessThan(3)
-      }
+    const timeoutPlaceholder = modifiers.getByRole('button', { name: 'Timeout', exact: true })
+    await expect(timeoutPlaceholder).toBeVisible()
+    await expect(timeoutPlaceholder).toBeDisabled()
+    for (const name of ['OOB', 'IB']) {
+      await expect(modifiers.getByRole('button', { name, exact: true })).toBeVisible()
+    }
+    await expect(modifiers.getByRole('button', { name: 'Spike', exact: true })).toHaveCount(0)
+    if (width === 1280) {
+      const box = await timeoutPlaceholder.boundingBox()
+      const mode = await hurry.boundingBox()
+      expect(Math.abs((box.y + box.height / 2) - (mode.y + mode.height / 2))).toBeLessThan(3)
     }
     await expect(page.getByLabel('Control mode')).toHaveCount(0)
     await expect(page.getByTestId('snap')).toHaveCount(0)

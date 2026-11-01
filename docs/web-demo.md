@@ -54,8 +54,11 @@ new browser coin toss. A failed decision stays on this screen; a saved unresolve
 toss loads back into it. Computer-owned choices advance automatically. Kickoff
 controls sit directly below the scoreboard/status, above the field.
 In **Two-sided manual play**, select both an
-offensive play (1–9) and defensive formation (A–F); the second selection submits
-the play immediately. Against the computer, choosing your single call submits it.
+offensive play (1–9) and defensive call; the second selection submits the play
+immediately. Advanced II Wild Card, Run/Pass, Nickel Zone, and Red Zone calls appear
+only when legal. W-coded teams receive free Wild Card and Run/Pass calls; other teams
+see their conditional status in the label. Against the computer, choosing your single
+call submits it; the computer currently uses the six chart formations.
 Both manual selections clear after every submission, even if possession stays the
 same or a request fails. There is no separate Snap button. Alternatively, select a human
 home/away control mode for the [computer opponent and difficulty](coaching.md): only your
@@ -195,7 +198,7 @@ contains Paydirt play names, down/distance arithmetic, or priority handling.
 | `GET /api/games/{id}` | `{game_id, seed, coach_policy, view, revision}`; bound games require the matching `?human_side` |
 | `GET /api/games/{id}/save` | Private JSON download; no chart tables; does not advance dice or choices |
 | `POST /api/games/load` | Raw save JSON body; optional `?human_side=home` / `away` binds resumed controls; returns independent game state with `revision`; 422 invalid/incompatible/unavailable teams, 413 over 2 MiB |
-| `POST /api/games/{id}/snap` | Manual games only; body `{play: "1"-"9", defense: "A"-"F"}`; returns `{report, view, revision}`; 409 for coached games or while a blocking engine decision is pending |
+| `POST /api/games/{id}/snap` | Manual games only; body `{play: "1"-"9", defense: <offered call key>}`; returns `{report, view, revision}`; 409 for coached games or while a blocking engine decision is pending |
 | `POST /api/games/{id}/kick` | Body `{action}` (`kickoff`, `punt`, or `field_goal`) selected from `view.actions.special`; returns `{report, view}`; 409 while a decision is pending or after demo completion, 422 for an unavailable action (including kicks during a two-point try) |
 | `POST /api/games/{id}/decision` | Body `{choice}` from `view.pending.choices`; controlled games require matching `?human_side`; returns current `revision`; 409 if nothing is pending or control does not match, 422 for an unknown or disabled choice |
 | `POST /api/games/{id}/action` | Body `{action}` (`kneel`, `hail_mary`, `timeout:home`, `timeout:away`) from `view.game_actions`; returns `{report, view}`; report may be null for administrative actions; 422 outside regulation mode |

@@ -80,7 +80,23 @@ def test_new_game_returns_engine_state_and_labels(client: TestClient) -> None:
     assert (view["home"], view["away"], view["finished"]) == ("Alpha Tech", "Beta State", False)
     assert view["state"]["situation"] == "1st and 10" and view["state"]["spot"] == "own 35"
     assert [a["label"] for a in view["actions"]["offense"]][:2] == ["Line Plunge", "Counter"]
-    assert [a["key"] for a in view["actions"]["defense"]] == list("ABCDEF")
+    assert [a["key"] for a in view["actions"]["defense"]] == [
+        *"ABCDEF",
+        "WC1",
+        "WC2",
+        "WC3",
+        "WC4",
+        "WC5",
+        "WC5SOP",
+        "WC5BLP",
+        "WC6",
+        "WC7",
+        "WC8",
+        "WC9",
+        "RUN",
+        "PASS",
+        "NICKEL",
+    ]
     assert view["log"] == []
 
 

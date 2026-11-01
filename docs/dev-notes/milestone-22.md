@@ -163,6 +163,24 @@ enabled solely because Paydirt has a similarly named feature.
   actions and local team charts. Keep historical charts, saves, rosters, and raw
   logs private.
 
+### Advanced II implementation review — 2026-11-01
+
+- Re-read local `docs/reference/bbrules2007.pdf`, printed pp. 16–18 (PDF pp. 19–21),
+  for Wild Card, Run/Pass, Nickel Zone, and Red Zone. Paydirt has no matching Bowl
+  Bound defensive calls; no NFL behavior was reused.
+- The owner selected the W-coded default. W privileges make Wild Card and Run/Pass
+  free; other teams may use those calls conditionally. Nickel Zone is unconditional.
+  Conditional mistakes double eligible yardage under the printed Rule IX exclusions.
+  Play 6 Screen counts as a pass for conditional guesses; QR/QT count as pass plays.
+- Implement exact Play 5 Wild Card guesses: run without SOP/BLP, SOP, or BLP. Keep
+  dice order and trace only observed rolls. Red Zone is offered only when the line
+  of scrimmage is inside the defense's 20.
+- Team privileges now pass through catalog loading, game creation, and private saves.
+  Legacy M21 saves keep their six-formation profile. Synthetic tests cover the
+  decisions, dice use, traces, conditional doubling, API creation, and save replay.
+- Coaching continues to select among the six chart formations; strategy and chart
+  evaluation are tracked separately in [AI-021](issues/AI/AI-021.md).
+
 ## Ticket coverage
 
 | Milestone 22 change or decision | Ticket |
@@ -198,6 +216,7 @@ rather than additional advanced-option features.
 | Preserve disabled choices and engine reasons in coached turns | [AI-017](issues/AI/AI-017.md) |
 | Post-game summary of computer call history | [AI-019](issues/AI/AI-019.md) |
 | Keep Hard coaching safe for engine-adjusted try spots | [AI-020](issues/AI/AI-020.md) |
+| Teach coaching policies to use Advanced II defenses | [AI-021](issues/AI/AI-021.md) |
 | Map coordinator errors to clear client responses | [API-002](issues/API/API-002.md) |
 | Bind games to control mode and make repeated coach posts safe | [API-003](issues/API/API-003.md) |
 | Improve terminal input errors, case handling, and paused-game loading | [CLI-044](issues/CLI/CLI-044.md) |
@@ -215,9 +234,9 @@ rather than additional advanced-option features.
 
 ### Ticket coverage reconciliation — 2026-11-01
 
-Checked the generated tracker against the Milestone 22 plan: all 38 tickets
+Checked the generated tracker against the Milestone 22 plan: all 39 tickets
 assigned to the milestone have individual mappings above. They cover the 14
-advanced-rule items, RULE-010 bounds declarations, nine AI findings, two API
+advanced-rule items, RULE-010 bounds declarations, ten AI findings, two API
 findings, two CLI findings, three development findings, one flow finding, four
 return-rule findings, and two UI findings. AI-018 is assigned to Milestone 23 for
 full-game coordinator coverage, so its absence here is intentional. No planned

@@ -13,7 +13,7 @@ from typing import TextIO
 
 from .coaching_session import CoachingTurn, GameView, recommend_call
 from .dice import DiceSequenceError
-from .models import Defense, Play, TeamChart
+from .models import Play, TeamChart
 from .save_game import MAX_SAVE_BYTES, SavedGame, dumps_game, loads_game
 from .session import (
     DEFENSE_LABELS,
@@ -24,6 +24,7 @@ from .session import (
 )
 from .team_catalog import TeamCatalog
 from .team_catalog import TeamEntry as TeamEntry
+from .team_csv import TeamFileMetadata
 
 MAX_AUTOMATIC_STEPS = 100
 _COMMAND_ERRORS = (
@@ -41,6 +42,16 @@ _ACTION_KEYS = {
     "bounds:oob": "O",
     "bounds:ib": "I",
 }
+_ADVANCED_DEFENSE_LABELS = {
+    "RUN": "Run Defense",
+    "PASS": "Pass Defense",
+    "NICKEL": "Nickel Zone",
+    "REDZONE": "Red Zone",
+    **{f"WC{number}": f"Wild Card: Play {number}" for number in (1, 2, 3, 4, 6, 7, 8, 9)},
+    "WC5": "Wild Card: Option run",
+    "WC5SOP": "Wild Card: Option SOP",
+    "WC5BLP": "Wild Card: Option BLP",
+}
 _CHOICE_KEYS = {
     "receive": "R",
     "kick": "K",
@@ -54,7 +65,7 @@ _CHOICE_KEYS = {
 }
 HELP = (
     "Shortcuts: use the bracketed keys in the current menu (case-insensitive).\n"
-    "Solitaire vs computer: 1-9 offense, A-F defense; control one team only.\n"
+    "Solitaire vs computer: 1-9 offense; use an offered A-F or Advanced II defense.\n"
     "Add T to a play or formation key (for example, 7T or AT) to request a timeout after "
     "the play. The game uses it only if offered.\n"
     "When offered: P punt, F field goal, K kickoff/kneel, H Hail Mary; R receive.\n"
@@ -67,7 +78,10 @@ HELP = (
 )
 
 
-def read_save(path: Path, loader: Callable[[str], TeamChart]) -> SavedGame:
+TeamLoader = Callable[[str], TeamChart | tuple[TeamChart, TeamFileMetadata]]
+
+
+def read_save(path: Path, loader: TeamLoader) -> SavedGame:
     """Bound file reads before invoking the unchanged validated save codec."""
     if path.is_symlink() or not path.is_file():
         raise ValueError("Load requires a regular, non-symlinked save file.")
@@ -105,7 +119,7 @@ class TerminalGame:
     def __init__(
         self,
         game: SavedGame,
-        load_team: Callable[[str], TeamChart],
+        load_team: TeamLoader,
         *,
         human_side: str = "home",
         output: TextIO | None = None,
@@ -236,7 +250,9 @@ class TerminalGame:
                 label = (
                     PLAY_LABELS[Play(int(key))]
                     if role == "offense"
-                    else DEFENSE_LABELS[Defense(key)]
+                    else DEFENSE_LABELS[key]
+                    if key in DEFENSE_LABELS
+                    else _ADVANCED_DEFENSE_LABELS[key]
                 )
                 formatted.append(f"{label}: {count}")
             self._print(f"  {team_names[side]} {role}: " + ", ".join(formatted))
@@ -271,7 +287,12 @@ class TerminalGame:
             ):
                 if calls:
                     keys = tuple(a.key for a in calls)
-                    summary = span if keys == tuple(complete) else ",".join(keys)
+                    if keys == tuple(complete):
+                        summary = span
+                    elif role == "DEF" and keys[:6] == tuple("ABCDEF"):
+                        summary = "A-F,+Advanced II"
+                    else:
+                        summary = ",".join(keys)
                     parts.append(f"{role}: {summary}")
             aliases = {target: alias for alias, target in bindings.items() if target[0] != "call"}
             if aliases:
@@ -452,13 +473,11 @@ class TerminalGame:
                 return False
             words = ["call", default.key]
         verb, *args = words
-        if (
-            len(words) == 1
-            and len(verb) == 2
-            and verb[1].upper() == "T"
-            and verb[0].upper() in "123456789ABCDEF"
-        ):
-            return self._call_with_timeout(verb[0].upper())
+        if len(words) == 1 and verb.upper().endswith("T"):
+            key = verb[:-1].upper()
+            _, turn = self.public_view()
+            if key in {action.key for action in turn.actions.offense + turn.actions.defense}:
+                return self._call_with_timeout(key)
         verb = {"?": "help", "/": "stats"}.get(verb, verb.lower())
         if not args and verb.lower() == "z":
             if self.game.coach_policy not in {
@@ -688,13 +707,15 @@ def main(argv: list[str] | None = None) -> int:
                 )
             ):
                 raise ValueError("--load uses saved teams/seeds/game type; omit new-game options.")
-            game = read_save(args.load.expanduser(), catalog.load)
+            game = read_save(args.load.expanduser(), catalog.load_with_metadata)
         else:
             home_id = args.home or "2007/cedar-valley"
             away_id = args.away or "2007/harbor-tech"
+            home, home_metadata = catalog.load_with_metadata(home_id)
+            away, away_metadata = catalog.load_with_metadata(away_id)
             game = SavedGame.new(
-                catalog.load(home_id),
-                catalog.load(away_id),
+                home,
+                away,
                 home_id=home_id,
                 away_id=away_id,
                 seed=args.seed if args.seed is not None else randbits(63),
@@ -702,10 +723,12 @@ def main(argv: list[str] | None = None) -> int:
                 coach_policy=f"{args.difficulty or 'medium'}-v8",
                 mode="regulation",
                 game_type=args.game_type or "regular",
+                home_privileges=home_metadata.privileges,
+                away_privileges=away_metadata.privileges,
             )
         return TerminalGame(
             game,
-            catalog.load,
+            catalog.load_with_metadata,
             human_side=args.human,
             roster_root=args.seasons,
             compact=args.compact,

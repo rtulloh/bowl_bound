@@ -20,6 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_vali
 from starlette.concurrency import run_in_threadpool
 
 from bowl_bound import DISPLAY_VERSION, __version__
+from bowl_bound.models import TeamChart
 from bowl_bound.regulation import RegulationView
 from bowl_bound.roster import RosterFormatError
 from bowl_bound.save_game import (
@@ -42,6 +43,7 @@ from bowl_bound.team_catalog import (
     TeamCatalog,
     TeamNotFoundError,
 )
+from bowl_bound.team_csv import TeamFileMetadata
 
 from .request_limits import RequestBodyLimit
 
@@ -111,7 +113,9 @@ class NewGame(BaseModel):
 class Snap(BaseModel):
     model_config = ConfigDict(extra="forbid")
     play: str = Field(pattern=r"^[1-9]$")
-    defense: str = Field(pattern=r"^[A-F]$")
+    defense: str = Field(
+        pattern=r"^(?:[A-F]|RUN|PASS|NICKEL|REDZONE|WC(?:[1-4]|5(?:SOP|BLP)?|[6-9]))$"
+    )
 
 
 class Kick(BaseModel):
@@ -139,7 +143,10 @@ class Decision(BaseModel):
 class CoachStep(BaseModel):
     model_config = ConfigDict(extra="forbid")
     human_side: HumanSide
-    human_call: str | None = Field(default=None, pattern=r"^[1-9A-F]$")
+    human_call: str | None = Field(
+        default=None,
+        pattern=r"^(?:[1-9A-F]|RUN|PASS|NICKEL|REDZONE|WC(?:[1-4]|5(?:SOP|BLP)?|[6-9]))$",
+    )
     expected_revision: int = Field(ge=0, strict=True)
 
 
@@ -221,8 +228,8 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
 
     @app.post("/api/games")
     def new_game(body: NewGame, human_side: HumanSide | None = None) -> dict[str, object]:
-        home = _load(seasons_root, body.home)
-        away = _load(seasons_root, body.away)
+        home, home_metadata = _load_with_metadata(seasons_root, body.home)
+        away, away_metadata = _load_with_metadata(seasons_root, body.away)
         seed = body.seed if body.seed is not None else secrets.randbits(32)
         try:
             session = SavedGame.new(
@@ -235,6 +242,8 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
                 game_type=body.game_type,
                 start_yards_to_goal=body.start_yards_to_goal,
                 coach_policy=body.coach_policy or f"{body.difficulty or 'medium'}-v8",
+                home_privileges=home_metadata.privileges,
+                away_privileges=away_metadata.privileges,
             )
             session.load_rosters(seasons_root)
         except ValueError as error:
@@ -317,7 +326,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
         try:
             text = (await request.body()).decode("utf-8")
             session = await run_in_threadpool(
-                loads_game, text, lambda key: _load(seasons_root, key)
+                loads_game, text, lambda key: _load_with_metadata(seasons_root, key)
             )
             await run_in_threadpool(session.load_rosters, seasons_root)
         except (SaveFormatError, RosterFormatError, UnicodeError, HTTPException) as error:
@@ -436,11 +445,15 @@ def _session(games: OrderedDict[str, RegisteredGame], game_id: str) -> Registere
     return registered
 
 
-def _load(seasons_root: Path, team_id: str):  # noqa: ANN202 - returns a TeamChart
+def _load(seasons_root: Path, team_id: str) -> TeamChart:
+    return _load_with_metadata(seasons_root, team_id)[0]
+
+
+def _load_with_metadata(seasons_root: Path, team_id: str) -> tuple[TeamChart, TeamFileMetadata]:
     if len(team_id) > TEAM_ID_MAX_LENGTH or not TEAM_ID_RE.fullmatch(team_id):
         raise HTTPException(status_code=422, detail="team id must look like 2002/ohio-state")
     try:
-        return TeamCatalog(seasons_root).load(team_id)
+        return TeamCatalog(seasons_root).load_with_metadata(team_id)
     except TeamNotFoundError as error:
         raise HTTPException(status_code=404, detail="no such team") from error
     except ValueError as error:

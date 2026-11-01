@@ -257,7 +257,7 @@ def audit_game(
             target: SavedGame, operation: str = operation, argument: str | None = argument
         ) -> object:
             if operation == "coach":
-                return target.coach_step(human, argument)
+                return target._coach_step_with_choice(human, argument)
             if operation == "decide":
                 return target.decide(argument)
             if operation == "action":

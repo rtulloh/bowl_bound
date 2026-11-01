@@ -73,11 +73,11 @@ The top-level JSON fields are:
 | Field | Meaning |
 | --- | --- |
 | `schema_version` | Exactly integer `1`; no guessing/defaulting missing versions |
-| `engine_profile` | `bowl-bound-m21-v1`, identifying command/rules/trace replay semantics |
+| `engine_profile` | `bowl-bound-m22-v1`, identifying command/rules/trace replay semantics |
 | `python` | Python major/minor pair; different pairs are rejected conservatively |
 | `saved_at` | UTC timestamp metadata |
-| `teams` | Canonical `season/slug` IDs and SHA-256 content fingerprints for home/away |
-| `config` | Mode, gameplay seed, start spot, regular/postseason type, initial clock, optional independent `coach_seed` and versioned `coach_policy` |
+| `teams` | Canonical `season/slug` IDs, SHA-256 chart fingerprints, and saved rule privileges when present |
+| `config` | Mode, gameplay seed, start spot, regular/postseason type, initial clock, Advanced II profile, optional independent `coach_seed` and versioned `coach_policy` |
 | `commands` | Ordered `snap`/`kick`/`decide`/`action` operations, arguments and expected error class (null for success) |
 | `rolls` | Previously observed offensive/defensive physical-face arrays, in request order |
 | `random_state` | Python MT19937 version-3 state, or remaining synthetic scripted rolls |
@@ -89,10 +89,18 @@ non-finite numbers. Team fingerprints include normalized chart/provenance conten
 not filesystem locations. Physical face count distinguishes offensive (three) and
 defensive (two) rolls; totals are not sampled or reverse-inferred.
 
-Milestone 21 uses `bowl-bound-m21-v1`: the RULE-011 return-fumble new-series
-correction changes replay semantics. Older `bowl-bound-m19-v1` saves are rejected
-before team lookup; no migration or deletion of private saves is performed.
-Do not hand-edit engine profiles to bypass this check.
+Milestone 22 writes `bowl-bound-m22-v1` saves. The loader still accepts legacy
+`bowl-bound-m21-v1` saves with their original six-defense profile; the optional
+Advanced II setting and team privilege metadata are absent from those saves.
+Older `bowl-bound-m19-v1` saves are rejected before team lookup. No migration or
+deletion of private saves is performed. Do not hand-edit engine profiles to bypass
+this check.
+
+New games enable Advanced II. A W-coded team's privileges are copied into the
+private save and verified against the installed team metadata on load. If a save
+contains privileges, the loader must return both the matching chart and metadata;
+chart-only loaders remain supported for saves without privileges. This preserves
+free versus conditional calls when a game resumes without storing chart files.
 
 Within the current engine profile, `coach_policy` accepts `baseline`,
 `baseline-v2`/`baseline-v8`, chart policies v1–v8, and Easy/Medium/Hard policies

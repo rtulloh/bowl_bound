@@ -59,6 +59,7 @@ def new(*, teams=None, mode="drive", rolls=None, clock=None, spot=65):
         start_yards_to_goal=spot,
         clock=clock,
         dice=ScriptedDice(rolls) if rolls is not None else None,
+        advanced_ii=False,
     )
 
 
@@ -323,6 +324,15 @@ def test_structural_validation_rejects_resigned_malformed_fields_before_team_loo
     for key in path[:-1]:
         target = target[key]
     target[path[-1]] = value
+    with pytest.raises(SaveFormatError):
+        loads_game(seal(data), lambda _: pytest.fail("malformed save must not look up teams"))
+
+
+def test_m22_save_rejects_nested_privilege_values_before_team_lookup() -> None:
+    data = json.loads(dumps_game(new()))
+    data["engine_profile"] = save_codec.ENGINE_PROFILE
+    data["config"]["advanced_ii"] = True
+    data["teams"]["home"]["privileges"] = [["W"]]
     with pytest.raises(SaveFormatError):
         loads_game(seal(data), lambda _: pytest.fail("malformed save must not look up teams"))
 

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .models import TeamChart
-from .team_csv import TeamFormatError, load_team, team_folder_name
+from .team_csv import TeamFileMetadata, TeamFormatError, load_team, team_folder_name
 
 TEAM_ID_MAX_LENGTH = 120
 TEAM_ID_RE = re.compile(r"^[1-9][0-9]{0,5}/[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -38,6 +38,10 @@ class TeamCatalog:
 
     def load(self, key: str) -> TeamChart:
         """Load an exact team ID while rejecting traversal and symlinked team paths."""
+        return self.load_with_metadata(key)[0]
+
+    def load_with_metadata(self, key: str) -> tuple[TeamChart, TeamFileMetadata]:
+        """Load a team and its rules privileges without exposing local file paths."""
         if type(key) is not str or len(key) > TEAM_ID_MAX_LENGTH or not TEAM_ID_RE.fullmatch(key):
             raise TeamCatalogError(
                 "Team ID must be a canonical season/team, e.g. 2007/cedar-valley."
@@ -50,10 +54,10 @@ class TeamCatalog:
         if not team_directory.is_dir():
             raise TeamNotFoundError("Team folder does not exist.")
         try:
-            chart, _ = load_team(directory, folder)
+            chart, metadata = load_team(directory, folder)
         except (TeamFormatError, OSError) as error:
             raise TeamCatalogError("Team could not be read; check the local team files.") from error
-        return chart
+        return chart, metadata
 
     def teams(self) -> tuple[TeamEntry, ...]:
         """List readable canonical teams and summarize unreadable entries safely."""

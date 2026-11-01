@@ -24,6 +24,18 @@ from .session import SessionPhase
 AGGRESSION = {
     mode: behavior_for_policy(f"{mode}-v1").aggression for mode in ("easy", "medium", "hard")
 }
+_UNMODELED_DEFENSE_CALLS = frozenset(
+    {
+        "RUN",
+        "PASS",
+        "NICKEL",
+        "REDZONE",
+        *(f"WC{number}" for number in (1, 2, 3, 4, 6, 7, 8, 9)),
+        "WC5",
+        "WC5SOP",
+        "WC5BLP",
+    }
+)
 
 
 class DifficultyCoach(ChartAwareCoach):
@@ -104,7 +116,7 @@ class DifficultyCoach(ChartAwareCoach):
         if (
             offense_side not in {"home", "away"}
             or play not in tuple("123456789")
-            or defense not in tuple("ABCDEF")
+            or type(defense) is not str
         ):
             raise ValueError("history requires a public committed offensive/defensive call")
         other = "away" if offense_side == "home" else "home"
@@ -114,10 +126,11 @@ class DifficultyCoach(ChartAwareCoach):
             if observation is not None
             else None
         )
-        role_calls = (
-            ((offense_side, "offense"), play, offense_observation),
-            ((other, "defense"), defense, defense_observation),
-        )
+        role_calls = [((offense_side, "offense"), play, offense_observation)]
+        if defense in tuple("ABCDEF"):
+            role_calls.append(((other, "defense"), defense, defense_observation))
+        elif defense not in _UNMODELED_DEFENSE_CALLS:
+            raise ValueError("history requires a public committed offensive/defensive call")
         for key, value, role_observation in role_calls:
             self._counts[key][value] += 1
             self._recent[key].append(value)
