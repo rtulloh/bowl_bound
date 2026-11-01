@@ -1,0 +1,23 @@
+tests/test_chart_coaching.py
+  s_ed54ab581b3d60::t_84ba79f7c63382 115-116
+tests/test_difficulty_interfaces.py
+  s_ed54ab581b3d60::t_ca46977760ad1e 22,37
+tests/test_overtime.py
+  s_ed54ab581b3d60::t_958b7d5599f1a6 154
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "427b42eda869b8457af97c2290ac9601c49f3092",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
