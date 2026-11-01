@@ -411,6 +411,23 @@ clock-draining play. No ticket is created to restore that rejected behavior.
 `IMPORT-012` concerns importing power-rating metadata; RULE-024 separately covers
 whether ratings affect gameplay.
 
+### Final regression — 2026-11-01
+
+- Python 3.13.1 full suite: 2,986 passed; 92.84% coverage, above the 75% gate.
+- Ruff lint/format, `pip check`, and `git diff --check` passed.
+- Frontend: 122 unit tests passed, production build passed, and `npm audit` found
+  zero vulnerabilities.
+- Real-engine Playwright: 33 passed on synthetic sample teams. The run reported
+  the existing `NO_COLOR`/`FORCE_COLOR` warning; no tests were skipped.
+- Local season audit, seed `20311031`: 120/120 games passed across 20 local teams
+  and seven seasons, with zero coaching fallbacks. Detailed reports remain in
+  ignored `private-data/local-season-audits/`.
+- Milestone 22 has 34 resolved tickets awaiting owner play-test confirmation and
+  seven closed scope decisions; no tickets remain open.
+
+The full gate passed after DEV-052 restored legacy M19 save loading. The milestone
+is ready for owner review and play-testing.
+
 ## Validation before implementation
 
 Review each ticket and its rulebook text before starting its behavior change. For
