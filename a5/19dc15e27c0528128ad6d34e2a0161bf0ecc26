@@ -1,0 +1,49 @@
+backend/app.py
+  s_ed54ab581b3d60::t_8491694b8445bb 84-87,198
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_60262a9ed4b674 519,739
+bowl_bound/coaching.py
+  s_ed54ab581b3d60::t_e8304ef6bd7f6a 65-66,147-148,150-165
+bowl_bound/coaching_audit.py
+  s_ed54ab581b3d60::t_acf1b44508cf56 368,456-459,461
+bowl_bound/coaching_profiles.py
+  s_ed54ab581b3d60::t_8d99d47010bf16 97-100,132-135
+bowl_bound/difficulty.py
+  s_ed54ab581b3d60::t_1e46aa722abc3c 41-42,245-246
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_f4625cfc6ed6a1 258,283-285,395,601-604
+docs/coaching.md
+  s_ed54ab581b3d60::t_925d8cc5c3030f 137-139,180,196-199
+docs/dev-notes/milestone-22.md
+  s_ed54ab581b3d60::t_80fbc54bd46140 145-156
+docs/saves.md
+  s_ed54ab581b3d60::t_c32f688e9563ee 98,100
+docs/web-demo.md
+  s_ed54ab581b3d60::t_c751e87d14fcb7 194,209-211
+tests/test_chart_coaching_contract.py
+  s_ed54ab581b3d60::t_2411c895c4ba86 27-36,147,159,163-172
+tests/test_cli_help_example.py
+  s_ed54ab581b3d60::t_adddd74cbe05de 31
+tests/test_coaching_audit_matrix.py
+  s_ed54ab581b3d60::t_9915d7761a9c6f 22-24
+tests/test_coaching_profiles.py
+  s_ed54ab581b3d60::t_741a64df111314 80-83
+tests/test_difficulty_interfaces.py
+  s_ed54ab581b3d60::t_d2b5574d236a80 22,37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "a519dc15e27c0528128ad6d34e2a0161bf0ecc26",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
