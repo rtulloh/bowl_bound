@@ -336,7 +336,11 @@ class RegulationGame:
                 f"{self._names[self._toss_winner]} won the opening toss; choose kick or receive."
             )
         elif self._phase is RegulationPhase.KICKOFF:
-            status = "Kickoff required before scrimmage play."
+            status = (
+                f"{pending.chooser} chooses how to receive the kickoff."
+                if pending is not None and pending.chooser is not None
+                else "Kickoff required before scrimmage play."
+            )
         elif self._phase is RegulationPhase.CLOCK:
             if normal_timing_ends_period and self._clock.quarter in {1, 3}:
                 status = (

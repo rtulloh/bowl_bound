@@ -65,6 +65,21 @@ def test_opening_choice_is_not_a_live_scrimmage_and_records_toss_evidence() -> N
     assert game.view().opening_kicker == "away"
 
 
+@pytest.mark.parametrize(
+    ("toss_choice", "receiver"),
+    [("toss:receive", "Home"), ("toss:kick", "Away")],
+)
+def test_pending_kickoff_status_names_receiving_team(toss_choice: str, receiver: str) -> None:
+    game = new_game()
+    game.decide(toss_choice)
+    game.kick("kickoff", dice=ScriptedDice([OffensiveRoll(1, 0, 0)]))
+
+    view = game.view()
+
+    assert view.pending is not None and view.pending.chooser == receiver
+    assert view.status == f"{receiver} chooses how to receive the kickoff."
+
+
 def test_view_exposes_named_defense_and_team_timeout_counts() -> None:
     game = new_game()
     kickoff(game)
