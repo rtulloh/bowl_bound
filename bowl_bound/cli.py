@@ -15,9 +15,15 @@ from typing import TextIO
 
 from .coaching_session import CoachingTurn, GameView, recommend_call
 from .dice import DiceSequenceError
-from .models import TeamChart
+from .models import Defense, Play, TeamChart
 from .save_game import MAX_SAVE_BYTES, SavedGame, dumps_game, loads_game
-from .session import PendingDecisionError, PlayReport, SessionFinishedError
+from .session import (
+    DEFENSE_LABELS,
+    PLAY_LABELS,
+    PendingDecisionError,
+    PlayReport,
+    SessionFinishedError,
+)
 from .team_csv import TeamFormatError, load_team
 
 _TEAM_ID = re.compile(r"[1-9][0-9]{0,5}/[a-z0-9]+(?:-[a-z0-9]+)*")
@@ -201,6 +207,7 @@ class TerminalGame:
         self.stopped = False
         self.automatic_paused = False
         self.last_report: PlayReport | None = None
+        self._postgame_summary_shown = False
 
     def _print(self, text: str) -> None:
         print(text, file=self.output)
@@ -237,6 +244,7 @@ class TerminalGame:
             self._print("Computer stopped. Inspect/save, then use retry to resume.")
         if view.finished:
             self._print("Inspect, save or quit; gameplay is finished.")
+            self._postgame_call_summary(view)
             return
         self._controls(view, turn, compact=self.compact)
         if self.game.player_advice_available(self.human_side):
@@ -288,6 +296,27 @@ class TerminalGame:
                 ):
                     bindings.setdefault(key, (verb, target_id))
         return bindings
+
+    def _postgame_call_summary(self, view: GameView) -> None:
+        """Show Hard's replay-derived call history once after the final whistle."""
+        if self._postgame_summary_shown:
+            return
+        self._postgame_summary_shown = True
+        history = self.game.postgame_call_summary()
+        if not history:
+            return
+        team_names = {"home": view.home, "away": view.away}
+        self._print("\nHard coach learned these committed calls:")
+        for side, role, calls in history:
+            formatted = []
+            for key, count in calls:
+                label = (
+                    PLAY_LABELS[Play(int(key))]
+                    if role == "offense"
+                    else DEFENSE_LABELS[Defense(key)]
+                )
+                formatted.append(f"{label}: {count}")
+            self._print(f"  {team_names[side]} {role}: " + ", ".join(formatted))
 
     def _controls(
         self,

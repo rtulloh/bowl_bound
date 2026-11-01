@@ -56,6 +56,14 @@ class DifficultyCoach(ChartAwareCoach):
         }
         self._strength = {"home": self._run_bias(home), "away": self._run_bias(away)}
 
+    def call_history(self) -> tuple[tuple[str, str, tuple[tuple[str, int], ...]], ...]:
+        """Return stable committed call counts by side and role for final summaries."""
+        return tuple(
+            (side, role, tuple(sorted(counts.items())))
+            for (side, role), counts in sorted(self._counts.items())
+            if counts
+        )
+
     @staticmethod
     def _run_bias(chart: TeamChart) -> float:
         # Paydirt's category-only adjustment idea, using Bowl Bound's own columns

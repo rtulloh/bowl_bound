@@ -177,6 +177,9 @@ already-pending human kickoff does not submit it either. If the follow-up kick
 fails, the election remains applied, the error is shown, and inspection cannot
 retry it: use `kick kickoff` explicitly when ready.
 
+After a Hard game ends, the terminal shows each team's committed offensive and
+defensive call counts. Previewed calls are excluded.
+
 ## Commands during play
 
 Follow the **currently offered** engine IDs and labels. Choices are not interchangeable

@@ -350,6 +350,15 @@ class SavedGame:
         """Persisted policy version; legacy saves remain baseline."""
         return self._config.get("coach_policy", "baseline")
 
+    def postgame_call_summary(
+        self,
+    ) -> tuple[tuple[str, str, tuple[tuple[str, int], ...]], ...] | None:
+        """Expose Hard's committed call counts only after the engine ends the game."""
+        with self._lock:
+            if not self.view().finished or not self.coach_policy.startswith("hard-v"):
+                return None
+            return self._coach.call_history()
+
     @property
     def mode(self) -> str:
         return self._config["mode"]
