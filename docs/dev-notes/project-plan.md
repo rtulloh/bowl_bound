@@ -345,7 +345,7 @@ Each is a separate test/review/commit milestone:
 
 1. Wild Card defense and option-specific guesses.
 2. QB Sneak and other situational plays.
-3. Yardage factors and rating-dependent eligibility.
+3. Yardage factors; power ratings remain informational and do not affect gameplay.
 4. Advanced kicking and block decisions.
 5. Consider alternate timing (action + return + dead time) and hybrid timing (standard timing normally, alternate timing in the last two minutes of each half). Review rulebook conflicts, season-profile interactions, and play-count effects before approving either option. If approved, implement each as a separate tested timing profile; otherwise retain standard chart timing.
 6. Remaining optional rules, each subject to separate scope approval.

@@ -219,6 +219,15 @@ enabled solely because Paydirt has a similarly named feature.
 - Implemented in `53ca033`; 253 focused Python tests and Ruff lint/format checks
   passed. The ticket is resolved and awaits owner play-test confirmation.
 
+### Power-rating scope decision — 2026-11-01
+
+- The owner stated that power rating is not important to gameplay. Advanced Rule
+  VIII's point spread and player-rating system is therefore not part of engine
+  eligibility, outcomes, or scoring; imported rating values remain informational.
+- Updated the canonical rules profile and plan; closed [RULE-024](issues/RULE/RULE-024.md)
+  as wont-fix for gameplay behavior. This documentation-only decision needs no
+  behavioral tests.
+
 ### QB Sneak implementation — 2026-11-01
 
 - Completed [RULE-021](issues/RULE/RULE-021.md) in tested commit `d0fa13b`.

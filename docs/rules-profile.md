@@ -30,7 +30,8 @@ college rules require dated sources, not Paydirt NFL behavior or a moving refere
 | Hurry-up, spike, kneel | Include using Bowl Bound procedures; Paydirt is a design reference only | Advanced I-4(A–B), pp. 14–15; I-6(A), p. 15; Milestone 15 |
 | Per-play bounds declarations | OOB (I-4(C)) guarantees 10 seconds; IB (I-6(C)) removes an existing OOB marker. Each costs five yards only if it changes the result, with printed exceptions. Applies to the next scrimmage play, not a punt. | Milestone 22, RULE-010 |
 | Advanced II defenses | New games offer Wild Card, conditional Run/Pass, Nickel Zone and Red Zone. A printed W privilege makes Wild Card and Run/Pass free; otherwise they are conditional. Incorrect conditional guesses double eligible nonnegative yardage, with Rule IX exclusions. Play 6 Screen and QR/QT count as passes for conditional guesses. Nickel Zone is always available; Red Zone is available only inside the defense's 20. Wild Card Play 5 requires an exact run/SOP/BLP guess; QB Sneak can be specifically Wild Carded. | User decision 2026-11-01; RULE-019–021 |
-| Deferred options | Yardage factors (IX), advanced kicking (III–V), Razzle-Dazzle (I-1), elected safeties (I-5), weather (VI), power ratings (VIII), intentional delay (I-6(B)) | Separate Milestone 22 scope approvals |
+| Power ratings | Informational chart metadata only; do not change eligibility, outcomes, or scoring | Owner decision 2026-11-01; Advanced VIII point-spread/tracking system is not part of engine play (RULE-024) |
+| Deferred options | Yardage factors (IX), advanced kicking (III–V), Razzle-Dazzle (I-1), elected safeties (I-5), weather (VI), intentional delay (I-6(B)) | Separate Milestone 22 scope approvals |
 | Later timing consideration | Alternate and hybrid timing; neither is promised for implementation | Milestone 22 evaluation only |
 
 ## Standard timing matrix
