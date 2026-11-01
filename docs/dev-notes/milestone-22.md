@@ -216,6 +216,8 @@ enabled solely because Paydirt has a similarly named feature.
 - Synthetic tests cover v8 preservation, all v9 coach types, W-coded/conditional
   eligibility from offense and defense, complete Hard estimates, and versioned
   committed-call history.
+- Implemented in `53ca033`; 253 focused Python tests and Ruff lint/format checks
+  passed. The ticket is resolved and awaits owner play-test confirmation.
 
 ### QB Sneak implementation — 2026-11-01
 
