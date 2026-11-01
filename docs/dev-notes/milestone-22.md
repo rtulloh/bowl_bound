@@ -237,6 +237,14 @@ enabled solely because Paydirt has a similarly named feature.
 - This is a scope/documentation decision, so verification uses the issue-tracker
   metadata and generated-index checks rather than artificial behavior tests.
 
+### Fake and block scope decision — 2026-11-01
+
+- The owner deferred Advanced V's fake-kick option, all-out kick rush, and free
+  block option as a group. They remain unavailable; the separate Basic VI-8
+  onside-kick implementation is unaffected. [RULE-026](issues/RULE/RULE-026.md)
+  is closed for this milestone. This documentation-only decision is verified by
+  the issue-tracker checks.
+
 ### QB Sneak implementation — 2026-11-01
 
 - Completed [RULE-021](issues/RULE/RULE-021.md) in tested commit `d0fa13b`.
