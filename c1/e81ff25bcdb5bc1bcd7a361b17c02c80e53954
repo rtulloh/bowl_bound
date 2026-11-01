@@ -1,0 +1,37 @@
+bowl_bound/return_recovery.py
+  s_ed54ab581b3d60::t_77ed24b5ff8f33 1-85
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_e030f2d493b161 35,51,63,387,408,410,477,719,846,850,855-856,864,878-879,886,888,890-893,897,909,922-923,1120,1126,1169-1171,1173-1175,1180-1181,1195,1507,1540,1543-1545,1610-1615,1620,1690-1691,1696,1702,1704-1707,1717,1766,1823-1824,1911,1918,1920-1923
+bowl_bound/special_teams.py
+  s_ed54ab581b3d60::t_0a1bb212ae829f 24-32,145,158,209,229-232,238,261,290,292,307,311,322,359,377,385,393,395,397,409,431,434-437,444,446-447,452,458-460,469,477-478,483,504,510-511,513-516,522,543,550,556-562,564,566,568-570,576,581-582,588,610-611,628-630,632,634-635,741,743-744,749-751
+bowl_bound/turnovers.py
+  s_ed54ab581b3d60::t_b05196c5fb7a98 19-28,76,81,86-124,134-135,165-167,174,194-217,223-225,228-231,234-239,257,288,300,308,314,329,331,333-336,355,363,367,392,395,402,409,414,425,431-432,435-441,449,458-459,472,484,486,490,523-527,529,537-538,550,554
+tests/test_engine_hardening.py
+  s_ed54ab581b3d60::t_135bc3741e3ad6 45-47,135-136
+tests/test_return_audit.py
+  s_ed54ab581b3d60::t_af0ed7ba669227 47-49,55-58
+tests/test_return_recovery.py
+  s_ed54ab581b3d60::t_bd5a47b3e3f948 1-66
+tests/test_session_penalties.py
+  s_ed54ab581b3d60::t_caa5680ed0628a 17,20,81-93
+tests/test_special_teams.py
+  s_ed54ab581b3d60::t_6f339deea7f472 19,361,376
+tests/test_turnovers.py
+  s_ed54ab581b3d60::t_24d77e08d26f24 4,63-66,200-204
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "c1e81ff25bcdb5bc1bcd7a361b17c02c80e53954",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
