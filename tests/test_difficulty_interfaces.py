@@ -19,7 +19,7 @@ def test_cli_selects_real_tiers_with_medium_default(
     monkeypatch.setattr(TerminalGame, "run", lambda self: seen.append(self.game.coach_policy) or 0)
     arguments = ["--seasons", str(tmp_path)] + (["-d", mode] if mode else [])
     assert main(arguments) == 0
-    assert seen == [f"{mode or 'medium'}-v3"]
+    assert seen == [f"{mode or 'medium'}-v4"]
 
 
 @pytest.mark.parametrize("mode", [None, "easy", "medium", "hard"])
@@ -34,7 +34,7 @@ def test_api_selects_real_tiers_with_medium_default_and_reports_policy(
     response = client.post("/api/games?human_side=home", json=payload)
     assert response.status_code == 200
     body = response.json()
-    policy = f"{mode or 'medium'}-v3"
+    policy = f"{mode or 'medium'}-v4"
     assert body["coach_policy"] == policy
     assert "estimates" not in body and "computer_choice" not in body["turn"]
     saved = client.get(f"/api/games/{body['game_id']}/save").json()

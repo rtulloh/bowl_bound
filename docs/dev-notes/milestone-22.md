@@ -107,6 +107,17 @@ enabled solely because Paydirt has a similarly named feature.
   distance, and offers kick or two-point conversion choices. The engine and
   imported chart remain authoritative; no fixed NFL kick range is introduced.
 
+### Easy/Medium urgency-mixture review — 2026-11-01
+
+- Reviewed `paydirt/computer_ai.py:559-591` for gradual deficit/time passing
+  pressure. Adapt the idea of continuously weighting a complete legal call set;
+  do not copy Paydirt's `scores_needed` rounding, exponential scale, clock units,
+  or run weights. Bowl Bound v4 uses its own bounded signed pressure profile and
+  keeps every offered offensive call possible.
+- Pressure uses only engine-provided score, quarter, and remaining time. It
+  changes coaching weights, never legal actions, game timing, or engine rules.
+  Earlier policy versions retain their saved selection streams.
+
 ## Ticket coverage
 
 | Milestone 22 change or decision | Ticket |

@@ -9,6 +9,7 @@ from collections import Counter, deque
 from dataclasses import asdict, replace
 from hashlib import sha256
 from json import dumps
+from math import exp
 from random import Random
 
 from .chart_coaching import ChartAwareCoach
@@ -36,8 +37,8 @@ class DifficultyCoach(ChartAwareCoach):
     ) -> None:
         if mode not in AGGRESSION:
             raise ValueError("difficulty must be easy, medium or hard")
-        if type(version) is not int or version not in {1, 2, 3}:
-            raise ValueError("difficulty policy version must be 1, 2 or 3")
+        if type(version) is not int or version not in {1, 2, 3, 4}:
+            raise ValueError("difficulty policy version must be 1, 2, 3 or 4")
         super().__init__(seed, home, away, version=version)
         self.mode = mode
         self.behavior = behavior_for_policy(f"{mode}-v{version}")
@@ -99,8 +100,13 @@ class DifficultyCoach(ChartAwareCoach):
         )
         if obs.down >= 3 and obs.distance > self.behavior.passing_distance:
             run_probability = self.behavior.passing_down_run_probability
+            if self.version >= 4:
+                run_probability += (
+                    0.5 - self.aggression
+                ) * self.behavior.passing_down_aggression_scale
         elif self.mode == "medium" and obs.down <= 2:
             run_probability += self._strength[obs.side]
+        run_probability += self._situational_pressure(obs) * self.behavior.pressure_run_shift
         run_probability = max(
             self.behavior.min_run_probability,
             min(self.behavior.max_run_probability, run_probability),
@@ -112,6 +118,21 @@ class DifficultyCoach(ChartAwareCoach):
             for key in obs.offense
         ]
         return self._random(obs, "offense").choices(obs.offense, weights=weights, k=1)[0]
+
+    def _situational_pressure(self, observation: CoachObservation) -> float:
+        """Return signed, bounded score pressure; positive protects a lead."""
+        if (
+            self.version < 4
+            or observation.overtime
+            or observation.quarter not in {2, 4}
+            or observation.remaining <= 0
+            or observation.score_difference == 0
+        ):
+            return 0.0
+        minutes_left = max(observation.remaining / 60, 1.0)
+        scores_needed = abs(observation.score_difference) / self.behavior.pressure_points_per_score
+        pressure = 1 - exp(-scores_needed / minutes_left)
+        return pressure if observation.score_difference > 0 else -pressure
 
     def offense(self, observation: CoachObservation) -> str:
         self.analysis_fallback = False
@@ -242,7 +263,20 @@ class DifficultyCoach(ChartAwareCoach):
         self, observation: CoachObservation, role: str, key: str, weight: float
     ) -> float:
         recent = Counter(self._recent[(observation.side, role)])
-        if role == "offense" and self.version >= 3:
+        if role == "offense" and self.version >= 4:
+            if key in "12345":
+                preference = 1.0
+            elif key in "6789":
+                preference = 1 + self.aggression
+            elif key in {"punt", "field_goal"}:
+                preference = 2 - self.aggression
+            else:
+                preference = 1.0
+            if key in "6789":
+                preference *= exp(
+                    -self._situational_pressure(observation) * self.behavior.pressure_run_shift
+                )
+        elif role == "offense" and self.version >= 3:
             if observation.down == 4 and key in tuple("123456789"):
                 preference = 1 + self.aggression
             elif key in {"punt", "field_goal"}:

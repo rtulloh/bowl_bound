@@ -70,6 +70,9 @@ The numbers are coaching aggression settings, not dice multipliers.
 - Easy uses conservative situational mixtures, independent of chart strength.
 - Medium uses balanced mixtures with a coarse run/pass strength tilt on first
   and second down; it does not rank individual chart plays.
+- In v4, Easy/Medium continuously adjust pass/run weights from late-half
+  score margin and time; runs retain positive weight, and protecting a lead
+  tilts the mix toward runs. Long-down mixtures also vary by tier aggression.
 - Hard evaluates individual legal plays through 32 isolated real-engine samples,
   blends smoothed committed opponent-call frequencies with recent-call variety,
   and retains exploration. Hypothetical dice never consume live gameplay dice.
@@ -131,9 +134,9 @@ see [attribution](ATTRIBUTION.md). No Paydirt runtime dependency was added.
 ## API
 
 `POST /api/games` accepts `difficulty: "easy" | "medium" | "hard"`; omitted means
-Medium. New games use the corresponding v3 policy. Alternatively, explicit
-`coach_policy` accepts `baseline`, `baseline-v2`, chart policies v1–v3, and the
-Easy/Medium/Hard v1–v3 policies; it cannot be combined with `difficulty`.
+Medium. New games use the corresponding v4 policy. Alternatively, explicit
+`coach_policy` accepts `baseline`, `baseline-v2`, chart policies v1–v4, and the
+Easy/Medium/Hard v1–v4 policies; it cannot be combined with `difficulty`.
 `baseline` and chart policies are compatibility/testing choices, not additional
 player-facing difficulty levels. New/load/get responses report `coach_policy`;
 loading restores the saved version, irrespective of setup selections.
@@ -174,11 +177,15 @@ aggression, late-game thresholds and utility coefficients. These are coaching
 preferences, not football rules, configurable difficulty odds or calibrated
 expected points. Version 2 consults the engine's `can_kneel_out_game` query before
 choosing a kneel; v1 keeps its original selection stream and heuristic. New games
-use v3, while existing saves retain their recorded policy. Version 3 adds
+use v4, while existing saves retain their recorded policy. Version 3 adds
 chart-backed fourth-down and late-half choices, score-aware fourth-quarter
 conversion preferences, and an offered last-snap Hail Mary for a trailing team.
 Its field-goal options come from the engine and team chart, not a fixed distance
-threshold. Existing v1/v2 policies keep their recorded behavior.
+threshold. Version 4 adds bounded score/time pressure to Easy/Medium pass/run
+mixtures and applies the same directional bias to chart-scored choices; long-down
+mixtures vary by tier aggression. Its seven-point pressure unit is a coaching
+scale, not a rules threshold or an expected score. Earlier policies keep their
+recorded behavior.
 
 Audit JSON includes `behavior_profile` and `audit_profile` for each game. The
 separate `coaching-audit-v1` profile names replay and advisory concentration

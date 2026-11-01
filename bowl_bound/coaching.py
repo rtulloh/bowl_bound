@@ -62,8 +62,8 @@ class BaselineCoach:
     """
 
     def __init__(self, seed: int, *, version: int = 1) -> None:
-        if type(version) is not int or version not in {1, 2, 3}:
-            raise ValueError("baseline policy version must be 1, 2 or 3")
+        if type(version) is not int or version not in {1, 2, 3, 4}:
+            raise ValueError("baseline policy version must be 1, 2, 3 or 4")
         self._seed = seed
         self.version = version
         policy = "baseline" if version == 1 else "baseline-v2"
@@ -98,7 +98,7 @@ class BaselineCoach:
         if "kneel" in observation.game_actions and observation.down < 4:
             if self.version == 1 and protecting:
                 return "kneel"
-            if self.version in {2, 3} and observation.can_kneel_out_game:
+            if self.version >= 2 and observation.can_kneel_out_game:
                 return "kneel"
         chasing = (
             not observation.overtime
