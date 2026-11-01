@@ -25,6 +25,7 @@ from bowl_bound.models import (
     SupplementalColumn,
     TeamChart,
 )
+from bowl_bound.normalization import chart_color_for_rgb
 from bowl_bound.team_csv import TEAM_FILES, TeamFileMetadata, load_team
 from tools.pdf_import import cli
 from tools.pdf_import.export import ExportedTeam, ImportValidationError
@@ -41,8 +42,19 @@ def _provenance(text: str = "", rgb_color: tuple[int, int, int] = (0, 255, 0)) -
 
 
 def _team(name: str, season: int = 2002) -> ExportedTeam:
-    cell = NormalizedCell(ResultKind.YARDS, _provenance("3"), yards=3)
-    blank = NormalizedCell(ResultKind.NO_CHANGE, _provenance("", (255, 255, 255)))
+    cell_evidence = _provenance("3")
+    blank_evidence = _provenance("", (255, 255, 255))
+    cell = NormalizedCell(
+        ResultKind.YARDS,
+        cell_evidence,
+        yards=3,
+        chart_color=chart_color_for_rgb(cell_evidence.rgb_color),
+    )
+    blank = NormalizedCell(
+        ResultKind.NO_CHANGE,
+        blank_evidence,
+        chart_color=chart_color_for_rgb(blank_evidence.rgb_color),
+    )
     chart = TeamChart(
         1,
         name,
