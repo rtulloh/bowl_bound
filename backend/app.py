@@ -22,6 +22,7 @@ from starlette.concurrency import run_in_threadpool
 from bowl_bound import DISPLAY_VERSION, __version__
 from bowl_bound.models import TeamChart
 from bowl_bound.regulation import RegulationView
+from bowl_bound.resolution import ChartResolutionError
 from bowl_bound.roster import RosterFormatError
 from bowl_bound.save_game import (
     GameRevisionConflict,
@@ -112,9 +113,9 @@ class NewGame(BaseModel):
 
 class Snap(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    play: str = Field(pattern=r"^[1-9]$")
+    play: str = Field(pattern=r"^(?:[1-9]|Q)$")
     defense: str = Field(
-        pattern=r"^(?:[A-F]|RUN|PASS|NICKEL|REDZONE|WC(?:[1-4]|5(?:SOP|BLP)?|[6-9]))$"
+        pattern=r"^(?:[A-F]|RUN|PASS|NICKEL|REDZONE|WCSNEAK|WC(?:[1-4]|5(?:SOP|BLP)?|[6-9]))$"
     )
 
 
@@ -145,7 +146,7 @@ class CoachStep(BaseModel):
     human_side: HumanSide
     human_call: str | None = Field(
         default=None,
-        pattern=r"^(?:[1-9A-F]|RUN|PASS|NICKEL|REDZONE|WC(?:[1-4]|5(?:SOP|BLP)?|[6-9]))$",
+        pattern=r"^(?:[1-9QA-F]|RUN|PASS|NICKEL|REDZONE|WCSNEAK|WC(?:[1-4]|5(?:SOP|BLP)?|[6-9]))$",
     )
     expected_revision: int = Field(ge=0, strict=True)
 
@@ -364,6 +365,8 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
             raise HTTPException(status_code=409, detail=str(error)) from error
         except InvalidDecisionError as error:
             raise HTTPException(status_code=422, detail=str(error)) from error
+        except ChartResolutionError as error:
+            raise HTTPException(status_code=422, detail=str(error)) from error
         except ValueError as error:
             raise coordinator_conflict() from error
         return {
@@ -384,6 +387,8 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
         except (SessionFinishedError, PendingDecisionError) as error:
             raise HTTPException(status_code=409, detail=str(error)) from error
         except InvalidDecisionError as error:
+            raise HTTPException(status_code=422, detail=str(error)) from error
+        except ChartResolutionError as error:
             raise HTTPException(status_code=422, detail=str(error)) from error
         return {
             "report": _report_data(session, report),

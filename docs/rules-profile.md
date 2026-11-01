@@ -29,8 +29,8 @@ college rules require dated sources, not Paydirt NFL behavior or a moving refere
 | Hail Mary | Include using Bowl Bound eligibility and outcomes, not NFL outcomes | Advanced I-3, p. 14; Milestone 15 |
 | Hurry-up, spike, kneel | Include using Bowl Bound procedures; Paydirt is a design reference only | Advanced I-4(A–B), pp. 14–15; I-6(A), p. 15; Milestone 15 |
 | Per-play bounds declarations | OOB (I-4(C)) guarantees 10 seconds; IB (I-6(C)) removes an existing OOB marker. Each costs five yards only if it changes the result, with printed exceptions. Applies to the next scrimmage play, not a punt. | Milestone 22, RULE-010 |
-| Advanced II defenses | New games offer Wild Card, conditional Run/Pass, Nickel Zone and Red Zone. A printed W privilege makes Wild Card and Run/Pass free; otherwise they are conditional. Incorrect conditional guesses double eligible nonnegative yardage, with Rule IX exclusions. Play 6 Screen and QR/QT count as passes for conditional guesses. Nickel Zone is always available; Red Zone is available only inside the defense's 20. Wild Card Play 5 requires an exact run/SOP/BLP guess. | User decision 2026-11-01; RULE-019 and RULE-020 |
-| Deferred options | QB Sneak (I-2), yardage factors (IX), advanced kicking (III–V), Razzle-Dazzle (I-1), elected safeties (I-5), weather (VI), power ratings (VIII), intentional delay (I-6(B)) | Separate Milestone 22 scope approvals |
+| Advanced II defenses | New games offer Wild Card, conditional Run/Pass, Nickel Zone and Red Zone. A printed W privilege makes Wild Card and Run/Pass free; otherwise they are conditional. Incorrect conditional guesses double eligible nonnegative yardage, with Rule IX exclusions. Play 6 Screen and QR/QT count as passes for conditional guesses. Nickel Zone is always available; Red Zone is available only inside the defense's 20. Wild Card Play 5 requires an exact run/SOP/BLP guess; QB Sneak can be specifically Wild Carded. | User decision 2026-11-01; RULE-019–021 |
+| Deferred options | Yardage factors (IX), advanced kicking (III–V), Razzle-Dazzle (I-1), elected safeties (I-5), weather (VI), power ratings (VIII), intentional delay (I-6(B)) | Separate Milestone 22 scope approvals |
 | Later timing consideration | Alternate and hybrid timing; neither is promised for implementation | Milestone 22 evaluation only |
 
 ## Standard timing matrix
@@ -263,7 +263,7 @@ return, so it does not eliminate the second attempt. Do not substitute NFL sudde
   halftime. Opening toss selection and reciprocal second-half kickoff follow the
   selected Bowl Bound profile; see the second-half kickoff policy above.
 - **Deferred actions:** Intentional delay,
-  Razzle-Dazzle, QB Sneak, weather, elected safeties, rating/YF adjustments, and
+  Razzle-Dazzle, weather, elected safeties, rating/YF adjustments, and
   advanced kicking remain unavailable until their individual Milestone 22 approvals.
 
 ## Historical sources

@@ -31,7 +31,7 @@ from .penalty_yardage import (
     enforce_penalty,
     enforce_return_penalty,
 )
-from .resolution import AdvancedDefenseTrace, LookupTrace, PlayResolution
+from .resolution import AdvancedDefenseTrace, LookupTrace, PlayResolution, resolve_qb_sneak
 from .return_recovery import GOAL_LINE, MAX_FIELD_SPOT, TOUCHBACK_SPOT
 from .scoring import ScoreKind, ScoreLedger, resolve_pat
 from .special_teams import SpecialTeamsPlay, SpecialTeamsResolution
@@ -694,7 +694,8 @@ class PlaySession:
             raise InvalidDecisionError("choose one offered bounds declaration") from error
         if declaration is not None and self._phase is SessionPhase.TWO_POINT_TRY:
             raise InvalidDecisionError("bounds declarations are unavailable on conversion tries")
-        called = _parse_play(play)
+        qb_sneak = play == "Q"
+        called = Play.ONE if qb_sneak else _parse_play(play)
         defensive = _parse_formation(
             formation,
             self._defensive_actions(),
@@ -715,24 +716,42 @@ class PlaySession:
         source = dice or self._dice
         self._hail_mary = hail_mary
         self._hurried_play = hurried
-        prepared = prepare_play(
-            offense,
-            defense,
-            called,
-            chart_formation,
-            source,
-            hurried=hurried,
-            hail_mary=hail_mary,
-            advanced_call=defensive.key if isinstance(defensive, AdvancedDefenseCall) else None,
-            free_wildcard=defensive.free if isinstance(defensive, AdvancedDefenseCall) else False,
-        )
+        advanced_call = defensive.key if isinstance(defensive, AdvancedDefenseCall) else None
+        free_wildcard = defensive.free if isinstance(defensive, AdvancedDefenseCall) else False
+        if qb_sneak:
+            if hail_mary:
+                raise InvalidDecisionError("QB Sneak and Hail Mary cannot be combined")
+            resolution = resolve_qb_sneak(
+                offense,
+                advanced_call
+                if advanced_call is not None and advanced_call.startswith("WC")
+                else None,
+                source,
+                free_wildcard=free_wildcard,
+            )
+            prepared = PreparedPlay(resolution)
+        else:
+            prepared = prepare_play(
+                offense,
+                defense,
+                called,
+                chart_formation,
+                source,
+                hurried=hurried,
+                hail_mary=hail_mary,
+                advanced_call=advanced_call,
+                free_wildcard=free_wildcard,
+            )
         resolution = prepared.resolution
         before = self._state_view(field)
-        prefix = (
-            f"{offense.name}: Hail Mary vs blank defense"
-            if hail_mary
-            else f"{offense.name}: {PLAY_LABELS[called]} vs {_formation_label(defensive)}"
-        )
+        if hail_mary:
+            prefix = f"{offense.name}: Hail Mary vs blank defense"
+        elif qb_sneak and isinstance(defensive, AdvancedDefenseCall):
+            prefix = f"{offense.name}: QB Sneak vs {_formation_label(defensive)}"
+        elif qb_sneak:
+            prefix = f"{offense.name}: QB Sneak vs no change"
+        else:
+            prefix = f"{offense.name}: {PLAY_LABELS[called]} vs {_formation_label(defensive)}"
         trace = tuple(_trace_entry(entry) for entry in resolution.trace)
         if prepared.offsetting:
             return self._record(
@@ -805,9 +824,9 @@ class PlaySession:
                 True,
                 "penalty_pending",
                 resolution.result.yards,
-                PLAY_LABELS[resolution.called_play],
-                PLAY_LABELS[resolution.resolved_play],
-                _formation_label(defensive),
+                _reported_play_label(resolution, resolved=False),
+                _reported_play_label(resolution, resolved=True),
+                _reported_defense_label(resolution, defensive),
                 before,
                 before,
                 f"{prefix} - penalty decision required.",
@@ -893,9 +912,9 @@ class PlaySession:
                 True,
                 "interception_pending",
                 location,
-                PLAY_LABELS[resolution.called_play],
-                PLAY_LABELS[resolution.resolved_play],
-                _formation_label(defensive),
+                _reported_play_label(resolution, resolved=False),
+                _reported_play_label(resolution, resolved=True),
+                _reported_defense_label(resolution, defensive),
                 before,
                 before,
                 f"{prefix} - interception decision required.",
@@ -1255,9 +1274,9 @@ class PlaySession:
                 True,
                 "end_zone_recovery_pending",
                 None,
-                PLAY_LABELS[resolution.called_play],
-                PLAY_LABELS[resolution.resolved_play],
-                _formation_label(defensive),
+                _reported_play_label(resolution, resolved=False),
+                _reported_play_label(resolution, resolved=True),
+                _reported_defense_label(resolution, defensive),
                 before,
                 before,
                 f"{prefix} - end-zone recovery decision required.",
@@ -1305,9 +1324,9 @@ class PlaySession:
                 True,
                 "return_penalty_pending",
                 None,
-                PLAY_LABELS[resolution.called_play],
-                PLAY_LABELS[resolution.resolved_play],
-                _formation_label(defensive),
+                _reported_play_label(resolution, resolved=False),
+                _reported_play_label(resolution, resolved=True),
+                _reported_defense_label(resolution, defensive),
                 before,
                 before,
                 f"{prefix} - return penalty decision required.",
@@ -1515,9 +1534,15 @@ class PlaySession:
             pending=reason is not None,
             outcome=outcome,
             yards=yards,
-            called_play="Hail Mary" if self._hail_mary else PLAY_LABELS[resolution.called_play],
-            resolved_play="Hail Mary" if self._hail_mary else PLAY_LABELS[resolution.resolved_play],
-            defense="Blank defense" if self._hail_mary else _formation_label(defensive),
+            called_play=_reported_play_label(resolution, resolved=False, hail_mary=self._hail_mary),
+            resolved_play=_reported_play_label(
+                resolution, resolved=True, hail_mary=self._hail_mary
+            ),
+            defense=(
+                "Blank defense"
+                if self._hail_mary
+                else _reported_defense_label(resolution, defensive)
+            ),
             state_before=before,
             state_after=after,
             description=description,
@@ -1627,6 +1652,7 @@ def _actions(
     defense = [Action(d.value, DEFENSE_LABELS[d]) for d in Defense]
     if advanced_ii:
         eligibility = "free" if free_advanced else "conditional"
+        defense.append(Action("WCSNEAK", f"{eligibility.title()} Wild Card: QB Sneak"))
         for play in Play:
             if play is Play.FIVE:
                 defense.extend(
@@ -1650,7 +1676,8 @@ def _actions(
         if red_zone:
             defense.append(Action("REDZONE", "Red Zone"))
     return Actions(
-        tuple(Action(str(play.value), PLAY_LABELS[play]) for play in Play),
+        tuple(Action(str(play.value), PLAY_LABELS[play]) for play in Play)
+        + (Action("Q", "QB Sneak"),),
         tuple(defense),
     )
 
@@ -1938,6 +1965,25 @@ def _formation_label(defense: DefenseCall) -> str:
     if isinstance(defense, AdvancedDefenseCall):
         return defense.label
     return f"{defense.value} {DEFENSE_LABELS[defense]}"
+
+
+def _reported_play_label(
+    resolution: PlayResolution, *, resolved: bool, hail_mary: bool = False
+) -> str:
+    if hail_mary:
+        return "Hail Mary"
+    if resolution.qb_sneak:
+        return "QB Sneak"
+    play = resolution.resolved_play if resolved else resolution.called_play
+    return PLAY_LABELS[play]
+
+
+def _reported_defense_label(resolution: PlayResolution, defensive: DefenseCall) -> str:
+    if resolution.qb_sneak and not (
+        isinstance(defensive, AdvancedDefenseCall) and defensive.key.startswith("WC")
+    ):
+        return "No change"
+    return _formation_label(defensive)
 
 
 def _resolved_turnover_location(

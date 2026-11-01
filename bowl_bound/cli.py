@@ -51,7 +51,9 @@ _ADVANCED_DEFENSE_LABELS = {
     "WC5": "Wild Card: Option run",
     "WC5SOP": "Wild Card: Option SOP",
     "WC5BLP": "Wild Card: Option BLP",
+    "WCSNEAK": "Wild Card: QB Sneak",
 }
+_SITUATIONAL_PLAY_LABELS = {"Q": "QB Sneak"}
 _CHOICE_KEYS = {
     "receive": "R",
     "kick": "K",
@@ -65,7 +67,7 @@ _CHOICE_KEYS = {
 }
 HELP = (
     "Shortcuts: use the bracketed keys in the current menu (case-insensitive).\n"
-    "Solitaire vs computer: 1-9 offense; use an offered A-F or Advanced II defense.\n"
+    "Solitaire vs computer: 1-9 or Q (QB Sneak); use an offered A-F or Advanced II defense.\n"
     "Add T to a play or formation key (for example, 7T or AT) to request a timeout after "
     "the play. The game uses it only if offered.\n"
     "When offered: P punt, F field goal, K kickoff/kneel, H Hail Mary; R receive.\n"
@@ -247,13 +249,18 @@ class TerminalGame:
         for side, role, calls in history:
             formatted = []
             for key, count in calls:
-                label = (
-                    PLAY_LABELS[Play(int(key))]
-                    if role == "offense"
-                    else DEFENSE_LABELS[key]
-                    if key in DEFENSE_LABELS
-                    else _ADVANCED_DEFENSE_LABELS[key]
-                )
+                if role == "offense":
+                    label = (
+                        _SITUATIONAL_PLAY_LABELS[key]
+                        if key in _SITUATIONAL_PLAY_LABELS
+                        else PLAY_LABELS[Play(int(key))]
+                    )
+                else:
+                    label = (
+                        DEFENSE_LABELS[key]
+                        if key in DEFENSE_LABELS
+                        else _ADVANCED_DEFENSE_LABELS[key]
+                    )
                 formatted.append(f"{label}: {count}")
             self._print(f"  {team_names[side]} {role}: " + ", ".join(formatted))
 
@@ -282,7 +289,7 @@ class TerminalGame:
         if compact and (actions.offense or actions.defense):
             parts = []
             for role, calls, complete, span in (
-                ("OFF", actions.offense, "123456789", "1-9"),
+                ("OFF", actions.offense, "123456789Q", "1-9,Q"),
                 ("DEF", actions.defense, "ABCDEF", "A-F"),
             ):
                 if calls:
@@ -316,6 +323,11 @@ class TerminalGame:
                     for action in calls:
                         text = f"[{action.key}] {action.label}"
                         self._print(f"    {text:<30}")
+            situational = tuple(a for a in actions.offense if a.key in _SITUATIONAL_PLAY_LABELS)
+            if situational:
+                self._print("\n  SITUATIONAL PLAYS:")
+                for action in situational:
+                    self._print(f"    [{action.key}] {action.label}")
         if actions.defense:
             heading("DEFENSIVE FORMATION")
             for action in actions.defense:

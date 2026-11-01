@@ -97,6 +97,10 @@ def _digest(value: object) -> str:
 
 def _fingerprint(chart: TeamChart) -> str:
     data = asdict(chart)
+    # Keep legacy team fingerprints stable; this normalized fact is derived from RGB evidence.
+    for section in ("offense", "defense", "supplemental", "special_teams"):
+        for record in data[section]:
+            record["cell"].pop("chart_color", None)
     # Chart recovery intervals are semantic ranges, not absolute local file paths.
     data["recovery_range"] = list(chart.recovery_range)
     return _digest(data)
@@ -923,6 +927,12 @@ def _legacy_m27_view_digest(
 ) -> str:
     """Recreate the pre-M27 digest for a state replayed with implicit timing."""
     data = asdict(view)
+    data["actions"]["offense"] = [
+        action for action in data["actions"]["offense"] if action["key"] != "Q"
+    ]
+    data["actions"]["defense"] = [
+        action for action in data["actions"]["defense"] if action["key"] != "WCSNEAK"
+    ]
     for charge in data.get("timing_log", []):
         if charge["method"] == "standard" and charge["seconds"] > 10:
             charge["method"] = "clock:runoff"

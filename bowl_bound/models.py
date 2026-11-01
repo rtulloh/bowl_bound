@@ -54,6 +54,16 @@ class Priority(str, Enum):
     BRACKETED = "bracketed"
 
 
+class ChartColor(str, Enum):
+    """Normalized box background class; source RGB remains in provenance."""
+
+    RED = "red"
+    GREEN = "green"
+    WHITE = "white"
+    BLACK = "black"
+    YELLOW = "yellow"
+
+
 class VariableReference(str, Enum):
     DS = "DS"
     X = "X"
@@ -215,6 +225,7 @@ class NormalizedCell:
     priority: Priority = Priority.NORMAL
     out_of_bounds: bool = False
     penalty: PenaltyData | None = None
+    chart_color: ChartColor | None = None
 
     def __post_init__(self) -> None:
         if type(self.kind) is not ResultKind:
@@ -223,6 +234,8 @@ class NormalizedCell:
             raise TypeError("provenance must be Provenance or None")
         if self.provenance is not None and self.provenance.rgb_color is None:
             raise ValueError("normalized cell provenance requires measured RGB")
+        if self.chart_color is not None and type(self.chart_color) is not ChartColor:
+            raise TypeError("chart_color must be a ChartColor or None")
         if type(self.priority) is not Priority or type(self.out_of_bounds) is not bool:
             raise TypeError("priority and out_of_bounds must have their declared types")
         if self.yards is not None and type(self.yards) is not int:

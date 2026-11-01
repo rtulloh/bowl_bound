@@ -80,8 +80,10 @@ def test_new_game_returns_engine_state_and_labels(client: TestClient) -> None:
     assert (view["home"], view["away"], view["finished"]) == ("Alpha Tech", "Beta State", False)
     assert view["state"]["situation"] == "1st and 10" and view["state"]["spot"] == "own 35"
     assert [a["label"] for a in view["actions"]["offense"]][:2] == ["Line Plunge", "Counter"]
+    assert view["actions"]["offense"][-1] == {"key": "Q", "label": "QB Sneak"}
     assert [a["key"] for a in view["actions"]["defense"]] == [
         *"ABCDEF",
+        "WCSNEAK",
         "WC1",
         "WC2",
         "WC3",
@@ -119,6 +121,29 @@ def test_snap_resolves_a_real_play(client: TestClient) -> None:
     assert len(response.json()["view"]["log"]) == 1
 
 
+def test_qb_sneak_is_exposed_and_traced_through_the_api(client: TestClient) -> None:
+    game = start(client)
+    response = client.post(f"/api/games/{game['game_id']}/snap", json={"play": "Q", "defense": "A"})
+
+    assert response.status_code == 200, response.text
+    report = response.json()["report"]
+    assert report["called_play"] == report["resolved_play"] == "QB Sneak"
+    assert [entry["section"] for entry in report["trace"]] == ["offense"]
+    assert response.json()["view"]["log"][-1]["defense"] == "No change"
+
+
+def test_api_accepts_the_mismatched_sneak_wild_card_guess(client: TestClient) -> None:
+    game = start(client)
+    response = client.post(
+        f"/api/games/{game['game_id']}/snap", json={"play": "1", "defense": "WCSNEAK"}
+    )
+
+    assert response.status_code == 200, response.text
+    report = response.json()["report"]
+    assert report["supported"] and report["yards"] == 8
+    assert [entry["section"] for entry in report["trace"]] == ["offense"]
+
+
 def test_get_game_returns_the_current_view(client: TestClient) -> None:
     game = start(client)
     client.post(f"/api/games/{game['game_id']}/snap", json={"play": "1", "defense": "A"})
@@ -145,6 +170,7 @@ def test_an_interception_is_returned_as_an_engine_owned_decision(client: TestCli
     [
         {"play": "0", "defense": "A"},
         {"play": "1", "defense": "Z"},
+        {"play": "Q", "defense": "Z"},
         {"play": 1, "defense": "A"},
         {"play": "1"},
         {},

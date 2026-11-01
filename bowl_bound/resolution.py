@@ -41,6 +41,7 @@ from enum import Enum
 
 from .dice import DefensiveRoll, DiceSource, OffensiveRoll
 from .models import (
+    ChartColor,
     Defense,
     NormalizedCell,
     PenaltyData,
@@ -184,6 +185,7 @@ class PlayResolution:
     trace: tuple[LookupTrace | AdvancedDefenseTrace, ...]
     bad_snap: bool = False
     conditional_double: bool = False
+    qb_sneak: bool = False
 
 
 def _rule_cell(
@@ -207,12 +209,13 @@ def resolve_advanced_play(
         "WC5",
         "WC5SOP",
         "WC5BLP",
+        "WCSNEAK",
     }
     if type(play) is not Play or call not in {"RUN", "PASS", "NICKEL", "REDZONE"} | wildcard_calls:
         raise ValueError("unknown Advanced II defense")
 
     wildcard = call.startswith("WC")
-    guessed = Play(int(call[2])) if wildcard else None
+    guessed = Play(int(call[2])) if wildcard and call != "WCSNEAK" else None
     wildcard_branch = call[3:] if wildcard and play is Play.FIVE else ""
     if wildcard and play is not Play.FIVE and guessed is play:
         kind = ResultKind.YARDS if play.value <= 5 else ResultKind.INCOMPLETE
@@ -311,6 +314,50 @@ def resolve_advanced_play(
     result = _variable_result(result, offense, defense, resolved_play, dice, trace)
     return PlayResolution(
         play, resolved_play, result, tuple(trace), conditional_double=conditional_double
+    )
+
+
+def resolve_qb_sneak(
+    offense: TeamChart,
+    call: str | None,
+    dice: DiceSource,
+    *,
+    free_wildcard: bool,
+) -> PlayResolution:
+    """Resolve Advanced I-2 from Play 1's classified box color only."""
+    blank = _rule_cell(ResultKind.NO_CHANGE)
+    if call == "WCSNEAK":
+        result = resolve_cells(_rule_cell(ResultKind.YARDS, yards=0), blank)
+        return PlayResolution(Play.ONE, Play.ONE, result, (), qb_sneak=True)
+
+    roll = dice.offensive()
+    cell = next(
+        record.cell
+        for record in offense.offense
+        if record.play is Play.ONE and record.roll == roll.total
+    )
+    color = cell.chart_color
+    if color is ChartColor.GREEN:
+        sneak_cell = _rule_cell(ResultKind.YARDS, yards=1)
+    elif color in {ChartColor.WHITE, ChartColor.YELLOW}:
+        sneak_cell = _rule_cell(ResultKind.YARDS, yards=0)
+    elif color is ChartColor.RED:
+        sneak_cell = _rule_cell(ResultKind.FUMBLE, yards=0)
+    else:
+        raise ChartResolutionError(
+            "QB Sneak requires a recognized green, white, yellow, or red Play 1 box"
+        )
+
+    result = resolve_cells(sneak_cell, blank)
+    trace = (LookupTrace("offense", offense.name, offense.season, Play.ONE, None, roll, cell),)
+    conditional_double = call is not None and call.startswith("WC") and not free_wildcard
+    return PlayResolution(
+        Play.ONE,
+        Play.ONE,
+        result,
+        trace,
+        conditional_double=conditional_double,
+        qb_sneak=True,
     )
 
 

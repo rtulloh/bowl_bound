@@ -37,6 +37,7 @@ def test_actions_and_labels_come_from_the_engine() -> None:
         ("7", "Sprint Out"),
         ("8", "Boot-leg"),
         ("9", "Drop Back"),
+        ("Q", "QB Sneak"),
     ]
     assert [a.key for a in actions.defense] == list("ABCDEF")
     assert [a.label for a in actions.defense] == [

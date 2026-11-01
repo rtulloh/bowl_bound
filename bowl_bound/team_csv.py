@@ -289,14 +289,16 @@ def _facts(chart: TeamChart, meta: TeamFileMetadata) -> tuple[list[Provenance], 
     if any(x.filename != ps[0].filename for x in ps):
         raise TeamFormatError("provenance: filename mismatch")
     serialized_cells = [
-        (format_cell(item.cell), item.cell.provenance)
+        (format_cell(item.cell), item.cell.provenance, item.cell.chart_color)
         for item in (*chart.offense, *chart.supplemental, *chart.defense, *chart.special_teams)
     ]
     serialized_cells.extend(
-        ("" if item.good else "NG", item.provenance) for item in chart.pat_outcomes
+        ("" if item.good else "NG", item.provenance, None) for item in chart.pat_outcomes
     )
-    for token, provenance in serialized_cells:
-        _validate_cell_color(token, provenance)
+    for token, provenance, normalized_color in serialized_cells:
+        evidence_color = _validate_cell_color(token, provenance)
+        if normalized_color is not None and normalized_color is not evidence_color:
+            raise TeamFormatError("provenance: normalized color disagrees with RGB evidence")
     return ps, ps[0].filename
 
 

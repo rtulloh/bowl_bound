@@ -68,7 +68,7 @@ instead of `choose toss:receive`. Required choices also display numbered shortcu
 In compact mode, ordinary scrimmage turns show only a shortcut summary:
 
 ```text
-  OFF: 1-9 | P,F,K | W=save | /=stats | ?=help (Default=1/Line Plunge)
+  OFF: 1-9,Q | P,F,K | W=save | /=stats | ?=help (Default=1/Line Plunge)
 ```
 
 The keys are filtered to current legal controls; this example is not a universal
@@ -77,8 +77,9 @@ enabled. Only your team's controls appear. Required choices remain labeled so th
 are actionable without another help command.
 
 `?` expands a titled, aligned menu: **Running / Option Plays**, **Passing Plays**,
-**Special Plays**, **Special Teams**, and **Options**, omitting groups that have no
-legal choices. Defensive help shows **Defensive Formation** and relevant options.
+**Situational Plays**, **Special Plays**, **Special Teams**, and **Options**, omitting
+groups that have no legal choices. Defensive help shows **Defensive Formation** and
+relevant options.
 Control labels come from the engine. They identify choices without promising
 yardage or changing the rules. Full command suffixes are omitted from play labels.
 Type `commands` for explicit command syntax, private save/load instructions and traces.
@@ -95,8 +96,9 @@ Without `--compact`, the expanded menu is shown at each turn.
 | `7` | Sprint Out |
 | `8` | Boot-leg |
 | `9` | Drop Back |
+| `Q` | QB Sneak (Play 1 box color only; an offered Wild Card may defend it) |
 | `A`–`F` | Engine-labeled chart defense (including `F` Blitz when defending) |
-| `WC1`–`WC9`, `RUN`, `PASS`, `NICKEL`, `REDZONE` | Advanced II calls when offered; Play 5 Wild Card labels identify run, SOP or BLP |
+| `WC1`–`WC9`, `WCSNEAK`, `RUN`, `PASS`, `NICKEL`, `REDZONE` | Advanced II calls when offered; Wild Card labels identify the exact guess |
 | `P`, `F` | Punt or field goal when choosing an offensive special play |
 | `K` | Kick off, elect to kick, or kneel—whichever the current menu offers |
 | `H` | Hail Mary when the engine offers it |

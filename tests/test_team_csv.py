@@ -25,7 +25,12 @@ from bowl_bound.models import (
     SupplementalColumn,
     TeamChart,
 )
-from bowl_bound.normalization import CELL_LEGEND, ChartColor, chart_color_for_csv_token
+from bowl_bound.normalization import (
+    CELL_LEGEND,
+    ChartColor,
+    chart_color_for_csv_token,
+    chart_color_for_rgb,
+)
 from bowl_bound.team_csv import (
     PROVENANCE_DIR,
     TEAM_FILES,
@@ -49,14 +54,18 @@ def evidence(text: str = "source", rgb: tuple[int, int, int] = (0, 255, 0)) -> P
 
 
 def chart(name: str = "Ohio State") -> TeamChart:
-    cell = NormalizedCell(ResultKind.YARDS, evidence(), yards=1)
+    cell = NormalizedCell(ResultKind.YARDS, evidence(), yards=1, chart_color=ChartColor.GREEN)
     return TeamChart(
         1,
         name,
         2026,
         tuple(OffensiveCell(p, r, cell) for p in Play for r in range(10, 40)),
         tuple(
-            SupplementalCell(c, r, NormalizedCell(ResultKind.BREAKAWAY, evidence()))
+            SupplementalCell(
+                c,
+                r,
+                NormalizedCell(ResultKind.BREAKAWAY, evidence(), chart_color=ChartColor.GREEN),
+            )
             for c in SupplementalColumn
             for r in range(10, 40)
         ),
@@ -95,7 +104,9 @@ def test_zero_yard_cell_round_trips_with_either_proven_chart_fill(
     rgb: tuple[int, int, int],
 ) -> None:
     team = chart()
-    zero = NormalizedCell(ResultKind.YARDS, evidence("zero", rgb), yards=0)
+    zero = NormalizedCell(
+        ResultKind.YARDS, evidence("zero", rgb), yards=0, chart_color=chart_color_for_rgb(rgb)
+    )
     team = replace(team, defense=(replace(team.defense[0], cell=zero), *team.defense[1:]))
     meta = metadata()
 
@@ -107,7 +118,9 @@ def test_zero_yard_cell_round_trips_with_either_proven_chart_fill(
 def test_verified_converted_rgb_fill_round_trips_without_canonicalizing_provenance() -> None:
     team = chart()
     rgb = (95, 255, 0)
-    cell = NormalizedCell(ResultKind.YARDS, evidence("5", rgb), yards=5)
+    cell = NormalizedCell(
+        ResultKind.YARDS, evidence("5", rgb), yards=5, chart_color=chart_color_for_rgb(rgb)
+    )
     team = replace(team, defense=(replace(team.defense[0], cell=cell), *team.defense[1:]))
     meta = metadata()
 
@@ -116,12 +129,25 @@ def test_verified_converted_rgb_fill_round_trips_without_canonicalizing_provenan
     assert team_from_files(files, provenance_to_csv(team, meta)) == (team, meta)
 
 
+def test_export_rejects_normalized_color_that_disagrees_with_source_rgb() -> None:
+    team = chart()
+    inconsistent = replace(team.offense[0].cell, chart_color=ChartColor.RED)
+    team = replace(
+        team,
+        offense=(replace(team.offense[0], cell=inconsistent), *team.offense[1:]),
+    )
+
+    with pytest.raises(TeamFormatError, match="normalized color disagrees with RGB evidence"):
+        team_to_files(team, metadata())
+
+
 def test_parenthesized_breakaway_round_trips_as_a_defensive_override() -> None:
     team = chart()
     defensive_breakaway = NormalizedCell(
         ResultKind.BREAKAWAY,
         evidence("(B)"),
         priority=Priority.PARENTHESIZED,
+        chart_color=ChartColor.GREEN,
     )
     team = replace(
         team,
@@ -139,7 +165,10 @@ def test_parenthesized_breakaway_round_trips_as_a_defensive_override() -> None:
 def test_out_of_bounds_marker_survives_blank_cell_round_trip(section: str) -> None:
     team = chart()
     marker_cell = NormalizedCell(
-        ResultKind.NO_CHANGE, evidence("marker", (255, 255, 255)), out_of_bounds=True
+        ResultKind.NO_CHANGE,
+        evidence("marker", (255, 255, 255)),
+        out_of_bounds=True,
+        chart_color=ChartColor.WHITE,
     )
     rows = getattr(team, section)
     updated = (replace(rows[0], cell=marker_cell), *rows[1:])

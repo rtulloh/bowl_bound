@@ -15,7 +15,12 @@ from bowl_bound.models import (
     SupplementalCell,
     TeamChart,
 )
-from bowl_bound.normalization import CELL_LEGEND, ChartColor, chart_color_for_csv_token
+from bowl_bound.normalization import (
+    CELL_LEGEND,
+    ChartColor,
+    chart_color_for_csv_token,
+    chart_color_for_rgb,
+)
 from bowl_bound.team_csv import (
     TeamFileMetadata,
     TeamFormatError,
@@ -38,7 +43,7 @@ def _with_legend_color(cell: NormalizedCell) -> NormalizedCell:
             raise
         color = ChartColor.RED if cell.variable_multiplier < 0 else ChartColor.GREEN
     evidence = replace(cell.provenance, rgb_color=CELL_LEGEND[color].rgb_color)
-    return replace(cell, provenance=evidence)
+    return replace(cell, provenance=evidence, chart_color=color)
 
 
 def yards(value: int) -> NormalizedCell:

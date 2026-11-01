@@ -55,7 +55,7 @@ def live(app: TerminalGame) -> None:
     app.human_side = app.game.view().state.possession
 
 
-@pytest.mark.parametrize("human,keys", [("home", "123456789"), ("away", "ABCDEF")])
+@pytest.mark.parametrize("human,keys", [("home", "123456789Q"), ("away", "ABCDEF")])
 def test_help_lists_every_legal_play_shortcut_and_hides_opponent(human: str, keys: str) -> None:
     app = terminal(new_game(), human, compact=True)
     before = saved_facts(app.game)
@@ -233,7 +233,10 @@ def test_illegal_shortcuts_and_blank_input_have_no_default_or_hidden_action() ->
 
 
 @pytest.mark.parametrize(
-    "human,key", [("home", str(key)) for key in range(1, 10)] + [("away", key) for key in "ABCDEF"]
+    "human,key",
+    [("home", str(key)) for key in range(1, 10)]
+    + [("home", "Q")]
+    + [("away", key) for key in "ABCDEF"],
 )
 def test_each_scrimmage_shortcut_matches_its_canonical_engine_id(human: str, key: str) -> None:
     app = terminal(new_game(), human)

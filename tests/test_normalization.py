@@ -56,6 +56,7 @@ def test_numeric_color_priority_and_markers(
     evidence = source(text)
     cell = normalize_cell(evidence, color)
     assert cell.kind is ResultKind.YARDS
+    assert cell.chart_color is color
     assert (cell.yards, cell.priority, cell.out_of_bounds) == (yards, priority, ob)
     assert cell.provenance is evidence
 

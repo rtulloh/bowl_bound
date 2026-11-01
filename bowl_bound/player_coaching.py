@@ -19,6 +19,7 @@ _ROLL_WEIGHTS = Counter(
     for black, first, second in product(BLACK_FACES, WHITE_ONE_FACES, WHITE_TWO_FACES)
 )
 _PHYSICAL_ROLLS = sum(_ROLL_WEIGHTS.values())
+_CALLABLE_PLAY_KEYS = frozenset(str(play.value) for play in Play)
 
 
 @dataclass(frozen=True)
@@ -67,7 +68,7 @@ def estimate_plays(
     produces absent rates rather than a zero average or guaranteed outcome.
     """
     target = target_yards(down, distance)
-    valid = {str(play.value) for play in Play}
+    valid = _CALLABLE_PLAY_KEYS
     if any(key not in valid for key in callable_plays):
         raise ValueError("callable plays must be offered offensive IDs 1..9")
     requested = set(callable_plays)
@@ -130,8 +131,9 @@ def advice_lines(
     """Describe public-only Easy assistance, separately from situation/clock tips."""
     lines: list[str] = []
     if role == "offense":
+        chart_calls = tuple(key for key in observation.offense if key in _CALLABLE_PLAY_KEYS)
         estimates = estimate_plays(
-            chart.offense, observation.offense, down=observation.down, distance=observation.distance
+            chart.offense, chart_calls, down=observation.down, distance=observation.distance
         )
         lines.append(f"Target: {target_yards(observation.down, observation.distance)} yards")
         lines.append(

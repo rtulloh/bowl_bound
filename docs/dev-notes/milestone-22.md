@@ -3,9 +3,9 @@
 ## Scope and decision boundary
 
 The canonical scope is [Milestone 22 in the project plan](project-plan.md#22-add-advanced-options-one-at-a-time).
-This note maps its options to tickets so each potential change can be triaged and
-approved separately. Ticket creation does not authorize implementation. Unsupported
-options remain unavailable until their Bowl Bound rule and scope are accepted.
+The owner authorized ticket-by-ticket work on 2026-11-01. This note maps each change
+to a ticket and its Bowl Bound rule basis; unsupported options remain unavailable
+when the ticket still needs a scope decision.
 
 ## Paydirt consultation — 2026-11-01
 
@@ -36,6 +36,22 @@ Reviewed the local Paydirt source before preparing the Milestone 22 ticket set:
 No Paydirt code or data is copied, and Bowl Bound gains no runtime dependency.
 The local Bowl Bound rulebook remains the implementation authority; no rule is
 enabled solely because Paydirt has a similarly named feature.
+
+### RULE-021 QB Sneak implementation review — 2026-11-01
+
+- Rechecked `paydirt/play_resolver.py:588-670`, `paydirt/game_engine.py:2860-2930`,
+  and `tests/test_qb_sneak.py:88-175`. Paydirt separates the rule procedure and
+  tests no-defense-dice behavior, but derives outcomes from its own chart tokens
+  and recovery rules. Reuse only the isolation and test organization.
+- Bowl Bound's `docs/reference/bbrules2007.pdf`, Advanced I-2 (printed p. 14),
+  controls: roll offense only against Play 1; green is one yard, white/yellow no
+  gain, red a fumble at the line. Defense rolls nothing unless it specifically
+  Wild Cards QB Sneak. Advanced II-1 (printed pp. 16–17) makes QB Sneak and Play 1
+  mismatched Wild Card guesses and doubles eligible yardage for an incorrect
+  Conditional Wild Card.
+- Keep color classification at the chart-normalization boundary, use the
+  existing fumble procedure, and retain the actual Play 1 lookup in the trace.
+  Do not reuse Paydirt's token interpretation, timing, or recovery flow.
 
 ### Return-rule correction review — 2026-11-01
 

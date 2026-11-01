@@ -2,10 +2,10 @@
 
 import re
 from dataclasses import dataclass
-from enum import Enum
 
 from .models import (
     BoundingBox,
+    ChartColor,
     NormalizedCell,
     PenaltyCode,
     PenaltyData,
@@ -15,16 +15,6 @@ from .models import (
     ResultKind,
     VariableReference,
 )
-
-
-class ChartColor(str, Enum):
-    """Importer-classified backgrounds; RGB matching is a layout concern."""
-
-    RED = "red"
-    GREEN = "green"
-    WHITE = "white"
-    BLACK = "black"
-    YELLOW = "yellow"
 
 
 @dataclass(frozen=True)
@@ -233,7 +223,12 @@ def _normalize(provenance: Provenance, color: ChartColor) -> NormalizedCell:
 
     def build(kind: ResultKind, **facts: object) -> NormalizedCell:
         return NormalizedCell(
-            kind, provenance, priority=priority, out_of_bounds=out_of_bounds, **facts
+            kind,
+            provenance,
+            priority=priority,
+            out_of_bounds=out_of_bounds,
+            chart_color=color,
+            **facts,
         )
 
     if not text:

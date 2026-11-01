@@ -35,6 +35,27 @@ it.each(['offense', 'defense'])('submits when the second manual call is selected
   fireEvent.click(defense)
   await waitFor(() => expect(api.snap).toHaveBeenCalledTimes(2))
 })
+it('offers QB Sneak as an engine play and sends its selected ID to the API', async () => {
+  const base = view()
+  api.newGame.mockResolvedValue({
+    game_id: 'game',
+    seed: 7,
+    view: view({
+      actions: {
+        ...base.actions,
+        offense: [...base.actions.offense, { key: 'Q', label: 'QB Sneak' }],
+      },
+    }),
+  })
+  await start()
+
+  const sneak = screen.getByTestId('offense-play-q')
+  expect(sneak).toHaveTextContent('QQB Sneak')
+  fireEvent.click(sneak)
+  fireEvent.click(screen.getByTestId('defense-play-a'))
+
+  await waitFor(() => expect(api.snap).toHaveBeenCalledWith('game', 'Q', 'A'))
+})
 it('serializes selection-triggered requests and blocks repeated input while resolving', async () => {
   let finish
   api.snap.mockImplementationOnce(() => new Promise((resolve) => { finish = resolve }))

@@ -243,7 +243,9 @@ def test_required_and_clock_decision_instructions_remain_visible() -> None:
     assert saved_facts(app.game) == before
 
 
-@pytest.mark.parametrize("human,summary", [("home", "OFF: 1-9"), ("away", "DEF: A-F,+Advanced II")])
+@pytest.mark.parametrize(
+    "human,summary", [("home", "OFF: 1-9,Q"), ("away", "DEF: A-F,+Advanced II")]
+)
 def test_compact_only_lists_shortcut_keys_until_help(human: str, summary: str) -> None:
     app = terminal(new_game(), human, compact=True)
     before = saved_facts(app.game)
@@ -388,9 +390,9 @@ def test_help_groups_legal_special_plays_separately_from_special_teams() -> None
     text = app.output.getvalue()
     assert "SPECIAL PLAYS:" in text and "SPECIAL TEAMS:" in text
     assert text.index("SPECIAL PLAYS:") < text.index("[K] Kneel") < text.index("SPECIAL TEAMS:")
+    assert "SITUATIONAL PLAYS:" in text and "[Q] QB Sneak" in text
     assert "[H] Hail Mary" in text
     assert "[P] Punt" in text and "[F] Field goal" in text
-    assert "QB Sneak" not in text and "[Q]" not in text
 
 
 @pytest.mark.parametrize(
