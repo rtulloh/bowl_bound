@@ -1,0 +1,37 @@
+backend/app.py
+  s_ed54ab581b3d60::t_8100f4c88d5dca 252-253
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_bc8bc9d70c722b 732-733
+bowl_bound/team_catalog.py
+  s_ed54ab581b3d60::t_2368624be82d7c 44
+docs/dev-notes/project-plan.md
+  s_ed54ab581b3d60::t_14a0e91ab998dd 354-355
+docs/saves.md
+  s_ed54ab581b3d60::t_0f2ffe8f40306f 79,94,99-104
+tests/test_pdf_export_e2e.py
+  s_ed54ab581b3d60::t_93df1fd394215e 113
+tests/test_pdf_verification.py
+  s_ed54ab581b3d60::t_0e085d729682cd 41
+tools/pdf_import/export.py
+  s_ed54ab581b3d60::t_7baedeaf7c2616 172
+tools/pdf_import/metadata.py
+  s_ed54ab581b3d60::t_f6c8ad3ac1f17b 33,159,222,225,228,231
+tools/pdf_import/verification.py
+  s_ed54ab581b3d60::t_624e820dedaba7 27,61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "08b905bd1fca12d0787f52b2eb2435d3a2515dbd",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
