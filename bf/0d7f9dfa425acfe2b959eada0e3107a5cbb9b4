@@ -1,0 +1,43 @@
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_7218570047bf39 73,80
+bowl_bound/regulation.py
+  s_ed54ab581b3d60::t_9f97dbd323afb6 220-227,428-432,642-649
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_6c3f5e7127c5e7 912,919,952,985-1002
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_4e99221165b673 26,558-588
+docs/cli.md
+  s_ed54ab581b3d60::t_b08c545fda64e1 108
+docs/coaching.md
+  s_ed54ab581b3d60::t_50582604ba85a9 59
+docs/dev-notes/milestone-22.md
+  s_ed54ab581b3d60::t_fa5252301ad8e7 310-312
+docs/playing.md
+  s_ed54ab581b3d60::t_7047e281bc6e54 57-60
+docs/rules-profile.md
+  s_ed54ab581b3d60::t_84381d41bb86e4 33,263-268,272-274,283-284
+docs/web-demo.md
+  s_ed54ab581b3d60::t_4040bf65892c6a 119-120
+tests/test_cli_shortcuts.py
+  s_ed54ab581b3d60::t_d3ab26ba8a2f2e 160-163
+tests/test_regulation.py
+  s_ed54ab581b3d60::t_dc16114e85e5d6 136-190
+tests/test_save_game.py
+  s_ed54ab581b3d60::t_10f4856661d3b4 5,377-428
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "bf0d7f9dfa425acfe2b959eada0e3107a5cbb9b4",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
