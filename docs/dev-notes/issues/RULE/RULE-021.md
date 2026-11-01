@@ -1,25 +1,29 @@
 ---
 id: RULE-021
 title: Add the Bowl Bound QB Sneak procedure
-status: open
+status: resolved
 priority: Medium
 milestone: '22'
 created-at: 2026-11-01
-resolved-at: null
+resolved-at: 2026-11-01
 closed-at: null
 tags:
 - advanced-option
 links: [RULE-022]
-commits: []
+commits: [d0fa13b]
 ---
 
 ## Description
 
-QB Sneak is deferred under Advanced Rule I-2. The current callable play set does not include it. Its result must follow Bowl Bound rules and chart semantics; a similarly named play in another game is not authoritative.
+QB Sneak follows Advanced Rule I-2 and is available as a callable play. Its result follows Bowl Bound rules and normalized chart semantics; a similarly named play in another game is not authoritative.
 
 ## Resolution / verification
 
-- Record eligibility, dice/chart use, defensive participation, field transition, statistics, timing, and commentary from the Bowl Bound rulebook; if approved, add synthetic test-first coverage for normal, short-yardage, goal-line, turnover, and boundary cases. Otherwise document it as unavailable.
+- Implemented in `d0fa13b` after test-first failures for Q parsing and defensive-key validation.
+- The engine uses only the Play 1 roll. Green awards one yard; white/yellow awards no gain; red fumbles at the line. WCSNEAK ends without dice; other Wild Card calls produce a blank defensive result. Existing conditional-guess doubling and fumble recovery/state handling apply.
+- Synthetic focused coverage includes normal, red-zone/goal-line, fumble, Wild Card, trace, statistics/state, API/CLI, coaching, normalization, CSV, and save compatibility behavior.
+- Validation: 416 targeted Python tests passed; 120 frontend tests passed on Node 24.22.2; frontend production build passed; Ruff lint/format checks passed.
+- Status is resolved pending owner play-test confirmation; do not close from automated tests alone.
 
 ## Comments
 

@@ -197,6 +197,16 @@ enabled solely because Paydirt has a similarly named feature.
 - Coaching continues to select among the six chart formations; strategy and chart
   evaluation are tracked separately in [AI-021](issues/AI/AI-021.md).
 
+### QB Sneak implementation — 2026-11-01
+
+- Completed [RULE-021](issues/RULE/RULE-021.md) in tested commit `d0fa13b`.
+- Followed Advanced Rule I-2 with synthetic test-first coverage. QB Sneak uses
+  Play 1 only, handles chart-color outcomes and WCSNEAK/conditional Wild Card
+  behavior, and preserves engine state, statistics, and structured traces.
+- Verification: 416 targeted Python tests passed; 120 frontend tests and the
+  production build passed on Node 24.22.2; Ruff lint/format checks passed.
+  Ticket is resolved and awaits owner play-test confirmation.
+
 ## Ticket coverage
 
 | Milestone 22 change or decision | Ticket |
