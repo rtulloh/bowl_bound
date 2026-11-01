@@ -1,0 +1,49 @@
+backend/app.py
+  s_ed54ab581b3d60::t_71be032398f8ee 137
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_9772acb3f81dbb 46
+bowl_bound/regulation.py
+  s_ed54ab581b3d60::t_7f23d65b447ec6 344,405,665-666
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_f414746f4b8e11 938-941
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_f3a371652da5f8 558-591
+docs/cli.md
+  s_ed54ab581b3d60::t_2b9ad64775c8ed 105
+docs/coaching.md
+  s_ed54ab581b3d60::t_4760e6a83bbddb 47-48
+docs/dev-notes/issues/RULE/RULE-029.md
+  s_ed54ab581b3d60::t_f31950ef33b592 18,22
+docs/playing.md
+  s_ed54ab581b3d60::t_0230c59a59defc 51-54
+docs/rules-profile.md
+  s_ed54ab581b3d60::t_f4c40e490aeb51 33,273-279
+docs/web-demo.md
+  s_ed54ab581b3d60::t_bd8fd6af88cabc 96-97
+frontend/src/App.jsx
+  s_ed54ab581b3d60::t_19f4892695ef9e 212
+frontend/src/test/compactGame.test.jsx
+  s_ed54ab581b3d60::t_860a97260f8e6c 135-146
+tests/test_api.py
+  s_ed54ab581b3d60::t_bbea7088e4ef1a 392-425
+tests/test_elected_safety.py
+  s_ed54ab581b3d60::t_169352a0c5ec35 1-100
+tests/test_save_game.py
+  s_ed54ab581b3d60::t_5e3e9b8fe51f8a 239-247
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "a51f8490ceeaa3313fdb26924f82df6b97e39dc0",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
