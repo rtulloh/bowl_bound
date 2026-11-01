@@ -251,9 +251,14 @@ enabled solely because Paydirt has a similarly named feature.
   governs the implementation.
 - Synthetic tests cover both sides of the recovery threshold, field position,
   trace, no-return timing, default AI preference for a normal kick, safety-kick
-  exclusion, second-half team assignment, and save replay. Automated evidence is
-  recorded with the tested implementation commit; owner play-test remains needed
-  before closure.
+  exclusion, second-half team assignment, all 216 offensive dice combinations,
+  API/CLI/browser controls, and save replay. The first tests failed before the
+  action/API support and safety-kick guard were implemented.
+- Tested in `9fb974a`: 162 focused Python tests passed, including issue-index
+  validation; Ruff checks and formatting passed; 121 frontend tests passed;
+  production build passed; all 33 real-engine browser tests passed on synthetic
+  teams. Browser emitted the existing `NO_COLOR`/`FORCE_COLOR` warning; no tests
+  were skipped. Owner play-test remains needed before closure.
 
 ### Situational-play scope decision — 2026-11-01
 
