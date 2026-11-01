@@ -1,0 +1,79 @@
+RELEASE_NOTES.md
+  s_ed54ab581b3d60::t_ec84abe989e4c9 3-9
+backend/app.py
+  s_ed54ab581b3d60::t_7796242853e9b7 129
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_efe0bcbafae55b 38-43,78-80
+bowl_bound/regulation.py
+  s_ed54ab581b3d60::t_c032c7596fbc76 334
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_0b00e93aa5ec4a 560-565,576,634-639
+bowl_bound/special_teams.py
+  s_ed54ab581b3d60::t_15275699c6bc0f 123-124,133-135,141,159-161,166-183
+docs/cli.md
+  s_ed54ab581b3d60::t_58c5fa419adec0 175-182
+docs/coaching.md
+  s_ed54ab581b3d60::t_5a09581ba2a21b 44-45,47-48
+docs/dev-notes/issue-tracker.md
+  s_ed54ab581b3d60::t_735666def9ea98 8,10,201,209,351
+docs/dev-notes/issues/RULE/RULE-018.md
+  s_ed54ab581b3d60::t_573d7e49e7d07d 12,18,38-41
+docs/dev-notes/issues/RULE/RULE-022.md
+  s_ed54ab581b3d60::t_731dd03901e9d7 4,9-10,21-22,31-40
+docs/dev-notes/issues/RULE/RULE-025.md
+  s_ed54ab581b3d60::t_327e4cc442764e 12,18
+docs/dev-notes/issues/RULE/RULE-028.md
+  s_ed54ab581b3d60::t_7eaac7b7ccb8ea 18,22,28-31
+docs/dev-notes/issues/RULE/RULE-029.md
+  s_ed54ab581b3d60::t_925bd5785bc047 18,22,28-31
+docs/dev-notes/issues/RULE/RULE-031.md
+  s_ed54ab581b3d60::t_76660dadd9fb02 18,22,28-31
+docs/dev-notes/milestone-15.md
+  s_ed54ab581b3d60::t_e9fb81d0ecdfb0 57-60
+docs/dev-notes/milestone-22.md
+  s_ed54ab581b3d60::t_dac27c995ded45 241-267,275
+docs/dev-notes/milestone-30.md
+  s_ed54ab581b3d60::t_7ef8ed7df1ddb9 22-24,33,57-64
+docs/dev-notes/project-plan.md
+  s_ed54ab581b3d60::t_9c0db93e8ee545 351,524-527,530-532
+docs/playing.md
+  s_ed54ab581b3d60::t_77acb1666dd6c3 47-49
+docs/rules-profile.md
+  s_ed54ab581b3d60::t_836d093e3d0737 28,33,35,170-175,273-278
+docs/web-demo.md
+  s_ed54ab581b3d60::t_cf90a4435c87ea 94-98,253-254
+frontend/e2e/openingScreen.spec.js
+  s_ed54ab581b3d60::t_f4299c8935652b 52-58
+frontend/src/App.jsx
+  s_ed54ab581b3d60::t_03414f0c77a05a 210-213
+frontend/src/test/openingScreen.test.jsx
+  s_ed54ab581b3d60::t_e66382637037ed 13-16,56-57,60-68
+tests/test_api.py
+  s_ed54ab581b3d60::t_c58ba91349e509 332,390-407
+tests/test_cli_kick_election.py
+  s_ed54ab581b3d60::t_e44ce6fe02446c 1,18-19,22,32-45,52,60-61,64,66-69,80,89,125,140-141,145
+tests/test_cli_shortcuts.py
+  s_ed54ab581b3d60::t_44b8beb559e967 134,141-143,146
+tests/test_onside_kickoff.py
+  s_ed54ab581b3d60::t_46a4ef147fc9a1 1-163
+tests/test_regulation.py
+  s_ed54ab581b3d60::t_a03b421c06f5ae 156,189,192-200
+tests/test_session_special_teams.py
+  s_ed54ab581b3d60::t_faa845ef363f17 51-53,57,60-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "9fb974a49c12b373893a7c971ae2c09799292de2",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
