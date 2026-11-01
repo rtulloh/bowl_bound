@@ -1,0 +1,25 @@
+bowl_bound/turnovers.py
+  s_ed54ab581b3d60::t_8500027a9d0bbb 477-478
+docs/rules-profile.md
+  s_ed54ab581b3d60::t_8b55727a074400 405-408
+docs/turnovers.md
+  s_ed54ab581b3d60::t_6e458fe7b2026f 45-48,51-52
+tests/test_engine_hardening.py
+  s_ed54ab581b3d60::t_e69c5e2e86eb21 12,395-420
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "075af29ea3333097647fb5f720e38c48c44b8b5b",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
