@@ -19,8 +19,9 @@ implementation misreads this as choosing whether to kick or receive, allowing
 the same team to kick off both halves. The owner clarified that the second-half
 choice is kick type (regular or onside) for the team assigned to kick. The
 first-half kicker receives the second-half kickoff, and the opening receiver
-kicks. Onside kicks are unsupported, so the regular kickoff is the only
-available action and no choice prompt is needed.
+kicks. At this milestone, onside kicks were unsupported, so the normal kickoff
+was the only action. RULE-025 later added the kick-type choice and onside
+resolution while preserving this reciprocal assignment.
 
 ## Acceptance
 
@@ -29,7 +30,7 @@ available action and no choice prompt is needed.
 - Halftime does not offer a kick/receive choice or consume an extra play or dice.
 - The second-half clock and timeout budgets are set correctly, and the assigned
   kickoff is the next legal action.
-- The normal kickoff is automatic because onside kicks are unsupported.
+- At the time of this milestone, only the normal kickoff was available.
 - Compatible pre-M30 saves still replay; old halftime choices are not offered to
   players and are handled only for supported legacy save replay.
 - Rules-profile, roadmap, ticket, and milestone notes record the source wording
@@ -53,3 +54,11 @@ available action and no choice prompt is needed.
   `NO_COLOR` is ignored when `FORCE_COLOR` is set; there were no skipped tests.
 
 All browser fixtures used the fictional sample teams and synthetic charts.
+
+## Follow-up: onside kickoff — 2026-11-01
+
+Milestone 22 ticket [RULE-025](issues/RULE/RULE-025.md) adds the Basic VI-8
+onside kick as an explicit action for the already assigned kicker. It uses one
+offensive roll, a 12-yard dead-ball kick, and the printed 13–20 recovery range.
+This follow-up does not change the reciprocal first/second-half kickoff order
+or restore a halftime kick/receive election.

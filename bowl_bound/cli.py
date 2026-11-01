@@ -35,7 +35,12 @@ _COMMAND_ERRORS = (
     SessionFinishedError,
     DiceSequenceError,
 )
-_KICK_KEYS = {"punt": "P", "field_goal": "F", "kickoff": "K"}
+_KICK_KEYS = {
+    "punt": "P",
+    "field_goal": "F",
+    "kickoff": "K",
+    "onside_kickoff": "O",
+}
 _ACTION_KEYS = {
     "kneel": "K",
     "hail_mary": "H",
@@ -70,8 +75,9 @@ HELP = (
     "Solitaire vs computer: 1-9 or Q (QB Sneak); use an offered A-F or Advanced II defense.\n"
     "Add T to a play or formation key (for example, 7T or AT) to request a timeout after "
     "the play. The game uses it only if offered.\n"
-    "When offered: P punt, F field goal, K kickoff/kneel, H Hail Mary; R receive.\n"
-    "When offered: O declare out of bounds or I declare in bounds for the next play.\n"
+    "When offered: P punt, F field goal, K kickoff/kneel, O onside at kickoff, "
+    "H Hail Mary; R receive.\n"
+    "Before a play: O declare out of bounds or I declare in bounds when offered.\n"
     "Full commands still work: call KEY; choose ID; kick KEY; action KEY.\n"
     "Inspect: status, stats (/), log, trace, help (?). Enter submits a displayed default only.\n"
     "Files: save PATH (private, new file only); load PATH (same local charts required).\n"
@@ -613,20 +619,6 @@ class TerminalGame:
             operation = "decide" if verb == "choose" else verb
             report = self.game.coach_execute(self.human_side, operation, args[0])[0]
             self._report(report)
-            if verb == "choose" and args[0] == "toss:kick":
-                _, next_turn = self.public_view()
-                next_actions = next_turn.actions
-                if any(a.key == "kickoff" for a in next_actions.special):
-                    try:
-                        report = self.game.coach_execute(self.human_side, "kick", "kickoff")[0]
-                        self._report(report)
-                    except _COMMAND_ERRORS as error:
-                        self.automatic_paused = True
-                        self._print(
-                            f"Kick election applied; kickoff not applied: {error}. "
-                            "Inspect, then use kick kickoff to retry."
-                        )
-                        return False
             return True
         raise ValueError("Use an offered command/ID, or status/help to inspect legal controls.")
 

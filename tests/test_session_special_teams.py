@@ -48,9 +48,14 @@ def test_session_kickoff_only_available_at_start_with_a_supported_home_season() 
 
     home = replace(special_chart("H", kickoff=yards(75)), season=2002)
     session = PlaySession.new(home, special_chart("A"), seed=1)
-    assert "kickoff" in [action.key for action in session.view().actions.special]
+    assert {"kickoff", "onside_kickoff"} <= {
+        action.key for action in session.view().actions.special
+    }
     report = session.kick("kickoff", dice=ScriptedDice([OffensiveRoll(1, 0, 0)]))
     assert report.outcome == "touchback" and report.state_after.yards_to_goal == 80
     assert "kickoff" not in [action.key for action in session.view().actions.special]
+    assert "onside_kickoff" not in [action.key for action in session.view().actions.special]
     with pytest.raises(InvalidDecisionError):
         session.kick("kickoff")
+    with pytest.raises(InvalidDecisionError):
+        session.kick("onside_kickoff")

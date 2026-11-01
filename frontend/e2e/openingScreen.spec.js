@@ -49,5 +49,12 @@ for (const [width, height, decision] of [[1280, 720, 'kick'], [390, 700, 'receiv
     const box = await kickoff.boundingBox()
     expect(box.y).toBeGreaterThanOrEqual(0)
     expect(box.y + box.height).toBeLessThanOrEqual(height)
+    const onsideKickoff = page.getByTestId('special-play-onside_kickoff')
+    await expect(onsideKickoff).toBeVisible()
+    const onsideResponse = page.waitForResponse((r) => r.url().endsWith('/kick') && r.request().method() === 'POST')
+    await onsideKickoff.click()
+    const onsideResult = await (await onsideResponse).json()
+    expect(onsideResult.report.outcome).toBe('kick_recovery')
+    expect(onsideResult.report.trace.map((entry) => entry.section)).toEqual(['onside_kickoff'])
   })
 }

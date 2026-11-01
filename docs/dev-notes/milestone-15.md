@@ -54,9 +54,10 @@ Milestone 15 incorrectly interpreted the other player's second-half choice in
 Basic V-3 as choosing which team kicks or receives. The choice is the kick type
 (normal or onside) by the team assigned to kick. The order is reciprocal: the
 opening kicker receives the second-half kickoff, and the opening receiver kicks.
-Onside kicks remain unsupported, so the normal kickoff is automatic. See
-[Milestone 30](milestone-30.md) and the updated
-[rules profile](../rules-profile.md).
+At the time of Milestone 15, onside kicks were unsupported and the normal kickoff
+was automatic. [Milestone 22 RULE-025](issues/RULE/RULE-025.md) later added the
+onside option without changing the assignment. See [Milestone 30](milestone-30.md)
+and the current [rules profile](../rules-profile.md).
 
 ## Architecture and compatibility
 

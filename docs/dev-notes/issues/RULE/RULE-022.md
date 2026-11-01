@@ -1,14 +1,13 @@
 ---
 id: RULE-022
 title: Choose scope for situational plays beyond QB Sneak
-status: open
+status: closed
 priority: Low
 milestone: '22'
 created-at: 2026-11-01
 resolved-at: null
-closed-at: null
-tags:
-- scope-review
+closed-at: 2026-11-01
+tags: [scope-decided, re-scoped]
 links: [RULE-021, RULE-028, RULE-029, RULE-031]
 commits: []
 ---
@@ -19,7 +18,8 @@ Milestone 22 says QB Sneak and other situational plays, but does not name the ad
 
 ## Resolution / verification
 
-- Publish a rulebook-backed candidate list with rule references and owner-approved adopt/defer decisions; create a separate implementation ticket for each adopted play. Do not add unnamed or inferred plays.
+- Advanced I-1 Razzle-Dazzle, I-5 elected safety, and I-6(B) intentional delay are approved for implementation. Their separate tickets remain open and must keep each behavior unavailable until individually implemented and verified.
+- QB Sneak is already implemented under RULE-021. No additional unnamed play is authorized.
 
 ## Comments
 
@@ -28,8 +28,13 @@ Created with scripts/create_issue.py. Keep evidence public-safe.
 
 --- 2026-11-01 ---
 Rulebook inventory (Advanced I, printed pp. 13–16) found no additional unnamed
-play to add: QB Sneak (I-2), Razzle-Dazzle (I-1), elected safety (I-5), and
-intentional delay (I-6(B)) are already tracked separately in the linked tickets.
-Hail Mary, hurry-up, spike, kneel, and in-bounds/out-of-bounds declarations
-already have implemented paths. Owner adopt/defer decisions for the four open
-candidates remain outstanding; keep each unavailable until then.
+play to add. The owner approved Razzle-Dazzle (I-1), elected safety (I-5), and
+intentional delay (I-6(B)); RULE-028, RULE-029, and RULE-031 track each
+implementation. All remain unavailable until implemented and verified. QB
+Sneak (I-2) is tracked separately in RULE-021. Hail Mary, hurry-up, spike,
+kneel, and in-bounds/out-of-bounds declarations already have implemented paths.
+
+--- 2026-11-01 ---
+Closed as `re-scoped` / `scope-decided`: the owner adopted all three candidates,
+and each has an individual Milestone 22 implementation ticket. This ticket
+records the scope decision only; it does not claim the plays are implemented.

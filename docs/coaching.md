@@ -41,9 +41,11 @@ retry; it does not cap game length or overtime rounds.
 Open the compact header **Game** menu for **New game**, **Save game** and **Load
 saved game**. It overlays rather than pushing the play area down; Escape closes
 it and returns focus to the menu summary. Offered special/game actions share your
-play panel: P/Punt, F/FG, K/Kneel, KO/Kickoff and HM/Hail Mary. The
+play panel: P/Punt, F/FG, K/Kneel, KO/Kickoff, O/Onside kickoff when offered,
+and HM/Hail Mary. The
 prominent number/letter sits above its name; full engine labels remain available
-to assistive technology and in tooltips. Unsupported Q/Sneak is not added.
+to assistive technology and in tooltips. QB Sneak appears as Q when the engine
+offers it.
 
 Defense buttons keep A–F above their engine-supplied names: **Standard**,
 **Short yardage (gaps)**, **Short yardage (wide)**, **Pass prevent (short)**,

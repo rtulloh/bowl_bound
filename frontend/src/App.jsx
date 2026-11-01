@@ -207,7 +207,10 @@ export default function App() {
   const timeoutActions = gameActions.filter((action) => action.key.startsWith("timeout:"))
   const boundsActions = gameActions.filter((action) => action.key.startsWith("bounds:"))
   // Display abbreviations only: offered engine IDs and labels still own availability/behavior.
-  const displayKeys = { punt: 'P', field_goal: 'F', kneel: 'K', kickoff: 'KO', hail_mary: 'HM' }
+  const displayKeys = {
+    punt: 'P', field_goal: 'F', kneel: 'K', kickoff: 'KO',
+    onside_kickoff: 'O', hail_mary: 'HM',
+  }
   const extraPlays = [
     ...(actions.special || []).map((action) => ({ ...action, prefix: 'special', displayKey: displayKeys[action.key], shortLabel: action.key === 'field_goal' ? 'FG' : action.label })),
     ...gameActions.filter((action) => !action.key.startsWith("timeout:") && !action.key.startsWith("bounds:")).map((action) => ({ ...action, prefix: 'game', displayKey: displayKeys[action.key] })),

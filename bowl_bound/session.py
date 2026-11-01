@@ -557,7 +557,12 @@ class PlaySession:
 
     def _special_actions(self) -> tuple[Action, ...]:
         if self._scheduled_kickoff:
-            return (Action("kickoff", "Safety free kick" if self._safety_free_kick else "Kickoff"),)
+            actions = [
+                Action("kickoff", "Safety free kick" if self._safety_free_kick else "Kickoff")
+            ]
+            if not self._safety_free_kick:
+                actions.append(Action("onside_kickoff", "Onside kickoff"))
+            return tuple(actions)
         if self._phase is SessionPhase.TWO_POINT_TRY:
             return ()
         if self._field is None or self._pending is not None or self._special is not None:
@@ -568,6 +573,7 @@ class PlaySession:
         season = self._charts[Possession.HOME].season
         if not self._log and 1940 <= season <= 2023:
             actions.insert(0, Action("kickoff", "Opening kickoff"))
+            actions.insert(1, Action("onside_kickoff", "Onside kickoff"))
         return tuple(actions)
 
     def _pending_view(self) -> PendingDecisionView | None:
@@ -625,7 +631,12 @@ class PlaySession:
         result: SpecialTeamsResolution,
         before: StateView,
     ) -> PlayReport:
-        labels = {"punt": "Punt", "kickoff": "Kickoff", "field_goal": "Field goal attempt"}
+        labels = {
+            "punt": "Punt",
+            "kickoff": "Kickoff",
+            "onside_kickoff": "Onside kickoff",
+            "field_goal": "Field goal attempt",
+        }
         label = labels[procedure.action]
         pending = bool(result.choices)
         trace = tuple(

@@ -153,7 +153,7 @@ def test_touchdown_requires_try_then_schedules_scoring_teams_kickoff() -> None:
     assert game.view().phase == "kickoff" and not game.view().finished
     assert game.view().state.possession_name == "Home"
     assert game.view().state.yards_to_goal == 65
-    assert [a.key for a in game.view().actions.special] == ["kickoff"]
+    assert [a.key for a in game.view().actions.special] == ["kickoff", "onside_kickoff"]
 
 
 def test_first_quarter_expiration_is_once_and_preserves_field_and_timeouts() -> None:
@@ -186,8 +186,17 @@ def test_halftime_schedules_reciprocal_kickoff_and_resets_timeouts(
     assert view.clock.quarter == 3 and view.clock.remaining == 900
     assert view.clock.timeouts == (3, 3)
     assert view.state.possession_name == second_half_kicker
-    assert [action.key for action in view.actions.special] == ["kickoff"]
+    assert [action.key for action in view.actions.special] == ["kickoff", "onside_kickoff"]
     assert len(view.log) == 2
+
+    kickoff_report = game.kick("onside_kickoff", dice=ScriptedDice([OffensiveRoll(1, 3, 0)]))
+    assert kickoff_report.outcome == "kick_recovery"
+    assert kickoff_report.timing.unreturned_kickoff
+    after_kickoff = game.view()
+    assert after_kickoff.phase == "scrimmage"
+    assert after_kickoff.state.possession_name == second_half_kicker
+    assert after_kickoff.state.yards_to_goal == 53
+    assert after_kickoff.clock.remaining == 900
 
 
 def test_expiration_waits_for_conversion_then_has_no_spurious_kickoff() -> None:

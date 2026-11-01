@@ -83,8 +83,6 @@ def test_toss_shortcuts_match_explicit_engine_choice(key: str, choice: str) -> N
     reference = loads_game(dumps_game(app.game), app.load_team)
     assert app.command(key)
     reference.execute_with_view("decide", [choice])
-    if choice == "toss:kick":
-        reference.execute_with_view("kick", ["kickoff"])
     assert saved_facts(app.game) == saved_facts(reference)
 
 
@@ -133,19 +131,19 @@ def test_oob_and_ib_shortcuts_select_one_engine_declaration_before_the_next_play
     assert app.game.view().bounds_declaration == "in_bounds"
 
 
-def test_k_is_a_kickoff_only_when_offered() -> None:
+def test_kickoff_and_onside_shortcuts_are_only_offered_for_a_kickoff() -> None:
     app = regulation()
     assert app.command("choose toss:receive")
     app.human_side = app.game.view().state.possession
     reference = loads_game(dumps_game(app.game), app.load_team)
     app.display()
     assert "[K] Kickoff" in app.output.getvalue()
-    assert "[O]" not in app.output.getvalue()  # No invented onside action.
-    assert app.command("k")
-    reference.execute_with_view("kick", ["kickoff"])
+    assert "[O] Onside kickoff" in app.output.getvalue()
+    assert app.command("o")
+    reference.execute_with_view("kick", ["onside_kickoff"])
     assert saved_facts(app.game) == saved_facts(reference)
     before = saved_facts(app.game)
-    assert not app.command("k")  # Pending reception is not another kickoff.
+    assert not app.command("o")
     assert saved_facts(app.game) == before
 
 

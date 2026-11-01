@@ -329,7 +329,7 @@ def test_punt_action_and_reception_decision_through_api(seasons: Path) -> None:
     assert client.post(path + "/kick", json={"action": "field_goal"}).status_code == 409
     assert client.post(path + "/snap", json={"play": "1", "defense": "A"}).status_code == 409
     result = client.post(path + "/decision", json={"choice": "kick:fair_catch"})
-    assert result.status_code == 200
+    assert result.status_code == 200, result.text
     assert result.json()["view"]["state"]["yards_to_goal"] == 75
     assert len(result.json()["report"]["trace"]) == 1
     assert len(result.json()["view"]["log"]) == 1
@@ -387,3 +387,21 @@ def test_opening_kickoff_end_zone_choice_through_api(seasons: Path) -> None:
     assert final.json()["view"]["state"]["yards_to_goal"] == 80
     assert "kickoff" not in [a["key"] for a in final.json()["view"]["actions"]["special"]]
     assert len(final.json()["report"]["trace"]) == 1
+
+
+def test_onside_kickoff_is_an_engine_offered_api_action(seasons: Path) -> None:
+    write_team(seasons, team_chart("Alpha Tech", season=2002))
+    write_team(seasons, team_chart("Beta State", season=2002))
+    client = TestClient(create_app(seasons))
+    game = start(client, home="2002/alpha-tech", away="2002/beta-state")
+    path = f"/api/games/{game['game_id']}"
+
+    assert {action["key"] for action in game["view"]["actions"]["special"]} >= {
+        "kickoff",
+        "onside_kickoff",
+    }
+    result = client.post(path + "/kick", json={"action": "onside_kickoff"})
+
+    assert result.status_code == 200, result.text
+    assert result.json()["report"]["outcome"] == "kick_recovery"
+    assert [entry["section"] for entry in result.json()["report"]["trace"]] == ["onside_kickoff"]

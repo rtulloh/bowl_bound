@@ -9,13 +9,13 @@ resolved-at: null
 closed-at: null
 tags:
 - advanced-option
-links: []
+links: [RULE-018]
 commits: []
 ---
 
 ## Description
 
-Onside kicks are currently unsupported; the engine automatically schedules a normal kickoff. The owner clarified that second-half kicking-team assignment is fixed, with only the kick type potentially selectable. Implementing this must not reintroduce a kick-or-receive choice.
+Onside kicks are currently unsupported. Basic VI-8 specifies the 12-yard kick and recovery rule. Offer it as a kick type to the already assigned kicker; never reintroduce a kick-or-receive choice at halftime. RULE-018 records the reciprocal team assignment.
 
 ## Resolution / verification
 

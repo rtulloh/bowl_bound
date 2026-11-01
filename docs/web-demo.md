@@ -91,11 +91,11 @@ Punt (**P / Punt**), field goal (**F / FG**) and kneel (**K / Kneel**) appear
 alongside numbered plays in the same panel when the engine offers them, not in
 separate Special Teams/Clock & Game Actions boxes. The play number or abbreviation
 is above the short name; tooltips/accessibility retain the full engine label.
-Kickoff (**KO**) and Hail Mary (**HM**) use the same panel; offered timeouts
-live beside Hurry-up in the modifier row. These are display abbreviations, not
-additional rules or keyboard bindings.
-Unsupported **Q / Sneak** stays absent. Kicks and kneels resolve immediately
-without a defensive formation. A punt is rolled before the receiver chooses a fair catch or return;
+Kickoff (**KO**), onside kickoff (**O**, when offered) and Hail Mary (**HM**)
+use the same panel; offered timeouts live beside Hurry-up in the modifier row.
+These are display abbreviations, not additional rules or keyboard bindings.
+**Q / QB Sneak** appears when the engine offers it. Kicks and kneels resolve
+immediately without a defensive formation. A punt is rolled before the receiver chooses a fair catch or return;
 marked punts suppress returns. The engine schedules the opening, second-half,
 post-score and safety free kicks. Home season determines kickoff placement and
 free-kick touchbacks, even for mixed-season opponents.
@@ -250,8 +250,8 @@ next-play controls during `clock_choice`; `view.clock_modifiers` supplies compac
 labels and exact decision IDs. Next-play requests commit normal prior timing in
 the engine, once, before consuming any new dice. A period-ending runoff advances
 the period without executing the requested next play; at halftime it also
-schedules the reciprocal second-half kickoff. Onside kicks are unsupported, so
-this is the only available second-half kick action.
+schedules the reciprocal second-half kickoff. The assigned kicker is offered a
+normal or onside kickoff; the receiver never chooses which team kicks.
 Explicit `clock:runoff` remains accepted for older clients, but is not offered in
 current engine views or user interfaces. Opening-toss choices may return a null
 report. Conversion IDs remain `conversion:kick` and `conversion:two`; the

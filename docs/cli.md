@@ -172,15 +172,14 @@ computer-owned turns, finished games or paused error recovery. Optional clock
 controls do not override the displayed scrimmage default. Inspection never
 submits it or advances dice; EOF/Ctrl-C/quit remain exits, not defaults.
 
-Selecting **Kick** at the opening election also submits the offered normal
-kickoff immediately—no second `K`. This applies to the numbered choice and
-`choose toss:kick`. Halftime schedules the reciprocal normal kickoff
-automatically because onside kicks are unsupported. Required return/penalty
-choices still stop for their owner; the computer resolves only its own choices.
-Choosing Receive does not submit a human-owned kick. Loading/inspecting an
-already-pending human kickoff does not submit it either. If the follow-up kick
-fails, the election remains applied, the error is shown, and inspection cannot
-retry it: use `kick kickoff` explicitly when ready.
+Selecting **Kick** at the opening election assigns the kicking team; the kicker
+then chooses `K` for a normal kickoff or `O` for an onside kickoff. This applies
+to the numbered choice and `choose toss:kick`. At halftime, the opening kicker
+receives and the opening receiver kicks; that assigned kicker makes the same
+kick-type choice, with no kick/receive election. The computer uses a normal
+kickoff by default when it controls the kicker. Choosing Receive does not submit
+a human-owned kick. Loading or inspecting a pending human kickoff does not
+submit it either.
 
 After a Hard game ends, the terminal shows each team's committed offensive and
 defensive call counts. Previewed calls are excluded.

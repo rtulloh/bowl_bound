@@ -1,5 +1,12 @@
 # Bowl Bound release notes
 
+## Unreleased
+
+- Adds the Basic VI-8 onside kickoff as a choice for the assigned kicking team;
+  the kick travels 12 yards and uses the 13–20 recovery range.
+- Adds the Bowl Bound QB Sneak and Advanced II defensive calls to engine-offered
+  controls and v9 coaching policies.
+
 ## 0.1.0-alpha.3 — Third alpha
 
 - Advances quarter and game transitions through normal plays; there is no separate

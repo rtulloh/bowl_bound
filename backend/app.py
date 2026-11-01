@@ -126,7 +126,7 @@ class Snap(BaseModel):
 
 class Kick(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    action: Literal["kickoff", "punt", "field_goal"]
+    action: Literal["kickoff", "onside_kickoff", "punt", "field_goal"]
 
 
 class GameAction(BaseModel):

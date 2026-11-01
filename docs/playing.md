@@ -44,6 +44,9 @@ halftime and overtime. Disabled choices include an explanation and cannot be
 selected. A touchdown awards six, then a one-point kick or two-point try is
 offered as appropriate. Kicks/returns and extra decisions resolve only when
 the engine offers them; do not infer a result from an animation or die face.
+At a kickoff, the assigned kicker may choose a normal or onside kick; the
+onside kick travels 12 yards, and the offensive-dice total determines which
+team recovers it.
 
 The clock advances through engine decisions, not real elapsed time. Standard
 play timing applies automatically with your next call; there is no separate

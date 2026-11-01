@@ -120,8 +120,8 @@ class SpecialTeamsPlay:
         safety_free_kick: bool = False,
         hurried: bool = False,
     ) -> None:
-        if action not in {"kickoff", "punt", "field_goal"}:
-            raise ValueError("kick action must be kickoff, punt, or field_goal")
+        if action not in {"kickoff", "onside_kickoff", "punt", "field_goal"}:
+            raise ValueError("kick action must be kickoff, onside_kickoff, punt, or field_goal")
         if not isinstance(state, FieldState):
             raise TypeError("kick needs a FieldState")
         if not isinstance(kicking, TeamChart) or not isinstance(receiving, TeamChart):
@@ -130,13 +130,15 @@ class SpecialTeamsPlay:
             raise TypeError("safety_free_kick must be a bool")
         if safety_free_kick and action == "field_goal":
             raise ValueError("a safety free kick cannot be a field goal")
-        if action == "kickoff" or safety_free_kick:
+        if safety_free_kick and action == "onside_kickoff":
+            raise ValueError("a safety free kick cannot be an onside kickoff")
+        if action in {"kickoff", "onside_kickoff"} or safety_free_kick:
             _validate_season(home_season)
         self.action = action
         self.charts = {state.possession: kicking, state.possession.other: receiving}
         self.dice = dice
         self.season = home_season
-        self.free_kick = action == "kickoff" or safety_free_kick
+        self.free_kick = action in {"kickoff", "onside_kickoff"} or safety_free_kick
         self.hurried = hurried
         self.no_elapsed_time = False
         self.extends_quarter = False
@@ -154,9 +156,30 @@ class SpecialTeamsPlay:
         """Roll the announced kick once; starting the same procedure twice is refused."""
         if self.result is not None:
             raise ValueError("kick procedure has already started")
+        if self.action == "onside_kickoff":
+            self.result = self._onside_kickoff()
+            return self.result
         column = SpecialTeamsColumn(self.action)
         self.result = self._column(self.start, column, lambda cell: self._kick(cell))
         return self.result
+
+    def _onside_kickoff(self) -> SpecialTeamsResolution:
+        """Apply Basic VI-8: recover 13–20; the ball travels 12 yards without return."""
+        roll = self.dice.offensive()
+        kicker = self.start.possession
+        receiver = kicker.other
+        self.trace.append(SpecialTeamsTrace("onside_kickoff", self.charts[kicker].name, roll, None))
+        recovery = kicker if 13 <= roll.total <= 20 else receiver
+        kicker_yards_to_goal = self.start.yards_to_goal - 12
+        recovery_yards_to_goal = (
+            kicker_yards_to_goal if recovery is kicker else GOAL_LINE - kicker_yards_to_goal
+        )
+        state = start_drive(recovery, recovery_yards_to_goal)
+        who = self.charts[recovery].name
+        self.descriptions.append(
+            f"{self.charts[kicker].name} onside kickoff travels 12 yards; {who} recovers."
+        )
+        return self._finish(SpecialTeamsOutcome.RECOVERY, state)
 
     def decide(self, choice: str) -> SpecialTeamsResolution:
         """Apply exactly one current legal choice without repeating prior dice."""

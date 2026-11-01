@@ -10,7 +10,10 @@ const pending = { chooser: 'Alpha Tech', choices: [
   { id: 'toss:receive', label: 'Receive', enabled: true },
 ] }
 const opening = () => view({ phase: 'opening_choice', pending, status: 'Alpha Tech won the opening toss; choose kick or receive.' })
-const kickoff = () => view({ phase: 'kickoff', pending: null, actions: { offense: [], defense: [], special: [{ key: 'kickoff', label: 'Kickoff' }] } })
+const kickoff = () => view({ phase: 'kickoff', pending: null, actions: { offense: [], defense: [], special: [
+  { key: 'kickoff', label: 'Kickoff' },
+  { key: 'onside_kickoff', label: 'Onside kickoff' },
+] } })
 const turn = (role, extra = {}) => ({ human_side: 'home', human_role: role, automatic: role === 'computer', status: 'Engine turn status', actions: { offense: [], defense: [], special: [] }, game_actions: [], pending: role === 'decision' ? pending : null, ...extra })
 beforeEach(() => {
   vi.resetAllMocks()
@@ -50,7 +53,18 @@ it.each(['manual', 'home'])('shows a separate toss screen then enters kickoff af
   expect(screen.queryByTestId('coin-toss')).toBeNull()
   const kickoffButton = screen.getByTestId('special-play-kickoff')
   expect(kickoffButton).toBeVisible()
+  expect(screen.getByTestId('special-play-onside_kickoff')).toBeVisible()
+  expect(screen.getByTestId('special-play-onside_kickoff')).toHaveTextContent('OOnside kickoff')
   expect(kickoffButton.compareDocumentPosition(screen.getByTestId('football-field')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+})
+it('sends the offered onside kickoff action to the engine', async () => {
+  api.decide.mockResolvedValue({ view: kickoff(), turn: turn('offense', { actions: kickoff().actions }) })
+  api.kick.mockResolvedValue({ view: kickoff(), report: null })
+  await start()
+  fireEvent.click(screen.getByRole('button', { name: 'Kick', exact: true }))
+  await screen.findByTestId('special-play-onside_kickoff')
+  fireEvent.click(screen.getByTestId('special-play-onside_kickoff'))
+  await waitFor(() => expect(api.kick).toHaveBeenCalledWith('game', 'onside_kickoff', 'home'))
 })
 it('keeps a failed toss decision on its screen with retry and game management available', async () => {
   api.decide.mockRejectedValue(new Error('Decision failed'))

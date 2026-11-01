@@ -238,6 +238,33 @@ enabled solely because Paydirt has a similarly named feature.
   production build passed on Node 24.22.2; Ruff lint/format checks passed.
   Ticket is resolved and awaits owner play-test confirmation.
 
+### Onside kickoff implementation review — 2026-11-01
+
+- Basic VI-8 (printed p. 10) specifies a 12-yard kickoff. The kicking team
+  recovers on offensive totals 13–20 inclusive; otherwise the receiving team
+  recovers. The ball is dead at recovery with no return roll.
+- [RULE-025](issues/RULE/RULE-025.md) exposes this kick type to the engine-assigned
+  kicker, including the fixed reciprocal halftime kicker. It does not introduce a
+  kick/receive choice. A safety free kick remains ineligible.
+- Paydirt's menu separation was reviewed at milestone start, but its rules, dice
+  threshold, field position, and timing are not reused. Bowl Bound's Basic VI-8
+  governs the implementation.
+- Synthetic tests cover both sides of the recovery threshold, field position,
+  trace, no-return timing, default AI preference for a normal kick, safety-kick
+  exclusion, second-half team assignment, and save replay. Automated evidence is
+  recorded with the tested implementation commit; owner play-test remains needed
+  before closure.
+
+### Situational-play scope decision — 2026-11-01
+
+- The owner approved Razzle-Dazzle (Advanced I-1), elected safety (I-5), and
+  intentional delay (I-6(B)). [RULE-022](issues/RULE/RULE-022.md) records this
+  scope decision; [RULE-028](issues/RULE/RULE-028.md),
+  [RULE-029](issues/RULE/RULE-029.md), and
+  [RULE-031](issues/RULE/RULE-031.md) remain separate implementation tickets.
+- None is enabled by the scope decision. Each stays unavailable until its own
+  rulebook review, synthetic test-first implementation, and verification.
+
 ## Ticket coverage
 
 | Milestone 22 change or decision | Ticket |
@@ -245,7 +272,7 @@ enabled solely because Paydirt has a similarly named feature.
 | Advanced II Wild Card, run/pass, nickel-zone, and red-zone defenses | [RULE-019](issues/RULE/RULE-019.md) |
 | Defensive guesses specific to SOP/BLP option plays | [RULE-020](issues/RULE/RULE-020.md) |
 | QB Sneak, Advanced I-2 | [RULE-021](issues/RULE/RULE-021.md) |
-| Scope of additional situational plays not yet named | [RULE-022](issues/RULE/RULE-022.md) |
+| Situational-play scope decision (closed; three options adopted) | [RULE-022](issues/RULE/RULE-022.md) |
 | Yardage factors, Advanced IX | [RULE-023](issues/RULE/RULE-023.md) |
 | Power-rating gameplay effects, Advanced VIII | [RULE-024](issues/RULE/RULE-024.md) |
 | Onside kick choice and resolution, Basic VI-8 | [RULE-025](issues/RULE/RULE-025.md) |

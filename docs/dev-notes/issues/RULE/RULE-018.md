@@ -9,13 +9,13 @@ resolved-at: 2026-10-31
 closed-at: null
 tags:
 - reproduced
-links: []
+links: [RULE-025]
 commits: [5b755cf]
 ---
 
 ## Description
 
-The halftime chooser can independently select kick or receive, allowing the same team to kick off both halves. Basic V-3's second-half choice is the kick type for the team already assigned to kick, not a choice of which team receives. The expected order is reciprocal: the opening kicker receives, and the opening receiver kicks. Onside kicks are unsupported, so schedule the normal kickoff automatically without another choice.
+The halftime chooser can independently select kick or receive, allowing the same team to kick off both halves. Basic V-3's second-half choice is the kick type for the team already assigned to kick, not a choice of which team receives. The expected order is reciprocal: the opening kicker receives, and the opening receiver kicks. At this ticket's resolution, onside kicks were unsupported, so the normal kickoff was scheduled without another choice. RULE-025 later added onside support while preserving the reciprocal team assignment resolved here.
 
 ## Resolution / verification
 
@@ -35,3 +35,7 @@ Created with scripts/create_issue.py. Keep evidence public-safe.
 --- 2026-10-31 07:26 ---
 Resolved in `5b755cf` after the full Python, frontend, build and browser regression
 gates passed. Awaiting owner play-test confirmation before closure.
+
+--- 2026-11-01 ---
+RULE-025 supersedes only this ticket's historical statement that onside kicks are
+unsupported. The RULE-018 reciprocal assignment fix remains resolved and unchanged.

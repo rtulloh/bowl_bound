@@ -348,7 +348,7 @@ Each is a separate test/review/commit milestone:
 3. Yardage factors; power ratings remain informational and do not affect gameplay.
 4. Advanced kicking and block decisions.
 5. Consider alternate timing (action + return + dead time) and hybrid timing (standard timing normally, alternate timing in the last two minutes of each half). Review rulebook conflicts, season-profile interactions, and play-count effects before approving either option. If approved, implement each as a separate tested timing profile; otherwise retain standard chart timing.
-6. Remaining optional rules, each subject to separate scope approval.
+6. Weather effects and remaining optional rules, each subject to separate scope approval. Razzle-Dazzle (I-1), elected safety (I-5), and intentional delay (I-6(B)) were approved on 2026-11-01 and have individual implementation tickets: RULE-028, RULE-029, and RULE-031.
 
 Unsupported options remain unavailable and documented.
 
@@ -521,14 +521,15 @@ second half. The implementation misread that as a choice of which team kicks or
 receives, instead of a choice of kick type by the team assigned to kick.
 
 **Deliver:** the team that kicked to open the game receives the second-half
-kickoff, and the opening receiver kicks. The second-half kicker may choose a
-normal or onside kick; onside kicks are unsupported, so automatically schedule
-the only available action, a normal kickoff, without a halftime prompt. Record
-this source interpretation and unsupported option in the rules profile.
+kickoff, and the opening receiver kicks. Do not prompt either team to choose
+which team kicks. Milestone 30 initially scheduled a normal kick because onside
+was unsupported; Milestone 22 [RULE-025](issues/RULE/RULE-025.md) later added
+the Basic VI-8 kick-type choice for the assigned kicker.
 
 **Validate:** synthetic regulation tests cover both opening elections, verify the
-fixed second-half teams and timeout reset, and show that halftime has no choice
-or extra play/dice while onside kicks are unsupported. Preserve compatible
+fixed second-half teams and timeout reset, and show that halftime has no team
+election or extra play/dice while the assigned kicker retains normal/onside
+actions. Preserve compatible
 saved-game replay, including a save at halftime, and retain old-choice
 compatibility only where needed for saved-command replay. Update rules
 documentation and run the full regression gate.

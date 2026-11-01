@@ -15,13 +15,17 @@ commits: []
 
 ## Description
 
-Razzle-Dazzle under Advanced Rule I-1 is explicitly deferred. It is not a current callable play, and the engine must not infer it from an ordinary chart result.
+The owner approved Razzle-Dazzle under Advanced Rule I-1 for implementation on 2026-11-01. It is not a current callable play; keep it unavailable until this ticket is implemented and verified. The engine must not infer it from an ordinary chart result.
 
 ## Resolution / verification
 
-- Document eligibility, call sequence, chart/dice use, priority, possession, statistics, timing, and trace behavior from the Bowl Bound rulebook; if approved, add synthetic test-first coverage for successful and failed branches and save replay. Otherwise document it as unavailable.
+- Document eligibility, call sequence, chart/dice use, priority, possession, statistics, timing, and trace behavior from the Bowl Bound rulebook; add synthetic test-first coverage for successful and failed branches and save replay.
 
 ## Comments
 
 --- 2026-11-01 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-01 ---
+Owner approved this implementation as part of the three-option scope in RULE-022.
+Runtime behavior remains unavailable until the test-first implementation lands.

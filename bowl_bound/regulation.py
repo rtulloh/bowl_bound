@@ -331,7 +331,7 @@ class RegulationGame:
         if (pending and not clock_optional) or finished:
             actions = Actions((), (), ())
         elif self._phase is RegulationPhase.KICKOFF:
-            actions = Actions((), (), (Action("kickoff", "Kickoff"),))
+            actions = Actions((), (), base.actions.special)
         game_actions = []
         if (
             (not pending or clock_optional)
