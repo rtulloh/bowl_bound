@@ -228,6 +228,15 @@ enabled solely because Paydirt has a similarly named feature.
   as wont-fix for gameplay behavior. This documentation-only decision needs no
   behavioral tests.
 
+### Yardage-factor scope decision — 2026-11-01
+
+- Advanced IX (printed pp. 29–31) ties both yardage-factor methods to point spreads,
+  rating-derived team factors, and score margin. The owner deferred both methods
+  because ratings must not change gameplay. [RULE-023](issues/RULE/RULE-023.md) is
+  closed for this milestone; chart yardage, traces, and save semantics stay unchanged.
+- This is a scope/documentation decision, so verification uses the issue-tracker
+  metadata and generated-index checks rather than artificial behavior tests.
+
 ### QB Sneak implementation — 2026-11-01
 
 - Completed [RULE-021](issues/RULE/RULE-021.md) in tested commit `d0fa13b`.
