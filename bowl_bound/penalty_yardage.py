@@ -1,15 +1,19 @@
-"""Penalty-table assessment and accepted-penalty field enforcement.
+"""Penalty-table assessment and accepted-penalty enforcement.
 
-This module deliberately does not resolve clock, score, safety, or touchdown outcomes.
-A caller must resolve those outcomes before asking this module to enforce a penalty.
+Ordinary enforcement does not mutate game state or score. Return enforcement reports
+field, touchback, or safety disposition so its engine caller can commit the result.
 """
 
 from dataclasses import dataclass
+from enum import Enum
 
 from .dice import DiceSource, OffensiveRoll
-from .game_state import FIRST_DOWN_DISTANCE, MAX_SPOT, FieldState
+from .game_state import FIRST_DOWN_DISTANCE, MAX_SPOT, FieldState, start_drive
 from .models import PenaltyCode, PenaltyData, PenaltyTeam
 from .variable_yardage import roll_variable
+
+OWN_GOAL_LINE = MAX_SPOT + 1
+OWN_END_LINE = OWN_GOAL_LINE + 10
 
 
 @dataclass(frozen=True)
@@ -50,6 +54,33 @@ class AssessedPenalty:
             type(roll) is not OffensiveRoll for roll in self.distance_rolls
         ):
             raise TypeError("distance_rolls must be a tuple of OffensiveRoll instances")
+
+
+class ReturnPenaltyDisposition(str, Enum):
+    """Possession result after enforcing a return penalty."""
+
+    ENFORCED = "enforced"
+    TOUCHBACK = "touchback"
+    SAFETY = "safety"
+
+
+@dataclass(frozen=True)
+class ReturnPenaltyResult:
+    """Resolved field position or end-zone ruling for an accepted return foul."""
+
+    disposition: ReturnPenaltyDisposition
+    state: FieldState | None
+    credited_yards: int
+
+    def __post_init__(self) -> None:
+        if type(self.disposition) is not ReturnPenaltyDisposition:
+            raise TypeError("disposition must be a ReturnPenaltyDisposition")
+        if self.state is not None and type(self.state) is not FieldState:
+            raise TypeError("state must be a FieldState or None")
+        if type(self.credited_yards) is not int:
+            raise TypeError("credited_yards must be an integer")
+        if (self.disposition is ReturnPenaltyDisposition.SAFETY) != (self.state is None):
+            raise ValueError("only a safety result may omit its field state")
 
 
 def assess_penalty(
@@ -158,13 +189,16 @@ def enforce_return_penalty(
     origin: int | None = None,
     continues_original_play: bool = False,
     scrimmage_start: FieldState | None = None,
-) -> FieldState:
+    touchback_yards_to_goal: int = 80,
+) -> ReturnPenaltyResult:
     """Enforce a return foul under Basic VI-4(C)(vi).
 
     Return fouls are marked from the end of the return.  An offensive foul after a
     return that passes its halfway point is instead marked from that midpoint.
     A new possessing team starts first-and-ten. An own-recovery return instead
     retains the original down and line to gain unless enforcement earns a first down.
+    Basic VI-13 determines whether an end-zone endpoint is a touchback or safety;
+    the caller awards any resulting points.
     """
     if type(return_start) is not FieldState:
         raise TypeError("return_start must be FieldState")
@@ -175,21 +209,73 @@ def enforce_return_penalty(
     start = return_start.yards_to_goal if origin is None else origin
     if type(start) is not int or not 1 <= start <= 109:
         raise ValueError("return origin must lie in the field or live end zone")
-    end_spot = start - return_yards
-    spot = end_spot
+    if type(touchback_yards_to_goal) is not int or not 1 <= touchback_yards_to_goal <= MAX_SPOT:
+        raise ValueError("touchback spot must lie within the field")
+    spot = start - return_yards
     if penalty.source.team is PenaltyTeam.OFFENSE and return_yards * 2 > start:
         spot = return_penalty_midpoint(start)
-    if not 1 <= spot <= MAX_SPOT:
-        raise ValueError("return penalty needs an in-field enforcement spot")
+
+    credited_yards = start - max(spot, 0)
+    if spot <= 0:
+        # An accepted return foul cancels the touchdown; the goal-line spot is the
+        # closest representable in-field marker for subsequent enforcement.
+        spot = 1
+    if spot >= OWN_GOAL_LINE:
+        if penalty.source.team is PenaltyTeam.DEFENSE:
+            spot -= min(penalty.yards, spot // 2)
+            if spot <= MAX_SPOT:
+                return _enforced_return_state(
+                    return_start,
+                    penalty,
+                    spot,
+                    continues_original_play=continues_original_play,
+                    scrimmage_start=scrimmage_start,
+                    credited_yards=credited_yards,
+                )
+        if start >= OWN_GOAL_LINE and spot < OWN_END_LINE:
+            return ReturnPenaltyResult(
+                ReturnPenaltyDisposition.TOUCHBACK,
+                start_drive(return_start.possession, touchback_yards_to_goal),
+                0,
+            )
+        return ReturnPenaltyResult(ReturnPenaltyDisposition.SAFETY, None, 0)
+
     new_spot = _enforced_spot(spot, penalty)
+    if new_spot >= OWN_GOAL_LINE:
+        if start >= OWN_GOAL_LINE and new_spot < OWN_END_LINE:
+            return ReturnPenaltyResult(
+                ReturnPenaltyDisposition.TOUCHBACK,
+                start_drive(return_start.possession, touchback_yards_to_goal),
+                0,
+            )
+        return ReturnPenaltyResult(ReturnPenaltyDisposition.SAFETY, None, 0)
+    return _enforced_return_state(
+        return_start,
+        penalty,
+        new_spot,
+        continues_original_play=continues_original_play,
+        scrimmage_start=scrimmage_start,
+        credited_yards=credited_yards,
+    )
+
+
+def _enforced_return_state(
+    return_start: FieldState,
+    penalty: AssessedPenalty,
+    spot: int,
+    *,
+    continues_original_play: bool,
+    scrimmage_start: FieldState | None,
+    credited_yards: int,
+) -> ReturnPenaltyResult:
     if continues_original_play and not penalty.automatic_first_down:
         original = scrimmage_start or return_start
         line_to_gain = original.yards_to_goal - original.yards_to_go
-        if new_spot > line_to_gain:
-            return FieldState(
-                return_start.possession, new_spot, original.down, new_spot - line_to_gain
-            )
-    return FieldState(return_start.possession, new_spot, 1, min(FIRST_DOWN_DISTANCE, new_spot))
+        if spot > line_to_gain:
+            state = FieldState(return_start.possession, spot, original.down, spot - line_to_gain)
+            return ReturnPenaltyResult(ReturnPenaltyDisposition.ENFORCED, state, credited_yards)
+    state = start_drive(return_start.possession, spot)
+    return ReturnPenaltyResult(ReturnPenaltyDisposition.ENFORCED, state, credited_yards)
 
 
 def return_penalty_midpoint(origin: int) -> int:

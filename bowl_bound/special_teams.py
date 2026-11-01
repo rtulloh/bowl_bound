@@ -16,9 +16,10 @@ from .models import (
 )
 from .penalty_yardage import (
     AssessedPenalty,
+    ReturnPenaltyDisposition,
     assess_penalty,
     enforce_penalty,
-    return_penalty_midpoint,
+    enforce_return_penalty,
 )
 from .variable_yardage import roll_variable
 
@@ -501,29 +502,23 @@ class SpecialTeamsPlay:
         distance = (
             start if cell.kind is ResultKind.TOUCHDOWN else self._distance(cell, state.possession)
         )
-        spot = start - distance
-        if penalty.source.team is PenaltyTeam.OFFENSE and 2 * distance > start:
-            spot = return_penalty_midpoint(start)
-        if spot >= 100:
-            if penalty.source.team is PenaltyTeam.DEFENSE:
-                # Mark from the real end-zone coordinate, never a fabricated own-one spot.
-                spot -= min(penalty.yards, spot // 2)
-                if spot < 100:
-                    return self._finish(
-                        SpecialTeamsOutcome.PENALTY, start_drive(state.possession, spot)
-                    )
-            if start >= 100:
-                own = free_kick_touchback_spot(self.season) if free_touchback else 20
-                return self._finish(
-                    SpecialTeamsOutcome.TOUCHBACK, start_drive(state.possession, 100 - own)
-                )
-            return self._score(state.possession.other, 2, SpecialTeamsOutcome.SAFETY)
-        spot = max(1, spot)
-        # Acceptance cancels the result; no recovery/return-fumble rolls are invented.
-        marked = enforce_penalty(start_drive(state.possession, spot), penalty)
-        return self._finish(
-            SpecialTeamsOutcome.PENALTY, start_drive(state.possession, marked.yards_to_goal)
+        touchback_spot = 100 - free_kick_touchback_spot(self.season) if free_touchback else 80
+        enforced = enforce_return_penalty(
+            state,
+            penalty,
+            return_yards=distance,
+            origin=start,
+            touchback_yards_to_goal=touchback_spot,
         )
+        if enforced.disposition is ReturnPenaltyDisposition.SAFETY:
+            return self._score(state.possession.other, 2, SpecialTeamsOutcome.SAFETY)
+        assert enforced.state is not None
+        outcome = (
+            SpecialTeamsOutcome.TOUCHBACK
+            if enforced.disposition is ReturnPenaltyDisposition.TOUCHBACK
+            else SpecialTeamsOutcome.PENALTY
+        )
+        return self._finish(outcome, enforced.state)
 
     def _score(
         self, possession: Possession, points: int, outcome: SpecialTeamsOutcome

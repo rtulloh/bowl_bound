@@ -50,6 +50,22 @@ enabled solely because Paydirt has a similarly named feature.
   (RULE-014) and the fixed one-yard F_ENDZONE location (RULE-015). No Paydirt rule
   or private chart data is used for those decisions.
 
+### Shared return-penalty review — 2026-11-01
+
+- Reviewed `paydirt/game_engine.py:700-719` and
+  `paydirt/penalty_handler.py:451-460` for return endpoints and midpoint marking.
+  These implementations use Paydirt field coordinates and behavior; adapt only
+  the separation of return resolution from penalty enforcement. Bowl Bound's Basic
+  VI-4(C)(vi–vii), pp. 8–9, controls return fouls, midfield rounding, and endpoints.
+- Existing Bowl Bound paths agree for ordinary in-field returns but diverge at
+  end-zone and touchdown endpoints. The test-first change will centralize Bowl
+  Bound marker/enforcement results and retain the kick-specific touchback spot.
+- The shared `ReturnPenaltyResult` now reports field position, touchback, or safety;
+  session and special-teams callers commit the appropriate engine result. Synthetic
+  tests cover both foul sides, field/end-zone/end-line/touchdown endpoints, return
+  yard credit, and the season-specific free-kick touchback spot. Paydirt's endpoint
+  and yardage formulas were not reused.
+
 ## Ticket coverage
 
 | Milestone 22 change or decision | Ticket |

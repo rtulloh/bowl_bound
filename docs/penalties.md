@@ -71,6 +71,7 @@ and a variable distance is rolled and traced.
   down (see the rules profile).
 - Accepting a penalty cancels the play, so a touchdown or safety gain no longer matters.
 - A return-column penalty rerolls the return, then is accepted or declined by the offended team. It is marked from the return end, except an offensive foul after the return's midpoint is marked from that midpoint. A half-yard midpoint is rounded toward the 50-yard line (Basic VI-4(C)(vii)).
+- Turnover, kickoff, and punt returns use the same accepted-return enforcement. An accepted return touchdown is canceled; end-zone touchbacks, safeties, and defensive fouls that move the ball back into the field follow the Bowl Bound goal-line and end-line rules.
 
 The project's worked example differs from the printed p. 9 example: a DEF 5 at the opponent 7
 on third and five gives the opponent **4**, third and **2** (the half-distance rule), not the
@@ -79,9 +80,10 @@ opponent 5 and third and three.
 ## Not yet supported
 
 Timing, kick and conversion penalties are handled by their engine procedures.
-Return enforcement whose endpoint cannot yet be represented remains explicitly
-disabled; declining continues the real result. See [turnovers](turnovers.md) for
-end-zone return depth and offensive-recovery down/distance preservation.
+Return enforcement reports a field position, touchback, or safety to the engine;
+an unavailable numeric return endpoint remains disabled with its specific reason.
+See [turnovers](turnovers.md) for end-zone return depth and
+offensive-recovery down/distance preservation.
 
 ## Tests
 

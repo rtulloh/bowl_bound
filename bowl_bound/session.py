@@ -24,7 +24,12 @@ from .game_state import (
 )
 from .models import Defense, Play, ResultKind, TeamChart
 from .penalties import PreparedPlay, prepare_play
-from .penalty_yardage import AssessedPenalty, enforce_penalty, enforce_return_penalty
+from .penalty_yardage import (
+    AssessedPenalty,
+    ReturnPenaltyDisposition,
+    enforce_penalty,
+    enforce_return_penalty,
+)
 from .resolution import LookupTrace, PlayResolution
 from .scoring import ScoreKind, ScoreLedger, resolve_pat
 from .special_teams import SpecialTeamsPlay, SpecialTeamsResolution
@@ -40,6 +45,7 @@ from .statistics import (
 from .team_csv import format_cell
 from .timing import TimingFacts
 from .turnovers import (
+    EndZoneResult,
     TurnoverOutcome,
     TurnoverResolution,
     TurnoverTrace,
@@ -844,7 +850,7 @@ class PlaySession:
             if accepted:
                 index = int(choice.rsplit(":", 1)[-1]) if choice.startswith("return:accept:") else 0
                 penalty = turnover.return_penalties[index] if turnover.return_penalties else penalty
-                state = enforce_return_penalty(
+                enforced = enforce_return_penalty(
                     turnover.return_start,
                     penalty,
                     return_yards=turnover.return_yards,
@@ -852,25 +858,36 @@ class PlaySession:
                     continues_original_play=turnover.continues_original_play,
                     scrimmage_start=turnover.scrimmage_start,
                 )
-                # Ask the same enforcement policy for its legal-advance base,
-                # without including stepped-off foul yardage in offensive credit.
-                base = enforce_return_penalty(
-                    turnover.return_start,
-                    replace(penalty, yards=0),
-                    return_yards=turnover.return_yards,
-                    origin=turnover.return_origin,
-                )
-                return_credit = turnover.return_start.yards_to_goal - base.yards_to_goal
-                turnover = replace(
-                    turnover,
-                    state=state,
-                    points=(0, 0),
-                    end_zone=None,
-                    outcome=(
+                return_credit = enforced.credited_yards
+                if enforced.disposition is ReturnPenaltyDisposition.SAFETY:
+                    points = (
+                        (0, 2) if turnover.return_start.possession is Possession.HOME else (2, 0)
+                    )
+                    outcome = TurnoverOutcome.SAFETY
+                    end_zone = EndZoneResult.SAFETY
+                    state = None
+                elif enforced.disposition is ReturnPenaltyDisposition.TOUCHBACK:
+                    outcome = TurnoverOutcome.TOUCHBACK
+                    end_zone = EndZoneResult.TOUCHBACK
+                    state = enforced.state
+                    points = (0, 0)
+                else:
+                    outcome = (
                         TurnoverOutcome.OFFENSIVE_RECOVERY
                         if turnover.continues_original_play
                         else TurnoverOutcome.DEFENSIVE_RECOVERY
-                    ),
+                    )
+                    end_zone = None
+                    state = enforced.state
+                    points = (0, 0)
+                assert state is not None or outcome is TurnoverOutcome.SAFETY
+                turnover = replace(
+                    turnover,
+                    state=state,
+                    points=points,
+                    end_zone=end_zone,
+                    outcome=outcome,
+                    end_zone_recovery=False,
                     return_penalty=None,
                     return_penalties=(),
                     continuation=None,
@@ -1645,7 +1662,7 @@ def _trace_entry(entry: LookupTrace) -> TraceEntry:
 def _return_penalty_choice(
     index: int, penalty: AssessedPenalty, turnover: TurnoverResolution
 ) -> PenaltyChoice:
-    """Expose unsupported end-zone enforcement honestly, before any state mutation."""
+    """Expose whether return-penalty enforcement can be applied before state mutation."""
     key = "return:accept" if index == 0 else f"return:accept:{index}"
     label = f"Accept {penalty.yards}-yard return penalty"
     if turnover.return_start is None or turnover.return_yards is None:
@@ -1659,11 +1676,11 @@ def _return_penalty_choice(
             continues_original_play=turnover.continues_original_play,
             scrimmage_start=turnover.scrimmage_start,
         )
-    except ValueError:
+    except (TypeError, ValueError) as exc:
         return PenaltyChoice(
             key,
             label,
             False,
-            "End-zone return-penalty enforcement is not yet supported; decline remains available.",
+            f"Return penalty cannot be enforced: {exc}",
         )
     return PenaltyChoice(key, label, True)

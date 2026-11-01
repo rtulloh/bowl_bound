@@ -15,6 +15,7 @@ from bowl_bound.game_state import FieldState, Possession
 from bowl_bound.models import PenaltyCode, PenaltyData, PenaltyTeam, VariableReference
 from bowl_bound.penalty_yardage import (
     AssessedPenalty,
+    ReturnPenaltyDisposition,
     assess_penalty,
     enforce_penalty,
     enforce_return_penalty,
@@ -166,7 +167,8 @@ def test_offensive_return_penalty_midpoint_rounds_toward_midfield(origin: int) -
         origin=origin,
     )
 
-    assert enforced == FieldState(Possession.HOME, origin // 2 + 5, 1, 10)
+    assert enforced.disposition is ReturnPenaltyDisposition.ENFORCED
+    assert enforced.state == FieldState(Possession.HOME, origin // 2 + 5, 1, 10)
 
 
 def test_enforcement_uses_end_of_gain_half_distance_and_pi_goal_rule() -> None:
@@ -243,12 +245,56 @@ def test_half_distance_applies_even_when_full_penalty_would_stay_in_field() -> N
 
 def test_return_penalties_mark_from_the_end_or_halfway_point() -> None:
     defensive = AssessedPenalty(data(PenaltyTeam.DEFENSE, PenaltyCode.FIXED, 15), 15)
-    assert enforce_return_penalty(
+    defensive_result = enforce_return_penalty(
         FieldState(Possession.AWAY, 80, 1, 10), defensive, return_yards=20
-    ) == FieldState(Possession.AWAY, 45, 1, 10)
+    )
+    assert defensive_result.disposition is ReturnPenaltyDisposition.ENFORCED
+    assert defensive_result.state == FieldState(Possession.AWAY, 45, 1, 10)
+    assert defensive_result.credited_yards == 20
 
     offensive = AssessedPenalty(data(PenaltyTeam.OFFENSE, PenaltyCode.FIXED, 10), 10)
     # Basic VI-4(C)(vi): a 52-yard return from own 13 is marked from halfway.
-    assert enforce_return_penalty(
+    offensive_result = enforce_return_penalty(
         FieldState(Possession.AWAY, 87, 1, 10), offensive, return_yards=52
-    ) == FieldState(Possession.AWAY, 54, 1, 10)
+    )
+    assert offensive_result.disposition is ReturnPenaltyDisposition.ENFORCED
+    assert offensive_result.state == FieldState(Possession.AWAY, 54, 1, 10)
+    assert offensive_result.credited_yards == 43
+
+
+@pytest.mark.parametrize(
+    ("team", "origin", "return_yards", "penalty_yards", "disposition", "spot", "credited"),
+    [
+        (PenaltyTeam.OFFENSE, 80, 20, 5, ReturnPenaltyDisposition.ENFORCED, 65, 20),
+        (PenaltyTeam.DEFENSE, 60, 60, 15, ReturnPenaltyDisposition.ENFORCED, 1, 60),
+        (PenaltyTeam.OFFENSE, 105, 0, 15, ReturnPenaltyDisposition.TOUCHBACK, 80, 0),
+        (PenaltyTeam.DEFENSE, 105, 0, 15, ReturnPenaltyDisposition.ENFORCED, 90, 0),
+        (PenaltyTeam.OFFENSE, 95, -10, 5, ReturnPenaltyDisposition.SAFETY, None, 0),
+        (PenaltyTeam.DEFENSE, 95, -10, 15, ReturnPenaltyDisposition.ENFORCED, 90, -10),
+        (PenaltyTeam.OFFENSE, 105, -5, 5, ReturnPenaltyDisposition.SAFETY, None, 0),
+        (PenaltyTeam.DEFENSE, 105, -5, 15, ReturnPenaltyDisposition.ENFORCED, 95, -5),
+    ],
+)
+def test_return_penalty_enforcement_resolves_field_endzone_and_endline_endpoints(
+    team: PenaltyTeam,
+    origin: int,
+    return_yards: int,
+    penalty_yards: int,
+    disposition: ReturnPenaltyDisposition,
+    spot: int | None,
+    credited: int,
+) -> None:
+    source = AssessedPenalty(data(team, PenaltyCode.FIXED, penalty_yards), penalty_yards)
+    result = enforce_return_penalty(
+        FieldState(Possession.AWAY, min(origin, 99), 1, min(min(origin, 99), 10)),
+        source,
+        return_yards=return_yards,
+        origin=origin,
+    )
+
+    assert result.disposition is disposition
+    assert result.credited_yards == credited
+    if spot is None:
+        assert result.state is None
+    else:
+        assert result.state == FieldState(Possession.AWAY, spot, 1, min(10, spot))

@@ -180,6 +180,104 @@ def test_literal_td_after_return_penalty_can_be_accepted_without_scoring(convers
     assert len(game.view().log[-1].trace) == 4
 
 
+def test_defensive_return_penalty_on_interception_touchdown_can_be_accepted() -> None:
+    home = team_chart(
+        "Home",
+        season=2002,
+        plays={Play.ONE: NormalizedCell(ResultKind.INTERCEPTION, provenance(), yards=20)},
+    )
+    away = returning(
+        foul(PenaltyTeam.DEFENSE, distance=15), NormalizedCell(ResultKind.TOUCHDOWN, provenance())
+    )
+    game = PlaySession.new(home, away, seed=1, start_yards_to_goal=60)
+    game.snap(
+        "1",
+        "A",
+        dice=ScriptedDice(
+            [
+                OffensiveRoll(1, 0, 0),
+                DefensiveRoll(1, 0),
+                OffensiveRoll(1, 0, 0),
+                OffensiveRoll(2, 0, 0),
+            ]
+        ),
+    )
+
+    game.decide("interception:return")
+    choice = next(c for c in game.view().pending.choices if c.id == "return:accept")
+    assert choice.enabled, choice.reason
+
+    result = game.decide(choice.id)
+
+    assert result.state_after is not None
+    assert (result.state_after.possession, result.state_after.yards_to_goal) == ("away", 1)
+    assert game.view().score.away == 0
+
+
+def test_end_zone_recovery_return_accepts_defensive_penalty_at_actual_origin() -> None:
+    home = team_chart(
+        "Home",
+        season=2002,
+        plays={Play.ONE: NormalizedCell(ResultKind.FUMBLE, provenance(), yards=8)},
+    )
+    away = returning(foul(PenaltyTeam.DEFENSE, distance=15), yards(0))
+    game = PlaySession.new(home, away, seed=1, start_yards_to_goal=5)
+    game.snap(
+        "1",
+        "A",
+        dice=ScriptedDice(
+            [
+                OffensiveRoll(1, 0, 0),
+                DefensiveRoll(1, 0),
+                OffensiveRoll(3, 4, 5),
+                OffensiveRoll(1, 0, 0),
+                OffensiveRoll(2, 0, 0),
+            ]
+        ),
+    )
+
+    game.decide("end_zone:return")
+    choice = next(c for c in game.view().pending.choices if c.id == "return:accept")
+    assert choice.enabled, choice.reason
+
+    result = game.decide(choice.id)
+
+    assert result.state_after is not None
+    assert result.state_after.yards_to_goal == 88
+
+
+def test_accepted_return_penalty_at_own_end_line_awards_a_safety() -> None:
+    home = team_chart(
+        "Home",
+        season=2002,
+        plays={Play.ONE: NormalizedCell(ResultKind.FUMBLE, provenance(), yards=8)},
+    )
+    away = returning(foul(PenaltyTeam.OFFENSE), yards(-7))
+    game = PlaySession.new(home, away, seed=1, start_yards_to_goal=5)
+    game.snap(
+        "1",
+        "A",
+        dice=ScriptedDice(
+            [
+                OffensiveRoll(1, 0, 0),
+                DefensiveRoll(1, 0),
+                OffensiveRoll(3, 4, 5),
+                OffensiveRoll(1, 0, 0),
+                OffensiveRoll(2, 0, 0),
+            ]
+        ),
+    )
+
+    game.decide("end_zone:return")
+    choice = next(c for c in game.view().pending.choices if c.id == "return:accept")
+    assert choice.enabled, choice.reason
+
+    result = game.decide(choice.id)
+
+    assert result.outcome == "safety"
+    assert game.view().score.home == 2
+
+
 def test_end_zone_recovery_return_with_penalties_is_available_and_touchback_needs_no_roll() -> None:
     home = team_chart(
         "Home",

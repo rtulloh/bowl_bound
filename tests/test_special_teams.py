@@ -382,6 +382,56 @@ def test_kick_return_penalty_midpoint_rounds_toward_midfield(origin: int) -> Non
     assert result.state == start_drive(Possession.AWAY, origin // 2 + 5)
 
 
+def test_kick_return_from_end_zone_uses_shared_defensive_penalty_enforcement() -> None:
+    away = with_roll(
+        special_chart("Away", kickoff_return=yards(0)),
+        "kickoff_return",
+        10,
+        penalty(PenaltyTeam.DEFENSE, 15),
+    )
+    play = procedure(
+        "kickoff",
+        special_chart("Home", kickoff=yards(70)),
+        away,
+        [OffensiveRoll(1, 0, 0), OffensiveRoll(1, 0, 0), OffensiveRoll(2, 0, 0)],
+        spot=30,
+    )
+
+    pending = play.begin()
+    assert [choice.id for choice in pending.choices] == ["kick:touchback", "kick:return"]
+    return_pending = play.decide("kick:return")
+    assert [choice.id for choice in return_pending.choices] == ["kick:accept:0", "kick:decline"]
+
+    result = play.decide("kick:accept:0")
+
+    assert result.outcome is SpecialTeamsOutcome.PENALTY
+    assert result.state == FieldState(Possession.AWAY, 90, 1, 10)
+
+
+def test_kick_return_touchback_preserves_season_specific_free_kick_spot() -> None:
+    away = with_roll(
+        special_chart("Away", kickoff_return=yards(0)),
+        "kickoff_return",
+        10,
+        penalty(PenaltyTeam.OFFENSE, 5),
+    )
+    play = procedure(
+        "kickoff",
+        special_chart("Home", kickoff=yards(70)),
+        away,
+        [OffensiveRoll(1, 0, 0), OffensiveRoll(1, 0, 0), OffensiveRoll(2, 0, 0)],
+        spot=30,
+        season=2023,
+    )
+
+    assert play.begin().choices
+    play.decide("kick:return")
+    result = play.decide("kick:accept:0")
+
+    assert result.outcome is SpecialTeamsOutcome.TOUCHBACK
+    assert result.state == FieldState(Possession.AWAY, 75, 1, 10)
+
+
 def test_kickoff_out_of_bounds_off_s_provides_receivers_two_choices_without_reroll() -> None:
     off_s = NormalizedCell(
         ResultKind.PENALTY, provenance(), penalty=PenaltyData(PenaltyTeam.OFFENSE, PenaltyCode.S)
@@ -805,6 +855,33 @@ def test_declining_defensive_return_penalty_preserves_the_return_touchdown() -> 
     # Basic VI-4(A): choose the result, rather than accepting penalty yardage.
     result = play.decide("kick:decline")
     assert result.points == (0, 6) and result.state is None
+
+
+def test_accepting_defensive_penalty_on_kick_return_touchdown_uses_goal_line_spot() -> None:
+    away = with_roll(
+        special_chart("R", kickoff_return=yards(80)),
+        "kickoff_return",
+        10,
+        penalty(PenaltyTeam.DEFENSE, 15),
+    )
+    play = procedure(
+        "kickoff",
+        special_chart("K", kickoff=yards(45)),
+        away,
+        [
+            OffensiveRoll(1, 0, 0),
+            OffensiveRoll(1, 0, 0),
+            OffensiveRoll(1, 1, 0),
+        ],
+    )
+
+    pending = play.begin()
+    assert pending.choices
+    result = play.decide("kick:accept:0")
+
+    assert result.outcome is SpecialTeamsOutcome.PENALTY
+    assert result.state == FieldState(Possession.AWAY, 1, 1, 1)
+    assert result.points == (0, 0)
 
 
 def test_field_goal_wrapper_uses_the_opponents_return_chart_after_a_block() -> None:
