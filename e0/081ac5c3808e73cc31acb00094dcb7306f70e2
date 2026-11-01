@@ -1,0 +1,91 @@
+backend/app.py
+  s_ed54ab581b3d60::t_bfd72164435724 23,46,116-118,146-149,231-232,245-246,329,448-452,456
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_9720efe15873bc 16,27,45-54,68,81-84,122,253-255,290-295,476-480,710,714-715,717-718,726-727,731
+bowl_bound/coaching_audit.py
+  s_ed54ab581b3d60::t_6e731b38eea922 260
+bowl_bound/coaching_session.py
+  s_ed54ab581b3d60::t_c56c29ab47edc5 75-83,105,132,163,168,184
+bowl_bound/difficulty.py
+  s_ed54ab581b3d60::t_870cee50ca1029 27-38,119,129-133
+bowl_bound/models.py
+  s_ed54ab581b3d60::t_a46c2f77c6efec 208,211,222-225,392-401
+bowl_bound/penalties.py
+  s_ed54ab581b3d60::t_b7a53244da5b6d 18,23,49-50,58-59,63-69,124,131-135,153-157,193-199,203-205,207-211
+bowl_bound/regulation.py
+  s_ed54ab581b3d60::t_3d767f814bf707 96-99,103-110,166-168,170-180
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_9fc7636f7f5161 38,42-43,72-81,225-227,236,243-244,254-263,273-275,282-285,357-359,366-372,654-658,664-665,757,765-769,771-775,783-790,811-814,827-854,869-870
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_b2393cd0dde06d 34,114-125,299,316-324,327-331,354-356,362-372,420,437-451,698-704,714,719-727,833,844-853,1135,1176,1209,1496,1535-1538,1624-1651,1654,1920-1934,1937-1939,2038-2047
+bowl_bound/team_catalog.py
+  s_ed54ab581b3d60::t_c9bf5d1a7d64e0 8,41-44,57,60
+bowl_bound/team_csv.py
+  s_ed54ab581b3d60::t_3c51a0cb246e3e 51,145
+docs/cli.md
+  s_ed54ab581b3d60::t_cdb3149770e371 75-77,98-99,106
+docs/coaching.md
+  s_ed54ab581b3d60::t_99681dbf81660e 203-205
+docs/dev-notes/issues/AI/AI-021.md
+  s_ed54ab581b3d60::t_c2b93a14bff838 1-27
+docs/dev-notes/issues/RULE/RULE-020.md
+  s_ed54ab581b3d60::t_16781bafd66282 22-24,28-30
+docs/dev-notes/milestone-22.md
+  s_ed54ab581b3d60::t_c0ba21b3a0da33 166-183,219,237,239
+docs/rules-profile.md
+  s_ed54ab581b3d60::t_d3614a12c87b1b 32-33,266-267
+docs/saves.md
+  s_ed54ab581b3d60::t_dde53d0a5139aa 76,79-80,92-103
+docs/web-demo.md
+  s_ed54ab581b3d60::t_37b20d1d192b2e 57-61,201
+frontend/e2e/compactControls.spec.js
+  s_ed54ab581b3d60::t_fff84f79f6d3f4 36-46
+frontend/e2e/difficulty.spec.js
+  s_ed54ab581b3d60::t_e13afff4ee644b 15,21,25
+frontend/e2e/milestone20.spec.js
+  s_ed54ab581b3d60::t_00ddac9e5b854c 45
+tests/synthetic_teams.py
+  s_ed54ab581b3d60::t_1096f31bb8fd65 108-112,119
+tests/test_api.py
+  s_ed54ab581b3d60::t_af290b70c1826e 83-99
+tests/test_chart_coaching.py
+  s_ed54ab581b3d60::t_0737cb5ac43a9e 130,133
+tests/test_cli_games.py
+  s_ed54ab581b3d60::t_d2efa56012bc36 158
+tests/test_cli_presentation.py
+  s_ed54ab581b3d60::t_500cc559a3f94a 246,276
+tests/test_coaching_contract.py
+  s_ed54ab581b3d60::t_d78e657a42a8a0 54-60,98-104
+tests/test_coaching_journal_order.py
+  s_ed54ab581b3d60::t_75f3fb6876b2d5 34,36
+tests/test_coaching_saves.py
+  s_ed54ab581b3d60::t_e948ac2f499101 21,89-90
+tests/test_commentary_lifecycle.py
+  s_ed54ab581b3d60::t_2d06faee263c73 17-19,23-30
+tests/test_commentary_replay.py
+  s_ed54ab581b3d60::t_d644319d7a2f4a 17,21
+tests/test_defense_labels.py
+  s_ed54ab581b3d60::t_5de946a8a499a9 28-29,42
+tests/test_models.py
+  s_ed54ab581b3d60::t_61cb12218c327c 483,485-490
+tests/test_release_metadata.py
+  s_ed54ab581b3d60::t_abc6c659867f07 32
+tests/test_return_fumble_series.py
+  s_ed54ab581b3d60::t_48e0e6c32f98ad 148
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "e0081ac5c3808e73cc31acb00094dcb7306f70e2",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
