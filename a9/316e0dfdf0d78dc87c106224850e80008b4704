@@ -1,0 +1,27 @@
+backend/app.py
+  s_ed54ab581b3d60::t_4d74c93dfce595 78-85
+bowl_bound/resolution.py
+  s_ed54ab581b3d60::t_f412544e2c2b53 150-152
+bowl_bound/timing.py
+  s_ed54ab581b3d60::t_071804b1d33812 4,11-17,29,92-93
+frontend/src/App.jsx
+  s_ed54ab581b3d60::t_7ecde6c579f945 202,207,273-281
+frontend/src/test/compactGame.test.jsx
+  s_ed54ab581b3d60::t_da2537e84fce96 122,139,146,149,155-156,161-188
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "a9316e0dfdf0d78dc87c106224850e80008b4704",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
