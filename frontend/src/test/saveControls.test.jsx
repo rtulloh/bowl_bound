@@ -11,10 +11,10 @@ it('uploads an opaque save and hands the engine response to the application', as
   loadGame.mockResolvedValue(loaded)
   const onLoaded = vi.fn()
   const onBusyChange = vi.fn()
-  render(<SaveControls onLoaded={onLoaded} onBusyChange={onBusyChange} onError={vi.fn()} />)
+  render(<SaveControls humanSide="away" onLoaded={onLoaded} onBusyChange={onBusyChange} onError={vi.fn()} />)
   fireEvent.change(screen.getByLabelText('Load saved game'), { target: { files: [{ size: 20, text: async () => '{"opaque":true}' }] } })
   await waitFor(() => expect(onLoaded).toHaveBeenCalledWith(loaded))
-  expect(loadGame).toHaveBeenCalledWith('{"opaque":true}')
+  expect(loadGame).toHaveBeenCalledWith('{"opaque":true}', 'away')
   expect(onBusyChange.mock.calls).toEqual([[true], [false]])
 })
 

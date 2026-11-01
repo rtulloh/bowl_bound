@@ -39,10 +39,16 @@ def test_preview_masks_computer_controls_and_resolution_reveals_calls(
     assert bool(turn["actions"]["defense"]) == (role == "defense")
     assert "computer_choice" not in str(created) and "coach_seed" not in str(created)
     assert client.get(path + f"?human_side={human}").json()["turn"] == turn
-    rejected = client.post(path + "/coach", json={"human_side": human, "human_call": "Z"})
+    rejected = client.post(
+        path + "/coach",
+        json={"human_side": human, "human_call": "Z", "expected_revision": 0},
+    )
     assert rejected.status_code == 422
-    assert client.get(path).json()["view"]["log"] == []
-    result = client.post(path + "/coach", json={"human_side": human, "human_call": call})
+    assert client.get(path + f"?human_side={human}").json()["view"]["log"] == []
+    result = client.post(
+        path + "/coach",
+        json={"human_side": human, "human_call": call, "expected_revision": 0},
+    )
     assert result.status_code == 200, result.text
     data = result.json()
     assert data["report"]["called_play"] and data["report"]["defense"]
@@ -61,11 +67,19 @@ def test_coached_human_decisions_validate_offered_controls(client) -> None:
         },
     ).json()
     path = f"/api/games/{created['game_id']}"
-    result = client.post(path + "/coach", json={"human_side": "home", "human_call": "1"}).json()
+    result = client.post(
+        path + "/coach",
+        json={"human_side": "home", "human_call": "1", "expected_revision": 0},
+    ).json()
     assert result["turn"]["human_role"] == "decision"
-    assert client.post(path + "/coach", json={"human_side": "home"}).status_code == 409
+    assert (
+        client.post(
+            path + "/coach", json={"human_side": "home", "expected_revision": 1}
+        ).status_code
+        == 409
+    )
     denied = client.post(path + "/decision?human_side=away", json={"choice": "conversion:kick"})
-    assert denied.status_code == 422
+    assert denied.status_code == 409
     done = client.post(path + "/decision?human_side=home", json={"choice": "conversion:kick"})
     assert done.status_code == 200, done.text
     assert done.json()["turn"]["human_role"] == "final"
@@ -84,7 +98,7 @@ def test_coordinator_errors_return_a_stable_conflict(
     client, monkeypatch: pytest.MonkeyPatch, failure: Exception, endpoint: str
 ) -> None:
     created = client.post(
-        "/api/games",
+        "/api/games?human_side=home",
         json={
             "home": "2026/alpha-tech",
             "away": "2026/beta-state",
@@ -105,7 +119,10 @@ def test_coordinator_errors_return_a_stable_conflict(
     if endpoint == "view":
         response = client.get(path + "?human_side=home")
     elif endpoint == "coach":
-        response = client.post(path + "/coach", json={"human_side": "home", "human_call": "1"})
+        response = client.post(
+            path + "/coach",
+            json={"human_side": "home", "human_call": "1", "expected_revision": 0},
+        )
     else:
         response = client.post(
             path + "/decision?human_side=home", json={"choice": "conversion:kick"}

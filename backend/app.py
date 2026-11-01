@@ -9,7 +9,7 @@ bowl_bound.session.
 import re
 import secrets
 from collections import OrderedDict
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from threading import RLock
 from typing import Annotated, Literal
@@ -23,7 +23,14 @@ from starlette.concurrency import run_in_threadpool
 from bowl_bound import DISPLAY_VERSION, __version__
 from bowl_bound.regulation import RegulationView
 from bowl_bound.roster import RosterFormatError
-from bowl_bound.save_game import MAX_SAVE_BYTES, SavedGame, SaveFormatError, dumps_game, loads_game
+from bowl_bound.save_game import (
+    MAX_SAVE_BYTES,
+    GameRevisionConflict,
+    SavedGame,
+    SaveFormatError,
+    dumps_game,
+    loads_game,
+)
 from bowl_bound.session import (
     InvalidDecisionError,
     PendingDecisionError,
@@ -133,6 +140,15 @@ class CoachStep(BaseModel):
     model_config = ConfigDict(extra="forbid")
     human_side: HumanSide
     human_call: str | None = Field(default=None, pattern=r"^[1-9A-F]$")
+    expected_revision: int = Field(ge=0, strict=True)
+
+
+@dataclass(frozen=True)
+class RegisteredGame:
+    """In-memory game plus its immutable API control mode."""
+
+    session: SavedGame
+    human_side: HumanSide | None
 
 
 def _report_data(session: SavedGame, report: PlayReport | None) -> dict[str, object] | None:
@@ -155,18 +171,25 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
         allow_headers=["*"],
     )
     app.add_middleware(RequestBodyLimit)
-    games: OrderedDict[str, SavedGame] = OrderedDict()
+    games: OrderedDict[str, RegisteredGame] = OrderedDict()
     registry_lock = RLock()
     coordinator_error_detail = "Unable to prepare a legal coached turn for this game state."
 
     def coordinator_conflict() -> HTTPException:
         return HTTPException(status_code=409, detail=coordinator_error_detail)
 
-    def lookup(game_id: str) -> SavedGame:
+    def lookup(game_id: str) -> RegisteredGame:
         with registry_lock:
-            session = _session(games, game_id)
+            registered = _session(games, game_id)
             games.move_to_end(game_id)
-            return session
+            return registered
+
+    def require_control(registered: RegisteredGame, human_side: HumanSide | None) -> None:
+        if registered.human_side != human_side:
+            raise HTTPException(
+                status_code=409,
+                detail="Game control mode or human side does not match this request.",
+            )
 
     @app.get("/api/health")
     def health() -> dict[str, str]:
@@ -213,24 +236,25 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
 
     def register(session: SavedGame, human_side: HumanSide | None = None) -> dict[str, object]:
         game_id = secrets.token_urlsafe(9)
+        registered = RegisteredGame(session, human_side)
         with registry_lock:
-            games[game_id] = session
+            games[game_id] = registered
             while len(games) > MAX_GAMES:
                 games.popitem(last=False)
-        return present(game_id, session, human_side)
+        return present(game_id, registered)
 
-    def present(
-        game_id: str, session: SavedGame, human_side: HumanSide | None
-    ) -> dict[str, object]:
-        if human_side is None:
+    def present(game_id: str, registered: RegisteredGame) -> dict[str, object]:
+        session = registered.session
+        if registered.human_side is None:
             return {
                 "game_id": game_id,
                 "seed": session.seed,
                 "coach_policy": session.coach_policy,
                 "view": _view_data(session, session.view()),
+                "revision": session.revision,
             }
         try:
-            view, turn = session.coach_view(human_side)
+            view, turn = session.coach_view(registered.human_side)
         except ValueError as error:
             raise coordinator_conflict() from error
         return {
@@ -239,6 +263,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
             "coach_policy": session.coach_policy,
             "view": _view_data(session, view),
             "turn": asdict(turn),
+            "revision": session.revision,
         }
 
     def command(
@@ -246,7 +271,11 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
     ) -> dict[str, object]:
         if human_side is None:
             report, view = session.execute_with_view(operation, [value])
-            return {"report": _report_data(session, report), "view": _view_data(session, view)}
+            return {
+                "report": _report_data(session, report),
+                "view": _view_data(session, view),
+                "revision": session.revision,
+            }
         try:
             report, view, turn = session.coach_execute(human_side, operation, value)
         except InvalidDecisionError:
@@ -257,11 +286,12 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
             "report": _report_data(session, report),
             "view": _view_data(session, view),
             "turn": asdict(turn),
+            "revision": session.revision,
         }
 
     @app.get("/api/games/{game_id}/save")
     def save_game(game_id: str) -> Response:
-        session = lookup(game_id)
+        session = lookup(game_id).session
         try:
             text = dumps_game(session)
         except SaveFormatError as error:
@@ -276,7 +306,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
         )
 
     @app.post("/api/games/load")
-    async def load_game(request: Request) -> dict[str, object]:
+    async def load_game(request: Request, human_side: HumanSide | None = None) -> dict[str, object]:
         chunks: list[bytes] = []
         size = 0
         async for chunk in request.stream():
@@ -298,18 +328,29 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
                     "current game unchanged."
                 ),
             ) from error
-        return register(session)
+        return register(session, human_side)
 
     @app.get("/api/games/{game_id}")
     def get_game(game_id: str, human_side: HumanSide | None = None) -> dict[str, object]:
-        session = lookup(game_id)
-        return present(game_id, session, human_side)
+        registered = lookup(game_id)
+        require_control(registered, human_side)
+        return present(game_id, registered)
 
     @app.post("/api/games/{game_id}/coach")
     def coach_step(game_id: str, body: CoachStep) -> dict[str, object]:
-        session = lookup(game_id)
+        registered = lookup(game_id)
+        require_control(registered, body.human_side)
+        if registered.human_side is None:
+            raise HTTPException(status_code=409, detail="This game uses manual controls.")
+        session = registered.session
         try:
-            report, view, turn, _ = session.coach_step(body.human_side, body.human_call)
+            report, view, turn, _ = session.coach_step(
+                body.human_side,
+                body.human_call,
+                expected_revision=body.expected_revision,
+            )
+        except GameRevisionConflict as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
         except (SessionFinishedError, PendingDecisionError) as error:
             raise HTTPException(status_code=409, detail=str(error)) from error
         except InvalidDecisionError as error:
@@ -320,22 +361,32 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
             "report": _report_data(session, report),
             "view": _view_data(session, view),
             "turn": asdict(turn),
+            "revision": session.revision,
         }
 
     @app.post("/api/games/{game_id}/snap")
     def snap(game_id: str, body: Snap) -> dict[str, object]:
-        session = lookup(game_id)
+        registered = lookup(game_id)
+        if registered.human_side is not None:
+            raise HTTPException(status_code=409, detail="This game uses coached controls.")
+        session = registered.session
         try:
             report, view = session.execute_with_view("snap", [body.play, body.defense])
         except (SessionFinishedError, PendingDecisionError) as error:
             raise HTTPException(status_code=409, detail=str(error)) from error
         except InvalidDecisionError as error:
             raise HTTPException(status_code=422, detail=str(error)) from error
-        return {"report": _report_data(session, report), "view": _view_data(session, view)}
+        return {
+            "report": _report_data(session, report),
+            "view": _view_data(session, view),
+            "revision": session.revision,
+        }
 
     @app.post("/api/games/{game_id}/kick")
     def kick(game_id: str, body: Kick, human_side: HumanSide | None = None) -> dict[str, object]:
-        session = lookup(game_id)
+        registered = lookup(game_id)
+        require_control(registered, human_side)
+        session = registered.session
         try:
             return command(session, "kick", body.action, human_side)
         except (SessionFinishedError, PendingDecisionError) as error:
@@ -347,7 +398,9 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
     def decide(
         game_id: str, body: Decision, human_side: HumanSide | None = None
     ) -> dict[str, object]:
-        session = lookup(game_id)
+        registered = lookup(game_id)
+        require_control(registered, human_side)
+        session = registered.session
         try:
             return command(session, "decide", body.choice, human_side)
         except (SessionFinishedError, PendingDecisionError) as error:
@@ -359,7 +412,9 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
     def game_action(
         game_id: str, body: GameAction, human_side: HumanSide | None = None
     ) -> dict[str, object]:
-        session = lookup(game_id)
+        registered = lookup(game_id)
+        require_control(registered, human_side)
+        session = registered.session
         if session.mode != "regulation":
             raise HTTPException(status_code=422, detail="clock actions require regulation mode")
         try:
@@ -374,11 +429,11 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
     return app
 
 
-def _session(games: OrderedDict[str, SavedGame], game_id: str) -> SavedGame:
-    session = games.get(game_id)
-    if session is None:
+def _session(games: OrderedDict[str, RegisteredGame], game_id: str) -> RegisteredGame:
+    registered = games.get(game_id)
+    if registered is None:
         raise HTTPException(status_code=404, detail="no such game")
-    return session
+    return registered
 
 
 def _team_folders(seasons_root: Path) -> list[tuple[str, Path, str]]:

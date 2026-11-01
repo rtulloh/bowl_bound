@@ -191,19 +191,21 @@ contains Paydirt play names, down/distance arithmetic, or priority handling.
 | `GET /api/health` | `{"status": "healthy", "service": "bowl-bound"}` |
 | `GET /api/version` | Public `version` and PEP440 `python_version`; see [versioning](versioning.md) |
 | `GET /api/teams` | `{teams: [{id, name, season}], problems: [{id, reason}]}` |
-| `POST /api/games` | Body `{home, away, seed?, mode?, game_type?, start_yards_to_goal?, difficulty?, coach_policy?}`; choose `difficulty` or `coach_policy`, never both; omitted policy means Medium v8; `game_type` is `regular` (default) or `postseason`; browser sends `mode: "regulation"`; returns `{game_id, seed, coach_policy, view}` |
-| `GET /api/games/{id}` | `{game_id, seed, coach_policy, view}` |
+| `POST /api/games` | Body `{home, away, seed?, mode?, game_type?, start_yards_to_goal?, difficulty?, coach_policy?}`; choose `difficulty` or `coach_policy`, never both; omitted policy means Medium v8; `game_type` is `regular` (default) or `postseason`; browser sends `mode: "regulation"`; optional `?human_side=home` / `away` binds coached controls; response includes current `revision` |
+| `GET /api/games/{id}` | `{game_id, seed, coach_policy, view, revision}`; bound games require the matching `?human_side` |
 | `GET /api/games/{id}/save` | Private JSON download; no chart tables; does not advance dice or choices |
-| `POST /api/games/load` | Raw save JSON body; returns independent `{game_id, seed, coach_policy, view}` after validation; 422 invalid/incompatible/unavailable teams, 413 over 2 MiB |
-| `POST /api/games/{id}/snap` | Body `{play: "1"-"9", defense: "A"-"F"}`; returns `{report, view}`; 409 while a blocking engine decision is pending |
+| `POST /api/games/load` | Raw save JSON body; optional `?human_side=home` / `away` binds resumed controls; returns independent game state with `revision`; 422 invalid/incompatible/unavailable teams, 413 over 2 MiB |
+| `POST /api/games/{id}/snap` | Manual games only; body `{play: "1"-"9", defense: "A"-"F"}`; returns `{report, view, revision}`; 409 for coached games or while a blocking engine decision is pending |
 | `POST /api/games/{id}/kick` | Body `{action}` (`kickoff`, `punt`, or `field_goal`) selected from `view.actions.special`; returns `{report, view}`; 409 while a decision is pending or after demo completion, 422 for an unavailable action (including kicks during a two-point try) |
-| `POST /api/games/{id}/decision` | Body `{choice}` from `view.pending.choices`; returns `{report, view}`; 409 if nothing is pending, 422 for an unknown or disabled choice |
+| `POST /api/games/{id}/decision` | Body `{choice}` from `view.pending.choices`; controlled games require matching `?human_side`; returns current `revision`; 409 if nothing is pending or control does not match, 422 for an unknown or disabled choice |
 | `POST /api/games/{id}/action` | Body `{action}` (`kneel`, `hail_mary`, `timeout:home`, `timeout:away`) from `view.game_actions`; returns `{report, view}`; report may be null for administrative actions; 422 outside regulation mode |
-| `POST /api/games/{id}/coach` | Body `{human_side: "home" or "away", human_call?}`; one automatic action or simultaneous play, returning `{report, view, turn}`; no computer call in previews |
+| `POST /api/games/{id}/coach` | Body `{human_side: "home" or "away", expected_revision, human_call?}`; the side must match the game binding; one automatic action or simultaneous play, returning `{report, view, turn, revision}`; stale duplicate requests return 409 |
 
-Creation/current-view endpoints accept optional `?human_side=home` / `away` and
-return human-only `turn` controls. Human kick/decision/action endpoints accept the
-same query and validate those controls under the game lock. If the coordinator
+The selected side is bound when a coached game is created or loaded. Manual games
+use direct engine controls; a game cannot switch between manual and coached play
+or change human sides. Browser coach posts include the displayed `revision`; the
+server applies them once under the game lock and advances the revision. Human
+kick/decision/action endpoints require the same bound side. If the coordinator
 cannot prepare a legal turn, coached requests return HTTP 409 with a stable error
 message. See the
 [coaching API contract](coaching.md#api). Manual endpoints remain compatible.

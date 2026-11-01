@@ -60,6 +60,10 @@ class SaveFormatError(ValueError):
     """A save is invalid, incompatible or cannot safely reproduce its original state."""
 
 
+class GameRevisionConflict(RuntimeError):
+    """A coached command was planned from a stale game revision."""
+
+
 def _fail() -> None:
     raise SaveFormatError("Save is invalid or incompatible; the current game was not replaced.")
 
@@ -350,6 +354,12 @@ class SavedGame:
         """Persisted policy version; legacy saves remain baseline."""
         return self._config.get("coach_policy", "baseline")
 
+    @property
+    def revision(self) -> int:
+        """Return the command-journal position used for optimistic concurrency."""
+        with self._lock:
+            return len(self._commands)
+
     def postgame_call_summary(
         self,
     ) -> tuple[tuple[str, str, tuple[tuple[str, int], ...]], ...] | None:
@@ -454,9 +464,13 @@ class SavedGame:
         self,
         human_side: str,
         human_call: str | None = None,
+        *,
+        expected_revision: int | None = None,
     ) -> tuple[PlayReport | None, SessionView | RegulationView, CoachingTurn, CoachChoice | None]:
         """Commit one computer action or simultaneous snap, then reveal the committed call."""
         with self._lock:
+            if expected_revision is not None and expected_revision != len(self._commands):
+                raise GameRevisionConflict("The game changed after this coached turn was shown.")
             view = self.view()
             plan = plan_turn(view, human_side, self._coach)
             if view.finished:

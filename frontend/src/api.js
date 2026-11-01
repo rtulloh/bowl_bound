@@ -14,7 +14,7 @@ export const listTeams = () => request('/api/teams')
 const controlled = (path, humanSide) => humanSide && humanSide !== 'manual' ? `${path}?human_side=${humanSide}` : path
 export const newGame = (payload, humanSide) => post(controlled('/api/games', humanSide), payload)
 export const getGame = (gameId, humanSide) => request(controlled(`/api/games/${gameId}`, humanSide))
-export const coachStep = (gameId, humanSide, humanCall = null) => post(`/api/games/${gameId}/coach`, { human_side: humanSide, human_call: humanCall })
+export const coachStep = (gameId, humanSide, expectedRevision, humanCall = null) => post(`/api/games/${gameId}/coach`, { human_side: humanSide, human_call: humanCall, expected_revision: expectedRevision })
 export const snap = (gameId, play, defense) => post(`/api/games/${gameId}/snap`, { play, defense })
 export const decide = (gameId, choice, humanSide) => post(controlled(`/api/games/${gameId}/decision`, humanSide), { choice })
 
@@ -23,7 +23,7 @@ export const kick = (gameId, action, humanSide) => post(controlled(`/api/games/$
 export const gameAction = (gameId, action, humanSide) => post(controlled(`/api/games/${gameId}/action`, humanSide), { action })
 
 export const saveGame = (gameId) => request(`/api/games/${gameId}/save`, undefined, true)
-export const loadGame = (text) => request(
-  '/api/games/load',
+export const loadGame = (text, humanSide) => request(
+  controlled('/api/games/load', humanSide),
   { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: text },
 )

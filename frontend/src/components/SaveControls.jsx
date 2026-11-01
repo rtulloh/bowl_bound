@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { loadGame, saveGame } from '../api'
 
 // Saves are opaque engine documents. Never infer a phase or execute a pending choice.
-export default function SaveControls({ gameId, busy = false, onLoaded, onBusyChange, onError }) {
+export default function SaveControls({ gameId, humanSide, busy = false, onLoaded, onBusyChange, onError }) {
   const inFlight = useRef(false)
   const perform = async (work) => {
     if (busy || inFlight.current) return
@@ -34,7 +34,7 @@ export default function SaveControls({ gameId, busy = false, onLoaded, onBusyCha
     if (!file) return
     perform(async () => {
       if (file.size > 2 * 1024 * 1024) throw new Error('Save exceeds the 2 MiB limit.')
-      await onLoaded(await loadGame(await file.text()))
+      await onLoaded(await loadGame(await file.text(), humanSide))
     })
   }
   return (

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { coachStep, decide, gameAction, getGame, kick, listTeams, newGame, snap } from './api'
+import { coachStep, decide, gameAction, kick, listTeams, newGame, snap } from './api'
 import FootballField from './components/FootballField'
 import PlayLog from './components/PlayLog'
 import PlaySelector from './components/PlaySelector'
@@ -61,7 +61,12 @@ export default function App() {
   const apply = (result) => {
     setOffense('')
     setDefense('')
-    setGame((current) => ({ ...current, view: result.view, turn: result.turn }))
+    setGame((current) => ({
+      ...current,
+      view: result.view,
+      turn: result.turn,
+      revision: result.revision ?? current.revision,
+    }))
     if (result.report) setReport(result.report)
     else if (["halftime_choice", "overtime_choice", "final"].includes(result.view.phase)) {
       setReport(null)
@@ -98,13 +103,16 @@ export default function App() {
     setOffense('')
     setDefense('')
     automaticCount.current = 0
+    let expectedRevision = game.revision ?? 0
     // Apply a human preference only through a modifier the engine offers to that human.
     const canHurry = control === 'manual' || game.turn?.human_role === 'offense'
     if (canHurry && hurryMode && game.view.clock_modifiers?.some((c) => c.id === 'clock:hurry' && c.enabled)) {
-      apply(await manualOrControlled(decide, game.game_id, 'clock:hurry'))
+      const hurried = await manualOrControlled(decide, game.game_id, 'clock:hurry')
+      apply(hurried)
+      expectedRevision = hurried.revision ?? expectedRevision
     }
     apply(await (control === 'manual' ? snap(game.game_id, offensiveCall, defensiveCall)
-      : coachStep(game.game_id, control, game.turn.human_role === 'offense' ? offensiveCall : defensiveCall)))
+      : coachStep(game.game_id, control, expectedRevision, game.turn.human_role === 'offense' ? offensiveCall : defensiveCall)))
   })
   const special = (action, isGameAction = false) => run(async () => {
     automaticCount.current = 0
@@ -119,17 +127,15 @@ export default function App() {
     const timer = setTimeout(() => {
       run(async () => {
         if (++automaticCount.current > 12) throw new Error('Computer stopped after 12 consecutive actions. Review the game before retrying.')
-        apply(await coachStep(game.game_id, control))
+        apply(await coachStep(game.game_id, control, game.revision ?? 0))
       })
     }, 200)
     return () => clearTimeout(timer)
   }, [game, control, busy, error, computerError, openingRevealed])
 
   const loaded = async (created) => {
-    // Apply the explicitly chosen browser mode before replacing the visible game.
-    const prepared = control === 'manual' ? created : await getGame(created.game_id, control)
     setRevealedToss(null)
-    setGame(prepared)
+    setGame(created)
     if (gameMenu.current) gameMenu.current.open = false
     automaticCount.current = 0
     setReport(null)
@@ -139,10 +145,10 @@ export default function App() {
     setOffense('')
     setDefense('')
   }
-  const saves = <SaveControls gameId={game?.game_id} busy={busy} onLoaded={loaded}
+  const saves = <SaveControls gameId={game?.game_id} humanSide={control} busy={busy} onLoaded={loaded}
     onBusyChange={(value) => { inFlight.current = value; setBusy(value) }} onError={setError} />
   const controls = <label className="block text-sm">Control mode
-    <select className="block text-black p-1" value={control} disabled={busy} onChange={(e) => setControl(e.target.value)}>
+    <select className="block text-black p-1" value={control} disabled={busy || Boolean(game)} onChange={(e) => setControl(e.target.value)}>
       <option value="home">Human home / computer away</option>
       <option value="away">Human away / computer home</option>
       <option value="manual">Two-sided manual play</option>

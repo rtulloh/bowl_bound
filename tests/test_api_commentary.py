@@ -63,7 +63,10 @@ def test_api_uses_engine_text_for_coached_reports_and_logs(
         "/api/games?human_side=home", json={"home": "2007/home", "away": "2007/away", "seed": 7}
     ).json()
     path = "/api/games/" + created["game_id"]
-    data = client.post(path + "/coach", json={"human_side": "home", "human_call": "1"}).json()
+    data = client.post(
+        path + "/coach",
+        json={"human_side": "home", "human_call": "1", "expected_revision": 0},
+    ).json()
     assert data["report"]["commentary"] == "ENGINE TEXT 1"
     assert data["view"]["log"][-1]["commentary"] == "ENGINE TEXT 1"
     assert client.get(path + "?human_side=home").json()["view"] == data["view"]

@@ -16,7 +16,7 @@ beforeEach(() => {
   api.listTeams.mockResolvedValue({ teams: [{ id: 'a', name: 'Alpha', season: 2007 }, { id: 'b', name: 'Beta', season: 2007 }] })
 })
 async function start(role, mode = 'home') {
-  api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, view: view(), turn: turn(role) })
+  api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, revision: 0, view: view(), turn: turn(role) })
   render(<App />)
   await screen.findByTestId('start-game')
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: mode } })
@@ -30,7 +30,7 @@ it.each(['offense', 'defense'])('shows only the human %s and sends only that cal
   expect(screen.queryByRole('button', { name: /Pause computer|Resume computer|Retry computer/ })).toBeNull()
   expect(screen.queryByLabelText('Control mode')).toBeNull()
   expect(screen.queryByTestId('snap')).toBeNull()
-  await waitFor(() => expect(api.coachStep).toHaveBeenCalledWith('cpu', role === 'offense' ? 'home' : 'away', role === 'offense' ? '1' : 'A'))
+  await waitFor(() => expect(api.coachStep).toHaveBeenCalledWith('cpu', role === 'offense' ? 'home' : 'away', 0, role === 'offense' ? '1' : 'A'))
   expect(api.snap).not.toHaveBeenCalled()
 })
 it('automatically advances serialized computer actions and stops for the human decision', async () => {
@@ -103,19 +103,18 @@ it('never shows the opposing timeout control in optional clock modifiers', async
 it('uses the explicitly selected coach mode on load without an in-game mode selector', async () => {
   await start('offense')
   await screen.findByTestId('offense-play-1')
-  api.loadGame.mockResolvedValue({ game_id: 'loaded', seed: 7, view: view() })
-  api.getGame.mockResolvedValue({ game_id: 'loaded', seed: 7, view: view(), turn: turn('defense') })
+  api.loadGame.mockResolvedValue({ game_id: 'loaded', seed: 7, revision: 1, view: view(), turn: turn('defense') })
   fireEvent.click(screen.getByText('Game', { selector: 'summary' }))
   fireEvent.change(screen.getByLabelText('Load saved game'), { target: { files: [{ size: 20, text: async () => '{opaque}' }] } })
   await screen.findByTestId('defense-play-a')
-  expect(api.getGame).toHaveBeenCalledWith('loaded', 'home')
+  expect(api.loadGame).toHaveBeenCalledWith('{opaque}', 'home')
   expect(screen.queryByLabelText('Control mode')).toBeNull()
   expect(screen.queryByTestId('offense-plays')).toBeNull()
   expect(api.coachStep).not.toHaveBeenCalled()
 })
 
 it('loads in manual mode when explicitly selected at setup', async () => {
-  api.loadGame.mockResolvedValue({ game_id: 'loaded', seed: 7, view: view() })
+  api.loadGame.mockResolvedValue({ game_id: 'loaded', seed: 7, revision: 0, view: view() })
   render(<App />)
   await screen.findByTestId('start-game')
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
@@ -123,15 +122,14 @@ it('loads in manual mode when explicitly selected at setup', async () => {
   await screen.findByTestId('defense-play-a')
   expect(screen.getByTestId('offense-play-1')).toBeInTheDocument()
   expect(screen.queryByLabelText('Control mode')).toBeNull()
-  expect(api.getGame).not.toHaveBeenCalled()
+  expect(api.loadGame).toHaveBeenCalledWith('{opaque}', 'manual')
   expect(api.coachStep).not.toHaveBeenCalled()
 })
 
-it('keeps the current game intact if preparing the loaded computer controls fails', async () => {
+it('keeps the current game intact when loading a coached save fails', async () => {
   await start('offense')
   await screen.findByTestId('offense-play-1')
-  api.loadGame.mockResolvedValue({ game_id: 'loaded', seed: 7, view: view() })
-  api.getGame.mockRejectedValue(new Error('Could not prepare computer controls'))
+  api.loadGame.mockRejectedValue(new Error('Could not prepare computer controls'))
   fireEvent.click(screen.getByText('Game', { selector: 'summary' }))
   fireEvent.change(screen.getByLabelText('Load saved game'), { target: { files: [{ size: 20, text: async () => '{opaque}' }] } })
   expect(await screen.findByRole('alert')).toHaveTextContent('Could not prepare computer controls')
@@ -161,7 +159,7 @@ it('does not silently retry a failed computer turn when saving the stopped game'
 })
 
 it('starts human home/computer away without changing the default selection', async () => {
-  api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, view: view(), turn: turn('offense') })
+  api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, revision: 0, view: view(), turn: turn('offense') })
   render(<App />)
   fireEvent.click(await screen.findByTestId('start-game'))
   await screen.findByTestId('offense-play-1')
@@ -170,13 +168,12 @@ it('starts human home/computer away without changing the default selection', asy
 })
 
 it('loads with human home controls by default without changing the selection', async () => {
-  api.loadGame.mockResolvedValue({ game_id: 'loaded', seed: 7, view: view() })
-  api.getGame.mockResolvedValue({ game_id: 'loaded', seed: 7, view: view(), turn: turn('defense') })
+  api.loadGame.mockResolvedValue({ game_id: 'loaded', seed: 7, revision: 1, view: view(), turn: turn('defense') })
   render(<App />)
   await screen.findByTestId('start-game')
   fireEvent.change(screen.getByLabelText('Load saved game'), { target: { files: [{ size: 20, text: async () => '{opaque}' }] } })
   await screen.findByTestId('defense-play-a')
-  expect(api.getGame).toHaveBeenCalledWith('loaded', 'home')
+  expect(api.loadGame).toHaveBeenCalledWith('{opaque}', 'home')
   expect(screen.queryByTestId('offense-plays')).toBeNull()
   expect(api.coachStep).not.toHaveBeenCalled()
 })
