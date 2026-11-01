@@ -9,7 +9,7 @@ resolved-at: 2026-11-01
 closed-at: null
 tags: []
 links: []
-commits: [a9316e0]
+commits: [a9316e0, bde4f40]
 ---
 
 ## Description
@@ -37,3 +37,5 @@ as a possible CLI shorthand only; confirm the command syntax before implementati
 Resolved by tested commit `a9316e0`. The terminal uses O/I shortcuts and explicit
 action commands; it does not interpret `7+` / `7-` as declarations. Awaiting
 play-test confirmation before closure.
+
+The coaching guide's stale “disabled” wording was corrected in `bde4f40`.
