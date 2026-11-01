@@ -2,12 +2,10 @@
 
 import argparse
 import os
-import re
 import shlex
 import stat
 import sys
 from collections.abc import Callable
-from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from secrets import randbits, token_hex
@@ -24,9 +22,9 @@ from .session import (
     PlayReport,
     SessionFinishedError,
 )
-from .team_csv import TeamFormatError, load_team
+from .team_catalog import TeamCatalog
+from .team_catalog import TeamEntry as TeamEntry
 
-_TEAM_ID = re.compile(r"[1-9][0-9]{0,5}/[a-z0-9]+(?:-[a-z0-9]+)*")
 MAX_AUTOMATIC_STEPS = 100
 _COMMAND_ERRORS = (
     ValueError,
@@ -67,59 +65,6 @@ HELP = (
     "retry resumes a stopped computer turn; quit exits without an automatic save.\n"
     "Quote paths containing spaces. Saves and terminal chart traces are private."
 )
-
-
-@dataclass(frozen=True)
-class TeamEntry:
-    """One locally installed team, with its canonical catalog identifier."""
-
-    key: str
-    name: str
-    season: int
-
-
-class TeamCatalog:
-    """Discover the ordinary YAML/CSV catalog without importing the web application."""
-
-    def __init__(self, root: Path) -> None:
-        self.root = root
-        self.problems: tuple[str, ...] = ()
-
-    def load(self, key: str) -> TeamChart:
-        """Load an exact season/team ID, rejecting traversal and symlinked team paths."""
-        if len(key) > 120 or not _TEAM_ID.fullmatch(key):
-            raise ValueError("Team ID must be a canonical season/team, e.g. 2007/cedar-valley.")
-        season, folder = key.split("/")
-        directory = self.root / season
-        if any(path.is_symlink() for path in (self.root, directory, directory / folder)):
-            raise ValueError("Team folders must not use symlinks.")
-        try:
-            chart, _ = load_team(directory, folder)
-        except (TeamFormatError, OSError) as error:
-            raise ValueError("Team could not be read; check --seasons and --list-teams.") from error
-        return chart
-
-    def teams(self) -> tuple[TeamEntry, ...]:
-        """List readable teams, reporting unreadable entries without echoing chart data."""
-        entries: list[TeamEntry] = []
-        problems: list[str] = []
-        if not self.root.is_dir() or self.root.is_symlink():
-            raise ValueError("Seasons directory is missing or symlinked; check --seasons.")
-        for metadata in sorted(self.root.glob("*/*/team.yaml")):
-            folder = metadata.parent
-            key = folder.parent.name + "/" + folder.name
-            if not _TEAM_ID.fullmatch(key) or any(
-                path.is_symlink() for path in (folder.parent, folder, metadata)
-            ):
-                continue
-            try:
-                chart = self.load(key)
-            except ValueError:
-                problems.append(f"{key}: could not be read")
-            else:
-                entries.append(TeamEntry(key, chart.name, chart.season))
-        self.problems = tuple(problems)
-        return tuple(entries)
 
 
 def read_save(path: Path, loader: Callable[[str], TeamChart]) -> SavedGame:
@@ -460,7 +405,7 @@ class TerminalGame:
             if not turn.automatic:
                 return
             try:
-                report, _, _, _ = self.game.coach_step(self.human_side)
+                report, _, _ = self.game.coach_step(self.human_side)
                 self._report(report)
                 if report is not None and not report.supported:
                     self.automatic_paused = True

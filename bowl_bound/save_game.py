@@ -6,7 +6,6 @@ Replaying fixed commands with observed rolls reconstructs engine-owned continuat
 
 import hashlib
 import json
-import re
 import sys
 from collections.abc import Callable
 from dataclasses import asdict
@@ -35,6 +34,7 @@ from .session import (
     SessionFinishedError,
     SessionView,
 )
+from .team_catalog import TEAM_ID_MAX_LENGTH, TEAM_ID_RE
 from .timing import Clock
 
 SCHEMA_VERSION = 1
@@ -42,7 +42,6 @@ ENGINE_PROFILE = "bowl-bound-m21-v1"
 MAX_SAVE_BYTES = 2 * 1024 * 1024
 MAX_COMMANDS = 10_000
 MAX_ROLLS = 50_000
-_TEAM_ID = re.compile(r"[1-9][0-9]{0,5}/[a-z0-9]+(?:-[a-z0-9]+)*")
 _ERRORS = (
     InvalidDecisionError,
     PendingDecisionError,
@@ -226,7 +225,9 @@ class SavedGame:
         config = json.loads(_json(config))
         _validate_config(config)
         if any(
-            not isinstance(key, str) or len(key) > 120 or not _TEAM_ID.fullmatch(key)
+            not isinstance(key, str)
+            or len(key) > TEAM_ID_MAX_LENGTH
+            or not TEAM_ID_RE.fullmatch(key)
             for key in (home_id, away_id)
         ):
             raise SaveFormatError("Save team identifiers must be canonical season/team references.")
@@ -466,8 +467,21 @@ class SavedGame:
         human_call: str | None = None,
         *,
         expected_revision: int | None = None,
+    ) -> tuple[PlayReport | None, SessionView | RegulationView, CoachingTurn]:
+        """Commit one coached turn and expose only the public report, view and next turn."""
+        report, view, turn, _ = self._coach_step_with_choice(
+            human_side, human_call, expected_revision=expected_revision
+        )
+        return report, view, turn
+
+    def _coach_step_with_choice(
+        self,
+        human_side: str,
+        human_call: str | None = None,
+        *,
+        expected_revision: int | None = None,
     ) -> tuple[PlayReport | None, SessionView | RegulationView, CoachingTurn, CoachChoice | None]:
-        """Commit one computer action or simultaneous snap, then reveal the committed call."""
+        """Commit a coached turn and retain the private computer choice for internal audits."""
         with self._lock:
             if expected_revision is not None and expected_revision != len(self._commands):
                 raise GameRevisionConflict("The game changed after this coached turn was shown.")
@@ -703,8 +717,8 @@ def _validate(data: Any) -> None:
         _keys(team, {"id", "fingerprint"})
         if (
             not isinstance(team["id"], str)
-            or len(team["id"]) > 120
-            or not _TEAM_ID.fullmatch(team["id"])
+            or len(team["id"]) > TEAM_ID_MAX_LENGTH
+            or not TEAM_ID_RE.fullmatch(team["id"])
             or not isinstance(team["fingerprint"], str)
         ):
             _fail()

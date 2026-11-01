@@ -1,4 +1,4 @@
-"""Thin FastAPI adapter for the Milestone 10 demonstration.
+"""Thin FastAPI adapter for Bowl Bound games.
 
 This module only validates input, finds teams on disk, holds in-memory sessions and
 serializes the engine's own views. It never reads chart cells, never decides football
@@ -6,7 +6,6 @@ results and never builds wording: every label, number and sentence comes from
 bowl_bound.session.
 """
 
-import re
 import secrets
 from collections import OrderedDict
 from dataclasses import asdict, dataclass
@@ -24,7 +23,6 @@ from bowl_bound import DISPLAY_VERSION, __version__
 from bowl_bound.regulation import RegulationView
 from bowl_bound.roster import RosterFormatError
 from bowl_bound.save_game import (
-    MAX_SAVE_BYTES,
     GameRevisionConflict,
     SavedGame,
     SaveFormatError,
@@ -38,16 +36,18 @@ from bowl_bound.session import (
     SessionFinishedError,
     SessionView,
 )
-from bowl_bound.team_csv import TeamFormatError, load_team, team_folder_name
+from bowl_bound.team_catalog import (
+    TEAM_ID_MAX_LENGTH,
+    TEAM_ID_RE,
+    TeamCatalog,
+    TeamNotFoundError,
+)
 
 from .request_limits import RequestBodyLimit
 
 MAX_GAMES = 50
 DEV_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
-_TEAM_ID = re.compile(r"^[1-9][0-9]{0,5}/[a-z0-9]+(?:-[a-z0-9]+)*$")
-_SEASON = re.compile(r"^[1-9][0-9]{0,5}$")
-
-TeamId = Annotated[str, StringConstraints(max_length=120)]
+TeamId = Annotated[str, StringConstraints(max_length=TEAM_ID_MAX_LENGTH)]
 HumanSide = Literal["home", "away"]
 
 
@@ -201,15 +201,16 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
 
     @app.get("/api/teams")
     def teams() -> dict[str, list[dict[str, object]]]:
-        found: list[dict[str, object]] = []
-        problems: list[dict[str, str]] = []
-        for team_id, season_dir, slug in _team_folders(seasons_root):
-            try:
-                chart, _ = load_team(season_dir, slug)
-            except (TeamFormatError, OSError):
-                problems.append({"id": team_id, "reason": "could not be read"})
-                continue
-            found.append({"id": team_id, "name": chart.name, "season": chart.season})
+        catalog = TeamCatalog(seasons_root)
+        try:
+            entries = catalog.teams()
+        except ValueError:
+            return {"teams": [], "problems": []}
+        found = [{"id": entry.key, "name": entry.name, "season": entry.season} for entry in entries]
+        problems = [
+            {"id": problem.partition(":")[0], "reason": "could not be read"}
+            for problem in catalog.problems
+        ]
         return {"teams": found, "problems": problems}
 
     @app.post("/api/games")
@@ -307,15 +308,8 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
 
     @app.post("/api/games/load")
     async def load_game(request: Request, human_side: HumanSide | None = None) -> dict[str, object]:
-        chunks: list[bytes] = []
-        size = 0
-        async for chunk in request.stream():
-            size += len(chunk)
-            if size > MAX_SAVE_BYTES:
-                raise HTTPException(status_code=413, detail="Save exceeds the 2 MiB limit.")
-            chunks.append(chunk)
         try:
-            text = b"".join(chunks).decode("utf-8")
+            text = (await request.body()).decode("utf-8")
             session = await run_in_threadpool(
                 loads_game, text, lambda key: _load(seasons_root, key)
             )
@@ -344,7 +338,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
             raise HTTPException(status_code=409, detail="This game uses manual controls.")
         session = registered.session
         try:
-            report, view, turn, _ = session.coach_step(
+            report, view, turn = session.coach_step(
                 body.human_side,
                 body.human_call,
                 expected_revision=body.expected_revision,
@@ -436,42 +430,14 @@ def _session(games: OrderedDict[str, RegisteredGame], game_id: str) -> Registere
     return registered
 
 
-def _team_folders(seasons_root: Path) -> list[tuple[str, Path, str]]:
-    result: list[tuple[str, Path, str]] = []
-    if not seasons_root.is_dir() or seasons_root.is_symlink():
-        return result
-    for season_dir in sorted(seasons_root.iterdir(), key=lambda p: p.name):
-        if (
-            not season_dir.is_dir()
-            or season_dir.is_symlink()
-            or not _SEASON.fullmatch(season_dir.name)
-        ):
-            continue
-        for folder in sorted(season_dir.iterdir(), key=lambda p: p.name):
-            if not folder.is_dir() or folder.is_symlink() or folder.name == "provenance":
-                continue
-            try:
-                canonical = team_folder_name(folder.name) == folder.name
-            except TeamFormatError:
-                canonical = False
-            if canonical and (folder / "team.yaml").is_file():
-                result.append((season_dir.name + "/" + folder.name, season_dir, folder.name))
-    return result
-
-
 def _load(seasons_root: Path, team_id: str):  # noqa: ANN202 - returns a TeamChart
-    if not _TEAM_ID.fullmatch(team_id):
+    if len(team_id) > TEAM_ID_MAX_LENGTH or not TEAM_ID_RE.fullmatch(team_id):
         raise HTTPException(status_code=422, detail="team id must look like 2002/ohio-state")
-    season, slug = team_id.split("/")
-    season_dir = seasons_root / season
-    if any(path.is_symlink() for path in (seasons_root, season_dir, season_dir / slug)):
-        raise HTTPException(status_code=422, detail="team folders must not use symlinks")
-    if not (season_dir / slug).is_dir():
-        raise HTTPException(status_code=404, detail="no such team")
     try:
-        chart, _ = load_team(season_dir, slug)
-    except (TeamFormatError, OSError) as error:
+        return TeamCatalog(seasons_root).load(team_id)
+    except TeamNotFoundError as error:
+        raise HTTPException(status_code=404, detail="no such team") from error
+    except ValueError as error:
         raise HTTPException(
             status_code=422, detail="that team's files could not be read"
         ) from error
-    return chart

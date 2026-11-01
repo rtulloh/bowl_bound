@@ -1,5 +1,6 @@
 """Milestone 10 API adapter: transport only; every label and number comes from the engine."""
 
+import shutil
 from pathlib import Path
 
 import pytest
@@ -54,6 +55,15 @@ def test_a_broken_team_is_reported_not_hidden(seasons: Path) -> None:
 def test_provenance_and_stray_folders_are_not_teams(seasons: Path) -> None:
     (seasons / "2026" / "notes").mkdir()
     (seasons / "readme").mkdir()
+    shutil.copytree(
+        seasons / "2026" / "alpha-tech",
+        seasons / "2026" / ("a" * 101),
+    )
+    shutil.copytree(
+        seasons / "2026" / "alpha-tech",
+        seasons / "2026" / "provenance",
+        dirs_exist_ok=True,
+    )
     data = TestClient(create_app(seasons)).get("/api/teams").json()
     assert len(data["teams"]) == 2 and data["problems"] == []
 

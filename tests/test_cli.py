@@ -396,7 +396,7 @@ def test_unsupported_computer_report_stops_before_another_roll(
     def unsupported_step(*_args: object):
         nonlocal count
         count += 1
-        return unsupported, *app.game.coach_view("home"), None
+        return unsupported, *app.game.coach_view("home")
 
     monkeypatch.setattr(app.game, "coach_step", unsupported_step)
     app.advance_computer()

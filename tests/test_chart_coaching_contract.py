@@ -82,7 +82,14 @@ def test_chart_computer_call_cannot_depend_on_hidden_human_call(
     human: str, calls: tuple[str, str]
 ) -> None:
     first, second = new(), new()
-    assert first.coach_step(human, calls[0])[3] == second.coach_step(human, calls[1])[3]
+    assert (
+        first._coach_step_with_choice(human, calls[0])[3]
+        == second._coach_step_with_choice(human, calls[1])[3]
+    )
+
+
+def test_coach_step_public_result_does_not_expose_private_choice() -> None:
+    assert len(new().coach_step("home", "1")) == 3
 
 
 def test_chart_previews_and_invalid_requests_preserve_gameplay_save_facts() -> None:
@@ -110,7 +117,7 @@ def test_analysis_failure_is_audited_in_committed_choice(monkeypatch: pytest.Mon
     game = new()
     # The human calls a legal defense; chart analysis fails before commit, and
     # the returned diagnostic still records the policy fallback.
-    _, _, _, choice = game.coach_step("away", "A")
+    _, _, _, choice = game._coach_step_with_choice("away", "A")
     assert choice is not None and choice.fallback
 
 
