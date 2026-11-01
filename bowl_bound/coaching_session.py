@@ -68,6 +68,7 @@ def observe_game(view: GameView, side: str) -> CoachObservation:
         )
         if view.pending
         else (),
+        decision_outcomes=view.pending.decision_outcomes if view.pending else (),
     )
 
 

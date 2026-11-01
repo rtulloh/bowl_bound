@@ -8,6 +8,7 @@ from dataclasses import dataclass, replace
 from enum import Enum
 from random import Random
 
+from .decision_facts import DecisionOutcome, DecisionOutcomeKind
 from .dice import DiceSource, RandomDice, roll_view
 from .game_state import (
     EndZonePending,
@@ -212,6 +213,7 @@ class PendingDecisionView:
     chooser: str
     choices: tuple[PenaltyChoice, ...]
     chooser_side: str | None = None
+    decision_outcomes: tuple[DecisionOutcome, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -1171,18 +1173,20 @@ class PlaySession:
                 else turnover.return_start.possession.other
             )
             chooser = self._charts[chooser_side].name
+            choices = (
+                *tuple(
+                    _return_penalty_choice(index, p, turnover)
+                    for index, p in enumerate(
+                        turnover.return_penalties or (turnover.return_penalty,)
+                    )
+                ),
+                PenaltyChoice("return:decline", "Decline return penalties", True),
+            )
             view = PendingDecisionView(
                 chooser,
-                (
-                    *tuple(
-                        _return_penalty_choice(index, p, turnover)
-                        for index, p in enumerate(
-                            turnover.return_penalties or (turnover.return_penalty,)
-                        )
-                    ),
-                    PenaltyChoice("return:decline", "Decline return penalties", True),
-                ),
+                choices,
                 chooser_side=chooser_side.value,
+                decision_outcomes=_return_penalty_outcomes(choices, turnover),
             )
             self._pending = _PendingDecision(
                 PreparedPlay(resolution),
@@ -1568,7 +1572,163 @@ def _pending_view(
         )
     )
     side = field.possession if first.source.team.value == "defense" else field.possession.other
-    return PendingDecisionView(chooser, tuple(choices), chooser_side=side.value)
+    offered = tuple(choices)
+    return PendingDecisionView(
+        chooser,
+        offered,
+        chooser_side=side.value,
+        decision_outcomes=_penalty_decision_outcomes(offered, penalties, resolution, field),
+    )
+
+
+def _penalty_decision_outcomes(
+    choices: tuple[PenaltyChoice, ...],
+    penalties: tuple[AssessedPenalty, ...],
+    resolution: PlayResolution,
+    field: FieldState,
+) -> tuple[DecisionOutcome, ...]:
+    """Project enabled penalty options using the same pure engine transitions as play."""
+    outcomes: list[DecisionOutcome] = []
+    for choice in choices:
+        if not choice.enabled:
+            continue
+        if choice.id == "decline":
+            outcomes.append(_declined_play_outcome(choice.id, resolution, field))
+            continue
+        _, index_text, spot = choice.id.split(":")
+        penalty = penalties[int(index_text)]
+        if spot == "kickoff":
+            outcomes.append(
+                DecisionOutcome(
+                    choice.id,
+                    DecisionOutcomeKind.TOUCHDOWN,
+                    scoring_side=field.possession.value,
+                )
+            )
+            continue
+        try:
+            projected = enforce_penalty(
+                field,
+                penalty,
+                gain=_gain(resolution),
+                from_end=spot == "end",
+            )
+        except (TypeError, ValueError):
+            outcomes.append(DecisionOutcome(choice.id, DecisionOutcomeKind.UNRESOLVED))
+            continue
+        outcomes.append(_field_decision_outcome(choice.id, projected))
+    return tuple(outcomes)
+
+
+def _declined_play_outcome(
+    choice_id: str, resolution: PlayResolution, field: FieldState
+) -> DecisionOutcome:
+    """Project a decline without consuming turnover or recovery dice."""
+    if resolution.result.kind is ResultKind.INTERCEPTION:
+        return DecisionOutcome(
+            choice_id,
+            DecisionOutcomeKind.TURNOVER,
+            possession=field.possession.other.value,
+        )
+    if resolution.result.kind is ResultKind.FUMBLE:
+        return DecisionOutcome(choice_id, DecisionOutcomeKind.UNRESOLVED)
+    try:
+        transition = apply_result(field, resolution.result)
+    except EndZonePending:
+        return DecisionOutcome(
+            choice_id,
+            DecisionOutcomeKind.SAFETY,
+            scoring_side=field.possession.other.value,
+        )
+    except (PendingOutcomeError, TypeError, ValueError):
+        return DecisionOutcome(choice_id, DecisionOutcomeKind.UNRESOLVED)
+    if transition.outcome is Outcome.TOUCHDOWN:
+        return DecisionOutcome(
+            choice_id,
+            DecisionOutcomeKind.TOUCHDOWN,
+            scoring_side=field.possession.value,
+        )
+    if transition.state is None:
+        return DecisionOutcome(choice_id, DecisionOutcomeKind.UNRESOLVED)
+    return _field_decision_outcome(choice_id, transition.state)
+
+
+def _field_decision_outcome(choice_id: str, field: FieldState) -> DecisionOutcome:
+    return DecisionOutcome(
+        choice_id,
+        DecisionOutcomeKind.FIELD,
+        possession=field.possession.value,
+        yards_to_goal=field.yards_to_goal,
+        down=field.down,
+        yards_to_go=field.yards_to_go,
+    )
+
+
+def _return_penalty_outcomes(
+    choices: tuple[PenaltyChoice, ...], turnover: TurnoverResolution
+) -> tuple[DecisionOutcome, ...]:
+    """Project deterministic return-foul choices without resolving a chained return."""
+    outcomes: list[DecisionOutcome] = []
+    for choice in choices:
+        if not choice.enabled:
+            continue
+        if choice.id == "return:decline":
+            if turnover.continuation is not None:
+                outcomes.append(DecisionOutcome(choice.id, DecisionOutcomeKind.UNRESOLVED))
+            elif turnover.state is not None:
+                outcomes.append(_field_decision_outcome(choice.id, turnover.state))
+            else:
+                outcomes.append(_scoring_decision_outcome(choice.id, turnover))
+            continue
+        if turnover.return_start is None or turnover.return_yards is None:
+            outcomes.append(DecisionOutcome(choice.id, DecisionOutcomeKind.UNRESOLVED))
+            continue
+        suffix = choice.id.rsplit(":", 1)[-1]
+        index = int(suffix) if choice.id.count(":") > 1 else 0
+        penalties = turnover.return_penalties or (
+            (turnover.return_penalty,) if turnover.return_penalty else ()
+        )
+        if index >= len(penalties):
+            outcomes.append(DecisionOutcome(choice.id, DecisionOutcomeKind.UNRESOLVED))
+            continue
+        try:
+            result = enforce_return_penalty(
+                turnover.return_start,
+                penalties[index],
+                return_yards=turnover.return_yards,
+                origin=turnover.return_origin,
+                continues_original_play=turnover.continues_original_play,
+                scrimmage_start=turnover.scrimmage_start,
+            )
+        except (TypeError, ValueError):
+            outcomes.append(DecisionOutcome(choice.id, DecisionOutcomeKind.UNRESOLVED))
+            continue
+        if result.disposition is ReturnPenaltyDisposition.SAFETY:
+            outcomes.append(
+                DecisionOutcome(
+                    choice.id,
+                    DecisionOutcomeKind.SAFETY,
+                    scoring_side=turnover.return_start.possession.other.value,
+                )
+            )
+        elif result.state is not None:
+            outcomes.append(_field_decision_outcome(choice.id, result.state))
+        else:
+            outcomes.append(DecisionOutcome(choice.id, DecisionOutcomeKind.UNRESOLVED))
+    return tuple(outcomes)
+
+
+def _scoring_decision_outcome(choice_id: str, turnover: TurnoverResolution) -> DecisionOutcome:
+    kind = (
+        DecisionOutcomeKind.SAFETY
+        if turnover.outcome is TurnoverOutcome.SAFETY
+        else DecisionOutcomeKind.TOUCHDOWN
+    )
+    if turnover.points[0]:
+        return DecisionOutcome(choice_id, kind, scoring_side="home")
+    if turnover.points[1]:
+        return DecisionOutcome(choice_id, kind, scoring_side="away")
+    return DecisionOutcome(choice_id, DecisionOutcomeKind.UNRESOLVED)
 
 
 def _penalty_result_text(resolution: PlayResolution, field: FieldState) -> str:

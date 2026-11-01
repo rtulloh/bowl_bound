@@ -38,8 +38,8 @@ class DifficultyCoach(ChartAwareCoach):
     ) -> None:
         if mode not in AGGRESSION:
             raise ValueError("difficulty must be easy, medium or hard")
-        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7}:
-            raise ValueError("difficulty policy version must be 1, 2, 3, 4, 5, 6 or 7")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8}:
+            raise ValueError("difficulty policy version must be 1 through 8")
         super().__init__(seed, home, away, version=version)
         self.mode = mode
         self.behavior = behavior_for_policy(f"{mode}-v{version}")
@@ -76,6 +76,8 @@ class DifficultyCoach(ChartAwareCoach):
 
     def _random(self, observation: CoachObservation, role: str) -> Random:
         facts = asdict(observation)
+        if self.version < 8:
+            facts.pop("decision_outcomes")
         if self.version == 1:
             facts.pop("can_kneel_out_game")
         public = dumps(facts, sort_keys=True, separators=(",", ":"))

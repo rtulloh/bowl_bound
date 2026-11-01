@@ -517,6 +517,7 @@ class TerminalGame:
                 "easy-v5",
                 "easy-v6",
                 "easy-v7",
+                "easy-v8",
             }:
                 raise ValueError("The helper is only available on Easy.")
             if not self.game.player_advice_available(self.human_side):
@@ -736,7 +737,7 @@ def main(argv: list[str] | None = None) -> int:
                 away_id=away_id,
                 seed=args.seed if args.seed is not None else randbits(63),
                 coach_seed=args.coach_seed,
-                coach_policy=f"{args.difficulty or 'medium'}-v7",
+                coach_policy=f"{args.difficulty or 'medium'}-v8",
                 mode="regulation",
                 game_type=args.game_type or "regular",
             )

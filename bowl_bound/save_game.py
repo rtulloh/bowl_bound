@@ -256,6 +256,7 @@ class SavedGame:
             "chart-v5",
             "chart-v6",
             "chart-v7",
+            "chart-v8",
         }:
             from .chart_coaching import ChartAwareCoach
 
@@ -283,6 +284,9 @@ class SavedGame:
             "easy-v7",
             "medium-v7",
             "hard-v7",
+            "easy-v8",
+            "medium-v8",
+            "hard-v8",
         }:
             from .difficulty import DifficultyCoach
 
@@ -294,7 +298,11 @@ class SavedGame:
                 version=int(self.coach_policy[-1]),
             )
         else:
-            version = 2 if self.coach_policy == "baseline-v2" else 1
+            version = (
+                8
+                if self.coach_policy == "baseline-v8"
+                else (2 if self.coach_policy == "baseline-v2" else 1)
+            )
             self._coach = BaselineCoach(self._config["coach_seed"], version=version)
         self._tape = tape
         self._commands: list[dict[str, Any]] = []
@@ -393,6 +401,7 @@ class SavedGame:
                 "easy-v5",
                 "easy-v6",
                 "easy-v7",
+                "easy-v8",
             }:
                 return False
             view = self.view()
@@ -574,6 +583,7 @@ def _validate_config(config: Any) -> None:
         not in {
             "baseline",
             "baseline-v2",
+            "baseline-v8",
             "chart-v1",
             "chart-v2",
             "easy-v1",
@@ -602,6 +612,10 @@ def _validate_config(config: Any) -> None:
             "medium-v7",
             "hard-v7",
             "chart-v7",
+            "easy-v8",
+            "medium-v8",
+            "hard-v8",
+            "chart-v8",
         }
     ):
         _fail()
@@ -809,6 +823,7 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         "home_timeouts",
         "away_timeouts",
         "can_kneel_out_game",
+        "decision_outcomes",
     }
     legacy_defenses = {
         f"{defense.value} {label}": f"Formation {defense.value}"

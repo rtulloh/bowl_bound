@@ -134,9 +134,9 @@ see [attribution](ATTRIBUTION.md). No Paydirt runtime dependency was added.
 ## API
 
 `POST /api/games` accepts `difficulty: "easy" | "medium" | "hard"`; omitted means
-Medium. New games use the corresponding v7 policy. Alternatively, explicit
-`coach_policy` accepts `baseline`, `baseline-v2`, chart policies v1–v7, and the
-Easy/Medium/Hard v1–v7 policies; it cannot be combined with `difficulty`.
+Medium. New games use the corresponding v8 policy. Alternatively, explicit
+`coach_policy` accepts `baseline`, `baseline-v2`, chart policies v1–v8, and the
+Easy/Medium/Hard v1–v8 policies; it cannot be combined with `difficulty`.
 `baseline` and chart policies are compatibility/testing choices, not additional
 player-facing difficulty levels. New/load/get responses report `coach_policy`;
 loading restores the saved version, irrespective of setup selections.
@@ -145,6 +145,12 @@ loading restores the saved version, irrespective of setup selections.
 (optionally `away`) return the normal engine view plus `turn`: human identity/role,
 automatic flag, status, human-only actions, game actions and pending choice. No
 private computer plan is serialized.
+
+For prepared penalty decisions, the engine may include `decision_outcomes` beside
+the offered choices. Each entry identifies one choice and its deterministic
+post-choice field position, score, turnover possession, or an `unresolved` result
+when applying the choice still needs dice. Coaches use only enabled choices and
+these engine projections; they do not parse choice labels or resolve penalties.
 
 `POST /api/games/{id}/coach` takes `{human_side, human_call?}`. Omit/null
 `human_call` only for an automatic computer action. Otherwise send just your offered
@@ -177,7 +183,7 @@ aggression, late-game thresholds and utility coefficients. These are coaching
 preferences, not football rules, configurable difficulty odds or calibrated
 expected points. Version 2 consults the engine's `can_kneel_out_game` query before
 choosing a kneel; v1 keeps its original selection stream and heuristic. New games
-use v7, while existing saves retain their recorded policy. Version 3 adds
+use v8, while existing saves retain their recorded policy. Version 3 adds
 chart-backed fourth-down and late-half choices, score-aware fourth-quarter
 conversion preferences, and an offered last-snap Hail Mary for a trailing team.
 Its field-goal options come from the engine and team chart, not a fixed distance
@@ -195,8 +201,11 @@ without removing any of the six formations from the engine's legal menu. Hard's
 chart analysis uses the same preferences, so it cannot override those guards.
 Version 7 returns kicks unless a large late lead favors a fair catch or
 touchback, selects the receiving team's guaranteed spot on a kickoff out of
-bounds, and clears stale analysis-fallback state before a decision. Earlier
-policy versions keep their recorded behavior.
+bounds, and clears stale analysis-fallback state before a decision. Version 8
+uses deterministic engine-projected penalty outcomes to compare decline and
+accepted-enforcement choices, including fourth-down turnovers and scoring
+results; when an outcome needs future dice, it retains the earlier safe default.
+Earlier policy versions keep their recorded behavior.
 
 Audit JSON includes `behavior_profile` and `audit_profile` for each game. The
 separate `coaching-audit-v1` profile names replay and advisory concentration

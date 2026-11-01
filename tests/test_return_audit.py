@@ -108,6 +108,12 @@ def test_pending_return_penalty_does_not_duplicate_trace_when_declined() -> None
     )
     pending = game.decide("interception:return")
     assert pending.pending and len(pending.trace) == 4
+    choices = game.view().pending
+    assert choices is not None
+    outcomes = {item.choice_id: item for item in choices.decision_outcomes}
+    assert set(outcomes) == {"return:accept", "return:decline"}
+    assert outcomes["return:accept"].kind == "field"
+    assert outcomes["return:decline"].kind == "field"
     result = game.decide("return:decline")
     assert len(result.trace) == 4
     assert [e.section for e in result.trace] == [

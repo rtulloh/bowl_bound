@@ -112,6 +112,7 @@ def test_observation_contract_has_no_opponent_selection_charts_or_future_rolls()
         "hurried",
         "phase",
         "can_kneel_out_game",
+        "decision_outcomes",
     }
     with pytest.raises(TypeError):
         CoachObservation(**(asdict(observation()) | {"human_call": "9"}))

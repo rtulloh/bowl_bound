@@ -57,6 +57,7 @@ def test_profiles_are_named_frozen_and_separate_from_persisted_policy_streams() 
         "medium-v1",
         "hard-v1",
         "baseline-v2",
+        "baseline-v8",
         "chart-v2",
         "easy-v2",
         "medium-v2",
@@ -81,6 +82,10 @@ def test_profiles_are_named_frozen_and_separate_from_persisted_policy_streams() 
         "easy-v7",
         "medium-v7",
         "hard-v7",
+        "chart-v8",
+        "easy-v8",
+        "medium-v8",
+        "hard-v8",
     ):
         profile = behavior_for_policy(policy)
         assert profile.name == ("baseline-v1" if policy == "baseline" else policy)

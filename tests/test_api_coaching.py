@@ -27,6 +27,7 @@ def test_preview_masks_computer_controls_and_resolution_reveals_calls(
             "home": "2026/alpha-tech",
             "away": "2026/beta-state",
             "seed": 7,
+            "coach_policy": "medium-v7",
         },
     ).json()
     path = f"/api/games/{created['game_id']}"

@@ -10,6 +10,7 @@ from json import dumps
 from random import Random
 
 from .coaching_profiles import behavior_for_policy
+from .decision_facts import DecisionOutcome, DecisionOutcomeKind
 
 
 class NoLegalAction(ValueError):
@@ -38,6 +39,7 @@ class CoachObservation:
     hurried: bool = False
     phase: str = "scrimmage"
     can_kneel_out_game: bool = False
+    decision_outcomes: tuple[DecisionOutcome, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -62,11 +64,11 @@ class BaselineCoach:
     """
 
     def __init__(self, seed: int, *, version: int = 1) -> None:
-        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7}:
-            raise ValueError("baseline policy version must be 1, 2, 3, 4, 5, 6 or 7")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8}:
+            raise ValueError("baseline policy version must be 1 through 8")
         self._seed = seed
         self.version = version
-        policy = "baseline" if version == 1 else "baseline-v2"
+        policy = "baseline" if version == 1 else "baseline-v8" if version >= 8 else "baseline-v2"
         self.behavior = behavior_for_policy(policy)
         self.analysis_fallback = False
 
@@ -82,6 +84,8 @@ class BaselineCoach:
 
     def _random(self, observation: CoachObservation, role: str) -> Random:
         facts = asdict(observation)
+        if self.version < 8:
+            facts.pop("decision_outcomes")
         # Freeze the baseline-v1 input contract so old saves retain future calls.
         facts.pop("hurried")
         facts.pop("phase")
@@ -147,6 +151,10 @@ class BaselineCoach:
         if self.version >= 7:
             self.analysis_fallback = False
         choices = observation.choices
+        if self.version >= 8:
+            preferred = _penalty_choice(observation)
+            if preferred is not None:
+                return preferred
         protecting_lead = (
             not observation.overtime
             and observation.quarter == 4
@@ -181,3 +189,43 @@ class BaselineCoach:
             "interception:return",
         )
         return next((key for key in preferred if key in choices), safe_choice("", choices).key)
+
+
+def _penalty_choice(observation: CoachObservation) -> str | None:
+    """Choose the unique best prepared penalty result from engine-owned projections."""
+    outcomes = tuple(
+        outcome
+        for outcome in observation.decision_outcomes
+        if outcome.choice_id in observation.choices
+    )
+    if len(outcomes) < 2 or any(
+        outcome.kind is DecisionOutcomeKind.UNRESOLVED for outcome in outcomes
+    ):
+        return None
+    scores = tuple(_outcome_value(outcome, observation.possession) for outcome in outcomes)
+    best = max(scores) if observation.side == observation.possession else min(scores)
+    winners = tuple(
+        outcome.choice_id for outcome, score in zip(outcomes, scores, strict=True) if score == best
+    )
+    return winners[0] if len(winners) == 1 else None
+
+
+def _outcome_value(outcome: DecisionOutcome, offense_side: str) -> tuple[int, int, int, int]:
+    """Order known outcomes by scoring, possession, field position, then down/distance."""
+    if outcome.kind is DecisionOutcomeKind.SAFETY:
+        return (3 if outcome.scoring_side == offense_side else -3, 0, 0, 0)
+    if outcome.kind is DecisionOutcomeKind.TOUCHDOWN:
+        return (3 if outcome.scoring_side == offense_side else -3, 0, 0, 0)
+    if outcome.possession == offense_side:
+        return (
+            1,
+            100 - (outcome.yards_to_goal or 100),
+            5 - (outcome.down or 5),
+            -(outcome.yards_to_go or 0),
+        )
+    return (
+        -1,
+        outcome.yards_to_goal or 0,
+        outcome.down or 0,
+        outcome.yards_to_go or 0,
+    )

@@ -74,6 +74,7 @@ HARD_V1 = replace(
     potential_exponent=2,
 )
 BASELINE_V2 = replace(BASELINE_V1, name="baseline-v2")
+BASELINE_V8 = replace(BASELINE_V2, name="baseline-v8")
 CHART_V2 = replace(CHART_V1, name="chart-v2")
 EASY_V2 = replace(EASY_V1, name="easy-v2")
 MEDIUM_V2 = replace(MEDIUM_V1, name="medium-v2")
@@ -98,6 +99,10 @@ CHART_V7 = replace(CHART_V6, name="chart-v7")
 EASY_V7 = replace(EASY_V6, name="easy-v7")
 MEDIUM_V7 = replace(MEDIUM_V6, name="medium-v7")
 HARD_V7 = replace(HARD_V6, name="hard-v7")
+CHART_V8 = replace(CHART_V7, name="chart-v8")
+EASY_V8 = replace(EASY_V7, name="easy-v8")
+MEDIUM_V8 = replace(MEDIUM_V7, name="medium-v8")
+HARD_V8 = replace(HARD_V7, name="hard-v8")
 
 
 def behavior_for_policy(policy: str) -> CoachBehavior:
@@ -109,6 +114,7 @@ def behavior_for_policy(policy: str) -> CoachBehavior:
         ("medium-v1", MEDIUM_V1),
         ("hard-v1", HARD_V1),
         ("baseline-v2", BASELINE_V2),
+        ("baseline-v8", BASELINE_V8),
         ("chart-v2", CHART_V2),
         ("easy-v2", EASY_V2),
         ("medium-v2", MEDIUM_V2),
@@ -133,6 +139,10 @@ def behavior_for_policy(policy: str) -> CoachBehavior:
         ("easy-v7", EASY_V7),
         ("medium-v7", MEDIUM_V7),
         ("hard-v7", HARD_V7),
+        ("chart-v8", CHART_V8),
+        ("easy-v8", EASY_V8),
+        ("medium-v8", MEDIUM_V8),
+        ("hard-v8", HARD_V8),
     ):
         if policy == key:
             return profile
