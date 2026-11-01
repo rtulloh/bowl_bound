@@ -259,6 +259,15 @@ enabled solely because Paydirt has a similarly named feature.
   and field-goal results. No weather state or randomness is added;
   [RULE-030](issues/RULE/RULE-030.md) is closed for this milestone.
 
+### Advanced special-teams scope decision — 2026-11-01
+
+- The owner deferred the Advanced III/IV package: squib and coordinated
+  kick/return choices, short-drop/coffin-corner/quick punts, punt fair-catch and
+  roll choices, and alternate kickoff returns. Basic VI-8 onside support remains
+  implemented under [RULE-025](issues/RULE/RULE-025.md). No other special-team
+  behavior is added; [RULE-032](issues/RULE/RULE-032.md) is closed for this
+  milestone.
+
 ### QB Sneak implementation — 2026-11-01
 
 - Completed [RULE-021](issues/RULE/RULE-021.md) in tested commit `d0fa13b`.
