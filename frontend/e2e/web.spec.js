@@ -117,7 +117,8 @@ test('an interception waits for an engine-owned choice and charges ten seconds o
 test('the page shows only engine wording', async ({ page }) => {
   await start(page)
   const body = await page.locator('body').innerText()
-  for (const paydirtLabel of ['Ln-Plg', 'O-Tkl', 'Sneak']) expect(body).not.toContain(paydirtLabel)
+  for (const paydirtLabel of ['Ln-Plg', 'O-Tkl']) expect(body).not.toContain(paydirtLabel)
+  await expect(page.getByTestId('offense-play-q')).toContainText('QB Sneak')
   await expect(page.getByTestId('game-play-kneel')).toContainText('Kneel')
 })
 

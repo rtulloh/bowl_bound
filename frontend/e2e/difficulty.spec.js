@@ -12,17 +12,17 @@ for (const difficulty of ['easy', 'medium', 'hard']) {
     const response = await created
     expect(response.ok()).toBeTruthy()
     const body = await response.json()
-    expect(body.coach_policy).toBe(difficulty + '-v8')
+    expect(body.coach_policy).toBe(difficulty + '-v9')
     expect(body.turn).not.toHaveProperty('computer_choice')
     expect(body).not.toHaveProperty('estimates')
     const saved = await request.get('/api/games/' + body.game_id + '/save')
     expect(saved.ok()).toBeTruthy()
     const text = await saved.text()
-    expect(JSON.parse(text).config.coach_policy).toBe(difficulty + '-v8')
+    expect(JSON.parse(text).config.coach_policy).toBe(difficulty + '-v9')
     // Preserve private 63-bit coaching seeds; do not round-trip saves through JS Numbers.
     const loaded = await request.post('/api/games/load', { data: text, headers: { 'Content-Type': 'application/json' } })
     expect(loaded.ok()).toBeTruthy()
-    expect((await loaded.json()).coach_policy).toBe(difficulty + '-v8')
+    expect((await loaded.json()).coach_policy).toBe(difficulty + '-v9')
     await expect(page.getByText('Easy helper', { exact: false })).toHaveCount(0)
   })
 }
