@@ -1,0 +1,37 @@
+backend/app.py
+  s_ed54ab581b3d60::t_96c8ceb7f59374 155-161
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_0e9dab4b98822e 166-185
+docs/api.md
+  s_ed54ab581b3d60::t_c8cfde38a6e14d 1,11-17,21-23
+docs/web-demo.md
+  s_ed54ab581b3d60::t_404fe0d24e59f1 326-327
+frontend/src/components/PlayHighlights.jsx
+  s_ed54ab581b3d60::t_223ef3e9c2cda3 1-10,12-14
+frontend/src/test/fixtures.js
+  s_ed54ab581b3d60::t_440b3c82b8e51a 20
+frontend/src/test/noRules.test.js
+  s_ed54ab581b3d60::t_13a34c4a294835 20-25
+frontend/src/test/playHighlights.test.jsx
+  s_ed54ab581b3d60::t_c0fcca6c99ffcb 7-10,12-17,21-24,29-32,38-39
+tests/test_api_commentary.py
+  s_ed54ab581b3d60::t_ed052eed706ad4 37-38
+tests/test_commentary.py
+  s_ed54ab581b3d60::t_63326a40ba74cd 13,170-193
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "26f2d28f5433c474bc9bf6f57ba87d35c52da878",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
