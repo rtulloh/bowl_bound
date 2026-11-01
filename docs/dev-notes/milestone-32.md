@@ -62,5 +62,5 @@ remain ignored under `private-data/local-season-audits/`.
 
 Validation: `.venv/bin/python -m pytest -q tests/test_local_season_runner.py
 tests/test_issue_tracker.py` (45 passed); Ruff lint and format checks passed for the
-runner and synthetic tests. The issue-index builder completed successfully. Record the
-dedicated milestone commit hash here after committing.
+runner and synthetic tests. The issue-index builder completed successfully. Dedicated
+milestone commit: `9dac898` (`milestone 32: add local full-season audit runner`).
