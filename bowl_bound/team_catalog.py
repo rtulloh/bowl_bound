@@ -41,7 +41,7 @@ class TeamCatalog:
         return self.load_with_metadata(key)[0]
 
     def load_with_metadata(self, key: str) -> tuple[TeamChart, TeamFileMetadata]:
-        """Load a team and its rules privileges without exposing local file paths."""
+        """Load a team and its defense-chart markers without exposing local file paths."""
         if type(key) is not str or len(key) > TEAM_ID_MAX_LENGTH or not TEAM_ID_RE.fullmatch(key):
             raise TeamCatalogError(
                 "Team ID must be a canonical season/team, e.g. 2007/cedar-valley."

@@ -24,7 +24,7 @@ class TeamVerification:
     recovery_range: range
     pat_failures: tuple[int, ...]
     power_rating: float
-    privileges: tuple[str, ...]
+    defense_chart_markers: tuple[str, ...]
     provenance_rows: int
 
 
@@ -58,7 +58,7 @@ def verify_team_export(
         chart.recovery_range,
         pat_failures,
         metadata.power_rating,
-        metadata.privileges,
+        metadata.defense_chart_markers,
         provenance_rows,
     )
     if report.chart_cells != 810 or report.pat_outcomes != 30 or report.provenance_rows < 840:

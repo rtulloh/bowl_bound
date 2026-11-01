@@ -729,8 +729,8 @@ def main(argv: list[str] | None = None) -> int:
                 coach_policy=f"{args.difficulty or 'medium'}-v9",
                 mode="regulation",
                 game_type=args.game_type or "regular",
-                home_privileges=home_metadata.privileges,
-                away_privileges=away_metadata.privileges,
+                home_privileges=home_metadata.defense_chart_markers,
+                away_privileges=away_metadata.defense_chart_markers,
             )
         return TerminalGame(
             game,

@@ -351,6 +351,8 @@ Each is a separate test/review/commit milestone:
 6. Weather effects were reviewed and deferred (RULE-030). Razzle-Dazzle (I-1), elected safety (I-5), and intentional delay (I-6(B)) were approved on 2026-11-01 and have individual implementation tickets: RULE-028, RULE-029, and RULE-031.
 
 Unsupported options remain unavailable and documented.
+Per-game settings for players to enable or disable individual advanced options
+are deferred; Milestone 22 does not add a rules-selection screen.
 
 Ticket coverage and Paydirt review: [Milestone 22 work log](milestone-22.md).
 

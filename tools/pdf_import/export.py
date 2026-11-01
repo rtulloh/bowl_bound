@@ -169,7 +169,7 @@ def export_document(
                     chart,
                     TeamFileMetadata(
                         metadata.power_rating,
-                        metadata.privileges,
+                        metadata.defense_chart_markers,
                         defense_info.team_name,
                         inspection.source_sha256,
                         tuple((fact.label, fact.provenance) for fact in metadata.evidence),

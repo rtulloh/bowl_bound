@@ -44,11 +44,11 @@ from .normalization import (
 )
 
 TEAM_FILES: tuple[str, ...] = ("offense.csv", "defense.csv", "special.csv", "team.yaml")
-TEAM_FILE_VERSION = 2
-PLACEHOLDER_TEAM_FILE_VERSION = 3
+TEAM_FILE_VERSION = 4
+PLACEHOLDER_TEAM_FILE_VERSION = 5
 LOCAL_PLACEHOLDER_POWER_RATING = 200.0
 PROVENANCE_DIR = "provenance"
-TEAM_PRIVILEGES = frozenset({"W", "FBO", "SPBO", "XWC"})
+DEFENSE_CHART_MARKERS = frozenset({"W", "FBO", "SPBO", "XWC"})
 _NAMED_RESULT_KINDS = frozenset(
     kind for legend in CELL_LEGEND.values() for _, kind in legend.named_tokens
 )
@@ -126,7 +126,7 @@ class TeamFormatError(ValueError):
 @dataclass(frozen=True)
 class TeamFileMetadata:
     power_rating: float
-    privileges: tuple[str, ...]
+    defense_chart_markers: tuple[str, ...]
     defense_label: str
     source_sha256: str
     evidence: tuple[tuple[str, Provenance], ...]
@@ -140,11 +140,14 @@ class TeamFileMetadata:
         ):
             raise TypeError("invalid rating")
         if (
-            type(self.privileges) is not tuple
-            or len(set(self.privileges)) != len(self.privileges)
-            or any(type(x) is not str or x not in TEAM_PRIVILEGES for x in self.privileges)
+            type(self.defense_chart_markers) is not tuple
+            or len(set(self.defense_chart_markers)) != len(self.defense_chart_markers)
+            or any(
+                type(x) is not str or x not in DEFENSE_CHART_MARKERS
+                for x in self.defense_chart_markers
+            )
         ):
-            raise ValueError("invalid privileges")
+            raise ValueError("invalid defense chart markers")
         if not isinstance(self.defense_label, str) or not _sha(self.source_sha256):
             raise ValueError("invalid metadata")
         if type(self.evidence) is not tuple or any(
@@ -364,7 +367,7 @@ def team_to_files(chart: TeamChart, meta: TeamFileMetadata) -> dict[str, str]:
             if meta.power_rating_is_placeholder
             else {}
         ),
-        "privileges": list(meta.privileges),
+        "defense_chart_markers": list(meta.defense_chart_markers),
         "source_sha256": meta.source_sha256,
         "source_filename": fn,
         "team_file_version": (
@@ -527,11 +530,14 @@ def _yaml(text: str) -> dict[str, object]:
         "power_rating",
     ]
     version = data.get("team_file_version") if isinstance(data, dict) else None
-    if type(version) is int and version == PLACEHOLDER_TEAM_FILE_VERSION:
+    if type(version) is int and version in {3, PLACEHOLDER_TEAM_FILE_VERSION}:
         keys.append("power_rating_origin")
+    marker_key = (
+        "defense_chart_markers" if type(version) is int and version in {4, 5} else "privileges"
+    )
     keys.extend(
         [
-            "privileges",
+            marker_key,
             "source_sha256",
             "source_filename",
             "team_file_version",
@@ -550,6 +556,10 @@ def team_from_files(
         raise TeamFormatError("files row 0: required file set")
     o, d, s = (_rows(files[x], x) for x in ("offense.csv", "defense.csv", "special.csv"))
     y = _yaml(files["team.yaml"])
+    version = y["team_file_version"]
+    marker_key = (
+        "defense_chart_markers" if type(version) is int and version in {4, 5} else "privileges"
+    )
     if (
         len(o) != 30
         or any(len(x) != 14 for x in o)
@@ -568,15 +578,15 @@ def team_from_files(
         or (type(y["power_rating"]) is float and not isfinite(y["power_rating"]))
         or len(str(y["power_rating"])) > 12
         or y["power_rating"] <= 0
-        or type(y["privileges"]) is not list
-        or any(type(x) is not str for x in y["privileges"])
+        or type(y[marker_key]) is not list
+        or any(type(x) is not str for x in y[marker_key])
         or not _sha(y["source_sha256"])
         or type(y["source_filename"]) is not str
         or not y["source_filename"]
         or type(y["team_file_version"]) is not int
-        or y["team_file_version"] not in {1, TEAM_FILE_VERSION, PLACEHOLDER_TEAM_FILE_VERSION}
+        or version not in {1, 2, 3, TEAM_FILE_VERSION, PLACEHOLDER_TEAM_FILE_VERSION}
         or (
-            y["team_file_version"] == PLACEHOLDER_TEAM_FILE_VERSION
+            version in {3, PLACEHOLDER_TEAM_FILE_VERSION}
             and (
                 y["power_rating_origin"] != "local-only-placeholder"
                 or y["power_rating"] != LOCAL_PLACEHOLDER_POWER_RATING
@@ -588,11 +598,11 @@ def team_from_files(
     try:
         meta = TeamFileMetadata(
             float(y["power_rating"]),
-            tuple(y["privileges"]),
+            tuple(y[marker_key]),
             y["nickname"],
             y["source_sha256"],
             (),
-            y["team_file_version"] == PLACEHOLDER_TEAM_FILE_VERSION,
+            version in {3, PLACEHOLDER_TEAM_FILE_VERSION},
         )
     except (TypeError, ValueError) as e:
         raise _err("team.yaml", 0, "invalid metadata") from e
@@ -643,7 +653,8 @@ def team_from_files(
             rgb_color = (
                 None
                 if (
-                    y["team_file_version"] in {TEAM_FILE_VERSION, PLACEHOLDER_TEAM_FILE_VERSION}
+                    y["team_file_version"]
+                    in {2, 3, TEAM_FILE_VERSION, PLACEHOLDER_TEAM_FILE_VERSION}
                     and section == "metadata"
                     and (red, green, blue) == ("", "", "")
                 )

@@ -87,6 +87,13 @@ def metadata() -> TeamFileMetadata:
     return TeamFileMetadata(5.5, ("W",), "Buckeyes", SHA, (("rating", evidence("note")),))
 
 
+def test_team_metadata_names_printed_defense_markers_explicitly() -> None:
+    files = team_to_files(chart(), metadata())
+
+    assert "defense_chart_markers:\n- W\n" in files["team.yaml"]
+    assert "privileges:" not in files["team.yaml"]
+
+
 def test_paydirt_layout_round_trip_and_positions() -> None:
     files = team_to_files(chart(), metadata())
     assert tuple(files) == TEAM_FILES
@@ -185,7 +192,7 @@ def test_metadata_provenance_without_measured_color_round_trips_as_blank_rgb() -
     no_color = Provenance(SHA, "synthetic.pdf", 1, BoundingBox(0, 0, 1, 1), "note", None)
     meta = replace(metadata(), evidence=(("rating", no_color),))
     provenance_csv = provenance_to_csv(team, meta)
-    assert "team_file_version: 2" in team_to_files(team, meta)["team.yaml"]
+    assert "team_file_version: 4" in team_to_files(team, meta)["team.yaml"]
     metadata_row = next(
         row for row in csv.reader(io.StringIO(provenance_csv)) if row[0] == "metadata"
     )
@@ -194,14 +201,16 @@ def test_metadata_provenance_without_measured_color_round_trips_as_blank_rgb() -
     assert team_from_files(team_to_files(team, meta), provenance_csv) == (team, meta)
 
     version_one = team_to_files(team, meta)
-    version_one["team.yaml"] = version_one["team.yaml"].replace(
-        "team_file_version: 2", "team_file_version: 1"
+    version_one["team.yaml"] = (
+        version_one["team.yaml"]
+        .replace("team_file_version: 4", "team_file_version: 1")
+        .replace("defense_chart_markers:", "privileges:")
     )
     with pytest.raises(TeamFormatError, match="invalid provenance"):
         team_from_files(version_one, provenance_csv)
 
 
-def test_local_power_rating_placeholder_uses_version_three_marker() -> None:
+def test_local_power_rating_placeholder_uses_version_five_marker() -> None:
     team = chart()
     meta = replace(metadata(), power_rating=200.0, power_rating_is_placeholder=True)
 
@@ -209,7 +218,7 @@ def test_local_power_rating_placeholder_uses_version_three_marker() -> None:
     provenance = provenance_to_csv(team, meta)
 
     assert "power_rating_origin: local-only-placeholder" in files["team.yaml"]
-    assert "team_file_version: 3" in files["team.yaml"]
+    assert "team_file_version: 5" in files["team.yaml"]
     assert team_from_files(files, provenance) == (team, meta)
 
     files["team.yaml"] = files["team.yaml"].replace(
@@ -223,9 +232,36 @@ def test_version_one_bundle_with_measured_metadata_rgb_remains_readable() -> Non
     team = chart()
     meta = metadata()
     files = team_to_files(team, meta)
-    files["team.yaml"] = files["team.yaml"].replace("team_file_version: 2", "team_file_version: 1")
+    files["team.yaml"] = (
+        files["team.yaml"]
+        .replace("team_file_version: 4", "team_file_version: 1")
+        .replace("defense_chart_markers:", "privileges:")
+    )
 
     assert team_from_files(files, provenance_to_csv(team, meta)) == (team, meta)
+
+
+def test_legacy_v2_and_v3_bundles_keep_privileges_marker_key_readable() -> None:
+    team = chart()
+    meta = metadata()
+    files = team_to_files(team, meta)
+    files["team.yaml"] = (
+        files["team.yaml"]
+        .replace("defense_chart_markers:", "privileges:")
+        .replace("team_file_version: 4", "team_file_version: 2")
+    )
+
+    assert team_from_files(files, provenance_to_csv(team, meta)) == (team, meta)
+
+    placeholder = replace(meta, power_rating=200.0, power_rating_is_placeholder=True)
+    files = team_to_files(team, placeholder)
+    files["team.yaml"] = (
+        files["team.yaml"]
+        .replace("defense_chart_markers:", "privileges:")
+        .replace("team_file_version: 5", "team_file_version: 3")
+    )
+
+    assert team_from_files(files, provenance_to_csv(team, placeholder)) == (team, placeholder)
 
 
 def test_reader_rejects_cell_color_that_disagrees_with_provenance() -> None:
@@ -318,9 +354,9 @@ def _with_yaml(text_edit: object) -> dict[str, str]:
         lambda y: y + "status: validated\n",  # duplicate key, last value must not win
         lambda y: y.replace("season: 2026", "season: 2026\nseason: 2003"),
         lambda y: y.replace("team_name: Ohio State", "<<: {team_name: Foo}\nteam_name: Ohio State"),
-        lambda y: y.replace("team_file_version: 2", "team_file_version: true"),
-        lambda y: y.replace("team_file_version: 2", "team_file_version: 2.0"),
-        lambda y: y.replace("team_file_version: 2", "team_file_version: 4"),
+        lambda y: y.replace("team_file_version: 4", "team_file_version: true"),
+        lambda y: y.replace("team_file_version: 4", "team_file_version: 4.0"),
+        lambda y: y.replace("team_file_version: 4", "team_file_version: 6"),
     ],
 )
 def test_yaml_rejects_duplicate_keys_merge_keys_and_non_integer_versions(edit: object) -> None:

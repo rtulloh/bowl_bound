@@ -110,7 +110,7 @@ def test_missing_rating_uses_only_explicit_labeled_local_placeholder(
     assert exported.metadata.power_rating_is_placeholder is True
     assert "power_rating" not in {label for label, _ in exported.metadata.evidence}
     files = team_to_files(exported.chart, exported.metadata)
-    assert "team_file_version: 3" in files["team.yaml"]
+    assert "team_file_version: 5" in files["team.yaml"]
     assert "power_rating_origin: local-only-placeholder" in files["team.yaml"]
     provenance = provenance_to_csv(exported.chart, exported.metadata)
     assert team_from_files(files, provenance) == (exported.chart, exported.metadata)

@@ -363,8 +363,8 @@ def test_w_coded_privilege_is_verified_and_replayed_from_team_metadata() -> None
 
     def load(key: str):
         chart = {"2026/alpha-tech": home, "2026/beta-state": away}[key]
-        privileges = ("W",) if key.endswith("beta-state") else ()
-        return chart, metadata_with_privileges(privileges)
+        markers = ("W",) if key.endswith("beta-state") else ()
+        return chart, metadata_with_markers(markers)
 
     restored = loads_game(snapshot, load)
     assert restored.view() == game.view()
@@ -383,7 +383,7 @@ def test_api_loads_w_code_and_restores_it_from_saved_team_metadata(tmp_path) -> 
     write_team(
         seasons,
         team_chart("Beta State"),
-        metadata_with_privileges(("W",)),
+        metadata_with_markers(("W",)),
     )
     client = TestClient(create_app(seasons))
     created = client.post(
@@ -423,5 +423,5 @@ def test_human_advanced_defense_does_not_break_computer_call_history() -> None:
     assert game._coach._counts[("away", "defense")] == {"WC1": 1}
 
 
-def metadata_with_privileges(privileges: tuple[str, ...]) -> TeamFileMetadata:
-    return replace(metadata(), privileges=privileges)
+def metadata_with_markers(markers: tuple[str, ...]) -> TeamFileMetadata:
+    return replace(metadata(), defense_chart_markers=markers)

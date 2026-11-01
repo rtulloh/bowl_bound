@@ -38,7 +38,7 @@ def test_verification_reports_complete_counts_and_metadata(tmp_path: Path) -> No
             "recovery_range": range(10, 27),
             "pat_failures": tuple(range(11, 40, 2)),
             "power_rating": 5.5,
-            "privileges": ("W",),
+            "defense_chart_markers": ("W",),
         },
     )
 

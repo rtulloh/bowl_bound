@@ -35,7 +35,7 @@ from .session import (
     SessionView,
 )
 from .team_catalog import TEAM_ID_MAX_LENGTH, TEAM_ID_RE
-from .team_csv import TEAM_PRIVILEGES, TeamFileMetadata
+from .team_csv import DEFENSE_CHART_MARKERS, TeamFileMetadata
 from .timing import Clock
 
 SCHEMA_VERSION = 1
@@ -69,13 +69,13 @@ def _fail() -> None:
     raise SaveFormatError("Save is invalid or incompatible; the current game was not replaced.")
 
 
-def _validate_privileges(value: object) -> tuple[str, ...]:
+def _validate_defense_chart_markers(value: object) -> tuple[str, ...]:
     if (
         type(value) is not tuple
-        or any(type(item) is not str or item not in TEAM_PRIVILEGES for item in value)
+        or any(type(item) is not str or item not in DEFENSE_CHART_MARKERS for item in value)
         or len(set(value)) != len(value)
     ):
-        raise SaveFormatError("Team rules privileges are invalid.")
+        raise SaveFormatError("Team defense-chart markers are invalid.")
     return value
 
 
@@ -244,8 +244,8 @@ class SavedGame:
         # Run the same strict configuration checks used at the untrusted load boundary.
         config = json.loads(_json(config))
         _validate_config(config)
-        home_privileges = _validate_privileges(home_privileges)
-        away_privileges = _validate_privileges(away_privileges)
+        home_privileges = _validate_defense_chart_markers(home_privileges)
+        away_privileges = _validate_defense_chart_markers(away_privileges)
         if any(
             not isinstance(key, str)
             or len(key) > TEAM_ID_MAX_LENGTH
@@ -284,9 +284,9 @@ class SavedGame:
             "away": {"id": away_id, "fingerprint": _fingerprint(away)},
         }
         if home_privileges:
-            self._teams["home"]["privileges"] = list(home_privileges)
+            self._teams["home"]["defense_chart_markers"] = list(home_privileges)
         if away_privileges:
-            self._teams["away"]["privileges"] = list(away_privileges)
+            self._teams["away"]["defense_chart_markers"] = list(away_privileges)
         self._charts = {"home": home, "away": away}
         self._rosters: tuple[Roster | None, Roster | None] = (None, None)
         self._config = dict(config)
@@ -774,15 +774,22 @@ def _validate(data: Any) -> None:
         _fail()
     _validate_config(data["config"])
     _keys(data["teams"], {"home", "away"})
+    marker_keys = {"privileges", "defense_chart_markers"}
     if data["engine_profile"] == "bowl-bound-m21-v1" and (
         "advanced_ii" in data["config"]
-        or any("privileges" in team for team in data["teams"].values())
+        or any(
+            isinstance(team, dict) and marker_keys.intersection(team)
+            for team in data["teams"].values()
+        )
     ):
         _fail()
     for team in data["teams"].values():
-        if not isinstance(team, dict) or set(team) not in (
+        if not isinstance(team, dict):
+            _fail()
+        marker_fields = marker_keys.intersection(team)
+        if len(marker_fields) > 1 or set(team) not in (
             {"id", "fingerprint"},
-            {"id", "fingerprint", "privileges"},
+            {"id", "fingerprint", *marker_fields},
         ):
             _fail()
         if (
@@ -792,12 +799,14 @@ def _validate(data: Any) -> None:
             or not isinstance(team["fingerprint"], str)
         ):
             _fail()
-        if "privileges" in team:
-            values = team["privileges"]
+        if marker_fields:
+            values = team[next(iter(marker_fields))]
             if (
                 type(values) is not list
                 or len(set(values)) != len(values)
-                or any(type(value) is not str or value not in TEAM_PRIVILEGES for value in values)
+                or any(
+                    type(value) is not str or value not in DEFENSE_CHART_MARKERS for value in values
+                )
             ):
                 _fail()
     if not isinstance(data["commands"], list) or len(data["commands"]) > MAX_COMMANDS:
@@ -838,7 +847,7 @@ def loads_game(
         tape = _Tape(source, [_read_roll(r) for r in data["rolls"]])
         loaded_teams = {side: load_team(data["teams"][side]["id"]) for side in ("home", "away")}
         charts: dict[str, TeamChart] = {}
-        privileges: dict[str, tuple[str, ...]] = {}
+        markers_by_side: dict[str, tuple[str, ...]] = {}
         for side, loaded in loaded_teams.items():
             metadata: TeamFileMetadata | None = None
             if isinstance(loaded, tuple) and len(loaded) == 2:
@@ -849,20 +858,24 @@ def loads_game(
                 chart = loaded
             if not isinstance(chart, TeamChart):
                 _fail()
-            stored = tuple(data["teams"][side].get("privileges", ()))
-            if "privileges" in data["teams"][side]:
-                if metadata is None or metadata.privileges != stored:
+            team_record = data["teams"][side]
+            marker_key = (
+                "defense_chart_markers" if "defense_chart_markers" in team_record else "privileges"
+            )
+            stored = tuple(team_record.get(marker_key, ()))
+            if marker_key in team_record:
+                if metadata is None or metadata.defense_chart_markers != stored:
                     raise SaveFormatError(
-                        "Saved team rules privileges do not match the installed team."
+                        "Saved defense-chart markers do not match the installed team."
                     )
             elif (
                 data["config"].get("advanced_ii", False)
                 and metadata is not None
-                and "W" in metadata.privileges
+                and "W" in metadata.defense_chart_markers
             ):
                 _fail()
             charts[side] = chart
-            privileges[side] = stored
+            markers_by_side[side] = stored
         home, away = charts["home"], charts["away"]
         if any(
             _fingerprint(chart) != data["teams"][side]["fingerprint"]
@@ -878,8 +891,8 @@ def loads_game(
             data["teams"]["away"]["id"],
             data["config"],
             tape,
-            home_privileges=privileges["home"],
-            away_privileges=privileges["away"],
+            home_privileges=markers_by_side["home"],
+            away_privileges=markers_by_side["away"],
         )
         for record in data["commands"]:
             try:

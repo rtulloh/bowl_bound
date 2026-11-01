@@ -56,7 +56,7 @@ PUNT_REFERENCE is reserved in the schema and is not produced by this grammar.
 
 The result is a [schema-v1 cell](chart-schema.md). Column placement is validated when
 constructing the offense/defense/supplemental/special-team record. This function
-does not normalize PAT dice-number-column colors, metadata, or privileges, nor
+does not normalize PAT dice-number-column colors, metadata, or defense-chart markers, nor
 apply published team errata. Those belong to import validation and rules policies.
 
 ## Synthetic example

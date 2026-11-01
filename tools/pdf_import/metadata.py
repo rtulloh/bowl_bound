@@ -30,7 +30,7 @@ class MetadataFact:
 class TeamMetadata:
     power_rating: float
     recovery_range: range
-    privileges: tuple[str, ...]
+    defense_chart_markers: tuple[str, ...]
     evidence: tuple[MetadataFact, ...]
     power_rating_is_placeholder: bool = False
 
@@ -156,7 +156,7 @@ def extract_metadata(
     *,
     use_local_rating_placeholder: bool = False,
 ) -> TeamMetadata:
-    """Extract rating, recovery endpoints, and privilege markers without enforcing options."""
+    """Extract rating, recovery endpoints, and printed defense-chart markers."""
     if type(use_local_rating_placeholder) is not bool:
         raise TypeError("use_local_rating_placeholder must be a boolean")
     try:
@@ -219,16 +219,16 @@ def extract_metadata(
             chart_color_for_rgb(_color(rect)) in {ChartColor.RED, ChartColor.GREEN}
             for rect in header_rects
         ):
-            raise MetadataError("Privilege marker box is present without text")
+            raise MetadataError("Defense-chart marker box is present without text")
         return TeamMetadata(rating, range(10, end + 1), (), tuple(facts), rating_is_placeholder)
     if marker not in {"W", "FBO", "SPBO", "XWC"}:
-        raise MetadataError("Unrecognized privilege marker in supported header box")
+        raise MetadataError("Unrecognized defense-chart marker in supported header box")
     rgb = _background(defense, marker_chars, tight=True)
     if rgb is None:
-        raise MetadataError("Privilege background evidence is missing")
+        raise MetadataError("Defense-chart marker background evidence is missing")
     expected = ChartColor.GREEN if marker == "XWC" else ChartColor.RED
     if chart_color_for_rgb(rgb) is not expected:
-        raise MetadataError("Privilege marker conflicts with its background")
+        raise MetadataError("Defense-chart marker conflicts with its background")
     facts.append(
         _evidence(
             defense,

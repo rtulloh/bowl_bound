@@ -184,14 +184,14 @@ enabled solely because Paydirt has a similarly named feature.
 - Re-read local `docs/reference/bbrules2007.pdf`, printed pp. 16–18 (PDF pp. 19–21),
   for Wild Card, Run/Pass, Nickel Zone, and Red Zone. Paydirt has no matching Bowl
   Bound defensive calls; no NFL behavior was reused.
-- The owner selected the W-coded default. W privileges make Wild Card and Run/Pass
+- The owner selected the W-coded default. W-marked teams get Wild Card and Run/Pass
   free; other teams may use those calls conditionally. Nickel Zone is unconditional.
   Conditional mistakes double eligible yardage under the printed Rule IX exclusions.
   Play 6 Screen counts as a pass for conditional guesses; QR/QT count as pass plays.
 - Implement exact Play 5 Wild Card guesses: run without SOP/BLP, SOP, or BLP. Keep
   dice order and trace only observed rolls. Red Zone is offered only when the line
   of scrimmage is inside the defense's 20.
-- Team privileges now pass through catalog loading, game creation, and private saves.
+- Defense-chart markers now pass through catalog loading, game creation, and private saves.
   Legacy M21 saves keep their six-formation profile. Synthetic tests cover the
   decisions, dice use, traces, conditional doubling, API creation, and save replay.
 - At the time of this review, coaching still selected among the six chart formations;
@@ -309,6 +309,8 @@ enabled solely because Paydirt has a similarly named feature.
   [RULE-031](issues/RULE/RULE-031.md) remain separate implementation tickets.
 - None is enabled by the scope decision. Each stays unavailable until its own
   rulebook review, synthetic test-first implementation, and verification.
+- Per-game settings that let players enable or disable advanced options are
+  future work; Milestone 22 does not add a rules-selection screen.
 
 ## Ticket coverage
 
@@ -353,6 +355,7 @@ rather than additional advanced-option features.
 | Share return and recovery rule logic | [DEV-022](issues/DEV/DEV-022.md) |
 | Deduplicate team discovery and shared constants | [DEV-024](issues/DEV/DEV-024.md) |
 | Document a coaching play-test protocol | [DEV-028](issues/DEV/DEV-028.md) |
+| Remove unused synthetic-team color helper import | [DEV-051](issues/DEV/DEV-051.md) |
 | Correct kickoff status while receiver choice is pending | [FLOW-002](issues/FLOW/FLOW-002.md) |
 | Correct return-foul midpoint rounding | [RULE-012](issues/RULE/RULE-012.md) |
 | Distinguish end-zone return fumbles from non-advances | [RULE-013](issues/RULE/RULE-013.md) |
@@ -363,10 +366,10 @@ rather than additional advanced-option features.
 
 ### Ticket coverage reconciliation — 2026-11-01
 
-Checked the generated tracker against the Milestone 22 plan: all 39 tickets
+Checked the generated tracker against the Milestone 22 plan: all 40 tickets
 assigned to the milestone have individual mappings above. They cover the 14
 advanced-rule items, RULE-010 bounds declarations, ten AI findings, two API
-findings, two CLI findings, three development findings, one flow finding, four
+findings, two CLI findings, four development findings, one flow finding, four
 return-rule findings, and two UI findings. AI-018 is assigned to Milestone 23 for
 full-game coordinator coverage, so its absence here is intentional. No planned
 Milestone 22 change is missing a ticket.

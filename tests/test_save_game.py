@@ -24,6 +24,7 @@ from bowl_bound.save_game import (
     loads_game,
 )
 from bowl_bound.session import PendingDecisionError, SessionFinishedError
+from bowl_bound.team_csv import TeamFileMetadata
 from bowl_bound.timing import Clock
 from tests.synthetic_teams import team_chart, yards
 from tests.test_models import provenance
@@ -337,13 +338,49 @@ def test_structural_validation_rejects_resigned_malformed_fields_before_team_loo
         loads_game(seal(data), lambda _: pytest.fail("malformed save must not look up teams"))
 
 
-def test_m22_save_rejects_nested_privilege_values_before_team_lookup() -> None:
+def test_m22_save_rejects_nested_legacy_marker_values_before_team_lookup() -> None:
     data = json.loads(dumps_game(new()))
     data["engine_profile"] = save_codec.ENGINE_PROFILE
     data["config"]["advanced_ii"] = True
     data["teams"]["home"]["privileges"] = [["W"]]
     with pytest.raises(SaveFormatError):
         loads_game(seal(data), lambda _: pytest.fail("malformed save must not look up teams"))
+
+
+def test_saves_write_defense_chart_markers_and_read_legacy_privileges() -> None:
+    home, away = charts()
+    game = SavedGame.new(
+        home,
+        away,
+        home_id="2002/home",
+        away_id="2002/away",
+        seed=1,
+        home_privileges=("W",),
+        advanced_ii=True,
+    )
+
+    data = json.loads(dumps_game(game))
+    assert data["teams"]["home"]["defense_chart_markers"] == ["W"]
+    assert "privileges" not in data["teams"]["home"]
+
+    data["teams"]["home"]["privileges"] = data["teams"]["home"].pop("defense_chart_markers")
+    home_metadata = TeamFileMetadata(5.5, ("W",), "Home", "a" * 64, ())
+    away_metadata = TeamFileMetadata(5.5, (), "Away", "b" * 64, ())
+    restored = loads_game(
+        seal(data),
+        lambda key: (home, home_metadata) if key == "2002/home" else (away, away_metadata),
+    )
+
+    assert json.loads(dumps_game(restored))["teams"]["home"]["defense_chart_markers"] == ["W"]
+
+
+def test_save_rejects_ambiguous_legacy_and_current_marker_keys() -> None:
+    data = json.loads(dumps_game(new()))
+    data["teams"]["home"]["privileges"] = []
+    data["teams"]["home"]["defense_chart_markers"] = []
+
+    with pytest.raises(SaveFormatError):
+        loads_game(seal(data), lambda _: pytest.fail("ambiguous save must not look up teams"))
 
 
 @pytest.mark.parametrize(

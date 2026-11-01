@@ -80,7 +80,7 @@ def test_metadata_is_extracted_with_own_evidence() -> None:
     result = extract(pages())
     assert result.power_rating == 200.5
     assert result.recovery_range == range(10, 26)
-    assert result.privileges == ("W",)
+    assert result.defense_chart_markers == ("W",)
     assert {fact.label for fact in result.evidence} == {"power_rating", "recovery", "W"}
     assert all(fact.provenance.source_sha256 == "a" * 64 for fact in result.evidence)
 
@@ -100,21 +100,20 @@ def test_missing_or_inconsistent_recovery_is_rejected(recovery: str) -> None:
         extract(pages(recovery=recovery))
 
 
-def test_absent_privilege_is_not_a_wildcard_entitlement() -> None:
-    assert extract(pages(marker="")).privileges == ()
+def test_absent_marker_is_not_a_wildcard_entitlement() -> None:
+    assert extract(pages(marker="")).defense_chart_markers == ()
 
 
 @pytest.mark.parametrize(
     "marker,color", [("FBO", (1, 0, 0)), ("SPBO", (1, 0, 0)), ("XWC", (0, 1, 0))]
 )
-def test_privilege_marker_colors_follow_documented_legend(
+def test_defense_chart_marker_colors_follow_documented_legend(
     marker: str, color: tuple[int, int, int]
 ) -> None:
     with pdfplumber.open(BytesIO(pages(marker=marker))) as pdf:
         defense = defense_with_rects(pdf.pages[1], [rect(color)])
-        assert extract_metadata(pdf.pages[0], defense, "a" * 64, "synthetic.pdf", 1).privileges == (
-            marker,
-        )
+        result = extract_metadata(pdf.pages[0], defense, "a" * 64, "synthetic.pdf", 1)
+        assert result.defense_chart_markers == (marker,)
 
 
 def test_xwc_on_red_background_is_rejected() -> None:
@@ -127,9 +126,8 @@ def test_xwc_on_red_background_is_rejected() -> None:
 def test_later_overlapping_rect_wins_by_paint_order() -> None:
     with pdfplumber.open(BytesIO(pages())) as pdf:
         defense = defense_with_rects(pdf.pages[1], [rect((0, 1, 0)), rect((1, 0, 0))])
-        assert extract_metadata(pdf.pages[0], defense, "a" * 64, "synthetic.pdf", 1).privileges == (
-            "W",
-        )
+        result = extract_metadata(pdf.pages[0], defense, "a" * 64, "synthetic.pdf", 1)
+        assert result.defense_chart_markers == ("W",)
 
 
 def test_ambiguous_covering_rectangle_order_is_rejected() -> None:
@@ -141,7 +139,7 @@ def test_ambiguous_covering_rectangle_order_is_rejected() -> None:
             extract_metadata(pdf.pages[0], defense, "a" * 64, "synthetic.pdf", 1)
 
 
-def test_page_wide_privilege_rectangle_is_rejected() -> None:
+def test_page_wide_marker_rectangle_is_rejected() -> None:
     with pdfplumber.open(BytesIO(pages())) as pdf:
         defense = defense_with_rects(pdf.pages[1], [rect((1, 0, 0), 0, 792, 0, 612)])
         with pytest.raises(MetadataError, match="background"):

@@ -249,8 +249,8 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
                 game_type=body.game_type,
                 start_yards_to_goal=body.start_yards_to_goal,
                 coach_policy=body.coach_policy or f"{body.difficulty or 'medium'}-v9",
-                home_privileges=home_metadata.privileges,
-                away_privileges=away_metadata.privileges,
+                home_privileges=home_metadata.defense_chart_markers,
+                away_privileges=away_metadata.defense_chart_markers,
             )
             session.load_rosters(seasons_root)
         except ValueError as error:

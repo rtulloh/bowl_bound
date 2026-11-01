@@ -1,14 +1,15 @@
 ---
 id: RULE-019
 title: Define and implement Bowl Bound Advanced II defensive options
-status: resolved
+status: open
 priority: Medium
 milestone: '22'
 created-at: 2026-11-01
-resolved-at: 2026-11-01
+resolved-at: null
 closed-at: null
 tags:
 - advanced-option
+- reopened
 links: []
 commits: [e0081ac, 2bea18e]
 ---
@@ -23,8 +24,9 @@ Advanced Rule II lists Wild Card, run/pass, nickel-zone, and red-zone defenses, 
 - Offer only legal calls, resolve them in the engine through the Priority Chart, and retain rule-table rolls in traces without fabricating chart provenance.
 - Cover exact defensive-die ranges, Play 5 option branches, conditional yardage doubling, QR/QT classification, Red Zone eligibility, API/CLI actions, and save replay with synthetic charts.
 - Keep QR/QT pass classification limited to conditional-call correctness; fixed result cells remain keyed to the selected play and resolved SOP/BLP branch.
-- Reject malformed saved privilege arrays, including nested JSON values, through the normal invalid-save error path.
-- Test-first evidence: all nine initial synthetic Advanced II cases failed before the engine exposed these calls. Synthetic coverage now checks eligibility, every defensive roll total, Play 5 branches, QR/QT and Screen classification, Red Zone limits, API/CLI actions, save replay, and malformed privilege data.
+- Reject malformed saved marker arrays, including nested JSON values, through the normal invalid-save error path.
+- Rename the persisted team metadata key and matching metadata model property from `privileges` to `defense_chart_markers`; keep legacy team bundles and saves readable.
+- Test-first evidence: all nine initial synthetic Advanced II cases failed before the engine exposed these calls. Synthetic coverage now checks eligibility, every defensive roll total, Play 5 branches, QR/QT and Screen classification, Red Zone limits, API/CLI actions, save replay, and malformed marker data.
 - Tested commits: `e0081ac` implements Advanced II; cumulative regression was run on `2bea18e`.
 - Validation: 2,904 Python tests passed at 92.76% branch-aware coverage; 35 focused Advanced II tests; 119 frontend tests; production build; npm audit with zero vulnerabilities; 33 real-engine browser tests; Ruff lint/format, pip check, and 18 issue-index tests all passed.
 - Automated verification is complete. Owner play-test confirmation remains before closure.
@@ -42,3 +44,8 @@ Rulebook review clarified that QR/QT affect whether a conditional Run/Pass guess
 
 --- 2026-11-01 14:05 ---
 Resolved after synthetic tests and cumulative regression passed on `2bea18e`. The new defense-result tests distinguish conditional guess classification from fixed play-row results. Kept open for owner play-test confirmation.
+
+--- 2026-11-01 ---
+Reopened by owner request to rename the persisted team metadata marker field to
+`defense_chart_markers`, now that the rulebook meaning of W is confirmed. Preserve
+legacy bundle and save reads while writing the explicit marker name.

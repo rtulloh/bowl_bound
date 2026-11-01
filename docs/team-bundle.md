@@ -118,10 +118,10 @@ team_name: Example Valley
 nickname: Examples
 season: 2007
 power_rating: 100.0
-privileges: []
+defense_chart_markers: []
 source_sha256: <64 lowercase hex characters>
 source_filename: synthetic.pdf
-team_file_version: 2
+team_file_version: 4
 status: validated
 ```
 
@@ -131,34 +131,39 @@ status: validated
 | `nickname` | The defense-page header (usually a mascot). Display only; never an identifier. |
 | `season` | Positive integer. Must equal the season folder's name. |
 | `power_rating` | Printed rating or a marked local placeholder (50-500). Recorded only; the game does not use it. |
-| `power_rating_origin` | Present only in version 3 with the exact value `local-only-placeholder`; identifies an owner-approved private testing value. |
-| `privileges` | Printed markers (`W`, `FBO`, `SPBO`, `XWC`), unique. Empty means none were printed. |
+| `power_rating_origin` | Present only in legacy version 3 or current version 5 with the exact value `local-only-placeholder`; identifies an owner-approved private testing value. |
+| `defense_chart_markers` | Printed markers (`W`, `FBO`, `SPBO`, `XWC`), unique. Empty means none were printed. |
 | `source_sha256` | SHA-256 of the exact PDF bytes that were parsed. |
 | `source_filename` | The PDF's file name. |
-| `team_file_version` | Writers use integer `2` for source ratings and `3` for marked local placeholders. Readers also accept legacy version `1`. Versions 2 and 3 allow empty RGB fields on metadata provenance rows when no fill was measured. |
+| `team_file_version` | Writers use integer `4` for source ratings and `5` for marked local placeholders. Readers accept versions 1–3 with the legacy `privileges` key. Versions 2–5 allow empty RGB fields on metadata provenance rows when no fill was measured. |
 | `status` | `validated`. |
 
-Version 3 is reserved for private exports that use the importer's explicit local rating
+Version 5 is reserved for private exports that use the importer's explicit local rating
 option. It requires `power_rating_origin: local-only-placeholder` and has no PDF rating
 provenance row. Never treat that value as printed source data or publish the team bundle.
 
-A marker is recorded as printed. **No privilege is ever defaulted**, and an absent marker is
-not an entitlement. The importer decides nothing from a marker. Per the rulebook, `FBO`
-(Free Block Option) and `SPBO` identify teams with an outstanding kick rush, printed black
-on a red field in the upper left corner of the defensive chart. Using the option belongs to
-the later rules milestones. The meanings of `W` and `XWC` are not yet confirmed. The legend
-maps `W`, `FBO`, and `SPBO` to a red field and `XWC` to a green field; a marker whose
+A marker is recorded as printed. Missing markers stay absent and grant no entitlement by
+default. Advanced II-1(A)(i) says a black `W` on a red field in the upper-left
+defensive-chart corner grants Free Wild Card use when the point-spread rule is not used;
+other teams may use a Conditional Wild Card. The approved Bowl Bound profile does not use
+point spreads, so the W-coded rule applies. Eligible teams may also use Run/Pass defenses
+for free under Advanced II-2. Per the rulebook, `FBO` (Free Block Option) and `SPBO` identify
+teams with an outstanding kick rush, printed black on a red field in the upper-left corner of
+the defensive chart. Using the option belongs to a later rules milestone. `XWC` belongs to an
+optional alternate eligibility method and is inactive in the approved W-coded profile. The
+legend maps `W`, `FBO`, and `SPBO` to a red field and `XWC` to a green field; a marker whose
 measured background disagrees is rejected.
 
 The reader parses YAML strictly: duplicate keys, anchors, aliases, tags, merge keys, unknown
 or missing keys, booleans where numbers are expected, non-finite numbers, and unknown
-privileges all fail. Strings that look like numbers or booleans (a team called `2002` or
+defense-chart markers all fail. Legacy versions retain their original `privileges` key when read.
+Strings that look like numbers or booleans (a team called `2002` or
 `yes`) are quoted on write and come back as strings.
 
 ## `provenance/<team-slug>.csv`
 
 One row per chart cell and PAT outcome, plus one `metadata` row for each piece of measured
-metadata evidence (printed rating, recovery text, privilege marker). A local placeholder
+metadata evidence (printed rating, recovery text, defense-chart marker). A local placeholder
 rating has no PDF evidence row:
 
 ```text
