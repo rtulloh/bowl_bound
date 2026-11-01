@@ -2,6 +2,7 @@
 
 from collections.abc import Iterator, Sequence
 from contextlib import contextmanager
+from dataclasses import replace
 from random import Random
 from unittest.mock import patch
 
@@ -40,6 +41,21 @@ class _ObservedRandom(Random):
         return selected
 
 
+def _same_observation(observed: CoachObservation, expected: CoachObservation) -> bool:
+    """Match policy-filtered actions while retaining every other public fact."""
+    return (
+        replace(
+            observed,
+            offense=expected.offense,
+            defense=expected.defense,
+            special=expected.special,
+            game_actions=expected.game_actions,
+            choices=expected.choices,
+        )
+        == expected
+    )
+
+
 @contextmanager
 def capture_preferences(
     coach: BaselineCoach,
@@ -48,8 +64,10 @@ def capture_preferences(
 ) -> Iterator[list[dict[str, float]]]:
     """Observe this coach only; no global RNG patch, extra draw or live dice access.
 
-    The final draw is the selected policy mixture; earlier discarded fallback
-    draws are not reported. A deterministic decision has no draws.
+    Candidate filtering is permitted when matching the supplied observation;
+    other public facts must still match, excluding future-turn previews. The final
+    draw is the selected policy mixture; earlier fallback draws are not reported.
+    A deterministic decision has no draws.
     """
     draws: list[dict[str, float]] = []
     original = coach._random
@@ -57,7 +75,9 @@ def capture_preferences(
     def observed(context: CoachObservation, role: str) -> Random:
         # coach_step also prepares the next concealed turn; never export its
         # preview mixture as evidence for the call that just committed.
-        selected_draws = draws if observation is None or observation == context else []
+        selected_draws = (
+            draws if observation is None or _same_observation(context, observation) else []
+        )
         return _ObservedRandom(original(context, role), selected_draws)
 
     with patch.object(coach, "_random", observed):

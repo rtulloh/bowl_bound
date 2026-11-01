@@ -191,7 +191,7 @@ contains Paydirt play names, down/distance arithmetic, or priority handling.
 | `GET /api/health` | `{"status": "healthy", "service": "bowl-bound"}` |
 | `GET /api/version` | Public `version` and PEP440 `python_version`; see [versioning](versioning.md) |
 | `GET /api/teams` | `{teams: [{id, name, season}], problems: [{id, reason}]}` |
-| `POST /api/games` | Body `{home, away, seed?, mode?, game_type?, start_yards_to_goal?, difficulty?, coach_policy?}`; choose `difficulty` or `coach_policy`, never both; omitted policy means Medium v2; `game_type` is `regular` (default) or `postseason`; browser sends `mode: "regulation"`; returns `{game_id, seed, coach_policy, view}` |
+| `POST /api/games` | Body `{home, away, seed?, mode?, game_type?, start_yards_to_goal?, difficulty?, coach_policy?}`; choose `difficulty` or `coach_policy`, never both; omitted policy means Medium v3; `game_type` is `regular` (default) or `postseason`; browser sends `mode: "regulation"`; returns `{game_id, seed, coach_policy, view}` |
 | `GET /api/games/{id}` | `{game_id, seed, coach_policy, view}` |
 | `GET /api/games/{id}/save` | Private JSON download; no chart tables; does not advance dice or choices |
 | `POST /api/games/load` | Raw save JSON body; returns independent `{game_id, seed, coach_policy, view}` after validation; 422 invalid/incompatible/unavailable teams, 413 over 2 MiB |
@@ -206,9 +206,9 @@ return human-only `turn` controls. Human kick/decision/action endpoints accept t
 same query and validate those controls under the game lock. See the
 [coaching API contract](coaching.md#api). Manual endpoints remain compatible.
 
-`difficulty` is `easy`, `medium` or `hard`. New games use the matching v2 policy.
-Explicit `coach_policy` accepts `baseline`, `baseline-v2`, `chart-v1`, `chart-v2`,
-and Easy/Medium/Hard policies in v1 or v2; it is an alternative versioned
+`difficulty` is `easy`, `medium` or `hard`. New games use the matching v3 policy.
+Explicit `coach_policy` accepts `baseline`, `baseline-v2`, chart policies v1–v3,
+and Easy/Medium/Hard policies in v1–v3; it is an alternative versioned
 interface, not a second difficulty override. Example public-sample create body:
 
 ```json

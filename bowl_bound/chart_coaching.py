@@ -54,9 +54,10 @@ class ChartAwareCoach(BaselineCoach):
             return self._cache[key]
         candidates = observation.defense if role == "defense" else observation.offense
         if role == "offense":
+            late_quarter = {2, 4} if self.version >= 3 else {4}
             late = (
                 not observation.overtime
-                and observation.quarter == 4
+                and observation.quarter in late_quarter
                 and observation.remaining <= self.behavior.late_seconds
             )
             if observation.down == 4 or late:

@@ -57,8 +57,9 @@ def test_easy_helper_defaults_on_and_toggle_preserves_every_saved_fact() -> None
     assert saved_facts(app.game) == before
 
 
-def test_easy_v2_keeps_the_helper_available() -> None:
-    app = terminal(version=2)
+@pytest.mark.parametrize("version", [2, 3])
+def test_new_easy_policy_keeps_the_helper_available(version: int) -> None:
+    app = terminal(version=version)
     app.display()
 
     assert "Easy helper" in app.output.getvalue()

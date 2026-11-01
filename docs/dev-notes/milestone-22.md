@@ -95,6 +95,18 @@ enabled solely because Paydirt has a similarly named feature.
   loss to prevent a safety. Legacy coaching policies retain their prior behavior;
   the updated policy uses a new version.
 
+### Situation-aware coaching review — 2026-11-01
+
+- Reviewed `paydirt/computer_ai.py:311-484` for its score/time and field-position
+  strategy gates, `computer_ai.py:827-864` for late two-point choices, and
+  `offense_strategy.py:83` for bounded conversion scoring. Adapt the separation
+  of situation facts from policy preferences and the call-distribution audit.
+  Do not copy Paydirt's NFL field-goal distance tiers or thresholds.
+- Bowl Bound's rulebook, printed pp. 9–10 (PDF pp. 12–13), makes field-goal
+  availability and success a team-chart procedure based on line-of-scrimmage
+  distance, and offers kick or two-point conversion choices. The engine and
+  imported chart remain authoritative; no fixed NFL kick range is introduced.
+
 ## Ticket coverage
 
 | Milestone 22 change or decision | Ticket |
@@ -115,22 +127,45 @@ enabled solely because Paydirt has a similarly named feature.
 | Advanced kickoff/punt choices and punt/kickoff returns, Advanced III-IV | [RULE-032](issues/RULE/RULE-032.md) |
 | Guaranteed in-bounds/out-of-bounds declarations, already requested | [RULE-010](issues/RULE/RULE-010.md) |
 
-Other work already assigned to Milestone 22 has tickets in the
-[issue tracker](issue-tracker.md): AI-011–AI-017 and AI-019; API-002/003;
-CLI-044/045; DEV-022/024/028; FLOW-002; RULE-012–015; and UI-036/037.
-These are existing coaching, API, CLI, development, flow, rules-correction, and
-presentation findings, rather than additional untracked advanced-option features.
+Other Milestone 22 work is mapped ticket by ticket below. These are existing
+coaching, API, CLI, development, flow, rules-correction, and presentation findings,
+rather than additional advanced-option features.
+
+| Tracked change | Ticket |
+| --- | --- |
+| Engine-owned kneel-out safety query | [AI-011](issues/AI/AI-011.md) |
+| Score-, time-, chart-, and aggression-aware fourth-down and conversion coaching | [AI-012](issues/AI/AI-012.md) |
+| Urgency and lead protection in Easy/Medium play selection | [AI-013](issues/AI/AI-013.md) |
+| Situation-bucketed Hard repetition discount | [AI-014](issues/AI/AI-014.md) |
+| Easy/Medium defensive situational guards | [AI-015](issues/AI/AI-015.md) |
+| Baseline decision-policy safety and fallback reporting | [AI-016](issues/AI/AI-016.md) |
+| Preserve disabled choices and engine reasons in coached turns | [AI-017](issues/AI/AI-017.md) |
+| Post-game summary of computer call history | [AI-019](issues/AI/AI-019.md) |
+| Keep Hard coaching safe when enforcement changes a try's spot | [AI-020](issues/AI/AI-020.md) |
+| Map coordinator errors to clear client responses | [API-002](issues/API/API-002.md) |
+| Bind games to control mode and make repeated coach posts safe | [API-003](issues/API/API-003.md) |
+| Improve terminal input errors, case handling, and paused-game loading | [CLI-044](issues/CLI/CLI-044.md) |
+| Remove obsolete manual-mode branches | [CLI-045](issues/CLI/CLI-045.md) |
+| Share return and recovery rule logic | [DEV-022](issues/DEV/DEV-022.md) |
+| Deduplicate team discovery and shared constants | [DEV-024](issues/DEV/DEV-024.md) |
+| Document a coaching play-test protocol | [DEV-028](issues/DEV/DEV-028.md) |
+| Correct kickoff status while receiver choice is pending | [FLOW-002](issues/FLOW/FLOW-002.md) |
+| Correct return-foul midpoint rounding | [RULE-012](issues/RULE/RULE-012.md) |
+| Distinguish end-zone return fumbles from non-advances | [RULE-013](issues/RULE/RULE-013.md) |
+| Correct return-penalty acceptance and end-zone reasoning | [RULE-014](issues/RULE/RULE-014.md) |
+| Correct end-zone trace labels and decline text | [RULE-015](issues/RULE/RULE-015.md) |
+| Deliver engine commentary and highlights to the browser | [UI-036](issues/UI/UI-036.md) |
+| Enable the Spike control and remove dead timeout mappings | [UI-037](issues/UI/UI-037.md) |
 
 ### Ticket coverage reconciliation — 2026-11-01
 
-Checked the generated tracker against the Milestone 22 plan and this feature map:
-all 37 tickets assigned to Milestone 22 are represented here. They cover the 14
-advanced-rule items above, RULE-010 bounds declarations, eight AI findings, two
-API findings, two CLI findings, three development findings, one flow finding,
-four return-rule findings, and two UI findings. The active kneel-safety work is
-tracked by AI-011. AI-018 is assigned to Milestone 23 for full-game coordinator
-coverage, so its absence from this milestone is intentional. No untracked M22
-change was identified in this reconciliation.
+Checked the generated tracker against the Milestone 22 plan: all 38 tickets
+assigned to the milestone have individual mappings above. They cover the 14
+advanced-rule items, RULE-010 bounds declarations, nine AI findings, two API
+findings, two CLI findings, three development findings, one flow finding, four
+return-rule findings, and two UI findings. AI-018 is assigned to Milestone 23 for
+full-game coordinator coverage, so its absence here is intentional. No planned
+Milestone 22 change is missing a ticket.
 
 The owner explicitly removed a separate normal-runoff action; kneeldown is the
 clock-draining play. No ticket is created to restore that rejected behavior.

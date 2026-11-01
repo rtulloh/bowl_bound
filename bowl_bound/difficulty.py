@@ -6,7 +6,7 @@ variety. No policy owns or changes gameplay dice.
 """
 
 from collections import Counter, deque
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from hashlib import sha256
 from json import dumps
 from random import Random
@@ -17,6 +17,7 @@ from .coaching_evaluation import ActionEstimate, evaluate_action
 from .coaching_profiles import behavior_for_policy
 from .models import TeamChart
 from .player_coaching import estimate_plays
+from .session import SessionPhase
 
 AGGRESSION = {
     mode: behavior_for_policy(f"{mode}-v1").aggression for mode in ("easy", "medium", "hard")
@@ -35,8 +36,8 @@ class DifficultyCoach(ChartAwareCoach):
     ) -> None:
         if mode not in AGGRESSION:
             raise ValueError("difficulty must be easy, medium or hard")
-        if type(version) is not int or version not in {1, 2}:
-            raise ValueError("difficulty policy version must be 1 or 2")
+        if type(version) is not int or version not in {1, 2, 3}:
+            raise ValueError("difficulty policy version must be 1, 2 or 3")
         super().__init__(seed, home, away, version=version)
         self.mode = mode
         self.behavior = behavior_for_policy(f"{mode}-v{version}")
@@ -114,10 +115,94 @@ class DifficultyCoach(ChartAwareCoach):
 
     def offense(self, observation: CoachObservation) -> str:
         self.analysis_fallback = False
+        if (
+            self.version >= 3
+            and not observation.overtime
+            and observation.quarter in {2, 4}
+            and 0 < observation.remaining <= 20
+            and observation.score_difference < 0
+            and "hail_mary" in observation.game_actions
+        ):
+            return "hail_mary"
         fallback = self._basic_offense(observation)
-        if self.mode != "hard" or not observation.offense or fallback == "kneel":
+        if observation.phase == SessionPhase.TWO_POINT_TRY.value and (
+            observation.down != 1 or observation.yards_to_goal != 2 or observation.distance != 2
+        ):
+            # The evaluator models canonical tries from the two. Keep an
+            # engine-adjusted attempt playable without inventing a rollout.
             return fallback
-        return self._select(observation, "offense", fallback)
+        if not observation.offense or fallback == "kneel":
+            return fallback
+        if self.version < 3:
+            return (
+                self._select(observation, "offense", fallback) if self.mode == "hard" else fallback
+            )
+
+        late_half = (
+            not observation.overtime
+            and observation.quarter in {2, 4}
+            and observation.remaining <= self.behavior.late_seconds
+        )
+        fourth_down = observation.down == 4
+        if self.mode != "hard" and not fourth_down and not late_half:
+            return fallback
+        selection = observation
+        needs_touchdown = (
+            not observation.overtime
+            and observation.quarter == 4
+            and observation.remaining <= self.behavior.chase_seconds
+            and observation.score_difference <= -4
+        )
+        protects_multi_score_lead = (
+            not observation.overtime
+            and observation.quarter == 4
+            and observation.remaining <= self.behavior.protect_seconds
+            and observation.score_difference >= self.behavior.large_lead_points
+            and fourth_down
+        )
+        if needs_touchdown:
+            selection = replace(
+                observation,
+                special=(),
+                game_actions=tuple(key for key in observation.game_actions if key == "hail_mary"),
+            )
+        elif protects_multi_score_lead:
+            selection = replace(
+                observation,
+                offense=(),
+                special=tuple(key for key in observation.special if key in {"punt", "field_goal"}),
+                game_actions=(),
+            )
+        legal = selection.offense + selection.special + selection.game_actions
+        if not legal:
+            return fallback
+        selection_fallback = fallback if fallback in legal else safe_choice("", legal).key
+        return self._select(selection, "offense", selection_fallback)
+
+    def decision(self, observation: CoachObservation) -> str:
+        """Apply versioned margin-aware try choices before the baseline fallback."""
+        choices = observation.choices
+        if (
+            self.version >= 3
+            and not observation.overtime
+            and observation.quarter == 4
+            and "conversion:kick" in choices
+            and "conversion:two" in choices
+        ):
+            if observation.score_difference <= self.behavior.two_point_tie_margin:
+                return "conversion:two"
+            if (
+                observation.score_difference == self.behavior.two_point_lead_margin
+                and observation.remaining <= self.behavior.two_point_lead_seconds
+                and self.aggression >= self.behavior.two_point_aggression_threshold
+            ):
+                return "conversion:two"
+            if (
+                observation.score_difference >= self.behavior.large_lead_points
+                and observation.remaining <= self.behavior.protect_seconds
+            ):
+                return "conversion:kick"
+        return super().decision(observation)
 
     def defense(self, observation: CoachObservation) -> str:
         self.analysis_fallback = False
@@ -157,8 +242,16 @@ class DifficultyCoach(ChartAwareCoach):
         self, observation: CoachObservation, role: str, key: str, weight: float
     ) -> float:
         recent = Counter(self._recent[(observation.side, role)])
-        aggressive = key in {"7", "8", "9"} if role == "offense" else key == "F"
-        preference = 1 + self.aggression if aggressive else 1
+        if role == "offense" and self.version >= 3:
+            if observation.down == 4 and key in tuple("123456789"):
+                preference = 1 + self.aggression
+            elif key in {"punt", "field_goal"}:
+                preference = 2 - self.aggression
+            else:
+                preference = 1 + self.aggression if key in {"7", "8", "9"} else 1
+        else:
+            aggressive = key in {"7", "8", "9"} if role == "offense" else key == "F"
+            preference = 1 + self.aggression if aggressive else 1
         return weight * preference / (1 + recent[key])
 
     def _selection_role(self, role: str) -> str:

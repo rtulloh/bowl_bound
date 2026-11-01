@@ -23,7 +23,7 @@ def new(policy: str = "chart-v1") -> SavedGame:
     )
 
 
-@pytest.mark.parametrize("policy", ["chart-v1", "chart-v2"])
+@pytest.mark.parametrize("policy", ["chart-v1", "chart-v2", "chart-v3"])
 def test_chart_policy_is_saved_and_restores_identical_future_calls_and_dice(policy: str) -> None:
     teams = default_teams()
     game = new(policy)
@@ -133,7 +133,7 @@ def test_cli_hard_flag_and_legacy_chart_resume_preserve_distinct_policies(
         )
         == 0
     )
-    assert policies == ["hard-v2"]
+    assert policies == ["hard-v3"]
     path = tmp_path / "private-test.json"
     game = SavedGame.new(
         *teams,
@@ -145,10 +145,10 @@ def test_cli_hard_flag_and_legacy_chart_resume_preserve_distinct_policies(
     )
     path.write_text(dumps_game(game))
     assert main(["--seasons", str(tmp_path), "--load", str(path), "--compact"]) == 0
-    assert policies == ["hard-v2", "chart-v1"]
+    assert policies == ["hard-v3", "chart-v1"]
 
 
-@pytest.mark.parametrize("policy", ["chart-v1", "chart-v2"])
+@pytest.mark.parametrize("policy", ["chart-v1", "chart-v2", "chart-v3"])
 def test_api_can_opt_in_without_exposing_policy_plan(tmp_path: Path, policy: str) -> None:
     ids = [write_team(tmp_path, chart) for chart in default_teams()]
     client = TestClient(create_app(tmp_path))

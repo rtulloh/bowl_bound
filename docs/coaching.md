@@ -131,9 +131,9 @@ see [attribution](ATTRIBUTION.md). No Paydirt runtime dependency was added.
 ## API
 
 `POST /api/games` accepts `difficulty: "easy" | "medium" | "hard"`; omitted means
-Medium. New games use the corresponding v2 policy. Alternatively, explicit
-`coach_policy` accepts `baseline`, `baseline-v2`, `chart-v1`, `chart-v2`, and the
-Easy/Medium/Hard v1 or v2 policies; it cannot be combined with `difficulty`.
+Medium. New games use the corresponding v3 policy. Alternatively, explicit
+`coach_policy` accepts `baseline`, `baseline-v2`, chart policies v1–v3, and the
+Easy/Medium/Hard v1–v3 policies; it cannot be combined with `difficulty`.
 `baseline` and chart policies are compatibility/testing choices, not additional
 player-facing difficulty levels. New/load/get responses report `coach_policy`;
 loading restores the saved version, irrespective of setup selections.
@@ -168,13 +168,17 @@ expandable toss/chart audits never generate, reconstruct or reorder rolls.
 ### Versioned behavior profiles
 
 `bowl_bound/coaching_profiles.py` groups immutable preference parameters for the
-v1 and v2 policies. The persisted legacy baseline identifier remains `baseline`.
+versioned policies. The persisted legacy baseline identifier remains `baseline`.
 Profiles name sample/cache/history bounds, mixture temperature/exploration,
 aggression, late-game thresholds and utility coefficients. These are coaching
 preferences, not football rules, configurable difficulty odds or calibrated
 expected points. Version 2 consults the engine's `can_kneel_out_game` query before
 choosing a kneel; v1 keeps its original selection stream and heuristic. New games
-use v2, while existing saves retain their recorded policy.
+use v3, while existing saves retain their recorded policy. Version 3 adds
+chart-backed fourth-down and late-half choices, score-aware fourth-quarter
+conversion preferences, and an offered last-snap Hail Mary for a trailing team.
+Its field-goal options come from the engine and team chart, not a fixed distance
+threshold. Existing v1/v2 policies keep their recorded behavior.
 
 Audit JSON includes `behavior_profile` and `audit_profile` for each game. The
 separate `coaching-audit-v1` profile names replay and advisory concentration

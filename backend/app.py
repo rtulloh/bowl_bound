@@ -65,6 +65,10 @@ class NewGame(BaseModel):
             "easy-v2",
             "medium-v2",
             "hard-v2",
+            "chart-v3",
+            "easy-v3",
+            "medium-v3",
+            "hard-v3",
         ]
         | None
     ) = None
@@ -175,7 +179,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
                 mode=body.mode,
                 game_type=body.game_type,
                 start_yards_to_goal=body.start_yards_to_goal,
-                coach_policy=body.coach_policy or f"{body.difficulty or 'medium'}-v2",
+                coach_policy=body.coach_policy or f"{body.difficulty or 'medium'}-v3",
             )
             session.load_rosters(seasons_root)
         except ValueError as error:

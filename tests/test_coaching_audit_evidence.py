@@ -179,6 +179,19 @@ def test_preference_capture_excludes_next_turn_previews() -> None:
     assert len(draws) == 1 and set(draws[0]) == set(current.offense)
 
 
+def test_preference_capture_keeps_filtered_candidates_but_excludes_next_turn() -> None:
+    coach = BaselineCoach(31)
+    current = observation()
+    filtered = replace(current, offense=("1", "2"), special=(), game_actions=())
+    preview = replace(filtered, play_number=current.play_number + 1)
+
+    with audit.capture_preferences(coach, observation=current) as draws:
+        coach._random(filtered, "offense").choices(filtered.offense, weights=(1, 3))
+        coach._random(preview, "offense").choices(preview.offense, weights=(1, 3))
+
+    assert draws == [{"1": 0.25, "2": 0.75}]
+
+
 def test_json_serialization_preserves_counter_counts_not_counted_pairs() -> None:
     from collections import Counter
 

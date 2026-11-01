@@ -46,6 +46,11 @@ class CoachBehavior:
     potential_distance_discount: float = 0.03
     late_lead_bonus: int = 4
     late_tie_bonus: int = 1
+    large_lead_points: int = 9
+    two_point_tie_margin: int = -2
+    two_point_lead_margin: int = -1
+    two_point_lead_seconds: int = 60
+    two_point_aggression_threshold: float = 0.5
 
 
 BASELINE_V1 = CoachBehavior("baseline-v1")
@@ -65,6 +70,10 @@ CHART_V2 = replace(CHART_V1, name="chart-v2")
 EASY_V2 = replace(EASY_V1, name="easy-v2")
 MEDIUM_V2 = replace(MEDIUM_V1, name="medium-v2")
 HARD_V2 = replace(HARD_V1, name="hard-v2")
+CHART_V3 = replace(CHART_V2, name="chart-v3")
+EASY_V3 = replace(EASY_V2, name="easy-v3")
+MEDIUM_V3 = replace(MEDIUM_V2, name="medium-v3")
+HARD_V3 = replace(HARD_V2, name="hard-v3")
 
 
 def behavior_for_policy(policy: str) -> CoachBehavior:
@@ -80,6 +89,10 @@ def behavior_for_policy(policy: str) -> CoachBehavior:
         ("easy-v2", EASY_V2),
         ("medium-v2", MEDIUM_V2),
         ("hard-v2", HARD_V2),
+        ("chart-v3", CHART_V3),
+        ("easy-v3", EASY_V3),
+        ("medium-v3", MEDIUM_V3),
+        ("hard-v3", HARD_V3),
     ):
         if policy == key:
             return profile

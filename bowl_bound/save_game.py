@@ -248,7 +248,7 @@ class SavedGame:
         self._rosters: tuple[Roster | None, Roster | None] = (None, None)
         self._config = dict(config)
         self._config.setdefault("coach_seed", randbits(63))
-        if self.coach_policy in {"chart-v1", "chart-v2"}:
+        if self.coach_policy in {"chart-v1", "chart-v2", "chart-v3"}:
             from .chart_coaching import ChartAwareCoach
 
             version = int(self.coach_policy[-1])
@@ -260,6 +260,9 @@ class SavedGame:
             "easy-v2",
             "medium-v2",
             "hard-v2",
+            "easy-v3",
+            "medium-v3",
+            "hard-v3",
         }:
             from .difficulty import DifficultyCoach
 
@@ -362,7 +365,7 @@ class SavedGame:
         with self._lock:
             if human_side not in {"home", "away"}:
                 raise ValueError("human side must be home or away")
-            if self.coach_policy not in {"easy-v1", "easy-v2"}:
+            if self.coach_policy not in {"easy-v1", "easy-v2", "easy-v3"}:
                 return False
             view = self.view()
             if (
@@ -544,6 +547,10 @@ def _validate_config(config: Any) -> None:
             "easy-v2",
             "medium-v2",
             "hard-v2",
+            "easy-v3",
+            "medium-v3",
+            "hard-v3",
+            "chart-v3",
         }
     ):
         _fail()
