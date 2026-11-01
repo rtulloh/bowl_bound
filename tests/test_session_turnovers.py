@@ -15,7 +15,8 @@ from bowl_bound.models import (
     SpecialTeamsCell,
     SpecialTeamsColumn,
 )
-from bowl_bound.session import PendingDecisionError, PlaySession
+from bowl_bound.session import PendingDecisionError, PlaySession, _turnover_trace_entry
+from bowl_bound.turnovers import TurnoverTrace
 from tests.synthetic_teams import default_teams, team_chart
 from tests.test_models import provenance
 
@@ -171,3 +172,12 @@ def test_defensive_end_zone_recovery_can_be_returned() -> None:
         "fumble_recovery",
         "end_zone_recovery_return",
     ]
+
+
+def test_end_zone_depth_trace_labels_the_roll_as_depth() -> None:
+    entry = TurnoverTrace("end_zone_depth", "Alpha Tech", OffensiveRoll(3, 2, 4), None)
+
+    trace = _turnover_trace_entry(entry)
+
+    assert trace.section == "end_zone_depth"
+    assert trace.cell == "depth"

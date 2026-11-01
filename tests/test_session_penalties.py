@@ -5,15 +5,18 @@ from dataclasses import replace
 import pytest
 
 from bowl_bound.dice import DefensiveRoll, OffensiveRoll, ScriptedDice
+from bowl_bound.game_state import FieldState, Possession
 from bowl_bound.models import (
     NormalizedCell,
     PenaltyCode,
     PenaltyData,
     PenaltyTeam,
     Play,
+    Priority,
     ResultKind,
 )
-from bowl_bound.session import PlaySession
+from bowl_bound.resolution import PlayResolution, resolve_cells
+from bowl_bound.session import PlaySession, _penalty_result_text
 from tests.synthetic_teams import team_chart, yards
 from tests.test_models import provenance
 
@@ -58,6 +61,20 @@ def test_penalty_snap_waits_for_explicit_choice_without_extra_dice() -> None:
     with pytest.raises(RuntimeError, match="penalty decision"):
         session.snap("1", "A", dice=dice)
     assert dice.offensive() == sentinel
+
+
+def test_f_endzone_decline_text_names_its_fixed_one_yard_location() -> None:
+    offense = NormalizedCell(ResultKind.FUMBLE, provenance(), yards=22)
+    defense = NormalizedCell(
+        ResultKind.TOUCHDOWN,
+        provenance(),
+        priority=Priority.BRACKETED,
+    )
+    prepared = PlayResolution(Play.ONE, Play.ONE, resolve_cells(offense, defense), ())
+
+    text = _penalty_result_text(prepared, FieldState(Possession.HOME, 50, 1, 10))
+
+    assert "1 yard into the defenders' end zone" in text
 
 
 def test_accepting_one_of_multiple_penalties_does_not_sum_them() -> None:

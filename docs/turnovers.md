@@ -40,6 +40,8 @@ Goal lines are 100 yards apart; each end line is ten yards beyond its goal line.
 - An interception on/beyond the defenders' end line is placed nine yards deep.
   A fumble there instead rolls the white-face sum for its live depth **before**
   the separate recovery roll (`end_zone_depth`, then `fumble_recovery`).
+- A Priority Chart `F_ENDZONE` result places the live fumble one yard into the
+  defenders' end zone; traces distinguish that depth fact from a recovery roll.
 - End-zone returns subtract the actual depth. A return that never crosses its
   own goal line is a touchback; a return begun in the field and carried backward
   across its own goal line is a safety, as is an own-recovery return taken backward

@@ -1507,6 +1507,10 @@ def _pending_view(
 def _penalty_result_text(resolution: PlayResolution, field: FieldState) -> str:
     """Describe only prepared facts; do not resolve turnovers or consume dice."""
     result = resolution.result
+    if result.defensive_end_zone_depth is not None:
+        depth = result.defensive_end_zone_depth
+        unit = "yard" if depth == 1 else "yards"
+        return f"fumble {depth} {unit} into the defenders' end zone; recovery still to be resolved"
     if result.kind in {ResultKind.INTERCEPTION, ResultKind.FUMBLE}:
         name = result.kind.value
         if result.yards is None:
@@ -1600,7 +1604,12 @@ def _gain_text(kind: ResultKind | None, yards: int) -> str:
 def _turnover_trace_entry(entry: TurnoverTrace) -> TraceEntry:
     """Adapt a turnover roll into the browser's engine-owned trace shape."""
     roll = entry.roll
-    cell = "recovery" if entry.cell is None else format_cell(entry.cell)
+    if entry.cell is not None:
+        cell = format_cell(entry.cell)
+    elif entry.section == "end_zone_depth":
+        cell = "depth"
+    else:
+        cell = "recovery"
     return TraceEntry(
         section=entry.section,
         team=entry.team_name,
