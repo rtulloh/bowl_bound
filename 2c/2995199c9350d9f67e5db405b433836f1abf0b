@@ -1,0 +1,33 @@
+backend/app.py
+  s_ed54ab581b3d60::t_a2122f419ee9db 1,39-44,50,204-213,312,341,434,437-440
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_d3069cfb12c65e 25-26,408
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_b936470d53434a 37,228-230,470-482,484,720-721
+bowl_bound/team_catalog.py
+  s_ed54ab581b3d60::t_8aaa9304a8148c 1-90
+tests/test_api.py
+  s_ed54ab581b3d60::t_4060b301d4d6e5 3,58-66
+tests/test_chart_coaching_contract.py
+  s_ed54ab581b3d60::t_31ade05841e161 85-92,120
+tests/test_cli.py
+  s_ed54ab581b3d60::t_f480e3d29d3eb6 399
+tests/test_team_catalog.py
+  s_ed54ab581b3d60::t_715466122827b5 1-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "2c2995199c9350d9f67e5db405b433836f1abf0b",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
