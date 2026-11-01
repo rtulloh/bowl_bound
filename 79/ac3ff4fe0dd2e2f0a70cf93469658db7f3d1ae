@@ -1,0 +1,21 @@
+docs/dev-notes/issue-tracker.md
+  s_ed54ab581b3d60::t_fad4dfa9ad0817 8,10,110,174,339
+docs/dev-notes/issues/RULE/RULE-010.md
+  s_ed54ab581b3d60::t_027d032cd546fa 4,8,10,12,17,21-24,35-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "79ac3ff4fe0dd2e2f0a70cf93469658db7f3d1ae",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
