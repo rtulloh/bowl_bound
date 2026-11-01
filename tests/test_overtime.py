@@ -148,7 +148,13 @@ def test_toss_series_spot_untimed_rounds_alternating_first_and_timeouts() -> Non
     assert view.clock.quarter_label == "OT1" and view.clock.label == "Untimed"
     assert view.clock.timeouts == (1, 1)
     assert (view.state.possession, view.state.yards_to_goal, view.state.down) == ("home", 25, 1)
-    assert {a.key for a in view.game_actions} == {"timeout:home", "timeout:away", "kneel"}
+    assert {a.key for a in view.game_actions} == {
+        "bounds:ib",
+        "bounds:oob",
+        "kneel",
+        "timeout:away",
+        "timeout:home",
+    }
     game.action("timeout:home")
     assert game.view().clock.timeouts == (0, 1)
     before = game.view()
