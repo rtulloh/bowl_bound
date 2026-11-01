@@ -1,27 +1,31 @@
 ---
 id: RULE-030
 title: Define weather effects for Bowl Bound games
-status: open
+status: closed
 priority: Low
 milestone: '22'
 created-at: 2026-11-01
 resolved-at: null
-closed-at: null
+closed-at: 2026-11-01
 tags:
 - scope-review
+- wont-fix
 links: []
 commits: []
 ---
 
 ## Description
 
-Weather effects under Advanced Rule VI are deferred and have no approved runtime model. Do not add ambient randomness or alter chart outcomes without explicit rule support.
+Weather effects under Advanced Rule VI are outside the approved gameplay scope. Do not add condition rolls, alter chart outcomes, or modify kick distances based on weather.
 
 ## Resolution / verification
 
-- Inventory rulebook weather conditions, eligibility, affected procedures, and season applicability; record adopt/defer decisions. For each adopted condition, create a separate implementation ticket with deterministic synthetic tests and unchanged behavior when weather is absent.
+- Decision (2026-11-01): defer precipitation and wind effects. Advanced VI (printed pp. 23–24) applies weather-dependent changes to run/pass gains, returns, kicks, and field goals and permits condition rolls or agreement. No weather state, randomness, yardage adjustment, trace, or save behavior is introduced.
 
 ## Comments
 
 --- 2026-11-01 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-01 ---
+Owner chose to defer the Advanced VI weather system. Closed for this milestone; retain deterministic chart results without weather adjustments.

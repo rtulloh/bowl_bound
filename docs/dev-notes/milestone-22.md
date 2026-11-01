@@ -252,6 +252,13 @@ enabled solely because Paydirt has a similarly named feature.
   timing; no manual runoff choice is restored. [RULE-027](issues/RULE/RULE-027.md)
   is closed for this milestone. No gameplay change was made.
 
+### Weather scope decision — 2026-11-01
+
+- The owner deferred precipitation and wind effects. Advanced VI (printed
+  pp. 23–24) introduces weather conditions and modifies run/pass, return, kick,
+  and field-goal results. No weather state or randomness is added;
+  [RULE-030](issues/RULE/RULE-030.md) is closed for this milestone.
+
 ### QB Sneak implementation — 2026-11-01
 
 - Completed [RULE-021](issues/RULE/RULE-021.md) in tested commit `d0fa13b`.
