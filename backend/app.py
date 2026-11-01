@@ -157,6 +157,10 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
     app.add_middleware(RequestBodyLimit)
     games: OrderedDict[str, SavedGame] = OrderedDict()
     registry_lock = RLock()
+    coordinator_error_detail = "Unable to prepare a legal coached turn for this game state."
+
+    def coordinator_conflict() -> HTTPException:
+        return HTTPException(status_code=409, detail=coordinator_error_detail)
 
     def lookup(game_id: str) -> SavedGame:
         with registry_lock:
@@ -225,7 +229,10 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
                 "coach_policy": session.coach_policy,
                 "view": _view_data(session, session.view()),
             }
-        view, turn = session.coach_view(human_side)
+        try:
+            view, turn = session.coach_view(human_side)
+        except ValueError as error:
+            raise coordinator_conflict() from error
         return {
             "game_id": game_id,
             "seed": session.seed,
@@ -240,7 +247,12 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
         if human_side is None:
             report, view = session.execute_with_view(operation, [value])
             return {"report": _report_data(session, report), "view": _view_data(session, view)}
-        report, view, turn = session.coach_execute(human_side, operation, value)
+        try:
+            report, view, turn = session.coach_execute(human_side, operation, value)
+        except InvalidDecisionError:
+            raise
+        except ValueError as error:
+            raise coordinator_conflict() from error
         return {
             "report": _report_data(session, report),
             "view": _view_data(session, view),
@@ -302,6 +314,8 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
             raise HTTPException(status_code=409, detail=str(error)) from error
         except InvalidDecisionError as error:
             raise HTTPException(status_code=422, detail=str(error)) from error
+        except ValueError as error:
+            raise coordinator_conflict() from error
         return {
             "report": _report_data(session, report),
             "view": _view_data(session, view),

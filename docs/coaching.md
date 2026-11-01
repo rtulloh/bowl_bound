@@ -106,8 +106,9 @@ IDs. Medium/Hard can analyze supplied charts, but receive no live engine, future
 dice, gameplay seed/RNG or concealed current opponent selection. Hard learns only
 committed calls, not previews.
 Every suggestion is constrained to enabled engine IDs; an empty legal set fails
-clearly. Conversions, tosses, kick receptions, turnovers, penalties and clock
-choices remain engine-constrained. These are bounded heuristics, not an optimal
+clearly. The web API returns HTTP 409 with a stable message when it cannot prepare
+a legal coached turn. Conversions, tosses, kick receptions, turnovers, penalties
+and clock choices remain engine-constrained. These are bounded heuristics, not an optimal
 coach, exact win probabilities, or a guarantee of increasing win rate.
 
 Easy CLI assistance is [documented separately](cli.md#easy-only-coaching-helper).

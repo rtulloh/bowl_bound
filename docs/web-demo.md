@@ -203,7 +203,9 @@ contains Paydirt play names, down/distance arithmetic, or priority handling.
 
 Creation/current-view endpoints accept optional `?human_side=home` / `away` and
 return human-only `turn` controls. Human kick/decision/action endpoints accept the
-same query and validate those controls under the game lock. See the
+same query and validate those controls under the game lock. If the coordinator
+cannot prepare a legal turn, coached requests return HTTP 409 with a stable error
+message. See the
 [coaching API contract](coaching.md#api). Manual endpoints remain compatible.
 
 `difficulty` is `easy`, `medium` or `hard`. New games use the matching v8 policy.

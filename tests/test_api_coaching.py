@@ -6,6 +6,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from backend.app import create_app
+from bowl_bound.coaching import NoLegalAction
+from bowl_bound.save_game import SavedGame
 from tests.synthetic_teams import default_teams, write_team
 
 
@@ -74,3 +76,43 @@ def test_coached_human_decisions_validate_offered_controls(client) -> None:
 )
 def test_bad_coaching_contract_is_rejected(client, body) -> None:
     assert client.post("/api/games/missing/coach", json=body).status_code == 422
+
+
+@pytest.mark.parametrize("failure", [ValueError("secret state"), NoLegalAction("secret choice")])
+@pytest.mark.parametrize("endpoint", ["view", "coach", "decision"])
+def test_coordinator_errors_return_a_stable_conflict(
+    client, monkeypatch: pytest.MonkeyPatch, failure: Exception, endpoint: str
+) -> None:
+    created = client.post(
+        "/api/games",
+        json={
+            "home": "2026/alpha-tech",
+            "away": "2026/beta-state",
+            "seed": 7,
+        },
+    ).json()
+    path = f"/api/games/{created['game_id']}"
+    target = {
+        "view": "coach_view",
+        "coach": "coach_step",
+        "decision": "coach_execute",
+    }[endpoint]
+
+    def reject(*args, **kwargs):
+        raise failure
+
+    monkeypatch.setattr(SavedGame, target, reject)
+    if endpoint == "view":
+        response = client.get(path + "?human_side=home")
+    elif endpoint == "coach":
+        response = client.post(path + "/coach", json={"human_side": "home", "human_call": "1"})
+    else:
+        response = client.post(
+            path + "/decision?human_side=home", json={"choice": "conversion:kick"}
+        )
+
+    assert response.status_code == 409
+    assert response.json() == {
+        "detail": "Unable to prepare a legal coached turn for this game state."
+    }
+    assert "secret" not in response.text
