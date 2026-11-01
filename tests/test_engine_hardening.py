@@ -9,6 +9,7 @@ from bowl_bound.game_state import FieldState, Possession
 from bowl_bound.models import NormalizedCell, ResultKind, SpecialTeamsColumn, TeamChart
 from bowl_bound.turnovers import (
     TurnoverOutcome,
+    resolve_end_zone_recovery_return,
     resolve_fumble,
     resolve_interception,
 )
@@ -389,6 +390,32 @@ def test_fumble_on_an_elected_end_zone_return_uses_actual_fumble_spot(
     )
     assert result.outcome is expected and result.points == points
     assert [e.section for e in result.trace] == ["end_zone_recovery_return", "fumble_recovery"]
+
+
+@pytest.mark.parametrize(
+    ("return_yards", "expected", "points"),
+    [(-4, TurnoverOutcome.TOUCHBACK, (0, 0)), (-5, TurnoverOutcome.SAFETY, (2, 0))],
+)
+def test_end_zone_return_retreat_to_own_end_line_is_a_safety(
+    return_yards: int, expected: TurnoverOutcome, points: tuple[int, int]
+) -> None:
+    from tests.test_models import provenance
+
+    chart = return_team(
+        "Away",
+        cell=NormalizedCell(ResultKind.YARDS, provenance(), yards=return_yards),
+    )
+
+    result = resolve_end_zone_recovery_return(
+        chart,
+        return_team("Home"),
+        Possession.AWAY,
+        ScriptedDice([OffensiveRoll(1, 0, 0)]),
+        end_zone_depth=5,
+    )
+
+    assert result.outcome is expected
+    assert result.points == points
 
 
 def test_declined_scrimmage_penalty_can_continue_into_end_zone_recovery_choice() -> None:

@@ -42,13 +42,14 @@ Goal lines are 100 yards apart; each end line is ten yards beyond its goal line.
   the separate recovery roll (`end_zone_depth`, then `fumble_recovery`).
 - A Priority Chart `F_ENDZONE` result places the live fumble one yard into the
   defenders' end zone; traces distinguish that depth fact from a recovery roll.
-- End-zone returns subtract the actual depth. A return that never crosses its
-  own goal line is a touchback; a return begun in the field and carried backward
-  across its own goal line is a safety, as is an own-recovery return taken backward
-  into the original offense's end zone.
+- End-zone returns subtract the actual depth. A return that stops between its
+  own goal line and end line is a touchback; reaching or crossing its own end line
+  is a safety (Basic VI-13(F)(i–ii)). A return begun in the field and carried
+  backward across its own goal line is also a safety.
 - A return reaching the opposing goal line is a touchdown. Own-recovery advances
   retain the offensive touchdown classification. A return fumble uses its actual
-  landing spot, even if still inside the end zone.
+  landing spot, even if still inside the end zone; a fumble in a team's own end
+  zone follows Basic VI-13(D)(iv), including a safety if that team recovers.
 
 End-zone returns share ordinary return processing: penalties, no-change and
 fumbles do not disable the entire Return choice. Scores use engine-owned home/away

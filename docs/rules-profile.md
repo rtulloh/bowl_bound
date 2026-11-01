@@ -402,7 +402,10 @@ actual penalty enforcement and keeps penalty/defensive-return yards out of offen
   Defensive recovery/catch in the other end zone offers touchback or return.
   Beyond that end line, interceptions are nine deep; fumbles roll the white-face
   sum for depth before recovery. Returns count depth; failing to leave the end zone
-  is a touchback. A return begun in the field taken into its own end zone is a safety.
+  is a touchback while the ball remains in bounds; reaching the returner's own end
+  line is a safety (VI-13(F)(i–ii)). A return begun in the field taken into its own
+  end zone is a safety. An own-end-zone fumble recovered by the fumbling team is a
+  safety under VI-13(D)(iv), distinct from a return that never crosses its goal line.
   [Turnover details](turnovers.md) include return fouls and recovery chains.
 - Declining a prepared turnover penalty resumes its actual engine procedure,
   without repeated chart rolls or a duplicate committed play. Own-recovery return

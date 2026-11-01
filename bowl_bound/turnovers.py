@@ -474,6 +474,8 @@ def _apply_return_yards(
             state.possession,
             trace,
         )
+    if new_spot >= END_LINE:
+        return _safety(state.possession, trace)
     if new_spot >= GOAL_LINE:
         if continues_original_play or origin is None:
             return _safety(state.possession, trace)
