@@ -14,7 +14,12 @@ from .models import (
     SpecialTeamsColumn,
     TeamChart,
 )
-from .penalty_yardage import AssessedPenalty, assess_penalty, enforce_penalty
+from .penalty_yardage import (
+    AssessedPenalty,
+    assess_penalty,
+    enforce_penalty,
+    return_penalty_midpoint,
+)
 from .variable_yardage import roll_variable
 
 MIN_SUPPORTED_SEASON = 1940
@@ -498,7 +503,7 @@ class SpecialTeamsPlay:
         )
         spot = start - distance
         if penalty.source.team is PenaltyTeam.OFFENSE and 2 * distance > start:
-            spot = (start + 1) // 2
+            spot = return_penalty_midpoint(start)
         if spot >= 100:
             if penalty.source.team is PenaltyTeam.DEFENSE:
                 # Mark from the real end-zone coordinate, never a fabricated own-one spot.

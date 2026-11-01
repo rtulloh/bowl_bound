@@ -70,7 +70,7 @@ and a variable distance is rolled and traced.
 - **PI after a QR or QT was already rolled** becomes a DEF 10 penalty with no automatic first
   down (see the rules profile).
 - Accepting a penalty cancels the play, so a touchdown or safety gain no longer matters.
-- A return-column penalty rerolls the return, then is accepted or declined by the offended team. It is marked from the return end, except an offensive foul after the return's midpoint is marked from that midpoint.
+- A return-column penalty rerolls the return, then is accepted or declined by the offended team. It is marked from the return end, except an offensive foul after the return's midpoint is marked from that midpoint. A half-yard midpoint is rounded toward the 50-yard line (Basic VI-4(C)(vii)).
 
 The project's worked example differs from the printed p. 9 example: a DEF 5 at the opponent 7
 on third and five gives the opponent **4**, third and **2** (the half-distance rule), not the

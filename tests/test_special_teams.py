@@ -15,6 +15,7 @@ from bowl_bound.models import (
     SpecialTeamsCell,
     TeamChart,
 )
+from bowl_bound.penalty_yardage import AssessedPenalty
 from bowl_bound.special_teams import (
     SpecialTeamsOutcome,
     SpecialTeamsPlay,
@@ -350,6 +351,35 @@ def test_return_penalty_uses_midpoint_and_starts_first_and_ten() -> None:
         "kickoff_return",
         "kickoff_return",
     ]
+
+
+@pytest.mark.parametrize("origin", [101, 103, 105, 107, 109])
+def test_kick_return_penalty_midpoint_rounds_toward_midfield(origin: int) -> None:
+    from bowl_bound.game_state import start_drive
+
+    state = FieldState(Possession.AWAY, 70, 1, 10)
+    foul = AssessedPenalty(
+        PenaltyData(PenaltyTeam.OFFENSE, PenaltyCode.FIXED, 5),
+        5,
+    )
+    play = SpecialTeamsPlay(
+        "punt",
+        state,
+        special_chart("Home"),
+        special_chart("Away"),
+        ScriptedDice([]),
+        home_season=2007,
+    )
+
+    result = play._accepted_return(
+        state,
+        yards(origin // 2 + 1),
+        foul,
+        origin=origin,
+    )
+
+    assert result.outcome is SpecialTeamsOutcome.PENALTY
+    assert result.state == start_drive(Possession.AWAY, origin // 2 + 5)
 
 
 def test_kickoff_out_of_bounds_off_s_provides_receivers_two_choices_without_reroll() -> None:

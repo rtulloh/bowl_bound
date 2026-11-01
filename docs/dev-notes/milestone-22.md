@@ -37,6 +37,19 @@ No Paydirt code or data is copied, and Bowl Bound gains no runtime dependency.
 The local Bowl Bound rulebook remains the implementation authority; no rule is
 enabled solely because Paydirt has a similarly named feature.
 
+### Return-rule correction review — 2026-11-01
+
+- Reviewed `paydirt/penalty_handler.py:451-460` for return-foul midpoint handling.
+  Its field-coordinate formula illustrates the midpoint rule, but Bowl Bound uses
+  yards-to-goal coordinates; the formula is not reused. Basic VI-4(C)(vii),
+  documented on pp. 8–9, governs Bowl Bound's marker toward midfield.
+- Basic VI-13(D)(iii–iv) and (F)(i–ii), pp. 11–12, distinguish own-end-zone
+  fumbles from an elected return that fails to cross the goal line. Preserve those
+  separate cases while reviewing RULE-013; do not infer one outcome from the other.
+- Basic VI-4 and the prepared-result structure govern acceptance of return fouls
+  (RULE-014) and the fixed one-yard F_ENDZONE location (RULE-015). No Paydirt rule
+  or private chart data is used for those decisions.
+
 ## Ticket coverage
 
 | Milestone 22 change or decision | Ticket |

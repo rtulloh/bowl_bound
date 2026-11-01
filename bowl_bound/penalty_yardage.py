@@ -178,8 +178,7 @@ def enforce_return_penalty(
     end_spot = start - return_yards
     spot = end_spot
     if penalty.source.team is PenaltyTeam.OFFENSE and return_yards * 2 > start:
-        # A half-yard marker is placed toward midfield, per VI-4(C)(vii).
-        spot = (start + 1) // 2
+        spot = return_penalty_midpoint(start)
     if not 1 <= spot <= MAX_SPOT:
         raise ValueError("return penalty needs an in-field enforcement spot")
     new_spot = _enforced_spot(spot, penalty)
@@ -191,6 +190,20 @@ def enforce_return_penalty(
                 return_start.possession, new_spot, original.down, new_spot - line_to_gain
             )
     return FieldState(return_start.possession, new_spot, 1, min(FIRST_DOWN_DISTANCE, new_spot))
+
+
+def return_penalty_midpoint(origin: int) -> int:
+    """Return the whole-yard midpoint, rounded toward midfield (Basic VI-4(C)(vii)).
+
+    Bowl Bound coordinates measure yards to the opponent's goal. Origins through
+    the returner's goal line have a midpoint at or before the 50, so round upward;
+    end-zone origins have a midpoint beyond the 50, so round downward.
+    """
+    if type(origin) is not int:
+        raise TypeError("return origin must be an integer")
+    if not 1 <= origin <= 109:
+        raise ValueError("return origin must lie in the field or live end zone")
+    return (origin + 1) // 2 if origin <= 100 else origin // 2
 
 
 def _enforced_spot(spot: int, penalty: AssessedPenalty) -> int:

@@ -154,6 +154,21 @@ def test_enforcement_replays_down_preserves_line_to_gain_and_awards_first_down()
     assert enforce_penalty(state, automatic) == FieldState(Possession.HOME, 45, 1, 10)
 
 
+@pytest.mark.parametrize("origin", [101, 103, 105, 107, 109])
+def test_offensive_return_penalty_midpoint_rounds_toward_midfield(origin: int) -> None:
+    state = FieldState(Possession.HOME, 70, 1, 10)
+    foul = AssessedPenalty(data(PenaltyTeam.OFFENSE, PenaltyCode.FIXED, 5), 5)
+
+    enforced = enforce_return_penalty(
+        state,
+        foul,
+        return_yards=origin // 2 + 1,
+        origin=origin,
+    )
+
+    assert enforced == FieldState(Possession.HOME, origin // 2 + 5, 1, 10)
+
+
 def test_enforcement_uses_end_of_gain_half_distance_and_pi_goal_rule() -> None:
     state = FieldState(Possession.AWAY, 20, 2, 8)
     end_gain = AssessedPenalty(data(PenaltyTeam.DEFENSE, PenaltyCode.S), 5, from_end_of_gain=True)
