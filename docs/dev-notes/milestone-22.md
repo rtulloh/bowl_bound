@@ -141,7 +141,7 @@ rather than additional advanced-option features.
 | Baseline decision-policy safety and fallback reporting | [AI-016](issues/AI/AI-016.md) |
 | Preserve disabled choices and engine reasons in coached turns | [AI-017](issues/AI/AI-017.md) |
 | Post-game summary of computer call history | [AI-019](issues/AI/AI-019.md) |
-| Keep Hard coaching safe when enforcement changes a try's spot | [AI-020](issues/AI/AI-020.md) |
+| Keep Hard coaching safe for engine-adjusted try spots | [AI-020](issues/AI/AI-020.md) |
 | Map coordinator errors to clear client responses | [API-002](issues/API/API-002.md) |
 | Bind games to control mode and make repeated coach posts safe | [API-003](issues/API/API-003.md) |
 | Improve terminal input errors, case handling, and paused-game loading | [CLI-044](issues/CLI/CLI-044.md) |
