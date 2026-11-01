@@ -1,0 +1,29 @@
+docs/dev-notes/issue-tracker.md
+  s_ed54ab581b3d60::t_8916f45988ea5e 55,421-424
+docs/dev-notes/issues/DEV/DEV-007.md
+  s_ed54ab581b3d60::t_659fd7e78106a6 3,6,17-21,25-31,39-53
+docs/dev-notes/milestone-32.md
+  s_ed54ab581b3d60::t_f617cfc57667bb 1-66
+docs/dev-notes/project-plan.md
+  s_ed54ab581b3d60::t_4c7a819cc16680 561-585
+scripts/run_local_season.py
+  s_ed54ab581b3d60::t_961b13c7f8517d 1-643
+tests/test_local_season_runner.py
+  s_ed54ab581b3d60::t_307bf09de344f1 1-319
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "9dac89837770e913ab669e552e49caff1a09c208",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
