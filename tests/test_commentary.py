@@ -10,6 +10,7 @@ from bowl_bound.game_state import Possession
 from bowl_bound.roster import Roster, parse_roster
 from bowl_bound.session import PlayReport, PlaySession, TraceEntry
 from bowl_bound.statistics import PlayStatistics, StatKind
+from bowl_bound.timing import TimingFacts
 from tests.synthetic_teams import team_chart
 
 
@@ -166,3 +167,27 @@ def test_real_bad_snap_remains_generic() -> None:
     )
     assert value.statistics.kind is StatKind.RUSH
     assert narrate_report(value, roster("H")) == value.commentary
+
+
+def test_engine_report_exposes_structured_highlight_tags() -> None:
+    value = report()
+    assert "highlight_tags" not in asdict(value)
+    assert value.highlight_tags == ()
+    assert replace(value, outcome="interception_pending", pending=True).highlight_tags == (
+        "interception_pending",
+    )
+    assert replace(value, statistics=PlayStatistics(StatKind.INTERCEPTION)).highlight_tags == (
+        "interception",
+    )
+    assert replace(
+        value, trace=(*value.trace, TraceEntry("fumble_recovery", "Away", "", None, {}, ""))
+    ).highlight_tags == ("fumble",)
+    assert replace(value, outcome="touchdown").highlight_tags == ("touchdown",)
+    assert replace(
+        value, outcome="offensive_touchdown", timing=TimingFacts(conversion=True)
+    ).highlight_tags == ("conversion",)
+    assert replace(
+        value, trace=(*value.trace, TraceEntry("supplemental:B", "Home", "", None, {}, ""))
+    ).highlight_tags == ("breakaway",)
+    assert replace(value, outcome="touchback").highlight_tags == ("touchback",)
+    assert not replace(value, supported=False, outcome="touchdown").highlight_tags

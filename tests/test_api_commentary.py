@@ -34,6 +34,8 @@ def test_live_log_get_and_reload_serialize_same_engine_narration(
         direct.load_rosters(tmp_path)
     expected = direct.snap("1", "A")
     assert report["commentary"] == direct.commentary(expected)
+    assert report["highlights"] == list(expected.highlight_tags)
+    assert data["view"]["log"][-1]["highlights"] == list(expected.highlight_tags)
     actual_save = client.get(path + "/save").json()
     direct_save = json.loads(dumps_game(direct))
     for key in ("commands", "rolls", "random_state", "state_digest"):

@@ -152,7 +152,13 @@ class RegisteredGame:
 
 
 def _report_data(session: SavedGame, report: PlayReport | None) -> dict[str, object] | None:
-    return None if report is None else {**asdict(report), "commentary": session.commentary(report)}
+    if report is None:
+        return None
+    return {
+        **asdict(report),
+        "commentary": session.commentary(report),
+        "highlights": list(report.highlight_tags),
+    }
 
 
 def _view_data(session: SavedGame, view: SessionView | RegulationView) -> dict[str, object]:

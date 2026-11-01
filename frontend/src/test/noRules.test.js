@@ -17,4 +17,10 @@ describe('the UI contains no football rules', () => {
     expect(text).not.toMatch(/yards_to_go\s*[-+<>]|ball_from_left\s*[-+]|yards\s*>=|priority|Priority/)
     expect(text).not.toMatch(/parseInt|Number\(|Math\.(min|max)/)
   })
+
+  it('renders engine highlight tags without classifying raw report facts', () => {
+    const source = withoutComments(readFileSync(join(SRC, 'components', 'PlayHighlights.jsx'), 'utf8'))
+    expect(source).not.toMatch(/report\.(outcome|statistics|trace|timing)\b/)
+    expect(source).not.toMatch(/\.section\b/)
+  })
 })

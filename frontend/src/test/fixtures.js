@@ -17,6 +17,7 @@ export const view = (over = {}) => ({
 export const stateView = state
 export const report = (over = {}) => ({
   number: 1, supported: true, pending: false, outcome: 'advance', yards: 6,
+  highlights: [],
   called_play: 'Line Plunge', resolved_play: 'Line Plunge', defense: 'Formation A',
   description: 'Alpha Tech: Line Plunge vs Formation A - gain of 6 yards',
   unsupported_reason: null, state_before: state(), state_after: state({ down: 2, yards_to_go: 4 }),

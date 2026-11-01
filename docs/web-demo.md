@@ -323,8 +323,8 @@ remain in recorded order, with full cells available in the expanded audit.
 Entries with no recorded rolls do not invent a dice line.
 
 Report/log responses expose additive engine-generated
-[`commentary`](api.md), with optional illustrative roster names; semantic
-descriptions and downloadable saves remain unchanged.
+[`commentary and highlight tags`](api.md), with optional illustrative roster
+names. Semantic descriptions and downloadable saves remain unchanged.
 
 Live results and play logs render API commentary as escaped text, falling back
 to legacy descriptions only when commentary is absent. Long optional player

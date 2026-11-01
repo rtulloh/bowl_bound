@@ -1,4 +1,4 @@
-# Derived API report commentary
+# API play commentary and highlights
 
 Every report and `view.log` item includes additive `commentary`: engine-generated
 announcer-style text using the game's optional local roster snapshot, or generic
@@ -8,12 +8,19 @@ Automatic kneels/spikes, pending, unsupported, penalty and ambiguous-recovery
 reports retain factual wording; clients must not interpret prose to determine
 football results.
 
+Each report and `view.log` item also includes additive `highlights`, an array of
+engine-classified tags: `interception_pending`, `interception`, `fumble`,
+`touchdown`, `conversion`, `breakaway`, and `touchback`. It is empty when the
+engine has no highlight. Clients may choose labels and visual styling for these
+tags, but must not classify highlights from outcomes, timing, statistics, or
+trace details.
+
 `description` and all structured report fields are unchanged. Null reports stay
 null. Create/get/action/coached/load responses use the same serialization. Names
 are illustrative labels, not player statistics. Phrase selection is stable for
-the report number and consumes no randomness. Saves do not contain this field
-or rosters. Load may refresh names from current installed rosters. The save
-schema, semantic digest and engine profile are unchanged.
+the report number and consumes no randomness. Saves do not contain commentary,
+highlights, or rosters. Load may refresh names from current installed rosters.
+The save schema, semantic digest and engine profile are unchanged.
 
 ## Engine-owned play bounds declarations
 

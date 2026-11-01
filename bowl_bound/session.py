@@ -164,6 +164,26 @@ class PlayReport:
     statistics: PlayStatistics = PlayStatistics()
 
     @property
+    def highlight_tags(self) -> tuple[str, ...]:
+        """Classify notable facts once for presentation adapters to render."""
+        if not self.supported:
+            return ()
+        tags: list[str] = []
+        if self.outcome == "interception_pending":
+            tags.append("interception_pending")
+        elif self.statistics.kind is StatKind.INTERCEPTION:
+            tags.append("interception")
+        if any(entry.section == "fumble_recovery" for entry in self.trace):
+            tags.append("fumble")
+        if self.outcome in {"touchdown", "offensive_touchdown", "defensive_touchdown"}:
+            tags.append("conversion" if self.timing.conversion else "touchdown")
+        if any(entry.section == "supplemental:B" for entry in self.trace):
+            tags.append("breakaway")
+        if self.outcome == "touchback":
+            tags.append("touchback")
+        return tuple(tags)
+
+    @property
     def commentary(self) -> str:
         """Explain recorded turnover facts without changing legacy saved descriptions.
 
