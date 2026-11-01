@@ -1,25 +1,30 @@
 ---
 id: RULE-028
 title: Add the Bowl Bound Razzle-Dazzle play
-status: open
+status: resolved
 priority: Medium
 milestone: '22'
 created-at: 2026-11-01
-resolved-at: null
+resolved-at: 2026-11-01
 closed-at: null
 tags:
 - advanced-option
 links: [RULE-022]
-commits: []
+commits: [33a53da]
 ---
 
 ## Description
 
-The owner approved Razzle-Dazzle under Advanced Rule I-1 for implementation on 2026-11-01. It is not a current callable play; keep it unavailable until this ticket is implemented and verified. The engine must not infer it from an ordinary chart result.
+The owner approved Razzle-Dazzle under Advanced Rule I-1 for implementation on 2026-11-01. It is available as a callable play. The engine resolves it only when called and does not infer it from an ordinary chart result.
 
 ## Resolution / verification
 
-- Document eligibility, call sequence, chart/dice use, priority, possession, statistics, timing, and trace behavior from the Bowl Bound rulebook; add synthetic test-first coverage for successful and failed branches and save replay.
+- Implemented in `33a53da` after synthetic test-first cases failed on the missing RZDZ/WCRZDZ actions and resolution.
+- The engine rolls defense first, offense second, awards ties to offense, and lets the winning side choose only from the permitted non-penalty chart results (or a penalty when all available results are penalties). It resolves the selected result through ordinary priority, supplemental, variable-yardage, penalty, turnover, timing, statistics, and trace paths.
+- Advanced II behavior covers exact WCRZDZ as a no-dice incompletion and all other Wild Card guesses as incorrect; free and conditional eligibility retain their normal yardage effects. Run/Pass defense classifies the selected result, including option and quarterback results.
+- Synthetic tests cover chooser ownership, ties, result limits, penalties, Wild Card eligibility, option/B/QR/QT, fumbles, save replay, API, CLI, and coaching estimates.
+- Focused validation: 425 Python tests passed across engine, API, regulation, save, CLI, coaching, and resolution suites; Ruff check/format and `git diff --check` passed.
+- Status is resolved pending owner play-test confirmation; do not close from automated tests alone.
 
 ## Comments
 

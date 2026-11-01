@@ -172,6 +172,19 @@ enabled solely because Paydirt has a similarly named feature.
   selection, ordinary priority resolution, and any follow-up chart rolls in the
   engine; synthetic tests cover the rule branches and save replay.
 
+### RULE-028 implementation — 2026-11-01
+
+- Implemented in `33a53da`. Razzle-Dazzle is a callable engine action; its
+  comparison rolls and pending result choice are preserved in traces and save
+  replay. The chosen chart result follows existing priority, penalty, turnover,
+  timing, and statistics handling.
+- Synthetic coverage includes tie and chooser rules, allowed result sets,
+  penalty-only choices, free/conditional Wild Cards, Advanced II classification,
+  option and supplemental results, fumbles, API, CLI, coaching evaluation, and
+  pending-save replay.
+- Validation: 425 focused Python tests passed; Ruff check/format and
+  `git diff --check` passed. RULE-028 is resolved pending owner play-test.
+
 ### Baseline decision review — 2026-11-01
 
 - Reviewed Paydirt `paydirt/computer_ai.py:1242-1359` for its decision across
@@ -322,9 +335,8 @@ enabled solely because Paydirt has a similarly named feature.
   [RULE-029](issues/RULE/RULE-029.md), and
   [RULE-031](issues/RULE/RULE-031.md) remain separate implementation tickets.
 - The elected safety and intentional delay implementations are complete and
-  remain open for owner play-test confirmation. Razzle-Dazzle is implemented
-  under RULE-028; its ticket records focused verification and remains open until
-  the change is committed and tested in owner play.
+  remain resolved pending owner play-test confirmation. Razzle-Dazzle is
+  implemented under RULE-028 and also awaits owner play-test confirmation.
 - Per-game settings that let players enable or disable advanced options are
   future work; Milestone 22 does not add a rules-selection screen.
 
