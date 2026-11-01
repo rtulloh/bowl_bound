@@ -20,7 +20,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | [AI-001](issues/AI/AI-001.md) | Medium | [21](project-plan.md#21-add-chart-aware-coaching-and-audits) | Add chart-aware coaching with exact probability analysis and policy audits | created 2026-10-27 |
 | [AI-002](issues/AI/AI-002.md) | Medium | [21](project-plan.md#21-add-chart-aware-coaching-and-audits) | Restore Paydirt-style difficulty levels across CLI and browser | created 2026-10-27 |
 | [AI-010](issues/AI/AI-010.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Add missing coaching determinism, history, cache, fallback and mixture tests | created 2026-10-27 |
-| [AI-016](issues/AI/AI-016.md) | Medium | [22](project-plan.md#22-add-advanced-options-one-at-a-time) | Baseline decision policy is exploitable and marks every decision as fallback | created 2026-10-27 |
+| [AI-016](issues/AI/AI-016.md) | Medium | [22](project-plan.md#22-add-advanced-options-one-at-a-time) | Coached decisions use order-dependent defaults and can leak stale Hard fallback state | created 2026-10-27 |
 | [AI-017](issues/AI/AI-017.md) | Medium | [22](project-plan.md#22-add-advanced-options-one-at-a-time) | Coached turns drop disabled choices and their engine reasons | created 2026-10-27 |
 | [AI-018](issues/AI/AI-018.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Add coordinator-level tests driving full games only through coach paths | created 2026-10-27 |
 | [API-002](issues/API/API-002.md) | Medium | [22](project-plan.md#22-add-advanced-options-one-at-a-time) | Coordinator errors surface as HTTP 500 instead of a clear client error | created 2026-10-27 |
@@ -326,7 +326,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 - [AI-013](issues/AI/AI-013.md) (resolved, Medium) — No urgency gradient or lead protection in Easy/Medium play mixtures
 - [AI-014](issues/AI/AI-014.md) (resolved, Medium) — Hard repetition discount is global per side rather than situation-bucketed, undecayed and unfloored
 - [AI-015](issues/AI/AI-015.md) (resolved, Medium) — Easy/Medium defense has no goal-line, fourth-down or lead-protection guards
-- [AI-016](issues/AI/AI-016.md) (open, Medium) — Baseline decision policy is exploitable and marks every decision as fallback
+- [AI-016](issues/AI/AI-016.md) (open, Medium) — Coached decisions use order-dependent defaults and can leak stale Hard fallback state
 - [AI-017](issues/AI/AI-017.md) (open, Medium) — Coached turns drop disabled choices and their engine reasons
 - [AI-019](issues/AI/AI-019.md) (open, Low) — Offer a post-game summary of what the computer learned from committed calls
 - [AI-020](issues/AI/AI-020.md) (resolved, High) — Hard coach cannot evaluate an engine-adjusted try spot
