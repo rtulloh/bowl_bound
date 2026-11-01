@@ -1,0 +1,19 @@
+tests/test_cli_games.py
+  s_ed54ab581b3d60::t_78e25624c72745 146-149,164-167,172-179
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "8fdf6cfe6ca5e7dd511631dd05cda5e6f93134f3",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
