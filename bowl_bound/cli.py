@@ -36,28 +36,6 @@ _COMMAND_ERRORS = (
     SessionFinishedError,
     DiceSequenceError,
 )
-_SELECTION_BOILERPLATE = {
-    "Choose an offensive play and defensive formation.",
-    "Choose your offensive play; the computer defense stays hidden.",
-    "Choose your defensive formation; the computer offense stays hidden.",
-}
-_PLAY_HELP = {
-    "1": "Inside running play",
-    "2": "Counter running play",
-    "3": "Reverse running play",
-    "4": "Delayed running play",
-    "5": "Option call; follow the resolved branch",
-    "6": "Screen passing play",
-    "7": "Sprint-out passing play",
-    "8": "Boot-leg passing play",
-    "9": "Drop-back passing play",
-    "A": "Balanced defensive formation",
-    "B": "Short-yardage gaps formation",
-    "C": "Short-yardage wide formation",
-    "D": "Short-pass prevent formation",
-    "E": "Long-pass prevent formation",
-    "F": "Blitz formation",
-}
 _KICK_KEYS = {"punt": "P", "field_goal": "F", "kickoff": "K"}
 _ACTION_KEYS = {
     "kneel": "K",
@@ -212,7 +190,7 @@ class TerminalGame:
     def _print(self, text: str) -> None:
         print(text, file=self.output)
 
-    def public_view(self) -> tuple[GameView, CoachingTurn | None]:
+    def public_view(self) -> tuple[GameView, CoachingTurn]:
         """Inspect public state without asking the coordinator for private selections."""
         return self.game.coach_view(self.human_side)
 
@@ -237,8 +215,12 @@ class TerminalGame:
         self._print("\n" + " | ".join(parts))
         if self.trace and view.phase in {"opening_choice", "overtime_choice"}:
             self._toss_trace(view)
-        for status in dict.fromkeys((view.status, turn.status) if turn else (view.status,)):
-            if status not in _SELECTION_BOILERPLATE:
+        routine_selection = view.phase == "scrimmage" and turn.human_role in {
+            "offense",
+            "defense",
+        }
+        if not routine_selection:
+            for status in dict.fromkeys((view.status, turn.status)):
                 self._print(status)
         if self.automatic_paused:
             self._print("Computer stopped. Inspect/save, then use retry to resume.")
@@ -256,24 +238,23 @@ class TerminalGame:
     def _shortcuts(
         self,
         view: GameView,
-        turn: CoachingTurn | None,
+        turn: CoachingTurn,
     ) -> dict[str, tuple[str, str]]:
         """Bind keys to currently offered public IDs, never to football interpretations."""
         bindings: dict[str, tuple[str, str]] = {}
         if view.finished:
             return bindings
-        actions = turn.actions if turn else view.actions
-        if turn:
-            for action in actions.offense + actions.defense:
-                bindings[action.key.upper()] = ("call", action.key)
+        actions = turn.actions
+        for action in actions.offense + actions.defense:
+            bindings[action.key.upper()] = ("call", action.key)
         for action in actions.special:
             if key := _KICK_KEYS.get(action.key):
                 bindings.setdefault(key, ("kick", action.key))
-        game_actions = turn.game_actions if turn else getattr(view, "game_actions", ())
+        game_actions = turn.game_actions
         for action in game_actions:
             if key := _ACTION_KEYS.get(action.key):
                 bindings.setdefault(key, ("action", action.key))
-        pending = turn.pending if turn else view.pending
+        pending = turn.pending
         if pending:
             for index, choice in enumerate(pending.choices, 1):
                 if not choice.enabled:
@@ -283,18 +264,15 @@ class TerminalGame:
                     bindings.setdefault(key, target)
                 if not getattr(view, "clock_optional", False):
                     bindings.setdefault(str(index), target)
-        for side, key in ((self.human_side, "T"),):
-            for verb, controls in (
-                ("action", game_actions),
-                ("choose", pending.choices if pending else ()),
+        action_id = f"timeout:{self.human_side}"
+        if any(action.key == action_id for action in game_actions):
+            bindings.setdefault("T", ("action", action_id))
+        else:
+            choice_id = f"clock:timeout:{self.human_side}"
+            if pending and any(
+                choice.id == choice_id and choice.enabled for choice in pending.choices
             ):
-                target_id = f"timeout:{side}" if verb == "action" else f"clock:timeout:{side}"
-                if any(
-                    (c.key if verb == "action" else c.id) == target_id
-                    and getattr(c, "enabled", True)
-                    for c in controls
-                ):
-                    bindings.setdefault(key, (verb, target_id))
+                bindings.setdefault("T", ("choose", choice_id))
         return bindings
 
     def _postgame_call_summary(self, view: GameView) -> None:
@@ -321,7 +299,7 @@ class TerminalGame:
     def _controls(
         self,
         view: GameView,
-        turn: CoachingTurn | None,
+        turn: CoachingTurn,
         *,
         compact: bool,
         show_help: bool = False,
@@ -339,7 +317,7 @@ class TerminalGame:
             command = f" ({verb} {key})" if verb == "choose" or not shortcuts else ""
             return f"{shortcuts} {text}{command}".lstrip()
 
-        actions = turn.actions if turn else view.actions
+        actions = turn.actions
         if compact and (actions.offense or actions.defense):
             parts = []
             for role, calls, complete, span in (
@@ -371,13 +349,13 @@ class TerminalGame:
                     self._print("\n  " + group)
                     for action in calls:
                         text = f"[{action.key}] {action.label}"
-                        self._print(f"    {text:<30} - {_PLAY_HELP.get(action.key, '')}")
+                        self._print(f"    {text:<30}")
         if actions.defense:
             heading("DEFENSIVE FORMATION")
             for action in actions.defense:
                 text = f"[{action.key}] {action.label}"
-                self._print(f"    {text:<30} - {_PLAY_HELP.get(action.key, '')}")
-        game_actions = turn.game_actions if turn else getattr(view, "game_actions", ())
+                self._print(f"    {text:<30}")
+        game_actions = turn.game_actions
         special_plays = tuple(
             a
             for a in game_actions
@@ -396,7 +374,7 @@ class TerminalGame:
             self._print("\n  SPECIAL TEAMS:")
             for action in actions.special:
                 self._print("    " + label("kick", action.key, action.label))
-        pending = turn.pending if turn else view.pending
+        pending = turn.pending
         optional_clock = getattr(view, "clock_optional", False)
         if pending and not optional_clock:
             heading(f"{pending.chooser} chooses:")
@@ -479,7 +457,7 @@ class TerminalGame:
             return
         for _ in range(MAX_AUTOMATIC_STEPS):
             _, turn = self.public_view()
-            if turn is None or not turn.automatic:
+            if not turn.automatic:
                 return
             try:
                 report, _, _, _ = self.game.coach_step(self.human_side)
@@ -506,8 +484,8 @@ class TerminalGame:
     def _call_with_timeout(self, key: str) -> bool:
         """Submit one legal call, then use the human timeout only if the engine offers it."""
         view, turn = self.public_view()
-        actions = turn.actions if turn else view.actions
-        if turn is None or key not in {a.key for a in actions.offense + actions.defense}:
+        actions = turn.actions
+        if key not in {a.key for a in actions.offense + actions.defense}:
             raise ValueError("Use an offered play or formation before requesting its timeout.")
         self._report(self.game.coach_step(self.human_side, key)[0])
         self.advance_computer()
@@ -638,17 +616,17 @@ class TerminalGame:
             self.automatic_paused = False
             return True
         view, turn = self.public_view()
-        actions = turn.actions if turn else view.actions
-        pending = turn.pending if turn else view.pending
+        actions = turn.actions
+        pending = turn.pending
         if not args and (target := self._shortcuts(view, turn).get(verb.upper())):
             verb, value = target
             args = [value]
-        if verb == "call" and len(args) == 1 and turn is not None:
+        if verb == "call" and len(args) == 1:
             key = args[0].upper()
             if key in {a.key for a in actions.offense + actions.defense}:
                 self._report(self.game.coach_step(self.human_side, key)[0])
                 return True
-        game_actions = turn.game_actions if turn else getattr(view, "game_actions", ())
+        game_actions = turn.game_actions
         legal = {
             "choose": {c.id for c in pending.choices if c.enabled} if pending else set(),
             "kick": {a.key for a in actions.special},
@@ -659,8 +637,8 @@ class TerminalGame:
             report = self.game.coach_execute(self.human_side, operation, args[0])[0]
             self._report(report)
             if verb == "choose" and args[0] == "toss:kick":
-                next_view, next_turn = self.public_view()
-                next_actions = next_turn.actions if next_turn else next_view.actions
+                _, next_turn = self.public_view()
+                next_actions = next_turn.actions
                 if any(a.key == "kickoff" for a in next_actions.special):
                     try:
                         report = self.game.coach_execute(self.human_side, "kick", "kickoff")[0]

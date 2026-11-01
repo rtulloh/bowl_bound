@@ -7,6 +7,7 @@ import pytest
 
 from bowl_bound import coaching_session
 from bowl_bound.save_game import SavedGame
+from bowl_bound.session import Actions, PenaltyChoice, PendingDecisionView
 from tests.test_cli import new_game, saved_facts, terminal
 from tests.test_cli_shortcuts import live, regulation
 
@@ -212,6 +213,22 @@ def test_routine_selection_instructions_are_not_repeated(human: str, compact: bo
     assert saved_facts(app.game) == before
 
 
+def test_selection_status_suppression_uses_turn_role_not_engine_wording(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    app = terminal(new_game(), "home")
+    view, turn = app.public_view()
+    changed_view = replace(view, status="Synthetic engine selection status")
+    changed_turn = replace(turn, status="Synthetic human selection status")
+    monkeypatch.setattr(app, "public_view", lambda: (changed_view, changed_turn))
+
+    app.display()
+
+    output = app.output.getvalue()
+    assert "Synthetic engine selection status" not in output
+    assert "Synthetic human selection status" not in output
+
+
 def test_required_and_clock_decision_instructions_remain_visible() -> None:
     app = regulation()
     app.display()
@@ -298,12 +315,56 @@ def test_contextual_help_has_grouped_play_menu_without_command_clutter(human: st
         assert "RUNNING / OPTION PLAYS:" in text and "PASSING PLAYS:" in text
         assert "SPECIAL TEAMS:" in text and "[P] Punt" in text
         assert text.index("[5] Option") < text.index("PASSING PLAYS:") < text.index("[6] Screen")
-        assert "Inside running play" in text
+        assert "Line Plunge" in text and "Inside running play" not in text
     else:
         assert "[A] Standard" in text and "[F] Blitz" in text
         assert "[P]" not in text
     assert "commands" in text
     assert saved_facts(app.game) == before
+
+
+def test_help_uses_engine_play_label_without_cli_description(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    app = terminal(new_game(), "home", compact=True)
+    view, turn = app.public_view()
+    first, *rest = turn.actions.offense
+    changed_actions = replace(
+        turn.actions,
+        offense=(replace(first, label="Synthetic engine play label"), *rest),
+    )
+    changed_turn = replace(turn, actions=changed_actions)
+    monkeypatch.setattr(app, "public_view", lambda: (view, changed_turn))
+
+    assert not app.command("?")
+
+    output = app.output.getvalue()
+    assert "[1] Synthetic engine play label" in output
+    assert "Inside running play" not in output
+
+
+def test_disabled_engine_choice_keeps_its_reason_in_the_terminal() -> None:
+    app = terminal(new_game(), "home")
+    view, turn = app.public_view()
+    reason = "This overtime round requires a two-point try."
+    pending = PendingDecisionView(
+        "Home",
+        (
+            PenaltyChoice("conversion:two", "Two-point try", True),
+            PenaltyChoice("conversion:kick", "Field goal", False, reason),
+        ),
+        chooser_side="home",
+    )
+    decision_turn = replace(
+        turn,
+        human_role="decision",
+        actions=Actions((), (), ()),
+        pending=pending,
+    )
+
+    app._controls(view, decision_turn, compact=False)
+
+    assert f"[unavailable: {reason}]" in app.output.getvalue()
 
 
 def test_commands_reference_is_separate_read_only_and_retains_full_syntax() -> None:

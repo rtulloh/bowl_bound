@@ -78,9 +78,9 @@ Required choices remain labeled so they are actionable without another help comm
 `?` expands a titled, aligned menu: **Running / Option Plays**, **Passing Plays**,
 **Special Plays**, **Special Teams**, and **Options**, omitting groups that have no
 legal choices. Defensive help shows **Defensive Formation** and relevant options.
-Labels come from Bowl Bound; short glossary descriptions do not promise yardage
-or change the rules. Full command suffixes are omitted from play labels. Type
-`commands` for explicit command syntax, private save/load instructions and traces.
+Control labels come from the engine. They identify choices without promising
+yardage or changing the rules. Full command suffixes are omitted from play labels.
+Type `commands` for explicit command syntax, private save/load instructions and traces.
 Without `--compact`, the expanded menu is shown at each turn.
 
 | Key | Bowl Bound play/control, only when offered |
