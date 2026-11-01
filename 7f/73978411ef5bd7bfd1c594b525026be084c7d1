@@ -1,0 +1,59 @@
+backend/app.py
+  s_ed54ab581b3d60::t_2bb8802ce16515 60,86,90-92,203
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_4e32cbf592ee5b 520,740
+bowl_bound/coaching.py
+  s_ed54ab581b3d60::t_f93a1d594a4050 13,42,67-68,71,87-88,154-157,192-231
+bowl_bound/coaching_audit.py
+  s_ed54ab581b3d60::t_31e901d7a3a4de 368,432,461-464,466
+bowl_bound/coaching_profiles.py
+  s_ed54ab581b3d60::t_07c0289055f436 77,102-105,117,142-145
+bowl_bound/coaching_session.py
+  s_ed54ab581b3d60::t_8a0db72503da66 71
+bowl_bound/decision_facts.py
+  s_ed54ab581b3d60::t_962e8cfdcef91b 1-58
+bowl_bound/difficulty.py
+  s_ed54ab581b3d60::t_1ad4c554ff27ed 41-42,79-80
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_52aba027bf147c 259,287-289,301-305,404,586,615-618,826
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_6becfdaf6c627f 11,216,1176-1184,1187,1189,1575-1731
+docs/coaching.md
+  s_ed54ab581b3d60::t_6b2a44e6a4b7ea 137-139,149-154,186,204-208
+docs/saves.md
+  s_ed54ab581b3d60::t_b73de68345aeb1 98-100
+docs/web-demo.md
+  s_ed54ab581b3d60::t_696b408116c9c9 194,209-211
+tests/test_api_coaching.py
+  s_ed54ab581b3d60::t_1641c4cb929074 30
+tests/test_cli_help_example.py
+  s_ed54ab581b3d60::t_aea346822f752d 31
+tests/test_coaching.py
+  s_ed54ab581b3d60::t_a429dd6ebcd2ff 115
+tests/test_coaching_audit_matrix.py
+  s_ed54ab581b3d60::t_84a4da4d25b5d8 22-24
+tests/test_coaching_decisions_v8.py
+  s_ed54ab581b3d60::t_03caa2e092092f 1-151
+tests/test_coaching_profiles.py
+  s_ed54ab581b3d60::t_c1b1cb3d90b152 60,85-88
+tests/test_difficulty_interfaces.py
+  s_ed54ab581b3d60::t_69c9e9f2dd315d 22,37
+tests/test_return_audit.py
+  s_ed54ab581b3d60::t_df6739abad86d4 111-116
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "7f73978411ef5bd7bfd1c594b525026be084c7d1",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
