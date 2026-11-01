@@ -154,6 +154,15 @@ enabled solely because Paydirt has a similarly named feature.
   fallback handling can be tested from current facts; penalty strategy may need
   additional engine-provided facts before it can be meaningfully evaluated.
 
+### Human coaching play-test review — 2026-11-01
+
+- Reviewed `paydirt/docs/dev-notes/ai-playtesting.md` and
+  `paydirt/docs/ai-auditing.md`. Adapt the before-dice decision review and
+  separate coaching choices from outcomes. Do not copy Paydirt's NFL teams,
+  calls, thresholds, or balance conclusions; use Bowl Bound's offered engine
+  actions and local team charts. Keep historical charts, saves, rosters, and raw
+  logs private.
+
 ## Ticket coverage
 
 | Milestone 22 change or decision | Ticket |
@@ -226,3 +235,8 @@ an adopted option, write synthetic tests first, verify the expected failure, the
 implement only the approved Bowl Bound procedure. Reconcile score, possession,
 timing, statistics, structured traces, coaching privacy, and save replay where
 affected. If an option is deferred, keep it unavailable and record that decision.
+
+For AI follow-ups, owner play-test acceptance uses the
+[human coaching play-test checklist](ai-playtesting.md): inspect offered actions
+and the decision before the dice, then record the outcome separately. Automated
+audits and final scores alone do not close coaching tickets.
