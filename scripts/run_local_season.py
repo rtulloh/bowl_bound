@@ -323,7 +323,7 @@ def _submit_offense_choice(
 ) -> CoachChoice | None:
     """Submit a scrimmage call, kick, or action through its engine-owned path."""
     if choice.key in observation.offense:
-        _, _, _, computer_choice = game.coach_step(side, choice.key)
+        _, _, _, computer_choice = game._coach_step_with_choice(side, choice.key)
         return computer_choice
     operation = "kick" if choice.key in observation.special else "action"
     game.coach_execute(side, operation, choice.key)
@@ -361,7 +361,7 @@ def _play_one(spec: GameSpec, charts: dict[str, TeamChart]) -> dict[str, Any]:
                 _, turn = game.coach_view(side)
                 if turn.automatic:
                     cpu_side = "away" if side == "home" else "home"
-                    _, _, _, choice = game.coach_step(side)
+                    _, _, _, choice = game._coach_step_with_choice(side)
                     if choice is not None:
                         calls.append(
                             _call_record(
@@ -389,7 +389,7 @@ def _play_one(spec: GameSpec, charts: dict[str, TeamChart]) -> dict[str, Any]:
                         choice = safe_choice(
                             coaches[side].defense(observation), observation.defense
                         )
-                        _, _, _, cpu_choice = game.coach_step(side, choice.key)
+                        _, _, _, cpu_choice = game._coach_step_with_choice(side, choice.key)
                         call_role = role
                     calls.append(_call_record(view, side, call_role, choice, team_ids))
                     if cpu_choice is not None:
