@@ -1,0 +1,61 @@
+docs/dev-notes/ai-playtesting.md
+  s_ed54ab581b3d60::t_8a56142b28cf22 1-35
+docs/dev-notes/issues/AI/AI-001.md
+  s_ed54ab581b3d60::t_6019de39c795b2 26-27
+docs/dev-notes/issues/AI/AI-002.md
+  s_ed54ab581b3d60::t_bf51f8e63ea793 26-27
+docs/dev-notes/issues/AI/AI-003.md
+  s_ed54ab581b3d60::t_e7a12815d97079 25-26
+docs/dev-notes/issues/AI/AI-004.md
+  s_ed54ab581b3d60::t_7a5c9e1489a8c9 25-26
+docs/dev-notes/issues/AI/AI-005.md
+  s_ed54ab581b3d60::t_c2a9cc44d2026d 24-25
+docs/dev-notes/issues/AI/AI-006.md
+  s_ed54ab581b3d60::t_625e152d5b844c 24-25
+docs/dev-notes/issues/AI/AI-007.md
+  s_ed54ab581b3d60::t_ac93d90ee9aed0 24-25
+docs/dev-notes/issues/AI/AI-008.md
+  s_ed54ab581b3d60::t_fac9b1198d07b6 24-25
+docs/dev-notes/issues/AI/AI-009.md
+  s_ed54ab581b3d60::t_3b370826751212 24-25
+docs/dev-notes/issues/AI/AI-010.md
+  s_ed54ab581b3d60::t_9de3f429535348 23-24
+docs/dev-notes/issues/AI/AI-011.md
+  s_ed54ab581b3d60::t_69ea97cef3f983 25-26
+docs/dev-notes/issues/AI/AI-012.md
+  s_ed54ab581b3d60::t_4ab00233ba84af 24-25
+docs/dev-notes/issues/AI/AI-013.md
+  s_ed54ab581b3d60::t_ff81f25a7846d4 25-26
+docs/dev-notes/issues/AI/AI-014.md
+  s_ed54ab581b3d60::t_fa10a26f2f6511 25-26
+docs/dev-notes/issues/AI/AI-015.md
+  s_ed54ab581b3d60::t_8d3b4a4615da62 24-25
+docs/dev-notes/issues/AI/AI-016.md
+  s_ed54ab581b3d60::t_541ef9a18c87b0 27-28
+docs/dev-notes/issues/AI/AI-017.md
+  s_ed54ab581b3d60::t_8b137fff2144a1 23-24
+docs/dev-notes/issues/AI/AI-018.md
+  s_ed54ab581b3d60::t_86ebde928a1227 23-24
+docs/dev-notes/issues/AI/AI-019.md
+  s_ed54ab581b3d60::t_ccacb0d8bfe825 25-26
+docs/dev-notes/issues/AI/AI-020.md
+  s_ed54ab581b3d60::t_52ca030e50e258 24-25
+docs/dev-notes/milestone-22.md
+  s_ed54ab581b3d60::t_6772d3caef18a9 157-165,238-242
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "d7e7233a8e18abfff51a491e7af021f587c5c716",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
