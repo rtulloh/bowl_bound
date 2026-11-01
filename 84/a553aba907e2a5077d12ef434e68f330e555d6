@@ -1,0 +1,33 @@
+bowl_bound/penalty_yardage.py
+  s_ed54ab581b3d60::t_b6cc0bfe763767 1,3-4,8,11,15-17,59-85,192-193,200-201,212-214,217-242,244-270,274-278
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_c208627505fdc3 27-32,48,853,861-875,879-890,1665,1679,1684
+bowl_bound/special_teams.py
+  s_ed54ab581b3d60::t_1490e0e978d3d0 19,22,505-513,515-519,521
+docs/dev-notes/milestone-22.md
+  s_ed54ab581b3d60::t_905b85b66f634b 53-68
+docs/penalties.md
+  s_ed54ab581b3d60::t_d684a47461b6b0 74,83-86
+tests/test_penalty_yardage.py
+  s_ed54ab581b3d60::t_f0745b58f21f91 18,170-171,248,250-253,257,259-300
+tests/test_return_audit.py
+  s_ed54ab581b3d60::t_7cb75c30a942b0 183-280
+tests/test_special_teams.py
+  s_ed54ab581b3d60::t_09eba8a863b4f1 385-434,860-886
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "84a553aba907e2a5077d12ef434e68f330e555d6",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
