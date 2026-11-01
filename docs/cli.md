@@ -59,10 +59,11 @@ from these chart rankings. No browser helper panel is added.
 
 ## Bracketed shortcuts
 
-Type the key shown in brackets; letter keys are case-insensitive. `?` or `help`
-expands the **current legal menu**, even in compact mode. For example, an opening
-choice offers `[R] Receive` and `[K] Kick off`; enter `r` instead of
-`choose toss:receive`. Required choices also display numbered shortcuts.
+Type the key shown in brackets. Command words and letter shortcuts are
+case-insensitive; file paths and choice IDs must match the values you enter or see
+listed. `?` or `help` expands the **current legal menu**, even in compact mode. For
+example, an opening choice offers `[R] Receive` and `[K] Kick off`; enter `r`
+instead of `choose toss:receive`. Required choices also display numbered shortcuts.
 
 In compact mode, ordinary scrimmage turns show only a shortcut summary:
 

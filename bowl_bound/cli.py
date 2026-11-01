@@ -536,7 +536,7 @@ class TerminalGame:
             and verb[0].upper() in "123456789ABCDEF"
         ):
             return self._call_with_timeout(verb[0].upper())
-        verb = {"?": "help", "/": "stats"}.get(verb, verb)
+        verb = {"?": "help", "/": "stats"}.get(verb, verb.lower())
         if not args and verb.lower() == "z":
             if self.game.coach_policy not in {
                 "easy-v1",
@@ -592,6 +592,16 @@ class TerminalGame:
                 directory.mkdir(mode=0o700, exist_ok=True)
                 stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
                 args = [str(directory / f"bowl-bound-{stamp}-{token_hex(4)}.json")]
+        if not args:
+            missing_arguments = {
+                "save": "Save requires a path; use W to create a private save file.",
+                "load": "Load requires a path.",
+                "call": "Call requires an offered play or formation.",
+                "choose": "Choose requires an offered choice ID.",
+                "kick": "Kick requires an offered special-team action.",
+            }
+            if message := missing_arguments.get(verb):
+                raise ValueError(message)
         if len(args) == 1 and verb in {"save", "load"}:
             path = Path(args[0]).expanduser()
             if verb == "save":
