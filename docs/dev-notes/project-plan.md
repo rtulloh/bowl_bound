@@ -558,6 +558,31 @@ Tracked work: [DEV-050](issues/DEV/DEV-050.md). See the
 
 **Commit:** `milestone 31: make legacy save tests runtime-neutral`
 
+### 32. Audit local twelve-game seasons from imported teams
+
+Added 2026-10-31 at the owner's request after importing college teams from several
+seasons. The runner is local integration tooling; imported charts, rosters and
+per-game audit logs remain private and never enter CI, packages or release artifacts.
+
+**Deliver:** a deterministic schedule with 12 games per available team, grouped by
+chart season so teams from different years never meet. Play every matchup through
+the production game and coaching paths. Save structured play traces, coaching calls,
+final and period scores, statistics, clock timing and reconciliation results under
+ignored `private-data/`; retain failed games and report them without suppressing later
+matchups. Do not parse terminal prose or make historical result claims.
+
+**Validate:** synthetic tests cover schedule completeness, stable seeds and home/away
+balance, scoring-ledger and period-score reconciliation, report-derived statistics,
+four complete regulation quarters, unsupported/incomplete games and failure retention.
+Run the script only against locally installed team bundles, then inspect the private
+audit output for each imported season. Ordinary CI must not load historical charts or
+execute the full season.
+
+Tracked work: [DEV-007](issues/DEV/DEV-007.md). See the
+[Milestone 32 work log](milestone-32.md).
+
+**Commit:** `milestone 32: add local full-season audit runner`
+
 ## Decision gates
 
 Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.

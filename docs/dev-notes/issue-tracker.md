@@ -52,7 +52,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | [DEV-003](issues/DEV/DEV-003.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Restructure session.py pending decisions and remove invariant asserts and dead code | created 2026-10-26 |
 | [DEV-005](issues/DEV/DEV-005.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Consolidate shared test helpers and stop importing from test modules | created 2026-10-26 |
 | [DEV-006](issues/DEV/DEV-006.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Reduce test coupling to private engine attributes and timing-sensitive assertions | created 2026-10-26 |
-| [DEV-007](issues/DEV/DEV-007.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Add mixed-result seeded full-game simulations and reduce browser test brittleness | created 2026-10-26 |
+| [DEV-007](issues/DEV/DEV-007.md) | Medium | [32](project-plan.md#32-audit-local-twelve-game-seasons-from-imported-teams) | Add a local full-season runner to audit imported team game logs | created 2026-10-26 |
 | [DEV-010](issues/DEV/DEV-010.md) | Medium | [24](project-plan.md#24-prepare-github-publication) | Ignore docs/reference by rule and clarify which derived chart facts are public | created 2026-10-26 |
 | [DEV-019](issues/DEV/DEV-019.md) | Medium | [20a](project-plan.md#20a-add-an-interactive-cli-for-play-testing) | Provide standalone interactive CLI play-testing with existing engine and coaching interfaces | created 2026-10-27 |
 | [DEV-020](issues/DEV/DEV-020.md) | Medium | [20a](project-plan.md#20a-add-an-interactive-cli-for-play-testing) | Failed CLI save cleanup can delete a replacement file | created 2026-10-27 |
@@ -339,7 +339,6 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 - [DEV-004](issues/DEV/DEV-004.md) (open, High) — Provide a single-command full regression gate that builds before browser tests
 - [DEV-005](issues/DEV/DEV-005.md) (open, Medium) — Consolidate shared test helpers and stop importing from test modules
 - [DEV-006](issues/DEV/DEV-006.md) (open, Medium) — Reduce test coupling to private engine attributes and timing-sensitive assertions
-- [DEV-007](issues/DEV/DEV-007.md) (open, Medium) — Add mixed-result seeded full-game simulations and reduce browser test brittleness
 - [DEV-008](issues/DEV/DEV-008.md) (open, Low) — Add frontend coverage threshold, api.js unit tests and a lint script
 - [DEV-023](issues/DEV/DEV-023.md) (open, Low) — Replay engine profile is a hand-maintained string not tied to rule changes
 - [DEV-027](issues/DEV/DEV-027.md) (open, Low) — AGENTS.md issue-index command fails on the system python3
@@ -419,3 +418,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 ### Milestone [31](project-plan.md#31-make-legacy-save-tests-runtime-neutral)
 
 - [DEV-050](issues/DEV/DEV-050.md) (resolved, Medium) — Legacy save fixtures pin Python 3.12 and fail under Python 3.13 CI
+
+### Milestone [32](project-plan.md#32-audit-local-twelve-game-seasons-from-imported-teams)
+
+- [DEV-007](issues/DEV/DEV-007.md) (open, Medium) — Add a local full-season runner to audit imported team game logs
