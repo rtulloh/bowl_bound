@@ -19,7 +19,6 @@ from bowl_bound.normalization import (
     CELL_LEGEND,
     ChartColor,
     chart_color_for_csv_token,
-    chart_color_for_rgb,
 )
 from bowl_bound.team_csv import (
     TeamFileMetadata,
