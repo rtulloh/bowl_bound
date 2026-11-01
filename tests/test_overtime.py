@@ -151,6 +151,7 @@ def test_toss_series_spot_untimed_rounds_alternating_first_and_timeouts() -> Non
     assert {a.key for a in view.game_actions} == {
         "bounds:ib",
         "bounds:oob",
+        "elect_safety",
         "kneel",
         "timeout:away",
         "timeout:home",

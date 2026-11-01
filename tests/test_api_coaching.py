@@ -52,6 +52,22 @@ def test_preview_masks_computer_controls_and_resolution_reveals_calls(
     assert result.status_code == 200, result.text
     data = result.json()
     assert data["report"]["called_play"] and data["report"]["defense"]
+    revision = 1
+    while data["turn"]["automatic"]:
+        result = client.post(
+            path + "/coach",
+            json={"human_side": human, "expected_revision": revision},
+        )
+        assert result.status_code == 200, result.text
+        data = result.json()
+        revision += 1
+    if data["turn"]["human_role"] == "decision":
+        choice = next(
+            choice["id"] for choice in data["turn"]["pending"]["choices"] if choice["enabled"]
+        )
+        result = client.post(path + f"/decision?human_side={human}", json={"choice": choice})
+        assert result.status_code == 200, result.text
+        data = result.json()
     assert len(data["view"]["log"]) == 1
     assert "computer_choice" not in data
 
