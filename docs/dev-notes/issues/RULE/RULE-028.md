@@ -10,7 +10,7 @@ closed-at: null
 tags:
 - advanced-option
 links: [RULE-022]
-commits: [33a53da]
+commits: [33a53da, 427b42e]
 ---
 
 ## Description
@@ -34,3 +34,7 @@ Created with scripts/create_issue.py. Keep evidence public-safe.
 --- 2026-11-01 ---
 Owner approved this implementation as part of the three-option scope in RULE-022.
 Runtime behavior remains unavailable until the test-first implementation lands.
+
+--- 2026-11-01 ---
+Updated the API regression to complete the newly offered Razzle-Dazzle decision
+before asserting the final play log; tested in `427b42e`.

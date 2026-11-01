@@ -10,7 +10,7 @@ closed-at: null
 tags:
 - advanced-option
 links: [RULE-022]
-commits: [a51f849]
+commits: [a51f849, 427b42e]
 ---
 
 ## Description
@@ -36,3 +36,7 @@ Created with scripts/create_issue.py. Keep evidence public-safe.
 --- 2026-11-01 ---
 Owner approved this implementation as part of the three-option scope in RULE-022.
 Runtime behavior remains unavailable until the test-first implementation lands.
+
+--- 2026-11-01 ---
+Added `elect_safety` to the overtime game-action coverage set so the full legal
+menu remains asserted after this rule was added; tested in `427b42e`.
