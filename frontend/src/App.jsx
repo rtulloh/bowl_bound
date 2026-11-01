@@ -199,11 +199,12 @@ export default function App() {
   const blocking = (Boolean(pending) && !view.clock_optional) || Boolean(turn?.automatic)
   const gameActions = (turn ? turn.game_actions : view.game_actions) || []
   const timeoutActions = gameActions.filter((action) => action.key.startsWith("timeout:"))
+  const boundsActions = gameActions.filter((action) => action.key.startsWith("bounds:"))
   // Display abbreviations only: offered engine IDs and labels still own availability/behavior.
   const displayKeys = { punt: 'P', field_goal: 'F', kneel: 'K', kickoff: 'KO', hail_mary: 'HM', 'timeout:home': 'TO', 'timeout:away': 'TO' }
   const extraPlays = [
     ...(actions.special || []).map((action) => ({ ...action, prefix: 'special', displayKey: displayKeys[action.key], shortLabel: action.key === 'field_goal' ? 'FG' : action.label })),
-    ...gameActions.filter((action) => !action.key.startsWith("timeout:")).map((action) => ({ ...action, prefix: 'game', displayKey: displayKeys[action.key] })),
+    ...gameActions.filter((action) => !action.key.startsWith("timeout:") && !action.key.startsWith("bounds:")).map((action) => ({ ...action, prefix: 'game', displayKey: displayKeys[action.key] })),
   ]
   const offensePlays = [...actions.offense, ...(!turn || turn.human_role === 'offense' ? extraPlays : [])]
   const defensePlays = [...actions.defense, ...(turn && turn.human_role !== 'offense' ? extraPlays : [])]
@@ -269,8 +270,15 @@ export default function App() {
           {!timeoutActions.length && <button type="button" className="play-button" disabled title="Available when the engine offers a timeout after an eligible play.">Timeout</button>}
           <button type="button" className="play-button" disabled title="Available when the engine offers a spike after an eligible play.">Spike</button>
         </>}
-        <button type="button" className="play-button" disabled title="Per-play out-of-bounds declaration; engine support is not implemented yet.">OOB</button>
-        <button type="button" className="play-button" disabled title="Per-play in-bounds declaration; engine support is not implemented yet.">IB</button>
+        {boundsActions.map((action) => {
+          const declaration = action.key === 'bounds:oob' ? 'out_of_bounds' : 'in_bounds'
+          const rule = view.play_modifiers?.find((choice) => choice.id === action.key)
+          return <button key={action.key} type="button" className="play-button"
+            disabled={busy || blocking || view.finished || rule?.enabled === false}
+            aria-pressed={view.bounds_declaration === declaration}
+            title={rule?.reason || action.label} data-testid={'bounds-' + declaration}
+            onClick={() => special(action.key, true)}>{declaration === 'out_of_bounds' ? 'OOB' : 'IB'}</button>
+        })}
       </section>
       <p className="text-xs text-gray-300">{hurryMode ? "Enabled until you turn it off; used only when the engine offers a legal hurry-up snap for your offense." : turn ? "Choose your play to resolve it. Computer calls stay hidden until resolution." : "Choose both calls to resolve the play. Required decisions come first."}</p>
       {(view.toss_dice?.length > 0 || view.overtime_toss_dice?.length > 0) && <details className="text-xs"><summary>Toss dice audit</summary>

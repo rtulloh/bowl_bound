@@ -71,6 +71,43 @@ def test_unsupported_regulation_season_is_actionable_not_a_server_error(tmp_path
     assert response.status_code == 422 and "season" in response.json()["detail"]
 
 
+def test_bounds_declaration_api_uses_engine_actions_and_one_play_timing(tmp_path: Path) -> None:
+    for chart in default_teams():
+        kicks = special_chart(chart.name, kickoff=yards(70))
+        write_team(tmp_path, replace(chart, season=2002, special_teams=kicks.special_teams))
+    client = TestClient(create_app(tmp_path))
+    created = client.post(
+        "/api/games",
+        json={
+            "home": "2002/alpha-tech",
+            "away": "2002/beta-state",
+            "seed": 9,
+            "mode": "regulation",
+        },
+    ).json()
+    path = f"/api/games/{created['game_id']}"
+    unavailable = client.post(path + "/action", json={"action": "bounds:oob"})
+    assert unavailable.status_code == 409
+    assert client.get(path).json()["view"]["bounds_declaration"] is None
+    assert client.post(path + "/decision", json={"choice": "toss:receive"}).status_code == 200
+    assert client.post(path + "/kick", json={"action": "kickoff"}).status_code == 200
+    assert client.post(path + "/decision", json={"choice": "kick:touchback"}).status_code == 200
+
+    selected = client.post(path + "/action", json={"action": "bounds:oob"})
+    assert selected.status_code == 200, selected.text
+    assert selected.json()["view"]["bounds_declaration"] == "out_of_bounds"
+    assert {choice["id"] for choice in selected.json()["view"]["play_modifiers"]} == {
+        "bounds:oob",
+        "bounds:ib",
+    }
+
+    played = client.post(path + "/snap", json={"play": "1", "defense": "A"})
+    assert played.status_code == 200, played.text
+    assert played.json()["report"]["yards"] == 1
+    assert played.json()["view"]["timing_log"][-1]["seconds"] == 10
+    assert played.json()["view"]["bounds_declaration"] is None
+
+
 def test_overtime_api_transports_choices_timeouts_and_game_type(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

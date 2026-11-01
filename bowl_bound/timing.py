@@ -1,10 +1,18 @@
 """Standard Bowl Bound timing facts and immutable regulation clock (Timing Chart p.34)."""
 
 from dataclasses import dataclass, replace
+from enum import Enum
 
 from .game_state import Possession
 
 QUARTER_SECONDS = 900
+
+
+class BoundsDeclaration(str, Enum):
+    """One offensive declaration for the upcoming scrimmage play."""
+
+    OUT_OF_BOUNDS = "out_of_bounds"
+    IN_BOUNDS = "in_bounds"
 
 
 @dataclass(frozen=True)
@@ -18,6 +26,7 @@ class TimingFacts:
     scoring: bool = False
     touchback: bool = False
     out_of_bounds: bool = False
+    guaranteed_out_of_bounds: bool = False
     unreturned_kickoff: bool = False
     conversion: bool = False
     no_elapsed_time: bool = False
@@ -80,6 +89,8 @@ def duration(facts: TimingFacts, clock: Clock) -> int:
         return 0
     if facts.unreturned_kickoff:
         return 0
+    if facts.guaranteed_out_of_bounds:
+        return 10
     late_half = (clock.quarter == 2 and clock.remaining <= 120) or (
         clock.quarter == 4 and clock.remaining <= 300
     )

@@ -49,8 +49,12 @@ The clock advances through engine decisions, not real elapsed time. Standard
 play timing applies automatically with your next call; there is no separate
 runoff action. Kneel to run down the clock. Timeouts and spikes are one-shot
 choices; Hurry-up mode stays selected until turned off but applies only where
-legal. New/loaded games reset Hurry-up mode. IB/OOB declaration controls are
-not implemented and remain disabled. Modifier controls wrap on smaller screens.
+legal. New/loaded games reset Hurry-up mode. When offered, OOB and IB declare
+the next scrimmage play's bounds and clear after that play; OOB guarantees a
+10-second play. Each costs five yards only when it changes a result, subject to
+the rulebook exceptions. The terminal accepts O and I while offered, or
+`action bounds:oob` / `action bounds:ib`. Choosing a kick clears the declaration;
+it never applies to a punt. Modifier controls wrap on smaller screens.
 
 Expand Team statistics, the scoring summary, Play log and Dice and chart audit
 to inspect recorded events. CLI and web share natural engine-generated
@@ -96,8 +100,8 @@ there is no browser helper panel. `quit` exits without automatically saving.
 
 This is an early test release, not a complete implementation of every optional
 rule. Supported season profiles cover 1940–2023; older rules may permit a final
-tie. Advanced kick options, alternate/hybrid timing, in-bounds/out-of-bounds
-declarations and certain end-zone recovery/return-foul branches are unavailable.
+tie. Advanced kick options, alternate/hybrid timing and certain end-zone
+recovery/return-foul branches are unavailable.
 Unsupported choices stay disabled rather than guessing a result. The extractor
 supports only its documented PDF layout, not arbitrary scans.
 

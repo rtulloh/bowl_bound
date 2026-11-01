@@ -147,6 +147,9 @@ class PriorityResult:
     out_of_bounds: bool = False
     penalty: PenaltyData | None = None
     defensive_end_zone_depth: int | None = None
+    guaranteed_out_of_bounds: bool = False
+    bounds_declaration: str | None = None
+    bounds_cost: int = 0
 
 
 @dataclass(frozen=True)

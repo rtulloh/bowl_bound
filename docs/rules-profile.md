@@ -28,7 +28,8 @@ college rules require dated sources, not Paydirt NFL behavior or a moving refere
 | Second-half kickoff | Fixed reciprocal order: opening kicker receives; opening receiver kicks. The second-half kicker chooses normal or onside; onside kicks are unsupported, so schedule the normal kickoff without a prompt. | Basic V-3, p. 4, interpreted per owner clarification (2026-10-31); corrects the implementation's kick/receive interpretation; Milestone 30 |
 | Hail Mary | Include using Bowl Bound eligibility and outcomes, not NFL outcomes | Advanced I-3, p. 14; Milestone 15 |
 | Hurry-up, spike, kneel | Include using Bowl Bound procedures; Paydirt is a design reference only | Advanced I-4(A–B), pp. 14–15; I-6(A), p. 15; Milestone 15 |
-| Deferred options | Wild Card/advanced defenses (Advanced II), QB Sneak (I-2), yardage factors (IX), advanced kicking (III–V), Razzle-Dazzle (I-1), elected safeties (I-5), weather (VI), power ratings (VIII), guaranteed in/out-of-bounds (I-4(C), I-6(C)), intentional delay (I-6(B)) | Separate Milestone 22 scope approvals |
+| Per-play bounds declarations | OOB (I-4(C)) guarantees 10 seconds; IB (I-6(C)) removes an existing OOB marker. Each costs five yards only if it changes the result, with printed exceptions. Applies to the next scrimmage play, not a punt. | Milestone 22, RULE-010 |
+| Deferred options | Wild Card/advanced defenses (Advanced II), QB Sneak (I-2), yardage factors (IX), advanced kicking (III–V), Razzle-Dazzle (I-1), elected safeties (I-5), weather (VI), power ratings (VIII), intentional delay (I-6(B)) | Separate Milestone 22 scope approvals |
 | Later timing consideration | Alternate and hybrid timing; neither is promised for implementation | Milestone 22 evaluation only |
 
 ## Standard timing matrix
@@ -46,10 +47,11 @@ college rules require dated sources, not Paydirt NFL behavior or a moving refere
 | Conversion attempt | 0 |
 
 Non-kicking out-of-bounds plays take 10 seconds only in the last two minutes of Q2
-and last five minutes of Q4; otherwise ignore the marker for timing. Apply the shortest
-applicable duration. Return-chain timing must avoid charging both a kick/turnover and
-its return twice (Basic V-6, p. 5). Alternate and hybrid timing remain unavailable pending
-Milestone 22 consideration.
+and last five minutes of Q4; otherwise ignore the marker for timing. An OOB declaration
+guarantees 10 seconds in any period; an IB declaration clears an otherwise applicable
+out-of-bounds marker. Apply the shortest applicable duration. Return-chain timing must
+avoid charging both a kick/turnover and its return twice (Basic V-6, p. 5). Alternate
+and hybrid timing remain unavailable pending Milestone 22 consideration.
 
 ## Rules matrix for remaining core behavior
 
@@ -259,7 +261,7 @@ return, so it does not eliminate the second attempt. Do not substitute NFL sudde
 - **Timeouts:** Three per team per half, no carryover. Reset both budgets at
   halftime. Opening toss selection and reciprocal second-half kickoff follow the
   selected Bowl Bound profile; see the second-half kickoff policy above.
-- **Deferred actions:** Guaranteed in/out-of-bounds declarations, intentional delay,
+- **Deferred actions:** Intentional delay,
   Razzle-Dazzle, QB Sneak, Wild Card and other advanced defenses, weather, elected
   safeties, rating/YF adjustments, and advanced kicking remain unavailable until
   their individual Milestone 22 approvals.

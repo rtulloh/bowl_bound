@@ -14,3 +14,12 @@ are illustrative labels, not player statistics. Phrase selection is stable for
 the report number and consumes no randomness. Saves do not contain this field
 or rosters. Load may refresh names from current installed rosters. The save
 schema, semantic digest and engine profile are unchanged.
+
+## Engine-owned play bounds declarations
+
+Regulation views offer `game_actions` with `bounds:oob` and `bounds:ib` only
+when a scrimmage play can be selected. Clients submit an offered action through
+the game-action endpoint; `view.bounds_declaration` reports the selected value,
+and `view.play_modifiers` contains the offered IDs and reasons. The declaration
+is mutually exclusive, applies to the next scrimmage play, and is cleared by the
+engine after that play. Clients must not apply yardage or clock changes themselves.

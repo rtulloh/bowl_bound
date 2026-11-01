@@ -75,7 +75,14 @@ class Kick(BaseModel):
 
 class GameAction(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    action: Literal["kneel", "hail_mary", "timeout:home", "timeout:away"]
+    action: Literal[
+        "kneel",
+        "hail_mary",
+        "timeout:home",
+        "timeout:away",
+        "bounds:oob",
+        "bounds:ib",
+    ]
 
 
 class Decision(BaseModel):

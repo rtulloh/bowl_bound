@@ -119,7 +119,7 @@ it('defaults to human home/computer away while keeping two-sided manual play las
   expect(modes).toHaveValue('home')
 })
 
-it('keeps hurry-up, timeouts, spike and unavailable OOB together in the visible modifier row', async () => {
+it('keeps offered hurry-up, timeout and spike controls in the visible modifier row', async () => {
   api.newGame.mockResolvedValue({ game_id: 'game', seed: 7, view: view({ phase: 'clock_choice', clock_optional: true,
     pending: { choices: [
       { id: 'clock:timeout:home', label: 'Home timeout', enabled: true },
@@ -136,25 +136,54 @@ it('keeps hurry-up, timeouts, spike and unavailable OOB together in the visible 
   expect(row).toContainElement(screen.getByRole('checkbox', { name: 'Hurry-up mode' }))
   expect(row).toContainElement(screen.getByRole('radio', { name: 'Home timeout' }))
   expect(row).toContainElement(screen.getByRole('radio', { name: 'Spike' }))
-  expect(row).toContainElement(screen.getByRole('button', { name: 'OOB' }))
-  expect(screen.getByRole('button', { name: 'OOB' })).toBeDisabled()
+  expect(screen.queryByRole('button', { name: 'OOB' })).toBeNull()
   fireEvent.click(screen.getByRole('radio', { name: 'Home timeout' }))
   await waitFor(() => expect(api.decide).toHaveBeenCalledWith('game', 'clock:timeout:home'))
   expect(screen.getByRole('button', { name: 'Timeout' })).toBeDisabled()
   expect(screen.getByRole('button', { name: 'Spike' })).toBeDisabled()
 })
 
-it('shows unavailable Timeout, Spike and OOB beside Hurry-up instead of hiding them', async () => {
+it('hides modifiers that the engine has not offered', async () => {
   await start()
   const row = screen.getByRole('region', { name: 'Play modifiers' })
-  for (const name of ['Timeout', 'Spike', 'OOB', 'IB']) {
+  for (const name of ['Timeout', 'Spike']) {
     const button = screen.getByRole('button', { name, exact: true })
     expect(row).toContainElement(button)
     expect(button).toBeDisabled()
     fireEvent.click(button)
   }
+  expect(screen.queryByRole('button', { name: 'OOB', exact: true })).toBeNull()
+  expect(screen.queryByRole('button', { name: 'IB', exact: true })).toBeNull()
   expect(api.decide).not.toHaveBeenCalled()
   expect(api.gameAction).not.toHaveBeenCalled()
+})
+
+it('submits offered OOB and IB declarations through engine action IDs', async () => {
+  api.newGame.mockResolvedValue({ game_id: 'game', seed: 7, view: view({
+    game_actions: [
+      { key: 'bounds:oob', label: 'Declare out of bounds' },
+      { key: 'bounds:ib', label: 'Declare in bounds' },
+    ],
+    play_modifiers: [
+      { id: 'bounds:oob', label: 'Out of bounds', enabled: true },
+      { id: 'bounds:ib', label: 'In bounds', enabled: true },
+    ],
+  }) })
+  api.gameAction.mockResolvedValue({ view: view({ bounds_declaration: 'out_of_bounds' }) })
+  await start()
+
+  const row = screen.getByRole('region', { name: 'Play modifiers' })
+  const oob = screen.getByTestId('bounds-out_of_bounds')
+  const ib = screen.getByTestId('bounds-in_bounds')
+  expect(row).toContainElement(oob)
+  expect(row).toContainElement(ib)
+  expect(oob).toBeEnabled()
+  expect(oob).toHaveAttribute('aria-pressed', 'false')
+  expect(screen.queryByTestId('game-play-bounds:oob')).toBeNull()
+
+  fireEvent.click(oob)
+  await waitFor(() => expect(api.gameAction).toHaveBeenCalledWith('game', 'bounds:oob'))
+  expect(api.snap).not.toHaveBeenCalled()
 })
 
 it('keeps engine-offered between-play timeouts in the same modifier row, not in play panels', async () => {

@@ -43,7 +43,7 @@ from .statistics import (
     summarize,
 )
 from .team_csv import format_cell
-from .timing import TimingFacts
+from .timing import BoundsDeclaration, TimingFacts
 from .turnovers import (
     EndZoneResult,
     TurnoverOutcome,
@@ -269,6 +269,7 @@ class _PendingDecision:
     turnover: bool = False
     turnover_resolution: TurnoverResolution | None = None
     turnover_location: int | None = None
+    bounds_declaration: BoundsDeclaration | None = None
 
 
 class PlaySession:
@@ -604,8 +605,17 @@ class PlaySession:
         dice: DiceSource | None = None,
         hurried: bool = False,
         hail_mary: bool = False,
+        bounds_declaration: BoundsDeclaration | str | None = None,
     ) -> PlayReport:
         """Prepare one snap; penalty choices are resolved separately by :meth:`decide`."""
+        try:
+            declaration = (
+                BoundsDeclaration(bounds_declaration) if bounds_declaration is not None else None
+            )
+        except ValueError as error:
+            raise InvalidDecisionError("choose one offered bounds declaration") from error
+        if declaration is not None and self._phase is SessionPhase.TWO_POINT_TRY:
+            raise InvalidDecisionError("bounds declarations are unavailable on conversion tries")
         called = _parse_play(play)
         defensive = _parse_formation(formation)
         if self._phase is SessionPhase.CONVERSION_CHOICE:
@@ -685,7 +695,16 @@ class PlaySession:
                 )
                 pending_view = replace(pending_view, choices=(*pending_view.choices, *carry))
             self._pending = _PendingDecision(
-                prepared, called, defensive, field, before, trace, prefix, pending_view, dice=source
+                prepared,
+                called,
+                defensive,
+                field,
+                before,
+                trace,
+                prefix,
+                pending_view,
+                dice=source,
+                bounds_declaration=declaration,
             )
             return PlayReport(
                 len(self._log) + 1,
@@ -703,7 +722,15 @@ class PlaySession:
                 trace,
             )
         return self._apply_live_result(
-            prepared, called, defensive, field, before, trace, prefix, source
+            prepared,
+            called,
+            defensive,
+            field,
+            before,
+            trace,
+            prefix,
+            source,
+            bounds_declaration=declaration,
         )
 
     def _apply_live_result(
@@ -716,9 +743,11 @@ class PlaySession:
         trace: tuple[TraceEntry, ...],
         prefix: str,
         source: DiceSource,
+        *,
+        bounds_declaration: BoundsDeclaration | None = None,
     ) -> PlayReport:
         """Continue an already prepared play; never repeat lookup after a decline."""
-        resolution = prepared.resolution
+        resolution = _apply_bounds_declaration(prepared.resolution, bounds_declaration)
         offense, defense = self._charts[field.possession], self._charts[field.possession.other]
         hurried = self._hurried_play
         if resolution.result.defensive_end_zone_depth is not None:
@@ -743,7 +772,7 @@ class PlaySession:
             )
             full_trace = (*trace, *(_turnover_trace_entry(entry) for entry in location_trace))
             self._pending = _PendingDecision(
-                prepared,
+                replace(prepared, resolution=resolution),
                 called,
                 defensive,
                 field,
@@ -944,6 +973,7 @@ class PlaySession:
                 pending.trace,
                 pending.prefix,
                 pending.dice or self._dice,
+                bounds_declaration=pending.bounds_declaration,
             )
         _, index_text, spot = choice.split(":")
         penalty = pending.prepared.penalties[int(index_text)]
@@ -1406,11 +1436,31 @@ class PlaySession:
                 scoring=any(e.play_number == len(self._log) + 1 for e in self._ledger.events),
                 touchback=outcome == "touchback",
                 out_of_bounds=resolution.result.out_of_bounds,
+                guaranteed_out_of_bounds=resolution.result.guaranteed_out_of_bounds,
                 conversion=self._phase is SessionPhase.TWO_POINT_TRY,
                 no_elapsed_time=no_elapsed_time,
             ),
             extends_quarter=extends_quarter,
         )
+        declaration = resolution.result.bounds_declaration
+        if declaration is not None:
+            label = (
+                "Out-of-bounds"
+                if declaration == BoundsDeclaration.OUT_OF_BOUNDS.value
+                else "In-bounds"
+            )
+            if resolution.result.bounds_cost:
+                detail = "5-yard cost applied"
+            elif (
+                declaration == BoundsDeclaration.OUT_OF_BOUNDS.value
+                and resolution.result.out_of_bounds
+            ):
+                detail = "no yardage cost; the result was already out of bounds"
+            else:
+                detail = "no yardage cost applies"
+            report = replace(
+                report, description=f"{report.description} {label} declaration: {detail}."
+            )
         if (
             reason is None
             and self._phase is not SessionPhase.TWO_POINT_TRY
@@ -1605,6 +1655,36 @@ def _resolved_turnover_location(
 
 def _gain(resolution: PlayResolution) -> int:
     return resolution.result.yards or 0
+
+
+def _apply_bounds_declaration(
+    resolution: PlayResolution, declaration: BoundsDeclaration | None
+) -> PlayResolution:
+    """Apply Bowl Bound's five-yard declaration cost to the resolved ordinary result."""
+    if declaration is None:
+        return resolution
+    result = resolution.result
+    if result.kind not in {ResultKind.YARDS, ResultKind.NO_CHANGE}:
+        return replace(
+            resolution,
+            result=replace(result, bounds_declaration=declaration.value),
+        )
+    charge = (declaration is BoundsDeclaration.OUT_OF_BOUNDS and not result.out_of_bounds) or (
+        declaration is BoundsDeclaration.IN_BOUNDS and result.out_of_bounds
+    )
+    yards = (result.yards or 0) - 5 if charge else result.yards
+    return replace(
+        resolution,
+        result=replace(
+            result,
+            kind=ResultKind.YARDS if charge else result.kind,
+            yards=yards,
+            out_of_bounds=declaration is BoundsDeclaration.OUT_OF_BOUNDS,
+            guaranteed_out_of_bounds=declaration is BoundsDeclaration.OUT_OF_BOUNDS,
+            bounds_declaration=declaration.value,
+            bounds_cost=5 if charge else 0,
+        ),
+    )
 
 
 def _gain_text(kind: ResultKind | None, yards: int) -> str:

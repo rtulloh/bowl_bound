@@ -119,9 +119,10 @@ the next quarter. If it ends a half or game, the engine shows the required
 halftime, overtime or final state without running another play. Kneel is the play
 for deliberately using time. Timeout and spike remain one-shot engine decisions;
 unavailable controls stay disabled.
-IB/OOB declarations remain disabled pending their engine implementation, including
-the applicable five-yard cost and exceptions. Their approved interaction is
-mutually exclusive, for one play only, then reset—not a persistent mode.
+When offered, OOB and IB declarations are mutually exclusive and apply to the
+next scrimmage play only. OOB guarantees a 10-second play. The engine applies
+the five-yard cost and rulebook exceptions; controls clear after the play and
+do not apply to kicks.
 **Hurry-up mode** stays selected across plays, timeouts, possession changes,
 quarters and halftime until you toggle it off; unavailable situations simply
 suspend its application. Before a snap it selects the offered legal hurry action,

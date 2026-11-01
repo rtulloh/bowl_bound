@@ -715,7 +715,14 @@ def _legacy_m27_view_digest(
 
 def _semantic_view_digest(data: dict[str, Any]) -> str:
     """Hash semantic state while excluding view-only diagnostics and labels."""
-    presentation_keys = {"dice", "dice_label", "chooser_side", "toss_dice", "overtime_toss_dice"}
+    presentation_keys = {
+        "dice",
+        "dice_label",
+        "chooser_side",
+        "toss_dice",
+        "overtime_toss_dice",
+        "play_modifiers",
+    }
     legacy_defenses = {
         f"{defense.value} {label}": f"Formation {defense.value}"
         for defense, label in DEFENSE_LABELS.items()
@@ -738,9 +745,20 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
                         f"vs {friendly}", f"vs {legacy}", 1
                     ),
                 }
-            return {
-                key: semantic(item) for key, item in value.items() if key not in presentation_keys
-            }
+            canonical: dict[str, Any] = {}
+            for key, item in value.items():
+                if key in presentation_keys:
+                    continue
+                if key == "bounds_declaration" and item is None:
+                    continue
+                if key == "guaranteed_out_of_bounds" and item is False:
+                    continue
+                if key == "game_actions" and isinstance(item, (list, tuple)):
+                    item = [
+                        action for action in item if not action.get("key", "").startswith("bounds:")
+                    ]
+                canonical[key] = semantic(item)
+            return canonical
         if isinstance(value, (list, tuple)):
             return [semantic(item) for item in value]
         return value

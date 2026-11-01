@@ -120,6 +120,19 @@ def test_f_on_defense_is_blitz_not_a_field_goal() -> None:
     assert not app.command("p")
 
 
+def test_oob_and_ib_shortcuts_select_one_engine_declaration_before_the_next_play() -> None:
+    app = regulation()
+    live(app)
+    app.display()
+    output = app.output.getvalue()
+
+    assert "O,I" in output
+    assert app.command("O")
+    assert app.game.view().bounds_declaration == "out_of_bounds"
+    assert app.command("I")
+    assert app.game.view().bounds_declaration == "in_bounds"
+
+
 def test_k_is_a_kickoff_only_when_offered() -> None:
     app = regulation()
     assert app.command("choose toss:receive")

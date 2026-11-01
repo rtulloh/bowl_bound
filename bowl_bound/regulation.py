@@ -21,7 +21,7 @@ from .session import (
     SessionView,
 )
 from .statistics import PlayStatistics
-from .timing import Clock, TimingFacts, duration
+from .timing import BoundsDeclaration, Clock, TimingFacts, duration
 
 
 class RegulationPhase(str, Enum):
@@ -72,6 +72,8 @@ class RegulationView(SessionView):
     overtime_toss_rolls: tuple[OffensiveRoll, ...] = ()
     toss_dice: tuple[dict[str, object], ...] = ()
     overtime_toss_dice: tuple[dict[str, object], ...] = ()
+    bounds_declaration: str | None = None
+    play_modifiers: tuple[PenaltyChoice, ...] = ()
 
 
 class RegulationGame:
@@ -114,6 +116,7 @@ class RegulationGame:
         self._opening_kicker: Possession | None = None
         self._phase = RegulationPhase.OPENING
         self._hurried = False
+        self._bounds_declaration: BoundsDeclaration | None = None
         self._untimed = False
         self._pending_timing_seconds = 0
         self._last_report: PlayReport | None = None
@@ -265,6 +268,13 @@ class RegulationGame:
                     and not self._untimed
                 ):
                     game_actions.append(Action("hail_mary", "Hail Mary"))
+                if not normal_timing_ends_period:
+                    game_actions.extend(
+                        (
+                            Action("bounds:oob", "Declare out of bounds"),
+                            Action("bounds:ib", "Declare in bounds"),
+                        )
+                    )
         status = base.status
         if self._phase is RegulationPhase.OPENING:
             status = (
@@ -308,6 +318,12 @@ class RegulationGame:
                 ]
                 if base.phase == "scrimmage":
                     game_actions.append(Action("kneel", "Kneel"))
+                    game_actions.extend(
+                        (
+                            Action("bounds:oob", "Declare out of bounds"),
+                            Action("bounds:ib", "Declare in bounds"),
+                        )
+                    )
             if base.phase == "conversion_choice" and self._ot_profile.mandatory_two(
                 ot.round_number
             ):
@@ -352,6 +368,17 @@ class RegulationGame:
             timing_log=self._timing_log,
             clock_optional=clock_optional,
             clock_modifiers=modifiers,
+            bounds_declaration=(
+                self._bounds_declaration.value if self._bounds_declaration is not None else None
+            ),
+            play_modifiers=(
+                (
+                    PenaltyChoice("bounds:oob", "Out of bounds", True),
+                    PenaltyChoice("bounds:ib", "In bounds", True),
+                )
+                if any(a.key.startswith("bounds:") for a in game_actions)
+                else ()
+            ),
             game_type=self._game_type.value,
             overtime=(
                 OvertimeView(
@@ -425,7 +452,13 @@ class RegulationGame:
         if self._phase is RegulationPhase.KICKOFF:
             raise PendingDecisionError("the kickoff must be completed first")
         before = self._session.view()
-        report = self._session.snap(play, formation, dice=dice or self._dice, hurried=self._hurried)
+        report = self._session.snap(
+            play,
+            formation,
+            dice=dice or self._dice,
+            hurried=self._hurried,
+            bounds_declaration=self._bounds_declaration,
+        )
         if report.supported:
             self._hurried = False
         return self._after(before, report)
@@ -447,6 +480,7 @@ class RegulationGame:
         report = self._session.kick(action, dice=dice or self._dice, hurried=self._hurried)
         if report.supported:
             self._hurried = False
+            self._bounds_declaration = None
         return self._after(before, report)
 
     def decide(self, choice: str, *, dice: DiceSource | None = None) -> PlayReport | None:
@@ -517,6 +551,14 @@ class RegulationGame:
         self._guard()
         if action not in {a.key for a in self.view().game_actions}:
             raise InvalidDecisionError("that game action is unavailable")
+        if action in {"bounds:oob", "bounds:ib"}:
+            requested = (
+                BoundsDeclaration.OUT_OF_BOUNDS
+                if action == "bounds:oob"
+                else BoundsDeclaration.IN_BOUNDS
+            )
+            self._bounds_declaration = None if self._bounds_declaration is requested else requested
+            return None
         if self._phase is RegulationPhase.OVERTIME and action.startswith("timeout:"):
             team = Possession(action.split(":")[1])
             self._overtime = self._overtime.timeout(team)
@@ -526,7 +568,12 @@ class RegulationGame:
             self._session.automatic("kneel")
             if action == "kneel"
             else self._session.snap(
-                "8", "A", dice=dice or self._dice, hurried=self._hurried, hail_mary=True
+                "8",
+                "A",
+                dice=dice or self._dice,
+                hurried=self._hurried,
+                hail_mary=True,
+                bounds_declaration=self._bounds_declaration,
             )
         )
         if report.supported:
@@ -538,6 +585,7 @@ class RegulationGame:
         current = self._session.view()
         if report.pending or not report.supported or len(current.log) == len(before.log):
             return report
+        self._bounds_declaration = None
         if self._phase is RegulationPhase.OVERTIME:
             self._after_overtime(before, current, report)
             return report

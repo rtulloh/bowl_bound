@@ -66,6 +66,24 @@ enabled solely because Paydirt has a similarly named feature.
   yard credit, and the season-specific free-kick touchback spot. Paydirt's endpoint
   and yardage formulas were not reused.
 
+### Per-play bounds declaration review — 2026-11-01
+
+- Reviewed `paydirt/interactive_game.py:829-879` and
+  `paydirt/game_engine.py:1816-1910, 2150-2155` for declaration input, the
+  five-yard adjustment, and the clock effect. These references confirm that the
+  declaration belongs to the upcoming snap and that its adjustment follows
+  offensive/defensive resolution. Paydirt's simultaneous-declaration precedence
+  is deliberately not reused: RULE-010 requires Bowl Bound to reject mutually
+  exclusive OOB/IB requests.
+- The Bowl Bound rulebook's Advanced I-4(C) and I-6(C), printed pp. 14–15, is
+  authoritative for exceptions and five-yard costs. Standard Timing Chart p. 34
+  remains authoritative for Bowl Bound timing. Do not copy Paydirt's clock ranges,
+  random timing, or NFL-specific play behavior.
+- Paydirt's UI notation is design input only. Bowl Bound's rulebook names the
+  declarations but does not prescribe terminal shorthand, so the terminal offers
+  O/I shortcuts and explicit `action bounds:oob` / `action bounds:ib` commands;
+  it does not infer `7+` / `7-` chart notation. No Paydirt code or data is reused.
+
 ## Ticket coverage
 
 | Milestone 22 change or decision | Ticket |

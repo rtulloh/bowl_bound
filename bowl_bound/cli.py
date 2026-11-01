@@ -53,7 +53,12 @@ _PLAY_HELP = {
     "F": "Blitz formation",
 }
 _KICK_KEYS = {"punt": "P", "field_goal": "F", "kickoff": "K"}
-_ACTION_KEYS = {"kneel": "K", "hail_mary": "H"}
+_ACTION_KEYS = {
+    "kneel": "K",
+    "hail_mary": "H",
+    "bounds:oob": "O",
+    "bounds:ib": "I",
+}
 _CHOICE_KEYS = {
     "receive": "R",
     "kick": "K",
@@ -71,6 +76,7 @@ HELP = (
     "Add T to a play or formation key (for example, 7T or AT) to request a timeout after "
     "the play. The game uses it only if offered.\n"
     "When offered: P punt, F field goal, K kickoff/kneel, H Hail Mary; R receive.\n"
+    "When offered: O declare out of bounds or I declare in bounds for the next play.\n"
     "Full commands still work: call KEY; choose ID; kick KEY; action KEY.\n"
     "Inspect: status, stats (/), log, trace, help (?). Enter submits a displayed default only.\n"
     "Files: save PATH (private, new file only); load PATH (same local charts required).\n"
@@ -343,10 +349,19 @@ class TerminalGame:
                 text = f"[{action.key}] {action.label}"
                 self._print(f"    {text:<30} - {_PLAY_HELP.get(action.key, '')}")
         game_actions = turn.game_actions if turn else getattr(view, "game_actions", ())
-        special_plays = tuple(a for a in game_actions if not a.key.startswith("timeout:"))
+        special_plays = tuple(
+            a
+            for a in game_actions
+            if not a.key.startswith("timeout:") and not a.key.startswith("bounds:")
+        )
         if special_plays:
             self._print("\n  SPECIAL PLAYS:")
             for action in special_plays:
+                self._print("    " + label("action", action.key, action.label))
+        bounds_actions = tuple(a for a in game_actions if a.key.startswith("bounds:"))
+        if bounds_actions:
+            self._print("\n  PLAY MODIFIERS:")
+            for action in bounds_actions:
                 self._print("    " + label("action", action.key, action.label))
         if actions.special:
             self._print("\n  SPECIAL TEAMS:")
