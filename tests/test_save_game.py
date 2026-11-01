@@ -411,6 +411,12 @@ def test_pre_delay_clock_choice_save_digest_remains_loadable() -> None:
     game.snap("9", "A")
     data = json.loads(dumps_game(game))
     legacy_view = asdict(game.view())
+    legacy_view["actions"]["offense"] = [
+        action for action in legacy_view["actions"]["offense"] if action["key"] != "RZDZ"
+    ]
+    legacy_view["actions"]["defense"] = [
+        action for action in legacy_view["actions"]["defense"] if action["key"] != "WCRZDZ"
+    ]
     legacy_view["pending"]["choices"] = [
         choice for choice in legacy_view["pending"]["choices"] if choice["id"] != "clock:delay"
     ]

@@ -118,9 +118,9 @@ class NewGame(BaseModel):
 
 class Snap(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    play: str = Field(pattern=r"^(?:[1-9]|Q)$")
+    play: str = Field(pattern=r"^(?:[1-9]|Q|RZDZ)$")
     defense: str = Field(
-        pattern=r"^(?:[A-F]|RUN|PASS|NICKEL|REDZONE|WCSNEAK|WC(?:[1-4]|5(?:SOP|BLP)?|[6-9]))$"
+        pattern=r"^(?:[A-F]|RUN|PASS|NICKEL|REDZONE|WCSNEAK|WCRZDZ|WC(?:[1-4]|5(?:SOP|BLP)?|[6-9]))$"
     )
 
 

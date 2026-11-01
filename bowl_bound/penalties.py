@@ -18,6 +18,7 @@ from .resolution import (
     AdvancedDefenseTrace,
     LookupTrace,
     PlayResolution,
+    RazzleDazzleTrace,
     _supplemental_result,
     _variable_result,
     resolve_advanced_play,
@@ -68,6 +69,22 @@ def prepare_play(
             else resolve_play(offense, defense, play, formation, dice)
         )
     )
+    return prepare_resolution(
+        offense, defense, play, initial, dice, hurried=hurried, hail_mary=hail_mary
+    )
+
+
+def prepare_resolution(
+    offense: TeamChart,
+    defense: TeamChart,
+    play: Play,
+    initial: PlayResolution,
+    dice: DiceSource,
+    *,
+    hurried: bool = False,
+    hail_mary: bool = False,
+) -> PreparedPlay:
+    """Apply ordinary penalty rerolls to an already resolved chart result."""
     resolution = initial
     trace = list(initial.trace)
     penalties: list[AssessedPenalty] = []
@@ -122,6 +139,7 @@ def prepare_play(
                     tuple(trace),
                     bad_snap=True,
                     conditional_double=resolution.conditional_double,
+                    razzle_dazzle=resolution.razzle_dazzle,
                 )
             )
         if assessed.no_elapsed_time:
@@ -133,6 +151,7 @@ def prepare_play(
                     resolve_cells(blank, blank),
                     tuple(trace),
                     conditional_double=resolution.conditional_double,
+                    razzle_dazzle=resolution.razzle_dazzle,
                 ),
                 (assessed,),
                 pre_snap=True,
@@ -155,6 +174,7 @@ def prepare_play(
                 resolve_cells(incomplete, blank),
                 tuple(trace),
                 conditional_double=resolution.conditional_double,
+                razzle_dazzle=resolution.razzle_dazzle,
             )
             return PreparedPlay(resolution, tuple(penalties))
         roll = dice.offensive()
@@ -196,12 +216,14 @@ def prepare_play(
             combined,
             tuple(trace),
             conditional_double=resolution.conditional_double,
+            razzle_dazzle=resolution.razzle_dazzle,
         )
     return PreparedPlay(_with_trace(resolution, trace), tuple(penalties))
 
 
 def _with_trace(
-    resolution: PlayResolution, trace: list[LookupTrace | AdvancedDefenseTrace]
+    resolution: PlayResolution,
+    trace: list[LookupTrace | AdvancedDefenseTrace | RazzleDazzleTrace],
 ) -> PlayResolution:
     return PlayResolution(
         resolution.called_play,
@@ -209,6 +231,7 @@ def _with_trace(
         resolution.result,
         tuple(trace),
         conditional_double=resolution.conditional_double,
+        razzle_dazzle=resolution.razzle_dazzle,
     )
 
 

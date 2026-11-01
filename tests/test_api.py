@@ -82,6 +82,11 @@ def test_new_game_returns_engine_state_and_labels(client: TestClient) -> None:
     assert view["state"]["situation"] == "1st and 10" and view["state"]["spot"] == "own 35"
     assert [a["label"] for a in view["actions"]["offense"]][:2] == ["Line Plunge", "Counter"]
     assert view["actions"]["offense"][-1] == {
+        "key": "RZDZ",
+        "label": "Razzle-Dazzle",
+        "free_advanced": False,
+    }
+    assert view["actions"]["offense"][-2] == {
         "key": "Q",
         "label": "QB Sneak",
         "free_advanced": False,
@@ -89,6 +94,7 @@ def test_new_game_returns_engine_state_and_labels(client: TestClient) -> None:
     assert [a["key"] for a in view["actions"]["defense"]] == [
         *"ABCDEF",
         "WCSNEAK",
+        "WCRZDZ",
         "WC1",
         "WC2",
         "WC3",
@@ -105,6 +111,28 @@ def test_new_game_returns_engine_state_and_labels(client: TestClient) -> None:
         "NICKEL",
     ]
     assert view["log"] == []
+
+
+def test_api_exposes_razzle_result_choice_and_resolves_it_from_engine(client: TestClient) -> None:
+    game = start(client)
+
+    response = client.post(
+        f"/api/games/{game['game_id']}/snap", json={"play": "RZDZ", "defense": "A"}
+    )
+
+    assert response.status_code == 200
+    pending = response.json()
+    assert pending["report"]["pending"] is True
+    assert pending["report"]["called_play"] == "Razzle-Dazzle"
+    choices = pending["view"]["pending"]["choices"]
+    assert 1 <= len(choices) <= 18
+    resolved = client.post(
+        f"/api/games/{game['game_id']}/decision", json={"choice": choices[0]["id"]}
+    )
+
+    assert resolved.status_code == 200
+    assert resolved.json()["report"]["called_play"] == "Razzle-Dazzle"
+    assert resolved.json()["report"]["pending"] is False
 
 
 def test_a_seed_is_chosen_and_returned_when_none_is_given(client: TestClient) -> None:

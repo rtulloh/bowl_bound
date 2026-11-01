@@ -158,6 +158,20 @@ enabled solely because Paydirt has a similarly named feature.
   policy changes their weights, not the legal menu or engine resolution. Ship as
   v6 to keep earlier policy streams intact.
 
+### RULE-028 Razzle-Dazzle review — 2026-11-01
+
+- Reviewed `paydirt/play_resolver.py:41` and
+  `paydirt/tests/simulate_special_plays.py:3-69,141-160` for isolated special
+  play handling and edge-case audit structure. Paydirt has no Razzle-Dazzle
+  procedure or comparable defense/offense roll-selection flow. Reuse only the
+  practice of keeping special-play checks isolated and auditable; do not reuse
+  Paydirt play names, chart semantics, dice, or resolution behavior.
+- Bowl Bound's Advanced I-1 and Advanced II-1 wording remains authoritative for
+  roll order, who chooses which offensive chart result, Wild Card interaction,
+  and final priority resolution. The implementation keeps the comparison rolls,
+  selection, ordinary priority resolution, and any follow-up chart rolls in the
+  engine; synthetic tests cover the rule branches and save replay.
+
 ### Baseline decision review — 2026-11-01
 
 - Reviewed Paydirt `paydirt/computer_ai.py:1242-1359` for its decision across
@@ -308,8 +322,9 @@ enabled solely because Paydirt has a similarly named feature.
   [RULE-029](issues/RULE/RULE-029.md), and
   [RULE-031](issues/RULE/RULE-031.md) remain separate implementation tickets.
 - The elected safety and intentional delay implementations are complete and
-  remain open for owner play-test confirmation. Razzle-Dazzle stays unavailable
-  until its own rulebook review, synthetic test-first implementation, and verification.
+  remain open for owner play-test confirmation. Razzle-Dazzle is implemented
+  under RULE-028; its ticket records focused verification and remains open until
+  the change is committed and tested in owner play.
 - Per-game settings that let players enable or disable advanced options are
   future work; Milestone 22 does not add a rules-selection screen.
 

@@ -178,14 +178,25 @@ class AdvancedDefenseTrace:
 
 
 @dataclass(frozen=True)
+class RazzleDazzleTrace:
+    """Record an observed Razzle-Dazzle comparison roll without implying a chart lookup."""
+
+    section: str
+    team_name: str
+    season: int
+    roll: OffensiveRoll
+
+
+@dataclass(frozen=True)
 class PlayResolution:
     called_play: Play
     resolved_play: Play
     result: PriorityResult
-    trace: tuple[LookupTrace | AdvancedDefenseTrace, ...]
+    trace: tuple[LookupTrace | AdvancedDefenseTrace | RazzleDazzleTrace, ...]
     bad_snap: bool = False
     conditional_double: bool = False
     qb_sneak: bool = False
+    razzle_dazzle: bool = False
 
 
 def _rule_cell(
@@ -210,12 +221,13 @@ def resolve_advanced_play(
         "WC5SOP",
         "WC5BLP",
         "WCSNEAK",
+        "WCRZDZ",
     }
     if type(play) is not Play or call not in {"RUN", "PASS", "NICKEL", "REDZONE"} | wildcard_calls:
         raise ValueError("unknown Advanced II defense")
 
     wildcard = call.startswith("WC")
-    guessed = Play(int(call[2])) if wildcard and call != "WCSNEAK" else None
+    guessed = Play(int(call[2])) if wildcard and call not in {"WCSNEAK", "WCRZDZ"} else None
     wildcard_branch = call[3:] if wildcard and play is Play.FIVE else ""
     if wildcard and play is not Play.FIVE and guessed is play:
         kind = ResultKind.YARDS if play.value <= 5 else ResultKind.INCOMPLETE
@@ -266,11 +278,7 @@ def resolve_advanced_play(
     conditional_double = wildcard and not free_wildcard
     if not wildcard and call != "REDZONE":
         defensive_roll = dice.defensive()
-        quarterback_pass = off_cell.kind in {
-            ResultKind.QUARTERBACK_RUN,
-            ResultKind.QUARTERBACK_TRAPPED,
-        }
-        pass_like = resolved_play.value >= 6 or quarterback_pass
+        pass_like = _is_pass_like(resolved_play, off_cell)
         defensive_cell = _advanced_defensive_cell(call, resolved_play, defensive_roll.total)
         trace.append(
             AdvancedDefenseTrace(
@@ -373,6 +381,151 @@ def _advanced_defensive_cell(call: str, play: Play, roll: int) -> NormalizedCell
         if roll == 1 and play.value >= 7:
             return _rule_cell(ResultKind.INCOMPLETE)
     return _rule_cell(ResultKind.NO_CHANGE)
+
+
+def _is_pass_like(play: Play, cell: NormalizedCell) -> bool:
+    return play.value >= 6 or cell.kind in {
+        ResultKind.QUARTERBACK_RUN,
+        ResultKind.QUARTERBACK_TRAPPED,
+    }
+
+
+def resolve_razzle_dazzle_result(
+    offense: TeamChart,
+    defense: TeamChart,
+    play: Play,
+    total: int,
+    comparison_rolls: tuple[OffensiveRoll, OffensiveRoll],
+    formation: Defense,
+    dice: DiceSource,
+    *,
+    advanced_call: str | None,
+    free_wildcard: bool,
+) -> PlayResolution:
+    """Resolve a selected Razzle-Dazzle chart cell using its original comparison roll."""
+    if type(play) is not Play or type(formation) is not Defense:
+        raise TypeError("Razzle-Dazzle requires a selected play and chart formation")
+    if total not in {roll.total for roll in comparison_rolls}:
+        raise ValueError("selected Razzle-Dazzle total was not rolled")
+    if advanced_call not in {None, "RUN", "PASS", "NICKEL", "REDZONE"} and not (
+        advanced_call.startswith("WC") and advanced_call != "WCRZDZ"
+    ):
+        raise ValueError("unknown Razzle-Dazzle defensive call")
+
+    selected_roll = next(roll for roll in comparison_rolls if roll.total == total)
+    off_cell = next(
+        record.cell for record in offense.offense if record.play is play and record.roll == total
+    )
+    trace: list[LookupTrace | AdvancedDefenseTrace | RazzleDazzleTrace] = [
+        RazzleDazzleTrace(
+            "razzle_dazzle:defense_roll", defense.name, defense.season, comparison_rolls[0]
+        ),
+        RazzleDazzleTrace(
+            "razzle_dazzle:offense_roll", offense.name, offense.season, comparison_rolls[1]
+        ),
+        LookupTrace("offense", offense.name, offense.season, play, None, selected_roll, off_cell),
+    ]
+
+    option_play = {
+        ResultKind.SPRINT_OUT_PASS: Play.SEVEN,
+        ResultKind.BOOTLEG_PASS: Play.EIGHT,
+    }.get(off_cell.kind)
+    resolved_play = option_play or play
+    defensive_cell = _rule_cell(ResultKind.NO_CHANGE)
+    conditional_double = False
+    advanced = advanced_call is not None
+    wildcard = advanced_call is not None and advanced_call.startswith("WC")
+
+    if advanced_call is None:
+        defensive_roll = dice.defensive()
+        defensive_cell = next(
+            record.cell
+            for record in defense.defense
+            if record.play is play
+            and record.defense is formation
+            and record.roll == defensive_roll.total
+        )
+        trace.append(
+            LookupTrace(
+                "defense",
+                defense.name,
+                defense.season,
+                play,
+                formation,
+                defensive_roll,
+                defensive_cell,
+            )
+        )
+    elif wildcard:
+        # Every ordinary Wild Card guess is wrong against RZDZ, including a
+        # selected cell that later matches the guess. WCRZDZ is handled before
+        # these rolls are made.
+        conditional_double = not free_wildcard
+    elif advanced_call in {"RUN", "PASS", "NICKEL"}:
+        defensive_roll = dice.defensive()
+        pass_like = _is_pass_like(resolved_play, off_cell)
+        defensive_cell = _advanced_defensive_cell(
+            advanced_call, resolved_play, defensive_roll.total
+        )
+        trace.append(
+            AdvancedDefenseTrace(
+                advanced_call,
+                defense.name,
+                defense.season,
+                resolved_play,
+                defensive_roll,
+                _rule_cell_label(defensive_cell),
+            )
+        )
+        conditional_double = (
+            advanced_call in {"RUN", "PASS"}
+            and (
+                (advanced_call == "RUN" and pass_like)
+                or (advanced_call == "PASS" and not pass_like)
+            )
+            and not free_wildcard
+        )
+
+    if advanced and option_play is not None:
+        option_roll = dice.offensive()
+        option_cell = next(
+            record.cell
+            for record in offense.offense
+            if record.play is option_play and record.roll == option_roll.total
+        )
+        trace.append(
+            LookupTrace(
+                "option", offense.name, offense.season, option_play, None, option_roll, option_cell
+            )
+        )
+        off_cell = option_cell
+    result = resolve_cells(off_cell, defensive_cell)
+    if not advanced and result.operation is Operation.OPTION:
+        option_play = Play.SEVEN if result.kind is ResultKind.SPRINT_OUT_PASS else Play.EIGHT
+        option_roll = dice.offensive()
+        option_cell = next(
+            record.cell
+            for record in offense.offense
+            if record.play is option_play and record.roll == option_roll.total
+        )
+        trace.append(
+            LookupTrace(
+                "option", offense.name, offense.season, option_play, None, option_roll, option_cell
+            )
+        )
+        resolved_play = option_play
+        result = resolve_cells(option_cell, _blank_like(defensive_cell))
+
+    result = _supplemental_result(offense, result, resolved_play, dice, trace)
+    result = _variable_result(result, offense, defense, resolved_play, dice, trace)
+    return PlayResolution(
+        play,
+        resolved_play,
+        result,
+        tuple(trace),
+        conditional_double=conditional_double,
+        razzle_dazzle=True,
+    )
 
 
 def _rule_cell_label(cell: NormalizedCell) -> str:
@@ -536,7 +689,7 @@ def _supplemental_result(
     base: PriorityResult,
     play: Play,
     dice: DiceSource,
-    trace: list[LookupTrace | AdvancedDefenseTrace],
+    trace: list[LookupTrace | AdvancedDefenseTrace | RazzleDazzleTrace],
 ) -> PriorityResult:
     """Resolve any B/QR/QT chain while retaining the original defense only for ADD."""
     result = base
@@ -576,7 +729,7 @@ def _variable_result(
     defense: TeamChart,
     play: Play,
     dice: DiceSource,
-    trace: list[LookupTrace | AdvancedDefenseTrace],
+    trace: list[LookupTrace | AdvancedDefenseTrace | RazzleDazzleTrace],
 ) -> PriorityResult:
     """Materialize only distances selected by priority, retaining original chart facts."""
     operation = result.operation

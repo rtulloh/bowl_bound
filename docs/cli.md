@@ -97,8 +97,9 @@ Without `--compact`, the expanded menu is shown at each turn.
 | `8` | Boot-leg |
 | `9` | Drop Back |
 | `Q` | QB Sneak (Play 1 box color only; an offered Wild Card may defend it) |
+| `RZDZ` | Razzle-Dazzle; the lower of two offensive rolls determines who chooses an offensive chart result, offense wins ties |
 | `A`–`F` | Engine-labeled chart defense (including `F` Blitz when defending) |
-| `WC1`–`WC9`, `WCSNEAK`, `RUN`, `PASS`, `NICKEL`, `REDZONE` | Advanced II calls when offered; Wild Card labels identify the exact guess |
+| `WC1`–`WC9`, `WCSNEAK`, `WCRZDZ`, `RUN`, `PASS`, `NICKEL`, `REDZONE` | Advanced II calls when offered; Wild Card labels identify the exact guess |
 | `P`, `F` | Punt or field goal when choosing an offensive special play |
 | `K` | Kick off, elect to kick, or kneel—whichever the current menu offers |
 | `H` | Hail Mary when the engine offers it |

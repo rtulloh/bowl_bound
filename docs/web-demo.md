@@ -96,7 +96,9 @@ use the same panel; offered timeouts live beside Hurry-up in the modifier row.
 When offered between scrimmage plays, **ES / Elect a safety** awards two points
 to the opponents and schedules a free kick from the conceding team's own 20.
 These are display abbreviations, not additional rules or keyboard bindings.
-**Q / QB Sneak** appears when the engine offers it. Kicks and kneels resolve
+**Q / QB Sneak** and **RZDZ / Razzle-Dazzle** appear when the engine offers
+them. Razzle-Dazzle follows the engine's pending result choice and complete dice
+trace. Kicks and kneels resolve
 immediately without a defensive formation. A punt is rolled before the receiver chooses a fair catch or return;
 marked punts suppress returns. The engine schedules the opening, second-half,
 post-score and safety free kicks. Home season determines kickoff placement and

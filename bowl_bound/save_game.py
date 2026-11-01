@@ -994,6 +994,12 @@ def _legacy_m22_view_data(view: SessionView | RegulationView) -> dict[str, Any]:
         data["pending"]["choices"] = [
             choice for choice in data["pending"]["choices"] if choice["id"] != "clock:delay"
         ]
+    data["actions"]["offense"] = [
+        action for action in data["actions"]["offense"] if action["key"] != "RZDZ"
+    ]
+    data["actions"]["defense"] = [
+        action for action in data["actions"]["defense"] if action["key"] != "WCRZDZ"
+    ]
     data["clock_modifiers"] = [
         choice for choice in data.get("clock_modifiers", []) if choice["id"] != "clock:delay"
     ]

@@ -35,6 +35,7 @@ _ADVANCED_DEFENSE_CALLS = frozenset(
         "WC5SOP",
         "WC5BLP",
         "WCSNEAK",
+        "WCRZDZ",
     }
 )
 
@@ -119,7 +120,7 @@ class DifficultyCoach(ChartAwareCoach):
         """Learn only an already committed pair, never a preview or attempted call."""
         if (
             offense_side not in {"home", "away"}
-            or play not in tuple("123456789Q")
+            or (play not in "123456789Q" and play != "RZDZ")
             or type(defense) is not str
         ):
             raise ValueError("history requires a public committed offensive/defensive call")

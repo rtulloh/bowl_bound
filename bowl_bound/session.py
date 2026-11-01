@@ -9,7 +9,7 @@ from enum import Enum
 from random import Random
 
 from .decision_facts import DecisionOutcome, DecisionOutcomeKind
-from .dice import DiceSource, RandomDice, roll_view
+from .dice import DiceSource, OffensiveRoll, RandomDice, roll_view
 from .game_state import (
     EndZonePending,
     FieldState,
@@ -23,15 +23,32 @@ from .game_state import (
     spot_label,
     start_drive,
 )
-from .models import Defense, PenaltyCode, PenaltyData, PenaltyTeam, Play, ResultKind, TeamChart
-from .penalties import PreparedPlay, prepare_play
+from .models import (
+    Defense,
+    NormalizedCell,
+    PenaltyCode,
+    PenaltyData,
+    PenaltyTeam,
+    Play,
+    ResultKind,
+    TeamChart,
+)
+from .penalties import PreparedPlay, prepare_play, prepare_resolution
 from .penalty_yardage import (
     AssessedPenalty,
     ReturnPenaltyDisposition,
     enforce_penalty,
     enforce_return_penalty,
 )
-from .resolution import AdvancedDefenseTrace, LookupTrace, PlayResolution, resolve_qb_sneak
+from .resolution import (
+    AdvancedDefenseTrace,
+    LookupTrace,
+    PlayResolution,
+    RazzleDazzleTrace,
+    resolve_cells,
+    resolve_qb_sneak,
+    resolve_razzle_dazzle_result,
+)
 from .return_recovery import GOAL_LINE, MAX_FIELD_SPOT, TOUCHBACK_SPOT
 from .scoring import ScoreKind, ScoreLedger, resolve_pat
 from .special_teams import SpecialTeamsPlay, SpecialTeamsResolution
@@ -310,6 +327,17 @@ class _PendingDecision:
     bounds_declaration: BoundsDeclaration | None = None
 
 
+@dataclass(frozen=True)
+class _PendingRazzleDazzle:
+    defensive: DefenseCall
+    field: FieldState
+    before: StateView
+    rolls: tuple[OffensiveRoll, OffensiveRoll]
+    view: PendingDecisionView
+    dice: DiceSource
+    bounds_declaration: BoundsDeclaration | None = None
+
+
 class PlaySession:
     """A seeded, in-memory drive that resolves one real engine play per snap."""
 
@@ -334,6 +362,7 @@ class PlaySession:
         self._field: FieldState | None = start_drive(Possession.HOME, start_yards_to_goal)
         self._log: list[PlayReport] = []
         self._pending: _PendingDecision | None = None
+        self._razzle_pending: _PendingRazzleDazzle | None = None
         self._special: tuple[SpecialTeamsPlay, StateView] | None = None
         self._ledger = ScoreLedger()
         self._phase = SessionPhase.SCRIMMAGE
@@ -467,7 +496,11 @@ class PlaySession:
 
     def prepare_series(self, team: Possession, *, try_only: bool = False) -> None:
         """Start an overtime series/paired try, preserving the ledger and observed history."""
-        if self._pending is not None or self._special is not None:
+        if (
+            self._pending is not None
+            or self._razzle_pending is not None
+            or self._special is not None
+        ):
             raise PendingDecisionError("finish the live procedure before starting a series")
         self._overtime = True
         spot = 2 if try_only else 25
@@ -488,7 +521,11 @@ class PlaySession:
         """Schedule a regulation free kick without discarding scores or play history."""
         from .special_teams import kickoff_spot
 
-        if self._pending is not None or self._special is not None:
+        if (
+            self._pending is not None
+            or self._razzle_pending is not None
+            or self._special is not None
+        ):
             raise PendingDecisionError("finish the live procedure before scheduling a kickoff")
         self._overtime = False
         own = 20 if safety else kickoff_spot(self._charts[Possession.HOME].season)
@@ -630,7 +667,12 @@ class PlaySession:
             return tuple(actions)
         if self._phase is SessionPhase.TWO_POINT_TRY:
             return ()
-        if self._field is None or self._pending is not None or self._special is not None:
+        if (
+            self._field is None
+            or self._pending is not None
+            or self._razzle_pending is not None
+            or self._special is not None
+        ):
             return ()
         actions = [Action("punt", "Punt")]
         if self._field.yards_to_goal < MIN_FIELD_GOAL_YARDS_TO_GOAL:
@@ -659,6 +701,8 @@ class PlaySession:
                     tuple(PenaltyChoice(c.id, c.label, True) for c in result.choices),
                     chooser_side=result.chooser.value,
                 )
+        if self._razzle_pending is not None:
+            return self._razzle_pending.view
         return None if self._pending is None else self._pending.view
 
     def kick(
@@ -669,7 +713,11 @@ class PlaySession:
             raise PendingDecisionError("choose the touchdown conversion first")
         if self._field is None:
             raise SessionFinishedError("the drive is over")
-        if self._pending is not None or self._special is not None:
+        if (
+            self._pending is not None
+            or self._razzle_pending is not None
+            or self._special is not None
+        ):
             raise PendingDecisionError("an engine decision is required before another action")
         if action not in {item.key for item in self._special_actions()}:
             raise InvalidDecisionError("that special-teams action is unavailable")
@@ -787,7 +835,8 @@ class PlaySession:
         if declaration is not None and self._phase is SessionPhase.TWO_POINT_TRY:
             raise InvalidDecisionError("bounds declarations are unavailable on conversion tries")
         qb_sneak = play == "Q"
-        called = Play.ONE if qb_sneak else _parse_play(play)
+        razzle_dazzle = play == "RZDZ"
+        called = Play.ONE if qb_sneak or razzle_dazzle else _parse_play(play)
         defensive = _parse_formation(
             formation,
             self._defensive_actions(),
@@ -797,6 +846,8 @@ class PlaySession:
         )
         if self._phase is SessionPhase.CONVERSION_CHOICE:
             raise PendingDecisionError("choose the touchdown conversion first")
+        if self._razzle_pending is not None:
+            raise PendingDecisionError("an engine decision is required before the next snap")
         if self._pending is not None or self._special is not None:
             raise PendingDecisionError("a penalty decision is required before the next snap")
         if self._field is None:
@@ -810,6 +861,105 @@ class PlaySession:
         self._hurried_play = hurried
         advanced_call = defensive.key if isinstance(defensive, AdvancedDefenseCall) else None
         free_wildcard = defensive.free if isinstance(defensive, AdvancedDefenseCall) else False
+        if razzle_dazzle:
+            if hail_mary:
+                raise InvalidDecisionError("Razzle-Dazzle and Hail Mary cannot be combined")
+            before = self._state_view(field)
+            if isinstance(defensive, AdvancedDefenseCall) and defensive.key == "WCRZDZ":
+                blank = NormalizedCell(ResultKind.NO_CHANGE, None)
+                incomplete = NormalizedCell(ResultKind.INCOMPLETE, None)
+                resolution = PlayResolution(
+                    Play.ONE,
+                    Play.ONE,
+                    resolve_cells(incomplete, blank),
+                    (),
+                    razzle_dazzle=True,
+                )
+                return self._record(
+                    resolution,
+                    Play.ONE,
+                    defensive,
+                    before,
+                    before,
+                    (),
+                    None,
+                    (
+                        f"{offense.name}: Razzle-Dazzle vs {_formation_label(defensive)} "
+                        "- incomplete pass."
+                    ),
+                    outcome="incomplete",
+                    yards=0,
+                )
+
+            rolls = (source.offensive(), source.offensive())
+            offense_wins = rolls[1].total <= rolls[0].total
+            selectable_totals = (
+                (min(roll.total for roll in rolls),)
+                if offense_wins
+                else tuple(dict.fromkeys(roll.total for roll in rolls))
+            )
+            options = [
+                (play_row.play, play_row.roll, play_row.cell)
+                for play_row in offense.offense
+                if play_row.roll in selectable_totals
+            ]
+            nonpenalty = [item for item in options if item[2].kind is not ResultKind.PENALTY]
+            if nonpenalty:
+                options = nonpenalty
+            chooser = field.possession if offense_wins else field.possession.other
+            choices = tuple(
+                PenaltyChoice(
+                    f"razzle:{selected_play.value}:{total}",
+                    f"Play {selected_play.value}, total {total}: {format_cell(cell)}",
+                    True,
+                )
+                for selected_play, total, cell in options
+            )
+            view = PendingDecisionView(
+                self._charts[chooser].name,
+                choices,
+                chooser_side=chooser.value,
+            )
+            self._razzle_pending = _PendingRazzleDazzle(
+                defensive,
+                field,
+                before,
+                rolls,
+                view,
+                source,
+                declaration,
+            )
+            return PlayReport(
+                len(self._log) + 1,
+                True,
+                True,
+                "razzle_dazzle_choice",
+                None,
+                "Razzle-Dazzle",
+                "Razzle-Dazzle",
+                _formation_label(defensive),
+                before,
+                before,
+                f"{offense.name}: Razzle-Dazzle - {view.chooser} chooses an offensive result.",
+                None,
+                tuple(
+                    _trace_entry(entry)
+                    for entry in (
+                        RazzleDazzleTrace(
+                            "razzle_dazzle:defense_roll",
+                            defense.name,
+                            defense.season,
+                            rolls[0],
+                        ),
+                        RazzleDazzleTrace(
+                            "razzle_dazzle:offense_roll",
+                            offense.name,
+                            offense.season,
+                            rolls[1],
+                        ),
+                    )
+                ),
+            )
         if qb_sneak:
             if hail_mary:
                 raise InvalidDecisionError("QB Sneak and Hail Mary cannot be combined")
@@ -834,13 +984,40 @@ class PlaySession:
                 advanced_call=advanced_call,
                 free_wildcard=free_wildcard,
             )
-        resolution = prepared.resolution
         before = self._state_view(field)
+        return self._finish_prepared(
+            prepared,
+            called,
+            defensive,
+            field,
+            before,
+            source,
+            hail_mary=hail_mary,
+            bounds_declaration=declaration,
+        )
+
+    def _finish_prepared(
+        self,
+        prepared: PreparedPlay,
+        called: Play,
+        defensive: DefenseCall,
+        field: FieldState,
+        before: StateView,
+        source: DiceSource,
+        *,
+        hail_mary: bool = False,
+        bounds_declaration: BoundsDeclaration | None = None,
+    ) -> PlayReport:
+        """Apply a prepared chart result through the shared penalty/state path."""
+        resolution = prepared.resolution
+        offense, defense = self._charts[field.possession], self._charts[field.possession.other]
         if hail_mary:
             prefix = f"{offense.name}: Hail Mary vs blank defense"
-        elif qb_sneak and isinstance(defensive, AdvancedDefenseCall):
+        elif resolution.razzle_dazzle:
+            prefix = f"{offense.name}: Razzle-Dazzle vs {_formation_label(defensive)}"
+        elif resolution.qb_sneak and isinstance(defensive, AdvancedDefenseCall):
             prefix = f"{offense.name}: QB Sneak vs {_formation_label(defensive)}"
-        elif qb_sneak:
+        elif resolution.qb_sneak:
             prefix = f"{offense.name}: QB Sneak vs no change"
         else:
             prefix = f"{offense.name}: {PLAY_LABELS[called]} vs {_formation_label(defensive)}"
@@ -908,7 +1085,7 @@ class PlaySession:
                 prefix,
                 pending_view,
                 dice=source,
-                bounds_declaration=declaration,
+                bounds_declaration=bounds_declaration,
             )
             return PlayReport(
                 len(self._log) + 1,
@@ -934,7 +1111,7 @@ class PlaySession:
             trace,
             prefix,
             source,
-            bounds_declaration=declaration,
+            bounds_declaration=bounds_declaration,
         )
 
     def _apply_live_result(
@@ -1042,6 +1219,54 @@ class PlaySession:
                 raise InvalidDecisionError("unknown special-teams decision")
             result = procedure.decide(choice)
             return self._apply_special(procedure, result, before)
+        razzle = self._razzle_pending
+        if razzle is not None:
+            selected = next((item for item in razzle.view.choices if item.id == choice), None)
+            if selected is None:
+                raise InvalidDecisionError("unknown Razzle-Dazzle result")
+            _, play_text, total_text = choice.split(":")
+            play = Play(int(play_text))
+            total = int(total_text)
+            field = razzle.field
+            offense = self._charts[field.possession]
+            defense = self._charts[field.possession.other]
+            advanced_call = (
+                razzle.defensive.key if isinstance(razzle.defensive, AdvancedDefenseCall) else None
+            )
+            formation = razzle.defensive if isinstance(razzle.defensive, Defense) else Defense.A
+            resolution = resolve_razzle_dazzle_result(
+                offense,
+                defense,
+                play,
+                total,
+                razzle.rolls,
+                formation,
+                razzle.dice,
+                advanced_call=advanced_call,
+                free_wildcard=(
+                    razzle.defensive.free
+                    if isinstance(razzle.defensive, AdvancedDefenseCall)
+                    else False
+                ),
+            )
+            prepared = prepare_resolution(
+                offense,
+                defense,
+                play,
+                resolution,
+                razzle.dice,
+                hurried=self._hurried_play,
+            )
+            self._razzle_pending = None
+            return self._finish_prepared(
+                prepared,
+                play,
+                razzle.defensive,
+                field,
+                razzle.before,
+                razzle.dice,
+                bounds_declaration=razzle.bounds_declaration,
+            )
         pending = self._pending
         if pending is None:
             raise PendingDecisionError("there is no penalty decision to make")
@@ -1580,6 +1805,8 @@ class PlaySession:
         return report
 
     def _status(self) -> str:
+        if self._razzle_pending is not None:
+            return f"{self._razzle_pending.view.chooser}: choose a Razzle-Dazzle result."
         if self._phase is SessionPhase.CONVERSION_CHOICE:
             team = self._charts[self._conversion_team].name
             return f"{team}: choose a one-point kick or two-point try."
@@ -1747,6 +1974,9 @@ def _actions(
         defense.append(
             Action("WCSNEAK", f"{eligibility.title()} Wild Card: QB Sneak", free_advanced)
         )
+        defense.append(
+            Action("WCRZDZ", f"{eligibility.title()} Wild Card: Razzle-Dazzle", free_advanced)
+        )
         for play in Play:
             if play is Play.FIVE:
                 defense.extend(
@@ -1789,7 +2019,7 @@ def _actions(
             defense.append(Action("REDZONE", "Red Zone"))
     return Actions(
         tuple(Action(str(play.value), PLAY_LABELS[play]) for play in Play)
-        + (Action("Q", "QB Sneak"),),
+        + (Action("Q", "QB Sneak"), Action("RZDZ", "Razzle-Dazzle")),
         tuple(defense),
     )
 
@@ -2084,6 +2314,12 @@ def _reported_play_label(
 ) -> str:
     if hail_mary:
         return "Hail Mary"
+    if resolution.razzle_dazzle:
+        if not resolved or (
+            not resolution.trace and resolution.result.kind is ResultKind.INCOMPLETE
+        ):
+            return "Razzle-Dazzle"
+        return PLAY_LABELS[resolution.resolved_play]
     if resolution.qb_sneak:
         return "QB Sneak"
     play = resolution.resolved_play if resolved else resolution.called_play
@@ -2193,7 +2429,18 @@ def _unsupported_reason(resolution: PlayResolution) -> str:
     return kind.value
 
 
-def _trace_entry(entry: LookupTrace | AdvancedDefenseTrace) -> TraceEntry:
+def _trace_entry(
+    entry: LookupTrace | AdvancedDefenseTrace | RazzleDazzleTrace,
+) -> TraceEntry:
+    if isinstance(entry, RazzleDazzleTrace):
+        return TraceEntry(
+            section=entry.section,
+            team=entry.team_name,
+            play="Razzle-Dazzle",
+            formation=None,
+            roll=roll_view(entry.roll),
+            cell=f"comparison total {entry.roll.total}",
+        )
     if isinstance(entry, AdvancedDefenseTrace):
         return TraceEntry(
             section=entry.section,

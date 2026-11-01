@@ -58,8 +58,9 @@ _ADVANCED_DEFENSE_LABELS = {
     "WC5SOP": "Wild Card: Option SOP",
     "WC5BLP": "Wild Card: Option BLP",
     "WCSNEAK": "Wild Card: QB Sneak",
+    "WCRZDZ": "Wild Card: Razzle-Dazzle",
 }
-_SITUATIONAL_PLAY_LABELS = {"Q": "QB Sneak"}
+_SITUATIONAL_PLAY_LABELS = {"Q": "QB Sneak", "RZDZ": "Razzle-Dazzle"}
 _CHOICE_KEYS = {
     "receive": "R",
     "kick": "K",
@@ -74,7 +75,8 @@ _CHOICE_KEYS = {
 }
 HELP = (
     "Shortcuts: use the bracketed keys in the current menu (case-insensitive).\n"
-    "Solitaire vs computer: 1-9 or Q (QB Sneak); use an offered A-F or Advanced II defense.\n"
+    "Solitaire vs computer: 1-9, Q (QB Sneak), or RZDZ; use an offered A-F or "
+    "Advanced II defense.\n"
     "Add T to a play or formation key (for example, 7T or AT) to request a timeout after "
     "the play. The game uses it only if offered.\n"
     "When offered: P punt, F field goal, K kickoff/kneel, O onside at kickoff, D delay penalty, "
@@ -304,6 +306,8 @@ class TerminalGame:
                     keys = tuple(a.key for a in calls)
                     if keys == tuple(complete):
                         summary = span
+                    elif role == "OFF" and keys == tuple("123456789Q") + ("RZDZ",):
+                        summary = "1-9,Q,RZDZ"
                     elif role == "DEF" and keys[:6] == tuple("ABCDEF"):
                         summary = "A-F,+Advanced II"
                     else:

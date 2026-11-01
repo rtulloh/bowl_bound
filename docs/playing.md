@@ -33,7 +33,13 @@ not perfect foresight or exact win probabilities.
 ## Calls and decisions
 
 When attacking, choose one of the offered running/option/passing plays (1–9),
-or an available punt, field goal, kneel or other special action. When defending,
+QB Sneak, Razzle-Dazzle, or an available punt, field goal, kneel or other special
+action. On Razzle-Dazzle, the defense rolls first, then the offense. The lower
+roll chooses who selects an offensive chart result: offense when its roll is
+lower or tied, defense when its roll is lower. The offense chooses from its
+lower total; the defense may choose from either total. Penalty cells are excluded
+unless every available cell is a penalty. The selected result then follows the
+normal defensive priority and follow-up rules. When defending,
 choose an offered formation (A–F). Against the computer, your single selection
 submits the call; its simultaneous call is concealed until the result. In
 two-sided manual mode, the second of the offensive/defensive selections submits

@@ -80,6 +80,18 @@ def test_hard_estimates_use_only_public_committed_opponent_tendencies(
     assert calls and all(weights[-1] == 2 and weights[0] == 1 for weights in calls)
 
 
+def test_committed_razzle_calls_are_valid_hard_coaching_history() -> None:
+    from bowl_bound.difficulty import DifficultyCoach
+
+    coach = DifficultyCoach(31, team_chart("Home"), team_chart("Away"), "hard")
+
+    coach.commit_call("home", "RZDZ", "WCRZDZ")
+
+    history = coach.call_history()
+    assert ("home", "offense", (("RZDZ", 1),)) in history
+    assert ("away", "defense", (("WCRZDZ", 1),)) in history
+
+
 def test_hard_recent_call_variety_reduces_repetition_without_banning_legal_plays(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

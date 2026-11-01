@@ -160,14 +160,17 @@ def test_optional_clock_menu_keeps_the_visible_default_as_a_scrimmage_call() -> 
     assert saved_facts(app.game) == saved_facts(reference)
 
 
-def test_computer_runoff_does_not_repeat_the_same_play_commentary() -> None:
+def test_interactive_play_does_not_repeat_the_same_commentary() -> None:
     app = regulation(seed=39)
+    live(app)
     app.human_side = "home"
+    initial_log_count = len(app.game.view().log)
     commands = iter(["k", "", "quit"])
     assert app.run(lambda _: next(commands)) == 0
-    assert len(app.game.view().log) == 2
-    assert len({report.description for report in app.game.view().log}) == 2
-    for report in app.game.view().log:
+    reports = app.game.view().log[initial_log_count:]
+    assert len(reports) == 2
+    assert len({report.description for report in reports}) == 2
+    for report in reports:
         assert app.output.getvalue().count("► " + app.game.commentary(report)) == 1
     before = saved_facts(app.game)
     output = app.output.getvalue()
@@ -244,7 +247,7 @@ def test_required_and_clock_decision_instructions_remain_visible() -> None:
 
 
 @pytest.mark.parametrize(
-    "human,summary", [("home", "OFF: 1-9,Q"), ("away", "DEF: A-F,+Advanced II")]
+    "human,summary", [("home", "OFF: 1-9,Q,RZDZ"), ("away", "DEF: A-F,+Advanced II")]
 )
 def test_compact_only_lists_shortcut_keys_until_help(human: str, summary: str) -> None:
     app = terminal(new_game(), human, compact=True)
@@ -391,6 +394,7 @@ def test_help_groups_legal_special_plays_separately_from_special_teams() -> None
     assert "SPECIAL PLAYS:" in text and "SPECIAL TEAMS:" in text
     assert text.index("SPECIAL PLAYS:") < text.index("[K] Kneel") < text.index("SPECIAL TEAMS:")
     assert "SITUATIONAL PLAYS:" in text and "[Q] QB Sneak" in text
+    assert "[RZDZ] Razzle-Dazzle" in text
     assert "[H] Hail Mary" in text
     assert "[P] Punt" in text and "[F] Field goal" in text
 

@@ -44,6 +44,18 @@ def test_constant_play_estimate_matches_real_engine_and_is_repeatable() -> None:
     assert getstate() == state
 
 
+def test_razzle_dazzle_estimate_settles_its_pending_choice_in_the_engine() -> None:
+    from bowl_bound.coaching_evaluation import evaluate_action
+
+    home, away = team_chart("Home"), team_chart("Away")
+    obs = observation(offense=("RZDZ",), defense=("A",), special=())
+
+    result = evaluate_action(home, away, obs, "RZDZ", role="offense", samples=8)
+
+    assert result.complete and result.samples == 8 and result.failed_samples == 0
+    assert result.mean_utility is not None
+
+
 def test_lost_ball_and_offensive_recovery_are_distinguished_by_engine() -> None:
     from bowl_bound.coaching_evaluation import evaluate_action
 
