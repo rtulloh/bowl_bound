@@ -1,11 +1,11 @@
 ---
 id: RULE-019
 title: Define and implement Bowl Bound Advanced II defensive options
-status: open
+status: resolved
 priority: Medium
 milestone: '22'
 created-at: 2026-11-01
-resolved-at: null
+resolved-at: 2026-11-01
 closed-at: null
 tags:
 - advanced-option
@@ -49,3 +49,10 @@ Resolved after synthetic tests and cumulative regression passed on `2bea18e`. Th
 Reopened by owner request to rename the persisted team metadata marker field to
 `defense_chart_markers`, now that the rulebook meaning of W is confirmed. Preserve
 legacy bundle and save reads while writing the explicit marker name.
+
+--- 2026-11-01 ---
+Implemented and tested in `08b905b`. Team bundles now write versions 4/5 with
+`defense_chart_markers`; versions 1–3 and saves using `privileges` remain readable.
+The affected importer, metadata, save, API, and sample-team suites passed (293
+tests); Ruff, formatting, issue-index tests, and `git diff --check` passed. Awaiting
+owner play-test confirmation before closure.
