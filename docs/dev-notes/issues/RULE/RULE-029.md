@@ -1,16 +1,16 @@
 ---
 id: RULE-029
 title: Define and implement elected safety procedure
-status: open
+status: resolved
 priority: Medium
 milestone: '22'
 created-at: 2026-11-01
-resolved-at: null
+resolved-at: 2026-11-01
 closed-at: null
 tags:
 - advanced-option
 links: [RULE-022]
-commits: []
+commits: [a51f849]
 ---
 
 ## Description
@@ -20,6 +20,13 @@ The owner approved Advanced Rule I-5 elected safeties. During a live scrimmage, 
 ## Resolution / verification
 
 - Implement the choice as an engine-owned scrimmage action. Verify two-point scoring, the conceding team's free kick from its own 20, zero dice and elapsed time, no rushing/passing credit, availability on any down before the play, rejection during a pending/free-ball decision, API/CLI/browser controls, and save replay with synthetic teams.
+
+Verified in `a51f849`: 146 focused Python tests passed; all 15 compact-game
+frontend tests passed on Node 24.22.2; repository Ruff check/format and
+`git diff --check` passed. Tests cover scoring, safety free-kick spot, no clock
+or statistical charge, fourth-down pre-snap availability, pending interception
+rejection, API, browser controls, and save replay. Automated validation is done;
+owner play-test remains before closure.
 
 ## Comments
 
