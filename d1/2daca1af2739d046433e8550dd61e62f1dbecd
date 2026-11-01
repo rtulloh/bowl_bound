@@ -1,0 +1,29 @@
+bowl_bound/penalty_yardage.py
+  s_ed54ab581b3d60::t_29ea5fce4d6e7c 181,195-208
+bowl_bound/special_teams.py
+  s_ed54ab581b3d60::t_db1873a55d6613 17-22,506
+docs/dev-notes/milestone-22.md
+  s_ed54ab581b3d60::t_2bd1272ef1d3e6 40-52
+docs/penalties.md
+  s_ed54ab581b3d60::t_6a75135bb5d4b5 73
+tests/test_penalty_yardage.py
+  s_ed54ab581b3d60::t_90bb666883cb9c 157-171
+tests/test_special_teams.py
+  s_ed54ab581b3d60::t_219708eb243755 18,356-384
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "d12daca1af2739d046433e8550dd61e62f1dbecd",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
