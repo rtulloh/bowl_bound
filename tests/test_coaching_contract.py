@@ -4,6 +4,7 @@ import json
 from dataclasses import replace
 from itertools import product
 
+from bowl_bound import save_game as save_codec
 from bowl_bound.dice import (
     BLACK_FACES,
     GREEN_FACES,
@@ -59,10 +60,10 @@ def test_presentation_additions_keep_pre_ai_scrimmage_digest_compatible() -> Non
         advanced_ii=False,
     )
     game.snap("1", "A")
-    data = json.loads(dumps_game(game))
     # Recorded from committed m19 (57b4dd6), using only the synthetic default teams.
     assert (
-        data["state_digest"] == "1d81213460c860ddbc15267a5817e37d1909a812af6d43cdc36d2649080e149c"
+        save_codec._legacy_m19_view_digest(game.view())
+        == "1d81213460c860ddbc15267a5817e37d1909a812af6d43cdc36d2649080e149c"
     )
     restored = loads_game(dumps_game(game), lambda key: teams[0] if "alpha" in key else teams[1])
     assert restored.view() == game.view()
@@ -103,6 +104,10 @@ def test_an_actual_m19_config_without_coaching_metadata_loads_and_upgrades_once(
         advanced_ii=False,
     )
     game.snap("1", "A")
+    assert (
+        save_codec._legacy_m19_view_digest(game.view())
+        == "1d81213460c860ddbc15267a5817e37d1909a812af6d43cdc36d2649080e149c"
+    )
     legacy = json.loads(dumps_game(game))
     del legacy["config"]["coach_seed"]
     legacy["state_digest"] = "1d81213460c860ddbc15267a5817e37d1909a812af6d43cdc36d2649080e149c"

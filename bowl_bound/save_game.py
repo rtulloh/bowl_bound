@@ -909,6 +909,7 @@ def loads_game(
         legacy_halftime = getattr(game._engine, "_legacy_halftime_view", None)
         valid_digests = {
             _view_digest(view),
+            _legacy_m19_view_digest(view),
             _legacy_m22_view_digest(view),
             _legacy_m27_view_digest(view, getattr(game._engine, "_pending_timing_seconds", None)),
         }
@@ -916,6 +917,7 @@ def loads_game(
             valid_digests.update(
                 {
                     _view_digest(legacy_halftime),
+                    _legacy_m19_view_digest(legacy_halftime),
                     _legacy_m22_view_digest(legacy_halftime),
                     _legacy_m27_view_digest(legacy_halftime, None),
                 }
@@ -1004,6 +1006,59 @@ def _legacy_m22_view_data(view: SessionView | RegulationView) -> dict[str, Any]:
         choice for choice in data.get("clock_modifiers", []) if choice["id"] != "clock:delay"
     ]
     return data
+
+
+def _legacy_m19_view_digest(view: SessionView | RegulationView) -> str:
+    """Recreate M19's raw view digest before the additive coaching and rules fields."""
+    data = asdict(view)
+    data["actions"]["offense"] = [
+        action for action in data["actions"]["offense"] if action["key"] not in {"Q", "RZDZ"}
+    ]
+    data["actions"]["defense"] = [
+        action
+        for action in data["actions"]["defense"]
+        if action["key"] not in {"WCSNEAK", "WCRZDZ"}
+    ]
+    if "game_actions" in data:
+        data["game_actions"] = [
+            action for action in data["game_actions"] if action["key"] != "elect_safety"
+        ]
+    if "clock_modifiers" in data:
+        data["clock_modifiers"] = [
+            modifier for modifier in data["clock_modifiers"] if modifier["id"] != "clock:delay"
+        ]
+    if data.get("pending") is not None:
+        data["pending"]["choices"] = [
+            choice for choice in data["pending"]["choices"] if choice["id"] != "clock:delay"
+        ]
+
+    for actions in data["actions"].values():
+        for action in actions:
+            action.pop("free_advanced", None)
+    for report in data["log"]:
+        legacy_defense = next(
+            (
+                f"Formation {defense.value}"
+                for defense, label in DEFENSE_LABELS.items()
+                if report["defense"] == f"{defense.value} {label}"
+            ),
+            None,
+        )
+        if legacy_defense is not None:
+            friendly_defense = report["defense"]
+            report["defense"] = legacy_defense
+            report["description"] = report["description"].replace(
+                f"vs {friendly_defense}", f"vs {legacy_defense}", 1
+            )
+        if report.get("timing", {}).get("guaranteed_out_of_bounds") is False:
+            report["timing"].pop("guaranteed_out_of_bounds")
+        for trace in report.get("trace", []):
+            if isinstance(trace.get("roll"), dict):
+                trace["roll"].pop("dice", None)
+                trace["roll"].pop("dice_label", None)
+    for action in data["actions"]["defense"]:
+        action["label"] = f"Formation {action['key']}"
+    return _digest(data)
 
 
 def _semantic_view_digest(data: dict[str, Any]) -> str:

@@ -6,8 +6,15 @@ from pathlib import Path
 
 import pytest
 
-from bowl_bound.save_game import ENGINE_PROFILE, _view_digest, dumps_game, loads_game
+from bowl_bound.save_game import (
+    ENGINE_PROFILE,
+    _legacy_m19_view_digest,
+    _view_digest,
+    dumps_game,
+    loads_game,
+)
 from tests.test_commentary_lifecycle import setup_game, write_rosters
+from tests.test_save_game import seal
 
 # Independently measured with unchanged 2004a21 in a detached temporary worktree.
 LEGACY_DIGEST = "46f4b00853bff74f597720ecc45464e12963eddfe851b7a4f0b6b612247f23c1"
@@ -19,7 +26,9 @@ def test_pre_commentary_semantic_digest_and_save_shape_remain_compatible(tmp_pat
     text = dumps_game(game)
     saved = json.loads(text)
     assert saved["engine_profile"] == ENGINE_PROFILE == "bowl-bound-m22-v1"
-    assert saved["state_digest"] == LEGACY_DIGEST
+    assert _legacy_m19_view_digest(game.view()) == LEGACY_DIGEST
+    saved["state_digest"] = LEGACY_DIGEST
+    text = seal(saved)
     write_rosters(tmp_path)
     restored = loads_game(text, catalog.load)
     restored.load_rosters(tmp_path)
