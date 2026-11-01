@@ -62,15 +62,22 @@ class BaselineCoach:
     """
 
     def __init__(self, seed: int, *, version: int = 1) -> None:
-        if type(version) is not int or version not in {1, 2, 3, 4}:
-            raise ValueError("baseline policy version must be 1, 2, 3 or 4")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5}:
+            raise ValueError("baseline policy version must be 1, 2, 3, 4 or 5")
         self._seed = seed
         self.version = version
         policy = "baseline" if version == 1 else "baseline-v2"
         self.behavior = behavior_for_policy(policy)
         self.analysis_fallback = False
 
-    def commit_call(self, offense_side: str, play: str, defense: str) -> None:
+    def commit_call(
+        self,
+        offense_side: str,
+        play: str,
+        defense: str,
+        *,
+        observation: CoachObservation | None = None,
+    ) -> None:
         """Observe a committed pair; baseline/legacy policies intentionally learn nothing."""
 
     def _random(self, observation: CoachObservation, role: str) -> Random:

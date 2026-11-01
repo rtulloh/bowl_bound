@@ -509,7 +509,13 @@ class TerminalGame:
             return self._call_with_timeout(verb[0].upper())
         verb = {"?": "help", "/": "stats"}.get(verb, verb)
         if not args and verb.lower() == "z":
-            if self.game.coach_policy not in {"easy-v1", "easy-v2", "easy-v3", "easy-v4"}:
+            if self.game.coach_policy not in {
+                "easy-v1",
+                "easy-v2",
+                "easy-v3",
+                "easy-v4",
+                "easy-v5",
+            }:
                 raise ValueError("The helper is only available on Easy.")
             if not self.game.player_advice_available(self.human_side):
                 raise ValueError("Toggle the Easy helper at play selection.")
@@ -728,7 +734,7 @@ def main(argv: list[str] | None = None) -> int:
                 away_id=away_id,
                 seed=args.seed if args.seed is not None else randbits(63),
                 coach_seed=args.coach_seed,
-                coach_policy=f"{args.difficulty or 'medium'}-v4",
+                coach_policy=f"{args.difficulty or 'medium'}-v5",
                 mode="regulation",
                 game_type=args.game_type or "regular",
             )

@@ -5,7 +5,7 @@ from dataclasses import replace
 import pytest
 
 from bowl_bound.chart_coaching import ChartAwareCoach
-from bowl_bound.coaching import BaselineCoach
+from bowl_bound.coaching import BaselineCoach, CoachObservation
 from bowl_bound.difficulty import DifficultyCoach
 from bowl_bound.save_game import SavedGame
 from tests.synthetic_teams import team_chart
@@ -25,8 +25,15 @@ def test_saved_command_dispatches_history_hook_without_concrete_tier_check() -> 
     calls = []
 
     class RecordingCoach(BaselineCoach):
-        def commit_call(self, offense_side: str, play: str, defense: str) -> None:
-            calls.append((offense_side, play, defense))
+        def commit_call(
+            self,
+            offense_side: str,
+            play: str,
+            defense: str,
+            *,
+            observation: CoachObservation | None = None,
+        ) -> None:
+            calls.append((offense_side, play, defense, observation))
 
     game = SavedGame.new(
         team_chart("Home"),
@@ -37,7 +44,8 @@ def test_saved_command_dispatches_history_hook_without_concrete_tier_check() -> 
     )
     game._coach = RecordingCoach(31)
     game.snap("1", "A")
-    assert calls == [("home", "1", "A")]
+    assert len(calls) == 1 and calls[0][:3] == ("home", "1", "A")
+    assert calls[0][3].side == "home" and calls[0][3].possession == "home"
 
 
 @pytest.mark.parametrize("tier", ["chart", "hard"])

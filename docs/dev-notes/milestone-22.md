@@ -118,6 +118,18 @@ enabled solely because Paydirt has a similarly named feature.
   changes coaching weights, never legal actions, game timing, or engine rules.
   Earlier policy versions retain their saved selection streams.
 
+### Hard repetition review — 2026-11-01
+
+- Reviewed Paydirt `paydirt/offense_strategy.py:9-16,101-110` and
+  `tests/test_ai_offense_variety.py:73-118,201-212`. Adapt its bounded recent-call
+  discount, situation filtering, decay, and 0.30 floor. Bowl Bound uses its own
+  shared public-observation bucket from the coaching audit, including its exact
+  down, quarter, overtime, hurry, phase, side, and legal menus; it does not copy
+  Paydirt's down/distance-only key or its game-history format.
+- Persist no new mutable AI state: committed call history is rebuilt from the
+  save journal and pre-snap engine observations. Ship the changed Hard policy as
+  v5 so existing policy streams remain stable.
+
 ## Ticket coverage
 
 | Milestone 22 change or decision | Ticket |

@@ -12,6 +12,7 @@ from .coaching import BaselineCoach, CoachObservation
 from .coaching_audit_sampling import capture_preferences
 from .coaching_profiles import AUDIT_V1, behavior_for_policy
 from .coaching_session import observe_game
+from .coaching_situations import situation_bucket
 from .models import TeamChart
 from .sample_teams import sample_teams
 from .save_game import SavedGame, dumps_game, loads_game
@@ -98,21 +99,7 @@ class CallAudit:
             "invalid selected-call preference vector",
         )
 
-        def bucket(value: int, bounds: tuple[int, ...]) -> int:
-            return sum(value > bound for bound in bounds)
-
-        score = observation.score_difference
-        model = replace(
-            observation,
-            play_number=0,
-            distance=bucket(observation.distance, (3, 6, 10)),
-            yards_to_goal=bucket(observation.yards_to_goal, (20, 50, 80)),
-            remaining=bucket(observation.remaining, (60, 120, 180)),
-            score_difference=(1 if score > 0 else -1) * (1 if abs(score) <= 8 else 2)
-            if score
-            else 0,
-        )
-        situation = (model, role)
+        situation = situation_bucket(observation, role)
         if situation in self._previous:
             self.comparable_calls += 1
             self.repeated_calls += self._previous[situation] == key
@@ -378,7 +365,7 @@ def audit_game(
 def compare_policies(
     seeds: tuple[int, ...],
     *,
-    policies: tuple[str, ...] = ("baseline-v2", "easy-v4", "medium-v4", "hard-v4"),
+    policies: tuple[str, ...] = ("baseline-v2", "easy-v5", "medium-v5", "hard-v5"),
 ) -> tuple[GameAudit, ...]:
     """Compare independent dice seeds across both sample arrangements and CPU sides."""
     if (
@@ -458,8 +445,12 @@ def main(argv: list[str] | None = None) -> int:
             "easy-v4",
             "medium-v4",
             "hard-v4",
+            "chart-v5",
+            "easy-v5",
+            "medium-v5",
+            "hard-v5",
         ),
-        default=["baseline-v2", "easy-v4", "medium-v4", "hard-v4"],
+        default=["baseline-v2", "easy-v5", "medium-v5", "hard-v5"],
     )
     args = parser.parse_args(argv)
     try:

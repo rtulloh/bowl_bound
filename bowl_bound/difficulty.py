@@ -16,6 +16,7 @@ from .chart_coaching import ChartAwareCoach
 from .coaching import BaselineCoach, CoachObservation, safe_choice
 from .coaching_evaluation import ActionEstimate, evaluate_action
 from .coaching_profiles import behavior_for_policy
+from .coaching_situations import SituationBucket, situation_bucket
 from .models import TeamChart
 from .player_coaching import estimate_plays
 from .session import SessionPhase
@@ -37,8 +38,8 @@ class DifficultyCoach(ChartAwareCoach):
     ) -> None:
         if mode not in AGGRESSION:
             raise ValueError("difficulty must be easy, medium or hard")
-        if type(version) is not int or version not in {1, 2, 3, 4}:
-            raise ValueError("difficulty policy version must be 1, 2, 3 or 4")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5}:
+            raise ValueError("difficulty policy version must be 1, 2, 3, 4 or 5")
         super().__init__(seed, home, away, version=version)
         self.mode = mode
         self.behavior = behavior_for_policy(f"{mode}-v{version}")
@@ -48,6 +49,9 @@ class DifficultyCoach(ChartAwareCoach):
             (side, role): Counter() for side in ("home", "away") for role in ("offense", "defense")
         }
         self._recent: dict[tuple[str, str], deque[str]] = {
+            key: deque(maxlen=self.behavior.recent_calls) for key in self._counts
+        }
+        self._situational_recent: dict[tuple[str, str], deque[tuple[SituationBucket, str]]] = {
             key: deque(maxlen=self.behavior.recent_calls) for key in self._counts
         }
         self._strength = {"home": self._run_bias(home), "away": self._run_bias(away)}
@@ -78,7 +82,14 @@ class DifficultyCoach(ChartAwareCoach):
         digest = sha256(f"{self.policy}:{self._seed}:{role}:{public}".encode()).digest()
         return Random(int.from_bytes(digest, "big"))
 
-    def commit_call(self, offense_side: str, play: str, defense: str) -> None:
+    def commit_call(
+        self,
+        offense_side: str,
+        play: str,
+        defense: str,
+        *,
+        observation: CoachObservation | None = None,
+    ) -> None:
         """Learn only an already committed pair, never a preview or attempted call."""
         if (
             offense_side not in {"home", "away"}
@@ -87,9 +98,38 @@ class DifficultyCoach(ChartAwareCoach):
         ):
             raise ValueError("history requires a public committed offensive/defensive call")
         other = "away" if offense_side == "home" else "home"
-        for key, value in (((offense_side, "offense"), play), ((other, "defense"), defense)):
+        offense_observation = observation
+        defense_observation = (
+            replace(observation, side=other, score_difference=-observation.score_difference)
+            if observation is not None
+            else None
+        )
+        role_calls = (
+            ((offense_side, "offense"), play, offense_observation),
+            ((other, "defense"), defense, defense_observation),
+        )
+        for key, value, role_observation in role_calls:
             self._counts[key][value] += 1
             self._recent[key].append(value)
+            if self.mode == "hard" and self.version >= 5 and role_observation is not None:
+                self._situational_recent[key].append(
+                    (situation_bucket(role_observation, key[1]), value)
+                )
+
+    def _repetition_discount(self, observation: CoachObservation, role: str, key: str) -> float:
+        """Discount matching Hard calls by bucket and intervening own calls."""
+        bucket = situation_bucket(observation, role)
+        repeats = sum(
+            self.behavior.repetition_decay**age
+            for age, (past_bucket, past_key) in enumerate(
+                reversed(self._situational_recent[(observation.side, role)])
+            )
+            if past_bucket == bucket and past_key == key
+        )
+        return max(
+            self.behavior.repetition_floor,
+            1 / (1 + self.behavior.repetition_multiplier * repeats),
+        )
 
     def _basic_offense(self, obs: CoachObservation) -> str:
         fallback = BaselineCoach.offense(self, obs)
@@ -286,6 +326,8 @@ class DifficultyCoach(ChartAwareCoach):
         else:
             aggressive = key in {"7", "8", "9"} if role == "offense" else key == "F"
             preference = 1 + self.aggression if aggressive else 1
+        if self.mode == "hard" and self.version >= 5:
+            return weight * preference * self._repetition_discount(observation, role, key)
         return weight * preference / (1 + recent[key])
 
     def _selection_role(self, role: str) -> str:
