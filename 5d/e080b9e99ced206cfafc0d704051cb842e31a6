@@ -1,0 +1,21 @@
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_b693580608cab4 193,218-223,241,247-249,253,257,267-273,275,302,320,352,357-358,377,460,487-488,619-620,624,629,640-641
+tests/test_cli_presentation.py
+  s_ed54ab581b3d60::t_59521cb0f36493 10,216-231,318,326-369
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "5de080b9e99ced206cfafc0d704051cb842e31a6",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
