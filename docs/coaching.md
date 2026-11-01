@@ -134,9 +134,9 @@ see [attribution](ATTRIBUTION.md). No Paydirt runtime dependency was added.
 ## API
 
 `POST /api/games` accepts `difficulty: "easy" | "medium" | "hard"`; omitted means
-Medium. New games use the corresponding v5 policy. Alternatively, explicit
-`coach_policy` accepts `baseline`, `baseline-v2`, chart policies v1–v5, and the
-Easy/Medium/Hard v1–v5 policies; it cannot be combined with `difficulty`.
+Medium. New games use the corresponding v6 policy. Alternatively, explicit
+`coach_policy` accepts `baseline`, `baseline-v2`, chart policies v1–v6, and the
+Easy/Medium/Hard v1–v6 policies; it cannot be combined with `difficulty`.
 `baseline` and chart policies are compatibility/testing choices, not additional
 player-facing difficulty levels. New/load/get responses report `coach_policy`;
 loading restores the saved version, irrespective of setup selections.
@@ -177,7 +177,7 @@ aggression, late-game thresholds and utility coefficients. These are coaching
 preferences, not football rules, configurable difficulty odds or calibrated
 expected points. Version 2 consults the engine's `can_kneel_out_game` query before
 choosing a kneel; v1 keeps its original selection stream and heuristic. New games
-use v5, while existing saves retain their recorded policy. Version 3 adds
+use v6, while existing saves retain their recorded policy. Version 3 adds
 chart-backed fourth-down and late-half choices, score-aware fourth-quarter
 conversion preferences, and an offered last-snap Hail Mary for a trailing team.
 Its field-goal options come from the engine and team chart, not a fixed distance
@@ -189,6 +189,10 @@ recorded behavior. Version 5 gives Hard a decaying repetition discount within
 the same public situation buckets used by coaching audits. A 0.30 floor keeps a
 repeated call available; history from another situation does not reduce its
 weight directly. Other policy versions retain their prior selection behavior.
+Version 6 adds Easy/Medium/Hard situational defensive preferences for goal-line,
+likely fourth-down kicks, and protecting a large late lead. It adjusts weights
+without removing any of the six formations from the engine's legal menu. Hard's
+chart analysis uses the same preferences, so it cannot override those guards.
 
 Audit JSON includes `behavior_profile` and `audit_profile` for each game. The
 separate `coaching-audit-v1` profile names replay and advisory concentration

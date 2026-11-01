@@ -19,9 +19,9 @@ def test_default_comparison_includes_baseline_both_arrangements_and_sides(
     assert len(seen) == 32
     assert {entry[2]["policy"] for entry in seen} == {
         "baseline-v2",
-        "easy-v5",
-        "medium-v5",
-        "hard-v5",
+        "easy-v6",
+        "medium-v6",
+        "hard-v6",
     }
     assert {entry[2]["cpu_side"] for entry in seen} == {"home", "away"}
     assert len({(home, away) for home, away, _ in seen}) == 2

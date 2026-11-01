@@ -62,8 +62,8 @@ class BaselineCoach:
     """
 
     def __init__(self, seed: int, *, version: int = 1) -> None:
-        if type(version) is not int or version not in {1, 2, 3, 4, 5}:
-            raise ValueError("baseline policy version must be 1, 2, 3, 4 or 5")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6}:
+            raise ValueError("baseline policy version must be 1, 2, 3, 4, 5 or 6")
         self._seed = seed
         self.version = version
         policy = "baseline" if version == 1 else "baseline-v2"

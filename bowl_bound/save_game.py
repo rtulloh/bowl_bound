@@ -254,6 +254,7 @@ class SavedGame:
             "chart-v3",
             "chart-v4",
             "chart-v5",
+            "chart-v6",
         }:
             from .chart_coaching import ChartAwareCoach
 
@@ -275,6 +276,9 @@ class SavedGame:
             "easy-v5",
             "medium-v5",
             "hard-v5",
+            "easy-v6",
+            "medium-v6",
+            "hard-v6",
         }:
             from .difficulty import DifficultyCoach
 
@@ -383,6 +387,7 @@ class SavedGame:
                 "easy-v3",
                 "easy-v4",
                 "easy-v5",
+                "easy-v6",
             }:
                 return False
             view = self.view()
@@ -584,6 +589,10 @@ def _validate_config(config: Any) -> None:
             "medium-v5",
             "hard-v5",
             "chart-v5",
+            "easy-v6",
+            "medium-v6",
+            "hard-v6",
+            "chart-v6",
         }
     ):
         _fail()

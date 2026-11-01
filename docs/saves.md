@@ -95,9 +95,9 @@ before team lookup; no migration or deletion of private saves is performed.
 Do not hand-edit engine profiles to bypass this check.
 
 Within the current engine profile, `coach_policy` accepts `baseline`,
-`baseline-v2`, chart policies v1–v5, and Easy/Medium/Hard policies in v1–v5.
+`baseline-v2`, chart policies v1–v6, and Easy/Medium/Hard policies in v1–v6.
 Omission retains baseline compatibility; `SavedGame.new` defaults to baseline,
-while CLI/API new-game defaults are Medium v5. The saved policy and independent
+while CLI/API new-game defaults are Medium v6. The saved policy and independent
 coach seed are restored, not replaced by setup selections. No additional mutable
 coaching RNG state is serialized.
 

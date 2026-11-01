@@ -57,6 +57,8 @@ class CoachBehavior:
     repetition_decay: float = 0.94
     repetition_multiplier: float = 0.9
     repetition_floor: float = 0.30
+    defense_goal_line_yards: int = 5
+    defense_situation_multiplier: float = 1.5
 
 
 BASELINE_V1 = CoachBehavior("baseline-v1")
@@ -88,6 +90,10 @@ CHART_V5 = replace(CHART_V4, name="chart-v5")
 EASY_V5 = replace(EASY_V4, name="easy-v5")
 MEDIUM_V5 = replace(MEDIUM_V4, name="medium-v5")
 HARD_V5 = replace(HARD_V4, name="hard-v5", recent_calls=96)
+CHART_V6 = replace(CHART_V5, name="chart-v6")
+EASY_V6 = replace(EASY_V5, name="easy-v6")
+MEDIUM_V6 = replace(MEDIUM_V5, name="medium-v6")
+HARD_V6 = replace(HARD_V5, name="hard-v6")
 
 
 def behavior_for_policy(policy: str) -> CoachBehavior:
@@ -115,6 +121,10 @@ def behavior_for_policy(policy: str) -> CoachBehavior:
         ("easy-v5", EASY_V5),
         ("medium-v5", MEDIUM_V5),
         ("hard-v5", HARD_V5),
+        ("chart-v6", CHART_V6),
+        ("easy-v6", EASY_V6),
+        ("medium-v6", MEDIUM_V6),
+        ("hard-v6", HARD_V6),
     ):
         if policy == key:
             return profile

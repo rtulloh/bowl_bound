@@ -38,8 +38,8 @@ class DifficultyCoach(ChartAwareCoach):
     ) -> None:
         if mode not in AGGRESSION:
             raise ValueError("difficulty must be easy, medium or hard")
-        if type(version) is not int or version not in {1, 2, 3, 4, 5}:
-            raise ValueError("difficulty policy version must be 1, 2, 3, 4 or 5")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6}:
+            raise ValueError("difficulty policy version must be 1, 2, 3, 4, 5 or 6")
         super().__init__(seed, home, away, version=version)
         self.mode = mode
         self.behavior = behavior_for_policy(f"{mode}-v{version}")
@@ -268,11 +268,48 @@ class DifficultyCoach(ChartAwareCoach):
     def defense(self, observation: CoachObservation) -> str:
         self.analysis_fallback = False
         safe_choice("", observation.defense)
-        weights = [1 + self.aggression if key == "F" else 1 for key in observation.defense]
+        weights = [
+            (1 + self.aggression if key == "F" else 1)
+            * self._defense_situation_weight(observation, key)
+            for key in observation.defense
+        ]
         fallback = self._random(observation, "defense").choices(
             observation.defense, weights=weights, k=1
         )[0]
         return self._select(observation, "defense", fallback) if self.mode == "hard" else fallback
+
+    def _defense_situation_weight(self, observation: CoachObservation, key: str) -> float:
+        """Adjust formation preferences without removing legal defensive calls."""
+        if self.version < 6:
+            return 1.0
+        multiplier = self.behavior.defense_situation_multiplier
+        weight = 1.0
+        if observation.yards_to_goal <= self.behavior.defense_goal_line_yards and key in {"B", "C"}:
+            weight *= multiplier
+        likely_fourth_down_kick = observation.down == 4 and (
+            "field_goal" in observation.special
+            or (
+                "punt" in observation.special
+                and observation.distance > self.behavior.passing_distance
+            )
+        )
+        if likely_fourth_down_kick:
+            if key == "A":
+                weight *= multiplier
+            elif key == "F":
+                weight /= multiplier
+        protecting_lead = (
+            not observation.overtime
+            and observation.quarter in {2, 4}
+            and observation.remaining <= self.behavior.protect_seconds
+            and observation.score_difference >= self.behavior.large_lead_points
+        )
+        if protecting_lead:
+            if key in {"D", "E"}:
+                weight *= multiplier
+            elif key == "F":
+                weight /= multiplier
+        return weight
 
     def _opponent_weights(
         self, observation: CoachObservation, role: str
@@ -326,6 +363,8 @@ class DifficultyCoach(ChartAwareCoach):
         else:
             aggressive = key in {"7", "8", "9"} if role == "offense" else key == "F"
             preference = 1 + self.aggression if aggressive else 1
+        if role == "defense" and self.version >= 6:
+            preference *= self._defense_situation_weight(observation, key)
         if self.mode == "hard" and self.version >= 5:
             return weight * preference * self._repetition_discount(observation, role, key)
         return weight * preference / (1 + recent[key])

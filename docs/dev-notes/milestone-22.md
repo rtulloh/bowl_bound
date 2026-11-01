@@ -130,6 +130,18 @@ enabled solely because Paydirt has a similarly named feature.
   save journal and pre-snap engine observations. Ship the changed Hard policy as
   v5 so existing policy streams remain stable.
 
+### Situational defense review — 2026-11-01
+
+- Reviewed Paydirt `paydirt/computer_ai.py:894-1000,1013-1137` for goal-line,
+  red-zone, fourth-down and late-lead defense. Adapt situation-first weighting
+  and keep it ahead of Hard analysis. Do not copy Paydirt's field-coordinate
+  thresholds, NFL kickoff/clock rules, or learned-model ordering that can return
+  before its situational defenses. Bowl Bound uses its public `yards_to_goal`,
+  enabled kick options, distance, score, period and clock.
+- Preserve the engine's six legal formations in every situation; the coaching
+  policy changes their weights, not the legal menu or engine resolution. Ship as
+  v6 to keep earlier policy streams intact.
+
 ## Ticket coverage
 
 | Milestone 22 change or decision | Ticket |
