@@ -347,7 +347,7 @@ Each is a separate test/review/commit milestone:
 2. QB Sneak and other situational plays.
 3. Yardage factors were reviewed and deferred: Advanced IX derives them from point spreads and ratings, which remain informational and do not affect gameplay ([RULE-023](issues/RULE/RULE-023.md)).
 4. Advanced kicking and block options (RULE-026) were reviewed and deferred; Basic VI-8 onside kicks are handled separately in RULE-025.
-5. Consider alternate timing (action + return + dead time) and hybrid timing (standard timing normally, alternate timing in the last two minutes of each half). Review rulebook conflicts, season-profile interactions, and play-count effects before approving either option. If approved, implement each as a separate tested timing profile; otherwise retain standard chart timing.
+5. Alternate and hybrid timing were reviewed and deferred (RULE-027); retain standard chart timing and automatic period advancement. Do not restore manual runoff choices.
 6. Weather effects and remaining optional rules, each subject to separate scope approval. Razzle-Dazzle (I-1), elected safety (I-5), and intentional delay (I-6(B)) were approved on 2026-11-01 and have individual implementation tickets: RULE-028, RULE-029, and RULE-031.
 
 Unsupported options remain unavailable and documented.

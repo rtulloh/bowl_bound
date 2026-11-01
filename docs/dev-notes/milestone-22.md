@@ -245,6 +245,13 @@ enabled solely because Paydirt has a similarly named feature.
   is closed for this milestone. This documentation-only decision is verified by
   the issue-tracker checks.
 
+### Timing scope decision — 2026-11-01
+
+- The owner chose to retain standard chart timing and defer both Advanced VII
+  alternate and hybrid profiles. Period transitions continue to follow play
+  timing; no manual runoff choice is restored. [RULE-027](issues/RULE/RULE-027.md)
+  is closed for this milestone. No gameplay change was made.
+
 ### QB Sneak implementation — 2026-11-01
 
 - Completed [RULE-021](issues/RULE/RULE-021.md) in tested commit `d0fa13b`.

@@ -1,27 +1,31 @@
 ---
 id: RULE-027
 title: Evaluate alternate and hybrid timing for Bowl Bound
-status: open
+status: closed
 priority: Low
 milestone: '22'
 created-at: 2026-11-01
 resolved-at: null
-closed-at: null
+closed-at: 2026-11-01
 tags:
 - scope-review
+- wont-fix
 links: []
 commits: []
 ---
 
 ## Description
 
-The current engine uses standard chart timing. Milestone 22 asks whether to support alternate timing (action, return, and dead time) or hybrid timing (standard timing except in the final two minutes of each half). This ticket is a rule and scope review, not approval to change the clock.
+The owner chose to retain standard Bowl Bound chart timing. Do not add the Advanced VII alternate or hybrid timing profiles. Normal chart timing continues to advance automatically with plays; the removed manual runoff choice remains unavailable.
 
 ## Resolution / verification
 
-- Compare the local Bowl Bound rulebook procedures, season profiles, clock transitions, and expected play counts; record adopt/defer decisions. If either is adopted, create a separate implementation ticket for that timing profile and keep standard timing as the default unless separately approved.
+- Decision (2026-11-01): keep standard chart timing and defer both Advanced VII profiles. The rulebook describes alternate timing as a more detailed optional action/return/dead-time system and says it can increase play counts; hybrid timing is a player preference. Do not alter the engine clock or reintroduce a manual runoff action.
 
 ## Comments
 
 --- 2026-11-01 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-01 ---
+Owner chose standard chart timing. Closed both alternate and hybrid timing options for this milestone; period transitions remain determined by play timing under RULE-017.
