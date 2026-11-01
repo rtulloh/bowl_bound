@@ -1,0 +1,21 @@
+frontend/e2e/difficulty.spec.js
+  s_ed54ab581b3d60::t_a249902a2eb871 15,21,25
+frontend/e2e/web.spec.js
+  s_ed54ab581b3d60::t_d21c131657f48c 120-121
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "498149431bbb5761b8578051303077c1f5747072",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
