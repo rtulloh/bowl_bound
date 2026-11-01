@@ -143,7 +143,10 @@ def test_terminal_pending_interception_resume_matches_api_exact_future(
     assert app.game.view() == before
     assert app.human_side == human
     client = TestClient(create_app(tmp_path))
-    loaded = client.post("/api/games/load", content=save_path.read_bytes())
+    decision_owner = app.game.view().pending.chooser_side
+    loaded = client.post(
+        f"/api/games/load?human_side={decision_owner}", content=save_path.read_bytes()
+    )
     assert loaded.status_code == 200
     path = "/api/games/" + loaded.json()["game_id"]
 
@@ -158,12 +161,22 @@ def test_terminal_pending_interception_resume_matches_api_exact_future(
     # Select the pending decision owner; the other team remains computer-controlled.
     app.human_side = app.game.view().pending.chooser_side
     assert app.command("choose interception:return")
-    response = client.post(path + "/decision", json={"choice": "interception:return"})
+    response = client.post(
+        f"{path}/decision?human_side={decision_owner}",
+        json={"choice": "interception:return"},
+    )
     assert response.status_code == 200
     assert expected_api_view() == response.json()["view"]
     call = "1" if app.game.view().state.possession == app.human_side else "A"
     assert app.command(call)
-    response = client.post(path + "/coach", json={"human_side": app.human_side, "human_call": call})
+    response = client.post(
+        path + "/coach",
+        json={
+            "human_side": app.human_side,
+            "human_call": call,
+            "expected_revision": response.json()["revision"],
+        },
+    )
     assert response.status_code == 200
     assert expected_api_view() == response.json()["view"]
 
