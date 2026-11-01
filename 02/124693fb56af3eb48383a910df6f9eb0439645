@@ -1,0 +1,25 @@
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_03b979d28c3589 1510-1513,1607-1612
+docs/turnovers.md
+  s_ed54ab581b3d60::t_e07ccb93ebf5e0 43-44
+tests/test_session_penalties.py
+  s_ed54ab581b3d60::t_4a8555238d3732 8,15,18-19,66-79
+tests/test_session_turnovers.py
+  s_ed54ab581b3d60::t_c3676e854b2102 18-19,175-183
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "02124693fb56af3eb48383a910df6f9eb0439645",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
