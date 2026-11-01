@@ -9,7 +9,7 @@ resolved-at: null
 closed-at: null
 tags:
 - scope-review
-links: []
+links: [RULE-021, RULE-028, RULE-029, RULE-031]
 commits: []
 ---
 
@@ -25,3 +25,11 @@ Milestone 22 says QB Sneak and other situational plays, but does not name the ad
 
 --- 2026-11-01 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-01 ---
+Rulebook inventory (Advanced I, printed pp. 13–16) found no additional unnamed
+play to add: QB Sneak (I-2), Razzle-Dazzle (I-1), elected safety (I-5), and
+intentional delay (I-6(B)) are already tracked separately in the linked tickets.
+Hail Mary, hurry-up, spike, kneel, and in-bounds/out-of-bounds declarations
+already have implemented paths. Owner adopt/defer decisions for the four open
+candidates remain outstanding; keep each unavailable until then.
