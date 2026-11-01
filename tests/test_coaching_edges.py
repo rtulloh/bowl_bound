@@ -100,11 +100,17 @@ def test_overtime_toss_and_mandatory_two_are_engine_owned_not_coach_era_rules() 
     snap(game)
     view = game.view()
     assert {c.id for c in view.pending.choices if c.enabled} == {"conversion:two"}
-    plan = plan_turn(
-        view, "home" if view.pending.chooser_side == "away" else "away", BaselineCoach(31)
-    )
-    assert plan.arguments == ("conversion:two",)
-    game.decide(plan.arguments[0])
+    human = view.pending.chooser_side
+    plan = plan_turn(view, human, BaselineCoach(31))
+    assert plan.turn.pending is not None
+    assert plan.turn.pending.choices == view.pending.choices
+    disabled_kick = next(c for c in plan.turn.pending.choices if c.id == "conversion:kick")
+    assert not disabled_kick.enabled
+    assert disabled_kick.reason == "This overtime round requires a two-point try."
+    other = "home" if human == "away" else "away"
+    computer_plan = plan_turn(view, other, BaselineCoach(31))
+    assert computer_plan.arguments == ("conversion:two",)
+    game.decide(computer_plan.arguments[0])
     snap(game)
     # The other series can be played without asking the coach to apply any era rule.
     snap(game)
