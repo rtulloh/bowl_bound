@@ -1,0 +1,21 @@
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_814407744b6f73 54,56,70,252-263,292,326-330
+tests/test_session.py
+  s_ed54ab581b3d60::t_e602b036195288 40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "d0fa13b8dea75f4f55a8a4e3faae142e25a30ade",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
