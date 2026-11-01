@@ -352,6 +352,8 @@ Each is a separate test/review/commit milestone:
 
 Unsupported options remain unavailable and documented.
 
+Ticket coverage and Paydirt review: [Milestone 22 work log](milestone-22.md).
+
 ### 23. Establish the complete regression gate
 
 **Deliver:** documented workflow for engine, importer, API, frontend, production build, browser tests, full-game simulations, AI audits, and clean-checkout validation.
