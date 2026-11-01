@@ -384,6 +384,7 @@ rather than additional advanced-option features.
 | Deduplicate team discovery and shared constants | [DEV-024](issues/DEV/DEV-024.md) |
 | Document a coaching play-test protocol | [DEV-028](issues/DEV/DEV-028.md) |
 | Remove unused synthetic-team color helper import | [DEV-051](issues/DEV/DEV-051.md) |
+| Preserve M19 save-digest compatibility after added actions | [DEV-052](issues/DEV/DEV-052.md) |
 | Correct kickoff status while receiver choice is pending | [FLOW-002](issues/FLOW/FLOW-002.md) |
 | Correct return-foul midpoint rounding | [RULE-012](issues/RULE/RULE-012.md) |
 | Distinguish end-zone return fumbles from non-advances | [RULE-013](issues/RULE/RULE-013.md) |
@@ -394,13 +395,16 @@ rather than additional advanced-option features.
 
 ### Ticket coverage reconciliation — 2026-11-01
 
-Checked the generated tracker against the Milestone 22 plan: all 40 tickets
+Checked the generated tracker against the Milestone 22 plan: all 41 tickets
 assigned to the milestone have individual mappings above. They cover the 14
 advanced-rule items, RULE-010 bounds declarations, ten AI findings, two API
-findings, two CLI findings, four development findings, one flow finding, four
+findings, two CLI findings, five development findings, one flow finding, four
 return-rule findings, and two UI findings. AI-018 is assigned to Milestone 23 for
 full-game coordinator coverage, so its absence here is intentional. No planned
 Milestone 22 change is missing a ticket.
+
+Full regression found that added Milestone 22 actions changed the raw legacy M19
+save digest. DEV-052 records and fixes the compatibility regression.
 
 The owner explicitly removed a separate normal-runoff action; kneeldown is the
 clock-draining play. No ticket is created to restore that rejected behavior.
