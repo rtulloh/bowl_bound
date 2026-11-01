@@ -40,6 +40,8 @@ class CoachObservation:
     phase: str = "scrimmage"
     can_kneel_out_game: bool = False
     decision_outcomes: tuple[DecisionOutcome, ...] = ()
+    advanced_ii: bool = False
+    free_advanced_defense: bool = False
 
 
 @dataclass(frozen=True)
@@ -64,11 +66,16 @@ class BaselineCoach:
     """
 
     def __init__(self, seed: int, *, version: int = 1) -> None:
-        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8}:
-            raise ValueError("baseline policy version must be 1 through 8")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8, 9}:
+            raise ValueError("baseline policy version must be 1 through 9")
         self._seed = seed
         self.version = version
-        policy = "baseline" if version == 1 else "baseline-v8" if version >= 8 else "baseline-v2"
+        if version == 1:
+            policy = "baseline"
+        elif version < 8:
+            policy = "baseline-v2"
+        else:
+            policy = f"baseline-v{version}"
         self.behavior = behavior_for_policy(policy)
         self.analysis_fallback = False
 
@@ -84,6 +91,9 @@ class BaselineCoach:
 
     def _random(self, observation: CoachObservation, role: str) -> Random:
         facts = asdict(observation)
+        if self.version < 9:
+            facts.pop("advanced_ii")
+            facts.pop("free_advanced_defense")
         if self.version < 8:
             facts.pop("decision_outcomes")
         # Freeze the baseline-v1 input contract so old saves retain future calls.

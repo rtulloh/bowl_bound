@@ -11,7 +11,7 @@ from math import isclose, isfinite
 from .coaching import BaselineCoach, CoachObservation
 from .coaching_audit_sampling import capture_preferences
 from .coaching_profiles import AUDIT_V1, behavior_for_policy
-from .coaching_session import observe_game
+from .coaching_session import observe_game, observe_policy
 from .coaching_situations import situation_bucket
 from .models import TeamChart
 from .sample_teams import sample_teams
@@ -265,7 +265,8 @@ def audit_game(
             return target.kick(argument)
 
         _require(not view.finished, "action attempted after game over")
-        with capture_preferences(game._coach, observation=observe_game(view, cpu_side)) as draws:
+        cpu_observation = observe_policy(view, cpu_side, game._coach.version)
+        with capture_preferences(game._coach, observation=cpu_observation) as draws:
             result = advance(game)
         after = game.view()
         period = 4 + view.overtime.round_number if view.overtime else view.clock.quarter
@@ -280,7 +281,6 @@ def audit_game(
             replayed_steps += 1
         if operation == "coach" and result[3] is not None:
             choice = result[3]
-            cpu_observation = observe_game(view, cpu_side)
             role = (
                 "decision"
                 if view.pending and choice.key in cpu_observation.choices
@@ -365,7 +365,7 @@ def audit_game(
 def compare_policies(
     seeds: tuple[int, ...],
     *,
-    policies: tuple[str, ...] = ("baseline-v2", "easy-v8", "medium-v8", "hard-v8"),
+    policies: tuple[str, ...] = ("baseline-v2", "easy-v9", "medium-v9", "hard-v9"),
 ) -> tuple[GameAudit, ...]:
     """Compare independent dice seeds across both sample arrangements and CPU sides."""
     if (
@@ -430,6 +430,7 @@ def main(argv: list[str] | None = None) -> int:
             "baseline",
             "baseline-v2",
             "baseline-v8",
+            "baseline-v9",
             "chart-v1",
             "chart-v2",
             "easy-v1",
@@ -462,8 +463,12 @@ def main(argv: list[str] | None = None) -> int:
             "easy-v8",
             "medium-v8",
             "hard-v8",
+            "chart-v9",
+            "easy-v9",
+            "medium-v9",
+            "hard-v9",
         ),
-        default=["baseline-v2", "easy-v8", "medium-v8", "hard-v8"],
+        default=["baseline-v2", "easy-v9", "medium-v9", "hard-v9"],
     )
     args = parser.parse_args(argv)
     try:

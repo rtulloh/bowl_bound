@@ -300,6 +300,7 @@ class SavedGame:
             "chart-v6",
             "chart-v7",
             "chart-v8",
+            "chart-v9",
         }:
             from .chart_coaching import ChartAwareCoach
 
@@ -330,6 +331,9 @@ class SavedGame:
             "easy-v8",
             "medium-v8",
             "hard-v8",
+            "easy-v9",
+            "medium-v9",
+            "hard-v9",
         }:
             from .difficulty import DifficultyCoach
 
@@ -341,10 +345,8 @@ class SavedGame:
                 version=int(self.coach_policy[-1]),
             )
         else:
-            version = (
-                8
-                if self.coach_policy == "baseline-v8"
-                else (2 if self.coach_policy == "baseline-v2" else 1)
+            version = {"baseline-v2": 2, "baseline-v8": 8, "baseline-v9": 9}.get(
+                self.coach_policy, 1
             )
             self._coach = BaselineCoach(self._config["coach_seed"], version=version)
         self._tape = tape
@@ -469,6 +471,7 @@ class SavedGame:
                 "easy-v6",
                 "easy-v7",
                 "easy-v8",
+                "easy-v9",
             }:
                 return False
             view = self.view()
@@ -601,13 +604,13 @@ class SavedGame:
         # its journal entry after state/dice have already advanced.
         self._commands.append(record)
         if operation == "snap" and result is not None and result.supported:
-            from .coaching_session import observe_game
+            from .coaching_session import observe_policy
 
             offense_side = before.state.possession
             self._coach.commit_call(
                 offense_side,
                 *arguments,
-                observation=observe_game(before, offense_side),
+                observation=observe_policy(before, offense_side, self._coach.version),
             )
         return result
 
@@ -674,6 +677,7 @@ def _validate_config(config: Any) -> None:
             "baseline",
             "baseline-v2",
             "baseline-v8",
+            "baseline-v9",
             "chart-v1",
             "chart-v2",
             "easy-v1",
@@ -706,6 +710,10 @@ def _validate_config(config: Any) -> None:
             "medium-v8",
             "hard-v8",
             "chart-v8",
+            "chart-v9",
+            "easy-v9",
+            "medium-v9",
+            "hard-v9",
         }
     ):
         _fail()
@@ -969,6 +977,7 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         "away_timeouts",
         "can_kneel_out_game",
         "decision_outcomes",
+        "free_advanced",
     }
     legacy_defenses = {
         f"{defense.value} {label}": f"Formation {defense.value}"

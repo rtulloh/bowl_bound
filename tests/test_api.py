@@ -76,11 +76,16 @@ def test_a_missing_seasons_folder_gives_an_empty_list(tmp_path: Path) -> None:
 def test_new_game_returns_engine_state_and_labels(client: TestClient) -> None:
     game = start(client)
     assert game["game_id"] and game["seed"] == 7
+    assert game["coach_policy"] == "medium-v9"
     view = game["view"]
     assert (view["home"], view["away"], view["finished"]) == ("Alpha Tech", "Beta State", False)
     assert view["state"]["situation"] == "1st and 10" and view["state"]["spot"] == "own 35"
     assert [a["label"] for a in view["actions"]["offense"]][:2] == ["Line Plunge", "Counter"]
-    assert view["actions"]["offense"][-1] == {"key": "Q", "label": "QB Sneak"}
+    assert view["actions"]["offense"][-1] == {
+        "key": "Q",
+        "label": "QB Sneak",
+        "free_advanced": False,
+    }
     assert [a["key"] for a in view["actions"]["defense"]] == [
         *"ABCDEF",
         "WCSNEAK",

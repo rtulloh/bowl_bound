@@ -196,6 +196,10 @@ def evaluate_action(
         observation.distance,
     )
     facts = asdict(replace(observation, play_number=0))
+    if not observation.advanced_ii:
+        facts.pop("advanced_ii")
+    if not observation.free_advanced_defense:
+        facts.pop("free_advanced_defense")
     if utility_policy == "legacy-v1":
         # Preserve the original chart-v1 analysis stream and sandbox semantics.
         facts.pop("phase")
@@ -220,8 +224,24 @@ def evaluate_action(
             if utility_policy == "hard-v1" and observation.phase == SessionPhase.TWO_POINT_TRY.value
             else SessionPhase.SCRIMMAGE
         )
+        defender_side = (
+            observation.side
+            if role == "defense"
+            else ("away" if observation.possession == "home" else "home")
+        )
         session = PlaySession.for_analysis(
-            home, away, field, overtime=observation.overtime, phase=phase
+            home,
+            away,
+            field,
+            overtime=observation.overtime,
+            phase=phase,
+            advanced_ii=observation.advanced_ii,
+            home_privileges=("W",)
+            if observation.free_advanced_defense and defender_side == "home"
+            else (),
+            away_privileges=("W",)
+            if observation.free_advanced_defense and defender_side == "away"
+            else (),
         )
         try:
             if role == "defense":

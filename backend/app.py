@@ -68,6 +68,7 @@ class NewGame(BaseModel):
             "baseline",
             "baseline-v2",
             "baseline-v8",
+            "baseline-v9",
             "chart-v1",
             "chart-v2",
             "easy-v1",
@@ -94,12 +95,16 @@ class NewGame(BaseModel):
             "hard-v6",
             "chart-v7",
             "chart-v8",
+            "chart-v9",
             "easy-v7",
             "medium-v7",
             "hard-v7",
             "easy-v8",
             "medium-v8",
             "hard-v8",
+            "easy-v9",
+            "medium-v9",
+            "hard-v9",
         ]
         | None
     ) = None
@@ -242,7 +247,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
                 mode=body.mode,
                 game_type=body.game_type,
                 start_yards_to_goal=body.start_yards_to_goal,
-                coach_policy=body.coach_policy or f"{body.difficulty or 'medium'}-v8",
+                coach_policy=body.coach_policy or f"{body.difficulty or 'medium'}-v9",
                 home_privileges=home_metadata.privileges,
                 away_privileges=away_metadata.privileges,
             )

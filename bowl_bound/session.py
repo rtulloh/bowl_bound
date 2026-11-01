@@ -109,6 +109,7 @@ class InvalidDecisionError(ValueError):
 class Action:
     key: str
     label: str
+    free_advanced: bool = False
 
 
 @dataclass(frozen=True)
@@ -380,6 +381,9 @@ class PlaySession:
         *,
         overtime: bool = False,
         phase: SessionPhase = SessionPhase.SCRIMMAGE,
+        advanced_ii: bool = False,
+        home_privileges: tuple[str, ...] = (),
+        away_privileges: tuple[str, ...] = (),
     ) -> "PlaySession":
         """Build an isolated one-play sandbox from explicit public field facts.
 
@@ -387,7 +391,11 @@ class PlaySession:
         and log; evaluators supply independent hypothetical dice on every action.
         No existing session, pending decision or live random state is copied.
         """
-        if not isinstance(field, FieldState) or type(overtime) is not bool:
+        if (
+            not isinstance(field, FieldState)
+            or type(overtime) is not bool
+            or type(advanced_ii) is not bool
+        ):
             raise TypeError("analysis requires a FieldState and boolean overtime flag")
         if not isinstance(phase, SessionPhase):
             raise TypeError("analysis phase must be a SessionPhase")
@@ -397,7 +405,15 @@ class PlaySession:
             field.down != 1 or field.yards_to_goal != 2 or field.yards_to_go != 2
         ):
             raise ValueError("a try analysis must begin first-and-goal at the two")
-        session = cls.new(home, away, seed=0, start_yards_to_goal=field.yards_to_goal)
+        session = cls.new(
+            home,
+            away,
+            seed=0,
+            start_yards_to_goal=field.yards_to_goal,
+            advanced_ii=advanced_ii,
+            home_privileges=home_privileges,
+            away_privileges=away_privileges,
+        )
         session._field = field
         session._overtime = overtime
         session._phase = phase
@@ -1652,24 +1668,44 @@ def _actions(
     defense = [Action(d.value, DEFENSE_LABELS[d]) for d in Defense]
     if advanced_ii:
         eligibility = "free" if free_advanced else "conditional"
-        defense.append(Action("WCSNEAK", f"{eligibility.title()} Wild Card: QB Sneak"))
+        defense.append(
+            Action("WCSNEAK", f"{eligibility.title()} Wild Card: QB Sneak", free_advanced)
+        )
         for play in Play:
             if play is Play.FIVE:
                 defense.extend(
                     (
-                        Action("WC5", f"{eligibility.title()} Wild Card: Option run"),
-                        Action("WC5SOP", f"{eligibility.title()} Wild Card: Option SOP"),
-                        Action("WC5BLP", f"{eligibility.title()} Wild Card: Option BLP"),
+                        Action(
+                            "WC5", f"{eligibility.title()} Wild Card: Option run", free_advanced
+                        ),
+                        Action(
+                            "WC5SOP", f"{eligibility.title()} Wild Card: Option SOP", free_advanced
+                        ),
+                        Action(
+                            "WC5BLP", f"{eligibility.title()} Wild Card: Option BLP", free_advanced
+                        ),
                     )
                 )
             else:
                 defense.append(
-                    Action(f"WC{play.value}", f"{eligibility.title()} Wild Card: Play {play.value}")
+                    Action(
+                        f"WC{play.value}",
+                        f"{eligibility.title()} Wild Card: Play {play.value}",
+                        free_advanced,
+                    )
                 )
         defense.extend(
             (
-                Action("RUN", "Run Defense" if free_advanced else "Run Defense (conditional)"),
-                Action("PASS", "Pass Defense" if free_advanced else "Pass Defense (conditional)"),
+                Action(
+                    "RUN",
+                    "Run Defense" if free_advanced else "Run Defense (conditional)",
+                    free_advanced,
+                ),
+                Action(
+                    "PASS",
+                    "Pass Defense" if free_advanced else "Pass Defense (conditional)",
+                    free_advanced,
+                ),
                 Action("NICKEL", "Nickel Zone"),
             )
         )

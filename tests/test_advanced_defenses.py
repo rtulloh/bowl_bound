@@ -420,7 +420,7 @@ def test_human_advanced_defense_does_not_break_computer_call_history() -> None:
 
     assert report is not None and report.supported
     assert game._coach._counts[("home", "offense")]
-    assert not game._coach._counts[("away", "defense")]
+    assert game._coach._counts[("away", "defense")] == {"WC1": 1}
 
 
 def metadata_with_privileges(privileges: tuple[str, ...]) -> TeamFileMetadata:

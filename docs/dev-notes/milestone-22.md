@@ -194,8 +194,28 @@ enabled solely because Paydirt has a similarly named feature.
 - Team privileges now pass through catalog loading, game creation, and private saves.
   Legacy M21 saves keep their six-formation profile. Synthetic tests cover the
   decisions, dice use, traces, conditional doubling, API creation, and save replay.
-- Coaching continues to select among the six chart formations; strategy and chart
-  evaluation are tracked separately in [AI-021](issues/AI/AI-021.md).
+- At the time of this review, coaching still selected among the six chart formations;
+  the follow-up is recorded in [AI-021](issues/AI/AI-021.md).
+
+### Advanced II coaching review — 2026-11-01
+
+- Paydirt has no comparable Bowl Bound Advanced II defense calls or W-coded
+  eligibility. No Paydirt strategy or NFL rule was reused; the game engine remains
+  authoritative for legality and outcomes.
+- Policy v9 gives baseline, Easy, Medium, Hard, and chart coaches the complete
+  engine-offered defense set. Baseline/Easy/Medium use their existing legal-call
+  mixtures. Hard/chart compare calls with isolated Bowl Bound engine runs; the
+  evaluator carries the defending team's W-coded free eligibility. Policies v1–v8
+  keep their six-formation input and saved selection streams.
+- Advanced calls are now recorded in Hard's public call history. The coaching
+  audit with public synthetic sample teams covered 32 complete games across two
+  seeds, both team arrangements, both CPU sides, and baseline/Easy/Medium/Hard v9.
+  Every game finished and verified save continuation; there were no illegal
+  selections. All four policy types used Advanced II calls. Two Medium fallback
+  selections occurred on engine-adjusted two-point tries, covered by AI-020.
+- Synthetic tests cover v8 preservation, all v9 coach types, W-coded/conditional
+  eligibility from offense and defense, complete Hard estimates, and versioned
+  committed-call history.
 
 ### QB Sneak implementation — 2026-11-01
 

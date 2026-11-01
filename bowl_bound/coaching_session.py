@@ -69,15 +69,23 @@ def observe_game(view: GameView, side: str) -> CoachObservation:
         if view.pending
         else (),
         decision_outcomes=view.pending.decision_outcomes if view.pending else (),
+        advanced_ii=any(
+            action.key not in {"A", "B", "C", "D", "E", "F"} for action in view.actions.defense
+        ),
+        free_advanced_defense=any(action.free_advanced for action in view.actions.defense),
     )
 
 
-def _coach_observation(view: GameView, side: str) -> CoachObservation:
-    """Keep AI evaluation within its implemented six-formation defense model."""
+def observe_policy(view: GameView, side: str, policy_version: int) -> CoachObservation:
+    """Apply the selected policy's versioned defense-action allowlist."""
     observation = observe_game(view, side)
+    if policy_version >= 9:
+        return observation
     return replace(
         observation,
         defense=tuple(key for key in observation.defense if key in "ABCDEF"),
+        advanced_ii=False,
+        free_advanced_defense=False,
     )
 
 
@@ -102,7 +110,7 @@ def plan_turn(view: GameView, human_side: str, coach: BaselineCoach) -> _Plan:
         if pending.chooser_side not in {"home", "away"}:
             raise ValueError("engine decision is missing explicit side ownership")
         if view.phase == "clock_choice":
-            observation = _coach_observation(view, cpu)
+            observation = observe_policy(view, cpu, coach.version)
             legal = observation.choices + ("clock:standard",)
             if pending.chooser_side == human_side:
                 # A computer defender can use only its own timeout, not offensive
@@ -129,7 +137,7 @@ def plan_turn(view: GameView, human_side: str, coach: BaselineCoach) -> _Plan:
                 pending = None
         else:
             if pending.chooser_side == cpu:
-                observation = _coach_observation(view, cpu)
+                observation = observe_policy(view, cpu, coach.version)
                 choice = _selection(coach, coach.decision(observation), observation.choices)
                 return _Plan(
                     CoachingTurn(human_side, "computer", True, "Computer is deciding."),
@@ -160,12 +168,12 @@ def plan_turn(view: GameView, human_side: str, coach: BaselineCoach) -> _Plan:
         )
         if not view.actions.offense:
             return _Plan(turn)  # A human kickoff needs no defensive call.
-        observation = _coach_observation(view, cpu)
+        observation = observe_policy(view, cpu, coach.version)
         choice = _selection(coach, coach.defense(observation), observation.defense)
         return _Plan(
             turn, "snap", (None, choice.key), tuple(a.key for a in view.actions.offense), choice
         )
-    observation = _coach_observation(view, cpu)
+    observation = observe_policy(view, cpu, coach.version)
     legal = observation.offense + observation.special + observation.game_actions
     choice = _selection(coach, coach.offense(observation), legal)
     if choice.key in observation.offense:

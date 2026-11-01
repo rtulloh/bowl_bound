@@ -151,7 +151,7 @@ def test_cli_hard_flag_and_legacy_chart_resume_preserve_distinct_policies(
         )
         == 0
     )
-    assert policies == ["hard-v8"]
+    assert policies == ["hard-v9"]
     path = tmp_path / "private-test.json"
     game = SavedGame.new(
         *teams,
@@ -163,7 +163,7 @@ def test_cli_hard_flag_and_legacy_chart_resume_preserve_distinct_policies(
     )
     path.write_text(dumps_game(game))
     assert main(["--seasons", str(tmp_path), "--load", str(path), "--compact"]) == 0
-    assert policies == ["hard-v8", "chart-v1"]
+    assert policies == ["hard-v9", "chart-v1"]
 
 
 @pytest.mark.parametrize(

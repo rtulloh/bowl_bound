@@ -24,7 +24,7 @@ from .session import SessionPhase
 AGGRESSION = {
     mode: behavior_for_policy(f"{mode}-v1").aggression for mode in ("easy", "medium", "hard")
 }
-_UNMODELED_DEFENSE_CALLS = frozenset(
+_ADVANCED_DEFENSE_CALLS = frozenset(
     {
         "RUN",
         "PASS",
@@ -51,8 +51,8 @@ class DifficultyCoach(ChartAwareCoach):
     ) -> None:
         if mode not in AGGRESSION:
             raise ValueError("difficulty must be easy, medium or hard")
-        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8}:
-            raise ValueError("difficulty policy version must be 1 through 8")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8, 9}:
+            raise ValueError("difficulty policy version must be 1 through 9")
         super().__init__(seed, home, away, version=version)
         self.mode = mode
         self.behavior = behavior_for_policy(f"{mode}-v{version}")
@@ -99,6 +99,9 @@ class DifficultyCoach(ChartAwareCoach):
         facts = asdict(observation)
         if self.version < 8:
             facts.pop("decision_outcomes")
+        if self.version < 9:
+            facts.pop("advanced_ii")
+            facts.pop("free_advanced_defense")
         if self.version == 1:
             facts.pop("can_kneel_out_game")
         public = dumps(facts, sort_keys=True, separators=(",", ":"))
@@ -130,7 +133,9 @@ class DifficultyCoach(ChartAwareCoach):
         role_calls = [((offense_side, "offense"), play, offense_observation)]
         if defense in tuple("ABCDEF"):
             role_calls.append(((other, "defense"), defense, defense_observation))
-        elif defense not in _UNMODELED_DEFENSE_CALLS:
+        elif defense in _ADVANCED_DEFENSE_CALLS:
+            role_calls.append(((other, "defense"), defense, defense_observation))
+        else:
             raise ValueError("history requires a public committed offensive/defensive call")
         for key, value, role_observation in role_calls:
             self._counts[key][value] += 1

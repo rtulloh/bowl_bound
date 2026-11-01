@@ -103,9 +103,9 @@ chart-only loaders remain supported for saves without privileges. This preserves
 free versus conditional calls when a game resumes without storing chart files.
 
 Within the current engine profile, `coach_policy` accepts `baseline`,
-`baseline-v2`/`baseline-v8`, chart policies v1–v8, and Easy/Medium/Hard policies
-in v1–v8. Omission retains baseline compatibility; `SavedGame.new` defaults to
-baseline, while CLI/API new-game defaults are Medium v8. The saved policy and independent
+`baseline-v2`/`baseline-v8`/`baseline-v9`, chart policies v1–v9, and Easy/Medium/Hard policies
+in v1–v9. Omission retains baseline compatibility; `SavedGame.new` defaults to
+baseline, while CLI/API new-game defaults are Medium v9. The saved policy and independent
 coach seed are restored, not replaced by setup selections. No additional mutable
 coaching RNG state is serialized.
 

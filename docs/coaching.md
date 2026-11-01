@@ -135,9 +135,11 @@ see [attribution](ATTRIBUTION.md). No Paydirt runtime dependency was added.
 ## API
 
 `POST /api/games` accepts `difficulty: "easy" | "medium" | "hard"`; omitted means
-Medium. New games use the corresponding v8 policy. Alternatively, explicit
-`coach_policy` accepts `baseline`, `baseline-v2`, chart policies v1–v8, and the
-Easy/Medium/Hard v1–v8 policies; it cannot be combined with `difficulty`.
+Medium. New games use the corresponding v9 policy, which can use engine-offered
+Advanced II defenses. Earlier policy versions remain available for reproducible
+saves. Explicit `coach_policy` accepts `baseline`, `baseline-v2`/`baseline-v8`/
+`baseline-v9`, chart policies v1–v9, and the Easy/Medium/Hard v1–v9 policies; it
+cannot be combined with `difficulty`.
 `baseline` and chart policies are compatibility/testing choices, not additional
 player-facing difficulty levels. New/load/get responses report `coach_policy`;
 loading restores the saved version, irrespective of setup selections.
@@ -184,7 +186,7 @@ aggression, late-game thresholds and utility coefficients. These are coaching
 preferences, not football rules, configurable difficulty odds or calibrated
 expected points. Version 2 consults the engine's `can_kneel_out_game` query before
 choosing a kneel; v1 keeps its original selection stream and heuristic. New games
-use v8, while existing saves retain their recorded policy. Version 3 adds
+use v9, while existing saves retain their recorded policy. Version 3 adds
 chart-backed fourth-down and late-half choices, score-aware fourth-quarter
 conversion preferences, and an offered last-snap Hail Mary for a trailing team.
 Its field-goal options come from the engine and team chart, not a fixed distance
@@ -200,16 +202,19 @@ Version 6 adds Easy/Medium/Hard situational defensive preferences for goal-line,
 likely fourth-down kicks, and protecting a large late lead. It adjusts weights
 without removing any of the six formations from the engine's legal menu. Hard's
 chart analysis uses the same preferences, so it cannot override those guards.
-Advanced II calls are currently excluded from computer defense selections until
-their strategy and chart evaluation are implemented (AI-021); human-controlled
-defense can use any Advanced II call the engine offers.
+Advanced II calls remain excluded from older policy versions; version 9 adds all
+engine-offered calls while preserving the older selection streams.
 Version 7 returns kicks unless a large late lead favors a fair catch or
 touchback, selects the receiving team's guaranteed spot on a kickoff out of
 bounds, and clears stale analysis-fallback state before a decision. Version 8
 uses deterministic engine-projected penalty outcomes to compare decline and
 accepted-enforcement choices, including fourth-down turnovers and scoring
 results; when an outcome needs future dice, it retains the earlier safe default.
-Earlier policy versions keep their recorded behavior.
+Version 9 includes every engine-offered Advanced II defense. Baseline, Easy and
+Medium mix legal calls using their existing selection preferences. Hard and chart
+policies compare calls through isolated engine simulations, including conditional
+yardage doubling and free W-coded access. Earlier policy versions keep their
+recorded six-formation behavior.
 
 Audit JSON includes `behavior_profile` and `audit_profile` for each game. The
 separate `coaching-audit-v1` profile names replay and advisory concentration
