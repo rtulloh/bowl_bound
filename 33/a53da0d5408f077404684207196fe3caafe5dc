@@ -1,0 +1,51 @@
+backend/app.py
+  s_ed54ab581b3d60::t_e97760ce76bfd6 121,123
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_dec7ff20bfd550 61,63,78-79,309-310
+bowl_bound/difficulty.py
+  s_ed54ab581b3d60::t_5bf16ade11ec63 38,123
+bowl_bound/penalties.py
+  s_ed54ab581b3d60::t_3ca538ad42dfac 21,72-87,142,154,177,219,225-226,234
+bowl_bound/resolution.py
+  s_ed54ab581b3d60::t_c9b5a394dbaa09 180-189,195,199,224,230,281,386-530,692,732
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_3d311ad60bb6fa 997-1002
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_b1b8e8781443db 12,26-36,43-51,330-340,365,499-503,524-528,670-675,704-705,716-720,838-839,849-850,864-962,988-1013,1016-1018,1020,1088,1114,1222-1269,1808-1809,1977-1979,2022,2317-2322,2432-2443
+docs/cli.md
+  s_ed54ab581b3d60::t_bda3f6c24a0ba6 100,102
+docs/dev-notes/milestone-22.md
+  s_ed54ab581b3d60::t_c7211576a517a7 161-174,325-327
+docs/playing.md
+  s_ed54ab581b3d60::t_61f3c059a1c8b0 36-42
+docs/rules-profile.md
+  s_ed54ab581b3d60::t_c0185cb7d2a306 33
+docs/web-demo.md
+  s_ed54ab581b3d60::t_2252943ad32e26 99-101
+tests/test_api.py
+  s_ed54ab581b3d60::t_9f41d63ea66b1b 85-89,97,116-137
+tests/test_difficulty.py
+  s_ed54ab581b3d60::t_30f5bf39a287ca 83-94
+tests/test_razzle_dazzle.py
+  s_ed54ab581b3d60::t_12b421b3ddcbf4 1-353
+tests/test_save_game.py
+  s_ed54ab581b3d60::t_e9c4ca1b60d628 414-419
+tests/test_session.py
+  s_ed54ab581b3d60::t_e3accedd81cd88 41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "33a53da0d5408f077404684207196fe3caafe5dc",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
