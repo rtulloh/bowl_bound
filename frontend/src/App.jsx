@@ -209,7 +209,7 @@ export default function App() {
   // Display abbreviations only: offered engine IDs and labels still own availability/behavior.
   const displayKeys = {
     punt: 'P', field_goal: 'F', kneel: 'K', kickoff: 'KO',
-    onside_kickoff: 'O', hail_mary: 'HM',
+    onside_kickoff: 'O', hail_mary: 'HM', elect_safety: 'ES',
   }
   const extraPlays = [
     ...(actions.special || []).map((action) => ({ ...action, prefix: 'special', displayKey: displayKeys[action.key], shortLabel: action.key === 'field_goal' ? 'FG' : action.label })),

@@ -134,6 +134,7 @@ class GameAction(BaseModel):
     action: Literal[
         "kneel",
         "hail_mary",
+        "elect_safety",
         "timeout:home",
         "timeout:away",
         "bounds:oob",

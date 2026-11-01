@@ -43,6 +43,7 @@ _KICK_KEYS = {
 }
 _ACTION_KEYS = {
     "kneel": "K",
+    "elect_safety": "ES",
     "hail_mary": "H",
     "bounds:oob": "O",
     "bounds:ib": "I",

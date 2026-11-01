@@ -389,6 +389,40 @@ def test_opening_kickoff_end_zone_choice_through_api(seasons: Path) -> None:
     assert len(final.json()["report"]["trace"]) == 1
 
 
+def test_elected_safety_is_offered_and_resolved_through_regulation_api(
+    seasons: Path,
+) -> None:
+    from dataclasses import replace
+
+    from tests.test_special_teams import special_chart, yards
+
+    write_team(seasons, replace(special_chart("Alpha Tech", kickoff=yards(70)), season=2002))
+    write_team(seasons, replace(special_chart("Beta State", kickoff=yards(70)), season=2002))
+    client = TestClient(create_app(seasons))
+    game = start(
+        client,
+        home="2002/alpha-tech",
+        away="2002/beta-state",
+        mode="regulation",
+    )
+    path = f"/api/games/{game['game_id']}"
+    client.post(path + "/decision", json={"choice": "toss:receive"})
+    client.post(path + "/kick", json={"action": "kickoff"})
+    client.post(path + "/decision", json={"choice": "kick:touchback"})
+
+    offered = client.get(path).json()["view"]
+    assert "elect_safety" in [action["key"] for action in offered["game_actions"]]
+    result = client.post(path + "/action", json={"action": "elect_safety"})
+
+    assert result.status_code == 200, result.text
+    assert result.json()["report"]["called_play"] == "Elected safety"
+    possession = offered["state"]["possession"]
+    expected_score = {"home": 0, "away": 2} if possession == "home" else {"home": 2, "away": 0}
+    assert result.json()["view"]["score"] == expected_score
+    assert result.json()["view"]["state"]["possession"] == possession
+    assert result.json()["view"]["state"]["yards_to_goal"] == 80
+
+
 def test_onside_kickoff_is_an_engine_offered_api_action(seasons: Path) -> None:
     write_team(seasons, team_chart("Alpha Tech", season=2002))
     write_team(seasons, team_chart("Beta State", season=2002))

@@ -341,6 +341,7 @@ class RegulationGame:
         ):
             if base.phase == "scrimmage":
                 game_actions.append(Action("kneel", "Kneel"))
+                game_actions.append(Action("elect_safety", "Elect a safety"))
                 if (
                     effective_clock.quarter in {2, 4}
                     and 0 < effective_clock.remaining <= 20
@@ -401,6 +402,7 @@ class RegulationGame:
                 ]
                 if base.phase == "scrimmage":
                     game_actions.append(Action("kneel", "Kneel"))
+                    game_actions.append(Action("elect_safety", "Elect a safety"))
                     game_actions.extend(
                         (
                             Action("bounds:oob", "Declare out of bounds"),
@@ -660,6 +662,8 @@ class RegulationGame:
         report = (
             self._session.automatic("kneel")
             if action == "kneel"
+            else self._session.elect_safety()
+            if action == "elect_safety"
             else self._session.snap(
                 "8",
                 "A",

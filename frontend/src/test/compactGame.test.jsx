@@ -132,6 +132,18 @@ it('executes the offered kneel directly from the play panel, without another sel
   expect(api.snap).not.toHaveBeenCalled()
 })
 
+it('executes an offered elected safety from the play panel', async () => {
+  api.newGame.mockResolvedValue({ game_id: 'game', seed: 7, view: view({
+    game_actions: [{ key: 'elect_safety', label: 'Elect a safety' }],
+  }) })
+  api.gameAction.mockResolvedValue({ view: view(), report: report() })
+  await start()
+  const action = screen.getByTestId('game-play-elect_safety')
+  expect(action).toHaveTextContent('ESElect a safety')
+  fireEvent.click(action)
+  await waitFor(() => expect(api.gameAction).toHaveBeenCalledWith('game', 'elect_safety'))
+})
+
 it('defaults to human home/computer away while keeping two-sided manual play last', async () => {
   render(<App />)
   await screen.findByTestId('start-game')

@@ -44,7 +44,8 @@ it and returns focus to the menu summary. Offered special/game actions share you
 play panel: P/Punt, F/FG, K/Kneel, KO/Kickoff, O/Onside kickoff when offered,
 and HM/Hail Mary. The
 prominent number/letter sits above its name; full engine labels remain available
-to assistive technology and in tooltips. QB Sneak appears as Q when the engine
+to assistive technology and in tooltips. Elect a safety appears as ES when the
+engine offers it. QB Sneak appears as Q when the engine
 offers it.
 
 Defense buttons keep A–F above their engine-supplied names: **Standard**,

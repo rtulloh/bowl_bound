@@ -102,6 +102,7 @@ Without `--compact`, the expanded menu is shown at each turn.
 | `P`, `F` | Punt or field goal when choosing an offensive special play |
 | `K` | Kick off, elect to kick, or kneel—whichever the current menu offers |
 | `H` | Hail Mary when the engine offers it |
+| `ES` | Elect a safety when offered; the opponents score two and the conceding team receives a free kick from its own 20 |
 | `R` | Receive or return, as labeled in the current decision |
 | `TB`, `FC` | Touchback or fair catch when offered |
 | `N`, `S` | Apply an offered hurry or spike clock choice |

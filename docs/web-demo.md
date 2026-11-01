@@ -93,6 +93,8 @@ separate Special Teams/Clock & Game Actions boxes. The play number or abbreviati
 is above the short name; tooltips/accessibility retain the full engine label.
 Kickoff (**KO**), onside kickoff (**O**, when offered) and Hail Mary (**HM**)
 use the same panel; offered timeouts live beside Hurry-up in the modifier row.
+When offered between scrimmage plays, **ES / Elect a safety** awards two points
+to the opponents and schedules a free kick from the conceding team's own 20.
 These are display abbreviations, not additional rules or keyboard bindings.
 **Q / QB Sneak** appears when the engine offers it. Kicks and kneels resolve
 immediately without a defensive formation. A punt is rolled before the receiver chooses a fair catch or return;

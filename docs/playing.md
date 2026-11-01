@@ -48,6 +48,10 @@ At a kickoff, the assigned kicker may choose a normal or onside kick; the
 onside kick travels 12 yards, and the offensive-dice total determines which
 team recovers it.
 
+When offered between scrimmage plays, **ES / Elect a safety** awards two points
+to the opponents and gives the conceding team a free kick from its own 20. It
+uses no dice and is unavailable during a pending play decision.
+
 The clock advances through engine decisions, not real elapsed time. Standard
 play timing applies automatically with your next call; there is no separate
 runoff action. Kneel to run down the clock. Timeouts and spikes are one-shot

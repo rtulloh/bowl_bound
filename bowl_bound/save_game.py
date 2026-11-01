@@ -935,6 +935,10 @@ def _legacy_m27_view_digest(
 ) -> str:
     """Recreate the pre-M27 digest for a state replayed with implicit timing."""
     data = asdict(view)
+    if "game_actions" in data:
+        data["game_actions"] = [
+            action for action in data["game_actions"] if action["key"] != "elect_safety"
+        ]
     data["actions"]["offense"] = [
         action for action in data["actions"]["offense"] if action["key"] != "Q"
     ]

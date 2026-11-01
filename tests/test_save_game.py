@@ -236,6 +236,15 @@ def test_overtime_toss_series_timeout_and_final_guard_survive_resume() -> None:
     assert game.view() == restored.view()
 
 
+def test_elected_safety_action_replays_after_save_resume() -> None:
+    game = new(mode="regulation")
+    opening(game)
+    restored = clone(game)
+
+    assert restored.action("elect_safety") == game.action("elect_safety")
+    assert clone(restored).view() == game.view()
+
+
 def test_rejected_requests_replay_without_changing_legal_state() -> None:
     game = new()
     with pytest.raises(ValueError, match="play must be"):

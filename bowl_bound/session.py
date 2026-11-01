@@ -555,6 +555,40 @@ class PlaySession:
         self._log.append(report)
         return report
 
+    def elect_safety(self) -> PlayReport:
+        """Award the opponents a safety without rolling dice (Advanced I-5)."""
+        if self._pending_view() is not None:
+            raise PendingDecisionError("finish the pending decision before electing a safety")
+        if self._special is not None:
+            raise PendingDecisionError("finish the kick before electing a safety")
+        if self._phase is not SessionPhase.SCRIMMAGE or self._field is None:
+            raise SessionFinishedError("an elected safety requires a live scrimmage")
+
+        field = self._field
+        before = self._state_view(field)
+        scorer = field.possession.other
+        self._field = None
+        self._add_score(scorer, 2)
+        report = PlayReport(
+            number=len(self._log) + 1,
+            supported=True,
+            pending=False,
+            outcome="safety",
+            yards=None,
+            called_play="Elected safety",
+            resolved_play="Elected safety",
+            defense="No formation",
+            state_before=before,
+            state_after=None,
+            description=f"{self._charts[field.possession].name} elects a safety.",
+            unsupported_reason=None,
+            trace=(),
+            timing=TimingFacts(scoring=True, no_elapsed_time=True),
+        )
+        report = self._finish_report(report)
+        self._log.append(report)
+        return report
+
     def _special_actions(self) -> tuple[Action, ...]:
         if self._scheduled_kickoff:
             actions = [

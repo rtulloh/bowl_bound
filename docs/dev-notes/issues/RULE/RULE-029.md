@@ -15,11 +15,11 @@ commits: []
 
 ## Description
 
-The owner approved Advanced Rule I-5 elected safeties for implementation on 2026-11-01. This is separate from ordinary safeties and the existing free-kick procedure; keep the election unavailable until this ticket is implemented and verified.
+The owner approved Advanced Rule I-5 elected safeties. During a live scrimmage, the possessing team may elect to award the opponents two points, after which the conceding team receives a safety free kick from its own 20. The choice is separate from an ordinary safety and its resulting free kick.
 
 ## Resolution / verification
 
-- Record when a team may elect a safety and the resulting score, possession, kickoff, timing, statistics, and trace behavior; implement with synthetic tests for every legal phase and save replay.
+- Implement the choice as an engine-owned scrimmage action. Verify two-point scoring, the conceding team's free kick from its own 20, zero dice and elapsed time, no rushing/passing credit, availability on any down before the play, rejection during a pending/free-ball decision, API/CLI/browser controls, and save replay with synthetic teams.
 
 ## Comments
 
