@@ -32,6 +32,7 @@ from .penalty_yardage import (
     enforce_return_penalty,
 )
 from .resolution import LookupTrace, PlayResolution
+from .return_recovery import GOAL_LINE, MAX_FIELD_SPOT, TOUCHBACK_SPOT
 from .scoring import ScoreKind, ScoreLedger, resolve_pat
 from .special_teams import SpecialTeamsPlay, SpecialTeamsResolution
 from .statistics import (
@@ -47,6 +48,7 @@ from .team_csv import format_cell
 from .timing import BoundsDeclaration, TimingFacts
 from .turnovers import (
     EndZoneResult,
+    ReturnPenaltyFacts,
     TurnoverOutcome,
     TurnoverResolution,
     TurnoverTrace,
@@ -58,6 +60,7 @@ from .turnovers import (
 )
 
 DEFAULT_START_YARDS_TO_GOAL = 65  # own 35
+MIN_FIELD_GOAL_YARDS_TO_GOAL = 93
 PLAY_LABELS = {
     Play.ONE: "Line Plunge",
     Play.TWO: "Counter",
@@ -381,7 +384,7 @@ class PlaySession:
         spot = 2 if try_only else 25
         for penalty in self._kickoff_penalties:
             if penalty.team == self._charts[team].name:
-                spot += min(penalty.yards, (100 - spot) // 2)
+                spot += min(penalty.yards, (GOAL_LINE - spot) // 2)
             else:
                 spot -= min(penalty.yards, spot // 2)
         self._kickoff_penalties = ()
@@ -402,9 +405,9 @@ class PlaySession:
         own = 20 if safety else kickoff_spot(self._charts[Possession.HOME].season)
         for penalty in self._kickoff_penalties:
             # Carried try fouls were committed by the receiving team.
-            own += min(penalty.yards, (100 - own) // 2)
+            own += min(penalty.yards, (GOAL_LINE - own) // 2)
         self._kickoff_penalties = ()
-        self._field = start_drive(team, 100 - own)
+        self._field = start_drive(team, GOAL_LINE - own)
         self._phase = SessionPhase.SCRIMMAGE
         self._scheduled_kickoff = True
         self._safety_free_kick = safety
@@ -471,7 +474,7 @@ class PlaySession:
         if self._field is None or self._pending is not None or self._special is not None:
             return ()
         actions = [Action("punt", "Punt")]
-        if self._field.yards_to_goal < 93:
+        if self._field.yards_to_goal < MIN_FIELD_GOAL_YARDS_TO_GOAL:
             actions.append(Action("field_goal", "Field goal attempt"))
         season = self._charts[Possession.HOME].season
         if not self._log and 1940 <= season <= 2023:
@@ -713,7 +716,7 @@ class PlaySession:
                 True,
                 True,
                 "penalty_pending",
-                _gain(resolution),
+                resolution.result.yards,
                 PLAY_LABELS[resolution.called_play],
                 PLAY_LABELS[resolution.resolved_play],
                 _formation_label(defensive),
@@ -840,17 +843,17 @@ class PlaySession:
             raise InvalidDecisionError(selected.reason or "penalty decision cannot be selected")
         if pending.turnover and pending.turnover_resolution is not None:
             turnover = pending.turnover_resolution
-            if turnover.end_zone_recovery:
+            if turnover.end_zone_recovery is not None:
                 if pending.dice is None:
                     raise RuntimeError("end-zone recovery decision is missing its dice source")
                 self._pending = None
-                recovery_possession = turnover.recovery_possession or pending.field.possession.other
+                recovery_possession = turnover.end_zone_recovery.possession
                 if choice == "end_zone:touchback":
                     turnover = replace(
                         turnover,
                         outcome=TurnoverOutcome.TOUCHBACK,
-                        state=start_drive(recovery_possession, 80),
-                        end_zone_recovery=False,
+                        state=start_drive(recovery_possession, TOUCHBACK_SPOT),
+                        end_zone_recovery=None,
                     )
                 else:
                     returned = resolve_end_zone_recovery_return(
@@ -858,7 +861,7 @@ class PlaySession:
                         self._charts[recovery_possession.other],
                         recovery_possession,
                         pending.dice,
-                        end_zone_depth=turnover.end_zone_depth,
+                        end_zone_depth=turnover.end_zone_recovery.depth,
                         hurried=self._hurried_play,
                     )
                     turnover = replace(returned, trace=(*turnover.trace, *returned.trace))
@@ -872,28 +875,26 @@ class PlaySession:
                     pending.prefix,
                     dice=pending.dice,
                 )
-            penalty = turnover.return_penalty
-            if penalty is None or turnover.return_start is None or turnover.return_yards is None:
+            facts = turnover.return_facts
+            if facts is None:
                 raise RuntimeError("return penalty decision is incomplete")
             self._pending = None
             accepted = choice == "return:accept" or choice.startswith("return:accept:")
             return_credit = None
             if accepted:
                 index = int(choice.rsplit(":", 1)[-1]) if choice.startswith("return:accept:") else 0
-                penalty = turnover.return_penalties[index] if turnover.return_penalties else penalty
+                penalty = facts.penalties[index]
                 enforced = enforce_return_penalty(
-                    turnover.return_start,
+                    facts.start.state,
                     penalty,
-                    return_yards=turnover.return_yards,
-                    origin=turnover.return_origin,
-                    continues_original_play=turnover.continues_original_play,
-                    scrimmage_start=turnover.scrimmage_start,
+                    return_yards=facts.yards,
+                    origin=facts.start.origin.yards_to_goal,
+                    continues_original_play=facts.continues_original_play,
+                    scrimmage_start=facts.scrimmage_start,
                 )
                 return_credit = enforced.credited_yards
                 if enforced.disposition is ReturnPenaltyDisposition.SAFETY:
-                    points = (
-                        (0, 2) if turnover.return_start.possession is Possession.HOME else (2, 0)
-                    )
+                    points = (0, 2) if facts.start.state.possession is Possession.HOME else (2, 0)
                     outcome = TurnoverOutcome.SAFETY
                     end_zone = EndZoneResult.SAFETY
                     state = None
@@ -905,7 +906,7 @@ class PlaySession:
                 else:
                     outcome = (
                         TurnoverOutcome.OFFENSIVE_RECOVERY
-                        if turnover.continues_original_play
+                        if facts.continues_original_play
                         else TurnoverOutcome.DEFENSIVE_RECOVERY
                     )
                     end_zone = None
@@ -918,9 +919,8 @@ class PlaySession:
                     points=points,
                     end_zone=end_zone,
                     outcome=outcome,
-                    end_zone_recovery=False,
-                    return_penalty=None,
-                    return_penalties=(),
+                    end_zone_recovery=None,
+                    return_facts=None,
                     continuation=None,
                 )
             else:
@@ -1117,13 +1117,13 @@ class PlaySession:
         return_credit: int | None = None,
     ) -> PlayReport:
         """Record one completed turnover sequence without presentation-layer rules."""
-        if turnover.end_zone_recovery:
+        if turnover.end_zone_recovery is not None:
             if dice is None:
                 raise RuntimeError("end-zone recovery needs its original dice source")
             field = FieldState(
                 Possession(before.possession), before.yards_to_goal, before.down, before.yards_to_go
             )
-            recovery_possession = turnover.recovery_possession or field.possession.other
+            recovery_possession = turnover.end_zone_recovery.possession
             can_return = True
             view = PendingDecisionView(
                 self._charts[recovery_possession].name,
@@ -1166,19 +1166,19 @@ class PlaySession:
                 None,
                 (*trace, *(_turnover_trace_entry(entry) for entry in turnover.trace)),
             )
-        if turnover.return_penalty is not None:
+        if turnover.return_facts is not None:
+            facts = turnover.return_facts
+            first_penalty = facts.penalties[0]
             chooser_side = (
-                turnover.return_start.possession
-                if turnover.return_penalty.source.team.value == "defense"
-                else turnover.return_start.possession.other
+                facts.start.state.possession
+                if first_penalty.source.team.value == "defense"
+                else facts.start.state.possession.other
             )
             chooser = self._charts[chooser_side].name
             choices = (
                 *tuple(
-                    _return_penalty_choice(index, p, turnover)
-                    for index, p in enumerate(
-                        turnover.return_penalties or (turnover.return_penalty,)
-                    )
+                    _return_penalty_choice(index, p, facts)
+                    for index, p in enumerate(facts.penalties)
                 ),
                 PenaltyChoice("return:decline", "Decline return penalties", True),
             )
@@ -1192,7 +1192,7 @@ class PlaySession:
                 PreparedPlay(resolution),
                 called,
                 defensive,
-                turnover.return_start,
+                facts.start.state,
                 before,
                 trace,
                 prefix,
@@ -1504,7 +1504,7 @@ class PlaySession:
     def _state_view(self, field: FieldState) -> StateView:
         home = field.possession is Possession.HOME
         # Fixed orientation for this one-drive demo: the home goal is on the left.
-        ball = 100 - field.yards_to_goal if home else field.yards_to_goal
+        ball = GOAL_LINE - field.yards_to_goal if home else field.yards_to_goal
         first_down = ball + field.yards_to_go if home else ball - field.yards_to_go
         return StateView(
             possession=field.possession.value,
@@ -1537,11 +1537,12 @@ def _pending_view(
     """Expose alternatives without attempting an unsupported result transition."""
     first = penalties[0]
     chooser = offense_name if first.source.team.value == "defense" else defense_name
-    gain = _gain(resolution)
+    yards = resolution.result.yards
     infield_end = (
         resolution.result.kind is ResultKind.YARDS
-        and gain > 0
-        and 1 <= field.yards_to_goal - gain <= 99
+        and yards is not None
+        and yards > 0
+        and 1 <= field.yards_to_goal - yards <= MAX_FIELD_SPOT
     )
     choices: list[PenaltyChoice] = []
     for index, penalty in enumerate(penalties):
@@ -1606,11 +1607,17 @@ def _penalty_decision_outcomes(
                 )
             )
             continue
+        gain = resolution.result.yards
+        if gain is None:
+            if spot == "end":
+                outcomes.append(DecisionOutcome(choice.id, DecisionOutcomeKind.UNRESOLVED))
+                continue
+            gain = 0
         try:
             projected = enforce_penalty(
                 field,
                 penalty,
-                gain=_gain(resolution),
+                gain=gain,
                 from_end=spot == "end",
             )
         except (TypeError, ValueError):
@@ -1680,25 +1687,24 @@ def _return_penalty_outcomes(
             else:
                 outcomes.append(_scoring_decision_outcome(choice.id, turnover))
             continue
-        if turnover.return_start is None or turnover.return_yards is None:
+        facts = turnover.return_facts
+        if facts is None:
             outcomes.append(DecisionOutcome(choice.id, DecisionOutcomeKind.UNRESOLVED))
             continue
         suffix = choice.id.rsplit(":", 1)[-1]
         index = int(suffix) if choice.id.count(":") > 1 else 0
-        penalties = turnover.return_penalties or (
-            (turnover.return_penalty,) if turnover.return_penalty else ()
-        )
+        penalties = facts.penalties
         if index >= len(penalties):
             outcomes.append(DecisionOutcome(choice.id, DecisionOutcomeKind.UNRESOLVED))
             continue
         try:
             result = enforce_return_penalty(
-                turnover.return_start,
+                facts.start.state,
                 penalties[index],
-                return_yards=turnover.return_yards,
-                origin=turnover.return_origin,
-                continues_original_play=turnover.continues_original_play,
-                scrimmage_start=turnover.scrimmage_start,
+                return_yards=facts.yards,
+                origin=facts.start.origin.yards_to_goal,
+                continues_original_play=facts.continues_original_play,
+                scrimmage_start=facts.scrimmage_start,
             )
         except (TypeError, ValueError):
             outcomes.append(DecisionOutcome(choice.id, DecisionOutcomeKind.UNRESOLVED))
@@ -1708,7 +1714,7 @@ def _return_penalty_outcomes(
                 DecisionOutcome(
                     choice.id,
                     DecisionOutcomeKind.SAFETY,
-                    scoring_side=turnover.return_start.possession.other.value,
+                    scoring_side=facts.start.state.possession.other.value,
                 )
             )
         elif result.state is not None:
@@ -1757,7 +1763,7 @@ def _penalty_result_text(resolution: PlayResolution, field: FieldState) -> str:
     if result.kind is ResultKind.YARDS and result.yards is not None:
         if result.yards >= field.yards_to_goal:
             return "touchdown"
-        if field.yards_to_goal - result.yards >= 100:
+        if field.yards_to_goal - result.yards >= GOAL_LINE:
             return "safety"
     return _gain_text(result.kind, _gain(resolution))
 
@@ -1814,6 +1820,8 @@ def _resolved_turnover_location(
 
 
 def _gain(resolution: PlayResolution) -> int:
+    if resolution.result.yards is None and resolution.result.pending:
+        raise ValueError("pending result has no resolved yardage")
     return resolution.result.yards or 0
 
 
@@ -1900,21 +1908,19 @@ def _trace_entry(entry: LookupTrace) -> TraceEntry:
 
 
 def _return_penalty_choice(
-    index: int, penalty: AssessedPenalty, turnover: TurnoverResolution
+    index: int, penalty: AssessedPenalty, facts: ReturnPenaltyFacts
 ) -> PenaltyChoice:
     """Expose whether return-penalty enforcement can be applied before state mutation."""
     key = "return:accept" if index == 0 else f"return:accept:{index}"
     label = f"Accept {penalty.yards}-yard return penalty"
-    if turnover.return_start is None or turnover.return_yards is None:
-        return PenaltyChoice(key, label, False, "Return enforcement has no numeric endpoint.")
     try:
         enforce_return_penalty(
-            turnover.return_start,
+            facts.start.state,
             penalty,
-            return_yards=turnover.return_yards,
-            origin=turnover.return_origin,
-            continues_original_play=turnover.continues_original_play,
-            scrimmage_start=turnover.scrimmage_start,
+            return_yards=facts.yards,
+            origin=facts.start.origin.yards_to_goal,
+            continues_original_play=facts.continues_original_play,
+            scrimmage_start=facts.scrimmage_start,
         )
     except (TypeError, ValueError) as exc:
         return PenaltyChoice(

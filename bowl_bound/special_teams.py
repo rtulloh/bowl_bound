@@ -21,6 +21,15 @@ from .penalty_yardage import (
     enforce_penalty,
     enforce_return_penalty,
 )
+from .return_recovery import (
+    END_LINE,
+    GOAL_LINE,
+    MAX_FIELD_SPOT,
+    TOUCHBACK_SPOT,
+    ReturnOrigin,
+    ReturnStart,
+    resolve_recovery,
+)
 from .variable_yardage import roll_variable
 
 MIN_SUPPORTED_SEASON = 1940
@@ -133,7 +142,7 @@ class SpecialTeamsPlay:
         self.extends_quarter = False
         if self.free_kick:
             own_spot = 20 if safety_free_kick else kickoff_spot(home_season)
-            state = start_drive(state.possession, 100 - own_spot)
+            state = start_drive(state.possession, GOAL_LINE - own_spot)
         self.start = state
         self.chain_depth = 0
         self.trace: list[SpecialTeamsTrace] = []
@@ -146,9 +155,7 @@ class SpecialTeamsPlay:
         if self.result is not None:
             raise ValueError("kick procedure has already started")
         column = SpecialTeamsColumn(self.action)
-        self.result = self._column(
-            self.start, column, lambda cell: self._kick(cell), is_return=False
-        )
+        self.result = self._column(self.start, column, lambda cell: self._kick(cell))
         return self.result
 
     def decide(self, choice: str) -> SpecialTeamsResolution:
@@ -199,8 +206,7 @@ class SpecialTeamsPlay:
         column: SpecialTeamsColumn,
         continuation: Callable[[NormalizedCell], SpecialTeamsResolution],
         *,
-        is_return: bool,
-        return_origin: int | None = None,
+        return_start: ReturnStart | None = None,
     ) -> SpecialTeamsResolution:
         penalties: list[AssessedPenalty] = []
         for _ in range(MAX_KICK_CHAIN):
@@ -220,13 +226,16 @@ class SpecialTeamsPlay:
             if penalty.no_foul:
                 continue
             if penalty.bad_snap:
-                return self._recovery(state, -13 if self.action == "punt" else -7)
+                return self._recovery(
+                    ReturnStart(state, ReturnOrigin(state.yards_to_goal)),
+                    -13 if self.action == "punt" else -7,
+                )
             if penalty.no_elapsed_time:
                 self.no_elapsed_time = True
                 return self._finish(SpecialTeamsOutcome.PENALTY, enforce_penalty(state, penalty))
             if (
                 self.action == "kickoff"
-                and not is_return
+                and return_start is None
                 and penalty.source.team is PenaltyTeam.OFFENSE
                 and penalty.source.code is PenaltyCode.S
                 and penalty.roll is not None
@@ -249,7 +258,7 @@ class SpecialTeamsPlay:
                         ),
                     ],
                 )
-            if penalty.pre_snap and not is_return:
+            if penalty.pre_snap and return_start is None:
                 return self._finish(SpecialTeamsOutcome.PENALTY, enforce_penalty(state, penalty))
             penalties.append(penalty)
         else:
@@ -278,12 +287,11 @@ class SpecialTeamsPlay:
         for index, penalty in enumerate(penalties):
 
             def handler(p: AssessedPenalty = penalty) -> SpecialTeamsResolution:
-                if is_return:
+                if return_start is not None:
                     return self._accepted_return(
-                        state,
+                        return_start,
                         cell,
                         p,
-                        return_origin,
                         free_touchback=self.free_kick
                         and column is not SpecialTeamsColumn.INTERCEPTION_RETURN,
                     )
@@ -296,10 +304,11 @@ class SpecialTeamsPlay:
             alternatives.append(
                 (f"kick:accept:{index}", f"Accept {penalty.yards}-yard penalty", handler)
             )
+        declined_result = _penalty_result_text(cell, column, is_return=return_start is not None)
         alternatives.append(
             (
                 "kick:decline",
-                f"Decline penalties: {_penalty_result_text(cell, column, is_return=is_return)}",
+                f"Decline penalties: {declined_result}",
                 lambda: continuation(cell),
             )
         )
@@ -310,7 +319,7 @@ class SpecialTeamsPlay:
         if self.chain_depth > MAX_KICK_CHAIN:
             raise ValueError("kick replay limit exceeded")
         self.start = state
-        return self._column(state, SpecialTeamsColumn(self.action), self._kick, is_return=False)
+        return self._column(state, SpecialTeamsColumn(self.action), self._kick)
 
     def _distance(self, cell: NormalizedCell, possession: Possession) -> int:
         if cell.yards is not None:
@@ -344,11 +353,10 @@ class SpecialTeamsPlay:
                     redirected=redirected + 1,
                     no_return=no_return or cell.out_of_bounds,
                 ),
-                is_return=False,
             )
         if cell.kind in {ResultKind.FUMBLE, ResultKind.BLOCKED_KICK}:
             return self._recovery(
-                self.start,
+                ReturnStart(self.start, ReturnOrigin(self.start.yards_to_goal)),
                 self._distance(cell, self.start.possession),
                 blocked=cell.kind is ResultKind.BLOCKED_KICK,
                 snap=not self.free_kick,
@@ -366,7 +374,7 @@ class SpecialTeamsPlay:
             )
             if distance is not None and distance >= self.start.yards_to_goal:
                 return self._score(self.start.possession, 3, SpecialTeamsOutcome.FIELD_GOAL_GOOD)
-            spot = min(80, 100 - self.start.yards_to_goal - 7)
+            spot = min(TOUCHBACK_SPOT, GOAL_LINE - self.start.yards_to_goal - 7)
             if spot <= 0:
                 raise ValueError("field goal hold is outside the field")
             return self._finish(
@@ -374,7 +382,7 @@ class SpecialTeamsPlay:
                 start_drive(self.start.possession.other, spot),
             )
         distance = self._distance(cell, self.start.possession)
-        landing = 100 - self.start.yards_to_goal + distance
+        landing = GOAL_LINE - self.start.yards_to_goal + distance
         receiver = self.start.possession.other
         kicker = self.charts[self.start.possession].name
         receiving = self.charts[receiver].name
@@ -382,11 +390,11 @@ class SpecialTeamsPlay:
             f"{kicker} {self.action} from {_location(self.start.yards_to_goal)}: "
             f"{distance} yards; lands at {receiving} {_location(landing)}."
         )
-        if landing >= 110:
+        if landing >= END_LINE:
             return self._touchback(receiver)
-        if landing >= 100 and self.action == "punt" and (no_return or cell.out_of_bounds):
+        if landing >= GOAL_LINE and self.action == "punt" and (no_return or cell.out_of_bounds):
             return self._touchback(receiver)
-        if landing >= 100:
+        if landing >= GOAL_LINE:
             return self._choice(
                 receiver,
                 [
@@ -398,7 +406,7 @@ class SpecialTeamsPlay:
                     ),
                 ],
             )
-        if not 1 <= landing <= 99:
+        if not 1 <= landing < GOAL_LINE:
             raise ValueError("kick landing must be within the field or receiving end zone")
         if self.action == "punt" and (no_return or cell.out_of_bounds):
             return self._finish(SpecialTeamsOutcome.PUNT_DEAD, start_drive(receiver, landing))
@@ -420,33 +428,36 @@ class SpecialTeamsPlay:
 
     def _touchback(self, receiver: Possession) -> SpecialTeamsResolution:
         own = free_kick_touchback_spot(self.season) if self.free_kick else 20
-        return self._finish(SpecialTeamsOutcome.TOUCHBACK, start_drive(receiver, 100 - own))
+        return self._finish(SpecialTeamsOutcome.TOUCHBACK, start_drive(receiver, GOAL_LINE - own))
 
     def _return(self, possession: Possession, landing: int) -> SpecialTeamsResolution:
-        # FieldState cannot represent an end zone; landing stays a separate live-ball fact.
-        state = start_drive(possession, min(99, landing))
+        # FieldState cannot represent an end zone; ReturnStart retains the live coordinate.
+        start = ReturnStart(
+            start_drive(possession, min(MAX_FIELD_SPOT, landing)), ReturnOrigin(landing)
+        )
         column = (
             SpecialTeamsColumn.KICKOFF_RETURN
             if self.action == "kickoff"
             else SpecialTeamsColumn.PUNT_RETURN
         )
         return self._column(
-            state,
+            start.state,
             column,
-            lambda cell: self._return_cell(possession, landing, cell),
-            is_return=True,
-            return_origin=landing,
+            lambda cell: self._return_cell(start, cell),
+            return_start=start,
         )
 
     def _return_cell(
         self,
-        possession: Possession,
-        landing: int,
+        start: ReturnStart,
         cell: NormalizedCell,
         *,
         snap_state: FieldState | None = None,
         miscellaneous: bool = False,
     ) -> SpecialTeamsResolution:
+        state = start.state
+        possession = state.possession
+        landing = start.origin.yards_to_goal
         if cell.kind is ResultKind.TOUCHDOWN:
             return self._score(possession, 6, SpecialTeamsOutcome.RETURN_TOUCHDOWN)
         distance = self._distance(cell, possession)
@@ -455,22 +466,21 @@ class SpecialTeamsPlay:
         )
         if cell.kind is ResultKind.FUMBLE:
             return self._recovery(
-                start_drive(possession, min(99, landing)),
+                start,
                 distance,
-                origin=landing,
                 snap=False,
                 snap_state=snap_state,
             )
         endpoint = landing - distance
         if endpoint <= 0:
             return self._score(possession, 6, SpecialTeamsOutcome.RETURN_TOUCHDOWN)
-        if endpoint >= 100:
-            if landing >= 100:
+        if endpoint >= GOAL_LINE:
+            if landing >= GOAL_LINE:
                 return self._finish(
                     SpecialTeamsOutcome.TOUCHBACK,
                     start_drive(
                         possession,
-                        100
+                        GOAL_LINE
                         - (
                             free_kick_touchback_spot(self.season)
                             if self.free_kick and not miscellaneous
@@ -491,23 +501,25 @@ class SpecialTeamsPlay:
 
     def _accepted_return(
         self,
-        state: FieldState,
+        start: ReturnStart,
         cell: NormalizedCell,
         penalty: AssessedPenalty,
-        origin: int | None = None,
         *,
         free_touchback: bool = False,
     ) -> SpecialTeamsResolution:
-        start = state.yards_to_goal if origin is None else origin
+        state = start.state
+        origin = start.origin.yards_to_goal
         distance = (
-            start if cell.kind is ResultKind.TOUCHDOWN else self._distance(cell, state.possession)
+            origin if cell.kind is ResultKind.TOUCHDOWN else self._distance(cell, state.possession)
         )
-        touchback_spot = 100 - free_kick_touchback_spot(self.season) if free_touchback else 80
+        touchback_spot = (
+            GOAL_LINE - free_kick_touchback_spot(self.season) if free_touchback else TOUCHBACK_SPOT
+        )
         enforced = enforce_return_penalty(
             state,
             penalty,
             return_yards=distance,
-            origin=start,
+            origin=origin,
             touchback_yards_to_goal=touchback_spot,
         )
         if enforced.disposition is ReturnPenaltyDisposition.SAFETY:
@@ -528,47 +540,52 @@ class SpecialTeamsPlay:
 
     def _recovery(
         self,
-        state: FieldState,
+        start: ReturnStart,
         location: int,
         *,
         blocked: bool = False,
-        origin: int | None = None,
         snap: bool = True,
         snap_state: FieldState | None = None,
     ) -> SpecialTeamsResolution:
+        state = start.state
         self.chain_depth += 1
         if self.chain_depth > MAX_KICK_CHAIN:
             raise ValueError("kick recovery chain limit exceeded")
         scrimmage = snap_state if snap_state is not None else state if snap else None
         chart = self.charts[state.possession]
-        spot = (state.yards_to_goal if origin is None else origin) - location
-        if spot >= 110:
+        recovery = resolve_recovery(
+            start.origin,
+            location,
+            chart.recovery_range,
+            self.dice,
+        )
+        if recovery.safety:
             return self._score(state.possession.other, 2, SpecialTeamsOutcome.SAFETY)
-        if spot <= -10:
-            depth_roll = self.dice.offensive()
+        if recovery.depth_roll is not None:
             self.trace.append(
-                SpecialTeamsTrace("recovery_end_zone_depth", chart.name, depth_roll, None)
+                SpecialTeamsTrace("recovery_end_zone_depth", chart.name, recovery.depth_roll, None)
             )
-            spot = -(depth_roll.white_one + depth_roll.white_two)
-        roll = self.dice.offensive()
+        roll = recovery.recovery_roll
+        assert roll is not None and recovery.retained is not None
+        spot = recovery.spot
         self.trace.append(
             SpecialTeamsTrace(
                 "blocked_kick_recovery" if blocked else "fumble_recovery", chart.name, roll, None
             )
         )
-        retained = roll.total in chart.recovery_range
+        retained = recovery.retained
         receiver = state.possession if retained else state.possession.other
         if spot <= 0:
             if retained:
                 return self._score(receiver, 6, SpecialTeamsOutcome.RETURN_TOUCHDOWN)
-            return self._end_zone_choice(receiver, 100 - spot)
-        if spot >= 100:
+            return self._end_zone_choice(receiver, GOAL_LINE - spot)
+        if spot >= GOAL_LINE:
             scorer = state.possession.other
             outcome = (
                 SpecialTeamsOutcome.SAFETY if retained else SpecialTeamsOutcome.RETURN_TOUCHDOWN
             )
             return self._score(scorer, 2 if retained else 6, outcome)
-        landing = spot if retained else 100 - spot
+        landing = spot if retained else GOAL_LINE - spot
         if blocked and not retained and roll.total == 39:
             return self._score(receiver, 6, SpecialTeamsOutcome.RETURN_TOUCHDOWN)
         allowed = (retained and roll.total in {17, 18, 19} and (not blocked or location <= 0)) or (
@@ -590,7 +607,8 @@ class SpecialTeamsPlay:
                     "kick:touchback",
                     "Take a touchback",
                     lambda: self._finish(
-                        SpecialTeamsOutcome.TOUCHBACK, start_drive(possession, 80)
+                        SpecialTeamsOutcome.TOUCHBACK,
+                        start_drive(possession, TOUCHBACK_SPOT),
                     ),
                 ),
                 (
@@ -607,15 +625,14 @@ class SpecialTeamsPlay:
         landing: int,
         snap_state: FieldState | None = None,
     ) -> SpecialTeamsResolution:
-        state = start_drive(possession, min(99, landing))
+        start = ReturnStart(
+            start_drive(possession, min(MAX_FIELD_SPOT, landing)), ReturnOrigin(landing)
+        )
         return self._column(
-            state,
+            start.state,
             SpecialTeamsColumn.INTERCEPTION_RETURN,
-            lambda cell: self._return_cell(
-                possession, landing, cell, snap_state=snap_state, miscellaneous=True
-            ),
-            is_return=True,
-            return_origin=landing,
+            lambda cell: self._return_cell(start, cell, snap_state=snap_state, miscellaneous=True),
+            return_start=start,
         )
 
 
@@ -721,12 +738,14 @@ def _penalty_result_text(
 
 def _location(yards_to_goal: int) -> str:
     """Describe a live spot from the named team's perspective, including end zones."""
-    if yards_to_goal >= 110:
+    if yards_to_goal >= END_LINE:
         return "beyond the end line"
-    if yards_to_goal >= 100:
-        return f"{yards_to_goal - 100} yards deep in the end zone"
+    if yards_to_goal >= GOAL_LINE:
+        return f"{yards_to_goal - GOAL_LINE} yards deep in the end zone"
     if yards_to_goal <= 0:
         return "the opponents' end zone"
     if yards_to_goal == 50:
         return "midfield"
-    return f"own {100 - yards_to_goal}" if yards_to_goal > 50 else f"opponents' {yards_to_goal}"
+    return (
+        f"own {GOAL_LINE - yards_to_goal}" if yards_to_goal > 50 else f"opponents' {yards_to_goal}"
+    )

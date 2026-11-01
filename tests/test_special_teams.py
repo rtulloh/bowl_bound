@@ -16,6 +16,7 @@ from bowl_bound.models import (
     TeamChart,
 )
 from bowl_bound.penalty_yardage import AssessedPenalty
+from bowl_bound.return_recovery import ReturnOrigin, ReturnStart
 from bowl_bound.special_teams import (
     SpecialTeamsOutcome,
     SpecialTeamsPlay,
@@ -357,7 +358,7 @@ def test_return_penalty_uses_midpoint_and_starts_first_and_ten() -> None:
 def test_kick_return_penalty_midpoint_rounds_toward_midfield(origin: int) -> None:
     from bowl_bound.game_state import start_drive
 
-    state = FieldState(Possession.AWAY, 70, 1, 10)
+    state = FieldState(Possession.AWAY, 99, 1, 10)
     foul = AssessedPenalty(
         PenaltyData(PenaltyTeam.OFFENSE, PenaltyCode.FIXED, 5),
         5,
@@ -372,10 +373,9 @@ def test_kick_return_penalty_midpoint_rounds_toward_midfield(origin: int) -> Non
     )
 
     result = play._accepted_return(
-        state,
+        ReturnStart(state, ReturnOrigin(origin)),
         yards(origin // 2 + 1),
         foul,
-        origin=origin,
     )
 
     assert result.outcome is SpecialTeamsOutcome.PENALTY

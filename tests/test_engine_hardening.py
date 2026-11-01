@@ -42,8 +42,9 @@ def test_interception_in_defenders_end_zone_waits_without_awarding_points(
         dice=ScriptedDice([]),
     )
     assert result.outcome is TurnoverOutcome.END_ZONE_RETURN_PENDING
-    assert result.recovery_possession is possession.other
-    assert result.end_zone_depth == min(depth, 9)
+    assert result.end_zone_recovery is not None
+    assert result.end_zone_recovery.possession is possession.other
+    assert result.end_zone_recovery.depth == min(depth, 9)
     assert result.points == (0, 0) and result.trace == ()
 
 
@@ -131,7 +132,8 @@ def test_fumble_beyond_opponents_end_line_uses_white_faces_for_live_recovery_dep
         dice=ScriptedDice([OffensiveRoll(3, 2, 4), OffensiveRoll(3, 4, 5)]),
     )
     assert result.outcome is TurnoverOutcome.END_ZONE_RETURN_PENDING
-    assert result.end_zone_depth == 6
+    assert result.end_zone_recovery is not None
+    assert result.end_zone_recovery.depth == 6
     assert [(e.section, e.roll) for e in result.trace] == [
         ("end_zone_depth", OffensiveRoll(3, 2, 4)),
         ("fumble_recovery", OffensiveRoll(3, 4, 5)),

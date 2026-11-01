@@ -1,6 +1,7 @@
 """Turnover resolution uses synthetic charts only (Basic VI-9, VI-10 and VI-13)."""
 
 from dataclasses import replace
+from inspect import signature
 
 import pytest
 
@@ -57,6 +58,10 @@ def test_defensive_recovery_returns_a_fumble_from_its_actual_spot() -> None:
     assert result.outcome is TurnoverOutcome.DEFENSIVE_RECOVERY
     assert result.state == FieldState(Possession.AWAY, 28, 1, 10)
     assert [entry.section for entry in result.trace] == ["fumble_recovery", "turnover_return"]
+
+
+def test_resolve_fumble_keeps_recursive_chain_depth_internal() -> None:
+    assert "_depth" not in signature(resolve_fumble).parameters
 
 
 def test_offense_recovers_and_returns_only_on_the_designated_recovery_totals() -> None:
@@ -192,9 +197,11 @@ def test_a_return_penalty_rerolls_the_return_and_keeps_enforcement_facts() -> No
         choice="return",
         dice=ScriptedDice([OffensiveRoll(1, 0, 0), OffensiveRoll(1, 1, 0)]),
     )
-    assert result.return_penalty is not None and result.return_penalty.yards == 10
-    assert result.return_start == FieldState(Possession.AWAY, 87, 1, 10)
-    assert result.return_yards == 52
+    assert result.return_facts is not None
+    assert result.return_facts.penalties[0].yards == 10
+    assert result.return_facts.start.state == FieldState(Possession.AWAY, 87, 1, 10)
+    assert result.return_facts.start.origin.yards_to_goal == 87
+    assert result.return_facts.yards == 52
     assert [entry.section for entry in result.trace] == [
         "turnover_return",
         "turnover_return_reroll",

@@ -14,9 +14,10 @@ from bowl_bound.models import (
     Play,
     Priority,
     ResultKind,
+    VariableReference,
 )
 from bowl_bound.resolution import PlayResolution, resolve_cells
-from bowl_bound.session import PlaySession, _penalty_result_text
+from bowl_bound.session import PlaySession, _gain, _penalty_result_text
 from tests.synthetic_teams import team_chart, yards
 from tests.test_models import provenance
 
@@ -75,6 +76,19 @@ def test_f_endzone_decline_text_names_its_fixed_one_yard_location() -> None:
     text = _penalty_result_text(prepared, FieldState(Possession.HOME, 50, 1, 10))
 
     assert "1 yard into the defenders' end zone" in text
+
+
+def test_gain_refuses_unresolved_variable_yardage_instead_of_using_zero() -> None:
+    variable = NormalizedCell(
+        ResultKind.VARIABLE_DS,
+        provenance(),
+        variable=VariableReference.DS,
+        variable_multiplier=1,
+    )
+    resolution = PlayResolution(Play.ONE, Play.ONE, resolve_cells(variable, yards(0)), ())
+
+    with pytest.raises(ValueError, match="pending result has no resolved yardage"):
+        _gain(resolution)
 
 
 def test_accepting_one_of_multiple_penalties_does_not_sum_them() -> None:

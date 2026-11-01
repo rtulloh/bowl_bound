@@ -44,14 +44,18 @@ def test_consecutive_return_fouls_offer_separate_alternatives() -> None:
     result = intercept(
         away, [OffensiveRoll(1, 0, 0), OffensiveRoll(2, 0, 0), OffensiveRoll(3, 0, 0)]
     )
-    assert [p.yards for p in result.return_penalties] == [5, 15]
-    assert result.return_yards == 12 and len(result.trace) == 3
+    assert result.return_facts is not None
+    assert [p.yards for p in result.return_facts.penalties] == [5, 15]
+    assert result.return_facts.yards == 12 and len(result.trace) == 3
 
 
 def test_penalty_then_literal_td_retains_numeric_endpoint_for_acceptance() -> None:
     away = returning(foul(PenaltyTeam.OFFENSE), NormalizedCell(ResultKind.TOUCHDOWN, provenance()))
     result = intercept(away, [OffensiveRoll(1, 0, 0), OffensiveRoll(2, 0, 0)])
-    assert result.return_yards == 60 and result.return_start.yards_to_goal == 60
+    assert result.return_facts is not None
+    assert result.return_facts.yards == 60
+    assert result.return_facts.start.state.yards_to_goal == 60
+    assert result.return_facts.start.origin.yards_to_goal == 60
     assert result.points == (0, 6)
 
 
