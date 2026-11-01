@@ -9,7 +9,7 @@ from hashlib import sha256
 from json import dumps
 from random import Random
 
-from .coaching_profiles import BASELINE_V1
+from .coaching_profiles import behavior_for_policy
 
 
 class NoLegalAction(ValueError):
@@ -37,6 +37,7 @@ class CoachObservation:
     overtime: bool = False
     hurried: bool = False
     phase: str = "scrimmage"
+    can_kneel_out_game: bool = False
 
 
 @dataclass(frozen=True)
@@ -60,9 +61,13 @@ class BaselineCoach:
     stable without consuming future calls or recording an uncommitted selection.
     """
 
-    def __init__(self, seed: int) -> None:
+    def __init__(self, seed: int, *, version: int = 1) -> None:
+        if type(version) is not int or version not in {1, 2}:
+            raise ValueError("baseline policy version must be 1 or 2")
         self._seed = seed
-        self.behavior = BASELINE_V1
+        self.version = version
+        policy = "baseline" if version == 1 else "baseline-v2"
+        self.behavior = behavior_for_policy(policy)
         self.analysis_fallback = False
 
     def commit_call(self, offense_side: str, play: str, defense: str) -> None:
@@ -73,8 +78,10 @@ class BaselineCoach:
         # Freeze the baseline-v1 input contract so old saves retain future calls.
         facts.pop("hurried")
         facts.pop("phase")
+        if self.version == 1:
+            facts.pop("can_kneel_out_game")
         public = dumps(facts, sort_keys=True, separators=(",", ":"))
-        digest = sha256(f"baseline-v1:{self._seed}:{role}:{public}".encode()).digest()
+        digest = sha256(f"baseline-v{self.version}:{self._seed}:{role}:{public}".encode()).digest()
         return Random(int.from_bytes(digest, "big"))
 
     def offense(self, observation: CoachObservation) -> str:
@@ -88,8 +95,11 @@ class BaselineCoach:
             and observation.remaining <= self.behavior.protect_seconds
             and observation.score_difference > 0
         )
-        if protecting and "kneel" in observation.game_actions and observation.down < 4:
-            return "kneel"
+        if "kneel" in observation.game_actions and observation.down < 4:
+            if self.version == 1 and protecting:
+                return "kneel"
+            if self.version == 2 and observation.can_kneel_out_game:
+                return "kneel"
         chasing = (
             not observation.overtime
             and observation.quarter == 4

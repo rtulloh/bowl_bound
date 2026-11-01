@@ -53,7 +53,21 @@ class NewGame(BaseModel):
     mode: Literal["drive", "regulation"] = "drive"
     game_type: Literal["regular", "postseason"] = "regular"
     difficulty: Literal["easy", "medium", "hard"] | None = None
-    coach_policy: Literal["baseline", "chart-v1", "easy-v1", "medium-v1", "hard-v1"] | None = None
+    coach_policy: (
+        Literal[
+            "baseline",
+            "baseline-v2",
+            "chart-v1",
+            "chart-v2",
+            "easy-v1",
+            "medium-v1",
+            "hard-v1",
+            "easy-v2",
+            "medium-v2",
+            "hard-v2",
+        ]
+        | None
+    ) = None
 
     @model_validator(mode="after")
     def unambiguous_policy(self) -> "NewGame":
@@ -161,7 +175,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
                 mode=body.mode,
                 game_type=body.game_type,
                 start_yards_to_goal=body.start_yards_to_goal,
-                coach_policy=body.coach_policy or f"{body.difficulty or 'medium'}-v1",
+                coach_policy=body.coach_policy or f"{body.difficulty or 'medium'}-v2",
             )
             session.load_rosters(seasons_root)
         except ValueError as error:

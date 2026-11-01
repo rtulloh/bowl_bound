@@ -420,6 +420,14 @@ def test_loading_replays_only_observed_rolls_without_drawing_new_random_values(m
     assert restored.snap("6", "A") == game.snap("6", "A")
 
 
+def test_coaching_kneel_query_does_not_change_semantic_save_digest() -> None:
+    view = new(mode="regulation", clock=Clock(4, 30)).view()
+
+    assert save_codec._view_digest(view) == save_codec._view_digest(
+        replace(view, can_kneel_out_game=not view.can_kneel_out_game)
+    )
+
+
 def test_pre_m27_normal_timing_digest_remains_loadable() -> None:
     fixture = Path(__file__).parent / "fixtures" / "legacy_pre_m27_normal.json"
     teams = charts(cell=NormalizedCell(ResultKind.INCOMPLETE, provenance()))

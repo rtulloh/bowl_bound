@@ -378,7 +378,7 @@ def audit_game(
 def compare_policies(
     seeds: tuple[int, ...],
     *,
-    policies: tuple[str, ...] = ("baseline", "easy-v1", "medium-v1", "hard-v1"),
+    policies: tuple[str, ...] = ("baseline-v2", "easy-v2", "medium-v2", "hard-v2"),
 ) -> tuple[GameAudit, ...]:
     """Compare independent dice seeds across both sample arrangements and CPU sides."""
     if (
@@ -439,8 +439,19 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--policies",
         nargs="+",
-        choices=("baseline", "chart-v1", "easy-v1", "medium-v1", "hard-v1"),
-        default=["baseline", "easy-v1", "medium-v1", "hard-v1"],
+        choices=(
+            "baseline",
+            "baseline-v2",
+            "chart-v1",
+            "chart-v2",
+            "easy-v1",
+            "medium-v1",
+            "hard-v1",
+            "easy-v2",
+            "medium-v2",
+            "hard-v2",
+        ),
+        default=["baseline-v2", "easy-v2", "medium-v2", "hard-v2"],
     )
     args = parser.parse_args(argv)
     try:

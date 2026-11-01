@@ -81,7 +81,7 @@ The top-level JSON fields are:
 | `commands` | Ordered `snap`/`kick`/`decide`/`action` operations, arguments and expected error class (null for success) |
 | `rolls` | Previously observed offensive/defensive physical-face arrays, in request order |
 | `random_state` | Python MT19937 version-3 state, or remaining synthetic scripted rolls |
-| `state_digest` | SHA-256 of the semantic reconstructed engine view, excluding derived dice/ownership presentation additions |
+| `state_digest` | SHA-256 of the semantic reconstructed engine view, excluding derived dice, ownership, and coaching-query presentation additions |
 | `integrity` | SHA-256 of the canonical document excluding this field |
 
 Canonical hashing uses sorted-key compact JSON with enum values, UTF-8, and no
@@ -94,11 +94,12 @@ correction changes replay semantics. Older `bowl-bound-m19-v1` saves are rejecte
 before team lookup; no migration or deletion of private saves is performed.
 Do not hand-edit engine profiles to bypass this check.
 
-Within the current engine profile, `coach_policy` accepts `baseline`, `chart-v1`,
-`easy-v1`, `medium-v1` and `hard-v1`. Omission retains baseline compatibility;
-`SavedGame.new` defaults to baseline, while CLI/API new-game defaults are Medium.
-The saved policy and independent coach seed are restored, not replaced by setup
-selections. No additional mutable coaching RNG state is serialized.
+Within the current engine profile, `coach_policy` accepts `baseline`,
+`baseline-v2`, `chart-v1`, `chart-v2`, and Easy/Medium/Hard policies in v1 or v2.
+Omission retains baseline compatibility; `SavedGame.new` defaults to baseline,
+while CLI/API new-game defaults are Medium v2. The saved policy and independent
+coach seed are restored, not replaced by setup selections. No additional mutable
+coaching RNG state is serialized.
 
 Coached commands journal resolved ordinary engine calls rather than rerunning
 the selector on load. Successful committed snap pairs rebuild difficulty

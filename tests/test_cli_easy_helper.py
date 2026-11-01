@@ -19,13 +19,13 @@ def saved_facts(game: SavedGame) -> dict[str, object]:
     return data
 
 
-def terminal(mode: str = "easy", human: str = "home") -> TerminalGame:
+def terminal(mode: str = "easy", human: str = "home", version: int = 1) -> TerminalGame:
     teams = sample_teams()
     game = SavedGame.new(
         *teams,
         seed=7,
         coach_seed=31,
-        coach_policy=f"{mode}-v1",
+        coach_policy=f"{mode}-v{version}",
         home_id="2007/home",
         away_id="2007/away",
     )
@@ -55,6 +55,14 @@ def test_easy_helper_defaults_on_and_toggle_preserves_every_saved_fact() -> None
     assert "Target: 5 yards" not in app.output.getvalue()
     assert not app.command("z")
     assert saved_facts(app.game) == before
+
+
+def test_easy_v2_keeps_the_helper_available() -> None:
+    app = terminal(version=2)
+    app.display()
+
+    assert "Easy helper" in app.output.getvalue()
+    assert "Target: 5 yards" in app.output.getvalue()
 
 
 @pytest.mark.parametrize("mode", ["medium", "hard"])

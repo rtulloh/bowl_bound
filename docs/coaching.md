@@ -97,10 +97,11 @@ try-only snaps through the engine’s two-point phase. Success is worth two poin
 failure ends the try, and neither retains a scrimmage field-position value.
 Ordinary overtime series remain scrimmage, without hypothetical kickoffs.
 Policies receive an immutable public-observation allowlist: side, possession,
-down/distance, spot, phase, quarter/time, score difference, completed-play count, overtime,
-hurry status and offered action/decision IDs. Medium/Hard can analyze supplied
-charts, but receive no live engine, future dice, gameplay seed/RNG or concealed
-current opponent selection. Hard learns only committed calls, not previews.
+down/distance, spot, phase, quarter/time, score difference, completed-play count,
+overtime, hurry status, the engine's safe-kneel query and offered action/decision
+IDs. Medium/Hard can analyze supplied charts, but receive no live engine, future
+dice, gameplay seed/RNG or concealed current opponent selection. Hard learns only
+committed calls, not previews.
 Every suggestion is constrained to enabled engine IDs; an empty legal set fails
 clearly. Conversions, tosses, kick receptions, turnovers, penalties and clock
 choices remain engine-constrained. These are bounded heuristics, not an optimal
@@ -130,11 +131,12 @@ see [attribution](ATTRIBUTION.md). No Paydirt runtime dependency was added.
 ## API
 
 `POST /api/games` accepts `difficulty: "easy" | "medium" | "hard"`; omitted means
-Medium. Alternatively, explicit `coach_policy` accepts `baseline`, `chart-v1`,
-`easy-v1`, `medium-v1` or `hard-v1`; it cannot be combined with `difficulty`.
-`baseline` and `chart-v1` are compatibility policies, not additional player-facing
-difficulty levels. New/load/get responses report `coach_policy`; loading restores
-the saved version, irrespective of setup selections.
+Medium. New games use the corresponding v2 policy. Alternatively, explicit
+`coach_policy` accepts `baseline`, `baseline-v2`, `chart-v1`, `chart-v2`, and the
+Easy/Medium/Hard v1 or v2 policies; it cannot be combined with `difficulty`.
+`baseline` and chart policies are compatibility/testing choices, not additional
+player-facing difficulty levels. New/load/get responses report `coach_policy`;
+loading restores the saved version, irrespective of setup selections.
 
 `POST /api/games?human_side=home` and `GET /api/games/{id}?human_side=home`
 (optionally `away`) return the normal engine view plus `turn`: human identity/role,
@@ -165,13 +167,14 @@ expandable toss/chart audits never generate, reconstruct or reorder rolls.
 
 ### Versioned behavior profiles
 
-`bowl_bound/coaching_profiles.py` groups immutable preference parameters for
-`baseline-v1`, `chart-v1`, `easy-v1`, `medium-v1` and `hard-v1`. The persisted
-baseline save identifier remains `baseline`. Profiles name sample/cache/history
-bounds, mixture temperature/exploration, aggression, late-game thresholds and
-utility coefficients. These are coaching preferences, not football rules,
-configurable difficulty odds or calibrated expected points. Existing profile
-values and RNG inputs are frozen; preference changes require a new policy version.
+`bowl_bound/coaching_profiles.py` groups immutable preference parameters for the
+v1 and v2 policies. The persisted legacy baseline identifier remains `baseline`.
+Profiles name sample/cache/history bounds, mixture temperature/exploration,
+aggression, late-game thresholds and utility coefficients. These are coaching
+preferences, not football rules, configurable difficulty odds or calibrated
+expected points. Version 2 consults the engine's `can_kneel_out_game` query before
+choosing a kneel; v1 keeps its original selection stream and heuristic. New games
+use v2, while existing saves retain their recorded policy.
 
 Audit JSON includes `behavior_profile` and `audit_profile` for each game. The
 separate `coaching-audit-v1` profile names replay and advisory concentration

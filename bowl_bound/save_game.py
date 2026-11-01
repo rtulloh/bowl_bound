@@ -248,18 +248,31 @@ class SavedGame:
         self._rosters: tuple[Roster | None, Roster | None] = (None, None)
         self._config = dict(config)
         self._config.setdefault("coach_seed", randbits(63))
-        if self.coach_policy == "chart-v1":
+        if self.coach_policy in {"chart-v1", "chart-v2"}:
             from .chart_coaching import ChartAwareCoach
 
-            self._coach = ChartAwareCoach(self._config["coach_seed"], home, away)
-        elif self.coach_policy in {"easy-v1", "medium-v1", "hard-v1"}:
+            version = int(self.coach_policy[-1])
+            self._coach = ChartAwareCoach(self._config["coach_seed"], home, away, version=version)
+        elif self.coach_policy in {
+            "easy-v1",
+            "medium-v1",
+            "hard-v1",
+            "easy-v2",
+            "medium-v2",
+            "hard-v2",
+        }:
             from .difficulty import DifficultyCoach
 
             self._coach = DifficultyCoach(
-                self._config["coach_seed"], home, away, self.coach_policy.removesuffix("-v1")
+                self._config["coach_seed"],
+                home,
+                away,
+                self.coach_policy.rsplit("-v", 1)[0],
+                version=int(self.coach_policy[-1]),
             )
         else:
-            self._coach = BaselineCoach(self._config["coach_seed"])
+            version = 2 if self.coach_policy == "baseline-v2" else 1
+            self._coach = BaselineCoach(self._config["coach_seed"], version=version)
         self._tape = tape
         self._commands: list[dict[str, Any]] = []
         if config["mode"] == "regulation":
@@ -349,7 +362,7 @@ class SavedGame:
         with self._lock:
             if human_side not in {"home", "away"}:
                 raise ValueError("human side must be home or away")
-            if self.coach_policy != "easy-v1":
+            if self.coach_policy not in {"easy-v1", "easy-v2"}:
                 return False
             view = self.view()
             if (
@@ -519,7 +532,19 @@ def _validate_config(config: Any) -> None:
         _fail()
     if "coach_policy" in optional and (
         type(config["coach_policy"]) is not str
-        or config["coach_policy"] not in {"baseline", "chart-v1", "easy-v1", "medium-v1", "hard-v1"}
+        or config["coach_policy"]
+        not in {
+            "baseline",
+            "baseline-v2",
+            "chart-v1",
+            "chart-v2",
+            "easy-v1",
+            "medium-v1",
+            "hard-v1",
+            "easy-v2",
+            "medium-v2",
+            "hard-v2",
+        }
     ):
         _fail()
     if (
@@ -725,6 +750,7 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         "defense_name",
         "home_timeouts",
         "away_timeouts",
+        "can_kneel_out_game",
     }
     legacy_defenses = {
         f"{defense.value} {label}": f"Formation {defense.value}"

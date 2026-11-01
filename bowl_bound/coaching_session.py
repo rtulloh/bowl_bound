@@ -51,6 +51,7 @@ def observe_game(view: GameView, side: str) -> CoachObservation:
         overtime=getattr(view, "overtime", None) is not None,
         hurried=getattr(view, "hurried", False),
         phase=view.phase,
+        can_kneel_out_game=getattr(view, "can_kneel_out_game", False),
         offense=tuple(a.key for a in view.actions.offense),
         defense=tuple(a.key for a in view.actions.defense),
         special=tuple(a.key for a in view.actions.special),

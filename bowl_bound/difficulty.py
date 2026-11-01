@@ -30,14 +30,18 @@ class DifficultyCoach(ChartAwareCoach):
     our own offense as though it were the opposing offense.
     """
 
-    def __init__(self, seed: int, home: TeamChart, away: TeamChart, mode: str) -> None:
+    def __init__(
+        self, seed: int, home: TeamChart, away: TeamChart, mode: str, *, version: int = 1
+    ) -> None:
         if mode not in AGGRESSION:
             raise ValueError("difficulty must be easy, medium or hard")
-        super().__init__(seed, home, away)
+        if type(version) is not int or version not in {1, 2}:
+            raise ValueError("difficulty policy version must be 1 or 2")
+        super().__init__(seed, home, away, version=version)
         self.mode = mode
-        self.behavior = behavior_for_policy(f"{mode}-v1")
+        self.behavior = behavior_for_policy(f"{mode}-v{version}")
         self.aggression = self.behavior.aggression
-        self.policy = f"{mode}-v1"
+        self.policy = f"{mode}-v{version}"
         self._counts: dict[tuple[str, str], Counter[str]] = {
             (side, role): Counter() for side in ("home", "away") for role in ("offense", "defense")
         }
@@ -65,7 +69,10 @@ class DifficultyCoach(ChartAwareCoach):
         )
 
     def _random(self, observation: CoachObservation, role: str) -> Random:
-        public = dumps(asdict(observation), sort_keys=True, separators=(",", ":"))
+        facts = asdict(observation)
+        if self.version == 1:
+            facts.pop("can_kneel_out_game")
+        public = dumps(facts, sort_keys=True, separators=(",", ":"))
         digest = sha256(f"{self.policy}:{self._seed}:{role}:{public}".encode()).digest()
         return Random(int.from_bytes(digest, "big"))
 

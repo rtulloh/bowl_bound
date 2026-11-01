@@ -50,7 +50,18 @@ def test_profile_extraction_preserves_pre_refactor_seeded_calls() -> None:
 def test_profiles_are_named_frozen_and_separate_from_persisted_policy_streams() -> None:
     from bowl_bound.coaching_profiles import behavior_for_policy
 
-    for policy in ("baseline", "chart-v1", "easy-v1", "medium-v1", "hard-v1"):
+    for policy in (
+        "baseline",
+        "chart-v1",
+        "easy-v1",
+        "medium-v1",
+        "hard-v1",
+        "baseline-v2",
+        "chart-v2",
+        "easy-v2",
+        "medium-v2",
+        "hard-v2",
+    ):
         profile = behavior_for_policy(policy)
         assert profile.name == ("baseline-v1" if policy == "baseline" else policy)
         assert profile.analysis_samples == 32 and profile.cache_entries == 128

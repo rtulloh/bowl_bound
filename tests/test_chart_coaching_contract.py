@@ -23,14 +23,15 @@ def new(policy: str = "chart-v1") -> SavedGame:
     )
 
 
-def test_chart_policy_is_saved_and_restores_identical_future_calls_and_dice() -> None:
+@pytest.mark.parametrize("policy", ["chart-v1", "chart-v2"])
+def test_chart_policy_is_saved_and_restores_identical_future_calls_and_dice(policy: str) -> None:
     teams = default_teams()
-    game = new()
+    game = new(policy)
     restored = loads_game(
         dumps_game(game), lambda key: teams[0] if key.endswith("alpha-tech") else teams[1]
     )
-    assert game.coach_policy == restored.coach_policy == "chart-v1"
-    assert json.loads(dumps_game(game))["config"]["coach_policy"] == "chart-v1"
+    assert game.coach_policy == restored.coach_policy == policy
+    assert json.loads(dumps_game(game))["config"]["coach_policy"] == policy
     assert game.coach_step("home", "1") == restored.coach_step("home", "1")
     assert game.view() == restored.view()
 
@@ -45,6 +46,17 @@ def test_old_baseline_configuration_stays_baseline_without_policy_field() -> Non
         dumps_game(game), lambda key: teams[0] if key.endswith("alpha-tech") else teams[1]
     )
     assert restored.coach_policy == "baseline"
+    assert game.coach_step("home", "1") == restored.coach_step("home", "1")
+
+
+def test_baseline_v2_policy_roundtrips_without_reinterpreting_legacy_baseline() -> None:
+    game = new("baseline-v2")
+    teams = default_teams()
+    restored = loads_game(
+        dumps_game(game), lambda key: teams[0] if key.endswith("alpha-tech") else teams[1]
+    )
+
+    assert game.coach_policy == restored.coach_policy == "baseline-v2"
     assert game.coach_step("home", "1") == restored.coach_step("home", "1")
 
 
@@ -121,7 +133,7 @@ def test_cli_hard_flag_and_legacy_chart_resume_preserve_distinct_policies(
         )
         == 0
     )
-    assert policies == ["hard-v1"]
+    assert policies == ["hard-v2"]
     path = tmp_path / "private-test.json"
     game = SavedGame.new(
         *teams,
@@ -133,21 +145,22 @@ def test_cli_hard_flag_and_legacy_chart_resume_preserve_distinct_policies(
     )
     path.write_text(dumps_game(game))
     assert main(["--seasons", str(tmp_path), "--load", str(path), "--compact"]) == 0
-    assert policies == ["hard-v1", "chart-v1"]
+    assert policies == ["hard-v2", "chart-v1"]
 
 
-def test_api_can_opt_in_without_exposing_policy_plan(tmp_path: Path) -> None:
+@pytest.mark.parametrize("policy", ["chart-v1", "chart-v2"])
+def test_api_can_opt_in_without_exposing_policy_plan(tmp_path: Path, policy: str) -> None:
     ids = [write_team(tmp_path, chart) for chart in default_teams()]
     client = TestClient(create_app(tmp_path))
     response = client.post(
         "/api/games?human_side=home",
-        json={"home": ids[0], "away": ids[1], "seed": 7, "coach_policy": "chart-v1"},
+        json={"home": ids[0], "away": ids[1], "seed": 7, "coach_policy": policy},
     )
     assert response.status_code == 200
     body = response.json()
     assert "computer_choice" not in body["turn"] and "estimates" not in body
     saved = client.get(f"/api/games/{body['game_id']}/save").json()
-    assert saved["config"]["coach_policy"] == "chart-v1"
+    assert saved["config"]["coach_policy"] == policy
     assert (
         client.post(
             "/api/games", json={"home": ids[0], "away": ids[1], "coach_policy": "unknown"}

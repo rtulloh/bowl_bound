@@ -23,6 +23,8 @@ from .session import (
 from .statistics import PlayStatistics
 from .timing import BoundsDeclaration, Clock, TimingFacts, duration
 
+TIMEOUT_SECONDS = 10
+
 
 class RegulationPhase(str, Enum):
     OPENING = "opening_choice"
@@ -61,6 +63,7 @@ class RegulationView(SessionView):
     defense_name: str | None = None
     home_timeouts: int | None = None
     away_timeouts: int | None = None
+    can_kneel_out_game: bool = False
     game_actions: tuple[Action, ...] = ()
     toss_rolls: tuple[OffensiveRoll, ...] = ()
     rules_season: int = 0
@@ -215,6 +218,55 @@ class RegulationGame:
             and not self._hurried
             and self._last_report.called_play not in {"Kneel", "Spike"}
         )
+
+    def can_kneel_out_game(self) -> bool:
+        """Whether the offense can safely end regulation by kneeling.
+
+        The query assumes the opponent uses each available timeout when it
+        shortens a pending timing interval to 10 seconds. It checks each
+        possible kneel prefix so a later safety cannot be hidden by an earlier
+        safe kneel.
+        """
+        if self._phase not in {RegulationPhase.LIVE, RegulationPhase.CLOCK}:
+            return False
+        if self._overtime is not None:
+            return False
+
+        base = self._session.view()
+        state = base.state
+        if state is None:
+            return False
+        possession = Possession(state.possession)
+        if possession is Possession.HOME:
+            leading = base.score.home > base.score.away
+            opponent_timeouts = self._clock.timeouts[1]
+        else:
+            leading = base.score.away > base.score.home
+            opponent_timeouts = self._clock.timeouts[0]
+        if not leading or self._clock.quarter != 4:
+            return False
+
+        remaining = self._clock.remaining
+        if self._phase is RegulationPhase.CLOCK:
+            if opponent_timeouts and self._pending_timing_seconds > TIMEOUT_SECONDS:
+                remaining -= TIMEOUT_SECONDS
+                opponent_timeouts -= 1
+            else:
+                remaining -= self._pending_timing_seconds
+        if remaining <= 0:
+            return False
+
+        kneel_seconds = duration(TimingFacts(), self._clock)
+        max_kneels = 4 - state.down
+        for kneels in range(1, max_kneels + 1):
+            if state.yards_to_goal + 2 * kneels > 99:
+                break
+            elapsed = kneels * kneel_seconds - (kneel_seconds - TIMEOUT_SECONDS) * min(
+                kneels, opponent_timeouts
+            )
+            if remaining <= elapsed:
+                return True
+        return False
 
     def view(self) -> RegulationView:
         base = self._session.view()
@@ -371,6 +423,7 @@ class RegulationGame:
             defense_name=defense_name,
             home_timeouts=clock_view.timeouts[0],
             away_timeouts=clock_view.timeouts[1],
+            can_kneel_out_game=self.can_kneel_out_game(),
             game_actions=tuple(game_actions),
             toss_rolls=self._toss_rolls,
             rules_season=self._season,
@@ -535,7 +588,7 @@ class RegulationGame:
             seconds = self._pending_timing_seconds
             if choice.startswith("clock:timeout:"):
                 self._clock = self._clock.timeout(Possession(choice.split(":")[-1]))
-                seconds = 10
+                seconds = TIMEOUT_SECONDS
             elif choice == "clock:hurry":
                 self._hurried = True
                 seconds = 20

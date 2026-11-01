@@ -111,6 +111,7 @@ def test_new_public_context_does_not_change_baseline_v1_selection_stream() -> No
         public = asdict(obs)
         public.pop("hurried", None)
         public.pop("phase", None)  # Added public context is not part of baseline-v1.
+        public.pop("can_kneel_out_game", None)  # The v1 stream does not include this v2 field.
         assert set(public) == {
             "side",
             "possession",

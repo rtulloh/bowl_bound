@@ -6,7 +6,7 @@ from math import exp
 
 from .coaching import BaselineCoach, CoachObservation, safe_choice
 from .coaching_evaluation import ActionEstimate, evaluate_action
-from .coaching_profiles import CHART_V1
+from .coaching_profiles import behavior_for_policy
 from .models import TeamChart
 
 
@@ -18,9 +18,10 @@ class ChartAwareCoach(BaselineCoach):
     selected call, gameplay seed, live session or future dice.
     """
 
-    def __init__(self, seed: int, home: TeamChart, away: TeamChart) -> None:
-        super().__init__(seed)
-        self.behavior = CHART_V1
+    def __init__(self, seed: int, home: TeamChart, away: TeamChart, *, version: int = 1) -> None:
+        super().__init__(seed, version=version)
+        self.policy = f"chart-v{version}"
+        self.behavior = behavior_for_policy(self.policy)
         self._home, self._away = home, away
         self._cache: OrderedDict[
             tuple[CoachObservation, str, tuple[float, ...] | None], tuple[ActionEstimate, ...]
@@ -89,7 +90,7 @@ class ChartAwareCoach(BaselineCoach):
         return weight
 
     def _selection_role(self, role: str) -> str:
-        return f"chart-v1-{role}"
+        return f"{self.policy}-{role}"
 
     def _select(self, observation: CoachObservation, role: str, fallback: str) -> str:
         self.analysis_fallback = False

@@ -84,6 +84,17 @@ enabled solely because Paydirt has a similarly named feature.
   O/I shortcuts and explicit `action bounds:oob` / `action bounds:ib` commands;
   it does not infer `7+` / `7-` chart notation. No Paydirt code or data is reused.
 
+### Kneel-out coaching review — 2026-11-01
+
+- Reviewed `paydirt/game_engine.py:3413` and `paydirt/computer_ai.py:154-205`,
+  especially the AI's engine-owned `can_kneel_out_game()` check. Adapt the
+  separation between engine safety evaluation and policy choice.
+- Do not copy Paydirt's thresholds or timing assumptions. Bowl Bound's query
+  uses its 30-second kneel duration, opponent timeout's 10-second timing,
+  remaining downs, fourth-quarter state, score and the engine's two-yard kneel
+  loss to prevent a safety. Legacy coaching policies retain their prior behavior;
+  the updated policy uses a new version.
+
 ## Ticket coverage
 
 | Milestone 22 change or decision | Ticket |
@@ -109,6 +120,17 @@ Other work already assigned to Milestone 22 has tickets in the
 CLI-044/045; DEV-022/024/028; FLOW-002; RULE-012–015; and UI-036/037.
 These are existing coaching, API, CLI, development, flow, rules-correction, and
 presentation findings, rather than additional untracked advanced-option features.
+
+### Ticket coverage reconciliation — 2026-11-01
+
+Checked the generated tracker against the Milestone 22 plan and this feature map:
+all 37 tickets assigned to Milestone 22 are represented here. They cover the 14
+advanced-rule items above, RULE-010 bounds declarations, eight AI findings, two
+API findings, two CLI findings, three development findings, one flow finding,
+four return-rule findings, and two UI findings. The active kneel-safety work is
+tracked by AI-011. AI-018 is assigned to Milestone 23 for full-game coordinator
+coverage, so its absence from this milestone is intentional. No untracked M22
+change was identified in this reconciliation.
 
 The owner explicitly removed a separate normal-runoff action; kneeldown is the
 clock-draining play. No ticket is created to restore that rejected behavior.
