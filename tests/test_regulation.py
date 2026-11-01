@@ -65,6 +65,16 @@ def test_opening_choice_is_not_a_live_scrimmage_and_records_toss_evidence() -> N
     assert game.view().opening_kicker == "away"
 
 
+def test_view_exposes_named_defense_and_team_timeout_counts() -> None:
+    game = new_game()
+    kickoff(game)
+    view = game.view()
+
+    assert view.defense_name == "Away"
+    assert view.home_timeouts == 3
+    assert view.away_timeouts == 3
+
+
 def test_clock_management_is_pending_and_reductions_cannot_stack() -> None:
     game = new_game()
     kickoff(game)

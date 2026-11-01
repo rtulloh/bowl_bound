@@ -23,3 +23,9 @@ the game-action endpoint; `view.bounds_declaration` reports the selected value,
 and `view.play_modifiers` contains the offered IDs and reasons. The declaration
 is mutually exclusive, applies to the next scrimmage play, and is cleared by the
 engine after that play. Clients must not apply yardage or clock changes themselves.
+
+Regulation views also provide `defense_name`, `home_timeouts` and `away_timeouts`
+as presentation-ready fields. `score.home` and `score.away` remain the explicit
+score values. Clients should use these named fields rather than infer the
+opposing team or select timeout counts by tuple position; `clock.timeouts` stays
+available for compatibility.

@@ -4,7 +4,7 @@ import Scoreboard from '../components/Scoreboard'
 import { view } from './fixtures'
 
 it('shows engine-provided quarter, clock and timeout labels without running a local clock', () => {
-  render(<Scoreboard view={view({ clock: { quarter: 4, remaining: 65, quarter_label: 'Q4', label: '1:05', timeouts: [2, 1] } })} />)
+  render(<Scoreboard view={view({ clock: { quarter: 4, remaining: 65, quarter_label: 'Q4', label: '1:05', timeouts: [0, 0] }, home_timeouts: 2, away_timeouts: 1 })} />)
   expect(screen.getByTestId('quarter')).toHaveTextContent('Q4')
   expect(screen.getByTestId('game-clock')).toHaveTextContent('1:05')
   expect(screen.getByTestId('home-timeouts')).toHaveTextContent('2')

@@ -201,7 +201,7 @@ export default function App() {
   const timeoutActions = gameActions.filter((action) => action.key.startsWith("timeout:"))
   const boundsActions = gameActions.filter((action) => action.key.startsWith("bounds:"))
   // Display abbreviations only: offered engine IDs and labels still own availability/behavior.
-  const displayKeys = { punt: 'P', field_goal: 'F', kneel: 'K', kickoff: 'KO', hail_mary: 'HM', 'timeout:home': 'TO', 'timeout:away': 'TO' }
+  const displayKeys = { punt: 'P', field_goal: 'F', kneel: 'K', kickoff: 'KO', hail_mary: 'HM' }
   const extraPlays = [
     ...(actions.special || []).map((action) => ({ ...action, prefix: 'special', displayKey: displayKeys[action.key], shortLabel: action.key === 'field_goal' ? 'FG' : action.label })),
     ...gameActions.filter((action) => !action.key.startsWith("timeout:") && !action.key.startsWith("bounds:")).map((action) => ({ ...action, prefix: 'game', displayKey: displayKeys[action.key] })),
@@ -224,7 +224,7 @@ export default function App() {
   }
   const playPanels = (offensePlays.length > 0 || defensePlays.length > 0) && <div className={offensePlays.length && defensePlays.length ? 'grid sm:grid-cols-2 gap-3' : ''}>
     {offensePlays.length > 0 && <PlaySelector title={"OFFENSE — " + (view.state?.possession_name || "")} prefix="offense" actions={offensePlays} selected={offense} onSelect={(key) => selectPlay('offense', key)} disabled={view.finished || blocking || busy} />}
-    {defensePlays.length > 0 && <PlaySelector title={"DEFENSE — " + (view.state?.possession === "home" ? view.away : view.home)} prefix="defense" actions={defensePlays} selected={defense} onSelect={(key) => selectPlay('defense', key)} disabled={view.finished || blocking || busy} />}
+    {defensePlays.length > 0 && <PlaySelector title={"DEFENSE — " + (view.defense_name || "—")} prefix="defense" actions={defensePlays} selected={defense} onSelect={(key) => selectPlay('defense', key)} disabled={view.finished || blocking || busy} />}
   </div>
   return (
     <main className={`${view.phase === "opening_choice" ? "max-w-xl" : "max-w-4xl"} mx-auto p-4 space-y-3 text-white`} data-testid={view.phase === "opening_choice" ? "opening-screen" : "playing-screen"}>
@@ -268,7 +268,6 @@ export default function App() {
             disabled={busy || blocking || view.finished} title={action.label} data-testid={'game-play-' + action.key}
             onClick={() => special(action.key, true)}>{action.label}</button>)}
           {!timeoutActions.length && <button type="button" className="play-button" disabled title="Available when the engine offers a timeout after an eligible play.">Timeout</button>}
-          <button type="button" className="play-button" disabled title="Available when the engine offers a spike after an eligible play.">Spike</button>
         </>}
         {boundsActions.map((action) => {
           const declaration = action.key === 'bounds:oob' ? 'out_of_bounds' : 'in_bounds'

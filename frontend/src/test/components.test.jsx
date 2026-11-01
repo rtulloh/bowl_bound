@@ -128,6 +128,24 @@ it('shows engine-provided score values', () => {
 })
 
 
+it('does not invent a score when the view has no score', () => {
+  render(<Scoreboard view={view({ score: null })} />)
+  expect(screen.getByTestId('home-score')).toHaveTextContent('—')
+  expect(screen.getByTestId('away-score')).toHaveTextContent('—')
+})
+
+
+it('uses named timeout fields from the engine view', () => {
+  render(<Scoreboard view={view({
+    clock: { quarter: 1, remaining: 900, quarter_label: 'Q1', label: '15:00', timeouts: [0, 0] },
+    home_timeouts: 2,
+    away_timeouts: 1,
+  })} />)
+  expect(screen.getByTestId('home-timeouts')).toHaveTextContent('2')
+  expect(screen.getByTestId('away-timeouts')).toHaveTextContent('1')
+})
+
+
 it('does not reserve an empty panel for unavailable play groups', () => {
   const { container } = render(<PlaySelector title="OFFENSE" prefix="offense" actions={[]} selected="" onSelect={() => {}} disabled />)
   expect(container).toBeEmptyDOMElement()

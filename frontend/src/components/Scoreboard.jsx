@@ -2,15 +2,15 @@
 // Shows only engine-provided text, including the score.
 export default function Scoreboard({ view }) {
   const state = view.state
-  const score = view.score || { home: 0, away: 0 }
+  const score = view.score
   return (
     <div className="px-6 py-3 bg-gray-800" data-testid="scoreboard">
       <div className="flex flex-wrap gap-4 items-center justify-between max-w-4xl mx-auto text-center">
         <div>
           <div className="text-xs text-gray-500">HOME</div>
           <div className="text-lg font-bold text-white" data-testid="home-name">{view.home}</div>
-          <div className="text-2xl font-bold text-yellow-400" data-testid="home-score">{score.home}</div>
-          {view.clock && <div className="text-xs text-gray-300" data-testid="home-timeouts">Timeouts: {view.clock.timeouts[0]}</div>}
+          <div className="text-2xl font-bold text-yellow-400" data-testid="home-score">{score?.home ?? '—'}</div>
+          {view.home_timeouts != null && <div className="text-xs text-gray-300" data-testid="home-timeouts">Timeouts: {view.home_timeouts}</div>}
         </div>
         {view.clock && <div aria-label="Game time">
           <div className="text-sm text-gray-300" data-testid="quarter">{view.clock.quarter_label}</div>
@@ -31,8 +31,8 @@ export default function Scoreboard({ view }) {
         <div>
           <div className="text-xs text-gray-500">AWAY</div>
           <div className="text-lg font-bold text-white" data-testid="away-name">{view.away}</div>
-          <div className="text-2xl font-bold text-yellow-400" data-testid="away-score">{score.away}</div>
-          {view.clock && <div className="text-xs text-gray-300" data-testid="away-timeouts">Timeouts: {view.clock.timeouts[1]}</div>}
+          <div className="text-2xl font-bold text-yellow-400" data-testid="away-score">{score?.away ?? '—'}</div>
+          {view.away_timeouts != null && <div className="text-xs text-gray-300" data-testid="away-timeouts">Timeouts: {view.away_timeouts}</div>}
         </div>
       </div>
     </div>

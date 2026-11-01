@@ -58,6 +58,9 @@ class TimeCharge:
 @dataclass(frozen=True)
 class RegulationView(SessionView):
     clock: ClockView | None = None
+    defense_name: str | None = None
+    home_timeouts: int | None = None
+    away_timeouts: int | None = None
     game_actions: tuple[Action, ...] = ()
     toss_rolls: tuple[OffensiveRoll, ...] = ()
     rules_season: int = 0
@@ -348,9 +351,8 @@ class RegulationGame:
             finished=finished,
             actions=actions,
         )
-        return RegulationView(
-            **values,
-            clock=ClockView(
+        clock_view = (
+            ClockView(
                 self._clock.quarter,
                 self._clock.remaining,
                 self._clock.quarter_label,
@@ -358,7 +360,17 @@ class RegulationGame:
                 self._clock.timeouts,
             )
             if ot is None
-            else ClockView(4, 0, f"OT{ot.round_number}", "Untimed", ot.timeouts),
+            else ClockView(4, 0, f"OT{ot.round_number}", "Untimed", ot.timeouts)
+        )
+        defense_name = (
+            self._names[Possession(base.state.possession).other] if base.state is not None else None
+        )
+        return RegulationView(
+            **values,
+            clock=clock_view,
+            defense_name=defense_name,
+            home_timeouts=clock_view.timeouts[0],
+            away_timeouts=clock_view.timeouts[1],
             game_actions=tuple(game_actions),
             toss_rolls=self._toss_rolls,
             rules_season=self._season,

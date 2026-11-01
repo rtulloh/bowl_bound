@@ -722,6 +722,9 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         "toss_dice",
         "overtime_toss_dice",
         "play_modifiers",
+        "defense_name",
+        "home_timeouts",
+        "away_timeouts",
     }
     legacy_defenses = {
         f"{defense.value} {label}": f"Formation {defense.value}"

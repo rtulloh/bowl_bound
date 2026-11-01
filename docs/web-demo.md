@@ -111,8 +111,9 @@ The required conversion finishes before a post-touchdown kickoff or expiration.
 A safety schedules the conceding team’s free kick from its own 20.
 
 The scoreboard shows the engine’s **quarter, game clock, and remaining timeouts**.
-The visible **Play modifiers** row keeps **Hurry-up mode**, **Timeout**, **Spike**,
-**OOB** and **IB** together (wrapping on narrow screens). The engine applies
+The visible **Play modifiers** row keeps **Hurry-up mode**, offered **Timeout**
+and **Spike** choices, and offered **OOB** and **IB** controls together (wrapping
+on narrow screens). The engine applies
 standard play timing automatically when you choose the next action; there is no
 runoff or Continue control. If timing ends Q1 or Q3, the selected play starts in
 the next quarter. If it ends a half or game, the engine shows the required

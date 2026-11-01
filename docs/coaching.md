@@ -53,14 +53,13 @@ the stable Formation A–F identifiers; naming does not alter chart lookups or d
 Legacy save digests canonicalize only defensive selector wording back to those
 identifiers, preserving their original gameplay/trace checks.
 
-**Timeout** and **Spike** sit beside **Hurry-up mode** in the visible play-modifier
-row; they are one-shot engine decisions, not modes. The row wraps on narrow
-screens. Unavailable actions stay disabled. Hurry-up/no-huddle is the only
-persistent mode. **OOB** and **IB** also appear, but remain disabled pending
-[engine implementation](dev-notes/issues/RULE/RULE-010.md): they must be mutually
-exclusive declarations for one play, reset afterward, and apply the documented
-five-yard cost and exceptions. They are not clock-only overrides. Chart-generated
-OOB outcomes already follow the engine timing profile.
+**Timeout** and **Spike** are one-shot engine decisions, not modes. They appear
+in the play-modifier row only when the engine offers them after an eligible play;
+there is no persistent Spike button. **OOB** and **IB** appear when offered as
+mutually exclusive declarations for the next scrimmage play. They clear after
+that play, and the engine applies the five-yard cost and rulebook exceptions.
+They are not clock-only overrides. Chart-generated OOB outcomes already follow
+the engine timing profile. Hurry-up/no-huddle is the only persistent mode.
 
 ## Policy and fairness
 

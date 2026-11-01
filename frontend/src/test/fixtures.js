@@ -4,7 +4,8 @@ const state = (over = {}) => ({
   first_down_from_left: 45, ...over,
 })
 export const view = (over = {}) => ({
-  home: 'Alpha Tech', away: 'Beta State', score: { home: 0, away: 0 }, finished: false, state: state(), log: [],
+  home: 'Alpha Tech', away: 'Beta State', defense_name: 'Beta State',
+  home_timeouts: 3, away_timeouts: 3, score: { home: 0, away: 0 }, finished: false, state: state(), log: [],
   actions: {
     offense: [
       { key: '1', label: 'Line Plunge' }, { key: '2', label: 'Counter' }, { key: '9', label: 'Drop Back' },

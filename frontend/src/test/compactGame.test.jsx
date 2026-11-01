@@ -140,22 +140,32 @@ it('keeps offered hurry-up, timeout and spike controls in the visible modifier r
   fireEvent.click(screen.getByRole('radio', { name: 'Home timeout' }))
   await waitFor(() => expect(api.decide).toHaveBeenCalledWith('game', 'clock:timeout:home'))
   expect(screen.getByRole('button', { name: 'Timeout' })).toBeDisabled()
-  expect(screen.getByRole('button', { name: 'Spike' })).toBeDisabled()
+  expect(screen.queryByRole('button', { name: 'Spike', exact: true })).toBeNull()
 })
 
 it('hides modifiers that the engine has not offered', async () => {
   await start()
   const row = screen.getByRole('region', { name: 'Play modifiers' })
-  for (const name of ['Timeout', 'Spike']) {
+  for (const name of ['Timeout']) {
     const button = screen.getByRole('button', { name, exact: true })
     expect(row).toContainElement(button)
     expect(button).toBeDisabled()
     fireEvent.click(button)
   }
+  expect(screen.queryByRole('button', { name: 'Spike', exact: true })).toBeNull()
   expect(screen.queryByRole('button', { name: 'OOB', exact: true })).toBeNull()
   expect(screen.queryByRole('button', { name: 'IB', exact: true })).toBeNull()
   expect(api.decide).not.toHaveBeenCalled()
   expect(api.gameAction).not.toHaveBeenCalled()
+})
+
+it('uses the engine-provided defense name instead of deriving it from possession', async () => {
+  api.newGame.mockResolvedValue({ game_id: 'game', seed: 7, view: view({
+    defense_name: 'Engine Supplied Defense',
+    state: view().state,
+  }) })
+  await start()
+  expect(screen.getByTestId('defense-plays')).toHaveTextContent('DEFENSE — Engine Supplied Defense')
 })
 
 it('submits offered OOB and IB declarations through engine action IDs', async () => {

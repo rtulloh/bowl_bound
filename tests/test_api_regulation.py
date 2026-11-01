@@ -30,6 +30,9 @@ def test_regulation_creation_toss_kick_and_clock_action(tmp_path: Path) -> None:
     path = f"/api/games/{data['game_id']}"
     assert data["view"]["phase"] == "opening_choice"
     assert data["view"]["clock"]["label"] == "15:00"
+    assert data["view"]["defense_name"] == "Beta State"
+    assert data["view"]["home_timeouts"] == 3
+    assert data["view"]["away_timeouts"] == 3
     assert client.post(path + "/snap", json={"play": "1", "defense": "A"}).status_code == 409
     toss = client.post(path + "/decision", json={"choice": "toss:receive"})
     assert toss.status_code == 200 and toss.json()["report"] is None
@@ -48,6 +51,8 @@ def test_regulation_creation_toss_kick_and_clock_action(tmp_path: Path) -> None:
     assert timed.status_code == 200
     assert timed.json()["view"]["clock"]["remaining"] == 890
     assert timed.json()["view"]["clock"]["timeouts"] == [2, 3]
+    assert timed.json()["view"]["home_timeouts"] == 2
+    assert timed.json()["view"]["away_timeouts"] == 3
     assert client.post(path + "/action", json={"action": "spike"}).status_code == 422
     assert client.post(path + "/action", json={"action": "sneak"}).status_code == 422
     # No clock decision request is required between successive ordinary plays.
