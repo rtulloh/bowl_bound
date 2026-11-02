@@ -70,3 +70,11 @@ logic is added.
 - Conditional doubling now explicitly excludes QB Sneak. Synthetic fourth-and-
   two tests cover both conditional and W-marked defenders, ensuring a green
   Sneak does not become a first down through an inapplicable double.
+
+### RULE-038 — 2026-11-01
+
+- Synthetic kickoff and punt returns first reproduced a touchback when a return
+  crossed the receiving team's end line. Recovered-ball returns use the same
+  tested endpoint path.
+- Return handling now distinguishes remaining in the end zone (touchback) from
+  reaching or crossing the end line (safety), using the shared END_LINE fact.

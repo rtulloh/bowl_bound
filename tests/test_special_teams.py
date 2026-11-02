@@ -277,6 +277,55 @@ def test_end_zone_kickoff_return_counts_the_depth_before_crossing_the_goal(
         assert result.state == FieldState(Possession.AWAY, expected, 1, 10)
 
 
+@pytest.mark.parametrize("action", ["kickoff", "punt"])
+@pytest.mark.parametrize(
+    ("return_yards", "expected_outcome"),
+    [
+        (-4, SpecialTeamsOutcome.TOUCHBACK),
+        (-5, SpecialTeamsOutcome.SAFETY),
+        (-6, SpecialTeamsOutcome.SAFETY),
+    ],
+)
+def test_end_zone_return_is_a_safety_only_at_or_beyond_the_receiving_end_line(
+    action: str, return_yards: int, expected_outcome: SpecialTeamsOutcome
+) -> None:
+    kicking = special_chart("Home", **{action: yards(70)})
+    return_column = "kickoff_return" if action == "kickoff" else "punt_return"
+    receiving = special_chart("Away", **{return_column: yards(return_yards)})
+    play = procedure(
+        action,
+        kicking,
+        receiving,
+        [OffensiveRoll(1, 0, 0), OffensiveRoll(1, 0, 0)],
+    )
+
+    pending = play.begin()
+    result = play.decide("kick:return")
+
+    assert pending.choices
+    assert result.outcome is expected_outcome
+    if expected_outcome is SpecialTeamsOutcome.TOUCHBACK:
+        assert result.state == FieldState(Possession.AWAY, 80, 1, 10)
+        assert result.points == (0, 0)
+    else:
+        assert result.state is None
+        assert result.points == (2, 0)
+
+
+def test_recovered_end_zone_return_uses_the_same_end_line_safety_boundary() -> None:
+    play = procedure(
+        "kickoff",
+        special_chart("Home"),
+        special_chart("Away", interception_return=yards(-5)),
+        [OffensiveRoll(1, 0, 0)],
+    )
+
+    result = play._misc_return(Possession.AWAY, 105)
+
+    assert result.outcome is SpecialTeamsOutcome.SAFETY
+    assert result.state is None and result.points == (2, 0)
+
+
 @pytest.mark.parametrize(
     "redirect", [ResultKind.FIELD_GOAL_REFERENCE, ResultKind.KICKOFF_REFERENCE]
 )

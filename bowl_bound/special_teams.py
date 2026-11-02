@@ -497,6 +497,8 @@ class SpecialTeamsPlay:
         endpoint = landing - distance
         if endpoint <= 0:
             return self._score(possession, 6, SpecialTeamsOutcome.RETURN_TOUCHDOWN)
+        if endpoint >= END_LINE:
+            return self._score(possession.other, 2, SpecialTeamsOutcome.SAFETY)
         if endpoint >= GOAL_LINE:
             if landing >= GOAL_LINE:
                 return self._finish(
