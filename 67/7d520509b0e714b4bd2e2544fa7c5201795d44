@@ -1,0 +1,23 @@
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_08e5c2bd1d709e 914,923,989-1004
+docs/dev-notes/milestone-23.md
+  s_ed54ab581b3d60::t_ff899b67829917 97-105
+tests/test_save_game.py
+  s_ed54ab581b3d60::t_2a7d95acc1e140 308-340,614-635
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "677d520509b0e714b4bd2e2544fa7c5201795d44",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
