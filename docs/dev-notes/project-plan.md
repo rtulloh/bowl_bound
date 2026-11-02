@@ -588,6 +588,34 @@ Tracked work: [DEV-007](issues/DEV/DEV-007.md). See the
 
 **Commit:** `milestone 32: add local full-season audit runner`
 
+### 33. Correct core playability and make validation status visible
+
+Added 2026-11-02 at the owner's request after interactive play testing identified
+football-decision correctness, timeout availability, and player/CPU fairness as
+the highest-priority remaining work. Milestone 32 is complete and is not
+retroactively expanded.
+
+**Deliver:** use a public, deterministic fourth-down field-goal policy; resolve
+fumble recovery before a penalty choice; allow an eligible pre-play timeout after
+a kickoff; expose an equivalent decision basis to human players; and add the
+deterministic coaching coverage needed to protect those changes. Separate routine
+automatic test status from the explicitly named standalone release build.
+
+**Validate:** use synthetic charts and engine/API/CLI/browser tests. Cover
+fourth-down distance and short-yardage boundaries without inspecting kick charts,
+completed fumble outcomes before enforcement selection, post-kickoff timeout
+arming/consumption/save parity, and coaching determinism/no gameplay-RNG mutation.
+Verify the frontend displays only engine-provided guidance and workflow triggers
+and failure propagation are statically tested. Re-run the local season audit after
+gameplay changes, keeping all imported teams and reports private.
+
+Tracked work: [AI-010](issues/AI/AI-010.md), [AI-027](issues/AI/AI-027.md),
+[RULE-041](issues/RULE/RULE-041.md), [RULE-042](issues/RULE/RULE-042.md),
+[UI-041](issues/UI/UI-041.md), and [DEV-059](issues/DEV/DEV-059.md). See the
+[Milestone 33 work log](milestone-33.md).
+
+**Commit:** `milestone 33: correct core playability and validation status`
+
 ## Decision gates
 
 Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.

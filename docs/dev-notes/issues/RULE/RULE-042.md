@@ -3,7 +3,7 @@ id: RULE-042
 title: Offer a timeout as a pre-play modifier after kickoff
 status: open
 priority: Medium
-milestone: '23'
+milestone: '33'
 created-at: 2026-11-02
 resolved-at: null
 closed-at: null
@@ -39,3 +39,8 @@ timeout choice before resolving the play, then applies the short timing after
 that play. Bowl Bound will adapt the interaction only, retaining its own
 engine-owned legal actions and timing rules; it will not reuse Paydirt code or
 introduce a runtime dependency.
+
+--- 2026-11-02 00:00 ---
+Reassigned from Milestone 23 to the owner-prioritized Milestone 33 playability
+follow-up scope. The first scrimmage play after a kickoff must not omit an
+otherwise legal defensive timeout.

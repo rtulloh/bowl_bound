@@ -3,7 +3,7 @@ id: RULE-041
 title: Resolve fumble recovery before offering a penalty choice
 status: open
 priority: High
-milestone: '23'
+milestone: '33'
 created-at: 2026-11-02
 resolved-at: null
 closed-at: null
@@ -30,3 +30,8 @@ When a prepared play has both a selectable penalty and a fumble result, the engi
 
 --- 2026-11-02 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-02 00:00 ---
+Reassigned from Milestone 23 to the owner-prioritized Milestone 33 playability
+follow-up scope because a penalty choice must compare complete football outcomes,
+including recovery, rather than force a gamble.

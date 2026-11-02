@@ -11,17 +11,17 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 
 | ID | Priority | Milestone | Title | Dates |
 | --- | --- | --- | --- | --- |
-| [AI-027](issues/AI/AI-027.md) | High | [23](project-plan.md#23-establish-the-complete-regression-gate) | Use a shared public fourth-down field-goal distance policy | created 2026-11-01 |
+| [AI-027](issues/AI/AI-027.md) | High | [33](project-plan.md#33-correct-core-playability-and-make-validation-status-visible) | Use a shared public fourth-down field-goal distance policy | created 2026-11-01 |
 | [DEV-004](issues/DEV/DEV-004.md) | High | [23](project-plan.md#23-establish-the-complete-regression-gate) | Provide a single-command full regression gate that builds before browser tests | created 2026-10-26 |
 | [DEV-012](issues/DEV/DEV-012.md) | High | [24](project-plan.md#24-prepare-github-publication) | Exclude historical teams from GitHub release game packages | created 2026-10-26 |
 | [DEV-016](issues/DEV/DEV-016.md) | High | [20a](project-plan.md#20a-add-an-interactive-cli-for-play-testing) | Existing Vite and Vitest dependency chain reports critical development-tool vulnerabilities | created 2026-10-26 |
 | [DEV-036](issues/DEV/DEV-036.md) | High | [24](project-plan.md#24-prepare-github-publication) | Build verified standalone alpha artifacts for supported platforms | created 2026-10-28 |
 | [DEV-037](issues/DEV/DEV-037.md) | High | [24](project-plan.md#24-prepare-github-publication) | Audit alpha publication history privacy and clean-machine readiness | created 2026-10-28 |
 | [DEV-041](issues/DEV/DEV-041.md) | High | [24](project-plan.md#24-prepare-github-publication) | Standalone artifacts omit bundled native-library notices | created 2026-10-29 |
-| [RULE-041](issues/RULE/RULE-041.md) | High | [23](project-plan.md#23-establish-the-complete-regression-gate) | Resolve fumble recovery before offering a penalty choice | created 2026-11-02 |
+| [RULE-041](issues/RULE/RULE-041.md) | High | [33](project-plan.md#33-correct-core-playability-and-make-validation-status-visible) | Resolve fumble recovery before offering a penalty choice | created 2026-11-02 |
 | [AI-001](issues/AI/AI-001.md) | Medium | [21](project-plan.md#21-add-chart-aware-coaching-and-audits) | Add chart-aware coaching with exact probability analysis and policy audits | created 2026-10-27 |
 | [AI-002](issues/AI/AI-002.md) | Medium | [21](project-plan.md#21-add-chart-aware-coaching-and-audits) | Restore Paydirt-style difficulty levels across CLI and browser | created 2026-10-27 |
-| [AI-010](issues/AI/AI-010.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Add missing coaching determinism, history, cache, fallback and mixture tests | created 2026-10-27 |
+| [AI-010](issues/AI/AI-010.md) | Medium | [33](project-plan.md#33-correct-core-playability-and-make-validation-status-visible) | Add missing coaching determinism, history, cache, fallback and mixture tests | created 2026-10-27 |
 | [AI-018](issues/AI/AI-018.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Add coordinator-level tests driving full games only through coach paths | created 2026-10-27 |
 | [AI-030](issues/AI/AI-030.md) | Medium | [22](project-plan.md#22-add-advanced-options-one-at-a-time) | Use coffin-corner punts in fourth-down kick selection | created 2026-11-01 |
 | [AI-032](issues/AI/AI-032.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Weight short-yardage defense beyond the goal-line band | created 2026-11-02 |
@@ -66,10 +66,10 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | [DEV-047](issues/DEV/DEV-047.md) | Medium | [24](project-plan.md#24-prepare-github-publication) | Advertise the actual bound address when the launcher uses an explicit host | created 2026-10-30 |
 | [DEV-049](issues/DEV/DEV-049.md) | Medium | [24](project-plan.md#24-prepare-github-publication) | Reject release manifests that omit required sample or runtime files | created 2026-10-30 |
 | [DEV-058](issues/DEV/DEV-058.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Local-season audit treats a PAT setup as a disconnected scoring transition | created 2026-11-01 |
-| [DEV-059](issues/DEV/DEV-059.md) | Medium | [32](project-plan.md#32-audit-local-twelve-game-seasons-from-imported-teams) | Split automatic test status from named standalone release builds | created 2026-11-02 |
+| [DEV-059](issues/DEV/DEV-059.md) | Medium | [33](project-plan.md#33-correct-core-playability-and-make-validation-status-visible) | Split automatic test status from named standalone release builds | created 2026-11-02 |
 | [RULE-016](issues/RULE/RULE-016.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Add end-zone, variable-yardage, return-foul and period-boundary regression coverage | created 2026-10-27 |
 | [RULE-039](issues/RULE/RULE-039.md) | Medium | [22](project-plan.md#22-add-advanced-options-one-at-a-time) | Choose supported advanced rules before starting a game | created 2026-11-01 |
-| [RULE-042](issues/RULE/RULE-042.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Offer a timeout as a pre-play modifier after kickoff | created 2026-11-02 |
+| [RULE-042](issues/RULE/RULE-042.md) | Medium | [33](project-plan.md#33-correct-core-playability-and-make-validation-status-visible) | Offer a timeout as a pre-play modifier after kickoff | created 2026-11-02 |
 | [UI-007](issues/UI/UI-007.md) | Medium | [19](project-plan.md#19-complete-the-human-playable-ui) | New drive abandons pending decisions without confirmation | created 2026-10-26 |
 | [UI-009](issues/UI/UI-009.md) | Medium | [19](project-plan.md#19-complete-the-human-playable-ui) | Team identities omit season year during play | created 2026-10-26 |
 | [UI-013](issues/UI/UI-013.md) | Medium | [19](project-plan.md#19-complete-the-human-playable-ui) | Make hurry-up a persistent on/off mode | created 2026-10-26 |
@@ -77,7 +77,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | [UI-016](issues/UI/UI-016.md) | Medium | [19](project-plan.md#19-complete-the-human-playable-ui) | Keep Snap ball and core game controls visible using Paydirt layout as a guide | created 2026-10-26 |
 | [UI-018](issues/UI/UI-018.md) | Medium | [19](project-plan.md#19-complete-the-human-playable-ui) | Frontend-authored status wording and clock radio semantics mislead players | created 2026-10-26 |
 | [UI-038](issues/UI/UI-038.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Add browser tests for coach-mode hurry, automatic guard, finished loads, defender clock window and stale responses | created 2026-10-27 |
-| [UI-041](issues/UI/UI-041.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Give players an equivalent basis for chart-aware kick decisions | created 2026-11-01 |
+| [UI-041](issues/UI/UI-041.md) | Medium | [33](project-plan.md#33-correct-core-playability-and-make-validation-status-visible) | Give players an equivalent basis for chart-aware kick decisions | created 2026-11-01 |
 | [UI-047](issues/UI/UI-047.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Scope hurry-up controls and commentary to the acting offense | created 2026-11-02 |
 | [AI-031](issues/AI/AI-031.md) | Low | [23](project-plan.md#23-establish-the-complete-regression-gate) | Make public fourth-down field-goal distance policy season/team configurable | created 2026-11-01 |
 | [CLI-001](issues/CLI/CLI-001.md) | Low | [20a](project-plan.md#20a-add-an-interactive-cli-for-play-testing) | Separate terminal issue tracking from web UI tickets | created 2026-10-27 |
@@ -424,14 +424,12 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 
 ### Milestone [23](project-plan.md#23-establish-the-complete-regression-gate)
 
-- [AI-010](issues/AI/AI-010.md) (open, Medium) — Add missing coaching determinism, history, cache, fallback and mixture tests
 - [AI-018](issues/AI/AI-018.md) (open, Medium) — Add coordinator-level tests driving full games only through coach paths
 - [AI-022](issues/AI/AI-022.md) (resolved, High) — Penalty outcome projections ignore bounds declarations and conditional defense yardage
 - [AI-023](issues/AI/AI-023.md) (resolved, Medium) — Legacy coaching policies change future calls when M22 adds legal actions
 - [AI-024](issues/AI/AI-024.md) (resolved, Medium) — Last-seconds Hail Mary shortcut bypasses a winning field goal on every difficulty
 - [AI-025](issues/AI/AI-025.md) (closed, High) — Medium coach goes for it on early fourth-and-long in opponent territory
 - [AI-026](issues/AI/AI-026.md) (closed, High) — Saved games retain obsolete coaching policy revisions
-- [AI-027](issues/AI/AI-027.md) (open, High) — Use a shared public fourth-down field-goal distance policy
 - [AI-028](issues/AI/AI-028.md) (closed, High) — Fourth-down evaluator overvalues Razzle-Dazzle against a human defender
 - [AI-029](issues/AI/AI-029.md) (closed, High) — Keep QB Sneak out of ordinary long-yardage CPU calls
 - [AI-031](issues/AI/AI-031.md) (open, Low) — Make public fourth-down field-goal distance policy season/team configurable
@@ -473,10 +471,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 - [RULE-036](issues/RULE/RULE-036.md) (resolved, High) — QB Sneak treats an ignored yellow chart token as an actual timing penalty
 - [RULE-037](issues/RULE/RULE-037.md) (resolved, High) — Conditional Wild Card incorrectly doubles QB Sneak despite the Rule IX exemption
 - [RULE-038](issues/RULE/RULE-038.md) (resolved, High) — Special-team returns still award a touchback after crossing their own end line
-- [RULE-041](issues/RULE/RULE-041.md) (open, High) — Resolve fumble recovery before offering a penalty choice
-- [RULE-042](issues/RULE/RULE-042.md) (open, Medium) — Offer a timeout as a pre-play modifier after kickoff
 - [UI-038](issues/UI/UI-038.md) (open, Medium) — Add browser tests for coach-mode hurry, automatic guard, finished loads, defender clock window and stale responses
-- [UI-041](issues/UI/UI-041.md) (open, Medium) — Give players an equivalent basis for chart-aware kick decisions
 - [UI-042](issues/UI/UI-042.md) (closed, Medium) — Keep web play controls stable when results change height
 - [UI-043](issues/UI/UI-043.md) (closed, Medium) — Clarify and visibly confirm web play modifiers
 - [UI-044](issues/UI/UI-044.md) (closed, Medium) — Present Razzle-Dazzle choices as an aligned result matrix
@@ -563,4 +558,12 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 ### Milestone [32](project-plan.md#32-audit-local-twelve-game-seasons-from-imported-teams)
 
 - [DEV-007](issues/DEV/DEV-007.md) (resolved, Medium) — Add a local full-season runner to audit imported team game logs
+
+### Milestone [33](project-plan.md#33-correct-core-playability-and-make-validation-status-visible)
+
+- [AI-010](issues/AI/AI-010.md) (open, Medium) — Add missing coaching determinism, history, cache, fallback and mixture tests
+- [AI-027](issues/AI/AI-027.md) (open, High) — Use a shared public fourth-down field-goal distance policy
 - [DEV-059](issues/DEV/DEV-059.md) (open, Medium) — Split automatic test status from named standalone release builds
+- [RULE-041](issues/RULE/RULE-041.md) (open, High) — Resolve fumble recovery before offering a penalty choice
+- [RULE-042](issues/RULE/RULE-042.md) (open, Medium) — Offer a timeout as a pre-play modifier after kickoff
+- [UI-041](issues/UI/UI-041.md) (open, Medium) — Give players an equivalent basis for chart-aware kick decisions
