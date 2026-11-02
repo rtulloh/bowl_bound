@@ -109,6 +109,74 @@ def test_v10_early_long_fourth_down_uses_the_team_field_goal_chart() -> None:
     assert DifficultyCoach(31, weak, opponent, "medium", version=10).offense(obs) == "punt"
 
 
+def test_v10_early_long_fourth_down_excludes_razzle_dazzle_from_kick_comparison(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    coach = difficulty_coach("medium", version=10)
+    obs = observation(
+        quarter=1,
+        remaining=600,
+        score_difference=0,
+        down=4,
+        distance=16,
+        yards_to_goal=36,
+        offense=("RZDZ", "1"),
+        special=("punt", "field_goal"),
+    )
+
+    def estimates(observed: CoachObservation, _: str) -> tuple[ActionEstimate, ...]:
+        assert "RZDZ" not in observed.offense
+        return (
+            ActionEstimate("1", 1, 0, -2.0, 1.0, 0.0),
+            ActionEstimate("punt", 1, 0, 1.0, 1.0, 0.0),
+            ActionEstimate("field_goal", 1, 0, 0.0, 1.0, 0.0),
+        )
+
+    monkeypatch.setattr(coach, "estimates", estimates)
+
+    assert coach.offense(obs) == "punt"
+
+
+def test_v10_late_touchdown_need_keeps_razzle_dazzle_available(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    coach = difficulty_coach("medium", version=10)
+    obs = observation(
+        quarter=4,
+        remaining=60,
+        score_difference=-7,
+        down=4,
+        distance=16,
+        yards_to_goal=36,
+        offense=("RZDZ", "1"),
+        special=("punt", "field_goal"),
+    )
+
+    def select(observed: CoachObservation, _: str, __: str) -> str:
+        assert "RZDZ" in observed.offense
+        return "RZDZ"
+
+    monkeypatch.setattr(coach, "_select", select)
+
+    assert coach.offense(obs) == "RZDZ"
+
+
+def test_v10_early_long_fourth_down_without_a_kick_keeps_razzle_dazzle() -> None:
+    coach = difficulty_coach("medium", version=10)
+    obs = observation(
+        quarter=1,
+        remaining=600,
+        score_difference=0,
+        down=4,
+        distance=16,
+        yards_to_goal=36,
+        offense=("RZDZ",),
+        special=(),
+    )
+
+    assert coach.offense(obs) == "RZDZ"
+
+
 @pytest.mark.parametrize("side", ["home", "away"])
 @pytest.mark.parametrize("mode", ["easy", "medium", "hard"])
 def test_v3_late_touchdown_need_does_not_punt_or_kick(
