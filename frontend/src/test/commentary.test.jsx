@@ -12,7 +12,7 @@ describe('engine-owned narration', () => {
     expect(screen.getByTestId('result-description').textContent).toBe(commentary)
     expect(screen.getByTestId('log-entry').textContent).toContain('1. ' + commentary)
     expect(container.querySelector('img')).toBeNull()
-    expect(screen.getByTestId('result-description')).toHaveClass('break-words')
+    expect(screen.getByTestId('result-description')).toHaveClass('break-all')
   })
   it.each([undefined, null])('falls back to legacy text for missing commentary=%s', (commentary) => {
     const entry = report({ commentary, description: 'Generic engine wording.' })

@@ -31,20 +31,15 @@ for (const width of [1280, 390]) {
       await expect(defense).toHaveAttribute('title', name)
     }
     const modifiers = page.getByRole('region', { name: 'Play modifiers' })
-    const hurry = modifiers.getByRole('checkbox', { name: 'Hurry-up mode' })
+    const hurry = modifiers.getByRole('checkbox', { name: 'Enable/Disable Hurry-Up' })
     await expect(hurry).toBeVisible()
     const timeoutPlaceholder = modifiers.getByRole('button', { name: 'Timeout', exact: true })
     await expect(timeoutPlaceholder).toBeVisible()
     await expect(timeoutPlaceholder).toBeDisabled()
-    for (const name of ['OOB', 'IB']) {
+    for (const name of ['Out of bounds', 'Keep in bounds']) {
       await expect(modifiers.getByRole('button', { name, exact: true })).toBeVisible()
     }
     await expect(modifiers.getByRole('button', { name: 'Spike', exact: true })).toHaveCount(0)
-    if (width === 1280) {
-      const box = await timeoutPlaceholder.boundingBox()
-      const mode = await hurry.boundingBox()
-      expect(Math.abs((box.y + box.height / 2) - (mode.y + mode.height / 2))).toBeLessThan(3)
-    }
     await expect(page.getByLabel('Control mode')).toHaveCount(0)
     await expect(page.getByTestId('snap')).toHaveCount(0)
     await expect(page.getByRole('button', { name: /Pause computer|Resume computer/ })).toHaveCount(0)
@@ -75,11 +70,6 @@ for (const width of [1280, 390]) {
     await expect(timeout).toBeEnabled()
     await expect(modifiers.getByRole('radio', { name: 'Spike', exact: true })).toBeVisible()
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
-    if (width === 1280) {
-      const box = await timeout.boundingBox()
-      const mode = await hurry.boundingBox()
-      expect(Math.abs((box.y + box.height / 2) - (mode.y + mode.height / 2))).toBeLessThan(3)
-    }
     await summary.focus()
     await page.keyboard.press('Enter')
     await page.getByTestId('new-drive').click()

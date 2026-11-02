@@ -24,8 +24,8 @@ export default function PlayLog({ entries, expanded: controlledExpanded, onExpan
       <summary className="cursor-pointer py-1 text-sm font-semibold text-slate-100">Play history</summary>
       <ol ref={logRef} className="board-panel mt-1 min-w-0 break-words p-2 text-xs max-h-64 overflow-y-auto space-y-3" data-testid="play-log">
         {entries.map((entry) => (
-          <li key={entry.number} data-testid="log-entry">
-            <div>{entry.number}. {entry.commentary ?? entry.description}</div>
+          <li key={entry.number} className="min-w-0" data-testid="log-entry">
+            <div className="min-w-0 break-all">{entry.number}. {entry.commentary ?? entry.description}</div>
             <PlayHighlights report={entry} />
             {entry.state_before && <p>Before: {entry.state_before.possession_name} — {entry.state_before.situation} at {entry.state_before.spot}</p>}
             {entry.state_after && <p>After: {entry.state_after.possession_name} — {entry.state_after.situation} at {entry.state_after.spot}</p>}

@@ -5,7 +5,7 @@ export default function ResultPanel({ report }) {
   if (!report) return <div className="board-panel h-[13rem] overflow-y-auto p-3 text-sm" data-testid="result-empty">Follow the next-action guidance above.</div>
   return (
     <div className="board-panel h-[13rem] min-w-0 overflow-y-auto p-3" data-testid="result-panel">
-      <div className="text-sm font-bold break-words" role="status" aria-atomic="true" data-testid="result-description">{report.commentary ?? report.description}</div>
+      <div className="min-w-0 break-all text-sm font-bold" role="status" aria-atomic="true" data-testid="result-description">{report.commentary ?? report.description}</div>
       <PlayHighlights report={report} />
       {!report.supported && (
         <div className="mt-1 text-xs font-bold text-red-800" data-testid="unsupported-notice">

@@ -16,11 +16,11 @@ export default function PlaySelector({ title, actions, selected, onSelect, disab
             aria-label={action.shortLabel ? `${action.displayKey || action.key}: ${action.label}` : undefined}
             onClick={() => onSelect(action.key)}
             aria-pressed={selected === action.key}
-            className={`play-button flex flex-col items-center px-2 py-0.5 ${selected === action.key ? 'play-button-selected' : ''} ${disabled ? 'cursor-not-allowed' : ''}`}
+            className={`play-button flex min-w-0 flex-col items-center break-words px-2 py-0.5 ${selected === action.key ? 'play-button-selected' : ''} ${disabled ? 'cursor-not-allowed' : ''}`}
             data-testid={`${action.prefix || prefix}-play-${action.key.toLowerCase()}`}
           >
             <span className="text-sm font-bold">{action.displayKey || action.key}</span>
-            <span className="text-[9px] leading-tight">{action.shortLabel || action.label}</span>
+            <span className="max-w-full break-words text-[9px] leading-tight">{action.shortLabel || action.label}</span>
           </button>
         ))}
       </div>
