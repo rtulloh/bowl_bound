@@ -122,3 +122,11 @@ logic is added.
   real field-goal evaluator first. It selects the kick only when every sampled
   chart result scores three points; Hail Mary remains available when a kick is
   not guaranteed or cannot produce a lead.
+
+### API-006 — 2026-11-01
+
+- A manual request for Red Zone at own 35 first reproduced an unhandled
+  unavailable-formation ValueError and HTTP 500.
+- Formation parsing now uses the engine's decision-validation exception. The
+  existing API mapping returns HTTP 422 without consuming dice or changing the
+  game view.

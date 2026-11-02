@@ -2293,10 +2293,10 @@ def _parse_formation(
     formation: object, offered: tuple[Action, ...], *, free_advanced: bool
 ) -> DefenseCall:
     if type(formation) is not str:
-        raise ValueError("choose an offered defensive call")
+        raise InvalidDecisionError("choose an offered defensive call")
     action = next((item for item in offered if item.key == formation), None)
     if action is None:
-        raise ValueError("choose an offered defensive call")
+        raise InvalidDecisionError("choose an offered defensive call")
     if formation in {d.value for d in Defense}:
         return Defense(formation)
     return AdvancedDefenseCall(

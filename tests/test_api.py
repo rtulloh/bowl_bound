@@ -113,6 +113,18 @@ def test_new_game_returns_engine_state_and_labels(client: TestClient) -> None:
     assert view["log"] == []
 
 
+def test_manual_snap_rejects_unoffered_advanced_defense_without_mutating_game(
+    client: TestClient,
+) -> None:
+    game = start(client)
+    path = f"/api/games/{game['game_id']}"
+
+    response = client.post(path + "/snap", json={"play": "1", "defense": "REDZONE"})
+
+    assert response.status_code == 422
+    assert client.get(path).json()["view"] == game["view"]
+
+
 def test_api_exposes_razzle_result_choice_and_resolves_it_from_engine(client: TestClient) -> None:
     game = start(client)
 
