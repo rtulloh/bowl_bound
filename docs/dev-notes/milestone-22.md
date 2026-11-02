@@ -47,8 +47,8 @@ enabled solely because Paydirt has a similarly named feature.
   controls: roll offense only against Play 1; green is one yard, white/yellow no
   gain, red a fumble at the line. Defense rolls nothing unless it specifically
   Wild Cards QB Sneak. Advanced II-1 (printed pp. 16–17) makes QB Sneak and Play 1
-  mismatched Wild Card guesses and doubles eligible yardage for an incorrect
-  Conditional Wild Card.
+  mismatched Wild Card guesses; Advanced IX excludes QB Sneak from conditional
+  Wild Card yardage doubling (corrected by RULE-037).
 - Keep color classification at the chart-normalization boundary, use the
   existing fumble procedure, and retain the actual Play 1 lookup in the trace.
   Do not reuse Paydirt's token interpretation, timing, or recovery flow.

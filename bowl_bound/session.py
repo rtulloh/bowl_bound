@@ -1124,6 +1124,7 @@ class PlaySession:
         resolution = _apply_bounds_declaration(prepared.resolution, bounds_declaration)
         if (
             resolution.conditional_double
+            and not resolution.qb_sneak
             and resolution.result.kind is ResultKind.YARDS
             and resolution.result.yards is not None
             and resolution.result.yards >= 0

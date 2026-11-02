@@ -198,15 +198,36 @@ def test_correct_qb_sneak_wild_card_stops_the_play_without_any_dice() -> None:
     assert report.trace == ()
 
 
-def test_conditional_mismatched_wild_card_doubles_green_sneak_yardage() -> None:
+def test_conditional_mismatched_wild_card_does_not_double_green_sneak_yardage() -> None:
     home, away = default_teams()
     home = colored_chart((0, 255, 0))
     session = PlaySession.new(home, away, seed=1, advanced_ii=True)
 
     report = session.snap("Q", "WC1", dice=ScriptedDice([OffensiveRoll(1, 2, 3)]))
 
-    assert report.supported and report.yards == 2
+    assert report.supported and report.yards == 1
     assert report.trace[0].section == "offense"
+
+
+@pytest.mark.parametrize("away_privileges", [(), ("W",)])
+def test_wrong_wild_card_green_sneak_does_not_convert_fourth_and_two(
+    away_privileges: tuple[str, ...],
+) -> None:
+    home, away = default_teams()
+    home = colored_chart((0, 255, 0))
+    session = PlaySession.for_analysis(
+        home,
+        away,
+        FieldState(Possession.HOME, 30, 4, 2),
+        advanced_ii=True,
+        away_privileges=away_privileges,
+    )
+
+    report = session.snap("Q", "WC1", dice=ScriptedDice([OffensiveRoll(1, 0, 0)]))
+
+    assert report.yards == 1
+    assert report.outcome == "turnover_on_downs"
+    assert report.state_after is not None and report.state_after.possession is Possession.AWAY.value
 
 
 def test_free_mismatched_wild_card_does_not_double_green_sneak_yardage() -> None:

@@ -61,3 +61,12 @@ logic is added.
 - Timing now excludes chart-token penalties for QB Sneak. The original lookup
   remains in the structured trace as provenance; ordinary penalties and return
   penalties keep their existing timing behavior.
+
+### RULE-037 — 2026-11-01
+
+- The previous QB Sneak test incorrectly expected a conditional, mismatched
+  Wild Card to double a green Sneak. The local rulebook's Advanced IX exemption
+  applies to the Advanced II conditional-defense reference.
+- Conditional doubling now explicitly excludes QB Sneak. Synthetic fourth-and-
+  two tests cover both conditional and W-marked defenders, ensuring a green
+  Sneak does not become a first down through an inapplicable double.

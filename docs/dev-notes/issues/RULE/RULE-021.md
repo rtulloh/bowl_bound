@@ -20,7 +20,7 @@ QB Sneak follows Advanced Rule I-2 and is available as a callable play. Its resu
 ## Resolution / verification
 
 - Implemented in `d0fa13b` after test-first failures for Q parsing and defensive-key validation.
-- The engine uses only the Play 1 roll. Green awards one yard; white/yellow awards no gain; red fumbles at the line. WCSNEAK ends without dice; other Wild Card calls produce a blank defensive result. Existing conditional-guess doubling and fumble recovery/state handling apply.
+- The engine uses only the Play 1 roll. Green awards one yard; white/yellow awards no gain; red fumbles at the line. WCSNEAK ends without dice; other Wild Card calls produce a blank defensive result. Rule IX excludes QB Sneak from conditional-guess yardage doubling; ordinary fumble recovery and state handling still apply.
 - Synthetic focused coverage includes normal, red-zone/goal-line, fumble, Wild Card, trace, statistics/state, API/CLI, coaching, normalization, CSV, and save compatibility behavior.
 - Validation: 416 targeted Python tests passed; 120 frontend tests passed on Node 24.22.2; frontend production build passed; Ruff lint/format checks passed.
 - Updated a stale browser wording assertion to preserve the valid Bowl Bound `QB Sneak` label while still rejecting Paydirt-only labels. The test now verifies the offered Q control; all 33 real-engine browser tests passed in the follow-up validation.
