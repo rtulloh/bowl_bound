@@ -602,6 +602,9 @@ Complete Milestones 1–2, review the rules profile, then proceed to chart model
 
 Full milestone 25/current-alpha review: [2026-10-30 review](full-review-2026-10-30.md).
 
+Milestone 22/32 change review: [5294eb8 through 44d3438](review-5294eb8-to-44d3438.md).
+New findings are assigned to Milestone 23 follow-up work.
+
 ## Early alpha publication preparation — owner direction 2026-10-28
 
 After M21a implementation/audit commit `d030974`, the owner requested early
