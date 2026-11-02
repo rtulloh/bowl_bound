@@ -1,0 +1,21 @@
+docs/dev-notes/issues/DEV/DEV-060.md
+  s_0e32a34de270af::t_dbba79a7e4bd31 62-70
+docs/dev-notes/milestone-33.md
+  s_0e32a34de270af::t_90fcda6e6f9c9d 105-132
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "28dea63f515bbbbec32228df2f91030a2e1a1a7d",
+  "prompts": {},
+  "sessions": {
+    "s_0e32a34de270af": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19e3e-91b5-7fc3-a61a-a2d9b854b5e1",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
