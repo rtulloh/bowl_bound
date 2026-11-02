@@ -138,3 +138,12 @@ logic is added.
   quarter for a score delta.
 - Score deltas now use the post-action engine view, which correctly attributes
   plays that implicitly advance from Q1/Q3 into Q2/Q4 before scoring.
+
+### DEV-055 — 2026-11-01
+
+- A synthetic W-marked constructor regression first showed the runner had no
+  metadata path and therefore created only conditional defenses.
+- Audit-game construction now passes validated defense-chart markers exactly as
+  CLI/API construction does. Private records state both baseline coaching
+  policies, Advanced II status, and each side's marker set, so their scope is
+  inspectable without exposing team charts.
