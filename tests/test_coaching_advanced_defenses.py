@@ -7,9 +7,10 @@ import pytest
 from bowl_bound.chart_coaching import ChartAwareCoach
 from bowl_bound.coaching import BaselineCoach
 from bowl_bound.coaching_evaluation import evaluate_action
-from bowl_bound.coaching_session import observe_policy, plan_turn
+from bowl_bound.coaching_session import observe_game, observe_policy, plan_turn
 from bowl_bound.coaching_situations import situation_bucket
 from bowl_bound.difficulty import DifficultyCoach
+from bowl_bound.game_state import FieldState, Possession
 from bowl_bound.models import Play
 from bowl_bound.save_game import SavedGame
 from bowl_bound.session import PlaySession
@@ -31,6 +32,36 @@ def test_v8_keeps_legacy_defense_menu() -> None:
     legacy = plan_turn(session.view(), "home", BaselineCoach(9, version=8))
     assert legacy.computer_choice is not None
     assert legacy.computer_choice.key in "ABCDEF"
+
+
+def test_legacy_policy_ignores_new_m22_action_families_in_its_selection_stream() -> None:
+    home, away = default_teams()
+    session = PlaySession.for_analysis(
+        home,
+        away,
+        FieldState(Possession.AWAY, 65, 1, 10),
+        advanced_ii=True,
+    )
+    observation = observe_game(session.view(), "away")
+    historical = replace(
+        observation,
+        offense=tuple(str(number) for number in range(1, 10)),
+        defense=tuple("ABCDEF"),
+        special=tuple(key for key in observation.special if key != "onside_kickoff"),
+        game_actions=tuple(
+            key
+            for key in observation.game_actions
+            if key not in {"bounds:oob", "bounds:ib", "elect_safety"}
+        ),
+        choices=tuple(key for key in observation.choices if key != "clock:delay"),
+        advanced_ii=False,
+    )
+    coach = BaselineCoach(31, version=8)
+
+    plan = plan_turn(session.view(), "home", coach)
+
+    assert coach.offense(historical) == "3"
+    assert plan.computer_choice is not None and plan.computer_choice.key == "3"
 
 
 @pytest.mark.parametrize("mode", ["baseline", "easy", "medium", "hard", "chart"])

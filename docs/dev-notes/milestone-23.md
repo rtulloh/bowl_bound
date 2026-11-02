@@ -103,3 +103,13 @@ logic is added.
 - Save validation now includes that precise M21 projection in addition to the
   pre-M27 projection. It accepts only the historical semantic menu and never
   restores a runoff action into the loaded game.
+
+### AI-023 — 2026-11-01
+
+- A synthetic legacy-v8 regression first showed new Razzle-Dazzle actions
+  changing a frozen selection stream, despite the older policy being restricted
+  to standard defenses.
+- Legacy policy observations now remove all M22-only action families before
+  selection and hashing: QB Sneak/Razzle-Dazzle, onside kickoff, bounds/elected
+  safety, intentional delay, and Advanced II metadata. V9 receives the complete
+  engine menu unchanged.

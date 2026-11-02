@@ -77,13 +77,23 @@ def observe_game(view: GameView, side: str) -> CoachObservation:
 
 
 def observe_policy(view: GameView, side: str, policy_version: int) -> CoachObservation:
-    """Apply the selected policy's versioned defense-action allowlist."""
+    """Apply the selected policy's versioned public observation contract."""
     observation = observe_game(view, side)
     if policy_version >= 9:
         return observation
     return replace(
         observation,
+        # Versions 1–8 predate the M22 menus. Remove their identifiers before
+        # hashing or candidate selection so old seeded saves retain future calls.
+        offense=tuple(key for key in observation.offense if key in "123456789"),
         defense=tuple(key for key in observation.defense if key in "ABCDEF"),
+        special=tuple(key for key in observation.special if key != "onside_kickoff"),
+        game_actions=tuple(
+            key
+            for key in observation.game_actions
+            if key not in {"bounds:oob", "bounds:ib", "elect_safety"}
+        ),
+        choices=tuple(key for key in observation.choices if key != "clock:delay"),
         advanced_ii=False,
         free_advanced_defense=False,
     )
