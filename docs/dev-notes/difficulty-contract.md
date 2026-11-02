@@ -19,9 +19,9 @@ coaching, never physical dice distributions, engine rules or team-chart values.
 
 Implement these as genuinely different policies, not three aliases. No Paydirt
 runtime dependency or imported NFL rules. Both interfaces must select the same
-versioned policy; loading a save restores its policy rather than silently applying
-the current new-game default. Compatible baseline saves retain their future calls;
-older engine-profile saves are rejected, not migrated.
+difficulty tier; loading a save applies the current implementation for that tier.
+Compatible baseline saves retain their future calls; older engine-profile saves are
+rejected, not migrated.
 Hard history may use only already committed public plays, never the current hidden
 selection. Save/continuation tests must cover recent-call and tendency history.
 

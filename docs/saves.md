@@ -77,7 +77,7 @@ The top-level JSON fields are:
 | `python` | Python major/minor pair; different pairs are rejected conservatively |
 | `saved_at` | UTC timestamp metadata |
 | `teams` | Canonical `season/slug` IDs, SHA-256 chart fingerprints, and saved defense-chart markers when present |
-| `config` | Mode, gameplay seed, start spot, regular/postseason type, initial clock, Advanced II profile, optional independent `coach_seed` and versioned `coach_policy` |
+| `config` | Mode, gameplay seed, start spot, regular/postseason type, initial clock, Advanced II profile, optional independent `coach_seed`, and selected `difficulty` |
 | `commands` | Ordered `snap`/`kick`/`decide`/`action` operations, arguments and expected error class (null for success) |
 | `rolls` | Previously observed offensive/defensive physical-face arrays, in request order |
 | `random_state` | Python MT19937 version-3 state, or remaining synthetic scripted rolls |
@@ -103,12 +103,10 @@ contains markers, the loader must return both the matching chart and metadata; c
 loaders remain supported for saves without markers. This preserves free versus conditional
 calls when a game resumes without storing chart files.
 
-Within the current engine profile, `coach_policy` accepts `baseline`,
-`baseline-v2`/`baseline-v8`/`baseline-v9`/`baseline-v10`, chart policies v1–v10, and Easy/Medium/Hard policies
-in v1–v10. Omission retains baseline compatibility; `SavedGame.new` defaults to
-baseline, while CLI/API new-game defaults are Medium v10. The saved policy and independent
-coach seed are restored, not replaced by setup selections. No additional mutable
-coaching RNG state is serialized.
+CLI/API games save `difficulty` (`easy`, `medium`, or `hard`) and load it through the
+current coach. Older difficulty policies such as `medium-v9` are read as `medium`;
+their revision is ignored. Explicit baseline/chart policies remain development-only
+audit compatibility options. No additional mutable coaching RNG state is serialized.
 
 Coached commands journal resolved ordinary engine calls rather than rerunning
 the selector on load. Successful committed snap pairs rebuild difficulty
@@ -159,7 +157,7 @@ Hurry mode is a browser preference, not a stored football rule; loading clears i
 - `GET /api/games/{id}/save` returns the JSON document with `Cache-Control: no-store`
   and a generic attachment filename. Unknown game: 404; unsupported export: 422.
 - `POST /api/games/load` accepts that JSON as its request body, not a server path or
-  multipart upload, and returns `{game_id, seed, coach_policy, view}` after complete validation.
+  multipart upload, and returns `{game_id, seed, difficulty, view}` after complete validation.
   Invalid/incompatible/unavailable-team save: 422; oversized streamed body: 413.
   Registration/normal 50-game retention occurs only after successful reconstruction.
 - Existing gameplay request/response formats and default drive mode are unchanged.

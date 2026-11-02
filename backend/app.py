@@ -253,7 +253,8 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
                 mode=body.mode,
                 game_type=body.game_type,
                 start_yards_to_goal=body.start_yards_to_goal,
-                coach_policy=body.coach_policy or f"{body.difficulty or 'medium'}-v10",
+                coach_policy=body.coach_policy or "baseline",
+                difficulty=None if body.coach_policy else body.difficulty or "medium",
                 home_privileges=home_metadata.defense_chart_markers,
                 away_privileges=away_metadata.defense_chart_markers,
             )
@@ -273,11 +274,14 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
 
     def present(game_id: str, registered: RegisteredGame) -> dict[str, object]:
         session = registered.session
+        coaching = {"difficulty": session.difficulty}
+        if session.difficulty is None:
+            coaching["coach_policy"] = session.coach_policy
         if registered.human_side is None:
             return {
                 "game_id": game_id,
                 "seed": session.seed,
-                "coach_policy": session.coach_policy,
+                **coaching,
                 "view": _view_data(session, session.view()),
                 "revision": session.revision,
             }
@@ -288,7 +292,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
         return {
             "game_id": game_id,
             "seed": session.seed,
-            "coach_policy": session.coach_policy,
+            **coaching,
             "view": _view_data(session, view),
             "turn": asdict(turn),
             "revision": session.revision,

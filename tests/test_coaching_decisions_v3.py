@@ -9,8 +9,10 @@ from bowl_bound.coaching import CoachObservation
 from bowl_bound.coaching_audit import capture_preferences
 from bowl_bound.coaching_evaluation import ActionEstimate
 from bowl_bound.difficulty import DifficultyCoach
+from bowl_bound.models import NormalizedCell, ResultKind
 from tests.synthetic_teams import team_chart, yards
 from tests.test_coaching import observation
+from tests.test_models import provenance
 from tests.test_special_teams import special_chart
 
 
@@ -80,41 +82,31 @@ def test_v3_margin_strategy_does_not_change_third_quarter_try() -> None:
     assert coach.decision(obs) == "conversion:kick"
 
 
-@pytest.mark.parametrize(
-    ("distance", "yards_to_goal"),
-    [(13, 33), (18, 38)],
-)
-def test_v10_medium_punts_early_tied_long_fourth_down(distance: int, yards_to_goal: int) -> None:
-    """AI-025: preserve possession rather than gamble outside field-goal range."""
-    coach = difficulty_coach("medium", version=10)
+def test_v10_early_long_fourth_down_uses_the_team_field_goal_chart() -> None:
+    strong = replace(
+        team_chart("Strong", offense=0),
+        special_teams=special_chart("Strong", field_goal=yards(100)).special_teams,
+    )
+    weak = replace(
+        team_chart("Weak", offense=0),
+        special_teams=special_chart(
+            "Weak", field_goal=NormalizedCell(ResultKind.NO_GOOD_FIELD_GOAL, provenance())
+        ).special_teams,
+    )
+    opponent = team_chart("Opponent", defense=0)
     obs = observation(
         quarter=1,
-        remaining=750,
+        remaining=600,
         score_difference=0,
         down=4,
-        distance=distance,
-        yards_to_goal=yards_to_goal,
-        offense=tuple("123456789"),
+        distance=8,
+        yards_to_goal=31,
+        offense=("1",),
         special=("punt", "field_goal"),
     )
 
-    assert coach.offense(obs) == "punt"
-
-
-def test_v10_conservative_fourth_down_guard_does_not_reinterpret_v9() -> None:
-    obs = observation(
-        quarter=1,
-        remaining=750,
-        score_difference=0,
-        down=4,
-        distance=13,
-        yards_to_goal=33,
-        offense=tuple("123456789"),
-        special=("punt", "field_goal"),
-    )
-
-    assert difficulty_coach("medium", version=9).offense(obs) == "5"
-    assert difficulty_coach("medium", version=10).offense(obs) == "punt"
+    assert DifficultyCoach(31, strong, opponent, "medium", version=10).offense(obs) == "field_goal"
+    assert DifficultyCoach(31, weak, opponent, "medium", version=10).offense(obs) == "punt"
 
 
 @pytest.mark.parametrize("side", ["home", "away"])

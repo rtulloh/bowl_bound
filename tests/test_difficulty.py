@@ -129,7 +129,7 @@ def test_hard_partial_estimate_failure_falls_back_for_whole_comparison(
 
 
 @pytest.mark.parametrize("mode", ["easy", "medium", "hard"])
-def test_save_reconstructs_policy_history_and_exact_future(mode: str) -> None:
+def test_legacy_difficulty_save_reconstructs_facts_with_the_current_tier(mode: str) -> None:
     home, away = (
         team_chart("Home", season=2002, offense=3),
         team_chart("Away", season=2002, offense=3),
@@ -150,18 +150,10 @@ def test_save_reconstructs_policy_history_and_exact_future(mode: str) -> None:
         game.coach_view("home")
     assert saved_facts(game) == before
     restored = loads_game(dumps_game(game), lambda key: home if key.endswith("home") else away)
-    assert restored.coach_policy == game.coach_policy
-    for _ in range(3):
-        view, turn = game.coach_view("home")
-        if view.pending:
-            choice = next(c.id for c in turn.pending.choices if c.enabled)
-            game.coach_execute("home", "decide", choice)
-            restored.coach_execute("home", "decide", choice)
-        else:
-            key = "1" if view.state.possession == "home" else "A"
-            game.coach_step("home", key)
-            restored.coach_step("home", key)
-        assert saved_facts(game) == saved_facts(restored)
+    assert restored.difficulty == mode
+    assert restored.coach_policy == f"{mode}-v10"
+    before["config"] = saved_facts(restored)["config"]
+    assert saved_facts(restored) == before
 
 
 def test_baseline_stream_remains_a_separate_policy_not_a_new_difficulty_alias() -> None:

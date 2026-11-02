@@ -255,7 +255,8 @@ terminal control mode, validates before replacing the live game, and uses the sa
 dice/coaching. The same unchanged team charts must be installed. Loads reject
 symlinks, nonregular files, oversized saves (over 2 MiB), and invalid/tampered data.
 Do not combine `--load` with new-game team/seed/game-type/difficulty overrides.
-Legacy baseline/chart saves retain their original policies; they are not relabeled Hard.
+Older Easy/Medium/Hard saves retain their tier but use the current coach; legacy
+baseline/chart development saves retain their original policies.
 
 Saves are create-only with owner-only file permissions (0600); existing files and
 symlinks are never overwritten. A failed write removes its partial new file. There

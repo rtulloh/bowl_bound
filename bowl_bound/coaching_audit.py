@@ -295,7 +295,9 @@ def audit_game(
             )
         if step == replay_checkpoint:
             restored = loads_game(
-                dumps_game(game), lambda key: home if key.endswith("home") else away
+                dumps_game(game),
+                lambda key: home if key.endswith("home") else away,
+                preserve_development_policy=True,
             )
     view = game.view()
     _require(view.finished, "step limit reached before completion")

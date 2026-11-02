@@ -508,18 +508,7 @@ class TerminalGame:
                 return self._call_with_timeout(key)
         verb = {"?": "help", "/": "stats"}.get(verb, verb.lower())
         if not args and verb.lower() == "z":
-            if self.game.coach_policy not in {
-                "easy-v1",
-                "easy-v2",
-                "easy-v3",
-                "easy-v4",
-                "easy-v5",
-                "easy-v6",
-                "easy-v7",
-                "easy-v8",
-                "easy-v9",
-                "easy-v10",
-            }:
+            if self.game.difficulty != "easy" and not self.game.coach_policy.startswith("easy-v"):
                 raise ValueError("The helper is only available on Easy.")
             if not self.game.player_advice_available(self.human_side):
                 raise ValueError("Toggle the Easy helper at play selection.")
@@ -711,7 +700,7 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.load:
             if args.difficulty is not None:
-                raise ValueError("--load restores its saved coaching policy; omit -d/--difficulty.")
+                raise ValueError("--load restores its saved difficulty; omit -d/--difficulty.")
             if any(
                 value is not None
                 for value in (
@@ -736,7 +725,7 @@ def main(argv: list[str] | None = None) -> int:
                 away_id=away_id,
                 seed=args.seed if args.seed is not None else randbits(63),
                 coach_seed=args.coach_seed,
-                coach_policy=f"{args.difficulty or 'medium'}-v10",
+                difficulty=args.difficulty or "medium",
                 mode="regulation",
                 game_type=args.game_type or "regular",
                 home_privileges=home_metadata.defense_chart_markers,

@@ -6,6 +6,8 @@ their selection streams. Names are diagnostic and are not added to RNG inputs.
 
 from dataclasses import dataclass, replace
 
+CURRENT_DIFFICULTY_VERSION = 10
+
 
 @dataclass(frozen=True)
 class CoachBehavior:

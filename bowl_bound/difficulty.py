@@ -240,13 +240,17 @@ class DifficultyCoach(ChartAwareCoach):
             and observation.score_difference >= 0
             and observation.down == 4
             and observation.distance > self.behavior.punt_distance
-            and observation.yards_to_goal > self.behavior.field_goal_yards
-            and "punt" in observation.special
         ):
-            # v10 restores the conservative fourth-down floor that v9's
-            # evaluator mixture could bypass. Late/deficit situations remain
-            # available to the normal selection logic below.
-            return "punt"
+            # Use the actual team charts to compare every legal scrimmage and
+            # special-teams action. A legal field goal is not automatically a
+            # sensible one: its chart range, miss location, punt result, and
+            # fourth-down alternative all belong in the engine evaluation.
+            estimates = self.estimates(observation, "offense")
+            if estimates and all(
+                estimate.complete and estimate.mean_utility is not None for estimate in estimates
+            ):
+                best = max(estimates, key=lambda estimate: estimate.mean_utility or float("-inf"))
+                return best.key
         fallback = self._basic_offense(observation)
         if observation.phase == SessionPhase.TWO_POINT_TRY.value and (
             observation.down != 1 or observation.yards_to_goal != 2 or observation.distance != 2

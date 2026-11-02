@@ -35,6 +35,15 @@ early fourth-and-long guard. Paydirt's generic pending-choice wording was also
 reviewed but not reused; Bowl Bound's engine already owns the pending decision and
 therefore supplies its exact terminal status.
 
+## Paydirt consultation — AI-026 follow-up, 2026-11-01
+
+Reviewed `paydirt/__main__.py:336-351` and `paydirt/computer_ai.py:1362-1376`.
+Paydirt resumes games with the selected `easy`/`medium`/`hard` difficulty rather
+than a historical AI revision. Bowl Bound adopts that player-facing distinction:
+ordinary saves retain only their tier and use the current implementation on load.
+No Paydirt save code, game rules, charts, or runtime dependency is reused. Explicit
+Bowl Bound baseline/chart profiles remain available only for development audits.
+
 ## Ticket work
 
 ### RULE-033 — 2026-11-01
@@ -177,11 +186,10 @@ therefore supplies its exact terminal status.
 
 ### AI-025 and CLI-050 — 2026-11-01
 
-- `66de34b` introduces versioned v10 Easy/Medium/Hard policies. In non-overtime
-  Q1–Q3, a tied-or-leading offense punts on fourth-and-long outside the engine-offered
-  field-goal range; late and deficit situations retain normal selection. Synthetic
-  regressions preserve v9's previous stream and cover the reported fourth-and-13 and
-  penalty-replayed fourth-and-18 situations.
+- Current Easy/Medium/Hard policies compare legal early fourth-and-long scrimmage,
+  punt, and field-goal actions using the real engine and team chart data. Synthetic
+  strong/weak kicker cases prevent generic yard-line cutoffs from forcing either an
+  impossible long attempt or an unnecessary punt.
 - A pending ordinary penalty now names its required penalty decision rather than
   displaying the stale scrimmage-call status. Other pending results retain a generic
   pending-result status; the valid accepted-offense-penalty fourth-down replay is

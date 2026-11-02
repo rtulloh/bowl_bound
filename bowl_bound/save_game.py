@@ -203,6 +203,18 @@ class _Tape:
         return roll
 
 
+def _current_difficulty_config(config: dict[str, Any]) -> dict[str, Any]:
+    """Upgrade historical player tiers to the current coach without changing game facts."""
+    current = dict(config)
+    policy = current.get("coach_policy")
+    if isinstance(policy, str):
+        tier, separator, revision = policy.partition("-v")
+        if tier in {"easy", "medium", "hard"} and separator and revision.isdigit():
+            current.pop("coach_policy")
+            current["difficulty"] = tier
+    return current
+
+
 class SavedGame:
     """Compose the real engine with a serializable command/dice journal.
 
@@ -226,6 +238,7 @@ class SavedGame:
         dice: Source | None = None,
         coach_seed: int | None = None,
         coach_policy: str = "baseline",
+        difficulty: str | None = None,
         advanced_ii: bool = True,
         home_privileges: tuple[str, ...] = (),
         away_privileges: tuple[str, ...] = (),
@@ -239,7 +252,11 @@ class SavedGame:
             "coach_seed": randbits(63) if coach_seed is None else coach_seed,
             "advanced_ii": advanced_ii,
         }
-        if coach_policy != "baseline":
+        if difficulty is not None:
+            if difficulty not in {"easy", "medium", "hard"} or coach_policy != "baseline":
+                raise ValueError("choose a difficulty or an explicit development coach policy")
+            config["difficulty"] = difficulty
+        elif coach_policy != "baseline":
             config["coach_policy"] = coach_policy
         # Run the same strict configuration checks used at the untrusted load boundary.
         config = json.loads(_json(config))
@@ -291,7 +308,18 @@ class SavedGame:
         self._rosters: tuple[Roster | None, Roster | None] = (None, None)
         self._config = dict(config)
         self._config.setdefault("coach_seed", randbits(63))
-        if self.coach_policy in {
+        if self.difficulty is not None:
+            from .coaching_profiles import CURRENT_DIFFICULTY_VERSION
+            from .difficulty import DifficultyCoach
+
+            self._coach = DifficultyCoach(
+                self._config["coach_seed"],
+                home,
+                away,
+                self.difficulty,
+                version=CURRENT_DIFFICULTY_VERSION,
+            )
+        elif self.coach_policy in {
             "chart-v1",
             "chart-v2",
             "chart-v3",
@@ -408,8 +436,15 @@ class SavedGame:
 
     @property
     def coach_policy(self) -> str:
-        """Persisted policy version; legacy saves remain baseline."""
+        """Current development policy used by this game, if one is selected."""
+        if self.difficulty is not None:
+            return self._coach.policy
         return self._config.get("coach_policy", "baseline")
+
+    @property
+    def difficulty(self) -> str | None:
+        """Player-selected difficulty, independent of the coach implementation revision."""
+        return self._config.get("difficulty")
 
     @property
     def revision(self) -> int:
@@ -469,18 +504,7 @@ class SavedGame:
         with self._lock:
             if human_side not in {"home", "away"}:
                 raise ValueError("human side must be home or away")
-            if self.coach_policy not in {
-                "easy-v1",
-                "easy-v2",
-                "easy-v3",
-                "easy-v4",
-                "easy-v5",
-                "easy-v6",
-                "easy-v7",
-                "easy-v8",
-                "easy-v9",
-                "easy-v10",
-            }:
+            if self.difficulty != "easy" and not self.coach_policy.startswith("easy-v"):
                 return False
             view = self.view()
             if (
@@ -667,7 +691,7 @@ def _dumps_game(game: SavedGame) -> str:
 
 def _validate_config(config: Any) -> None:
     optional = (
-        {"coach_seed", "coach_policy", "advanced_ii"} & config.keys()
+        {"coach_seed", "coach_policy", "difficulty", "advanced_ii"} & config.keys()
         if isinstance(config, dict)
         else set()
     )
@@ -677,6 +701,10 @@ def _validate_config(config: Any) -> None:
     ):
         _fail()
     if "advanced_ii" in optional and type(config["advanced_ii"]) is not bool:
+        _fail()
+    if "difficulty" in optional and config["difficulty"] not in {"easy", "medium", "hard"}:
+        _fail()
+    if "difficulty" in optional and "coach_policy" in optional:
         _fail()
     if "coach_policy" in optional and (
         type(config["coach_policy"]) is not str
@@ -845,11 +873,15 @@ def _validate(data: Any) -> None:
 def loads_game(
     text: str,
     load_team: Callable[[str], TeamChart | tuple[TeamChart, TeamFileMetadata]],
+    *,
+    preserve_development_policy: bool = False,
 ) -> SavedGame:
     """Validate and reconstruct a separate game, using only matching local teams.
 
-    The caller installs the returned game only after this function succeeds. Errors
-    never echo save contents, chart values, filesystem paths or supplied code names.
+    The caller installs the returned game only after this function succeeds. Ordinary
+    player loads upgrade historical difficulty revisions to the current tier; audit
+    callers may explicitly preserve a development policy. Errors never echo save
+    contents, chart values, filesystem paths or supplied code names.
     """
     try:
         if not isinstance(text, str) or len(text.encode("utf-8")) > MAX_SAVE_BYTES:
@@ -897,12 +929,17 @@ def loads_game(
             raise SaveFormatError(
                 "Saved teams do not match the installed teams; current game unchanged."
             )
+        config = (
+            data["config"]
+            if preserve_development_policy
+            else _current_difficulty_config(data["config"])
+        )
         game = SavedGame(
             home,
             away,
             data["teams"]["home"]["id"],
             data["teams"]["away"]["id"],
-            data["config"],
+            config,
             tape,
             home_privileges=markers_by_side["home"],
             away_privileges=markers_by_side["away"],

@@ -46,7 +46,11 @@ def test_history_failure_keeps_successful_snap_journaled_and_replayable(
     assert data["commands"] == [{"operation": "snap", "arguments": ["1", "A"], "error": None}]
     assert data["commands"] == json.loads(dumps_game(reference))["commands"]
     teams = default_teams()
-    restored = loads_game(dumps_game(game), lambda key: teams[0 if key.endswith("/a") else 1])
+    restored = loads_game(
+        dumps_game(game),
+        lambda key: teams[0 if key.endswith("/a") else 1],
+        preserve_development_policy=True,
+    )
     assert restored.view() == reference.view()
     assert restored.coach_step("home", "2") == reference.coach_step("home", "2")
     assert restored.view() == reference.view()
