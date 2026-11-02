@@ -44,8 +44,10 @@ its original source token. The chart-specific exceptions below still apply.
 - **F_DEF:** offensive fumble at the defensive yardage.
 - **F_MIN:** offensive fumble at the lesser signed yardage from the two cells.
 - **F_ENDZONE:** offensive fumble one yard into the defenders' end zone.
-- **OPT:** cancel the ordinary defense and follow SOP/BLP under Play 7/8. Advanced
-  defenses are unavailable; their exceptions belong to Milestone 22.
+- **OPT:** cancel the ordinary defense and follow SOP/BLP under Play 7/8. With an
+  offered Advanced II Wild Card, Play 5 must match the resolved ordinary, SOP, or
+  BLP branch exactly; an exact call stops it. Other Advanced II calls use their
+  implemented policy before this ordinary-chart operation.
 - **PEN:** begin the penalty procedure, retaining the original defensive fact.
 
 Minimum locations use signed comparison as an explicit project interpretation:
@@ -67,8 +69,11 @@ signed spotting, but does not define the chart's `< #` notation independently.
   or a penalty. When it wins, the offense rolls its own B column, as for any Breakaway.
   This is limited to parenthesized Breakaway facts in defensive cells; it does not
   generalize priority decoration to other named results.
-- Basic VI-12 names advanced defensive exceptions II.1-II.3, whereas the chart
-  mentions Wild Card only. None is enabled in Milestone 7.
+- Basic VI-12 names Advanced II exceptions while the chart mentions Wild Card
+  only. The approved profile implements Wild Card, Run/Pass, Nickel Zone and Red
+  Zone; their eligibility, conditional-yardage, QR/QT, QB Sneak, and
+  Razzle-Dazzle exceptions are defined in the rules profile rather than inferred
+  from this ordinary priority matrix.
 
 These interpretations are also recorded in [the rules profile](rules-profile.md).
 

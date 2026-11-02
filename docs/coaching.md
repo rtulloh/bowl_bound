@@ -158,17 +158,21 @@ post-choice field position, score, turnover possession, or an `unresolved` resul
 when applying the choice still needs dice. Coaches use only enabled choices and
 these engine projections; they do not parse choice labels or resolve penalties.
 
-`POST /api/games/{id}/coach` takes `{human_side, human_call?}`. Omit/null
-`human_call` only for an automatic computer action. Otherwise send just your offered
-offensive ID or defensive ID; never both calls. Planning happens before the human
-call is considered. Planning, validation, the one engine command and its matching
-view/next turn all share the game lock. Responses contain `{report, view, turn}`.
+`POST /api/games/{id}/coach` takes
+`{human_side, expected_revision, human_call?}`. Use the `revision` from the
+create/get/previous command response as `expected_revision`; a stale or duplicate
+request receives HTTP 409 and changes nothing. The selected human side is bound
+when the game is created or loaded and cannot be changed. Omit/null `human_call`
+only for an automatic computer action. Otherwise send just one offered offensive
+or defensive ID, never both. Planning, validation, the one engine command and its
+matching view/next turn share the game lock. Responses contain
+`{report, view, turn, revision}`.
 
-For human kicks, decisions and game actions, append `?human_side=home` (or `away`)
-to the usual endpoints. These validate against the human-only controls and return
-the next turn atomically. Existing manual endpoints stay compatible; this local
-unauthenticated API is not multiplayer access control. Invalid input does not
-consume dice or record a command.
+For human kicks, decisions and game actions, append the same bound
+`?human_side=home` (or `away`) to the usual endpoints. These validate against the
+human-only controls and return the next turn atomically. Existing manual endpoints
+stay compatible; this local unauthenticated API is not multiplayer access control.
+Invalid input does not consume dice or record a command.
 
 ## Dice presentation
 
