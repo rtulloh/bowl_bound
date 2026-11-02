@@ -1,0 +1,19 @@
+docs/dev-notes/issues/RULE/RULE-037.md
+  s_ed54ab581b3d60::t_7f5f444c259b08 4,8,15-16,39-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "e260e157029138461e7ee8e0657c09d70f2026f1",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
