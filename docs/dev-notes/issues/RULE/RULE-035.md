@@ -1,17 +1,18 @@
 ---
 id: RULE-035
 title: Conditional Run/Pass classification is stale after penalty rerolls
-status: open
+status: resolved
 priority: High
 milestone: '23'
 created-at: 2026-11-01
-resolved-at: null
+resolved-at: 2026-11-01
 closed-at: null
 tags:
 - reproduced
 - code-review
 links: []
-commits: []
+commits:
+- 4126b06
 ---
 
 ## Description
@@ -31,3 +32,11 @@ Current tests cover direct QR/QT and direct SOP/BLP, but no classification-chang
 
 --- 2026-11-01 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-01 ---
+Resolved in `4126b06`. Synthetic tests cover declined penalties rerolled into
+QR, QT, SOP, and BLP; both conditional RUN/PASS calls and free W-marked
+defenders are covered. The focused Advanced II suite passed (95 tests), followed
+by the Advanced II, Razzle-Dazzle, penalty, regulation, save, and statistics
+regression set (285 tests). Ruff and format checks passed. Awaiting owner
+play-test confirmation before closure.
