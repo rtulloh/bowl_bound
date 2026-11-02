@@ -52,3 +52,12 @@ logic is added.
   play and cell. Penalty preparation and the Razzle-Dazzle decision path retain
   the Advanced II call metadata so that they can make that assessment without
   guessing from a stale resolution.
+
+### RULE-036 — 2026-11-01
+
+- A synthetic yellow Play 1 box containing a PEN token first demonstrated that
+  the QB Sneak correctly produced a zero-yard play but incorrectly charged
+  penalty timing because its color-evidence trace was mistaken for execution.
+- Timing now excludes chart-token penalties for QB Sneak. The original lookup
+  remains in the structured trace as provenance; ordinary penalties and return
+  penalties keep their existing timing behavior.

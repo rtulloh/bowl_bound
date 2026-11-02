@@ -6,11 +6,20 @@ import pytest
 
 from bowl_bound.dice import OffensiveRoll, ScriptedDice
 from bowl_bound.game_state import FieldState, Possession
-from bowl_bound.models import NormalizedCell, Play, ResultKind, TeamChart
+from bowl_bound.models import (
+    NormalizedCell,
+    PenaltyCode,
+    PenaltyData,
+    PenaltyTeam,
+    Play,
+    ResultKind,
+    TeamChart,
+)
 from bowl_bound.normalization import chart_color_for_rgb
 from bowl_bound.resolution import ChartResolutionError
 from bowl_bound.save_game import SavedGame, dumps_game, loads_game
 from bowl_bound.session import PlaySession
+from bowl_bound.timing import Clock, duration
 from tests.synthetic_teams import default_teams, team_chart, yards
 from tests.test_models import provenance
 
@@ -77,6 +86,26 @@ def test_qb_sneak_ignores_the_chart_symbol_when_color_is_green() -> None:
     assert report.outcome == "advance" and report.yards == 1
     assert session.view().state is not None
     assert session.view().state.possession == "home"
+
+
+def test_yellow_qb_sneak_penalty_token_is_source_evidence_not_a_timing_penalty() -> None:
+    """A yellow box is a color-only Sneak result even when its imported token is PEN."""
+    home, away = default_teams()
+    token = NormalizedCell(
+        ResultKind.PENALTY,
+        provenance(),
+        penalty=PenaltyData(PenaltyTeam.OFFENSE, PenaltyCode.FIXED, 5),
+    )
+    home = colored_chart((239, 255, 1), cell=token)
+    session = PlaySession.new(home, away, seed=1)
+
+    report = session.snap("Q", "A", dice=ScriptedDice([OffensiveRoll(1, 0, 0)]))
+
+    assert report.outcome == "advance" and report.yards == 0
+    assert report.timing.penalty is False
+    assert duration(report.timing, Clock()) == 30
+    assert report.state_after is not None and report.state_after.down == 2
+    assert [entry.section for entry in report.trace] == ["offense"]
 
 
 def test_qb_sneak_uses_normalized_color_without_reading_rgb_provenance() -> None:

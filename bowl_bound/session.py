@@ -1875,9 +1875,12 @@ class PlaySession:
                 ),
                 change_of_possession=after is not None and after.possession != before.possession,
                 penalty=return_penalty_seen
-                or any(
-                    isinstance(e, LookupTrace) and e.cell.kind is ResultKind.PENALTY
-                    for e in resolution.trace
+                or (
+                    not resolution.qb_sneak
+                    and any(
+                        isinstance(e, LookupTrace) and e.cell.kind is ResultKind.PENALTY
+                        for e in resolution.trace
+                    )
                 ),
                 incomplete=resolution.result.kind is ResultKind.INCOMPLETE
                 or outcome == "declined_interception",
