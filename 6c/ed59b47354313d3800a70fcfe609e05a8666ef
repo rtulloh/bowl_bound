@@ -1,0 +1,25 @@
+bowl_bound/difficulty.py
+  s_ed54ab581b3d60::t_99f97bb832f809 251
+docs/dev-notes/issue-tracker.md
+  s_ed54ab581b3d60::t_3dd4222f11a5d8 8,10,41,407
+docs/dev-notes/issues/CLI/CLI-051.md
+  s_ed54ab581b3d60::t_7bc26c2cd2bad6 1-30
+tests/test_coaching_decisions_v3.py
+  s_ed54ab581b3d60::t_f96014272ca570 128
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "6ced59b47354313d3800a70fcfe609e05a8666ef",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
