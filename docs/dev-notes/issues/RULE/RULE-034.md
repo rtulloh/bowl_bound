@@ -1,17 +1,17 @@
 ---
 id: RULE-034
 title: Exact WCRZDZ incompletion does not consume a down or turn over on fourth down
-status: open
+status: resolved
 priority: High
 milestone: '23'
 created-at: 2026-11-01
-resolved-at: null
+resolved-at: 2026-11-01
 closed-at: null
 tags:
 - reproduced
 - code-review
 links: []
-commits: []
+commits: [a6f775f]
 ---
 
 ## Description
@@ -24,10 +24,23 @@ Synthetic reproduction: `tests.test_advanced_defenses.new_game().snap("RZDZ", "W
 
 ## Resolution / verification
 
-- Apply the normal incomplete-pass transition while retaining the no-dice WCRZDZ procedure.
-- Cover downs 1–4, turnover-on-downs, regulation timing, two-point tries, and save continuation using synthetic charts.
+- Test-first synthetic coverage reproduced unchanged downs one through four after
+  WCRZDZ. It now covers all four down transitions, turnover on downs, regulation
+  timing, and save continuation without consuming dice.
+- `a6f775f` routes the no-dice incompletion through the ordinary prepared-play
+  path, preserving one authoritative transition and timing implementation.
+- Focused validation: 178 Razzle-Dazzle, regulation, save, and statistics tests
+  passed; Ruff lint/format and `git diff --check` passed.
+- The prior `outcome="incomplete"` expectation changed to normal engine outcome
+  values (`advance` or `turnover_on_downs`); the statistics kind remains
+  `incomplete`. This matches all other ordinary incomplete passes.
+- Status is resolved pending owner play-test confirmation.
 
 ## Comments
 
 --- 2026-11-01 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-01 ---
+The reported state-transition failure was reproduced before implementation. The
+tested fix in `a6f775f` awaits owner play-test confirmation before closure.
