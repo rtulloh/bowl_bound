@@ -1,0 +1,33 @@
+docs/dev-notes/issue-tracker.md
+  s_ed54ab581b3d60::t_78bf3fff370eb5 8,10,235,244,255-259,264,479-482,485-487
+docs/dev-notes/issues/UI/UI-042.md
+  s_ed54ab581b3d60::t_1a4bbe8dc7b35e 4,8-9,14-15,32-35
+docs/dev-notes/issues/UI/UI-043.md
+  s_ed54ab581b3d60::t_d5cea34f9203eb 4,8-9,14-15,32-36
+docs/dev-notes/issues/UI/UI-044.md
+  s_ed54ab581b3d60::t_b7d786e333b5a0 4,8-9,14-15,32-36
+docs/dev-notes/issues/UI/UI-045.md
+  s_ed54ab581b3d60::t_f3f6798635311f 4,8-9,14-15,35-39
+docs/dev-notes/issues/UI/UI-048.md
+  s_ed54ab581b3d60::t_016bb6dd0efd4c 4,8-9,14-15,32-36
+docs/dev-notes/issues/UI/UI-049.md
+  s_ed54ab581b3d60::t_4ee8943b2d665f 4,8-9,14,16-17,34-39
+docs/dev-notes/issues/UI/UI-050.md
+  s_ed54ab581b3d60::t_bc8f4f6d397e02 4,8-9,14-15,32-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "09b81b76f56e7288e7dd8053142678a2d8577553",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
