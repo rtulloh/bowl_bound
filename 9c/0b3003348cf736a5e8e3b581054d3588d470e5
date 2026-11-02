@@ -1,0 +1,19 @@
+docs/dev-notes/issues/AI/AI-024.md
+  s_ed54ab581b3d60::t_d4421a6fc3f2bd 4,8,15-16,39-46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "9c0b3003348cf736a5e8e3b581054d3588d470e5",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
