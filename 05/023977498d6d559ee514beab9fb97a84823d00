@@ -1,0 +1,125 @@
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_4a12846bfbf8ec 230-231,234,239,294-297,379-380,387-388
+bowl_bound/commentary.py
+  s_ed54ab581b3d60::t_c515e31b20e4ec 39,112-113
+bowl_bound/difficulty.py
+  s_ed54ab581b3d60::t_37b31dba8c914d 192-198,214-267,270,278,289-295,305-309
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_6f5949badfbcf7 254,260-263,910,912-915
+docs/cli.md
+  s_ed54ab581b3d60::t_ab9f3fc3dc8ecf 75-78,100,119-123
+docs/coaching.md
+  s_ed54ab581b3d60::t_ad9378443a66a6 49-50,222-232
+docs/dev-notes/issues/AI/AI-027.md
+  s_ed54ab581b3d60::t_aa58b2aede0d05 3-4,8-9,20-25,29-35,51-62
+docs/dev-notes/issues/AI/AI-029.md
+  s_ed54ab581b3d60::t_5634aa4434b641 1-41
+docs/dev-notes/issues/AI/AI-030.md
+  s_ed54ab581b3d60::t_fba3b9a743f1bc 1-31
+docs/dev-notes/issues/AI/AI-031.md
+  s_ed54ab581b3d60::t_66ad7825ed2e3e 1-42
+docs/dev-notes/issues/AI/AI-032.md
+  s_ed54ab581b3d60::t_6780e37f1d3140 1-31
+docs/dev-notes/issues/CLI/CLI-052.md
+  s_ed54ab581b3d60::t_8c57e491428063 1-48
+docs/dev-notes/issues/CLI/CLI-053.md
+  s_ed54ab581b3d60::t_529afcb09af2e9 1-41
+docs/dev-notes/issues/CLI/CLI-054.md
+  s_ed54ab581b3d60::t_199f7062d2c26d 1-35
+docs/dev-notes/issues/CLI/CLI-055.md
+  s_ed54ab581b3d60::t_4108162646d757 1-30
+docs/dev-notes/issues/CLI/CLI-056.md
+  s_ed54ab581b3d60::t_335092a5230a3a 1-30
+docs/dev-notes/issues/CLI/CLI-057.md
+  s_ed54ab581b3d60::t_91ac11a85950e5 1-37
+docs/dev-notes/issues/CLI/CLI-058.md
+  s_ed54ab581b3d60::t_9625e76faa65a7 1-37
+docs/dev-notes/issues/CLI/CLI-059.md
+  s_ed54ab581b3d60::t_c819b7c99463da 1-34
+docs/dev-notes/issues/CLI/CLI-060.md
+  s_ed54ab581b3d60::t_ae4b4648a5a0e2 1-31
+docs/dev-notes/issues/CLI/CLI-061.md
+  s_ed54ab581b3d60::t_54a221815dbb16 1-31
+docs/dev-notes/issues/DEV/DEV-058.md
+  s_ed54ab581b3d60::t_56b38b4c96b62c 1-30
+docs/dev-notes/issues/RULE/RULE-040.md
+  s_ed54ab581b3d60::t_e9a4f84d9b972e 1-35
+docs/dev-notes/issues/RULE/RULE-041.md
+  s_ed54ab581b3d60::t_72508355f97682 1-32
+docs/dev-notes/issues/RULE/RULE-042.md
+  s_ed54ab581b3d60::t_19c08d39cfe10e 1-41
+docs/dev-notes/issues/UI/UI-041.md
+  s_ed54ab581b3d60::t_d4c0f5484634ae 1-37
+docs/dev-notes/issues/UI/UI-046.md
+  s_ed54ab581b3d60::t_8a273f420d6f58 1-30
+docs/dev-notes/issues/UI/UI-047.md
+  s_ed54ab581b3d60::t_8ee698ff460678 1-30
+docs/dev-notes/issues/UI/UI-051.md
+  s_ed54ab581b3d60::t_d943eb5dfbab23 1-30
+docs/dev-notes/milestone-23.md
+  s_ed54ab581b3d60::t_c0f07dd1789e77 49-63,234-252
+docs/rosters.md
+  s_ed54ab581b3d60::t_cee470b3cb3206 66,124-128
+docs/rules-profile.md
+  s_ed54ab581b3d60::t_de2b4827e74bc2 32-33,35
+frontend/src/App.jsx
+  s_ed54ab581b3d60::t_e8e27495ac5002 30,98,145,151-160,215,223-227,269,275-279,290-291,298-341
+frontend/src/components/PenaltyChoices.jsx
+  s_ed54ab581b3d60::t_0201509c8a6f26 3-31,38,41-42,53
+frontend/src/components/PlayLog.jsx
+  s_ed54ab581b3d60::t_1eb0448eaa8514 2,5-20,23-49
+frontend/src/components/PlaySelector.jsx
+  s_ed54ab581b3d60::t_7f1101186ecc18 8-9,19,22-23
+frontend/src/components/ResultPanel.jsx
+  s_ed54ab581b3d60::t_b516dd6aaa00e0 5,7
+frontend/src/test/coaching.test.jsx
+  s_ed54ab581b3d60::t_4a2f245893bce1 36-54,160-168
+frontend/src/test/compactGame.test.jsx
+  s_ed54ab581b3d60::t_8a62894f7a921d 38-58,176,190-192,228-244,255-258,262-268
+frontend/src/test/components.test.jsx
+  s_ed54ab581b3d60::t_f88a3069b56773 49,112-129
+frontend/src/test/milestone19.test.jsx
+  s_ed54ab581b3d60::t_3e4cde61b3b67b 57,62,94,98,102,106
+frontend/src/test/openingScreen.test.jsx
+  s_ed54ab581b3d60::t_23b17ced576e26 58
+frontend/src/test/playLog.test.jsx
+  s_ed54ab581b3d60::t_df01a3af0c494d 62-75
+scripts/run_local_season.py
+  s_ed54ab581b3d60::t_9df3e59199ecec 178-179,424,435
+tests/test_advanced_defenses.py
+  s_ed54ab581b3d60::t_da0c4ae4ed2a48 24,39,110,132,180,272,332,372,456,494,509,521-522,528,547,553,568
+tests/test_api.py
+  s_ed54ab581b3d60::t_e386c98fc58d3b 95,163,169
+tests/test_api_commentary.py
+  s_ed54ab581b3d60::t_c0699f63be78cc 18,32
+tests/test_api_control_contract.py
+  s_ed54ab581b3d60::t_0cecc44893de25 72
+tests/test_cli_shortcuts.py
+  s_ed54ab581b3d60::t_501b4926d9b124 221-222,224
+tests/test_commentary_replay.py
+  s_ed54ab581b3d60::t_93107e788d33ab 51,60,71
+tests/test_commentary_special.py
+  s_ed54ab581b3d60::t_9ae26f8fed8616 25,116-117,121-134,170-171
+tests/test_hard_repetition_v5.py
+  s_ed54ab581b3d60::t_2f7cd9a68ebbd9 165,170-174
+tests/test_qb_sneak.py
+  s_ed54ab581b3d60::t_f58f867c73f806 279
+tests/test_razzle_dazzle.py
+  s_ed54ab581b3d60::t_4d48deb57e042f 10,123-135,206-208,406-408
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "05023977498d6d559ee514beab9fb97a84823d00",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
