@@ -1,0 +1,21 @@
+docs/coaching.md
+  s_ed54ab581b3d60::t_75db977054b96e 161-175
+docs/priority-chart.md
+  s_ed54ab581b3d60::t_91abe2f989e93d 47-50,72-76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "7f2019d92d02c94758f0fd589c66466d41dd54fb",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
