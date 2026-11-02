@@ -100,3 +100,5 @@ Validation:
 
 This repair does not complete Milestone 33. Native CI confirmation remains
 pending publication of the fix; the remaining milestone work stays pending.
+Tested implementation commit: `ca3d3bb`; DEV-060 is resolved pending native build
+confirmation.
