@@ -911,6 +911,7 @@ def loads_game(
             _view_digest(view),
             _legacy_m19_view_digest(view),
             _legacy_m22_view_digest(view),
+            _legacy_m21_post_m27_view_digest(view),
             _legacy_m27_view_digest(view, getattr(game._engine, "_pending_timing_seconds", None)),
         }
         if legacy_halftime is not None:
@@ -919,6 +920,7 @@ def loads_game(
                     _view_digest(legacy_halftime),
                     _legacy_m19_view_digest(legacy_halftime),
                     _legacy_m22_view_digest(legacy_halftime),
+                    _legacy_m21_post_m27_view_digest(legacy_halftime),
                     _legacy_m27_view_digest(legacy_halftime, None),
                 }
             )
@@ -981,6 +983,22 @@ def _legacy_m27_view_digest(
                 },
                 *data["pending"]["choices"],
             ]
+    return _semantic_view_digest(data)
+
+
+def _legacy_m21_post_m27_view_digest(view: SessionView | RegulationView) -> str:
+    """Recreate M21's post-M27 view without restoring removed runoff controls."""
+    data = _legacy_m22_view_data(view)
+    if "game_actions" in data:
+        data["game_actions"] = [
+            action for action in data["game_actions"] if action["key"] != "elect_safety"
+        ]
+    data["actions"]["offense"] = [
+        action for action in data["actions"]["offense"] if action["key"] != "Q"
+    ]
+    data["actions"]["defense"] = [
+        action for action in data["actions"]["defense"] if action["key"] != "WCSNEAK"
+    ]
     return _semantic_view_digest(data)
 
 

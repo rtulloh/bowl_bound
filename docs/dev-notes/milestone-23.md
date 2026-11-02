@@ -94,3 +94,12 @@ logic is added.
 - A shared pure live-resolution adjustment now feeds both execution and decline
   projections. Penalty acceptance retains the unmodified prepared result, since
   the declaration applies only when the ordinary play is declined.
+
+### DEV-053 — 2026-11-01
+
+- Synthetic M21/post-M27 digests first reproduced rejected fresh-drive and
+  ordinary clock-choice saves. The old profile had no M22 actions but had
+  already removed the manual runoff control.
+- Save validation now includes that precise M21 projection in addition to the
+  pre-M27 projection. It accepts only the historical semantic menu and never
+  restores a runoff action into the loaded game.

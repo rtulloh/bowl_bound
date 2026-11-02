@@ -305,6 +305,39 @@ def legacy_fixture_for_current_runtime(fixture: Path) -> str:
     return seal(data)
 
 
+def _m21_post_m27_digest(game: SavedGame) -> str:
+    """Reproduce the M21 view before M22 actions, without reintroducing runoff."""
+    data = asdict(game.view())
+    data["actions"]["offense"] = [
+        action for action in data["actions"]["offense"] if action["key"] not in {"Q", "RZDZ"}
+    ]
+    data["actions"]["defense"] = [
+        action
+        for action in data["actions"]["defense"]
+        if action["key"] not in {"WCSNEAK", "WCRZDZ"}
+    ]
+    if "game_actions" in data:
+        data["game_actions"] = [
+            action for action in data["game_actions"] if action["key"] != "elect_safety"
+        ]
+    data["clock_modifiers"] = [
+        action for action in data.get("clock_modifiers", []) if action["id"] != "clock:delay"
+    ]
+    if data.get("pending") is not None:
+        data["pending"]["choices"] = [
+            choice for choice in data["pending"]["choices"] if choice["id"] != "clock:delay"
+        ]
+    return save_codec._semantic_view_digest(data)
+
+
+def _m21_post_m27_save(game: SavedGame) -> str:
+    data = json.loads(dumps_game(game))
+    data["engine_profile"] = "bowl-bound-m21-v1"
+    del data["config"]["advanced_ii"]
+    data["state_digest"] = _m21_post_m27_digest(game)
+    return seal(data)
+
+
 @pytest.mark.parametrize(
     "path,value",
     [
@@ -576,6 +609,28 @@ def test_pre_m27_clock_choice_save_loads_without_restoring_runoff_action() -> No
         choice.id != "clock:runoff"
         for choice in restored.view().clock_modifiers + restored.view().pending.choices
     )
+
+
+@pytest.mark.parametrize("state", ["drive", "kickoff", "clock_choice"])
+def test_m21_post_m27_saves_load_without_reintroducing_runoff(state: str) -> None:
+    game = new(mode="regulation") if state != "drive" else new()
+    if state == "kickoff":
+        game.decide("toss:receive")
+    elif state == "clock_choice":
+        opening(game)
+        game.snap("1", "A")
+
+    restored = loads_game(
+        _m21_post_m27_save(game),
+        lambda key: {"2002/home": charts()[0], "2002/away": charts()[1]}[key],
+    )
+
+    assert restored.view() == game.view()
+    if state == "clock_choice":
+        assert all(
+            choice.id != "clock:runoff"
+            for choice in restored.view().clock_modifiers + restored.view().pending.choices
+        )
 
 
 def test_save_from_different_python_minor_version_is_rejected() -> None:
