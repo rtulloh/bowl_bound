@@ -147,3 +147,11 @@ logic is added.
   CLI/API construction does. Private records state both baseline coaching
   policies, Advanced II status, and each side's marker set, so their scope is
   inspectable without exposing team charts.
+
+### DEV-056 — 2026-11-01
+
+- Adversarial audit fixtures first showed both a repeated clock interval and a
+  disconnected report field state being accepted.
+- The local validator now reconciles chronological regulation clock continuity,
+  report-associated timing entries, and contiguous public field facts while
+  allowing explicit zero-time boundary entries and post-regulation timing.
