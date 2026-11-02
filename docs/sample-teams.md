@@ -87,3 +87,9 @@ not copy the entire local `seasons/` tree. The owner directed that Ohio State an
 Miami remain unpublished in game packages; their local charts are not deleted.
 Milestone 24 must verify the exact two approved sample rosters and provenance
 are included, while historical charts, provenance and all other rosters stay excluded.
+
+When intentionally changing an approved sample file, review its diff and update
+that file's SHA256 in `release/manifest.json`, including metadata-only migrations.
+Run `.venv/bin/python -m pytest tests/test_release_package.py -q` to verify the
+repository's selected public inputs can be staged and altered sample bytes are
+still rejected before starting native builds.

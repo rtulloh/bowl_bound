@@ -9,11 +9,28 @@ from unittest.mock import patch
 import pytest
 
 from scripts.release_package import (
+    SAMPLES,
     ReleaseError,
     assemble_runtime,
     build_frontend,
     stage_sources,
 )
+
+
+def test_real_release_inputs_stage_with_all_pinned_public_samples(tmp_path: Path) -> None:
+    """Catch release metadata drift using only the exact approved public inputs."""
+    root = Path(__file__).resolve().parents[1]
+    manifest = json.loads((root / "release/manifest.json").read_text(encoding="utf-8"))
+    assert set(manifest["sample_sha256"]) == SAMPLES
+    stage = tmp_path / "public release stage"
+    stage_sources(root, stage)
+    staged = {path.relative_to(stage).as_posix() for path in stage.rglob("*") if path.is_file()}
+    assert staged == {
+        *manifest["runtime"],
+        *manifest["frontend"],
+        "release/manifest.json",
+        ".release-inputs.json",
+    }
 
 
 def put(root: Path, name: str, text: str) -> None:
