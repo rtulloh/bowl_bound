@@ -1,0 +1,19 @@
+docs/dev-notes/issues/API/API-005.md
+  s_ed54ab581b3d60::t_04bfd9a644bf93 4,8,14-15,35-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "f0448c612130e259559a56c7f0f112a5b740f1e5",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
