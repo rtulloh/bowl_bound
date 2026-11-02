@@ -155,3 +155,12 @@ logic is added.
 - The local validator now reconciles chronological regulation clock continuity,
   report-associated timing entries, and contiguous public field facts while
   allowing explicit zero-time boundary entries and post-regulation timing.
+
+### DEV-057 — 2026-11-01
+
+- The maintained coaching reference was still pre-revision and described a
+  mutable human-side assumption, while the Priority Chart still deferred
+  Advanced II behavior that is now implemented.
+- Documentation now gives the concise current API contract and directs detailed
+  Advanced II exceptions to the canonical rules profile. The current web-demo
+  contract was checked for consistency.
