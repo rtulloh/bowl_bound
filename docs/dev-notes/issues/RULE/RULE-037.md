@@ -1,18 +1,19 @@
 ---
 id: RULE-037
 title: Conditional Wild Card incorrectly doubles QB Sneak despite the Rule IX exemption
-status: open
+status: resolved
 priority: High
 milestone: '23'
 created-at: 2026-11-01
-resolved-at: null
+resolved-at: 2026-11-01
 closed-at: null
 tags:
 - reproduced
 - code-review
 - test-expectation
 links: []
-commits: []
+commits:
+- 7ade835
 ---
 
 ## Description
@@ -35,3 +36,12 @@ Assigned to milestone 23 as a rules-correctness follow-up. Correct the existing 
 
 --- 2026-11-01 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-01 ---
+Resolved in `7ade835`. The contrary green-Sneak expectation now reflects the
+Advanced IX exemption. Synthetic fourth-and-two coverage proves both conditional
+and W-marked wrong Wild Cards gain only one yard and turn the ball over instead
+of converting the down. Documentation for RULE-021 and milestone 22 now records
+the exception. The QB Sneak, Advanced II, regulation, save, and statistics
+regression set passed (266 tests), with Ruff and formatting clean. Awaiting owner
+play-test confirmation before closure.
