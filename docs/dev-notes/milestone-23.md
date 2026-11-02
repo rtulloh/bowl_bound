@@ -33,3 +33,11 @@ logic is added.
 - The resolver now requires both Play 5 and the exact Option branch before the
   Wild Card stop applies. The focused Advanced II, resolution, and coaching
   evaluation regression set passed before commit.
+
+### RULE-034 — 2026-11-01
+
+- Synthetic tests first showed that an exact WCRZDZ call recorded an incomplete
+  pass without applying the normal state transition.
+- The no-dice result now uses the ordinary prepared-play path. This preserves the
+  required incomplete timing, statistics, turnover-on-downs behavior, regulation
+  integration, and save replay without duplicating transition logic.

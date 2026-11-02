@@ -875,20 +875,13 @@ class PlaySession:
                     (),
                     razzle_dazzle=True,
                 )
-                return self._record(
-                    resolution,
+                return self._finish_prepared(
+                    PreparedPlay(resolution),
                     Play.ONE,
                     defensive,
+                    field,
                     before,
-                    before,
-                    (),
-                    None,
-                    (
-                        f"{offense.name}: Razzle-Dazzle vs {_formation_label(defensive)} "
-                        "- incomplete pass."
-                    ),
-                    outcome="incomplete",
-                    yards=0,
+                    source,
                 )
 
             rolls = (source.offensive(), source.offensive())

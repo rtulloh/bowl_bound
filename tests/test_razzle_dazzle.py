@@ -5,6 +5,7 @@ from dataclasses import replace
 import pytest
 
 from bowl_bound.dice import DefensiveRoll, OffensiveRoll, ScriptedDice
+from bowl_bound.game_state import FieldState, Possession
 from bowl_bound.models import (
     PenaltyCode,
     PenaltyData,
@@ -12,10 +13,13 @@ from bowl_bound.models import (
     Play,
     ResultKind,
 )
+from bowl_bound.regulation import RegulationGame
 from bowl_bound.save_game import SavedGame, dumps_game, loads_game
 from bowl_bound.session import InvalidDecisionError, PendingDecisionError, PlaySession
+from bowl_bound.timing import Clock, duration
 from tests.synthetic_teams import default_teams, team_chart, yards
 from tests.test_models import provenance
+from tests.test_special_teams import special_chart
 
 DEFENSIVE_LOW = OffensiveRoll(1, 2, 3)  # 15
 OFFENSIVE_HIGH = OffensiveRoll(1, 3, 5)  # 18
@@ -122,9 +126,74 @@ def test_exact_razzle_wild_card_ends_incomplete_without_any_dice() -> None:
     report = session.snap("RZDZ", "WCRZDZ", dice=ScriptedDice([]))
 
     assert report.supported and not report.pending
-    assert report.outcome == "incomplete" and report.yards == 0
+    assert report.outcome == "advance" and report.yards == 0
+    assert report.statistics.kind.value == "incomplete"
     assert report.called_play == report.resolved_play == "Razzle-Dazzle"
     assert report.trace == ()
+
+
+@pytest.mark.parametrize(
+    ("field", "expected"),
+    [
+        (FieldState(Possession.HOME, 65, 1, 10), FieldState(Possession.HOME, 65, 2, 10)),
+        (FieldState(Possession.HOME, 65, 2, 10), FieldState(Possession.HOME, 65, 3, 10)),
+        (FieldState(Possession.HOME, 65, 3, 10), FieldState(Possession.HOME, 65, 4, 10)),
+        (FieldState(Possession.HOME, 65, 4, 10), FieldState(Possession.AWAY, 35, 1, 10)),
+    ],
+)
+def test_exact_razzle_wild_card_uses_the_normal_incomplete_transition(
+    field: FieldState, expected: FieldState
+) -> None:
+    home, away = _playtest_charts()
+    session = PlaySession.new(home, away, seed=1, advanced_ii=True)
+    session._field = field
+
+    report = session.snap("RZDZ", "WCRZDZ", dice=ScriptedDice([]))
+
+    assert report.outcome == ("turnover_on_downs" if field.down == 4 else "advance")
+    assert session._field == expected
+    assert report.state_after is not None
+    assert report.state_after.possession == expected.possession.value
+    assert report.state_after.down == expected.down
+    assert report.statistics.kind.value == "incomplete"
+
+
+def test_exact_razzle_wild_card_uses_incomplete_timing_in_regulation() -> None:
+    home, away = _playtest_charts()
+    home_kicks = special_chart("Alpha Tech", kickoff=yards(70), kickoff_return=yards(10))
+    away_kicks = special_chart("Beta State", kickoff=yards(70), kickoff_return=yards(10))
+    home = replace(home, season=2002, special_teams=home_kicks.special_teams)
+    away = replace(away, season=2002, special_teams=away_kicks.special_teams)
+    game = RegulationGame.new(home, away, seed=1, clock=Clock(1, 30), advanced_ii=True)
+    game.decide("toss:receive")
+    game.kick("kickoff", dice=ScriptedDice([OffensiveRoll(1, 0, 0)]))
+    game.decide("kick:touchback")
+
+    report = game.snap("RZDZ", "WCRZDZ", dice=ScriptedDice([]))
+
+    assert report.timing.incomplete
+    assert duration(report.timing, Clock(1, 30)) == 10
+    assert game.view().state.down == 2
+
+
+def test_exact_razzle_wild_card_save_replay_preserves_the_incomplete_transition() -> None:
+    home, away = _playtest_charts()
+    game = SavedGame.new(
+        home,
+        away,
+        home_id="2026/alpha-tech",
+        away_id="2026/beta-state",
+        seed=1,
+        advanced_ii=True,
+    )
+    report = game.snap("RZDZ", "WCRZDZ")
+    teams = {"2026/alpha-tech": home, "2026/beta-state": away}
+
+    restored = loads_game(dumps_game(game), lambda team_id: teams[team_id])
+
+    assert report.state_after == game.view().state
+    assert restored.view() == game.view()
+    assert restored.snap("1", "A") == game.snap("1", "A")
 
 
 def test_razzle_wild_card_is_incorrect_for_an_ordinary_play() -> None:
