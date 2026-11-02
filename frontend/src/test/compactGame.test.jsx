@@ -35,6 +35,27 @@ it.each(['offense', 'defense'])('submits when the second manual call is selected
   fireEvent.click(defense)
   await waitFor(() => expect(api.snap).toHaveBeenCalledTimes(2))
 })
+it('keeps a fixed-height result above stable play controls after a snap', async () => {
+  await start()
+  const offense = screen.getByTestId('offense-plays')
+  const result = screen.getByTestId('result-empty')
+  const playArea = screen.getByTestId('play-area')
+  expect(result.compareDocumentPosition(offense) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  expect(result).toHaveClass('h-[13rem]', 'overflow-y-auto')
+  expect(playArea).toHaveClass('grid', 'lg:grid-cols-[minmax(0,2fr)_minmax(16rem,1fr)]')
+  expect(playArea).toContainElement(offense)
+  expect(playArea).toContainElement(screen.getByRole('region', { name: 'Play modifiers' }))
+  expect(offense).not.toHaveClass('max-h-[10rem]', 'overflow-y-auto')
+  expect(screen.getByTestId('modifier-card')).toHaveTextContent('GAME CONTROLS')
+  expect(screen.getByTestId('modifier-card')).toHaveTextContent('Pace')
+  expect(screen.getByTestId('modifier-card')).toHaveTextContent('Clock')
+
+  fireEvent.click(screen.getByTestId('offense-play-1'))
+  fireEvent.click(screen.getByTestId('defense-play-a'))
+  const resolvedResult = await screen.findByTestId('result-panel')
+  expect(resolvedResult.compareDocumentPosition(offense) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  expect(resolvedResult).toHaveClass('h-[13rem]', 'overflow-y-auto')
+})
 it('offers QB Sneak as an engine play and sends its selected ID to the API', async () => {
   const base = view()
   api.newGame.mockResolvedValue({
@@ -152,7 +173,7 @@ it('defaults to human home/computer away while keeping two-sided manual play las
   expect(modes).toHaveValue('home')
 })
 
-it('keeps offered hurry-up, timeout and spike controls in the visible modifier row', async () => {
+it('groups an immediate clock decision separately from the persistent pace preference', async () => {
   api.newGame.mockResolvedValue({ game_id: 'game', seed: 7, view: view({ phase: 'clock_choice', clock_optional: true,
     pending: { choices: [
       { id: 'clock:timeout:home', label: 'Home timeout', enabled: true },
@@ -166,7 +187,9 @@ it('keeps offered hurry-up, timeout and spike controls in the visible modifier r
   api.decide.mockResolvedValue({ view: view() })
   await start()
   const row = screen.getByRole('region', { name: 'Play modifiers' })
-  expect(row).toContainElement(screen.getByRole('checkbox', { name: 'Hurry-up mode' }))
+  expect(row).toHaveTextContent('Pace')
+  expect(row).toHaveTextContent('Clock')
+  expect(row).toContainElement(screen.getByRole('checkbox', { name: 'Enable/Disable Hurry-Up' }))
   expect(row).toContainElement(screen.getByRole('radio', { name: 'Home timeout' }))
   expect(row).toContainElement(screen.getByRole('radio', { name: 'Spike' }))
   expect(screen.queryByRole('button', { name: 'OOB' })).toBeNull()
@@ -202,17 +225,23 @@ it('uses the engine-provided defense name instead of deriving it from possession
 })
 
 it('submits offered OOB and IB declarations through engine action IDs', async () => {
-  api.newGame.mockResolvedValue({ game_id: 'game', seed: 7, view: view({
-    game_actions: [
-      { key: 'bounds:oob', label: 'Declare out of bounds' },
-      { key: 'bounds:ib', label: 'Declare in bounds' },
-    ],
-    play_modifiers: [
-      { id: 'bounds:oob', label: 'Out of bounds', enabled: true },
-      { id: 'bounds:ib', label: 'In bounds', enabled: true },
-    ],
-  }) })
-  api.gameAction.mockResolvedValue({ view: view({ bounds_declaration: 'out_of_bounds' }) })
+  const boundsActions = [
+    { key: 'bounds:oob', label: 'Declare out of bounds' },
+    { key: 'bounds:ib', label: 'Declare in bounds' },
+  ]
+  const boundsModifiers = [
+    { id: 'bounds:oob', label: 'Out of bounds', enabled: true },
+    { id: 'bounds:ib', label: 'In bounds', enabled: true },
+  ]
+  const boundsView = (bounds_declaration) => view({
+    bounds_declaration,
+    game_actions: boundsActions,
+    play_modifiers: boundsModifiers,
+  })
+  api.newGame.mockResolvedValue({ game_id: 'game', seed: 7, view: boundsView(null) })
+  api.gameAction
+    .mockResolvedValueOnce({ view: boundsView('out_of_bounds') })
+    .mockResolvedValueOnce({ view: boundsView(null) })
   await start()
 
   const row = screen.getByRole('region', { name: 'Play modifiers' })
@@ -223,9 +252,20 @@ it('submits offered OOB and IB declarations through engine action IDs', async ()
   expect(oob).toBeEnabled()
   expect(oob).toHaveAttribute('aria-pressed', 'false')
   expect(screen.queryByTestId('game-play-bounds:oob')).toBeNull()
+  expect(screen.getByRole('group', { name: 'Next-play result instruction' })).toContainElement(oob)
+  expect(screen.getByTestId('bounds-actions')).toHaveClass('grid', 'grid-cols-2')
+  expect(oob).toHaveClass('px-2', 'py-1', 'text-xs')
+  expect(ib).toHaveClass('px-2', 'py-1', 'text-xs')
 
   fireEvent.click(oob)
   await waitFor(() => expect(api.gameAction).toHaveBeenCalledWith('game', 'bounds:oob'))
+  const selectedOob = screen.getByTestId('bounds-out_of_bounds')
+  expect(selectedOob).toHaveAttribute('aria-pressed', 'true')
+  expect(screen.getByTestId('bounds-status')).toHaveTextContent('Out of bounds selected')
+  fireEvent.click(selectedOob)
+  await waitFor(() => expect(api.gameAction).toHaveBeenLastCalledWith('game', 'bounds:oob'))
+  expect(screen.getByTestId('bounds-out_of_bounds')).toHaveAttribute('aria-pressed', 'false')
+  expect(screen.getByTestId('bounds-status')).toHaveTextContent('No bounds instruction selected')
   expect(api.snap).not.toHaveBeenCalled()
 })
 

@@ -21,6 +21,7 @@ from tests.synthetic_teams import metadata, team_chart, write_team, yards
 def new_game(
     *,
     start_yards_to_goal: int = 65,
+    advanced_ii: bool = True,
     home_privileges: tuple[str, ...] = (),
     away_privileges: tuple[str, ...] = (),
     rolls: tuple[OffensiveRoll | DefensiveRoll, ...] = (),
@@ -35,6 +36,7 @@ def new_game(
         seed=17,
         mode="drive",
         start_yards_to_goal=start_yards_to_goal,
+        advanced_ii=advanced_ii,
         home_privileges=home_privileges,
         away_privileges=away_privileges,
         dice=ScriptedDice(rolls),
@@ -105,6 +107,7 @@ def test_correct_option_wild_card_stops_after_the_branch_roll(
         away_id="2026/beta-state",
         seed=17,
         mode="drive",
+        advanced_ii=True,
         dice=ScriptedDice((OffensiveRoll(1, 0, 0),)),
     )
     report = game.snap("5", call)
@@ -126,6 +129,7 @@ def test_incorrect_option_wild_card_rerolls_against_blank_and_applies_conditiona
         away_id="2026/beta-state",
         seed=17,
         mode="drive",
+        advanced_ii=True,
         dice=ScriptedDice((OffensiveRoll(1, 0, 0), OffensiveRoll(1, 0, 0))),
     )
     report = game.snap("5", "WC5SOP")
@@ -173,6 +177,7 @@ def test_wrong_numbered_wild_cards_do_not_stop_any_option_branch(
         away_id="2026/beta-state",
         seed=17,
         mode="drive",
+        advanced_ii=True,
         away_privileges=away_privileges,
         dice=ScriptedDice(rolls),
     )
@@ -264,6 +269,7 @@ def test_conditional_guess_never_doubles_negative_yardage() -> None:
         away_id="2026/beta-state",
         seed=17,
         mode="drive",
+        advanced_ii=True,
         dice=ScriptedDice((OffensiveRoll(1, 0, 0), DefensiveRoll(2, 0))),
     )
     assert game.snap("1", "PASS").yards == -3
@@ -323,6 +329,7 @@ def test_advanced_defenses_follow_the_option_branch_before_resolving(
         away_id="2026/beta-state",
         seed=17,
         mode="drive",
+        advanced_ii=True,
         dice=ScriptedDice(
             (
                 OffensiveRoll(1, 0, 0),
@@ -362,6 +369,7 @@ def test_qr_and_qt_classify_conditional_guesses_without_changing_fixed_tables(
             away_id="2026/beta-state",
             seed=17,
             mode="drive",
+            advanced_ii=True,
             dice=ScriptedDice(
                 (
                     OffensiveRoll(1, 0, 0),
@@ -445,6 +453,7 @@ def test_penalty_reroll_reclassifies_conditional_advanced_defense(
         away_id="2026/beta-state",
         seed=17,
         mode="drive",
+        advanced_ii=True,
         away_privileges=away_privileges,
         dice=ScriptedDice(rolls),
     )
@@ -482,6 +491,7 @@ def test_nickel_zone_uses_its_printed_play_range_for_qr_outcomes() -> None:
         away_id="2026/beta-state",
         seed=17,
         mode="drive",
+        advanced_ii=True,
         dice=ScriptedDice((OffensiveRoll(1, 0, 0), DefensiveRoll(1, 0), OffensiveRoll(1, 0, 0))),
     )
     report = game.snap("1", "NICKEL")
@@ -496,7 +506,7 @@ def test_red_zone_defense_uses_blank_result_without_a_defensive_roll() -> None:
     assert [entry.section for entry in report.trace] == ["offense"]
 
 
-def test_w_coded_privilege_is_verified_and_replayed_from_team_metadata() -> None:
+def test_w_coded_marker_is_verified_but_deferred_on_normal_save_load() -> None:
     game = new_game(away_privileges=("W",), rolls=(OffensiveRoll(1, 0, 0),))
     game.snap("1", "WC2")
     snapshot = dumps_game(game)
@@ -508,13 +518,14 @@ def test_w_coded_privilege_is_verified_and_replayed_from_team_metadata() -> None
         return chart, metadata_with_markers(markers)
 
     restored = loads_game(snapshot, load)
-    assert restored.view() == game.view()
+    assert restored.view().log == game.view().log
+    assert not any(action.key.startswith("WC") for action in restored.view().actions.defense)
 
     with pytest.raises(SaveFormatError):
         loads_game(snapshot, lambda key: {"2026/alpha-tech": home, "2026/beta-state": away}[key])
 
 
-def test_api_loads_w_code_and_restores_it_from_saved_team_metadata(tmp_path) -> None:
+def test_api_keeps_w_code_as_metadata_without_enabling_wild_card(tmp_path) -> None:
     from fastapi.testclient import TestClient
 
     from backend.app import create_app
@@ -533,14 +544,13 @@ def test_api_loads_w_code_and_restores_it_from_saved_team_metadata(tmp_path) -> 
     )
     assert created.status_code == 200
     actions = created.json()["view"]["actions"]["defense"]
-    assert next(action for action in actions if action["key"] == "WC1")["label"].startswith("Free")
+    assert not any(action["key"].startswith("WC") for action in actions)
 
     save = client.get(f"/api/games/{created.json()['game_id']}/save")
     restored = client.post("/api/games/load", content=save.content)
     assert restored.status_code == 200
     restored_actions = restored.json()["view"]["actions"]["defense"]
-    wc1 = next(action for action in restored_actions if action["key"] == "WC1")
-    assert wc1["label"].startswith("Free")
+    assert not any(action["key"].startswith("WC") for action in restored_actions)
 
 
 def test_human_advanced_defense_does_not_break_computer_call_history() -> None:
@@ -555,6 +565,7 @@ def test_human_advanced_defense_does_not_break_computer_call_history() -> None:
         coach_seed=31,
         coach_policy="hard-v8",
         mode="drive",
+        advanced_ii=True,
     )
 
     report, _, _, _ = game._coach_step_with_choice("away", "WC1")

@@ -5,8 +5,8 @@ export default function PlaySelector({ title, actions, selected, onSelect, disab
 
   return (
     <div className="board-panel p-2" data-testid={`${prefix}-plays`}>
-      <div className="text-center text-xs font-bold text-panel-border mb-1">{title}</div>
-      <div className="grid grid-cols-3 gap-1">
+      <div className="mb-1 bg-panel-bg py-1 text-center text-xs font-bold text-panel-border">{title}</div>
+      <div className="grid grid-cols-3 gap-1 lg:grid-cols-4" data-testid={`${prefix}-play-grid`}>
         {actions.map((action) => (
           <button
             key={action.key}
@@ -16,11 +16,11 @@ export default function PlaySelector({ title, actions, selected, onSelect, disab
             aria-label={action.shortLabel ? `${action.displayKey || action.key}: ${action.label}` : undefined}
             onClick={() => onSelect(action.key)}
             aria-pressed={selected === action.key}
-            className={`play-button flex flex-col items-center py-1 ${selected === action.key ? 'play-button-selected' : ''} ${disabled ? 'cursor-not-allowed' : ''}`}
+            className={`play-button flex flex-col items-center px-2 py-0.5 ${selected === action.key ? 'play-button-selected' : ''} ${disabled ? 'cursor-not-allowed' : ''}`}
             data-testid={`${action.prefix || prefix}-play-${action.key.toLowerCase()}`}
           >
-            <span className="font-bold">{action.displayKey || action.key}</span>
-            <span className="text-[10px]">{action.shortLabel || action.label}</span>
+            <span className="text-sm font-bold">{action.displayKey || action.key}</span>
+            <span className="text-[9px] leading-tight">{action.shortLabel || action.label}</span>
           </button>
         ))}
       </div>

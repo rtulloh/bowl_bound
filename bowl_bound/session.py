@@ -251,12 +251,16 @@ class PlayReport:
 
 @dataclass(frozen=True)
 class PenaltyChoice:
-    """One engine-provided choice for a pending penalty or turnover decision."""
+    """One engine-provided legal choice and optional presentation facts."""
 
     id: str
     label: str
     enabled: bool
     reason: str | None = None
+    presentation: str | None = None
+    presentation_row: str | None = None
+    presentation_column: str | None = None
+    presentation_value: str | None = None
 
 
 @dataclass(frozen=True)
@@ -903,8 +907,12 @@ class PlaySession:
             choices = tuple(
                 PenaltyChoice(
                     f"razzle:{selected_play.value}:{total}",
-                    f"Play {selected_play.value}, total {total}: {format_cell(cell)}",
+                    f"Play {selected_play.value}, total {total}: {format_cell(cell) or '0'}",
                     True,
+                    presentation="razzle_dazzle",
+                    presentation_row=f"Play {selected_play.value}",
+                    presentation_column=f"Total {total}",
+                    presentation_value=format_cell(cell) or "0",
                 )
                 for selected_play, total, cell in options
             )

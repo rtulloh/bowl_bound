@@ -72,9 +72,10 @@ In compact mode, ordinary scrimmage turns show only a shortcut summary:
 ```
 
 The keys are filtered to current legal controls; this example is not a universal
-menu. Defensive turns show `DEF: A-F,+Advanced II` when the advanced calls are
-enabled. Only your team's controls appear. Required choices remain labeled so they
-are actionable without another help command.
+menu. Defensive turns currently show the six standard formations (`DEF: A-F`).
+Deferred Advanced II and Wild Card calls are not offered. Only your team's controls
+appear. Required choices remain labeled so they are actionable without another help
+command.
 
 `?` expands a titled, aligned menu: **Running / Option Plays**, **Passing Plays**,
 **Situational Plays**, **Special Plays**, **Special Teams**, and **Options**, omitting
@@ -96,10 +97,9 @@ Without `--compact`, the expanded menu is shown at each turn.
 | `7` | Sprint Out |
 | `8` | Boot-leg |
 | `9` | Drop Back |
-| `Q` | QB Sneak (Play 1 box color only; an offered Wild Card may defend it) |
+| `Q` | QB Sneak (Play 1 box color only) |
 | `RZDZ` | Razzle-Dazzle; the lower of two offensive rolls determines who chooses an offensive chart result, offense wins ties |
 | `A`–`F` | Engine-labeled chart defense (including `F` Blitz when defending) |
-| `WC1`–`WC9`, `WCSNEAK`, `WCRZDZ`, `RUN`, `PASS`, `NICKEL`, `REDZONE` | Advanced II calls when offered; Wild Card labels identify the exact guess |
 | `P`, `F` | Punt or field goal when choosing an offensive special play |
 | `K` | Kick off, elect to kick, or kneel—whichever the current menu offers |
 | `H` | Hail Mary when the engine offers it |
@@ -116,9 +116,11 @@ outcome**: select the displayed chart result most favorable to your side. The
 engine applies the selected result and all ordinary follow-up rules.
 
 During required decisions, numbers select the displayed choices, not scrimmage
-plays. During optional clock modifiers, `1`–`9` remain offensive calls. Disabled
-choices have no shortcut. Enter submits a **displayed default** in human/computer
-mode (see below); otherwise it does nothing.
+plays. Only enabled choices are displayed and numbered consecutively. During optional
+clock modifiers, `1`–`9` remain offensive calls. Enter submits a **displayed
+default** in human/computer mode (see below); otherwise it does nothing.
+When a decision has both a number and mnemonic alias, the number is shown first
+for an aligned, easy-to-scan choice column.
 Append `T` to an offensive or defensive call (for example, `7T` or `AT`) to use
 your timeout after that play when the engine offers it. The call still applies if
 the timeout is unavailable; the terminal reports that no timeout was used. An `O`

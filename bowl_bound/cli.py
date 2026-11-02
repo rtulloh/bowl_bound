@@ -227,14 +227,16 @@ class TerminalGame:
                 bindings.setdefault(key, ("action", action.key))
         pending = turn.pending
         if pending:
-            for index, choice in enumerate(pending.choices, 1):
+            choice_index = 0
+            for choice in pending.choices:
                 if not choice.enabled:
                     continue
+                choice_index += 1
                 target = ("choose", choice.id)
                 if key := _CHOICE_KEYS.get(choice.id.rsplit(":", 1)[-1]):
                     bindings.setdefault(key, target)
                 if not getattr(view, "clock_optional", False):
-                    bindings.setdefault(str(index), target)
+                    bindings.setdefault(str(choice_index), target)
         action_id = f"timeout:{self.human_side}"
         if any(action.key == action_id for action in game_actions):
             bindings.setdefault("T", ("action", action_id))
@@ -289,9 +291,10 @@ class TerminalGame:
         bindings = self._shortcuts(view, turn)
 
         def label(verb: str, key: str, text: str) -> str:
-            shortcuts = " ".join(
-                f"[{alias}]" for alias, target in bindings.items() if target == (verb, key)
-            )
+            aliases = [alias for alias, target in bindings.items() if target == (verb, key)]
+            if verb == "choose":
+                aliases.sort(key=lambda alias: (not alias.isdigit(), alias))
+            shortcuts = " ".join(f"[{alias}]" for alias in aliases)
             command = f" ({verb} {key})" if verb == "choose" or not shortcuts else ""
             return f"{shortcuts} {text}{command}".lstrip()
 
@@ -373,16 +376,16 @@ class TerminalGame:
                 else f"{pending.chooser} chooses:"
             )
             for choice in pending.choices:
-                unavailable = "" if choice.enabled else f" [unavailable: {choice.reason}]"
-                self._print("    " + label("choose", choice.id, choice.label) + unavailable)
+                if choice.enabled:
+                    self._print("    " + label("choose", choice.id, choice.label))
         self._print("\n  OPTIONS:")
         for action in game_actions:
             if action.key.startswith("timeout:"):
                 self._print("    " + label("action", action.key, action.label))
         if pending and optional_clock:
             for choice in pending.choices:
-                unavailable = "" if choice.enabled else f" [unavailable: {choice.reason}]"
-                self._print("    " + label("choose", choice.id, choice.label) + unavailable)
+                if choice.enabled:
+                    self._print("    " + label("choose", choice.id, choice.label))
         clock = getattr(view, "clock", None)
         timeout_index = 0 if self.human_side == "home" else 1
         if (

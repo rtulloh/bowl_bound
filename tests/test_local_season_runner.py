@@ -8,7 +8,6 @@ import pytest
 
 from bowl_bound.cli import TeamEntry
 from bowl_bound.coaching import BaselineCoach, CoachObservation
-from bowl_bound.dice import OffensiveRoll, ScriptedDice
 from bowl_bound.session import ScoreView
 from bowl_bound.statistics import PlayStatistics, summarize
 from scripts.run_local_season import (
@@ -119,6 +118,39 @@ def finished_view() -> SimpleNamespace:
 
 def test_game_audit_accepts_complete_engine_log_with_reconciled_score() -> None:
     validate_game(finished_view(), ((3, 0), (0, 0), (0, 0), (0, 0)))
+
+
+def test_game_audit_accepts_the_engine_halftime_kickoff_reset() -> None:
+    view = finished_view()
+    halftime_state = SimpleNamespace(
+        **(
+            vars(view.log[0].state_before)
+            | {
+                "possession": "away",
+                "possession_name": "Away",
+                "yards_to_goal": 70,
+                "spot": "own 30",
+                "ball_from_left": 30,
+                "first_down_from_left": 40,
+            }
+        )
+    )
+    view.log = (
+        view.log[0],
+        SimpleNamespace(
+            number=2,
+            supported=True,
+            pending=False,
+            trace=(),
+            statistics=PlayStatistics(),
+            state_before=halftime_state,
+            state_after=halftime_state,
+            called_play="Kickoff",
+        ),
+    )
+    view.statistics = summarize((PlayStatistics(), PlayStatistics()))
+
+    validate_game(view, ((3, 0), (0, 0), (0, 0), (0, 0)))
 
 
 def test_scoring_after_a_quarter_boundary_is_credited_to_the_new_quarter() -> None:
@@ -264,12 +296,12 @@ def test_simulator_uses_engine_and_records_calls_and_full_trace() -> None:
     assert result["configuration"] == {
         "engine_coach_policy": "baseline",
         "simulation_coach_policy": "baseline",
-        "advanced_ii": True,
+        "advanced_ii": False,
         "defense_chart_markers": {"home": [], "away": []},
     }
 
 
-def test_audit_game_preserves_w_marker_and_free_wild_card_yardage() -> None:
+def test_audit_game_preserves_w_marker_without_enabling_wild_card() -> None:
     away_id, home_id = "2007/synthetic-away", "2007/synthetic-home"
     spec = GameSpec(1, 2007, away_id, home_id, 31415)
     teams = {
@@ -283,10 +315,7 @@ def test_audit_game_preserves_w_marker_and_free_wild_card_yardage() -> None:
     game = _new_audit_game(spec, teams)
     session = game._engine._session
 
-    wild_card = next(action for action in session.view().actions.defense if action.key == "WC2")
-    assert wild_card.free_advanced
-    report = session.snap("1", "WC2", dice=ScriptedDice((OffensiveRoll(1, 0, 0),)))
-    assert report.yards == 4
+    assert not any(action.key.startswith("WC") for action in session.view().actions.defense)
 
 
 def fourth_down_observation() -> CoachObservation:

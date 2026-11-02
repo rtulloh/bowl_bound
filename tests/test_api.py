@@ -92,25 +92,7 @@ def test_new_game_returns_engine_state_and_labels(client: TestClient) -> None:
         "label": "QB Sneak",
         "free_advanced": False,
     }
-    assert [a["key"] for a in view["actions"]["defense"]] == [
-        *"ABCDEF",
-        "WCSNEAK",
-        "WCRZDZ",
-        "WC1",
-        "WC2",
-        "WC3",
-        "WC4",
-        "WC5",
-        "WC5SOP",
-        "WC5BLP",
-        "WC6",
-        "WC7",
-        "WC8",
-        "WC9",
-        "RUN",
-        "PASS",
-        "NICKEL",
-    ]
+    assert [a["key"] for a in view["actions"]["defense"]] == [*"ABCDEF"]
     assert view["log"] == []
 
 
@@ -178,16 +160,13 @@ def test_qb_sneak_is_exposed_and_traced_through_the_api(client: TestClient) -> N
     assert response.json()["view"]["log"][-1]["defense"] == "No change"
 
 
-def test_api_accepts_the_mismatched_sneak_wild_card_guess(client: TestClient) -> None:
+def test_api_rejects_deferred_sneak_wild_card_guess(client: TestClient) -> None:
     game = start(client)
     response = client.post(
         f"/api/games/{game['game_id']}/snap", json={"play": "1", "defense": "WCSNEAK"}
     )
 
-    assert response.status_code == 200, response.text
-    report = response.json()["report"]
-    assert report["supported"] and report["yards"] == 8
-    assert [entry["section"] for entry in report["trace"]] == ["offense"]
+    assert response.status_code == 422
 
 
 def test_get_game_returns_the_current_view(client: TestClient) -> None:

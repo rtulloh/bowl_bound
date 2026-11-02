@@ -46,6 +46,21 @@ Bowl Bound baseline/chart profiles remain available only for development audits.
 
 ## Ticket work
 
+### AI-027 / AI-030 / UI-041 / AI-031 follow-up — 2026-11-01
+
+Reviewed `/Users/rtulloh/work/paydirt/paydirt/computer_ai.py:311-465` and
+`paydirt/season_rules.py:46, 115, 161-239, 308-309`. Paydirt uses explicit
+1983 NFL field-goal-distance bands and optional short-drop/coffin-corner punts;
+its season-level fourth-down-aggression setting is not consumed by that decision
+method. Bowl Bound does not reuse its implementation, NFL rates, random punt
+choices, or season settings. The temporary chart-derived threshold was superseded
+by the owner's direction to use a shared, visible distance/yards-to-go/difficulty
+policy: no kick-chart calculation may decide whether the AI attempts a field goal.
+The engine still resolves an attempted kick from its chart. Coffin-corner-aware
+comparisons are deferred to AI-030. AI-031 tracks a future public season/team
+attempt-distance setting; UI-041 tracks player-guidance parity for any future
+coaching aid.
+
 ### RULE-033 — 2026-11-01
 
 - Synthetic tests first reproduced wrong numbered Wild Cards stopping Option runs.
@@ -216,3 +231,22 @@ closed until owner play-testing confirms the observed gameplay/UI behavior.
 
 No private charts, PDFs, historical rosters, saves, or local audit logs were
 added to the repository.
+
+### UI follow-up — 2026-11-02
+
+- Consulted local Paydirt `paydirt-web/frontend/src/components/Game/PlayingPhase.jsx`
+  before revising Bowl Bound's live-game layout. Its useful presentation pattern is
+  a bounded information/result area followed by a desktop two-column workspace:
+  play selection on the left, modifiers and recent history on the right.
+- Adapted only that browser-layout pattern. Bowl Bound retains its own engine-owned
+  result, dice traces, legal actions, and responsive single-column fallback; no
+  Paydirt gameplay code, rules, data, or runtime dependency was reused.
+
+### Timeout modifier follow-up — 2026-11-02
+
+- Consulted local Paydirt `paydirt-web/backend/routes.py` before planning
+  RULE-042. Its useful pattern is a player-selected defensive timeout flag that
+  is carried into the next play and then charged as that play's short timing.
+- Bowl Bound will adapt the interaction only through an explicit engine-owned
+  action and timing state. Its rules, API, save format, and frontend remain
+  independent; no Paydirt code, data, or runtime dependency will be reused.

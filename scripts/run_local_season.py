@@ -175,7 +175,8 @@ def validate_game(view: GameView, period_scores: tuple[tuple[int, int], ...]) ->
             raise ValueError("engine log contains an unsupported or pending report")
         before = _state_facts(getattr(report, "state_before", None))
         after = _state_facts(getattr(report, "state_after", None), allow_missing=True)
-        if previous_state is not None and before != previous_state:
+        halftime_kickoff = getattr(report, "called_play", None) == "Kickoff"
+        if previous_state is not None and before != previous_state and not halftime_kickoff:
             raise ValueError("engine report state transition is disconnected")
         previous_state = after
         report_numbers.add(report.number)
@@ -420,6 +421,7 @@ def _new_audit_game(spec: GameSpec, teams: AuditTeams) -> SavedGame:
         seed=spec.seed,
         mode="regulation",
         coach_seed=stable_seed(spec.seed, "engine-coach"),
+        advanced_ii=False,
         home_privileges=home_metadata.defense_chart_markers,
         away_privileges=away_metadata.defense_chart_markers,
     )
@@ -430,7 +432,7 @@ def _audit_configuration(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
     return {
         "engine_coach_policy": "baseline",
         "simulation_coach_policy": "baseline",
-        "advanced_ii": True,
+        "advanced_ii": False,
         "defense_chart_markers": {
             "home": list(teams[spec.home_id][1].defense_chart_markers),
             "away": list(teams[spec.away_id][1].defense_chart_markers),

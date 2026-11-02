@@ -189,6 +189,13 @@ class DifficultyCoach(ChartAwareCoach):
         ]
         return self._random(obs, "offense").choices(obs.offense, weights=weights, k=1)[0]
 
+    @staticmethod
+    def _situational_offense(observation: CoachObservation) -> CoachObservation:
+        """Remove short-yardage-only calls before a coaching tier evaluates them."""
+        if "Q" not in observation.offense or observation.distance <= 2:
+            return observation
+        return replace(observation, offense=tuple(key for key in observation.offense if key != "Q"))
+
     def _situational_pressure(self, observation: CoachObservation) -> float:
         """Return signed, bounded score pressure; positive protects a lead."""
         if (
@@ -204,8 +211,63 @@ class DifficultyCoach(ChartAwareCoach):
         pressure = 1 - exp(-scores_needed / minutes_left)
         return pressure if observation.score_difference > 0 else -pressure
 
+    @staticmethod
+    def _public_field_goal_distance(observation: CoachObservation) -> int:
+        """Return the conventional attempt distance visible from the line of scrimmage."""
+        return observation.yards_to_goal + 17
+
+    def _public_fourth_down_call(self, observation: CoachObservation) -> str | None:
+        """Choose a kick, punt, or go decision without inspecting team chart data.
+
+        Version 10's fourth-down policy is deliberately shared with a human
+        player: line of scrimmage, yards to gain, clock, score, and difficulty
+        aggression are its only inputs. The engine still resolves any selected
+        kick from its chart.
+        """
+        if (
+            self.version < 10
+            or observation.overtime
+            or observation.phase == SessionPhase.TWO_POINT_TRY.value
+            or observation.down != 4
+        ):
+            return None
+
+        field_goal_available = "field_goal" in observation.special
+        punt_available = "punt" in observation.special
+        field_goal_distance = self._public_field_goal_distance(observation)
+        late_trailing = (
+            observation.quarter == 4
+            and observation.remaining <= self.behavior.chase_seconds
+            and observation.score_difference < 0
+        )
+        if late_trailing:
+            if (
+                observation.score_difference >= -3
+                and field_goal_available
+                and field_goal_distance <= 55
+            ):
+                return "field_goal"
+            return "go"
+
+        if field_goal_available and field_goal_distance <= 35:
+            return "field_goal"
+        if field_goal_available and field_goal_distance <= 47:
+            if observation.distance == 1 and self.aggression >= 0.5:
+                return "go"
+            return "field_goal"
+        if field_goal_available and field_goal_distance <= 50:
+            return "field_goal"
+        if field_goal_available and field_goal_distance <= 55:
+            if self.aggression >= 0.5:
+                return "field_goal"
+            return "punt" if punt_available else "go"
+        if observation.distance == 1 and self.aggression >= 0.5:
+            return "go"
+        return "punt" if punt_available else "go"
+
     def offense(self, observation: CoachObservation) -> str:
         self.analysis_fallback = False
+        observation = self._situational_offense(observation)
         last_snap = (
             self.version >= 3
             and not observation.overtime
@@ -213,7 +275,7 @@ class DifficultyCoach(ChartAwareCoach):
             and 0 < observation.remaining <= 20
             and observation.score_difference in {-2, -1}
         )
-        if last_snap and "field_goal" in observation.special:
+        if last_snap and self.version < 10 and "field_goal" in observation.special:
             field_goal = next(
                 (
                     estimate
@@ -225,6 +287,13 @@ class DifficultyCoach(ChartAwareCoach):
             if field_goal is not None and field_goal.complete and field_goal.mean_points == 3:
                 return "field_goal"
         if (
+            last_snap
+            and self.version >= 10
+            and "field_goal" in observation.special
+            and self._public_field_goal_distance(observation) <= 55
+        ):
+            return "field_goal"
+        if (
             self.version >= 3
             and not observation.overtime
             and observation.quarter in {2, 4}
@@ -233,28 +302,11 @@ class DifficultyCoach(ChartAwareCoach):
             and "hail_mary" in observation.game_actions
         ):
             return "hail_mary"
-        if (
-            self.version >= 10
-            and not observation.overtime
-            and observation.quarter in {1, 2, 3}
-            and observation.score_difference >= 0
-            and observation.down == 4
-            and observation.distance > self.behavior.punt_distance
-        ):
-            # Use the actual team charts to compare every legal scrimmage and
-            # special-teams action. A legal field goal is not automatically a
-            # sensible one: its chart range, miss location, punt result, and
-            # fourth-down alternative all belong in the engine evaluation.
-            # Razzle-Dazzle leaves a defender-owned result choice pending. Do
-            # not score it as an offensive fourth-down candidate until its
-            # adversarial value is modeled explicitly.
-            conservative = replace(observation, offense=(), game_actions=())
-            estimates = self.estimates(conservative, "offense")
-            if estimates and all(
-                estimate.complete and estimate.mean_utility is not None for estimate in estimates
-            ):
-                best = max(estimates, key=lambda estimate: estimate.mean_utility or float("-inf"))
-                return best.key
+        public_fourth_down_call = self._public_fourth_down_call(observation)
+        if public_fourth_down_call in {"field_goal", "punt"}:
+            return public_fourth_down_call
+        if public_fourth_down_call == "go":
+            return self._basic_offense(observation)
         fallback = self._basic_offense(observation)
         if observation.phase == SessionPhase.TWO_POINT_TRY.value and (
             observation.down != 1 or observation.yards_to_goal != 2 or observation.distance != 2

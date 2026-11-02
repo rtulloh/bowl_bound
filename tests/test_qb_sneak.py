@@ -276,7 +276,7 @@ def test_qb_sneak_save_replays_and_keeps_future_coached_calls_stable() -> None:
     text = dumps_game(game)
     charts = {"2026/alpha-tech": home, "2026/beta-state": away}
 
-    restored = loads_game(text, charts.__getitem__)
+    restored = loads_game(text, charts.__getitem__, preserve_development_policy=True)
 
     assert restored.view() == game.view()
     assert restored.snap("2", "A") == game.snap("2", "A")

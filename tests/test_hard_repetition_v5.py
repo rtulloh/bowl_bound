@@ -162,11 +162,16 @@ def test_v5_save_replay_reconstructs_situational_history_and_future_calls() -> N
         seed=7,
         coach_seed=31,
         coach_policy="hard-v5",
+        advanced_ii=False,
     )
     for _ in range(4):
         game.snap("1", "A")
 
-    restored = loads_game(dumps_game(game), lambda key: home if key.endswith("home") else away)
+    restored = loads_game(
+        dumps_game(game),
+        lambda key: home if key.endswith("home") else away,
+        preserve_development_policy=True,
+    )
 
     assert restored._coach._situational_recent == game._coach._situational_recent
     current = observation(special=(), game_actions=())

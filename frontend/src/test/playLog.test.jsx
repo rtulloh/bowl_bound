@@ -59,3 +59,17 @@ it('does not invent a compact dice line when no rolls were recorded', () => {
   render(<PlayLog entries={[report({ trace: [] })]} />)
   expect(screen.queryByLabelText('Recorded dice')).toBeNull()
 })
+
+it('can collapse the history and follows the newest recorded play while expanded', () => {
+  const { rerender } = render(<PlayLog entries={[report({ number: 1 })]} />)
+  const history = screen.getByTestId('play-history')
+  const log = screen.getByTestId('play-log')
+  Object.defineProperty(log, 'scrollHeight', { configurable: true, value: 240 })
+
+  expect(history.open).toBe(true)
+  rerender(<PlayLog entries={[report({ number: 1 }), report({ number: 2, description: 'newest play' })]} />)
+  expect(log.scrollTop).toBe(240)
+
+  fireEvent.click(screen.getByText('Play history'))
+  expect(history.open).toBe(false)
+})

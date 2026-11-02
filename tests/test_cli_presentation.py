@@ -257,9 +257,7 @@ def test_required_and_clock_decision_instructions_remain_visible() -> None:
     assert saved_facts(app.game) == before
 
 
-@pytest.mark.parametrize(
-    "human,summary", [("home", "OFF: 1-9,Q,RZDZ"), ("away", "DEF: A-F,+Advanced II")]
-)
+@pytest.mark.parametrize("human,summary", [("home", "OFF: 1-9,Q,RZDZ"), ("away", "DEF: A-F")])
 def test_compact_only_lists_shortcut_keys_until_help(human: str, summary: str) -> None:
     app = terminal(new_game(), human, compact=True)
     before = saved_facts(app.game)
@@ -289,7 +287,8 @@ def test_compact_solitaire_never_offers_both_sets_of_calls(human: str) -> None:
     app.display()
     output = app.output.getvalue()
     assert ("OFF: 1-9" in output) == (human == "home")
-    assert ("DEF: A-F,+Advanced II" in output) == (human == "away")
+    assert ("DEF: A-F" in output) == (human == "away")
+    assert "+Advanced II" not in output
     assert "1 A" not in output and "Default=" in output
     assert "[1] Line Plunge" not in output
     assert not app.command("?")
@@ -359,7 +358,7 @@ def test_help_uses_engine_play_label_without_cli_description(
     assert "Inside running play" not in output
 
 
-def test_disabled_engine_choice_keeps_its_reason_in_the_terminal() -> None:
+def test_disabled_engine_choice_is_not_shown_in_the_terminal() -> None:
     app = terminal(new_game(), "home")
     view, turn = app.public_view()
     reason = "This overtime round requires a two-point try."
@@ -380,7 +379,67 @@ def test_disabled_engine_choice_keeps_its_reason_in_the_terminal() -> None:
 
     app._controls(view, decision_turn, compact=False)
 
-    assert f"[unavailable: {reason}]" in app.output.getvalue()
+    output = app.output.getvalue()
+    assert "[1] Two-point try" in output
+    assert "Field goal" not in output
+    assert reason not in output
+
+
+def test_disabled_penalty_choice_is_hidden_and_keeps_numeric_shortcuts_consecutive() -> None:
+    """Only legal terminal choices appear or receive numeric shortcuts."""
+    app = terminal(new_game(), "home")
+    view, turn = app.public_view()
+    reason = "end-of-gain enforcement is unavailable for this result"
+    pending = PendingDecisionView(
+        "Home",
+        (
+            PenaltyChoice("accept:0:previous", "Accept from previous spot", True),
+            PenaltyChoice("accept:0:end", "Accept from end of gain", False, reason),
+            PenaltyChoice("decline", "Decline penalties", True),
+        ),
+        chooser_side="home",
+    )
+    decision_turn = replace(
+        turn,
+        human_role="decision",
+        actions=Actions((), (), ()),
+        pending=pending,
+    )
+
+    app._controls(view, decision_turn, compact=False)
+
+    output = app.output.getvalue()
+    assert "[1] Accept from previous spot" in output
+    assert "Accept from end of gain" not in output
+    assert reason not in output
+    assert "[2] Decline penalties" in output
+    assert "[3] Decline penalties" not in output
+    assert app._shortcuts(view, decision_turn)["2"] == ("choose", "decline")
+
+
+def test_decision_menu_places_numeric_shortcuts_before_variable_width_mnemonics() -> None:
+    app = terminal(new_game(), "home")
+    view, turn = app.public_view()
+    pending = PendingDecisionView(
+        "Home",
+        (
+            PenaltyChoice("kick:fair_catch", "Fair catch the punt", True),
+            PenaltyChoice("kick:return", "Return the punt", True),
+        ),
+        chooser_side="home",
+    )
+    decision_turn = replace(
+        turn,
+        human_role="decision",
+        actions=Actions((), (), ()),
+        pending=pending,
+    )
+
+    app._controls(view, decision_turn, compact=False)
+
+    output = app.output.getvalue()
+    assert "[1] [FC] Fair catch the punt" in output
+    assert "[2] [R] Return the punt" in output
 
 
 def test_commands_reference_is_separate_read_only_and_retains_full_syntax() -> None:

@@ -36,7 +36,7 @@ def _actors(report: PlayReport) -> tuple[Actor, ...]:
                 and any(s in {"turnover_return", "end_zone_recovery_return"} for s in sections)
                 and report.outcome in {"defensive_recovery", "defensive_touchdown", "safety"}
             ):
-                actors += (("returner", "kr", team.other.value),)
+                actors += (("defender", "db", team.other.value),)
             return actors
         if kind is StatKind.SACK:
             return (("quarterback", "qb", side),)
@@ -109,8 +109,8 @@ def _scrimmage_call(report: PlayReport, names: dict[str, str]) -> str | None:
             ),
             **values,
         )
-        if "returner" in names:
-            text += " " + _call(report, ("{returner} returns the interception!",), **names)
+        if "defender" in names:
+            text += " " + _call(report, ("{defender} returns the interception!",), **names)
         text += {
             "defensive_touchdown": " TOUCHDOWN on the interception return!",
             "touchback": " Touchback.",

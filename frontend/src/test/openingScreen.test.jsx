@@ -55,7 +55,7 @@ it.each(['manual', 'home'])('shows a separate toss screen then enters kickoff af
   expect(kickoffButton).toBeVisible()
   expect(screen.getByTestId('special-play-onside_kickoff')).toBeVisible()
   expect(screen.getByTestId('special-play-onside_kickoff')).toHaveTextContent('OOnside kickoff')
-  expect(kickoffButton.compareDocumentPosition(screen.getByTestId('football-field')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  expect(screen.getByTestId('football-field').compareDocumentPosition(kickoffButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
 })
 it('sends the offered onside kickoff action to the engine', async () => {
   api.decide.mockResolvedValue({ view: kickoff(), turn: turn('offense', { actions: kickoff().actions }) })

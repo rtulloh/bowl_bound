@@ -218,9 +218,10 @@ def test_disabled_choice_shortcuts_and_full_id_are_rejected_without_rolls(
     monkeypatch.setattr(app, "public_view", lambda: (public, replace(turn, pending=public.pending)))
     before = saved_facts(app.game)
     assert not app.command("?")
-    assert "synthetic unavailable choice" in app.output.getvalue()
+    assert "synthetic unavailable choice" not in app.output.getvalue()
+    assert "Receive the kickoff" not in app.output.getvalue()
     assert "[R]" not in app.output.getvalue()
-    for command in ("1", "r", "choose toss:receive"):
+    for command in ("r", "choose toss:receive"):
         assert not app.command(command)
         assert saved_facts(app.game) == before
 

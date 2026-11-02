@@ -7,6 +7,7 @@ import pytest
 from bowl_bound.dice import DefensiveRoll, OffensiveRoll, ScriptedDice
 from bowl_bound.game_state import FieldState, Possession
 from bowl_bound.models import (
+    NormalizedCell,
     PenaltyCode,
     PenaltyData,
     PenaltyTeam,
@@ -119,6 +120,19 @@ def test_offense_wins_ties_and_can_choose_only_from_the_lower_total() -> None:
     }
 
 
+def test_razzle_dazzle_labels_a_no_change_choice_as_zero_for_players() -> None:
+    home, away = _playtest_charts()
+    home = _set_cell(home, Play.TWO, 15, NormalizedCell(ResultKind.NO_CHANGE, provenance()))
+    session = PlaySession.new(home, away, seed=1)
+
+    session.snap("RZDZ", "A", dice=ScriptedDice([TIED, TIED]))
+
+    decision = session.view().pending
+    assert decision is not None
+    choice = next(item for item in decision.choices if item.id == "razzle:2:15")
+    assert choice.label == "Play 2, total 15: 0"
+
+
 def test_exact_razzle_wild_card_ends_incomplete_without_any_dice() -> None:
     home, away = _playtest_charts()
     session = PlaySession.new(home, away, seed=1, advanced_ii=True)
@@ -189,7 +203,9 @@ def test_exact_razzle_wild_card_save_replay_preserves_the_incomplete_transition(
     report = game.snap("RZDZ", "WCRZDZ")
     teams = {"2026/alpha-tech": home, "2026/beta-state": away}
 
-    restored = loads_game(dumps_game(game), lambda team_id: teams[team_id])
+    restored = loads_game(
+        dumps_game(game), lambda team_id: teams[team_id], preserve_development_policy=True
+    )
 
     assert report.state_after == game.view().state
     assert restored.view() == game.view()
@@ -387,7 +403,9 @@ def test_save_replay_preserves_an_unresolved_razzle_choice() -> None:
     report = game.snap("RZDZ", "A")
     assert report.pending
     teams = {"2026/alpha-tech": home, "2026/harbor-tech": away}
-    resumed = loads_game(dumps_game(game), lambda team_id: teams[team_id])
+    resumed = loads_game(
+        dumps_game(game), lambda team_id: teams[team_id], preserve_development_policy=True
+    )
 
     assert resumed.view().pending == game.view().pending
     assert resumed.decide("razzle:9:18") == game.decide("razzle:9:18")

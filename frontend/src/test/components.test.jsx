@@ -46,6 +46,7 @@ describe('PlaySelector', () => {
     render(<PlaySelector title="OFFENSE" prefix="offense" actions={actions} selected="" onSelect={() => {}} disabled={false} />)
     expect(screen.getAllByRole('button')).toHaveLength(3)
     expect(screen.getByTestId('offense-play-9')).toHaveTextContent('Drop Back')
+    expect(screen.getByTestId('offense-play-grid')).toHaveClass('grid-cols-3', 'lg:grid-cols-4')
   })
   it('reports the chosen key and marks it selected', () => {
     const onSelect = vi.fn()
@@ -107,6 +108,24 @@ describe('PenaltyChoices', () => {
 
     expect(screen.getByTestId('penalty-choice-decline')).toBeDisabled()
     expect(screen.getByTestId('penalty-choice-decline-reason')).toHaveTextContent('This choice is unavailable')
+  })
+
+  it('groups Razzle-Dazzle choices by play and rolled total', () => {
+    const onChoose = vi.fn()
+    render(<PenaltyChoices pending={{ chooser: 'Alpha Tech', choices: [
+      { id: 'razzle:1:15', label: 'Play 1, total 15: 0', enabled: true, presentation: 'razzle_dazzle', presentation_row: 'Play 1', presentation_column: 'Total 15', presentation_value: '0' },
+      { id: 'razzle:1:18', label: 'Play 1, total 18: 6', enabled: true, presentation: 'razzle_dazzle', presentation_row: 'Play 1', presentation_column: 'Total 18', presentation_value: '6' },
+      { id: 'razzle:2:15', label: 'Play 2, total 15: 3', enabled: true, presentation: 'razzle_dazzle', presentation_row: 'Play 2', presentation_column: 'Total 15', presentation_value: '3' },
+      { id: 'razzle:2:18', label: 'Play 2, total 18: BLACK', enabled: true, presentation: 'razzle_dazzle', presentation_row: 'Play 2', presentation_column: 'Total 18', presentation_value: 'BLACK' },
+    ] }} onChoose={onChoose} />)
+
+    const matrix = screen.getByRole('grid', { name: 'Razzle-Dazzle choices' })
+    expect(matrix).toHaveTextContent('Play 1')
+    expect(matrix).toHaveTextContent('Total 15')
+    expect(matrix).toHaveTextContent('Total 18')
+    const zero = screen.getByRole('button', { name: 'Play 1, total 15: 0' })
+    fireEvent.click(zero)
+    expect(onChoose).toHaveBeenCalledWith('razzle:1:15')
   })
 })
 

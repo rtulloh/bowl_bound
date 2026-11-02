@@ -69,7 +69,7 @@ def test_expected_revision_rejects_repeated_coach_posts(tmp_path: Path) -> None:
 
 @pytest.mark.parametrize(
     ("human_side", "human_call"),
-    [("home", "RZDZ"), ("away", "WCRZDZ")],
+    [("home", "RZDZ")],
 )
 def test_coached_endpoint_accepts_each_offered_razzle_dazzle_call(
     tmp_path: Path, human_side: str, human_call: str

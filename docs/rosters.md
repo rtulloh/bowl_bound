@@ -63,7 +63,7 @@ slug)`, and `player_name(roster, position, index=0)`.
 - A **missing file is not an error**: `load_roster` returns `None`. A file that exists but is
   malformed **is** an error, so a typo is never silently ignored.
 - With no roster, or no names for a position, `player_name` returns generic wording such as
-  `the quarterback` or `the kick returner`.
+  `the quarterback`, `the kick returner`, or `the defensive back`.
 - The `index` wraps around the verified starter list when present, or the full position list
   otherwise. **No randomness is used.** A name is chosen from an explicit index, so it cannot
   consume or reorder the gameplay random stream. A name never changes results, state,
@@ -121,10 +121,11 @@ yardage alone never implies a first down. No tackler, route, broken tackle,
 dropped pass or player statistic is invented.
 
 Committed kick/PAT calls can name the original kicker or punter. An explicit
-completed kickoff/punt/interception return can name the opposite-side
-returner, including a return touchdown; fair catches/touchbacks do not imply
-a return. Kicks retain the engine's complete factual detail after the natural
-call, including recorded distances and final team/spot. These details have no
+completed kickoff or punt return can name the opposite-side kick returner; an
+interception return can name an opposite-side defensive back, including a return
+touchdown. Fair catches/touchbacks do not imply a return. Kicks retain the
+engine's complete factual detail after the natural call, including recorded
+distances and final team/spot. These details have no
 separate structured report fields, so narration preserves the text without
 parsing chart tokens or inferring return distances.
 

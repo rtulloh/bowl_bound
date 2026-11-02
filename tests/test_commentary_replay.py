@@ -48,7 +48,7 @@ def test_hard_history_and_future_commands_are_identical_with_narration(
 ) -> None:
     from bowl_bound.save_game import SavedGame
 
-    _, catalog = setup_game(tmp_path)
+    _, catalog = setup_game(tmp_path, advanced_ii=False)
     game = SavedGame.new(
         catalog.load("2007/home"),
         catalog.load("2007/away"),
@@ -57,6 +57,7 @@ def test_hard_history_and_future_commands_are_identical_with_narration(
         seed=7,
         coach_seed=31,
         coach_policy="hard-v1",
+        advanced_ii=False,
     )
     game.coach_step(human, "1" if human == "home" else "A")
     write_rosters(tmp_path)
@@ -67,7 +68,7 @@ def test_hard_history_and_future_commands_are_identical_with_narration(
         (tmp_path / "2007/away/roster.json").unlink()
     elif rosters == "changed":
         write_rosters(tmp_path, "New Illustrative Runner")
-    resumed = loads_game(text, catalog.load)
+    resumed = loads_game(text, catalog.load, preserve_development_policy=True)
     resumed.load_rosters(tmp_path)
     for _ in range(12):
         view, turn = game.coach_view(human)

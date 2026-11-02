@@ -33,6 +33,25 @@ it.each(['offense', 'defense'])('shows only the human %s and sends only that cal
   await waitFor(() => expect(api.coachStep).toHaveBeenCalledWith('cpu', role === 'offense' ? 'home' : 'away', 0, role === 'offense' ? '1' : 'A'))
   expect(api.snap).not.toHaveBeenCalled()
 })
+it('shows the persistent hurry-up preference only to the human offense', async () => {
+  await start('defense', 'home')
+  expect(screen.queryByRole('checkbox', { name: 'Enable/Disable Hurry-Up' })).toBeNull()
+})
+it('preserves a collapsed play history when the human turn changes from offense to defense', async () => {
+  api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, revision: 0, view: view({ log: [report()] }), turn: turn('offense') })
+  api.coachStep.mockResolvedValue({ revision: 1, view: view({ log: [report(), report({ number: 2, description: 'second play' })] }), turn: turn('defense') })
+  render(<App />)
+  await screen.findByTestId('start-game')
+  fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'home' } })
+  fireEvent.click(screen.getByTestId('start-game'))
+  const history = await screen.findByTestId('play-history')
+  fireEvent.click(screen.getByText('Play history'))
+  expect(history.open).toBe(false)
+
+  fireEvent.click(screen.getByTestId('offense-play-1'))
+  await screen.findByTestId('defense-play-a')
+  expect(screen.getByTestId('play-history').open).toBe(false)
+})
 it('automatically advances serialized computer actions and stops for the human decision', async () => {
   let finish
   api.coachStep.mockImplementationOnce(() => new Promise((resolve) => { finish = resolve }))
@@ -136,6 +155,15 @@ it('keeps the current game intact when loading a coached save fails', async () =
   expect(screen.getByTestId('offense-play-1')).toBeInTheDocument()
   expect(screen.queryByTestId('defense-plays')).toBeNull()
   expect(api.coachStep).not.toHaveBeenCalled()
+})
+
+it('explains a stale game after a local server restart and offers a new game', async () => {
+  api.coachStep.mockRejectedValueOnce(new Error('no such game'))
+  await start('offense')
+  fireEvent.click(await screen.findByTestId('offense-play-1'))
+  expect(await screen.findByRole('alert')).toHaveTextContent('The local server was restarted')
+  fireEvent.click(screen.getByRole('button', { name: 'Start new game' }))
+  expect(screen.getByTestId('team-select')).toBeInTheDocument()
 })
 
 it('does not silently retry a failed computer turn when saving the stopped game', async () => {

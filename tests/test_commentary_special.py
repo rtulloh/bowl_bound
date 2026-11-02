@@ -22,6 +22,7 @@ def names(prefix: str) -> Roster:
                 "k": [prefix + " Boot"],
                 "p": [prefix + " Punt"],
                 "kr": [prefix + " Return"],
+                "db": [prefix + " Defender"],
                 "qb": [prefix + " Quill"],
                 "rb": [prefix + " Runner"],
             }
@@ -112,8 +113,23 @@ def test_completed_interception_return_uses_original_defending_team(side: str) -
     )
     home, away = (names("H"), names("A")) if side == "home" else (names("A"), names("H"))
     text = narrate_report(value, home, away)
-    assert "H Quill" in text and "A Return" in text and "returns the interception" in text
+    assert "H Quill" in text and "A Defender" in text and "returns the interception" in text
+    assert "A Return" not in text
     assert "defender:" not in narrate_report(value, home, away)
+
+
+def test_interception_return_without_a_defender_roster_uses_defensive_back_fallback() -> None:
+    value = replace(
+        report(StatKind.INTERCEPTION),
+        outcome="defensive_recovery",
+        trace=(TraceEntry("turnover_return", "ignored", "", None, {}, ""),),
+    )
+    away_without_defenders = parse_roster(json.dumps({"kr": ["A Return"]}))
+
+    text = narrate_report(value, names("H"), away_without_defenders)
+
+    assert "The defensive back returns the interception" in text
+    assert "kick returner" not in text and "A Return" not in text
 
 
 def test_real_engine_kicks_and_pending_results_preserve_facts() -> None:
@@ -151,7 +167,8 @@ def test_supported_interception_return_stages(section: str, outcome: str) -> Non
     )
     if outcome == "defensive_touchdown":
         value = replace(value, state_after=None)
-    assert "A Return" in narrate_report(value, names("H"), names("A"))
+    text = narrate_report(value, names("H"), names("A"))
+    assert "A Defender" in text and "A Return" not in text
     assert (
         narrate_report(replace(value, pending=True), names("H"))
         == replace(value, pending=True).commentary

@@ -239,7 +239,7 @@ class SavedGame:
         coach_seed: int | None = None,
         coach_policy: str = "baseline",
         difficulty: str | None = None,
-        advanced_ii: bool = True,
+        advanced_ii: bool = False,
         home_privileges: tuple[str, ...] = (),
         away_privileges: tuple[str, ...] = (),
     ) -> "SavedGame":
@@ -424,6 +424,14 @@ class SavedGame:
                 season, slug = self._teams[side]["id"].split("/")
                 loaded.append(load_roster(seasons_root / season, slug))
             self._rosters = (loaded[0], loaded[1])
+
+    def _disable_deferred_advanced_ii(self) -> None:
+        """Retire deferred Advanced II calls after replaying a legacy player save."""
+        self._config["advanced_ii"] = False
+        session = (
+            self._engine._session if isinstance(self._engine, RegulationGame) else self._engine
+        )
+        session._advanced_ii = False
 
     def commentary(self, report: PlayReport) -> str:
         """Render engine-owned narration using this game's private snapshot."""
@@ -976,6 +984,8 @@ def loads_game(
             )
         if data["state_digest"] not in valid_digests:
             _fail()
+        if not preserve_development_policy:
+            game._disable_deferred_advanced_ii()
         tape.replaying = False
         return game
     except SaveFormatError:
@@ -1144,6 +1154,10 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         "can_kneel_out_game",
         "decision_outcomes",
         "free_advanced",
+        "presentation",
+        "presentation_row",
+        "presentation_column",
+        "presentation_value",
     }
     legacy_defenses = {
         f"{defense.value} {label}": f"Formation {defense.value}"

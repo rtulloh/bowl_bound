@@ -15,7 +15,7 @@ from tests.test_commentary_lifecycle import setup_game, write_rosters
 def test_live_log_get_and_reload_serialize_same_engine_narration(
     tmp_path: Path, named: bool
 ) -> None:
-    setup_game(tmp_path)
+    setup_game(tmp_path, advanced_ii=False)
     if named:
         write_rosters(tmp_path)
     client = TestClient(create_app(tmp_path))
@@ -29,7 +29,7 @@ def test_live_log_get_and_reload_serialize_same_engine_narration(
     report = data["report"]
     assert report["commentary"] == data["view"]["log"][-1]["commentary"]
     assert ("H Runner" in report["commentary"]) is named
-    direct, _ = setup_game(tmp_path)
+    direct, _ = setup_game(tmp_path, advanced_ii=False)
     if named:
         direct.load_rosters(tmp_path)
     expected = direct.snap("1", "A")

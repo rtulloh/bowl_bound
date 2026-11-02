@@ -46,7 +46,8 @@ and HM/Hail Mary. The
 prominent number/letter sits above its name; full engine labels remain available
 to assistive technology and in tooltips. Elect a safety appears as ES when the
 engine offers it. QB Sneak appears as Q when the engine
-offers it.
+offers it. The computer considers QB Sneak only with two or fewer yards to gain;
+it does not use it as a long-yardage passing-down call.
 
 Defense buttons keep A–F above their engine-supplied names: **Standard**,
 **Short yardage (gaps)**, **Short yardage (wide)**, **Pass prevent (short)**,
@@ -218,9 +219,17 @@ Medium mix legal calls using their existing selection preferences. Hard and char
 policies compare calls through isolated engine simulations, including conditional
 yardage doubling and free W-coded access. Earlier policy versions keep their
 recorded six-formation behavior.
-The current coach evaluates early fourth-and-long choices through the team's own
-field-goal and punt charts alongside legal scrimmage calls. A technically legal long
-kick is not treated as a sensible field-goal attempt merely because the engine permits it.
+Version 10 replaces current fourth-down kick selection with a shared public policy:
+attempt distance is yards to the goal line plus 17. The coach kicks through 35 yards;
+at 36–47 it goes for fourth-and-one at Medium/Hard and otherwise kicks; at 48–50 it
+kicks; at 51–55 Medium/Hard kick and Easy punts; beyond 55 it punts unless
+Medium/Hard face fourth-and-one. Late in the fourth while trailing, it kicks only if
+three points can tie or win and the attempt is within 55 yards; otherwise it goes for
+it. Difficulty supplies only the public aggression choice (Easy .3, Medium .5, Hard
+.7). The same rule can be shown to players: the AI does not inspect a team's kick
+chart to decide whether to attempt a field goal. The engine still uses the selected
+team's chart to resolve the actual kick. Future public season/team range adjustments
+are tracked in AI-031.
 
 Audit JSON includes `behavior_profile` and `audit_profile` for each game. The
 separate `coaching-audit-v1` profile names replay and advisory concentration

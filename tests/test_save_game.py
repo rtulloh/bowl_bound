@@ -26,7 +26,7 @@ from bowl_bound.save_game import (
 from bowl_bound.session import PendingDecisionError, SessionFinishedError
 from bowl_bound.team_csv import TeamFileMetadata
 from bowl_bound.timing import Clock
-from tests.synthetic_teams import team_chart, yards
+from tests.synthetic_teams import metadata, team_chart, yards
 from tests.test_models import provenance
 from tests.test_special_teams import special_chart
 
@@ -405,6 +405,43 @@ def test_saves_write_defense_chart_markers_and_read_legacy_privileges() -> None:
     )
 
     assert json.loads(dumps_game(restored))["teams"]["home"]["defense_chart_markers"] == ["W"]
+
+
+def test_normal_games_keep_defense_chart_markers_without_enabling_wild_card() -> None:
+    """Printed W metadata is provenance, not a default rules-profile entitlement."""
+    home, away = charts()
+    game = SavedGame.new(
+        home,
+        away,
+        home_id="2002/home",
+        away_id="2002/away",
+        seed=1,
+        away_privileges=("W",),
+    )
+
+    assert game._config["advanced_ii"] is False
+    assert not any(action.key.startswith("WC") for action in game.view().actions.defense)
+
+    # A legacy normal-player save can retain earlier results, but must not offer
+    # deferred Wild Card calls once it is loaded into the current rules profile.
+    legacy = SavedGame.new(
+        home,
+        away,
+        home_id="2002/home",
+        away_id="2002/away",
+        seed=1,
+        advanced_ii=True,
+        away_privileges=("W",),
+    )
+    home_metadata = metadata()
+    away_metadata = replace(metadata(), defense_chart_markers=("W",))
+    restored = loads_game(
+        dumps_game(legacy),
+        lambda key: (home, home_metadata) if key == "2002/home" else (away, away_metadata),
+    )
+
+    assert restored._config["advanced_ii"] is False
+    assert not any(action.key.startswith("WC") for action in restored.view().actions.defense)
 
 
 def test_intentional_delay_save_replays_without_dice_or_state_drift() -> None:

@@ -27,6 +27,7 @@ export default function App() {
   const [computerError, setComputerError] = useState('')
   const [busy, setBusy] = useState(false)
   const [hurryMode, setHurryMode] = useState(false)
+  const [historyExpanded, setHistoryExpanded] = useState(true)
   const [revealedToss, setRevealedToss] = useState(null)
   const [control, setControl] = useState('home')
   const gameMenu = useRef(null)
@@ -94,6 +95,7 @@ export default function App() {
     setGame(created)
     setReport(null)
     setHurryMode(false)
+    setHistoryExpanded(true)
     setOffense('')
     setDefense('')
     setComputerError('')
@@ -140,10 +142,21 @@ export default function App() {
     automaticCount.current = 0
     setReport(null)
     setHurryMode(false)
+    setHistoryExpanded(true)
     setError('')
     setComputerError('')
     setOffense('')
     setDefense('')
+  }
+  const resetGame = () => {
+    setGame(null)
+    setReport(null)
+    setError('')
+    setComputerError('')
+    setOffense('')
+    setDefense('')
+    setHurryMode(false)
+    setHistoryExpanded(true)
   }
   const saves = <SaveControls gameId={game?.game_id} humanSide={control} busy={busy} onLoaded={loaded}
     onBusyChange={(value) => { inFlight.current = value; setBusy(value) }} onError={setError} />
@@ -199,6 +212,7 @@ export default function App() {
 
   const view = game.view
   const turn = control === 'manual' ? null : game.turn
+  const canSetHurry = control === 'manual' || !turn || turn.human_role === 'offense'
   const actions = turn?.actions || view.actions
   const pending = turn ? turn.pending : view.pending
   const clockChoice = pending && view.phase === 'clock_choice'
@@ -206,6 +220,11 @@ export default function App() {
   const gameActions = (turn ? turn.game_actions : view.game_actions) || []
   const timeoutActions = gameActions.filter((action) => action.key.startsWith("timeout:"))
   const boundsActions = gameActions.filter((action) => action.key.startsWith("bounds:"))
+  const boundsStatus = view.bounds_declaration === 'out_of_bounds'
+    ? 'Out of bounds selected for the next play.'
+    : view.bounds_declaration === 'in_bounds'
+      ? 'Keep in bounds selected for the next play.'
+      : 'No bounds instruction selected.'
   // Display abbreviations only: offered engine IDs and labels still own availability/behavior.
   const displayKeys = {
     punt: 'P', field_goal: 'F', kneel: 'K', kickoff: 'KO',
@@ -247,14 +266,17 @@ export default function App() {
         }}>
           <summary className="cursor-pointer text-sm rounded px-3 py-1 bg-gray-800">Game</summary>
           <div className="absolute right-0 top-full mt-2 z-50 w-72 max-w-[calc(100vw-2rem)] rounded-lg border border-gray-500 bg-gray-900 p-3 shadow-xl space-y-3">
-            <button type="button" className="play-button text-black" disabled={busy} onClick={() => { setGame(null); setReport(null); setError(''); setComputerError(''); setOffense(''); setDefense(''); setHurryMode(false) }} data-testid="new-drive">New game</button>
+            <button type="button" className="play-button text-black" disabled={busy} onClick={resetGame} data-testid="new-drive">New game</button>
             {saves}
             <div className="text-xs text-gray-400">Seed {game.seed}</div>
           </div>
         </details>
       </header>
-      {(error || computerError) && <div className="text-red-300" role="alert">{error || computerError}
-        {turn?.automatic && !view.finished && <button type="button" className="play-button ml-2" disabled={busy} onClick={() => { automaticCount.current = 0; setComputerError(''); setError('') }}>Retry computer</button>}
+      {(error || computerError) && <div className="text-red-300" role="alert">{error === 'no such game' ? <>
+        The local server was restarted, so this unsaved game is no longer available.
+        <button type="button" className="play-button ml-2" disabled={busy} onClick={resetGame}>Start new game</button>
+      </> : <>{error || computerError}
+        {turn?.automatic && !view.finished && <button type="button" className="play-button ml-2" disabled={busy} onClick={() => { automaticCount.current = 0; setComputerError(''); setError('') }}>Retry computer</button>}</>}
       </div>}
       {view.phase === "opening_choice" ? <>
         <p className="text-center font-bold">{view.home} vs {view.away}</p>
@@ -263,41 +285,62 @@ export default function App() {
       </> : <>
       <Scoreboard view={view} />
       <div role="status" className={!view.finished && ["scrimmage", "clock_choice"].includes(view.phase) ? "sr-only" : "text-sm"} data-testid="session-status">{turn?.status || view.status}</div>
-      {view.phase === "kickoff" && playPanels}
       <FootballField state={view.state} home={view.home} away={view.away} />
       <ResultPanel report={report} />
-      <section aria-label="Play modifiers" className="play-modifiers flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-        <label className="inline-flex items-center gap-2">
-          <input type="checkbox" checked={hurryMode} disabled={busy} onChange={(e) => setHurryMode(e.target.checked)} />
-          Hurry-up mode
-        </label>
-        {clockChoice && <ClockChoices pending={pending} modifiers={turn ? view.clock_modifiers?.filter((c) => pending.choices.some((offered) => offered.id === c.id)) : view.clock_modifiers} onChoose={choose} disabled={busy} />}
-        {!clockChoice && <>
-          {timeoutActions.map((action) => <button key={action.key} type="button" className="play-button"
-            disabled={busy || blocking || view.finished} title={action.label} data-testid={'game-play-' + action.key}
-            onClick={() => special(action.key, true)}>{action.label}</button>)}
-          {!timeoutActions.length && <button type="button" className="play-button" disabled title="Available when the engine offers a timeout after an eligible play.">Timeout</button>}
-        </>}
-        {boundsActions.map((action) => {
-          const declaration = action.key === 'bounds:oob' ? 'out_of_bounds' : 'in_bounds'
-          const rule = view.play_modifiers?.find((choice) => choice.id === action.key)
-          return <button key={action.key} type="button" className="play-button"
-            disabled={busy || blocking || view.finished || rule?.enabled === false}
-            aria-pressed={view.bounds_declaration === declaration}
-            title={rule?.reason || action.label} data-testid={'bounds-' + declaration}
-            onClick={() => special(action.key, true)}>{declaration === 'out_of_bounds' ? 'OOB' : 'IB'}</button>
-        })}
-      </section>
+      <div className="grid gap-3 lg:grid-cols-[minmax(0,2fr)_minmax(16rem,1fr)]" data-testid="play-area">
+      <div className="order-2 space-y-3 lg:order-1">
       <p className="text-xs text-gray-300">{hurryMode ? "Enabled until you turn it off; used only when the engine offers a legal hurry-up snap for your offense." : turn ? "Choose your play to resolve it. Computer calls stay hidden until resolution." : "Choose both calls to resolve the play. Required decisions come first."}</p>
       {(view.toss_dice?.length > 0 || view.overtime_toss_dice?.length > 0) && <details className="text-xs"><summary>Toss dice audit</summary>
         <p>Opening toss</p>{view.toss_dice?.map((roll, i) => <DiceRoll key={`opening-${i}`} roll={roll} />)}
         {view.overtime_toss_dice?.length > 0 && <p>Overtime toss</p>}{view.overtime_toss_dice?.map((roll, i) => <DiceRoll key={`ot-${i}`} roll={roll} />)}
       </details>}
       {!clockChoice && pending && <PenaltyChoices pending={pending} onChoose={choose} disabled={busy} />}
-      {view.phase !== "kickoff" && playPanels}
+      {playPanels}
+      </div>
+      <aside className="order-1 space-y-3 lg:order-2">
+      <section aria-label="Play modifiers" className="play-modifiers rounded-lg border border-slate-600 bg-slate-800/80 p-3 text-sm space-y-3" data-testid="modifier-card">
+        <h2 className="text-xs font-bold tracking-wide text-slate-300">GAME CONTROLS</h2>
+        {canSetHurry && <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-slate-600 pt-2">
+          <span className="font-bold">Pace</span>
+          <label className="inline-flex items-center gap-2">
+            <input type="checkbox" checked={hurryMode} disabled={busy} onChange={(e) => setHurryMode(e.target.checked)} />
+            Enable/Disable Hurry-Up
+          </label>
+        </div>}
+        {clockChoice ? <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-600 pt-2">
+          <span className="font-bold">Clock</span>
+          <span className="text-xs text-gray-300">Choose one action for the next play.</span>
+          <ClockChoices pending={pending} modifiers={turn ? view.clock_modifiers?.filter((c) => pending.choices.some((offered) => offered.id === c.id)) : view.clock_modifiers} onChoose={choose} disabled={busy} />
+        </div> : <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-600 pt-2">
+          <span className="font-bold">Clock</span>
+          {timeoutActions.map((action) => <button key={action.key} type="button" className="play-button"
+            disabled={busy || blocking || view.finished} title={action.label} data-testid={'game-play-' + action.key}
+            onClick={() => special(action.key, true)}>{action.label}</button>)}
+          {!timeoutActions.length && <button type="button" className="play-button" disabled title="Available when the engine offers a timeout after an eligible play.">Timeout</button>}
+        </div>}
+        {boundsActions.length > 0 && <div role="group" aria-label="Next-play result instruction" className="border-t border-slate-600 pt-2">
+          <span className="font-bold">Next-play result</span>
+          <div className="mt-2 grid grid-cols-2 gap-2" data-testid="bounds-actions">
+            {boundsActions.map((action) => {
+              const declaration = action.key === 'bounds:oob' ? 'out_of_bounds' : 'in_bounds'
+              const rule = view.play_modifiers?.find((choice) => choice.id === action.key)
+              const selected = view.bounds_declaration === declaration
+              const label = declaration === 'out_of_bounds' ? 'Out of bounds' : 'Keep in bounds'
+              return <button key={action.key} type="button" className={`play-button w-full px-2 py-1 text-xs leading-tight ${selected ? 'play-button-selected' : ''}`}
+                disabled={busy || blocking || view.finished || rule?.enabled === false}
+                aria-pressed={selected}
+                title={rule?.reason || action.label} data-testid={'bounds-' + declaration}
+                onClick={() => special(action.key, true)}>{label}</button>
+            })}
+          </div>
+          <span className="mt-2 block text-xs text-gray-300" data-testid="bounds-status">{boundsStatus}</span>
+        </div>}
+      </section>
+      <PlayLog entries={view.log} expanded={historyExpanded} onExpandedChange={setHistoryExpanded} />
+      </aside>
+      </div>
       <ScoringLedger events={view.scoring} />
       <TeamStatistics home={view.home} away={view.away} statistics={view.statistics} />
-      <PlayLog entries={view.log} />
       </>}
     </main>
   )

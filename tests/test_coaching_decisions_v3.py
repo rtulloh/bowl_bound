@@ -82,7 +82,7 @@ def test_v3_margin_strategy_does_not_change_third_quarter_try() -> None:
     assert coach.decision(obs) == "conversion:kick"
 
 
-def test_v10_early_long_fourth_down_uses_the_team_field_goal_chart() -> None:
+def test_v10_fourth_down_field_goal_range_is_independent_of_private_chart_strength() -> None:
     strong = replace(
         team_chart("Strong", offense=0),
         special_teams=special_chart("Strong", field_goal=yards(100)).special_teams,
@@ -106,12 +106,180 @@ def test_v10_early_long_fourth_down_uses_the_team_field_goal_chart() -> None:
     )
 
     assert DifficultyCoach(31, strong, opponent, "medium", version=10).offense(obs) == "field_goal"
-    assert DifficultyCoach(31, weak, opponent, "medium", version=10).offense(obs) == "punt"
+    assert DifficultyCoach(31, weak, opponent, "medium", version=10).offense(obs) == "field_goal"
 
 
-def test_v10_early_long_fourth_down_excludes_razzle_dazzle_from_kick_comparison(
+def test_v10_fourth_down_does_not_evaluate_hidden_kick_chart_data(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """AI-027: the visible fourth-down policy never inspects kick estimates."""
+    coach = difficulty_coach("medium", version=10)
+    obs = observation(
+        quarter=1,
+        remaining=600,
+        score_difference=0,
+        down=4,
+        distance=8,
+        yards_to_goal=33,
+        offense=("1",),
+        special=("punt", "field_goal"),
+    )
+
+    def estimates(_: CoachObservation, __: str) -> tuple[ActionEstimate, ...]:
+        raise AssertionError("public fourth-down policy must not inspect chart estimates")
+
+    monkeypatch.setattr(coach, "estimates", estimates)
+
+    assert coach.offense(obs) == "field_goal"
+
+
+@pytest.mark.parametrize(
+    ("mode", "expected"),
+    [("easy", "punt"), ("medium", "1"), ("hard", "1")],
+)
+def test_v10_short_fourth_down_beyond_public_field_goal_range_uses_aggression(
+    mode: str, expected: str
+) -> None:
+    coach = difficulty_coach(mode, version=10)
+    obs = observation(
+        quarter=1,
+        remaining=600,
+        score_difference=0,
+        down=4,
+        distance=1,
+        yards_to_goal=40,
+        offense=("1",),
+        special=("punt", "field_goal"),
+    )
+    assert coach.offense(obs) == expected
+
+
+@pytest.mark.parametrize("mode", ["easy", "medium", "hard"])
+def test_v10_fourth_and_one_in_48_to_50_yard_band_attempts_field_goal(mode: str) -> None:
+    coach = difficulty_coach(mode, version=10)
+    obs = observation(
+        quarter=1,
+        remaining=600,
+        score_difference=0,
+        down=4,
+        distance=1,
+        yards_to_goal=33,
+        offense=("1",),
+        special=("punt", "field_goal"),
+    )
+
+    assert coach.offense(obs) == "field_goal"
+
+
+@pytest.mark.parametrize(
+    ("yards_to_goal", "expected"),
+    [
+        (18, "field_goal"),  # 35-yard attempt
+        (19, "field_goal"),  # 36-yard attempt
+        (30, "field_goal"),  # 47-yard attempt
+        (31, "field_goal"),  # 48-yard attempt
+        (33, "field_goal"),  # 50-yard attempt
+        (34, "field_goal"),  # 51-yard attempt
+        (38, "field_goal"),  # 55-yard attempt
+        (39, "punt"),  # 56-yard attempt
+    ],
+)
+def test_v10_medium_fourth_down_public_field_goal_band_boundaries(
+    yards_to_goal: int, expected: str
+) -> None:
+    coach = difficulty_coach("medium", version=10)
+    obs = observation(
+        quarter=1,
+        remaining=600,
+        score_difference=0,
+        down=4,
+        distance=8,
+        yards_to_goal=yards_to_goal,
+        offense=("1",),
+        special=("punt", "field_goal"),
+    )
+
+    assert coach.offense(obs) == expected
+
+
+@pytest.mark.parametrize(
+    ("mode", "expected"),
+    [("easy", "field_goal"), ("medium", "1"), ("hard", "1")],
+)
+def test_v10_fourth_and_one_in_36_to_47_yard_band_uses_aggression(mode: str, expected: str) -> None:
+    coach = difficulty_coach(mode, version=10)
+    obs = observation(
+        quarter=1,
+        remaining=600,
+        score_difference=0,
+        down=4,
+        distance=1,
+        yards_to_goal=30,
+        offense=("1",),
+        special=("punt", "field_goal"),
+    )
+
+    assert coach.offense(obs) == expected
+
+
+def test_v10_late_trailing_team_kicks_only_for_a_tie_or_win_in_public_range() -> None:
+    coach = difficulty_coach("medium", version=10)
+    tie = observation(
+        quarter=4,
+        remaining=60,
+        score_difference=-3,
+        down=4,
+        distance=8,
+        yards_to_goal=38,
+        offense=("1",),
+        special=("punt", "field_goal"),
+    )
+    needs_touchdown = replace(tie, score_difference=-4)
+
+    assert coach.offense(tie) == "field_goal"
+    assert coach.offense(needs_touchdown) == "1"
+
+
+def test_v10_public_fourth_down_policy_never_returns_an_unoffered_punt() -> None:
+    coach = difficulty_coach("easy", version=10)
+    obs = observation(
+        quarter=1,
+        remaining=600,
+        score_difference=0,
+        down=4,
+        distance=8,
+        yards_to_goal=38,
+        offense=("1",),
+        special=("field_goal",),
+    )
+
+    assert coach.offense(obs) == "1"
+
+
+@pytest.mark.parametrize("mode", ["easy", "medium", "hard"])
+def test_qb_sneak_is_not_a_cpu_long_yardage_call(mode: str) -> None:
+    """AI-029: Q is short-yardage only, never a passing-down lottery entry."""
+    long = observation(
+        quarter=1,
+        remaining=780,
+        down=3,
+        distance=13,
+        offense=("Q", "9"),
+        special=(),
+    )
+
+    for seed in range(32):
+        coach = DifficultyCoach(seed, team_chart("Home"), team_chart("Away"), mode, version=10)
+        assert coach.offense(long) == "9"
+
+    short = replace(long, distance=1, offense=("Q",))
+    assert (
+        DifficultyCoach(31, team_chart("Home"), team_chart("Away"), mode, version=10).offense(short)
+        == "Q"
+    )
+
+
+def test_v10_early_long_fourth_down_uses_the_public_51_to_55_yard_band() -> None:
     coach = difficulty_coach("medium", version=10)
     obs = observation(
         quarter=1,
@@ -124,17 +292,7 @@ def test_v10_early_long_fourth_down_excludes_razzle_dazzle_from_kick_comparison(
         special=("punt", "field_goal"),
     )
 
-    def estimates(observed: CoachObservation, _: str) -> tuple[ActionEstimate, ...]:
-        assert observed.offense == ()
-        return (
-            ActionEstimate("1", 1, 0, -2.0, 1.0, 0.0),
-            ActionEstimate("punt", 1, 0, 1.0, 1.0, 0.0),
-            ActionEstimate("field_goal", 1, 0, 0.0, 1.0, 0.0),
-        )
-
-    monkeypatch.setattr(coach, "estimates", estimates)
-
-    assert coach.offense(obs) == "punt"
+    assert coach.offense(obs) == "field_goal"
 
 
 def test_v10_late_touchdown_need_keeps_razzle_dazzle_available(
