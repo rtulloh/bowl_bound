@@ -1,0 +1,23 @@
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_abb40e5a0f8789 878-879,882,884
+docs/dev-notes/milestone-23.md
+  s_ed54ab581b3d60::t_7eff1aef55c029 36-43
+tests/test_razzle_dazzle.py
+  s_ed54ab581b3d60::t_a11130036255bd 8,16,19,22,129-130,135-198
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "a6f775f80673b3b814f2261ae3380fe132d041ec",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
