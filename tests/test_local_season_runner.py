@@ -1,16 +1,19 @@
 """Synthetic coverage for the local-only historical-season audit tooling."""
 
 from collections import Counter
+from dataclasses import replace
 from types import SimpleNamespace
 
 import pytest
 
 from bowl_bound.cli import TeamEntry
 from bowl_bound.coaching import BaselineCoach, CoachObservation
+from bowl_bound.dice import OffensiveRoll, ScriptedDice
 from bowl_bound.session import ScoreView
 from bowl_bound.statistics import PlayStatistics, summarize
 from scripts.run_local_season import (
     GameSpec,
+    _new_audit_game,
     _offense_choice,
     _period_for_score,
     _play_one,
@@ -22,7 +25,7 @@ from scripts.run_local_season import (
     run_local_season,
     validate_game,
 )
-from tests.synthetic_teams import team_chart, write_team
+from tests.synthetic_teams import metadata, team_chart, write_team
 
 
 def teams(count: int, season: int = 2007) -> tuple[TeamEntry, ...]:
@@ -175,8 +178,8 @@ def test_simulator_uses_engine_and_records_calls_and_full_trace() -> None:
     away_id, home_id = "2007/synthetic-away", "2007/synthetic-home"
     spec = GameSpec(1, 2007, away_id, home_id, 31415)
     charts = {
-        away_id: team_chart("Synthetic Away", season=2007),
-        home_id: team_chart("Synthetic Home", season=2007),
+        away_id: (team_chart("Synthetic Away", season=2007), metadata()),
+        home_id: (team_chart("Synthetic Home", season=2007), metadata()),
     }
 
     result = _play_one(spec, charts)
@@ -192,6 +195,32 @@ def test_simulator_uses_engine_and_records_calls_and_full_trace() -> None:
     assert result["final"]["statistics"]
     assert not any(call["fallback"] for call in result["coaching_calls"])
     assert {call["team_id"] for call in result["coaching_calls"]} == {away_id, home_id}
+    assert result["configuration"] == {
+        "engine_coach_policy": "baseline",
+        "simulation_coach_policy": "baseline",
+        "advanced_ii": True,
+        "defense_chart_markers": {"home": [], "away": []},
+    }
+
+
+def test_audit_game_preserves_w_marker_and_free_wild_card_yardage() -> None:
+    away_id, home_id = "2007/synthetic-away", "2007/synthetic-home"
+    spec = GameSpec(1, 2007, away_id, home_id, 31415)
+    teams = {
+        away_id: (
+            team_chart("Synthetic Away", season=2007),
+            replace(metadata(), defense_chart_markers=("W",)),
+        ),
+        home_id: (team_chart("Synthetic Home", season=2007), metadata()),
+    }
+
+    game = _new_audit_game(spec, teams)
+    session = game._engine._session
+
+    wild_card = next(action for action in session.view().actions.defense if action.key == "WC2")
+    assert wild_card.free_advanced
+    report = session.snap("1", "WC2", dice=ScriptedDice((OffensiveRoll(1, 0, 0),)))
+    assert report.yards == 4
 
 
 def fourth_down_observation() -> CoachObservation:

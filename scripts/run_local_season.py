@@ -26,12 +26,14 @@ from bowl_bound.coaching_session import GameView, observe_game
 from bowl_bound.models import TeamChart
 from bowl_bound.save_game import SavedGame
 from bowl_bound.statistics import summarize
+from bowl_bound.team_csv import TeamFileMetadata
 from bowl_bound.timing import QUARTER_SECONDS
 
 DEFAULT_GAMES_PER_TEAM = 12
 DEFAULT_MASTER_SEED = 20311031
 MAX_GAME_ACTIONS = 1500
 DEFAULT_OUTPUT = Path("private-data/local-season-audits")
+AuditTeams = dict[str, tuple[TeamChart, TeamFileMetadata]]
 
 
 @dataclass(frozen=True)
@@ -341,16 +343,11 @@ def _submit_offense_choice(
     return None
 
 
-def _play_one(spec: GameSpec, charts: dict[str, TeamChart]) -> dict[str, Any]:
-    """Play a complete regulation game through SavedGame's engine/coaching API."""
-    away = charts[spec.away_id]
-    home = charts[spec.home_id]
-    team_ids = {"home": spec.home_id, "away": spec.away_id}
-    coaches = {
-        "home": BaselineCoach(stable_seed(spec.seed, "home-coach")),
-        "away": BaselineCoach(stable_seed(spec.seed, "away-coach")),
-    }
-    game = SavedGame.new(
+def _new_audit_game(spec: GameSpec, teams: AuditTeams) -> SavedGame:
+    """Construct an audit game with the same marker inputs as CLI/API games."""
+    away, away_metadata = teams[spec.away_id]
+    home, home_metadata = teams[spec.home_id]
+    return SavedGame.new(
         home,
         away,
         home_id=spec.home_id,
@@ -358,7 +355,32 @@ def _play_one(spec: GameSpec, charts: dict[str, TeamChart]) -> dict[str, Any]:
         seed=spec.seed,
         mode="regulation",
         coach_seed=stable_seed(spec.seed, "engine-coach"),
+        home_privileges=home_metadata.defense_chart_markers,
+        away_privileges=away_metadata.defense_chart_markers,
     )
+
+
+def _audit_configuration(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
+    """Return the rules and chart-marker configuration recorded with an audit."""
+    return {
+        "engine_coach_policy": "baseline",
+        "simulation_coach_policy": "baseline",
+        "advanced_ii": True,
+        "defense_chart_markers": {
+            "home": list(teams[spec.home_id][1].defense_chart_markers),
+            "away": list(teams[spec.away_id][1].defense_chart_markers),
+        },
+    }
+
+
+def _play_one(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
+    """Play a complete regulation game through SavedGame's engine/coaching API."""
+    team_ids = {"home": spec.home_id, "away": spec.away_id}
+    coaches = {
+        "home": BaselineCoach(stable_seed(spec.seed, "home-coach")),
+        "away": BaselineCoach(stable_seed(spec.seed, "away-coach")),
+    }
+    game = _new_audit_game(spec, teams)
     calls: list[dict[str, Any]] = []
     period_totals: dict[int, list[int]] = {quarter: [0, 0] for quarter in range(1, 5)}
     failure: str | None = None
@@ -453,6 +475,7 @@ def _play_one(spec: GameSpec, charts: dict[str, TeamChart]) -> dict[str, Any]:
         "error": failure,
         "spec": asdict(spec),
         "teams": {"home": spec.home_id, "away": spec.away_id},
+        "configuration": _audit_configuration(spec, teams),
         "final": {
             "finished": view.finished,
             "phase": view.phase,
@@ -584,8 +607,8 @@ def run_local_season(
     ]
     if not scheduled:
         raise ValueError("no season contains at least two readable local teams")
-    charts = {entry.key: catalog.load(entry.key) for entry in entries}
-    results = run_games(scheduled, lambda spec: _play_one(spec, charts), progress)
+    teams = {entry.key: catalog.load_with_metadata(entry.key) for entry in entries}
+    results = run_games(scheduled, lambda spec: _play_one(spec, teams), progress)
     summary = _summary(results)
     run_dir = _private_run_dir(output_root, master_seed)
     for result in results:
