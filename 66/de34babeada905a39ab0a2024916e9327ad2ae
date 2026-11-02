@@ -1,0 +1,65 @@
+backend/app.py
+  s_ed54ab581b3d60::t_49225dc0830cdc 72,100,110-112,256
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_69ad6beb6c5f03 370-374,521,739
+bowl_bound/coaching.py
+  s_ed54ab581b3d60::t_6348abcdb80f85 69-70
+bowl_bound/coaching_audit.py
+  s_ed54ab581b3d60::t_fa6ac0a09223be 368,434,468,472-474,476
+bowl_bound/coaching_profiles.py
+  s_ed54ab581b3d60::t_cf9562481d73e7 79,112-115,129,162-165
+bowl_bound/difficulty.py
+  s_ed54ab581b3d60::t_7551b836548008 55-56,236-249
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_9e5d1e3edd632f 304,308,338-340,349,352-357,482,689,723,727-729
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_81d2a50d503f1e 1804-1815
+docs/coaching.md
+  s_ed54ab581b3d60::t_597fb42a758726 141,144,196,225-227
+docs/dev-notes/issues/AI/AI-025.md
+  s_ed54ab581b3d60::t_1c41042c61a4ce 1-34
+docs/dev-notes/issues/CLI/CLI-050.md
+  s_ed54ab581b3d60::t_bfa1384824ebac 1-33
+docs/dev-notes/milestone-23.md
+  s_ed54ab581b3d60::t_ca0ef388fba6e3 28-37,178-183
+docs/saves.md
+  s_ed54ab581b3d60::t_3a3b2e3fe8c4fd 107-109
+docs/web-demo.md
+  s_ed54ab581b3d60::t_e0d2afee6fb43a 201,220-222
+tests/test_api.py
+  s_ed54ab581b3d60::t_94a8e6c8c029ad 79
+tests/test_chart_coaching_contract.py
+  s_ed54ab581b3d60::t_887796db7f6e59 154,166
+tests/test_cli_help_example.py
+  s_ed54ab581b3d60::t_6e3361f6a88bc7 31
+tests/test_cli_presentation.py
+  s_ed54ab581b3d60::t_41d43e3a9feab6 9,74-83
+tests/test_coaching_audit_matrix.py
+  s_ed54ab581b3d60::t_fb85c30759a075 22-24
+tests/test_coaching_decisions_v3.py
+  s_ed54ab581b3d60::t_6505cf572a03a1 83-119
+tests/test_coaching_profiles.py
+  s_ed54ab581b3d60::t_d521b05d3db44c 94-98
+tests/test_difficulty_interfaces.py
+  s_ed54ab581b3d60::t_24abd770cb84c5 22,37
+tests/test_session.py
+  s_ed54ab581b3d60::t_8cee9bf4f13555 149
+tests/test_session_penalties.py
+  s_ed54ab581b3d60::t_1f60e900835120 67-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "66de34babeada905a39ab0a2024916e9327ad2ae",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
