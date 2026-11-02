@@ -1,0 +1,53 @@
+docs/dev-notes/issues/AI/AI-022.md
+  s_59da2999eda1fc::t_fec230e006f295 1-35
+docs/dev-notes/issues/AI/AI-023.md
+  s_59da2999eda1fc::t_d2afcf5c37d888 1-36
+docs/dev-notes/issues/AI/AI-024.md
+  s_59da2999eda1fc::t_c1812373970a6d 1-37
+docs/dev-notes/issues/API/API-005.md
+  s_59da2999eda1fc::t_785585af4b792e 1-33
+docs/dev-notes/issues/API/API-006.md
+  s_59da2999eda1fc::t_b8e20652671efb 1-33
+docs/dev-notes/issues/DEV/DEV-053.md
+  s_59da2999eda1fc::t_3fcaa442096de9 1-34
+docs/dev-notes/issues/DEV/DEV-054.md
+  s_59da2999eda1fc::t_9fe6b915439801 1-34
+docs/dev-notes/issues/DEV/DEV-055.md
+  s_59da2999eda1fc::t_3c855c6bdf327b 1-40
+docs/dev-notes/issues/DEV/DEV-056.md
+  s_59da2999eda1fc::t_30674a4d4b0925 1-34
+docs/dev-notes/issues/DEV/DEV-057.md
+  s_59da2999eda1fc::t_a59a5dd0ceaf00 1-34
+docs/dev-notes/issues/RULE/RULE-033.md
+  s_59da2999eda1fc::t_b61cc0924b940c 1-33
+docs/dev-notes/issues/RULE/RULE-034.md
+  s_59da2999eda1fc::t_c9625f13b53427 1-33
+docs/dev-notes/issues/RULE/RULE-035.md
+  s_59da2999eda1fc::t_c159dca91aa398 1-33
+docs/dev-notes/issues/RULE/RULE-036.md
+  s_59da2999eda1fc::t_b291e9cba5d311 1-33
+docs/dev-notes/issues/RULE/RULE-037.md
+  s_59da2999eda1fc::t_190a0689be6a9e 1-37
+docs/dev-notes/issues/RULE/RULE-038.md
+  s_59da2999eda1fc::t_a1d5e492c4bd4c 1-35
+docs/dev-notes/project-plan.md
+  s_59da2999eda1fc::t_d0ac11b6bcd019 605-607
+docs/dev-notes/review-5294eb8-to-44d3438.md
+  s_59da2999eda1fc::t_2ca0d506d75827 1-152
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "7fec758d942a66169a56b7bee97dc5d508104f0e",
+  "prompts": {},
+  "sessions": {
+    "s_59da2999eda1fc": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19955-b0d2-7750-a72a-5455973f7963",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
