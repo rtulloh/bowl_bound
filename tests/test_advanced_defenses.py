@@ -5,7 +5,14 @@ from dataclasses import replace
 import pytest
 
 from bowl_bound.dice import DefensiveRoll, OffensiveRoll, ScriptedDice
-from bowl_bound.models import NormalizedCell, Play, ResultKind
+from bowl_bound.models import (
+    NormalizedCell,
+    PenaltyCode,
+    PenaltyData,
+    PenaltyTeam,
+    Play,
+    ResultKind,
+)
 from bowl_bound.save_game import SavedGame, SaveFormatError, dumps_game, loads_game
 from bowl_bound.team_csv import TeamFileMetadata
 from tests.synthetic_teams import metadata, team_chart, write_team, yards
@@ -379,6 +386,79 @@ def test_qr_and_qt_classify_conditional_guesses_without_changing_fixed_tables(
 
     run_stop_report = game_for("RUN", DefensiveRoll(1, 0)).snap("1", "RUN")
     assert run_stop_report.trace[1].cell == "(0)"
+
+
+@pytest.mark.parametrize(
+    ("call", "source_play", "reroll", "result_play", "conditional_yards"),
+    [
+        ("RUN", Play.ONE, ResultKind.QUARTERBACK_RUN, Play.ONE, 8),
+        ("RUN", Play.ONE, ResultKind.QUARTERBACK_TRAPPED, Play.ONE, 8),
+        ("RUN", Play.FIVE, ResultKind.SPRINT_OUT_PASS, Play.SEVEN, 8),
+        ("RUN", Play.FIVE, ResultKind.BOOTLEG_PASS, Play.EIGHT, 8),
+        ("PASS", Play.ONE, ResultKind.YARDS, Play.ONE, 8),
+        ("PASS", Play.FIVE, ResultKind.SPRINT_OUT_PASS, Play.SEVEN, 4),
+    ],
+)
+@pytest.mark.parametrize("away_privileges", [(), ("W",)])
+def test_penalty_reroll_reclassifies_conditional_advanced_defense(
+    call: str,
+    source_play: Play,
+    reroll: ResultKind,
+    result_play: Play,
+    conditional_yards: int,
+    away_privileges: tuple[str, ...],
+) -> None:
+    penalty = NormalizedCell(
+        ResultKind.PENALTY,
+        metadata().evidence[0][1],
+        penalty=PenaltyData(PenaltyTeam.DEFENSE, PenaltyCode.FIXED, 5),
+    )
+    rerolled = (
+        yards(4)
+        if reroll is ResultKind.YARDS
+        else NormalizedCell(reroll, metadata().evidence[0][1])
+    )
+    offense = team_chart("Alpha Tech", offense=0, defense=0)
+    offense = replace(
+        offense,
+        offense=tuple(
+            replace(row, cell=penalty)
+            if row.play is source_play and row.roll == 10
+            else replace(row, cell=rerolled)
+            if row.play is source_play and row.roll == 20
+            else replace(row, cell=yards(4))
+            if row.play is result_play and row.roll == 10 and result_play is not Play.ONE
+            else row
+            for row in offense.offense
+        ),
+        supplemental=tuple(
+            replace(row, cell=yards(4)) if row.roll == 10 else row for row in offense.supplemental
+        ),
+    )
+    rolls = [OffensiveRoll(1, 0, 0), DefensiveRoll(2, 0), OffensiveRoll(2, 0, 0)]
+    if reroll is not ResultKind.YARDS:
+        rolls.append(OffensiveRoll(1, 0, 0))
+    game = SavedGame.new(
+        offense,
+        team_chart("Beta State", offense=0, defense=0),
+        home_id="2026/alpha-tech",
+        away_id="2026/beta-state",
+        seed=17,
+        mode="drive",
+        away_privileges=away_privileges,
+        dice=ScriptedDice(rolls),
+    )
+
+    pending = game.snap(str(source_play.value), call)
+    report = game.decide("decline")
+
+    assert pending.pending
+    assert report.yards == (4 if away_privileges else conditional_yards)
+    expected_play = {
+        Play.SEVEN: "Sprint Out",
+        Play.EIGHT: "Boot-leg",
+    }.get(result_play, "Line Plunge")
+    assert report.resolved_play == expected_play
 
 
 def test_nickel_zone_uses_its_printed_play_range_for_qr_outcomes() -> None:

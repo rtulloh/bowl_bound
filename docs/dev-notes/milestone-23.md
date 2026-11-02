@@ -41,3 +41,14 @@ logic is added.
 - The no-dice result now uses the ordinary prepared-play path. This preserves the
   required incomplete timing, statistics, turnover-on-downs behavior, regulation
   integration, and save replay without duplicating transition logic.
+
+### RULE-035 — 2026-11-01
+
+- Synthetic penalty-reroll tests first reproduced stale conditional-defense
+  doubling for QR, QT, Sprint Out, and Boot-leg outcomes. They also cover a
+  PASS guess changing from incorrect before the reroll to correct afterward,
+  plus W-marked free defenders.
+- The shared conditional-defense predicate now evaluates the rerolled resolved
+  play and cell. Penalty preparation and the Razzle-Dazzle decision path retain
+  the Advanced II call metadata so that they can make that assessment without
+  guessing from a stale resolution.

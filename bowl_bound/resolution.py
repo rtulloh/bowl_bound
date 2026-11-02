@@ -275,10 +275,9 @@ def resolve_advanced_play(
             )
             return PlayResolution(play, resolved_play, result, tuple(trace))
     defensive_cell = blank
-    conditional_double = wildcard and not free_wildcard
+    conditional_double = conditional_defense_doubles(call, free_wildcard, resolved_play, off_cell)
     if not wildcard and call != "REDZONE":
         defensive_roll = dice.defensive()
-        pass_like = _is_pass_like(resolved_play, off_cell)
         defensive_cell = _advanced_defensive_cell(call, resolved_play, defensive_roll.total)
         trace.append(
             AdvancedDefenseTrace(
@@ -289,11 +288,6 @@ def resolve_advanced_play(
                 defensive_roll,
                 _rule_cell_label(defensive_cell),
             )
-        )
-        conditional_double = (
-            call in {"RUN", "PASS"}
-            and ((call == "RUN" and pass_like) or (call == "PASS" and not pass_like))
-            and not free_wildcard
         )
 
     resolved_offense = off_cell
@@ -390,6 +384,23 @@ def _is_pass_like(play: Play, cell: NormalizedCell) -> bool:
     }
 
 
+def conditional_defense_doubles(
+    call: str | None,
+    free_wildcard: bool,
+    play: Play,
+    cell: NormalizedCell,
+) -> bool:
+    """Return whether an incorrect Advanced II call doubles this resolved result."""
+    if call is None or free_wildcard:
+        return False
+    if call.startswith("WC"):
+        return True
+    return call in {"RUN", "PASS"} and (
+        (call == "RUN" and _is_pass_like(play, cell))
+        or (call == "PASS" and not _is_pass_like(play, cell))
+    )
+
+
 def resolve_razzle_dazzle_result(
     offense: TeamChart,
     defense: TeamChart,
@@ -432,9 +443,7 @@ def resolve_razzle_dazzle_result(
     }.get(off_cell.kind)
     resolved_play = option_play or play
     defensive_cell = _rule_cell(ResultKind.NO_CHANGE)
-    conditional_double = False
     advanced = advanced_call is not None
-    wildcard = advanced_call is not None and advanced_call.startswith("WC")
 
     if advanced_call is None:
         defensive_roll = dice.defensive()
@@ -456,14 +465,8 @@ def resolve_razzle_dazzle_result(
                 defensive_cell,
             )
         )
-    elif wildcard:
-        # Every ordinary Wild Card guess is wrong against RZDZ, including a
-        # selected cell that later matches the guess. WCRZDZ is handled before
-        # these rolls are made.
-        conditional_double = not free_wildcard
     elif advanced_call in {"RUN", "PASS", "NICKEL"}:
         defensive_roll = dice.defensive()
-        pass_like = _is_pass_like(resolved_play, off_cell)
         defensive_cell = _advanced_defensive_cell(
             advanced_call, resolved_play, defensive_roll.total
         )
@@ -476,14 +479,6 @@ def resolve_razzle_dazzle_result(
                 defensive_roll,
                 _rule_cell_label(defensive_cell),
             )
-        )
-        conditional_double = (
-            advanced_call in {"RUN", "PASS"}
-            and (
-                (advanced_call == "RUN" and pass_like)
-                or (advanced_call == "PASS" and not pass_like)
-            )
-            and not free_wildcard
         )
 
     if advanced and option_play is not None:
@@ -518,6 +513,9 @@ def resolve_razzle_dazzle_result(
 
     result = _supplemental_result(offense, result, resolved_play, dice, trace)
     result = _variable_result(result, offense, defense, resolved_play, dice, trace)
+    conditional_double = conditional_defense_doubles(
+        advanced_call, free_wildcard, resolved_play, off_cell
+    )
     return PlayResolution(
         play,
         resolved_play,

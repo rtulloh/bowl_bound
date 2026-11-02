@@ -1249,6 +1249,12 @@ class PlaySession:
                 resolution,
                 razzle.dice,
                 hurried=self._hurried_play,
+                advanced_call=advanced_call,
+                free_wildcard=(
+                    razzle.defensive.free
+                    if isinstance(razzle.defensive, AdvancedDefenseCall)
+                    else False
+                ),
             )
             self._razzle_pending = None
             return self._finish_prepared(

@@ -21,6 +21,7 @@ from .resolution import (
     RazzleDazzleTrace,
     _supplemental_result,
     _variable_result,
+    conditional_defense_doubles,
     resolve_advanced_play,
     resolve_cells,
     resolve_play,
@@ -70,7 +71,15 @@ def prepare_play(
         )
     )
     return prepare_resolution(
-        offense, defense, play, initial, dice, hurried=hurried, hail_mary=hail_mary
+        offense,
+        defense,
+        play,
+        initial,
+        dice,
+        hurried=hurried,
+        hail_mary=hail_mary,
+        advanced_call=advanced_call,
+        free_wildcard=free_wildcard,
     )
 
 
@@ -83,6 +92,8 @@ def prepare_resolution(
     *,
     hurried: bool = False,
     hail_mary: bool = False,
+    advanced_call: str | None = None,
+    free_wildcard: bool = False,
 ) -> PreparedPlay:
     """Apply ordinary penalty rerolls to an already resolved chart result."""
     resolution = initial
@@ -210,12 +221,15 @@ def prepare_resolution(
         combined = resolve_cells(rerolled, effective_defense)
         combined = _supplemental_result(offense, combined, current_play, dice, trace)
         combined = _variable_result(combined, offense, defense, current_play, dice, trace)
+        conditional_double = conditional_defense_doubles(
+            advanced_call, free_wildcard, current_play, rerolled
+        )
         resolution = PlayResolution(
             play,
             current_play,
             combined,
             tuple(trace),
-            conditional_double=resolution.conditional_double,
+            conditional_double=conditional_double,
             razzle_dazzle=resolution.razzle_dazzle,
         )
     return PreparedPlay(_with_trace(resolution, trace), tuple(penalties))
