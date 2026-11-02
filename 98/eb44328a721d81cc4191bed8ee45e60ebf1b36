@@ -1,0 +1,33 @@
+frontend/e2e/compactControls.spec.js
+  s_ed54ab581b3d60::t_c47be0716319b8 34,39
+frontend/e2e/milestone19.spec.js
+  s_ed54ab581b3d60::t_91de801f183dd6 124,131,136
+frontend/e2e/openingScreen.spec.js
+  s_ed54ab581b3d60::t_1ffb9c8e8987ff 52
+frontend/e2e/web.spec.js
+  s_ed54ab581b3d60::t_6215e5fb3840d9 259,262
+frontend/src/components/PlayLog.jsx
+  s_ed54ab581b3d60::t_99eed7257ceb0f 27-28
+frontend/src/components/PlaySelector.jsx
+  s_ed54ab581b3d60::t_1377c99baec56e 19,23
+frontend/src/components/ResultPanel.jsx
+  s_ed54ab581b3d60::t_e9f050b377035c 8
+frontend/src/test/commentary.test.jsx
+  s_ed54ab581b3d60::t_40d62e24c78b61 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "98eb44328a721d81cc4191bed8ee45e60ebf1b36",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
