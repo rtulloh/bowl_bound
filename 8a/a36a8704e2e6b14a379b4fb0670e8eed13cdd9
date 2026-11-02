@@ -1,0 +1,55 @@
+backend/app.py
+  s_ed54ab581b3d60::t_e8f95ce2a897dd 256-257,277-279,284,295
+bowl_bound/cli.py
+  s_ed54ab581b3d60::t_a230a186c33114 511,703,728
+bowl_bound/coaching_audit.py
+  s_ed54ab581b3d60::t_a542fd9b79d995 298-300
+bowl_bound/coaching_profiles.py
+  s_ed54ab581b3d60::t_a38921e977f633 9-10
+bowl_bound/save_game.py
+  s_ed54ab581b3d60::t_88b9e86c03e0ca 206-217,241,255-259,311-322,439-441,444-448,507,694,705-708,876-877,881-884,932-936,942
+docs/cli.md
+  s_ed54ab581b3d60::t_f4d8de35f9370c 258-259
+docs/dev-notes/difficulty-contract.md
+  s_ed54ab581b3d60::t_ef7b124322c2c1 22-24
+docs/dev-notes/issue-tracker.md
+  s_ed54ab581b3d60::t_761047c995e03b 8,10,14-16,62,82,218,224,387,398-400,403
+docs/dev-notes/issues/AI/AI-025.md
+  s_ed54ab581b3d60::t_2031673266ed5f 4,8,14,42-47
+docs/dev-notes/issues/AI/AI-026.md
+  s_ed54ab581b3d60::t_9f20a7212b86f3 1-30
+docs/dev-notes/issues/AI/AI-027.md
+  s_ed54ab581b3d60::t_083247c2728015 1-30
+docs/dev-notes/issues/CLI/CLI-050.md
+  s_ed54ab581b3d60::t_75ea753957d8c7 4,9,42-45
+docs/dev-notes/issues/RULE/RULE-039.md
+  s_ed54ab581b3d60::t_4fb1ebd20bf2c4 1-30
+docs/saves.md
+  s_ed54ab581b3d60::t_df4502d1506ed2 80,106-109,160
+docs/web-demo.md
+  s_ed54ab581b3d60::t_db8e2765b71688 201-202,220-222,232-233
+frontend/e2e/difficulty.spec.js
+  s_ed54ab581b3d60::t_a1f08eb51b71ec 15,21,25
+tests/test_api.py
+  s_ed54ab581b3d60::t_3bfdcdda2afe25 79-80
+tests/test_coaching_journal_order.py
+  s_ed54ab581b3d60::t_fc60b93d3cea2a 49-53
+tests/test_difficulty.py
+  s_ed54ab581b3d60::t_a15ac9b68d18b2 132,153-156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "8aa36a8704e2e6b14a379b4fb0670e8eed13cdd9",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
