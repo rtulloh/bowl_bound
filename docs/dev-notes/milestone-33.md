@@ -102,3 +102,31 @@ This repair does not complete Milestone 33. Native CI confirmation remains
 pending publication of the fix; the remaining milestone work stays pending.
 Tested implementation commit: `ca3d3bb`; DEV-060 is resolved pending native build
 confirmation.
+
+### DEV-060 pre-push gate — 2026-11-02
+
+The owner authorized committing and pushing the repair. Reviewed both outgoing
+commits and their seven changed paths: documentation, one public-input regression,
+and the release manifest only; no private charts, PDFs, reports, saves, or logs.
+
+- `.venv/bin/python -m pytest --cov --cov-report=term-missing -q`:
+  **3,115 passed in 724.12s**, **92.90% branch-aware coverage** (75% required),
+  no skips or Python warnings.
+- `.venv/bin/python -m ruff check .`,
+  `.venv/bin/python -m ruff format --check .` (**526 files**), and
+  `.venv/bin/python -m pip check`: passed.
+- From `frontend/`, using Node **24.22.1** / npm **11.19.1**:
+  `npm ci --ignore-scripts`, `npm test` (**128 passed, 16 files**),
+  `npm run build`, and `npm audit` (**0 vulnerabilities**) passed. npm retained
+  the existing `whatwg-encoding@3.1.1` deprecation warning.
+- `npx playwright install chromium` succeeded, followed by
+  `BB_E2E_SEASONS=/private/tmp/bowl-bound-dev060-push-e2e npm run test:e2e`.
+  **All 33 cases failed at browser launch**, before application assertions:
+  macOS denied Chromium's MachPortRendezvousServer process registration
+  (`bootstrap_check_in`, Permission denied 1100). The existing
+  `NO_COLOR`/`FORCE_COLOR` environment warning also appeared. This environment
+  cannot supply a successful browser gate; no tests were skipped or weakened.
+
+The browser limitation is recorded rather than treated as a passing full gate.
+A fresh hosted standalone workflow must confirm browser and native builds after
+the push; DEV-060 remains resolved pending that confirmation.
