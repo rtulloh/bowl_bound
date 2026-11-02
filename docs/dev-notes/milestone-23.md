@@ -164,3 +164,24 @@ logic is added.
 - Documentation now gives the concise current API contract and directs detailed
   Advanced II exceptions to the canonical rules profile. The current web-demo
   contract was checked for consistency.
+
+## Acceptance — 2026-11-01
+
+All sixteen findings from the milestone 23 review inventory are resolved with
+public-safe synthetic regression evidence. They remain resolved rather than
+closed until owner play-testing confirms the observed gameplay/UI behavior.
+
+- Full Python gate: `/tmp/bowl-bound-py313/bin/python -m pytest --cov
+  --cov-report=term-missing -q` — 3,078 passed in 641.13 seconds; 92.80% branch
+  coverage (75% required).
+- Repository checks: `/tmp/bowl-bound-py313/bin/python -m ruff check .`, Ruff
+  format check (487 files), `/tmp/bowl-bound-py313/bin/python -m pip check`, and
+  `git diff --check` passed.
+- Frontend on Node 24.22.1: `npm test` — 122 passed across 16 files; `npm run
+  build` passed; `npm audit --omit=dev` reported zero vulnerabilities.
+- Real-engine browser gate: an isolated `/private/tmp/bowl-bound-m23-e2e.*`
+  synthetic-team directory with `npm run test:e2e` completed all 33 Playwright
+  cases; its recorded status is passed with no failed tests.
+
+No private charts, PDFs, historical rosters, saves, or local audit logs were
+added to the repository.
