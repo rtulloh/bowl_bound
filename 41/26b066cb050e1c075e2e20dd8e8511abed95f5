@@ -1,0 +1,27 @@
+bowl_bound/penalties.py
+  s_ed54ab581b3d60::t_2b65ce1fdcc683 24,74-82,95-96,224-226,232
+bowl_bound/resolution.py
+  s_ed54ab581b3d60::t_22404711f2a739 278,387-403,516-518
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_b857bc81dab939 1252-1257
+docs/dev-notes/milestone-23.md
+  s_ed54ab581b3d60::t_8fade65c974091 44-54
+tests/test_advanced_defenses.py
+  s_ed54ab581b3d60::t_a3d2c1456e45d6 8-15,391-463
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "4126b066cb050e1c075e2e20dd8e8511abed95f5",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
