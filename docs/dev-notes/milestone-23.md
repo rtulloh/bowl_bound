@@ -85,3 +85,12 @@ logic is added.
   and its exact Wild Card defense even though the engine offered each action.
 - The request contract now permits both offered identifiers, and tests submit
   them through real coached games for either human side.
+
+### AI-022 — 2026-11-01
+
+- Synthetic pending-decision tests first showed the decline preview using twelve
+  yards while execution applied the out-of-bounds declaration's five-yard cost.
+  Conditional defense doubling was likewise absent from the preview.
+- A shared pure live-resolution adjustment now feeds both execution and decline
+  projections. Penalty acceptance retains the unmodified prepared result, since
+  the declaration applies only when the ordinary play is declined.

@@ -214,6 +214,16 @@ def test_declining_a_penalty_applies_the_pending_out_of_bounds_declaration() -> 
     pending = session.snap("1", "A", dice=_penalty_dice(), bounds_declaration="out_of_bounds")
     assert pending.pending
 
+    decision = session.view().pending
+    assert decision is not None
+    decline = next(item for item in decision.decision_outcomes if item.choice_id == "decline")
+    assert (decline.possession, decline.yards_to_goal, decline.down, decline.yards_to_go) == (
+        "home",
+        58,
+        2,
+        3,
+    )
+
     report = session.decide("decline")
 
     assert report.yards == 7

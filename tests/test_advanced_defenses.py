@@ -450,10 +450,22 @@ def test_penalty_reroll_reclassifies_conditional_advanced_defense(
     )
 
     pending = game.snap(str(source_play.value), call)
+    view = game.view()
+    assert view.pending is not None
+    projected = next(item for item in view.pending.decision_outcomes if item.choice_id == "decline")
     report = game.decide("decline")
 
     assert pending.pending
     assert report.yards == (4 if away_privileges else conditional_yards)
+    assert (
+        projected.yards_to_goal,
+        projected.down,
+        projected.yards_to_go,
+    ) == (
+        65 - report.yards,
+        2,
+        10 - report.yards,
+    )
     expected_play = {
         Play.SEVEN: "Sprint Out",
         Play.EIGHT: "Boot-leg",

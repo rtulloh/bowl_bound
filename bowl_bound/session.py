@@ -1048,7 +1048,12 @@ class PlaySession:
             )
         if prepared.penalties:
             pending_view = _pending_view(
-                prepared.penalties, resolution, field, offense.name, defense.name
+                prepared.penalties,
+                resolution,
+                field,
+                offense.name,
+                defense.name,
+                bounds_declaration=bounds_declaration,
             )
             if self._phase is SessionPhase.TWO_POINT_TRY and (
                 resolution.result.kind is ResultKind.TOUCHDOWN
@@ -1121,18 +1126,7 @@ class PlaySession:
         bounds_declaration: BoundsDeclaration | None = None,
     ) -> PlayReport:
         """Continue an already prepared play; never repeat lookup after a decline."""
-        resolution = _apply_bounds_declaration(prepared.resolution, bounds_declaration)
-        if (
-            resolution.conditional_double
-            and not resolution.qb_sneak
-            and resolution.result.kind is ResultKind.YARDS
-            and resolution.result.yards is not None
-            and resolution.result.yards >= 0
-        ):
-            resolution = replace(
-                resolution,
-                result=replace(resolution.result, yards=2 * resolution.result.yards),
-            )
+        resolution = _live_resolution(prepared.resolution, bounds_declaration)
         offense, defense = self._charts[field.possession], self._charts[field.possession.other]
         hurried = self._hurried_play
         if resolution.result.defensive_end_zone_depth is not None:
@@ -2033,6 +2027,8 @@ def _pending_view(
     field: FieldState,
     offense_name: str,
     defense_name: str,
+    *,
+    bounds_declaration: BoundsDeclaration | None = None,
 ) -> PendingDecisionView:
     """Expose alternatives without attempting an unsupported result transition."""
     first = penalties[0]
@@ -2062,12 +2058,13 @@ def _pending_view(
                 None if end_enabled else "end-of-gain enforcement is unavailable for this result",
             )
         )
-    decline_reason = _decline_blocker(field, resolution)
+    decline_resolution = _live_resolution(resolution, bounds_declaration)
+    decline_reason = _decline_blocker(field, decline_resolution)
     decline_enabled = decline_reason is None
     choices.append(
         PenaltyChoice(
             "decline",
-            f"Decline penalties: {_penalty_result_text(resolution, field)}",
+            f"Decline penalties: {_penalty_result_text(decline_resolution, field)}",
             decline_enabled,
             decline_reason,
         )
@@ -2078,7 +2075,9 @@ def _pending_view(
         chooser,
         offered,
         chooser_side=side.value,
-        decision_outcomes=_penalty_decision_outcomes(offered, penalties, resolution, field),
+        decision_outcomes=_penalty_decision_outcomes(
+            offered, penalties, resolution, decline_resolution, field
+        ),
     )
 
 
@@ -2086,6 +2085,7 @@ def _penalty_decision_outcomes(
     choices: tuple[PenaltyChoice, ...],
     penalties: tuple[AssessedPenalty, ...],
     resolution: PlayResolution,
+    decline_resolution: PlayResolution,
     field: FieldState,
 ) -> tuple[DecisionOutcome, ...]:
     """Project enabled penalty options using the same pure engine transitions as play."""
@@ -2094,7 +2094,7 @@ def _penalty_decision_outcomes(
         if not choice.enabled:
             continue
         if choice.id == "decline":
-            outcomes.append(_declined_play_outcome(choice.id, resolution, field))
+            outcomes.append(_declined_play_outcome(choice.id, decline_resolution, field))
             continue
         _, index_text, spot = choice.id.split(":")
         penalty = penalties[int(index_text)]
@@ -2391,6 +2391,25 @@ def _apply_bounds_declaration(
             bounds_cost=5 if charge else 0,
         ),
     )
+
+
+def _live_resolution(
+    resolution: PlayResolution, declaration: BoundsDeclaration | None
+) -> PlayResolution:
+    """Apply every deterministic pre-transition adjustment used by a live result."""
+    resolved = _apply_bounds_declaration(resolution, declaration)
+    if (
+        resolved.conditional_double
+        and not resolved.qb_sneak
+        and resolved.result.kind is ResultKind.YARDS
+        and resolved.result.yards is not None
+        and resolved.result.yards >= 0
+    ):
+        return replace(
+            resolved,
+            result=replace(resolved.result, yards=2 * resolved.result.yards),
+        )
+    return resolved
 
 
 def _gain_text(kind: ResultKind | None, yards: int) -> str:
