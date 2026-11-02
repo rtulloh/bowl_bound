@@ -125,7 +125,7 @@ def test_v10_early_long_fourth_down_excludes_razzle_dazzle_from_kick_comparison(
     )
 
     def estimates(observed: CoachObservation, _: str) -> tuple[ActionEstimate, ...]:
-        assert "RZDZ" not in observed.offense
+        assert observed.offense == ()
         return (
             ActionEstimate("1", 1, 0, -2.0, 1.0, 0.0),
             ActionEstimate("punt", 1, 0, 1.0, 1.0, 0.0),

@@ -248,9 +248,7 @@ class DifficultyCoach(ChartAwareCoach):
             # Razzle-Dazzle leaves a defender-owned result choice pending. Do
             # not score it as an offensive fourth-down candidate until its
             # adversarial value is modeled explicitly.
-            conservative = replace(
-                observation, offense=tuple(key for key in observation.offense if key != "RZDZ")
-            )
+            conservative = replace(observation, offense=(), game_actions=())
             estimates = self.estimates(conservative, "offense")
             if estimates and all(
                 estimate.complete and estimate.mean_utility is not None for estimate in estimates
