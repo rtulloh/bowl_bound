@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
 from backend.app import create_app
@@ -64,6 +65,32 @@ def test_expected_revision_rejects_repeated_coach_posts(tmp_path: Path) -> None:
         client.post(path + "/coach", json={"human_side": "home", "human_call": "1"}).status_code
         == 422
     )
+
+
+@pytest.mark.parametrize(
+    ("human_side", "human_call"),
+    [("home", "RZDZ"), ("away", "WCRZDZ")],
+)
+def test_coached_endpoint_accepts_each_offered_razzle_dazzle_call(
+    tmp_path: Path, human_side: str, human_call: str
+) -> None:
+    client = _client(tmp_path)
+    path, created = _create(client, human_side)
+    actions = created["view"]["actions"]
+    role = "offense" if human_side == "home" else "defense"
+
+    response = client.post(
+        path + "/coach",
+        json={
+            "human_side": human_side,
+            "human_call": human_call,
+            "expected_revision": created["revision"],
+        },
+    )
+
+    assert human_call in {action["key"] for action in actions[role]}
+    assert response.status_code == 200, response.text
+    assert response.json()["revision"] == 1
 
 
 def test_concurrent_duplicate_coach_posts_resolve_once(tmp_path: Path) -> None:

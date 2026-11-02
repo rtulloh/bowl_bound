@@ -78,3 +78,10 @@ logic is added.
   tested endpoint path.
 - Return handling now distinguishes remaining in the end zone (touchback) from
   reaching or crossing the end line (safety), using the shared END_LINE fact.
+
+### API-005 — 2026-11-01
+
+- Coached API contract tests first reproduced FastAPI rejecting the Razzle-Dazzle
+  and its exact Wild Card defense even though the engine offered each action.
+- The request contract now permits both offered identifiers, and tests submit
+  them through real coached games for either human side.

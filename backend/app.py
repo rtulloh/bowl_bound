@@ -152,7 +152,7 @@ class CoachStep(BaseModel):
     human_side: HumanSide
     human_call: str | None = Field(
         default=None,
-        pattern=r"^(?:[1-9QA-F]|RUN|PASS|NICKEL|REDZONE|WCSNEAK|WC(?:[1-4]|5(?:SOP|BLP)?|[6-9]))$",
+        pattern=r"^(?:[1-9QA-F]|RZDZ|RUN|PASS|NICKEL|REDZONE|WCSNEAK|WCRZDZ|WC(?:[1-4]|5(?:SOP|BLP)?|[6-9]))$",
     )
     expected_revision: int = Field(ge=0, strict=True)
 
