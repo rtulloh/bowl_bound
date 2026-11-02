@@ -1,18 +1,19 @@
 ---
 id: RULE-038
 title: Special-team returns still award a touchback after crossing their own end line
-status: open
+status: resolved
 priority: High
 milestone: '23'
 created-at: 2026-11-01
-resolved-at: null
+resolved-at: 2026-11-01
 closed-at: null
 tags:
 - reproduced
 - code-review
 - incomplete-fix
 links: []
-commits: []
+commits:
+- 1834ed7
 ---
 
 ## Description
@@ -33,3 +34,10 @@ This is a residual pre-existing defect missed by the correction in the reviewed 
 
 --- 2026-11-01 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-01 ---
+Resolved in `1834ed7`. Synthetic kickoff and punt returns now cover one yard
+short of, at, and beyond the receiving end line, and a recovered-ball return
+uses the same safety boundary. The special-teams, shared-return, turnover,
+regulation, and save regression set passed (211 tests), together with Ruff and
+formatting. Awaiting owner play-test confirmation before closure.
