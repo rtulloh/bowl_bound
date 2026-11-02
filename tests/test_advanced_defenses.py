@@ -127,6 +127,55 @@ def test_incorrect_option_wild_card_rerolls_against_blank_and_applies_conditiona
     assert [entry.section for entry in report.trace] == ["offense", "option"]
 
 
+@pytest.mark.parametrize("call", ("WC1", "WC2", "WC3", "WC4", "WC6", "WC7", "WC8", "WC9"))
+@pytest.mark.parametrize(
+    ("option_cell", "resolved_play", "resolved_name"),
+    [
+        (yards(4), Play.FIVE, "Option"),
+        (
+            NormalizedCell(ResultKind.SPRINT_OUT_PASS, metadata().evidence[0][1]),
+            Play.SEVEN,
+            "Sprint Out",
+        ),
+        (
+            NormalizedCell(ResultKind.BOOTLEG_PASS, metadata().evidence[0][1]),
+            Play.EIGHT,
+            "Boot-leg",
+        ),
+    ],
+)
+@pytest.mark.parametrize(("away_privileges", "expected_yards"), [((), 8), (("W",), 4)])
+def test_wrong_numbered_wild_cards_do_not_stop_any_option_branch(
+    call: str,
+    option_cell: NormalizedCell,
+    resolved_play: Play,
+    resolved_name: str,
+    away_privileges: tuple[str, ...],
+    expected_yards: int,
+) -> None:
+    plays = {Play.FIVE: option_cell}
+    if resolved_play is not Play.FIVE:
+        plays[resolved_play] = yards(4)
+    rolls = (OffensiveRoll(1, 0, 0),) + (
+        (OffensiveRoll(1, 0, 0),) if resolved_play is not Play.FIVE else ()
+    )
+    game = SavedGame.new(
+        team_chart("Alpha Tech", plays=plays),
+        team_chart("Beta State"),
+        home_id="2026/alpha-tech",
+        away_id="2026/beta-state",
+        seed=17,
+        mode="drive",
+        away_privileges=away_privileges,
+        dice=ScriptedDice(rolls),
+    )
+
+    report = game.snap("5", call)
+
+    assert report.resolved_play == resolved_name
+    assert report.yards == expected_yards
+
+
 def test_run_defense_uses_parenthesized_zero_on_defensive_roll_one() -> None:
     game = new_game(rolls=(OffensiveRoll(1, 0, 0), DefensiveRoll(1, 0)))
     report = game.snap("1", "RUN")

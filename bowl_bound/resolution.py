@@ -263,7 +263,7 @@ def resolve_advanced_play(
             ResultKind.SPRINT_OUT_PASS: "SOP",
             ResultKind.BOOTLEG_PASS: "BLP",
         }.get(off_cell.kind, "")
-        if actual_branch == wildcard_branch:
+        if guessed is Play.FIVE and actual_branch == wildcard_branch:
             resolved_play = {
                 "SOP": Play.SEVEN,
                 "BLP": Play.EIGHT,
