@@ -1,0 +1,21 @@
+scripts/run_local_season.py
+  s_ed54ab581b3d60::t_54b28126661855 29,36,346-350,358-359,361-383,478,610-611
+tests/test_local_season_runner.py
+  s_ed54ab581b3d60::t_dffd79d886289b 4,11,16,28,181-182,198-223
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "fafaf154eda7901be0f2597a0dfcca44831ffdea",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
