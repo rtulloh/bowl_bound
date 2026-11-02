@@ -1,0 +1,23 @@
+backend/app.py
+  s_ed54ab581b3d60::t_373158af87476c 155
+docs/dev-notes/milestone-23.md
+  s_ed54ab581b3d60::t_e2877f5bce55fa 81-87
+tests/test_api_control_contract.py
+  s_ed54ab581b3d60::t_ff44016c3ac15c 7,70-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "db5c63eb209f9d04d19098c536b167bd5b54af99",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
