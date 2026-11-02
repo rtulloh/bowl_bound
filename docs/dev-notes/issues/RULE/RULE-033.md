@@ -1,17 +1,17 @@
 ---
 id: RULE-033
 title: Wrong Wild Card guesses stop Option runs as if WC5 was called
-status: open
+status: resolved
 priority: High
 milestone: '23'
 created-at: 2026-11-01
-resolved-at: null
+resolved-at: 2026-11-01
 closed-at: null
 tags:
 - reproduced
 - code-review
 links: []
-commits: []
+commits: [e63ef70]
 ---
 
 ## Description
@@ -24,10 +24,21 @@ Existing tests cover correct WC5 variants and a wrong SOP/BLP branch, but omit w
 
 ## Resolution / verification
 
-- Require both the guessed play and the Option branch to match.
-- Add synthetic cross-product coverage for wrong numbered Wild Cards against all Option branches, for conditional and W-marked defenders.
+- Test-first reproduction added a synthetic matrix for every wrong numbered Wild
+  Card across Option run, SOP, and BLP branches, for conditional and W-marked
+  defenders. Before the fix, all Option-run cases stopped at zero yards.
+- `e63ef70` requires both a Play 5 guess and an exact branch match before the
+  Wild Card stop applies. Other numbered guesses resolve normally; a conditional
+  defender doubles eligible yardage and a W-marked defender does not.
+- Focused validation: 146 Advanced II, resolution, and coaching-evaluation tests
+  passed; Ruff lint/format and `git diff --check` passed.
+- Status is resolved pending owner play-test confirmation.
 
 ## Comments
 
 --- 2026-11-01 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-01 ---
+Test-first failure reproduced the reported Option-run zero-yard behavior. The
+tested fix in `e63ef70` awaits owner play-test confirmation before closure.
