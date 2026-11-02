@@ -1,0 +1,25 @@
+bowl_bound/session.py
+  s_ed54ab581b3d60::t_76347427631293 1051-1056,1129,2030-2031,2061-2062,2067,2078-2080,2088,2097,2396-2414
+docs/dev-notes/milestone-23.md
+  s_ed54ab581b3d60::t_13928f5a9d81b4 88-96
+tests/test_advanced_defenses.py
+  s_ed54ab581b3d60::t_938e31a8e7364d 453-455,460-468
+tests/test_bounds_declarations.py
+  s_ed54ab581b3d60::t_163eead905c479 217-226
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "21f20327918f173211e2f31002c5347ef1492360",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
