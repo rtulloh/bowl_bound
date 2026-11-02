@@ -1,0 +1,31 @@
+docs/dev-notes/issue-tracker.md
+  s_0e32a34de270af::t_d034136192294d 8,10,70,568
+docs/dev-notes/issues/DEV/DEV-060.md
+  s_0e32a34de270af::t_a8ec4302b306f6 1-51
+docs/dev-notes/milestone-33.md
+  s_0e32a34de270af::t_09dc5c9880e959 12-14,54-102
+docs/dev-notes/project-plan.md
+  s_0e32a34de270af::t_a7df68b726dbb3 614-615
+docs/sample-teams.md
+  s_0e32a34de270af::t_1f93448ad30c36 90-95
+release/manifest.json
+  s_0e32a34de270af::t_59b13fc95017a9 103,107
+tests/test_release_package.py
+  s_0e32a34de270af::t_22cafa5b4a88e0 12,20-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "ca3d3bbf4dc4d6e21a742d4c98788c7b850f9f47",
+  "prompts": {},
+  "sessions": {
+    "s_0e32a34de270af": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19e3e-91b5-7fc3-a61a-a2d9b854b5e1",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
