@@ -1,0 +1,23 @@
+bowl_bound/coaching_session.py
+  s_ed54ab581b3d60::t_118296441d1007 80,86-88,90-96
+docs/dev-notes/milestone-23.md
+  s_ed54ab581b3d60::t_2fcf0dfa9b5e66 106-115
+tests/test_coaching_advanced_defenses.py
+  s_ed54ab581b3d60::t_ae6eceed155b33 10,13,37-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "56c5fbfd7a28bf6b1d595618a82cab9ce046088e",
+  "prompts": {},
+  "sessions": {
+    "s_ed54ab581b3d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18dee-8add-7893-a991-c8fee64f06e0",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
