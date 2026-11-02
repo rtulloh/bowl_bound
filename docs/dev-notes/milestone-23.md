@@ -130,3 +130,11 @@ logic is added.
 - Formation parsing now uses the engine's decision-validation exception. The
   existing API mapping returns HTTP 422 without consuming dice or changing the
   game view.
+
+### DEV-054 — 2026-11-01
+
+- A synthetic boundary regression first demonstrated that the runner had no
+  post-action period attribution and therefore used the stale pre-action
+  quarter for a score delta.
+- Score deltas now use the post-action engine view, which correctly attributes
+  plays that implicitly advance from Q1/Q3 into Q2/Q4 before scoring.
