@@ -1,17 +1,18 @@
 ---
 id: RULE-036
 title: QB Sneak treats an ignored yellow chart token as an actual timing penalty
-status: open
+status: resolved
 priority: High
 milestone: '23'
 created-at: 2026-11-01
-resolved-at: null
+resolved-at: 2026-11-01
 closed-at: null
 tags:
 - reproduced
 - code-review
 links: []
-commits: []
+commits:
+- 075acbc
 ---
 
 ## Description
@@ -31,3 +32,11 @@ RULE-021 specifies color-only interpretation. Its yellow-box test uses a numeric
 
 --- 2026-11-01 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-01 ---
+Resolved in `075acbc`. A synthetic yellow PEN-token box first reproduced the
+incorrect 10-second charge; it now retains one source-evidence lookup while
+recording a normal zero-yard Sneak (30 seconds, second down). The QB Sneak,
+timing, bounds, special-commentary, and regulation regression set passed (126
+tests), as did Ruff and formatting. Awaiting owner play-test confirmation before
+closure.
