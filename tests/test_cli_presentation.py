@@ -6,6 +6,7 @@ from dataclasses import replace
 import pytest
 
 from bowl_bound import coaching_session
+from bowl_bound.dice import OffensiveRoll, ScriptedDice
 from bowl_bound.save_game import SavedGame
 from bowl_bound.session import Actions, PenaltyChoice, PendingDecisionView
 from tests.test_cli import new_game, saved_facts, terminal
@@ -68,6 +69,16 @@ def test_blank_does_not_select_a_required_decision_or_kickoff() -> None:
         if app.game.view().phase == "opening_choice":
             assert app.command("r")
             app.human_side = app.game.view().state.possession
+
+
+def test_razzle_dazzle_prompt_explains_that_the_chooser_selects_an_outcome() -> None:
+    game = new_game(dice=ScriptedDice((OffensiveRoll(1, 2, 3), OffensiveRoll(1, 3, 5))))
+    game.snap("RZDZ", "A")
+    app = terminal(game, "away")
+
+    assert not app.command("?")
+
+    assert "Beta State chooses (pick a desired outcome):" in app.output.getvalue()
 
 
 def test_finished_automatic_and_missing_state_have_no_suggestion() -> None:

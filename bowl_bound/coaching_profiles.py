@@ -76,6 +76,7 @@ HARD_V1 = replace(
 BASELINE_V2 = replace(BASELINE_V1, name="baseline-v2")
 BASELINE_V8 = replace(BASELINE_V2, name="baseline-v8")
 BASELINE_V9 = replace(BASELINE_V8, name="baseline-v9")
+BASELINE_V10 = replace(BASELINE_V9, name="baseline-v10")
 CHART_V2 = replace(CHART_V1, name="chart-v2")
 EASY_V2 = replace(EASY_V1, name="easy-v2")
 MEDIUM_V2 = replace(MEDIUM_V1, name="medium-v2")
@@ -108,6 +109,10 @@ CHART_V9 = replace(CHART_V8, name="chart-v9")
 EASY_V9 = replace(EASY_V8, name="easy-v9")
 MEDIUM_V9 = replace(MEDIUM_V8, name="medium-v9")
 HARD_V9 = replace(HARD_V8, name="hard-v9")
+CHART_V10 = replace(CHART_V9, name="chart-v10")
+EASY_V10 = replace(EASY_V9, name="easy-v10")
+MEDIUM_V10 = replace(MEDIUM_V9, name="medium-v10")
+HARD_V10 = replace(HARD_V9, name="hard-v10")
 
 
 def behavior_for_policy(policy: str) -> CoachBehavior:
@@ -121,6 +126,7 @@ def behavior_for_policy(policy: str) -> CoachBehavior:
         ("baseline-v2", BASELINE_V2),
         ("baseline-v8", BASELINE_V8),
         ("baseline-v9", BASELINE_V9),
+        ("baseline-v10", BASELINE_V10),
         ("chart-v2", CHART_V2),
         ("easy-v2", EASY_V2),
         ("medium-v2", MEDIUM_V2),
@@ -153,6 +159,10 @@ def behavior_for_policy(policy: str) -> CoachBehavior:
         ("easy-v9", EASY_V9),
         ("medium-v9", MEDIUM_V9),
         ("hard-v9", HARD_V9),
+        ("chart-v10", CHART_V10),
+        ("easy-v10", EASY_V10),
+        ("medium-v10", MEDIUM_V10),
+        ("hard-v10", HARD_V10),
     ):
         if policy == key:
             return profile

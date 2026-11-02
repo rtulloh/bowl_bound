@@ -80,6 +80,43 @@ def test_v3_margin_strategy_does_not_change_third_quarter_try() -> None:
     assert coach.decision(obs) == "conversion:kick"
 
 
+@pytest.mark.parametrize(
+    ("distance", "yards_to_goal"),
+    [(13, 33), (18, 38)],
+)
+def test_v10_medium_punts_early_tied_long_fourth_down(distance: int, yards_to_goal: int) -> None:
+    """AI-025: preserve possession rather than gamble outside field-goal range."""
+    coach = difficulty_coach("medium", version=10)
+    obs = observation(
+        quarter=1,
+        remaining=750,
+        score_difference=0,
+        down=4,
+        distance=distance,
+        yards_to_goal=yards_to_goal,
+        offense=tuple("123456789"),
+        special=("punt", "field_goal"),
+    )
+
+    assert coach.offense(obs) == "punt"
+
+
+def test_v10_conservative_fourth_down_guard_does_not_reinterpret_v9() -> None:
+    obs = observation(
+        quarter=1,
+        remaining=750,
+        score_difference=0,
+        down=4,
+        distance=13,
+        yards_to_goal=33,
+        offense=tuple("123456789"),
+        special=("punt", "field_goal"),
+    )
+
+    assert difficulty_coach("medium", version=9).offense(obs) == "5"
+    assert difficulty_coach("medium", version=10).offense(obs) == "punt"
+
+
 @pytest.mark.parametrize("side", ["home", "away"])
 @pytest.mark.parametrize("mode", ["easy", "medium", "hard"])
 def test_v3_late_touchdown_need_does_not_punt_or_kick(

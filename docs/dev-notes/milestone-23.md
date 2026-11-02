@@ -25,6 +25,16 @@ Reviewed the local Paydirt repository before beginning the follow-up work:
 No Paydirt runtime dependency, rules implementation, private data, or schedule
 logic is added.
 
+## Paydirt consultation — AI-025 and CLI-050 follow-up, 2026-11-01
+
+Reviewed `/Users/rtulloh/work/paydirt/paydirt/computer_ai.py:311-365`, which documents
+historical NFL fourth-down patterns, including mixed kick/go choices in opponent
+territory. Bowl Bound does not adopt its NFL rates, field-goal distance, teams, or
+selection logic: the owner-directed Bowl Bound policy is an explicit conservative
+early fourth-and-long guard. Paydirt's generic pending-choice wording was also
+reviewed but not reused; Bowl Bound's engine already owns the pending decision and
+therefore supplies its exact terminal status.
+
 ## Ticket work
 
 ### RULE-033 — 2026-11-01
@@ -164,6 +174,12 @@ logic is added.
 - Documentation now gives the concise current API contract and directs detailed
   Advanced II exceptions to the canonical rules profile. The current web-demo
   contract was checked for consistency.
+
+### AI-025 and CLI-050 — 2026-11-01
+
+- Pending final regression and release verification for the owner-reported early
+  fourth-down coaching and penalty-status findings. Both are assigned here because
+  they were found after the Milestone 32 audit commit.
 
 ## Acceptance — 2026-11-01
 

@@ -1801,6 +1801,18 @@ class PlaySession:
     def _status(self) -> str:
         if self._razzle_pending is not None:
             return f"{self._razzle_pending.view.chooser}: choose a Razzle-Dazzle result."
+        if self._pending is not None:
+            choices = tuple(choice.id for choice in self._pending.view.choices)
+            is_penalty_choice = bool(choices) and all(
+                choice == "decline" or choice.startswith("accept:") for choice in choices
+            )
+            if is_penalty_choice:
+                return f"{self._pending.view.chooser}: choose a penalty decision."
+            return f"{self._pending.view.chooser}: choose a pending result."
+        if self._special is not None:
+            pending = self._pending_view()
+            if pending is not None:
+                return f"{pending.chooser}: choose a special-teams decision."
         if self._phase is SessionPhase.CONVERSION_CHOICE:
             team = self._charts[self._conversion_team].name
             return f"{team}: choose a one-point kick or two-point try."

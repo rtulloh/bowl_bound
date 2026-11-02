@@ -52,8 +52,8 @@ class DifficultyCoach(ChartAwareCoach):
     ) -> None:
         if mode not in AGGRESSION:
             raise ValueError("difficulty must be easy, medium or hard")
-        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8, 9}:
-            raise ValueError("difficulty policy version must be 1 through 9")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}:
+            raise ValueError("difficulty policy version must be 1 through 10")
         super().__init__(seed, home, away, version=version)
         self.mode = mode
         self.behavior = behavior_for_policy(f"{mode}-v{version}")
@@ -233,6 +233,20 @@ class DifficultyCoach(ChartAwareCoach):
             and "hail_mary" in observation.game_actions
         ):
             return "hail_mary"
+        if (
+            self.version >= 10
+            and not observation.overtime
+            and observation.quarter in {1, 2, 3}
+            and observation.score_difference >= 0
+            and observation.down == 4
+            and observation.distance > self.behavior.punt_distance
+            and observation.yards_to_goal > self.behavior.field_goal_yards
+            and "punt" in observation.special
+        ):
+            # v10 restores the conservative fourth-down floor that v9's
+            # evaluator mixture could bypass. Late/deficit situations remain
+            # available to the normal selection logic below.
+            return "punt"
         fallback = self._basic_offense(observation)
         if observation.phase == SessionPhase.TWO_POINT_TRY.value and (
             observation.down != 1 or observation.yards_to_goal != 2 or observation.distance != 2

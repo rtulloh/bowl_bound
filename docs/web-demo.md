@@ -198,7 +198,7 @@ contains Paydirt play names, down/distance arithmetic, or priority handling.
 | `GET /api/health` | `{"status": "healthy", "service": "bowl-bound"}` |
 | `GET /api/version` | Public `version` and PEP440 `python_version`; see [versioning](versioning.md) |
 | `GET /api/teams` | `{teams: [{id, name, season}], problems: [{id, reason}]}` |
-| `POST /api/games` | Body `{home, away, seed?, mode?, game_type?, start_yards_to_goal?, difficulty?, coach_policy?}`; choose `difficulty` or `coach_policy`, never both; omitted policy means Medium v9; `game_type` is `regular` (default) or `postseason`; browser sends `mode: "regulation"`; optional `?human_side=home` / `away` binds coached controls; response includes current `revision` |
+| `POST /api/games` | Body `{home, away, seed?, mode?, game_type?, start_yards_to_goal?, difficulty?, coach_policy?}`; choose `difficulty` or `coach_policy`, never both; omitted policy means Medium v10; `game_type` is `regular` (default) or `postseason`; browser sends `mode: "regulation"`; optional `?human_side=home` / `away` binds coached controls; response includes current `revision` |
 | `GET /api/games/{id}` | `{game_id, seed, coach_policy, view, revision}`; bound games require the matching `?human_side` |
 | `GET /api/games/{id}/save` | Private JSON download; no chart tables; does not advance dice or choices |
 | `POST /api/games/load` | Raw save JSON body; optional `?human_side=home` / `away` binds resumed controls; returns independent game state with `revision`; 422 invalid/incompatible/unavailable teams, 413 over 2 MiB |
@@ -217,9 +217,9 @@ cannot prepare a legal turn, coached requests return HTTP 409 with a stable erro
 message. See the
 [coaching API contract](coaching.md#api). Manual endpoints remain compatible.
 
-`difficulty` is `easy`, `medium` or `hard`. New games use the matching v9 policy.
-Explicit `coach_policy` accepts `baseline`, `baseline-v2`/`baseline-v8`/`baseline-v9`, chart
-policies v1–v9, and Easy/Medium/Hard policies in v1–v9; it is an alternative versioned
+`difficulty` is `easy`, `medium` or `hard`. New games use the matching v10 policy.
+Explicit `coach_policy` accepts `baseline`, `baseline-v2`/`baseline-v8`/`baseline-v9`/`baseline-v10`, chart
+policies v1–v10, and Easy/Medium/Hard policies in v1–v10; it is an alternative versioned
 interface, not a second difficulty override. Example public-sample create body:
 
 Each engine action also includes `free_advanced`, true only for Wild Card, Run

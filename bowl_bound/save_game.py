@@ -301,10 +301,11 @@ class SavedGame:
             "chart-v7",
             "chart-v8",
             "chart-v9",
+            "chart-v10",
         }:
             from .chart_coaching import ChartAwareCoach
 
-            version = int(self.coach_policy[-1])
+            version = int(self.coach_policy.rsplit("-v", 1)[1])
             self._coach = ChartAwareCoach(self._config["coach_seed"], home, away, version=version)
         elif self.coach_policy in {
             "easy-v1",
@@ -334,6 +335,9 @@ class SavedGame:
             "easy-v9",
             "medium-v9",
             "hard-v9",
+            "easy-v10",
+            "medium-v10",
+            "hard-v10",
         }:
             from .difficulty import DifficultyCoach
 
@@ -342,12 +346,15 @@ class SavedGame:
                 home,
                 away,
                 self.coach_policy.rsplit("-v", 1)[0],
-                version=int(self.coach_policy[-1]),
+                version=int(self.coach_policy.rsplit("-v", 1)[1]),
             )
         else:
-            version = {"baseline-v2": 2, "baseline-v8": 8, "baseline-v9": 9}.get(
-                self.coach_policy, 1
-            )
+            version = {
+                "baseline-v2": 2,
+                "baseline-v8": 8,
+                "baseline-v9": 9,
+                "baseline-v10": 10,
+            }.get(self.coach_policy, 1)
             self._coach = BaselineCoach(self._config["coach_seed"], version=version)
         self._tape = tape
         self._commands: list[dict[str, Any]] = []
@@ -472,6 +479,7 @@ class SavedGame:
                 "easy-v7",
                 "easy-v8",
                 "easy-v9",
+                "easy-v10",
             }:
                 return False
             view = self.view()
@@ -678,6 +686,7 @@ def _validate_config(config: Any) -> None:
             "baseline-v2",
             "baseline-v8",
             "baseline-v9",
+            "baseline-v10",
             "chart-v1",
             "chart-v2",
             "easy-v1",
@@ -711,9 +720,13 @@ def _validate_config(config: Any) -> None:
             "hard-v8",
             "chart-v8",
             "chart-v9",
+            "chart-v10",
             "easy-v9",
             "medium-v9",
             "hard-v9",
+            "easy-v10",
+            "medium-v10",
+            "hard-v10",
         }
     ):
         _fail()

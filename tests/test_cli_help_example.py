@@ -28,4 +28,4 @@ def test_displayed_help_example_starts_medium_solitaire(
 
     monkeypatch.setattr(TerminalGame, "run", run)
     assert main([*command[3:], "--seasons", str(tmp_path)]) == 0
-    assert seen == ["medium-v9"]
+    assert seen == ["medium-v10"]

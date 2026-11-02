@@ -367,7 +367,11 @@ class TerminalGame:
         pending = turn.pending
         optional_clock = getattr(view, "clock_optional", False)
         if pending and not optional_clock:
-            heading(f"{pending.chooser} chooses:")
+            heading(
+                f"{pending.chooser} chooses (pick a desired outcome):"
+                if any(choice.id.startswith("razzle:") for choice in pending.choices)
+                else f"{pending.chooser} chooses:"
+            )
             for choice in pending.choices:
                 unavailable = "" if choice.enabled else f" [unavailable: {choice.reason}]"
                 self._print("    " + label("choose", choice.id, choice.label) + unavailable)
@@ -514,6 +518,7 @@ class TerminalGame:
                 "easy-v7",
                 "easy-v8",
                 "easy-v9",
+                "easy-v10",
             }:
                 raise ValueError("The helper is only available on Easy.")
             if not self.game.player_advice_available(self.human_side):
@@ -731,7 +736,7 @@ def main(argv: list[str] | None = None) -> int:
                 away_id=away_id,
                 seed=args.seed if args.seed is not None else randbits(63),
                 coach_seed=args.coach_seed,
-                coach_policy=f"{args.difficulty or 'medium'}-v9",
+                coach_policy=f"{args.difficulty or 'medium'}-v10",
                 mode="regulation",
                 game_type=args.game_type or "regular",
                 home_privileges=home_metadata.defense_chart_markers,

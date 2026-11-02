@@ -111,6 +111,10 @@ Without `--compact`, the expanded menu is shown at each turn.
 | `W` | Save immediately to a new private file; `W PATH` selects an explicit new filename |
 | `Z` | Toggle Easy-only coaching at play selection (on by default) |
 
+For a Razzle-Dazzle result choice, the terminal explicitly says **pick a desired
+outcome**: select the displayed chart result most favorable to your side. The
+engine applies the selected result and all ordinary follow-up rules.
+
 During required decisions, numbers select the displayed choices, not scrimmage
 plays. During optional clock modifiers, `1`–`9` remain offensive calls. Disabled
 choices have no shortcut. Enter submits a **displayed default** in human/computer
@@ -190,6 +194,8 @@ defensive call counts. Previewed calls are excluded.
 
 Follow the **currently offered** engine IDs and labels. Choices are not interchangeable
 between phases; disabled choices include the engine's reason.
+When a penalty is pending, the status explicitly asks the named team for that penalty
+decision; accepting an offensive foul can correctly replay the same down.
 
 - `call 1` or bare `1`: select a displayed offensive play against the computer.
 - `call A` or bare `a`: select a displayed defense against the computer.

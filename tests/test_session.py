@@ -146,6 +146,7 @@ def test_an_interception_waits_for_an_explicit_engine_owned_decision() -> None:
         "interception:return",
         "interception:decline",
     ]
+    assert session.view().status == "Beta State: choose a pending result."
     assert session.view().log == ()
 
 

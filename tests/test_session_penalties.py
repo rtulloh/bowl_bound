@@ -64,6 +64,21 @@ def test_penalty_snap_waits_for_explicit_choice_without_extra_dice() -> None:
     assert dice.offensive() == sentinel
 
 
+def test_pending_penalty_status_names_the_required_choice() -> None:
+    """CLI-050: a pending foul is not an invitation to call another scrimmage play."""
+    session = PlaySession.new(
+        chart(foul(PenaltyTeam.OFFENSE), yards(7)), team_chart("Away"), seed=1
+    )
+
+    session.snap(
+        "1",
+        "A",
+        dice=ScriptedDice([OffensiveRoll(1, 0, 0), DefensiveRoll(1, 0), OffensiveRoll(2, 0, 0)]),
+    )
+
+    assert session.view().status == "Away: choose a penalty decision."
+
+
 def test_f_endzone_decline_text_names_its_fixed_one_yard_location() -> None:
     offense = NormalizedCell(ResultKind.FUMBLE, provenance(), yards=22)
     defense = NormalizedCell(
