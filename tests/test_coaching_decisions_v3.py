@@ -25,6 +25,7 @@ def test_v3_conversion_uses_two_points_to_tie_late(side: str, mode: str) -> None
     coach = difficulty_coach(mode)
     obs = observation(
         side=side,
+        possession=side,
         quarter=4,
         remaining=30,
         score_difference=-2,
@@ -269,19 +270,33 @@ def test_field_goal_estimate_uses_bowl_bound_chart_range_at_longer_distance() ->
     assert estimate.mean_points == 3.0
 
 
-def test_v3_last_snap_prefers_the_engine_offered_hail_mary() -> None:
-    coach = difficulty_coach("easy")
+@pytest.mark.parametrize("mode", ["easy", "medium", "hard"])
+@pytest.mark.parametrize("side", ["home", "away"])
+def test_last_snap_takes_a_guaranteed_winning_field_goal_before_hail_mary(
+    mode: str, side: str
+) -> None:
+    reliable = replace(
+        team_chart("Reliable"),
+        special_teams=special_chart("Reliable", field_goal=yards(70)).special_teams,
+    )
+    other = team_chart("Other")
+    home, away = (reliable, other) if side == "home" else (other, reliable)
+    coach = DifficultyCoach(31, home, away, mode, version=9)
     obs = observation(
+        side=side,
+        possession=side,
         quarter=4,
         remaining=10,
         score_difference=-1,
         down=2,
+        distance=5,
+        yards_to_goal=5,
         offense=tuple("123456789"),
         special=("punt", "field_goal"),
         game_actions=("hail_mary",),
     )
 
     with capture_preferences(coach, observation=obs) as draws:
-        assert coach.offense(obs) == "hail_mary"
+        assert coach.offense(obs) == "field_goal"
 
     assert draws == []

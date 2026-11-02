@@ -113,3 +113,12 @@ logic is added.
   selection and hashing: QB Sneak/Razzle-Dazzle, onside kickoff, bounds/elected
   safety, intentional delay, and Advanced II metadata. V9 receives the complete
   engine menu unchanged.
+
+### AI-024 — 2026-11-01
+
+- Synthetic last-snap tests first reproduced Easy, Medium, and Hard selecting
+  Hail Mary over a guaranteed winning field goal for either possession side.
+- The late-play shortcut now checks a one- or two-point deficit against the
+  real field-goal evaluator first. It selects the kick only when every sampled
+  chart result scores three points; Hail Mary remains available when a kick is
+  not guaranteed or cannot produce a lead.

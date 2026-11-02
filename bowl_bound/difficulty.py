@@ -206,6 +206,24 @@ class DifficultyCoach(ChartAwareCoach):
 
     def offense(self, observation: CoachObservation) -> str:
         self.analysis_fallback = False
+        last_snap = (
+            self.version >= 3
+            and not observation.overtime
+            and observation.quarter in {2, 4}
+            and 0 < observation.remaining <= 20
+            and observation.score_difference in {-2, -1}
+        )
+        if last_snap and "field_goal" in observation.special:
+            field_goal = next(
+                (
+                    estimate
+                    for estimate in self.estimates(observation, "offense")
+                    if estimate.key == "field_goal"
+                ),
+                None,
+            )
+            if field_goal is not None and field_goal.complete and field_goal.mean_points == 3:
+                return "field_goal"
         if (
             self.version >= 3
             and not observation.overtime
