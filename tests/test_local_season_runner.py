@@ -77,8 +77,26 @@ def test_schedule_rejects_invalid_team_groups(entries, games_per_team: int) -> N
 
 
 def finished_view() -> SimpleNamespace:
+    state = SimpleNamespace(
+        possession="home",
+        possession_name="Home",
+        down=1,
+        yards_to_go=10,
+        yards_to_goal=65,
+        spot="own 35",
+        situation="1st and 10",
+        attacking="right",
+        ball_from_left=35,
+        first_down_from_left=45,
+    )
     report = SimpleNamespace(
-        number=1, supported=True, pending=False, trace=(), statistics=PlayStatistics()
+        number=1,
+        supported=True,
+        pending=False,
+        trace=(),
+        statistics=PlayStatistics(),
+        state_before=state,
+        state_after=state,
     )
     event = SimpleNamespace(team="Home", points=3)
     return SimpleNamespace(
@@ -93,7 +111,7 @@ def finished_view() -> SimpleNamespace:
         scoring=(event,),
         statistics=summarize((PlayStatistics(),)),
         timing_log=tuple(
-            SimpleNamespace(quarter=quarter, before=900, seconds=900, after=0)
+            SimpleNamespace(play_number=1, quarter=quarter, before=900, seconds=900, after=0)
             for quarter in range(1, 5)
         ),
     )
@@ -111,7 +129,18 @@ def test_scoring_after_a_quarter_boundary_is_credited_to_the_new_quarter() -> No
 
 
 @pytest.mark.parametrize(
-    "failure", ["unfinished", "pending", "unsupported", "score", "statistics", "timing", "period"]
+    "failure",
+    [
+        "unfinished",
+        "pending",
+        "unsupported",
+        "score",
+        "statistics",
+        "timing",
+        "rewind",
+        "state",
+        "period",
+    ],
 )
 def test_game_audit_rejects_incomplete_or_inconsistent_game(failure: str) -> None:
     view = finished_view()
@@ -127,6 +156,41 @@ def test_game_audit_rejects_incomplete_or_inconsistent_game(failure: str) -> Non
         view.statistics = SimpleNamespace(home="mismatch")
     elif failure == "timing":
         view.timing_log = (SimpleNamespace(quarter=1, before=900, seconds=899, after=0),)
+    elif failure == "rewind":
+        view.timing_log = tuple(
+            charge
+            for quarter in range(1, 5)
+            for charge in (
+                SimpleNamespace(play_number=1, quarter=quarter, before=900, seconds=450, after=450),
+                SimpleNamespace(play_number=1, quarter=quarter, before=900, seconds=450, after=450),
+            )
+        )
+    elif failure == "state":
+        disconnected = SimpleNamespace(
+            possession="away",
+            possession_name="Away",
+            down=1,
+            yards_to_go=10,
+            yards_to_goal=65,
+            spot="own 35",
+            situation="1st and 10",
+            attacking="right",
+            ball_from_left=35,
+            first_down_from_left=45,
+        )
+        view.log = (
+            view.log[0],
+            SimpleNamespace(
+                number=2,
+                supported=True,
+                pending=False,
+                trace=(),
+                statistics=PlayStatistics(),
+                state_before=disconnected,
+                state_after=disconnected,
+            ),
+        )
+        view.statistics = summarize(report.statistics for report in view.log)
 
     with pytest.raises(ValueError):
         periods = ((3, 0), (0, 0), (0, 0), (0, 0))
@@ -141,6 +205,8 @@ def test_game_audit_rejects_trace_roll_that_does_not_match_its_faces() -> None:
         number=1,
         supported=True,
         pending=False,
+        state_before=view.log[0].state_before,
+        state_after=view.log[0].state_after,
         trace=(
             SimpleNamespace(
                 team="Home",

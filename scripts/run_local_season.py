@@ -166,11 +166,19 @@ def validate_game(view: GameView, period_scores: tuple[tuple[int, int], ...]) ->
     if view.home == view.away:
         raise ValueError("home and away names must differ for score reconciliation")
 
+    previous_state: tuple[object, ...] | None = None
+    report_numbers: set[int] = set()
     for number, report in enumerate(view.log, start=1):
         if report.number != number:
             raise ValueError("engine report numbering is not sequential")
         if not report.supported or report.pending:
             raise ValueError("engine log contains an unsupported or pending report")
+        before = _state_facts(getattr(report, "state_before", None))
+        after = _state_facts(getattr(report, "state_after", None), allow_missing=True)
+        if previous_state is not None and before != previous_state:
+            raise ValueError("engine report state transition is disconnected")
+        previous_state = after
+        report_numbers.add(report.number)
         for entry in report.trace:
             if (
                 entry.team not in {view.home, view.away}
@@ -192,18 +200,75 @@ def validate_game(view: GameView, period_scores: tuple[tuple[int, int], ...]) ->
     reconcile_period_scores(period_scores, (view.score.home, view.score.away))
 
     timing_log = getattr(view, "timing_log", ())
-    regulation_seconds = {quarter: 0 for quarter in range(1, 5)}
+    expected_quarter = 1
+    expected_remaining = QUARTER_SECONDS
+    last_report_number = 0
     for charge in timing_log:
         if (
             charge.before - charge.after != min(charge.before, charge.seconds)
             or charge.after < 0
             or charge.seconds < 0
+            or charge.play_number not in report_numbers
+            or charge.play_number < last_report_number
         ):
             raise ValueError("timing log contains an invalid clock transition")
-        if charge.quarter in regulation_seconds:
-            regulation_seconds[charge.quarter] += charge.before - charge.after
-    if tuple(regulation_seconds.values()) != (QUARTER_SECONDS,) * 4:
+        last_report_number = charge.play_number
+        if charge.quarter in range(1, 5):
+            if charge.quarter == expected_quarter and charge.before == expected_remaining:
+                expected_remaining = charge.after
+                if expected_remaining == 0:
+                    expected_quarter += 1
+                    expected_remaining = QUARTER_SECONDS
+            elif not (
+                charge.quarter == expected_quarter - 1
+                and charge.before == charge.after == charge.seconds == 0
+            ):
+                raise ValueError("timing log is not chronologically continuous")
+        elif expected_quarter <= 4:
+            raise ValueError("overtime timing started before regulation ended")
+    if expected_quarter != 5:
         raise ValueError("regulation clock does not reconcile to four complete quarters")
+
+
+def _state_facts(state: object, *, allow_missing: bool = False) -> tuple[object, ...] | None:
+    """Validate the public live-field facts recorded around an engine report."""
+    if state is None and allow_missing:
+        return None
+    if state is None:
+        raise ValueError("engine report has no pre-action state")
+    names = (
+        "possession",
+        "possession_name",
+        "down",
+        "yards_to_go",
+        "yards_to_goal",
+        "spot",
+        "situation",
+        "attacking",
+        "ball_from_left",
+        "first_down_from_left",
+    )
+    try:
+        values = tuple(getattr(state, name) for name in names)
+    except AttributeError as error:
+        raise ValueError("engine report state is incomplete") from error
+    possession, name, down, distance, to_goal, spot, situation, attacking, ball, first_down = values
+    if (
+        possession not in {"home", "away"}
+        or not all(isinstance(value, str) and value for value in (name, spot, situation))
+        or type(down) is not int
+        or down not in {1, 2, 3, 4}
+        or type(distance) is not int
+        or distance <= 0
+        or type(to_goal) is not int
+        or not 1 <= to_goal <= 99
+        or attacking not in {"left", "right"}
+        or type(ball) is not int
+        or type(first_down) is not int
+        or not all(0 <= value <= 100 for value in (ball, first_down))
+    ):
+        raise ValueError("engine report state is invalid")
+    return values
 
 
 def _valid_trace_roll(roll: object) -> bool:
