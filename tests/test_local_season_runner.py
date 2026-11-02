@@ -12,6 +12,7 @@ from bowl_bound.statistics import PlayStatistics, summarize
 from scripts.run_local_season import (
     GameSpec,
     _offense_choice,
+    _period_for_score,
     _play_one,
     _private_run_dir,
     _submit_offense_choice,
@@ -97,6 +98,13 @@ def finished_view() -> SimpleNamespace:
 
 def test_game_audit_accepts_complete_engine_log_with_reconciled_score() -> None:
     validate_game(finished_view(), ((3, 0), (0, 0), (0, 0), (0, 0)))
+
+
+def test_scoring_after_a_quarter_boundary_is_credited_to_the_new_quarter() -> None:
+    before = SimpleNamespace(clock=SimpleNamespace(quarter=1), overtime=None)
+    after = SimpleNamespace(clock=SimpleNamespace(quarter=2), overtime=None)
+
+    assert _period_for_score(before, after) == 2
 
 
 @pytest.mark.parametrize(

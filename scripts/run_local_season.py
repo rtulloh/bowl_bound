@@ -291,6 +291,17 @@ def _period_number(view: GameView) -> int:
     return clock.quarter if clock is not None else 1
 
 
+def _period_for_score(before: GameView, after: GameView) -> int:
+    """Return the period in which an action's scoring result occurred.
+
+    An action can consume the last seconds of a quarter before it resolves a
+    scoring result.  The post-action engine view is therefore authoritative
+    for score attribution, rather than the period in which the action began.
+    """
+    del before
+    return _period_number(after)
+
+
 def _call_record(
     view: GameView,
     side: str,
@@ -425,7 +436,7 @@ def _play_one(spec: GameSpec, charts: dict[str, TeamChart]) -> dict[str, Any]:
             )
             if any(points < 0 for points in score_delta):
                 raise ValueError("score decreased during a period")
-            period = period_totals.setdefault(_period_number(view), [0, 0])
+            period = period_totals.setdefault(_period_for_score(view, after), [0, 0])
             period[0] += score_delta[0]
             period[1] += score_delta[1]
         else:
