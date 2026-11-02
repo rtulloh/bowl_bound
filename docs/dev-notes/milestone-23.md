@@ -177,9 +177,16 @@ therefore supplies its exact terminal status.
 
 ### AI-025 and CLI-050 — 2026-11-01
 
-- Pending final regression and release verification for the owner-reported early
-  fourth-down coaching and penalty-status findings. Both are assigned here because
-  they were found after the Milestone 32 audit commit.
+- `66de34b` introduces versioned v10 Easy/Medium/Hard policies. In non-overtime
+  Q1–Q3, a tied-or-leading offense punts on fourth-and-long outside the engine-offered
+  field-goal range; late and deficit situations retain normal selection. Synthetic
+  regressions preserve v9's previous stream and cover the reported fourth-and-13 and
+  penalty-replayed fourth-and-18 situations.
+- A pending ordinary penalty now names its required penalty decision rather than
+  displaying the stale scrimmage-call status. Other pending results retain a generic
+  pending-result status; the valid accepted-offense-penalty fourth-down replay is
+  unchanged.
+- Both tickets are resolved, not closed, pending owner play-test confirmation.
 
 ## Acceptance — 2026-11-01
 
