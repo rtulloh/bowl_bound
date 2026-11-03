@@ -972,10 +972,10 @@ status and absent timing explanations; frontend red exposed the missing prior
 charge explanation. Presentation now names the in-progress play correctly and
 reports recorded timeout use in both latest result and history. Exact clock,
 timeout ownership, logs and strict replay remain unchanged. Cumulative Python
-435/50.97s; frontend131/4.60s and build1.16s; focused Ruff pass. Normal CLI AT
+435/50.97s; frontend 131/4.60s and build1.16s; focused Ruff pass. Normal CLI AT
 parity includes prior30+selected10 at late41s→1s. Natural10s web reservations
 are not AT-equivalent; owner authorizes a distinct conditional intent next.
-Original M33 acceptance is historical; RULE044 remains open.
+Original M33 acceptance is historical; RULE-044 remains open.
 
 
 RULE-044 conditional-intent checkpoint (2026-11-03): parent/owner approved
@@ -990,8 +990,8 @@ pending limitation is documented, not silently changed.
 
 15 meaningful engine failures, six new API command failures and one frontend
 primary-control failure preceded implementation. 44 focused/7.43s and568
-cumulative/73.23s pass; frontend131/4.80s, production build1.08s and Ruff
-check/format554files pass. Existing browser selectors now use conditional offers;
+cumulative/73.23s pass; frontend 131/4.80s, production build1.08s and Ruff
+check/format 554 files pass. Existing browser selectors now use conditional offers;
 two fictional pending-interception cases were added, not claimed executed.
 Fresh full gate and immutable owner re-test are pending.
 
@@ -1000,7 +1000,7 @@ on next play; if-eligible status says next until a mandatory choice is pending.
 A meaningful red CLI menu test exposed the new key leaking as an implementation
 name; both prefixes are now excluded without changing terminal T/AT. Both new
 browser-fixture INT paths pass through TestClient, not a browser. Isolated real
-runtime,18 tracker,pip check and npm audit0 also pass.
+runtime,18 tracker,pip check and npm audit 0 also pass.
 
 Final-source full gate initially exposed two stale exact CLI/API drive-log
 expectations missing additive `timing_label: null`. Both failed meaningfully,
@@ -1011,8 +1011,29 @@ remains e3d6516; a fresh complete gate follows this test-contract correction.
 
 Owner follow-up (2026-11-03): frozen e3d6516 offense timeout/play1 uses10seconds
 as confirmed by the owner; defense still awaits confirmation. Parent's separate
-HTTP/asset/history and actual97d synthetic-save compatibility checks pass; no
+HTTP/asset/history and actual 97d synthetic-save compatibility checks pass; no
 existing server was restarted. Browser tests now explicitly finish possible
 human RZDZ continuations while preserving pending-state assertions, avoiding a
 concealed-call-dependent timeout. Only collection/API-fixture checks are claimed
 locally, not browser execution.
+
+
+### RULE-044 final engineering verification
+
+Executable source: `e3d6516fd7362940c7178dcea2276f1b1f75747c`, identical to the
+owner's frozen candidate. Test contract corrected in b265de3, browser continuation
+checks/docs in 899cd8c. Fresh `.venv/bin/python -m pytest --cov
+--cov-report=term-missing -q`: **3,499 passed in 873.91s, 93.17% branch coverage**,
+exit 0, no skips/warnings. The interrupted 511-pass/2-stale-expectation run is
+explicitly not used as acceptance evidence.
+
+Relevant cumulative 568/73.23s and final focused 122/13.30s pass; frontend 131,
+production build, npm audit 0, Ruff check/format 554 files, pip check, isolated
+real runtime/default-game stage, 818 local Markdown links and diff checks pass.
+Both new browser fixtures pass real API execution, and 40 browser cases collect;
+no automated browser pass is claimed because the local sandbox remains blocked.
+Root's frozen HTTP/frontend/history and actual 97d fictional-golden strict
+load/re-save checks pass. Owner confirms offense; defense confirmation is pending.
+RULE-044 is resolved with tested refs, **not closed**. No new M33 acceptance,
+push, merge, release or tag is claimed; root owns subsequent UI requests on its
+separate worktree. All heavy validation jobs have completed.

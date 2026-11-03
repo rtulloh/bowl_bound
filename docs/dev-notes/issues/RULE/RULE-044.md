@@ -1,16 +1,17 @@
 ---
 id: RULE-044
 title: Reconcile next-play timeout timing through a pending coached play
-status: open
+status: resolved
 priority: High
 milestone: '33'
 created-at: 2026-11-03
-resolved-at: null
+resolved-at: 2026-11-03
 closed-at: null
 tags:
-- investigating
+- owner-review
+- timing
 links: [RULE-042, UI-052]
-commits: []
+commits: [04707ce113729830700308610a120d53d1dd3282, e3d6516fd7362940c7178dcea2276f1b1f75747c, b265de374e8ea1cb1e918ae8ac8bbffb83df7632]
 ---
 
 ## Description
@@ -19,7 +20,8 @@ Owner web play-test: selecting a team timeout and then a defensive formation app
 
 ## Resolution / verification
 
-- Verify timeout click, defense call, CPU-owned continuation, final 10-second charge, correct team budget and cleared selection through API and engine.
+- Bind an eligible timeout request to the selected call, preserve it through required decisions, spend once for a normal play longer than 10 seconds, and clear it unused for natural 10-second/no-time outcomes. Verify ownership, clocks, budget and save/replay in engine/API controls.
+- Match ordinary CLI AT timing/eligibility, explicitly document its existing human-pending limitation, and preserve legacy unconditional commands and saves.
 - Verify critical late-quarter timing and visible engine-provided labels/status without armed wording.
 
 ## Comments
@@ -47,7 +49,7 @@ correct timeout count/10-second charge, then failed on remaining armed wording.
 A frontend regression failed on missing engine prior-timing explanation. Tests
 now cover both interception choices at Q1/Q2/Q4, no extra charge on refresh,
 save/replay and four 11-second period-boundary controls. Normal CLI AT vs web
-reservation is mechanically equivalent (prior30 + selected10), retaining distinct
+reservation is mechanically equivalent (prior 30 + selected 10), retaining distinct
 legacy audit method names. **435 cumulative Python cases**, **131 frontend
 cases**, production build and focused Ruff pass.
 
@@ -72,8 +74,8 @@ Test-first: 15 engine tests failed on absent command, six new API branches on
 422, frontend on displaying the legacy control instead of the conditional offer.
 An initial new API test had a missing parametrized function argument; corrected
 that fixture before recording meaningful API failures. Focused current result:
-44 passed in7.43s; cumulative568 in73.23s. Frontend131 in4.80s/build1.08s; Ruff
-check/format554files pass. New real-engine browser controls include conditional
+44 passed in 7.43s; cumulative 568 in 73.23s. Frontend 131 in 4.80s/build 1.08s; Ruff
+check/format 554 files pass. New real-engine browser controls include conditional
 requests/side ownership and both human interception decisions on fictional
 all-interception charts (explicit baseline-v2 avoids another RZDZ decision).
 These browser assertions remain unverified locally because of sandbox launch
@@ -93,21 +95,21 @@ release-package isolated-runtime test successfully. No check was skipped.
 
 Final-source full gate initially exposed two stale exact CLI/API drive-log
 expectations missing additive `timing_label: null`. Both failed meaningfully,
-then both passed in0.67s with only that documented field added; all strict
+then both passed in 0.67s with only that documented field added; all strict
 football/save/future comparisons remain. The early full run was interrupted
-at511passed/2failed in278.38s and is not acceptance evidence. Executable source
+at 511 passed/2 failed in 278.38s and is not acceptance evidence. Executable source
 remains e3d6516; a fresh complete gate follows this test-contract correction.
 
 --- 2026-11-03 15:55 ---
 Parent verified frozen e3d6516 on a separate port: eligible same-play timeout
-spends one budget/10seconds and appears in history; health/frontend/assets pass.
-An independently generated fictional golden save from actual frozen97d9314
-loads/re-saves, preserving its legacy prior30 + selected10 charge and one timeout.
+spends one budget/10 seconds and appears in history; health/frontend/assets pass.
+An independently generated fictional golden save from actual frozen `97d9314`
+loads/re-saves, preserving its legacy prior 30 + selected 10 charge and one timeout.
 An authorized private CLI save also loads without changing its saved public
 score/clock; no raw save, team details or play logs are copied here.
 
 Play-test confirmation (partial): owner reports the offensive control on frozen
-e3d6516 used exactly10seconds after selecting a timeout and play1. Defensive
+e3d6516 used exactly 10 seconds after selecting a timeout and play 1. Defensive
 confirmation is still pending; this does not close the ticket.
 
 Browser self-review now handles a possible human-owned RZDZ result choice in
@@ -117,3 +119,30 @@ human choices, then assert one final charge. It does not replace normal-tier
 coverage with a simpler policy or make invented decisions on the frontend.
 The fresh Python gate has passed the earlier stale-expectation point; no full
 pass or automated browser execution is claimed yet.
+
+--- 2026-11-03 — final engineering verification ---
+Resolved against executable e3d6516 (presentation 04707ce), with b265de3's
+explicit nullable API-contract correction. Subsequent 899cd8c changes only
+browser tests/docs. No new runtime change is hidden behind a prior green gate.
+
+- `.venv/bin/python -m pytest --cov --cov-report=term-missing -q`: **3,499
+  passed in 873.91s, 93.17% branch-aware coverage**, exit 0, no skips/warnings.
+- Relevant cumulative timeout/CLI/coaching/saves/API/fumble/fourth-down/current
+  RZDZ/version contracts: **568 passed in 73.23s**. Final focused timeout, CLI and
+  tracker command: **122 passed in 13.30s**, including the review's red CLI menu
+  control. The two corrected exact CLI/API drive cases pass in 0.67s.
+- Pinned frontend: **131 tests**, production build, npm audit **zero
+  vulnerabilities**. Ruff check/format **554 files**, pip check, isolated real
+  runtime/default-game staging, link and diff checks pass. Runtime paths are
+  already manifest-selected; no module or private material was added to packaging.
+- **40** real-engine browser cases collect; both new fictional INT fixtures pass
+  through TestClient. Automated browser execution remains unverified under the
+  documented local Chromium sandbox restriction. No fresh hosted pass is claimed.
+- Independent frozen e3d6516 HTTP/frontend/history checks and actual 97d fictional
+  golden-save load/re-save preserve legacy behavior. Original live games/servers
+  were left intact. No branch push, merge, release or tag was performed.
+
+Owner confirmed offense on the immutable candidate. **Defensive owner play-test
+confirmation remains pending**, so the ticket is resolved rather than closed.
+Original M33 acceptance remains historical; subsequent button-count wording and
+play-history work are separate owner requests.
