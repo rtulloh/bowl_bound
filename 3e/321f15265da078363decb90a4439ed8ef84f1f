@@ -1,0 +1,41 @@
+bowl_bound/cli.py
+  s_0e32a34de270af::t_a63dabf3ed2747 206-207,247-250,494-495
+bowl_bound/save_game.py
+  s_cee2f5c7a51f19::t_6732f8d6643ed8 1243,1283-1284,1289-1296
+docs/api.md
+  s_cee2f5c7a51f19::t_b3c2e84bbb6c25 63-75
+docs/coaching.md
+  s_cee2f5c7a51f19::t_48296a865d29e8 60-66
+docs/saves.md
+  s_cee2f5c7a51f19::t_f0a11f6b7d2354 203-210
+frontend/e2e/difficulty.spec.js
+  s_cee2f5c7a51f19::t_7350bb76268789 70-112
+frontend/src/App.jsx
+  s_cee2f5c7a51f19::t_c13140482bd1d4 318-319,324,326
+frontend/src/test/clockFlow.test.jsx
+  s_0e32a34de270af::t_d18bdc6661fecd 62-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "3e321f15265da078363decb90a4439ed8ef84f1f",
+  "prompts": {},
+  "sessions": {
+    "s_0e32a34de270af": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19e3e-91b5-7fc3-a61a-a2d9b854b5e1",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    },
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
