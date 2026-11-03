@@ -908,3 +908,50 @@ legal selection. Neither benchmark predicts or replays the unknown original
 RZDZ field state/future result. Current source is offered as a focused commit
 for an immutable local play test; AI-033 stays open until fresh full validation
 and owner review. Prior full-Python evidence is explicitly pre-revision.
+
+
+### AI-033 final engineering verification
+
+Tested implementation: `aad5312d301c430f9ea8243c758fcb0666ecedf7`; the code is the
+same immutable source used by the parent's port-8036 play-test server. AI-033 is
+resolved pending actual owner RZDZ confirmation before closure. Original M33
+acceptance at `f82ad47` remains historical; this is a bounded owner-review fix.
+
+- `.venv/bin/python -m pytest --cov --cov-report=term-missing -q`:
+  **3,454 passed in 893.63s, 93.15% branch coverage**, no skips or Python warnings.
+- Focused cumulative command covers RZDZ, difficulty, coaching saves/profiles/
+  invariants, strict saves, API coaching/save/control, CLI games, evaluator and
+  exact-probability contracts, version interfaces and current audit matrix:
+  **372 passed in 58.93s**. Tracker + isolated real runtime + all 62 new RZDZ
+  cases: **81 passed in 15.22s**.
+- `.venv/bin/python -m bowl_bound.coaching_audit --seeds 101 307 --policies baseline-v2 easy-v11 medium-v11 hard-v11`:
+  **32/32 mechanically correct games**, both sides/arrangements, exact saved-future
+  replay, scoring/statistics and all four 900-second quarters. Reconciled **5,451
+  reports, 11,764 trace rolls and 5,336 replayed commands**, zero illegal selections.
+  All **147** current forced RZDZ decisions (**77 defense / 70 offense**) have
+  **zero fallback**; **5,623** preference vectors are finite, normalized, legal and
+  assign positive probability to the selected call.
+- The whole audit has **two flagged initial-try analysis fallbacks**, preserved
+  in [AI-034](issues/AI/AI-034.md), an M23 follow-up. A penalty leaves another
+  attempt outside the one-action boundary; the current evaluator refuses to
+  pretend it knows a completed zero/two-point outcome. The fictional reproduction
+  has 32 explicit failed samples/no mean. No flag or failure assertion is hidden.
+- Comparable calls/repetitions: baseline **150/21**, Easy **191/43**, Medium
+  **201/45**, Hard **170/28**. Longest comparable streaks: **2/3/4/3**. All **4,911**
+  situation buckets remain small samples, with zero advisory concentration warnings;
+  this provides no broad balance, optimality or calibration claim.
+- Unchanged private command: `.venv/bin/python scripts/run_local_season.py --seasons seasons --games-per-team 12 --seed 20311031 --output private-data/milestone-33-validation/ai033-local-season`:
+  **120 passed, zero failures/fallbacks**. Detailed evidence remains ignored.
+- Frontend source unchanged: pinned npm CI/test/build/audit already passes,
+  **130 tests in 4.66s**, build **1.42s**, zero vulnerabilities; existing npm
+  deprecation and Vitest advice remain visible. Ruff check/format (**547 files**),
+  pip check and diff checks pass. All ten changed app-runtime files are already
+  manifest-selected; the developer audit CLI is intentionally not a player
+  runtime module. Real isolated staging/default-game checks pass.
+
+No fresh automated browser/hosted gate is claimed for this follow-up. Local
+Chromium's sandbox restriction remains documented above, and no push is authorized.
+The parent independently verified health/frontend/assets, v11 imports from the
+frozen checkout, and the owner's exact saved-game load/re-save/reload with only
+timestamp/integrity differences. This is not invented owner RZDZ confirmation.
+No live game was stopped, restarted or edited; no main/release/tag was changed.

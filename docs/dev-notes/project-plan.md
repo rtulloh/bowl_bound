@@ -629,8 +629,11 @@ Owner play-test follow-up: [UI-052](issues/UI/UI-052.md) replaces timeout button
 copy with the owner's approved plain language on the unmerged M33 review branch.
 It preserves the completed `f82ad47` engineering snapshot and changes no rules.
 [AI-033](issues/AI/AI-033.md) separately tracks the subsequent owner-reported
-Razzle-Dazzle CPU choice-quality problem on that same review branch; it remains
-open until its own tested follow-up is accepted.
+Razzle-Dazzle CPU choice-quality problem on that same review branch; it is
+resolved against tested `aad5312` after 3,454 Python cases and 147 audited
+current RZDZ choices with no pending-choice fallback. Owner RZDZ confirmation
+remains required before closure; the separate initial-try analysis limitation is
+tracked under M23 in [AI-034](issues/AI/AI-034.md).
 
 **Commit:** `milestone 33: correct core playability and validation status`
 
