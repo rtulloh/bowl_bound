@@ -358,12 +358,15 @@ class RegulationGame:
                 if not normal_timing_ends_period and not self._untimed:
                     for team, available in zip(Possession, self._clock.timeouts, strict=True):
                         if available and self._armed_timeout in {None, team}:
-                            verb = "Cancel" if self._armed_timeout is team else "Arm"
+                            label = (
+                                f"Cancel {self._names[team]} timeout"
+                                if self._armed_timeout is team
+                                else f"Use {self._names[team]} timeout on next play"
+                            )
                             game_actions.append(
                                 Action(
                                     f"timeout:{team.value}",
-                                    f"{verb} {self._names[team]} timeout "
-                                    f"for next play ({available})",
+                                    f"{label} ({available})",
                                 )
                             )
                 game_actions.append(Action("kneel", "Kneel"))

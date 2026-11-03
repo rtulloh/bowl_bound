@@ -130,13 +130,14 @@ choose any enabled legal action. It uses public game facts, with actual kick
 results resolved from the team chart after the call.
 
 
-The Clock controls also show each engine-offered next-play timeout. Choose your
-own timeout to arm it, then choose the play or defensive formation. The clock
-and timeout budget stay unchanged until the play completes; then that play takes
-10 seconds and one timeout is spent. The engine's cancel control removes the
-selection. Only one side's modifier can be armed at a time. It survives required
-play decisions and private save/load, and clears after the play. The existing
-post-play clock choices continue to adjust the completed play.
+The Clock controls also show each engine-offered next-play timeout. Choose
+**Use [team] timeout on next play (N)** for your team, then choose the play or
+defensive formation. The clock and timeout budget stay unchanged until the play
+completes; then that play takes 10 seconds and one timeout is spent. Choose
+**Cancel [team] timeout (N)** to remove the selection; `(N)` is the remaining
+timeout budget. Only one side's modifier can be armed at a time. It survives
+required play decisions and private save/load, and clears after the play. The
+existing post-play clock choices continue to adjust the completed play.
 
 
 Cancel an armed timeout before choosing the separate combined next-spike timing

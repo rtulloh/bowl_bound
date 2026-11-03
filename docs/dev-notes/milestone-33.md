@@ -739,3 +739,39 @@ all **900** local Markdown links and `git diff --check` pass. All ten assigned
 tickets are resolved with tested commits; none is closed. The final acceptance
 commit changes documentation/status only; reviewed executable source remains
 identical to the fully passing hosted `eed362c`.
+
+## Owner play-test follow-up — UI-052 (2026-11-03)
+
+After completed engineering acceptance at `f82ad47`, the owner requested clearer
+next-play timeout button wording on the still-unmerged play-test branch. This
+narrow [UI-052](issues/UI/UI-052.md) follow-up belongs to M33 owner review; it does
+not reopen or replace that snapshot's acceptance record or expand game rules.
+
+Reread local Paydirt `paydirt/interactive_game.py:637`, whose `[T] Call Timeout`
+control describes its purpose in plain language. Adapt that wording approach
+only, not its NFL timing instruction, code or dependencies. The owner approved
+**Use [team] timeout on next play (N)** when unselected and
+**Cancel [team] timeout (N)** when selected. The engine supplies both labels and
+the existing budget; the browser continues to display backend facts. Action keys,
+timeout ownership, timing, save state and gameplay behavior are unchanged.
+
+Updated the existing synthetic frontend fixture/expectations and player guide.
+This is copy only: no artificial new behavior test or changed football assertion
+is needed. Focused existing engine/CLI/frontend checks and lint/build validation
+are recorded below after execution. The live port-8033 process and its in-memory
+game remain untouched; the owner will transfer via Save/Load to a new process.
+
+Validation (copy-only follow-up):
+
+- `.venv/bin/python -m pytest tests/test_armed_timeouts.py tests/test_cli_timeout_controls.py tests/test_cli_shortcuts.py tests/test_issue_tracker.py -q`:
+  **114 passed in 8.99s**, including all 37 armed-timeout cases; no skips/warnings.
+- Pinned Node 24.22.1/npm 11.19.1, `frontend/`:
+  `npm test -- src/test/clockFlow.test.jsx src/test/clockChoices.test.jsx src/test/noRules.test.js`:
+  **27 passed in three files, 1.09s**; `npm run build` passes (**369ms**).
+- Ruff check/format (**542 files**) and `git diff --check` pass. A synthetic
+  two-side preview confirms exact approved labels/counts and unchanged state
+  after selection/cancellation. Existing frontend expectations change only to
+  the approved copy; no gameplay assertion or action key changed.
+- No full simulation/regression rerun or push is needed for this local copy
+  review. The previous `f82ad47` full-gate evidence stays historical; it is not
+  presented as testing this new label change. Port 8033 remains running untouched.

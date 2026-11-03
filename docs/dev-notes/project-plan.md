@@ -625,6 +625,10 @@ coaching/replay audit pass; 17/17 deliberate coaching faults are detected.
 Owner play-test confirmation remains required before closing gameplay tickets.
 This milestone does not publish a release or implement Milestones 34/35.
 
+Owner play-test follow-up: [UI-052](issues/UI/UI-052.md) replaces timeout button
+copy with the owner's approved plain language on the unmerged M33 review branch.
+It preserves the completed `f82ad47` engineering snapshot and changes no rules.
+
 **Commit:** `milestone 33: correct core playability and validation status`
 
 ### 35. Add optional coffin-corner punts and coaching support
