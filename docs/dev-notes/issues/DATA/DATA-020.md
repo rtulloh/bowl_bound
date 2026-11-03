@@ -40,3 +40,11 @@ Cumulative 172 cases passed before this final guard; corrected-source focused
 51 cases, repository lint/format, dependency consistency and whitespace checks
 passed. Full changed-source acceptance and measured historical pilot storage
 remain pending; this ticket stays open.
+
+--- 2026-11-03 17:10 ---
+Tested storage source commit: `83f2cc61c4fa845833560a51faf2e62fa0cf0821`.
+Local full regression passed 3,491 cases / 91.54% branch-aware coverage; exact-source
+hosted Tests 41673619396 passed 3,491 Python cases / 91.53%, 130 frontend cases,
+38 real-engine browsers and zero audit vulnerabilities. Full logs remain private.
+Measured historical pilot storage still awaits the concrete-slate review and run;
+the ticket remains open rather than claiming that unperformed evidence.

@@ -243,3 +243,30 @@ blocking issue and confirmed gzip footer/fsync ordering, atomic publication,
 preflight placement and strict resume checks. Legacy payload reading does not
 automatically migrate old source/tool run contracts; documentation states this
 limit explicitly. A renewed full gate follows the focused storage commit.
+
+## Frozen storage-source regression checkpoint
+
+At `83f2cc61c4fa845833560a51faf2e62fa0cf0821`, local full regression passed
+3,491 cases in 1,175.68 seconds with 91.54% branch-aware coverage. Repository
+Ruff check/format (603 files), pip consistency and whitespace checks passed.
+Tracked files and new commit history contain no private inputs, source archives
+or historical charts; public sample bundles are unchanged.
+
+Fresh exact-source hosted [Tests 41673619396](https://github.com/rtulloh/bowl_bound/actions/runs/41673619396)
+passed 3,491 Python cases with 91.53% coverage, all 130 frontend cases, production
+build, audit with zero vulnerabilities and all 38 real-engine browser cases.
+Python's final summary contains no skips or warnings. Existing frontend warnings
+remain visible: React act warnings, one duplicate synthetic fixture-key warning
+and the whatwg-encoding deprecation. These repeat the known DEV-044/DEV-064
+baseline and are not suppressed or represented as new gameplay regressions.
+
+The hosted job took 44 minutes 25 seconds against a 45-minute budget. DATA-021
+tracks the 35-second margin as a repeatability risk to investigate before final
+34a acceptance. The run passed; no hang, failed test or timeout is asserted.
+
+All 87 selected 2007 teams and 92 selected 2008 teams have the six required source
+targets separately for offense and defense. This does not establish official
+source completeness or remove sparse exposure: 19 and 23 teams respectively have
+only one selected fixture. Private v3 reports/charts are unchanged. No broad
+historical batch has started before the owner's concrete-slate review. This is
+an engineering checkpoint, not completed 34a acceptance or renewed calibration.
