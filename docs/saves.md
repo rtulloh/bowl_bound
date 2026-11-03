@@ -60,6 +60,11 @@ random source is restored at the exact post-save position, shared by the game an
 pending procedures, so continuation consumes the same next dice as uninterrupted
 play. Saving/viewing does not advance the source.
 
+A pending fumble-penalty decision already contains the completed recovery facts.
+Loading reconstructs them from the recorded rolls. Declining reuses that result;
+accepting discards it without a second recovery roll. Required end-zone/return
+decisions that precede the original penalty are save-capable as well.
+
 This reconstructs actual state; it is not playback of canned descriptions. The
 engine remains authoritative for field position, clocks, penalties, conversions,
 overtime, scoring and statistics. Both the compatible drive mode and regulation
@@ -73,11 +78,11 @@ The top-level JSON fields are:
 | Field | Meaning |
 | --- | --- |
 | `schema_version` | Exactly integer `1`; no guessing/defaulting missing versions |
-| `engine_profile` | `bowl-bound-m22-v1`, identifying command/rules/trace replay semantics |
+| `engine_profile` | `bowl-bound-m33-v1`, identifying command/rules/trace replay semantics |
 | `python` | Python major/minor pair; different pairs are rejected conservatively |
 | `saved_at` | UTC timestamp metadata |
 | `teams` | Canonical `season/slug` IDs, SHA-256 chart fingerprints, and saved defense-chart markers when present |
-| `config` | Mode, gameplay seed, start spot, regular/postseason type, initial clock, Advanced II profile, optional independent `coach_seed`, and selected `difficulty` |
+| `config` | Mode, gameplay seed, start spot, regular/postseason type, initial clock, Advanced II profile, optional independent `coach_seed`, selected `difficulty`, and optional legacy replay-prefix length |
 | `commands` | Ordered `snap`/`kick`/`decide`/`action` operations, arguments and expected error class (null for success) |
 | `rolls` | Previously observed offensive/defensive physical-face arrays, in request order |
 | `random_state` | Python MT19937 version-3 state, or remaining synthetic scripted rolls |
@@ -89,15 +94,30 @@ non-finite numbers. Team fingerprints include normalized chart/provenance conten
 not filesystem locations. Physical face count distinguishes offensive (three) and
 defensive (two) rolls; totals are not sampled or reverse-inferred.
 
-Milestone 22 writes `bowl-bound-m22-v1` saves. The loader still accepts legacy
-`bowl-bound-m21-v1` saves with their original six-defense profile; the optional
-Advanced II setting and team marker metadata are absent from those saves.
+Milestone 33 writes `bowl-bound-m33-v1` saves. The loader still accepts
+`bowl-bound-m22-v1` and legacy `bowl-bound-m21-v1` saves. The latter retain their
+original six-defense profile; optional Advanced II and team marker metadata are
+absent from those saves. Historical commands retain their original fumble/penalty
+order, identified by the validated `config.legacy_fumble_commands` prefix length.
+New commands use recovery-before-penalty ordering.
+
+If an older save stopped before its fumble recovery roll, loading offers a single
+**Resolve fumble recovery** control before offering accept/decline. Loading and
+resaving consume no new dice. Selecting that control records an ordinary engine
+decision and resolves recovery with the original future source. Any required
+end-zone/return choices follow before the original penalty decision. Subsequent
+saves replay this sequence exactly; migration never substitutes a predicted
+recovery or relaxes the recorded-roll and final-state integrity checks.
+
 Older `bowl-bound-m19-v1` saves are rejected before team lookup. No migration or
-deletion of private saves is performed. Do not hand-edit engine profiles to bypass
+deletion of those unsupported private saves is performed. Do not hand-edit engine profiles to bypass
 this check.
 
-New games enable Advanced II. A team's printed defense-chart markers are copied into
-the private save and verified against the installed team metadata on load. Current saves
+Normal games keep deferred Advanced II defensive options unavailable. Legacy
+Advanced II settings are replayed only for compatibility and then disabled; this
+does not enable Wild Card, Run/Pass, Nickel Zone or Red Zone calls for new play.
+A team's printed defense-chart markers remain private save metadata and are
+verified against the installed team metadata on load. Current saves
 write `defense_chart_markers`; older saves using `privileges` remain readable. If a save
 contains markers, the loader must return both the matching chart and metadata; chart-only
 loaders remain supported for saves without markers. This preserves free versus conditional
@@ -180,3 +200,11 @@ saves remain compatible; loading uses current validated local rosters only after
 replay succeeds. Changed names may alter displayed history, never saved facts or
 future dice/coaching streams. Missing files stay generic; malformed present
 rosters reject adapter load without replacing the current game.
+
+
+Armed next-play timeouts replay through ordinary `action timeout:<side>` journal
+commands. `armed_timeout` is semantic state when present and must match the final
+state digest. Its label and derived action labels are presentation facts. Unarmed
+additive fields do not invalidate older supported save digests. Saving/loading
+an arm or a pending play continuation neither spends a timeout nor consumes dice;
+only the final completed legal play applies its 10-second timing modifier.

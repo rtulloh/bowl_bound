@@ -50,11 +50,74 @@ class CoachChoice:
     fallback: bool = False
 
 
+@dataclass(frozen=True)
+class FourthDownGuidance:
+    """Read-only public recommendation shared with the normal CPU policy."""
+
+    action: str
+    label: str
+    summary: str
+    attempt_distance: int
+    difficulty: str
+    aggression: float
+
+
 def safe_choice(candidate: str, legal: tuple[str, ...]) -> CoachChoice:
     """Constrain a policy suggestion to the supplied enabled engine options."""
     if not legal:
         raise NoLegalAction("No enabled engine action is available.")
     return CoachChoice(candidate) if candidate in legal else CoachChoice(legal[0], True)
+
+
+def field_goal_attempt_distance(observation: CoachObservation) -> int:
+    """Return the public conventional distance: line of scrimmage plus 17 yards."""
+    return observation.yards_to_goal + 17
+
+
+def public_fourth_down_call(
+    observation: CoachObservation, *, aggression: float, chase_seconds: int = 180
+) -> str | None:
+    """Choose field_goal, punt, or go using the owner-approved public policy.
+
+    Inputs contain only visible game facts and declared aggression. This function
+    neither accepts nor inspects a chart and consumes no randomness. It recommends
+    an offered kick or scrimmage; the engine separately resolves the actual play.
+    Non-fourth downs, overtime and conversion tries are outside this policy.
+    """
+    if observation.overtime or observation.phase == "two_point_try" or observation.down != 4:
+        return None
+    field_goal_available = "field_goal" in observation.special
+    punt_available = "punt" in observation.special
+    field_goal_distance = field_goal_attempt_distance(observation)
+    late_trailing = (
+        observation.quarter == 4
+        and observation.remaining <= chase_seconds
+        and observation.score_difference < 0
+    )
+    if late_trailing:
+        if (
+            observation.score_difference >= -3
+            and field_goal_available
+            and field_goal_distance <= 55
+        ):
+            return "field_goal"
+        return "go"
+
+    if field_goal_available and field_goal_distance <= 35:
+        return "field_goal"
+    if field_goal_available and field_goal_distance <= 47:
+        if observation.distance == 1 and aggression >= 0.5:
+            return "go"
+        return "field_goal"
+    if field_goal_available and field_goal_distance <= 50:
+        return "field_goal"
+    if field_goal_available and field_goal_distance <= 55:
+        if aggression >= 0.5:
+            return "field_goal"
+        return "punt" if punt_available else "go"
+    if observation.distance == 1 and aggression >= 0.5:
+        return "go"
+    return "punt" if punt_available else "go"
 
 
 class BaselineCoach:

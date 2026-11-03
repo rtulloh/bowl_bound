@@ -274,7 +274,19 @@ return, so it does not eliminate the second attempt. Do not substitute NFL sudde
   starting another play. Never allow a finalized game to be reopened. At 0:00 complete the current play,
   required conversion, and any defensive-penalty untimed down before finalizing.
 - **Timeouts:** Three per team per half, no carryover. Reset both budgets at
-  halftime. Opening toss selection and reciprocal second-half kickoff follow the
+  halftime. Each eligible side may arm/cancel its own next-play timeout, including
+  after kickoff. Only one side may be armed; another side cannot overwrite it.
+  Selection consumes no clock, dice or timeout. The next completed legal play
+  consumes that side’s timeout, uses 10 seconds, and clears the modifier, including
+  after turnovers/scoring. Mandatory recovery/kick/penalty choices retain it until
+  the play completes; invalid/unsupported actions do not spend it. A no-time
+  elected safety clears an unused modifier and retains its zero-time rule.
+  Existing post-play clock choices still apply to the prior completed play. A
+  prior-play timeout spending the armed side’s last timeout clears that now
+  unavailable modifier; a period boundary also clears it without spending it.
+  No arming during kickoff, mandatory choices, conversions, untimed downs,
+  overtime, finished games, or when prior normal timing ends the period.
+  Overtime retains its separate existing timeout rule. Opening toss selection and reciprocal second-half kickoff follow the
   selected Bowl Bound profile; see the second-half kickoff policy above.
 - **Elected safety:** During a live scrimmage, the offense may elect to give the
   defense two points. This is a no-dice, no-time action; the conceding team then
@@ -427,8 +439,12 @@ actual penalty enforcement and keeps penalty/defensive-return yards out of offen
   end zone is a safety. An own-end-zone fumble recovered by the fumbling team is a
   safety under VI-13(D)(iv), distinct from a return that never crosses its goal line.
   [Turnover details](turnovers.md) include return fouls and recovery chains.
-- Declining a prepared turnover penalty resumes its actual engine procedure,
-  without repeated chart rolls or a duplicate committed play. Own-recovery return
+- A fumble's recovery and required return/end-zone consequences finish before
+  the original penalty choice compares the completed result with enforcement.
+  The engine prepares those facts without committing state, points, statistics,
+  or timing. Declining applies that result without repeated recovery rolls;
+  accepting discards it. Interception penalties retain their explicit subsequent
+  interception choice. Neither path records a duplicate committed play. Own-recovery return
   fouls retain the original down and line to gain unless enforcement earns a first down.
 - Field goals are not offered from own 7 or closer (the hold would be outside
   the field); an invalid direct request is refused before rolling. A fourth-down
@@ -450,3 +466,7 @@ statistical kick length. This changes replay-description digests, not football
 rules; the save engine profile is now `bowl-bound-m19-v1` (see [saves](saves.md)).
 Persistent browser hurry mode selects only an offered legal engine decision; it
 does not add timing reductions or bypass required decisions.
+
+
+Cancel an armed timeout before choosing the separate combined next-spike timing
+option; the engine withholds that choice while the timeout is armed.

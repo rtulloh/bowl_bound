@@ -13,7 +13,11 @@ for (const width of [1280, 390]) {
     await page.getByTestId('away-select').selectOption('2002/beta-state')
     await page.getByTestId('start-game').click()
     await page.getByTestId('penalty-choice-toss:kick').click()
+    const kickoffResponse = page.waitForResponse((response) => response.url().endsWith('/kick') && response.request().method() === 'POST')
     await page.getByTestId('special-play-kickoff').click()
+    const kicked = await kickoffResponse
+    expect(kicked.ok()).toBeTruthy()
+    const kickoffView = (await kicked.json()).view
     const plays = page.getByTestId('offense-plays')
     await expect(plays).toBeVisible()
     await expect(plays.getByTestId('special-play-punt').locator('span')).toHaveText(['P', 'Punt'])
@@ -33,9 +37,16 @@ for (const width of [1280, 390]) {
     const modifiers = page.getByRole('region', { name: 'Play modifiers' })
     const hurry = modifiers.getByRole('checkbox', { name: 'Enable/Disable Hurry-Up' })
     await expect(hurry).toBeVisible()
-    const timeoutPlaceholder = modifiers.getByRole('button', { name: 'Timeout', exact: true })
-    await expect(timeoutPlaceholder).toBeVisible()
-    await expect(timeoutPlaceholder).toBeDisabled()
+    const timeoutActions = kickoffView.game_actions.filter((action) => action.key.startsWith('timeout:'))
+    expect(timeoutActions.map((action) => action.key)).toEqual(['timeout:home', 'timeout:away'])
+    expect(kickoffView.armed_timeout).toBeNull()
+    for (const action of timeoutActions) {
+      const timeout = modifiers.getByTestId('game-play-' + action.key)
+      await expect(timeout).toBeVisible()
+      await expect(timeout).toBeEnabled()
+      await expect(timeout).toHaveAccessibleName(action.label)
+    }
+    await expect(modifiers.getByRole('button', { name: 'Timeout', exact: true })).toHaveCount(0)
     for (const name of ['Out of bounds', 'Keep in bounds']) {
       await expect(modifiers.getByRole('button', { name, exact: true })).toBeVisible()
     }

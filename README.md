@@ -6,8 +6,8 @@ local web game. Dice, chart results, clock, scoring and statistics are resolved
 by the game engine. No account or Internet connection is needed for local play
 after installation.
 
-**Third alpha: 0.1.0-alpha.3.** Standalone downloads are available from the
-GitHub prerelease. The game includes the original fictional Cedar Valley and Harbor
+**Fourth alpha candidate: 0.1.0-alpha.4.** Standalone downloads are published
+through GitHub Releases after build verification. The game includes the original fictional Cedar Valley and Harbor
 Tech teams; no historical teams or chart PDFs are bundled.
 
 ## Get started

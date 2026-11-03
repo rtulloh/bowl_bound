@@ -25,7 +25,7 @@ def test_pre_commentary_semantic_digest_and_save_shape_remain_compatible(tmp_pat
     value = game.snap("1", "A")
     text = dumps_game(game)
     saved = json.loads(text)
-    assert saved["engine_profile"] == ENGINE_PROFILE == "bowl-bound-m22-v1"
+    assert saved["engine_profile"] == ENGINE_PROFILE == "bowl-bound-m33-v1"
     assert _legacy_m19_view_digest(game.view()) == LEGACY_DIGEST
     saved["state_digest"] = LEGACY_DIGEST
     text = seal(saved)

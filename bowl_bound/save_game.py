@@ -17,7 +17,13 @@ from secrets import randbits
 from threading import RLock
 from typing import Any
 
-from .coaching import BaselineCoach, CoachChoice
+from .coaching import (
+    BaselineCoach,
+    CoachChoice,
+    FourthDownGuidance,
+    field_goal_attempt_distance,
+    public_fourth_down_call,
+)
 from .coaching_session import CoachingTurn, plan_turn
 from .commentary import narrate_report
 from .dice import DefensiveRoll, DiceSequenceError, OffensiveRoll, RandomDice, ScriptedDice
@@ -39,8 +45,8 @@ from .team_csv import DEFENSE_CHART_MARKERS, TeamFileMetadata
 from .timing import Clock
 
 SCHEMA_VERSION = 1
-ENGINE_PROFILE = "bowl-bound-m22-v1"
-_SUPPORTED_ENGINE_PROFILES = {"bowl-bound-m21-v1", ENGINE_PROFILE}
+ENGINE_PROFILE = "bowl-bound-m33-v1"
+_SUPPORTED_ENGINE_PROFILES = {"bowl-bound-m21-v1", "bowl-bound-m22-v1", ENGINE_PROFILE}
 MAX_SAVE_BYTES = 2 * 1024 * 1024
 MAX_COMMANDS = 10_000
 MAX_ROLLS = 50_000
@@ -307,6 +313,7 @@ class SavedGame:
         self._charts = {"home": home, "away": away}
         self._rosters: tuple[Roster | None, Roster | None] = (None, None)
         self._config = dict(config)
+        self._legacy_fumble_view: SessionView | RegulationView | None = None
         self._config.setdefault("coach_seed", randbits(63))
         if self.difficulty is not None:
             from .coaching_profiles import CURRENT_DIFFICULTY_VERSION
@@ -507,6 +514,57 @@ class SavedGame:
             view, next_turn = self.coach_view(human_side)
             return report, view, next_turn
 
+    def fourth_down_guidance(
+        self,
+        human_side: str | None,
+        *,
+        view: SessionView | RegulationView | None = None,
+    ) -> FourthDownGuidance | None:
+        """Describe the public policy without selecting calls or inspecting charts.
+
+        Adapters supply their captured response view so concurrent commands cannot
+        attach a later state's guidance to an earlier command's response.
+        """
+        from .coaching_session import observe_game
+
+        with self._lock:
+            if human_side not in {None, "home", "away"}:
+                raise ValueError("human side must be home or away")
+            if self.difficulty is None or self._coach.version < 10:
+                return None
+            view = self.view() if view is None else view
+            if (
+                view.finished
+                or view.state is None
+                or (view.pending and not getattr(view, "clock_optional", False))
+                or (human_side is not None and view.state.possession != human_side)
+                or not view.actions.offense
+                or not any(a.key in {"field_goal", "punt"} for a in view.actions.special)
+            ):
+                return None
+            public = observe_game(view, view.state.possession)
+            action = public_fourth_down_call(
+                public,
+                aggression=self._coach.aggression,
+                chase_seconds=self._coach.behavior.chase_seconds,
+            )
+            if action is None:
+                return None
+            label = {"field_goal": "Field goal", "punt": "Punt", "go": "Go for it"}[action]
+            distance = field_goal_attempt_distance(public)
+            return FourthDownGuidance(
+                action=action,
+                label=f"Fourth down: {label}",
+                summary=(
+                    f"{distance}-yard field-goal distance. "
+                    f"{self.difficulty.title()} public policy, shared with the computer. "
+                    "Actual kick results use the team's chart."
+                ),
+                attempt_distance=distance,
+                difficulty=self.difficulty,
+                aggression=self._coach.aggression,
+            )
+
     def player_advice_available(self, human_side: str) -> bool:
         """Check Easy helper availability without analyzing charts or selecting CPU calls."""
         with self._lock:
@@ -607,6 +665,12 @@ class SavedGame:
 
     def _execute(self, operation: str, arguments: list[str]) -> PlayReport | None:
         record = {"operation": operation, "arguments": arguments, "error": None}
+        session = (
+            self._engine._session if isinstance(self._engine, RegulationGame) else self._engine
+        )
+        session._legacy_fumble_penalties = len(self._commands) < self._config.get(
+            "legacy_fumble_commands", 0
+        )
         before = self._engine.view()
         roll_count, position = len(self._tape.rolls), self._tape.position
         try:
@@ -639,10 +703,12 @@ class SavedGame:
                 or self._engine.view() != before
             ):
                 self._commands.append(record)
+                self._finish_legacy_fumble_prefix()
             raise
         # The engine command is authoritative; derived history must not prevent
         # its journal entry after state/dice have already advanced.
         self._commands.append(record)
+        self._finish_legacy_fumble_prefix()
         if operation == "snap" and result is not None and result.supported:
             from .coaching_session import observe_policy
 
@@ -653,6 +719,17 @@ class SavedGame:
                 observation=observe_policy(before, offense_side, self._coach.version),
             )
         return result
+
+    def _finish_legacy_fumble_prefix(self) -> None:
+        """Keep historical rolls exact, then expose current recovery ordering."""
+        if len(self._commands) != self._config.get("legacy_fumble_commands", 0):
+            return
+        session = (
+            self._engine._session if isinstance(self._engine, RegulationGame) else self._engine
+        )
+        before = self.view()
+        if session._upgrade_pending_fumble():
+            self._legacy_fumble_view = before
 
     def snap(self, play: str, formation: str) -> PlayReport:
         return self._run("snap", [play, formation])
@@ -699,11 +776,17 @@ def _dumps_game(game: SavedGame) -> str:
 
 def _validate_config(config: Any) -> None:
     optional = (
-        {"coach_seed", "coach_policy", "difficulty", "advanced_ii"} & config.keys()
+        {"coach_seed", "coach_policy", "difficulty", "advanced_ii", "legacy_fumble_commands"}
+        & config.keys()
         if isinstance(config, dict)
         else set()
     )
     _keys(config, {"seed", "mode", "start_yards_to_goal", "game_type", "clock"} | optional)
+    if "legacy_fumble_commands" in optional and (
+        type(config["legacy_fumble_commands"]) is not int
+        or not 0 <= config["legacy_fumble_commands"] <= MAX_COMMANDS
+    ):
+        _fail()
     if "coach_seed" in optional and (
         type(config["coach_seed"]) is not int or not 0 <= config["coach_seed"] <= 2**63 - 1
     ):
@@ -860,6 +943,11 @@ def _validate(data: Any) -> None:
                 _fail()
     if not isinstance(data["commands"], list) or len(data["commands"]) > MAX_COMMANDS:
         _fail()
+    if "legacy_fumble_commands" in data["config"] and (
+        data["engine_profile"] != ENGINE_PROFILE
+        or data["config"]["legacy_fumble_commands"] > len(data["commands"])
+    ):
+        _fail()
     for record in data["commands"]:
         _keys(record, {"operation", "arguments", "error"})
         operation, arguments = record["operation"], record["arguments"]
@@ -942,6 +1030,8 @@ def loads_game(
             if preserve_development_policy
             else _current_difficulty_config(data["config"])
         )
+        if data["engine_profile"] != ENGINE_PROFILE:
+            config = {**config, "legacy_fumble_commands": len(data["commands"])}
         game = SavedGame(
             home,
             away,
@@ -972,6 +1062,8 @@ def loads_game(
             _legacy_m21_post_m27_view_digest(view),
             _legacy_m27_view_digest(view, getattr(game._engine, "_pending_timing_seconds", None)),
         }
+        if data["engine_profile"] != ENGINE_PROFILE and game._legacy_fumble_view is not None:
+            valid_digests.add(_view_digest(game._legacy_fumble_view))
         if legacy_halftime is not None:
             valid_digests.update(
                 {
@@ -1148,6 +1240,7 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         "toss_dice",
         "overtime_toss_dice",
         "play_modifiers",
+        "armed_timeout_label",
         "defense_name",
         "home_timeouts",
         "away_timeouts",
@@ -1187,11 +1280,20 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
                     continue
                 if key == "bounds_declaration" and item is None:
                     continue
+                if key == "armed_timeout" and item is None:
+                    continue
                 if key == "guaranteed_out_of_bounds" and item is False:
                     continue
                 if key == "game_actions" and isinstance(item, (list, tuple)):
                     item = [
-                        action for action in item if not action.get("key", "").startswith("bounds:")
+                        action
+                        for action in item
+                        if not action.get("key", "").startswith("bounds:")
+                        and not (
+                            data.get("clock") is not None
+                            and data.get("overtime") is None
+                            and action.get("key", "").startswith("timeout:")
+                        )
                     ]
                 canonical[key] = semantic(item)
             return canonical

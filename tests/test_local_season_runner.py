@@ -502,11 +502,13 @@ def test_overtime_series_evidence_requires_engine_order() -> None:
     from scripts.run_local_season import OvertimeSeriesStart, _state_facts
 
     view = finished_view()
-    state = view.log[0].state_before
-    view.log += (SimpleNamespace(**(vars(view.log[0]) | {"number": 2})),)
+    original = view.log[0]
+    state = replace_namespace(original.state_before, yards_to_goal=25, spot="opp 25")
+    view.log += (replace_namespace(original, number=2, state_before=state, state_after=state),)
     start = OvertimeSeriesStart(2, 2, 1, "home", "home", False, _state_facts(state))
-    periods = ((0, 0), (0, 0), (0, 0), (0, 0), (3, 0), (0, 0))
-    with pytest.raises(ValueError, match="invalid overtime series boundary"):
+    periods = ((0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (3, 0))
+
+    with pytest.raises(ValueError, match="invalid overtime series boundary evidence"):
         validate_game(view, periods, overtime_starts=(start,))
 
 

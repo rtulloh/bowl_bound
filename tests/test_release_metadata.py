@@ -14,8 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_alpha_version_agrees_across_package_api_and_frontend(tmp_path: Path) -> None:
-    python_version = "0.1.0a3"
-    display_version = "0.1.0-alpha.3"
+    python_version = "0.1.0a4"
+    display_version = "0.1.0-alpha.4"
     assert bowl_bound.__version__ == python_version
     metadata = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert re.search(r'^version = "([^"]+)"$', metadata, re.MULTILINE)[1] == python_version
@@ -29,7 +29,7 @@ def test_alpha_version_agrees_across_package_api_and_frontend(tmp_path: Path) ->
         response = client.get("/api/version")
         assert response.status_code == 200
         assert response.json() == {"version": display_version, "python_version": python_version}
-    assert ENGINE_PROFILE == "bowl-bound-m22-v1"
+    assert ENGINE_PROFILE == "bowl-bound-m33-v1"
 
 
 def test_mit_license_retains_notice_and_excludes_third_party_material() -> None:

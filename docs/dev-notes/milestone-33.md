@@ -12,7 +12,10 @@ GitHub status.
 [DEV-060](issues/DEV/DEV-060.md) is a focused packaging repair for the reported
 standalone-build failure, independent of the pending gameplay and workflow work.
 [DEV-061](issues/DEV/DEV-061.md) tracks missing runtime modules exposed by the
-next native smoke run.
+next native smoke run. [DEV-062](issues/DEV/DEV-062.md) corrects the stale
+save-guide assertion that normal games enable deferred Advanced II options.
+[DEV-063](issues/DEV/DEV-063.md) corrects the local audit’s rejection of valid,
+engine-observed overtime series resets discovered during final acceptance.
 
 Milestone 32 remains completed. Imported teams, historical charts, rosters, and
 local audit output remain private and excluded from ordinary test collection,
@@ -38,6 +41,14 @@ Reviewed local Paydirt sources before planning:
 
 No Paydirt source code, team data, or runtime dependency is reused.
 
+The implementation pass independently reread Paydirt's
+`tests/test_ai_offense_variety.py`, `tests/test_ai_trailing_defense.py`, and
+`tests/test_ai_mode_consistency.py` before AI-010. Adapted exact categorical
+probability checks, coaching RNG isolation, committed-history invariants, and
+one-coach-per-CLI-game instrumentation. The NFL call families, probability
+weights, clock decisions, and field-position policies are deliberately excluded;
+the tests exercise Bowl Bound's versioned behavior profiles and synthetic charts.
+
 ## Dependency order
 
 1. Establish the AI-010 deterministic regression harness needed by the gameplay
@@ -52,7 +63,158 @@ No Paydirt source code, team data, or runtime dependency is reused.
 
 ## Acceptance record
 
-Pending implementation.
+All ten assigned tickets have tested implementations and their engineering
+acceptance criteria are satisfied. Automatic
+[Tests 41575358111](https://github.com/rtulloh/bowl_bound/actions/runs/41575358111)
+passes the complete gate at `eed362c7daacff66c092a11d1ba8a896d1a9a1eb`, including
+all 38 real-engine browser cases. The private audit, coaching audits and review
+also pass. The records below retain earlier failures and follow-up checks; none
+establish owner play-test confirmation or release publication.
+
+| Ticket | Implementation commit | Acceptance evidence / remaining verification |
+| --- | --- | --- |
+| AI-010 | `33b752d` | 75 contract cases; 17/17 injected faults caught; full coaching and policy audits. |
+| RULE-041 | `4b64796` | 47 new recovery/penalty cases; 109 focused hardening/fumble cases; current and legacy replay. |
+| AI-027 | `32649b2` | 70 public-policy cases; unchanged approved bands, chart access forbidden at selection. |
+| UI-041 | `b4b8fdf` | 29 engine/API/CLI cases, frontend display coverage and all three hosted difficulty/guidance cases pass at `eed362c`. |
+| RULE-042 | `3e321f1` | 37 engine/API/CLI/save cases, both side-owned timeout cases and both compact-layout browser cases pass at `eed362c`. |
+| DEV-059 | `2b11cd6` | 15 workflow checks; automatic branch Tests passes at `eed362c`; earlier failing run confirms failure propagation. |
+| DEV-060 | `ca3d3bb` | Exact sample staging tests and baseline native confirmation on all three targets. |
+| DEV-061 | `03d1992` | Isolated staged runtime probe, baseline native/extracted-app/installer confirmation. |
+| DEV-062 | `c22df25` | Corrected deferred Advanced II save guidance; save/tracker and full regression pass. |
+| DEV-063 | `0a89a68` | 39 local-audit cases; unchanged 120-game audit passes, including strict overtime boundary validation. |
+
+Gameplay tickets await owner play-test confirmation before closure. Existing
+DEV-044 and newly recorded DEV-064 frontend warning cleanup remain M23 follow-up;
+they do not expand this milestone’s implementation scope.
+
+## AI-010 — Coaching contract harness
+
+Added `tests/test_coaching_invariants.py` with synthetic charts only. It checks
+all three tiers' hidden-call independence and pending penalty, conversion, and
+overtime save/replay; Hard preview/rejection history purity; exact counters and
+bounded recent/situational histories after 220 actual snaps across both teams;
+and selection purity through scrimmage, kicks, kneel, Hail Mary, tries, and
+decision branches. Cache checks assert tuple identity, true LRU refresh/eviction,
+and opponent-count sensitivity. Other checks cover private-plan fallback flags
+and reset, exact exploration/exploitation weights, exact Medium group weights
+and symbolic-chart fallback, and one coach instance per new/resumed CLI game.
+
+`scripts/audit_coaching_contracts.py` copies only source and public tests to a
+temporary directory, injects one fault at a time, and requires the corresponding
+regression to fail an assertion. It never mutates the live checkout or copies
+local seasons/private data. The 17 faults cover preview/rejection learning,
+pending-save and long-history loss, concealed-input leakage, gameplay-dice and
+chart mutation, selection-history mutation, LRU/key errors, hidden fallback,
+omitted exploration/Medium tilt, invented symbolic bias, and repeated CLI coach
+construction. Run it with `.venv/bin/python scripts/audit_coaching_contracts.py`.
+
+The 75 new cases pass against unchanged production. The mutation audit
+detects all 17 faults. No gameplay behavior or existing expectation changes.
+
+Validation:
+
+- `.venv/bin/python -m pytest tests/test_coaching_invariants.py -q`: **75 passed
+  in 6.94s**; includes unmocked Hard analysis for both roles.
+- `.venv/bin/python -m pytest tests/test_coaching*.py tests/test_difficulty*.py tests/test_chart_coaching.py tests/test_cli.py -q`:
+  **418 passed in 72.22s** (the two additional unmocked-analysis cases were
+  validated by the focused run above).
+- `.venv/bin/python scripts/audit_coaching_contracts.py`: clean baseline passes;
+  **17/17 deliberate faults detected by assertions**.
+- `.venv/bin/python -m pytest tests/test_issue_tracker.py -q`: **18 passed**.
+- `.venv/bin/python -m ruff check .` and
+  `.venv/bin/python -m ruff format --check .`: passed; **530 files** formatted.
+
+No skips or warnings in these checks. The milestone-wide gate remains pending.
+
+## RULE-041 — Recovery before penalty comparison
+
+Before implementation, reviewed Paydirt's `tests/test_fumble.py` and
+`tests/test_flagged_play_timing.py`. Adapt the synthetic recovery/possession
+matrix and exactly-once flagged-play timing checks. Do not reuse Paydirt's
+recovery ranges, NFL clock charges, return/scoring exceptions, or resolver code.
+Bowl Bound's existing turnover resolver supplies the complete prepared facts;
+only the session's decision ordering changes.
+
+The session now resolves fumble recovery and any required end-zone/return-foul
+consequences before offering the original penalty choice. The engine retains
+the completed turnover and return-yardage credit, exposes its known field or
+scoring projection, and commits it once on decline. Accepting enforcement
+discards the prepared result. Pending views do not alter the field, ledger,
+statistics, clock, or play log. Every actually consulted recovery/return roll
+appears once in both pending and final traces.
+
+The ordering change requires replay profile `bowl-bound-m33-v1`. Old `m21-v1` and
+`m22-v1` journals replay their validated historical command prefix with the old
+order; subsequent commands use the corrected order. A legacy save paused before
+recovery exposes only `fumble:resolve` until recovery and its consequences are
+known. Loading/resaving never draws fresh dice. The normal decision command
+records that recovery step, and later saves preserve both the historical prefix
+and current continuation. Strict prefix validation and a forged-old-digest
+regression prevent the compatibility path from accepting a different final
+state. Unsupported `m19-v1` saves remain rejected.
+
+Changed existing expectations include the scrimmage fumble decline label
+(completed recovery/possession instead of unresolved recovery), three assertions
+of the current replay-profile identifier, and the legacy engine-hardening test’s
+recovery-before-decline command chronology documented below. The label fixture now supplies its
+recovery roll explicitly before the unchanged sentinel assertion. No assertion
+was weakened. Runtime changes remain in already-allowlisted `session.py` and
+`save_game.py`; no new module or public sample is staged. Reviewed the exact
+runtime manifest and preserved all sample hashes.
+
+Validation:
+
+- Before implementation, **22 expected failures** in the new fumble matrix:
+  absent recovery traces, unknown decline projections and too few recorded dice.
+  Three additional legacy-journal regressions then reproduced pending/accepted
+  replay failure and the obsolete profile identifier before compatibility work.
+- `.venv/bin/python -m pytest tests/test_fumble_penalty_order.py -q`:
+  **47 passed in 2.28s**. Covers both possessions, offensive/defensive recovery,
+  fourth-down consequences, touchdowns/safeties, nested return fouls, prepared
+  return-yardage credit, timing/statistics, sentinel dice, current/legacy replay,
+  API transport and CLI controls.
+- `.venv/bin/python -m pytest tests/test_session*.py tests/test_turnovers.py tests/test_return_fumble_series.py tests/test_penalty_choice_labels.py tests/test_coaching_decisions_v8.py tests/test_save_game.py tests/test_regulation.py tests/test_fumble_penalty_order.py tests/test_api.py tests/test_api_coaching.py tests/test_cli.py tests/test_release_metadata.py tests/test_commentary_replay.py tests/test_coaching_invariants.py -q`:
+  **450 passed in 44.73s**; the four subsequently added API/CLI/return-credit cases
+  pass in the focused run above.
+- `.venv/bin/python scripts/audit_coaching_contracts.py`: clean baseline passes,
+  **17/17 faults detected** after updating its codec-helper mutation target.
+- `.venv/bin/python -m pytest tests/test_commentary_replay.py tests/test_release_metadata.py tests/test_issue_tracker.py -q`:
+  **28 passed in 6.99s**.
+- Ruff lint/format passed; **531 files** formatted. No skips or warnings.
+
+Owner play-test confirmation and milestone-wide regression remain pending.
+
+## AI-027 / UI-041 — One public fourth-down policy
+
+Before this phase, independently reviewed Paydirt's
+`paydirt/computer_ai.py:311-365` and `tests/test_fourth_down.py`. Its boundary-test
+structure is useful. Its historical 1983 NFL rates, random coffin-corner choices,
+punt variants and game rules are excluded. The exact Bowl Bound bands remain
+those already approved and documented in [coaching](../coaching.md): no new
+distance, clock, short-yardage, or aggression policy is introduced.
+
+Current version-10 CPU behavior already implements those bands. AI-027 extracts
+them into `coaching.public_fourth_down_call`, accepting only the public observation
+and declared aggression/clock threshold. CPU selection and the following UI-041
+guidance work use this one engine function. `field_goal_attempt_distance` supplies
+the shared public distance. The actual selected kick remains chart-resolved.
+
+AI-027 validation:
+
+- The new shared-policy test initially failed collection because the public
+  function did not exist; the existing CPU decision was then extracted without
+  changing any policy band or expectation.
+- `.venv/bin/python -m pytest tests/test_public_fourth_down.py tests/test_coaching_decisions_v3.py tests/test_coaching_invariants.py tests/test_difficulty.py tests/test_coaching_saves.py -q`:
+  **237 passed in 18.95s**. Includes 70 new public-policy cases: all tier/distance
+  boundaries with chart reads and evaluation forbidden, late-clock boundaries,
+  legal-action filtering, CPU delegation, and saved choice stability while strong
+  and weak charts still produce different actual kick outcomes.
+- Ruff lint/format passed; **532 files** formatted. No skips or warnings.
+
+The two changed runtime modules were already in the exact release manifest; no
+module or sample addition is needed. Owner play-test confirmation, UI-041's
+display work and the final milestone gate remain pending.
 
 ## DEV-060 — Stale sample metadata hashes (2026-11-02)
 
@@ -215,3 +377,365 @@ Validation:
   **57 passed in 1.73s** after tracking updates. All **15** selected sample hashes
   match, **75** relative documentation links resolve, and `git diff --check`
   passed.
+
+
+## UI-041 — equivalent public fourth-down guidance
+
+The Paydirt fourth-down code/tests reviewed for AI-027 informed the UI-041
+review too; the approved Bowl Bound policy remains authoritative. No NFL make
+rates, team-derived kick advice, randomness or special punt variants are reused.
+`SavedGame.fourth_down_guidance` uses the same AI-027 public helper with the
+normal difficulty's declared profile. It accepts the captured response view so
+concurrent API commands cannot attach advice for a different state. API
+serialization and browser/CLI rendering contain no football policy. Guidance is
+read-only and disappears outside eligible offensive fourth-down scrimmage with
+legal kicks. Future public team/season ranges remain outside this milestone.
+
+Test-first evidence: 25 synthetic Python failures on the missing engine method,
+and one frontend failure on absent backend wording, before implementation.
+Coverage includes both possession sides, all normal difficulties, public distance
+bands, short-yardage go, wrong-side/unavailable contexts, chart-read rejection,
+repeated-preview dice/journal/history purity, save/load equivalence, atomic-view
+use, CLI wording, and API load/get/coached/kick response lifecycle. A frontend
+fixture deliberately has first-down state alongside a backend recommendation:
+the browser renders the supplied text rather than deriving football meaning.
+Full browser execution remains subject to the documented local Chromium sandbox
+limitation; fresh branch-hosted coverage is required before final acceptance.
+
+
+UI-041 focused validation (2026-11-02):
+- `.venv/bin/python -m pytest tests/test_fourth_down_guidance.py tests/test_public_fourth_down.py tests/test_coaching_invariants.py tests/test_api.py tests/test_cli.py tests/test_issue_tracker.py -q`: **265 passed in 25.15s**; the new guidance file contains **29 cases**.
+- Pinned Node/npm, `frontend/`: `npm test` **129 passed (16 files)**; `npm run build` passed. Focused coaching/no-rules tests: **44 passed**.
+- Ruff check and format check passed (**533 files**); `git diff --check` passed.
+- Added three real-engine Playwright cases for normal difficulty guidance, three legal snaps, displayed backend facts, save/load and kick clearing. The local focused run failed all three **before assertions** with Chromium `bootstrap_check_in` Permission denied 1100 / SIGTRAP; existing color-environment warnings remained visible. No skips or browser assertion changes. These cases require the fresh branch-hosted browser run before acceptance.
+- Review corrected a synthetic short-yardage fixture from a 48-yard attempt (approved policy always kicks there) to 47 yards (Medium fourth-and-one goes). The existing approved bands and production policy were unchanged.
+- No runtime module was added; all modified runtime modules already belong to `release/manifest.json`. No sample allowlist/hash or private data changed.
+
+
+## RULE-042 — armed, side-owned pre-play timeout
+
+Reviewed Paydirt `paydirt-web/backend/routes.py` request/control flow (427–430,
+1078–1089, 1186–1191) and `tests/test_timeout_clock_interactions.py`. Adapted the
+pre-play interaction and boundary-test strategy; excluded NFL two-minute warnings,
+minute clocks, random 35-second play timing and any runtime dependency. The
+approved Bowl Bound 10-second timing and three-per-half budgets stay in the engine.
+
+Eligible regulation scrimmage views offer own-side arm/cancel actions, including
+after kickoff. Parent confirmed one armed modifier, own cancellation and no
+overwrite by the other side. Arming does not commit prior optional timing or
+spend dice/budget. The completed legal play consumes it exactly once, logs the
+10-second charge and clears it. Pending penalty/kick/RZDZ continuations retain it;
+unsupported/invalid actions do not spend it. The no-time elected safety and period
+boundaries clear unused arms, preserving existing rules. Existing prior-play
+clock decisions and overtime timeouts remain separate. Exhausting the armed
+side’s last budget through an explicit prior-play timeout clears the unavailable
+arm. Cancel an arm before choosing the separate combined next-spike timing;
+no simultaneous next-play clock rule is invented. Safe-kneel queries account for
+an armed offensive timeout.
+
+New synthetic tests were red before each discovered behavior correction: absent
+post-kickoff actions (17 initial failures), the safe-kneel forecast, prior-delay
+period boundary, elected safety’s no-time rule, and combined-spike exclusion.
+Corrected two test setup errors (illegal sentinel face, unfinished punt) and the
+generic elected safety expectation against the approved rule; documented in
+RULE-042. Save tests include pending real Hard RZDZ decisions and reject a forged
+unarmed digest for an armed journal. API/CLI tests cover ownership, no overwrite,
+preview/save purity, clock/budget changes and replay. Browser fixtures use actual
+synthetic engine commands and raw private-seed-preserving save text, never mocked
+outcomes. All modified runtime modules already belong to the release manifest.
+
+
+RULE-042 focused validation (2026-11-02):
+- `.venv/bin/python -m pytest tests/test_armed_timeouts.py tests/test_coaching_invariants.py tests/test_regulation.py tests/test_api_regulation.py tests/test_cli_timeout_controls.py tests/test_cli_shortcuts.py tests/test_kneel_safety.py tests/test_save_game.py tests/test_coaching_saves.py tests/test_fumble_penalty_order.py tests/test_fourth_down_guidance.py tests/test_issue_tracker.py -q`: **425 passed in 44.04s**, including **37 new armed-timeout cases**, no skips/warnings.
+- Pinned Node/npm in `frontend/`: `npm test` **130 passed (16 files)** and `npm run build` passed. Focused clock/no-rules tests: **22 passed**.
+- Ruff check and format check passed (**535 files**), and `git diff --check` passed.
+- Added real-engine browser cases for each human side after kickoff: offered own-side arm, unchanged clock/budget, raw-text save/load, legal offensive/defensive call, one 10-second charge and reset. Browser acceptance remains pending the fresh hosted branch run; the local process-launch restriction is not counted as a pass.
+
+
+## Hosted DEV-060/DEV-061 confirmation
+
+Baseline [run 41558282571](https://github.com/rtulloh/bowl_bound/actions/runs/41558282571)
+completed successfully at `03d1992d3a3811cf89879bce985e23937e3a3dc0`: source/browser
+test job plus macOS Intel, macOS ARM64 and Windows x64 native jobs all passed.
+Applicable extracted-app and Windows installer smoke checks passed. DEV-061 is
+now resolved against tested commit `03d1992`; DEV-060 retains tested `ca3d3bb` with
+end-to-end native confirmation. Neither is closed on unconfirmed owner play-test.
+No release tag, manifest hash or baseline snapshot was changed by this evidence
+update. Current milestone changes require fresh branch-hosted browser validation.
+
+
+## DEV-059 — automatic Tests and manual native release builds
+
+Reviewed local Paydirt `.github/workflows/test.yml` and `release.yml`: reused the
+separate workflow purpose/names, while excluding NFL/private audits, mutable
+action tags, optional installer failures and automatic publication. Bowl Bound's
+complete established source gate is reusable `tests.yml`, with push/PR triggers
+for main and isolated workstreams. The native workflow calls it, then performs
+the unchanged three-target packaging/installer gate. Its manual dispatch,
+read-only permissions, exact pins, artifact-only outputs and explicit publication
+boundary are retained.
+
+Checked [GitHub's reusable workflow reference](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations)
+and [workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax):
+the local reusable workflow comes from the caller commit; caller/callee
+concurrency prefixes differ to avoid cancellation. Full optional source SHA
+validation prevents a branch moving between source/native checkouts. No secrets
+are passed and token permissions remain read-only. Exact source commit selection
+is a build input, not a publication authorization.
+
+Four new regression tests were red before workflow creation; a further red guard
+regression preceded immutable-source validation. Six synthetic Bash cases check
+SHA/ref validation. Existing assertions follow moved source commands into the
+reusable gate and continue to require coverage/browser/pins/failure propagation.
+Maintainer docs distinguish automatic source status, manual native acceptance,
+and separately authorized publication. Hosted branch validation remains required.
+
+
+DEV-059 implementation is committed at `2b11cd6`. Focused cumulative packaging/workflow/tracker/metadata validation: **197 passed in 6.35s**, with 11 new workflow cases. Ruff/format (**539 files**) and diff checks passed. The automatic branch-hosted run and final milestone gate remain pending.
+
+
+Final-gate follow-up: two `test_cli_games` pending-interception API parity cases
+were red on the new additive null guidance field. Their expected transport view
+now serializes `SavedGame.fourth_down_guidance` while retaining the entire exact
+view and future-replay comparison. This changes the API-shape expectation only;
+no football or private replay rule changes. The initial full pass is recorded as
+failing and the complete gate must rerun after this correction.
+
+
+The initial full pass also exposed one existing engine-hardening test whose
+commands encoded the retired penalty-first order. Its independent regression
+reproduced the now-illegal early decline. Updated its command order to recover in
+the end zone before offering/declining the original penalty, retaining final
+field, exact trace and one committed log entry and adding pre-commit purity
+assertions. This completes the intentional expectation migration for RULE-041;
+no production behavior changes in this follow-up.
+
+
+## DEV-063 — strict engine-observed overtime audit boundaries
+
+The first final private season audit completed 120 games, but rejected six at
+valid overtime field resets: **114 passed, 6 failed, 0 fallbacks**. The final-view
+validator incorrectly required regulation field continuity into and between
+overtime series. Detailed game evidence remains private. This is a development
+audit defect; no engine, chart, timing policy or coaching behavior changes.
+
+Before this repair, reviewed Paydirt `tests/test_full_season_runner.py` for strict
+final/scoring validation and preservation of failing reproductions. Adapt its
+failure-accounting discipline, not its NFL schedule, historical seeds, overtime
+rules or runtime. Independently reviewed the parallel generator worker’s
+`3e699aa` runner correction. Reused only its `OvertimeSeriesStart` evidence and
+engine-owned `OvertimeState.next_series` ordering; no generator implementation,
+DATA ticket, private input, replay override or policy change is brought here.
+
+The runner records the actual public engine view before the first committed
+report of each overtime series. Validation accepts a field reset only with exact
+report/state/possession evidence, completed and tied regulation, increasing report
+numbers, and the engine’s series order. Ordinary missing/disconnected states,
+forged/mismatched/stale/duplicate/premature evidence and non-tied regulation remain
+failures. All existing scoring, statistics, traces and four-quarter clock checks
+remain. Private game JSON adds `overtime_series_starts`; public outputs and runtime
+save formats are unchanged.
+
+Test-first evidence: two boundary tests initially failed on the absent evidence
+type. A separate fictional complete game was run against the unchanged runner
+loaded from HEAD: it failed with the same `ValueError` as the six local games.
+The corrected runner passes that game with both first-round series recorded.
+Adversarial controls then showed the initial reviewed boundary implementation
+accepted reversed report numbers and non-tied regulation; both were corrected.
+A no-regulation-end test now rejects boundary evidence at that boundary, retaining
+the independent clock reconciliation too. No assertion was weakened or skipped.
+
+Focused validation: `.venv/bin/python -m pytest tests/test_local_season_runner.py tests/test_overtime.py tests/test_coaching_audit.py tests/test_issue_tracker.py -q`:
+**87 passed in 28.31s**. The local-season suite contains 39 cases. Full regression
+and the unchanged 120-game private audit must rerun after this committed repair.
+
+
+DEV-063 tested implementation: `0a89a68`. The unchanged private schedule now
+passes **120/120 games, 22,192 reports, 0 fallbacks**, including six overtime games
+and 16 engine-observed series. All 120 engine logs, final states, coaching calls,
+period scores and configurations exactly match the first run; only audit evidence
+and validation changed. No chart or selection adjustment was made. The baseline
+policy audit covers all 11 offered offensive calls and six normal formations.
+Under the documented comparable public-situation buckets, 2,819 offense/defense
+observations repeat 441 prior calls, with a longest streak of three. All 236
+team/role/down/distance buckets with at least 20 calls stay below 80% concentration.
+These are descriptive baseline observations, not universal usage quotas or a
+calibration claim for Medium/Hard. Full normal-tier policy audits run separately.
+Detailed reports remain private and are not part of Git history or packaging.
+
+
+## Final local regression and policy audit
+
+Source implementation is frozen at `0a89a68`; `3d888d9` strengthens the new
+series-order test fixture and records private audit evidence. The preceding
+runtime gate at `86600a4` passed **3,385 tests in 800.13s**, **93.05% branch-aware
+coverage**, without skips or warnings. The complete gate rerun includes
+all seven new DEV-063 audit cases: **3,392 passed in 793.00s (13:13)**,
+**93.05% branch-aware coverage**, no skips or Python warnings. The strengthened
+series-order fixture also passes in the 39-case focused run. The initial **3-failure / 3,382-pass** run is
+retained as failing evidence; all three intended expectation migrations were
+verified independently before the successful runtime gate.
+
+Fresh available non-Python checks, using Node **24.22.1** / npm **11.19.1**:
+`npm ci --ignore-scripts`, `npm test` (**130 passed, 16 files, 5.04s**),
+`npm run build` (**590ms**) and `npm audit` (**0 vulnerabilities**) passed.
+The existing `whatwg-encoding@3.1.1` deprecation and Vitest performance advice
+remain visible. Ruff lint/format (**540 files**), pip dependency check and
+tracker (**18 tests**) passed. The final simplify review checked shared helpers,
+state retention, response-view consistency, rule authority and workflow controls;
+removed an extra workflow EOF blank line and strengthened the audit controls.
+All changed runtime paths are manifest-selected; all 15 public sample hashes
+match. All 897 local links in changed Markdown resolve. No private inputs,
+reports or game saves are tracked in the outgoing changes.
+
+- `.venv/bin/python scripts/audit_coaching_contracts.py`:
+  **clean baseline passed; 17/17 deliberate faults detected by assertions**.
+- `.venv/bin/python -m bowl_bound.coaching_audit --seeds 101 307 --policies baseline-v2 easy-v10 medium-v10 hard-v10`:
+  **32/32 games passed**, eight per policy, both CPU sides and sample arrangements.
+  All saved continuations verify (**5,261 replayed commands**); all four regulation
+  quarters reconcile to 900 seconds per game; scoring, statistics and **11,726
+  trace rolls** reconcile across **5,413 reports**. **Zero illegal selections or
+  fallbacks**. All **5,620** committed CPU preference vectors are normalized,
+  finite, legal and assign positive probability to the selected call.
+- Comparable-call counts/repetitions: baseline **150/21**, Easy **179/25**,
+  Medium **191/46**, Hard **186/28**. Longest within-game comparable streak is
+  **two** for each policy. All 4,914 per-game situation buckets are below the
+  concentration audit’s minimum sample count; no broad balance or calibration
+  claim follows. The exact mixture/cache/history/hidden-input contracts are
+  separately protected by the AI-010 synthetic suite and mutation audit.
+- `.venv/bin/python scripts/run_local_season.py --seasons seasons --games-per-team 12 --seed 20311031 --output private-data/local-season-audits`:
+  **120/120 passed**, detailed reconciliation and limitations recorded under
+  DEV-063 above. Full game outputs stay in ignored private paths.
+
+Local `BB_E2E_SEASONS=/private/tmp/bowl-bound-m33-full-e2e npm run test:e2e`
+attempted all **38 cases**. All failed **before application assertions** because
+macOS denies Chromium’s MachPort process registration (`bootstrap_check_in`,
+Permission denied 1100 / SIGTRAP). The 38 existing color-environment warnings
+remain visible. `npm run test:e2e -- --list` lists **38 tests in seven files**.
+No skip, assertion weakening or sandbox bypass was introduced. Fresh hosted
+branch Tests/browser confirmation is required; this is not a passing browser gate.
+
+
+Pre-push status: all available full local checks pass. Local Chromium remains
+blocked before assertions as recorded above; fresh hosted Tests/browser coverage
+is required before resolving UI-041, RULE-042 and DEV-059 or accepting the whole
+milestone. Only `milestone/33-core-playability` is authorized for this push. No
+main, release branch, tag, native build or publication is included.
+
+
+Independent read-only integration review of `03d1992..d518ba2` by the parallel
+college-generator worker found no blocking mismatch in `session.py`,
+`regulation.py`, `save_game.py`, the shared policy/difficulty wrapper, or API/CLI
+guidance. The review checked deferred recovery/return credit across nested
+continuations, discarded accepted outcomes, exactly-once traces, legacy prefix
+upgrades/digests without load-time draws, armed side/timing/reset/exhaustion/spike
+behavior, and captured-view guidance. This is code/test review, not another runtime
+run or owner play-test. The generator’s separate calibration remains pinned to
+`03d1992` until its workstream explicitly integrates and recalibrates the engine.
+
+
+## First hosted M33 run — browser fixture follow-up
+
+Automatic [Tests 41571415572](https://github.com/rtulloh/bowl_bound/actions/runs/41571415572)
+at `d518ba2` passes Python/lint/format/pip (**3,392 tests in 1,081.55s,
+93.03% branch-aware coverage**) and frontend/build/audit (**130 tests,
+0 vulnerabilities**). Browser outcome is **33 passed, 5 failed in 5.0m**,
+so this is a failing full gate. Both new armed-timeout browser cases pass.
+
+Two compact-controls cases encoded the retired disabled timeout placeholder
+after kickoff. They now compare both enabled side actions with exact keys/labels
+from the actual engine response, verify no arm initially and no stale placeholder,
+and retain every existing geometry/focus/menu/play assertion. The three guidance
+cases supplied invalid API mode `scrimmage`, producing 422 before any controls;
+the transport fixture now requests supported `drive` mode and verifies success
+and initial engine scrimmage phase. All actual guidance/save/kick assertions stay.
+No production behavior, engine charts, clock rules or CPU seed changes.
+
+Hosted frontend warnings include existing React act(...) warnings (DEV-044),
+a duplicate PlayLog fixture-key warning now tracked as DEV-064, and the known
+npm deprecation. These are not suppressed, not browser-failure causes, and remain
+M23 follow-up scope. This record corrects any inference that a passing frontend
+suite establishes warning-free output. Fresh branch-hosted coverage remains
+required before milestone acceptance.
+
+
+Browser follow-up pre-push gate: **3,392 Python tests passed in 771.66s,
+93.05% branch-aware coverage**, no skips or Python warnings; **84** focused
+guidance/timeout/tracker cases pass in **6.68s**. Pinned Node/npm: syntax checks
+for both changed E2E files pass; frontend **130 tests in 4.56s**, build **587ms**,
+audit **0 vulnerabilities**, and Playwright discovery **38 cases / seven files**
+pass. Ruff check/format, pip check and diff checks pass. The existing npm
+deprecation and Vitest performance advice remain visible.
+
+A second independent read-only review of the two E2E corrections confirms valid
+`drive` transport, initial engine scrimmage phase, three zero-yard snaps to the
+48-yard public attempt, and exact engine-provided timeout labels/keys after
+kickoff. It found no test weakening or obvious setup mismatch. Runtime and audit
+tool source are byte-identical to the preceding hosted source-green `d518ba2`;
+the 17-fault/32-public-game/120-private-game evidence still applies unchanged.
+Fresh hosted browser verification is pending; the previous failing run remains
+recorded above.
+
+
+Independent baseline confirmation: generator-branch Tests
+[41572345677](https://github.com/rtulloh/bowl_bound/actions/runs/41572345677)
+at `3c1bb9b` passes 33 browsers with runtime/frontend pinned to `03d1992`, and
+its passing frontend stage emits the same React act(...) and duplicate-key `1`
+warnings. DEV-044/DEV-064 record this evidence; neither warning originated in
+M33’s gameplay/UI changes. This does not substitute for the 38-case M33 retry.
+
+## Completed engineering acceptance — 2026-11-02
+
+Automatic [Tests 41575358111](https://github.com/rtulloh/bowl_bound/actions/runs/41575358111)
+completed successfully at exact tested commit
+`eed362c7daacff66c092a11d1ba8a896d1a9a1eb`:
+
+- Python **3,392 passed in 820.51s (13:40)** with **93.03% branch-aware coverage**;
+  Ruff lint/format (**541 files**) and pip dependency checks pass.
+- Frontend **130 passed in 16 files**; production build **422ms**;
+  dependency audit **zero vulnerabilities**.
+- Real-engine Playwright **38/38 passed in 4.1m**. All three normal-difficulty
+  guidance cases, both side-owned post-kickoff timeout cases and both corrected
+  compact-controls cases pass. No browser case was skipped or weakened.
+- The automatic branch trigger and exact source association are confirmed;
+  the preceding failed run establishes failure propagation. Static tests retain
+  main/PR triggers, read-only permissions, exact pins, immutable source selection
+  and the separately named manual native workflow. No automatic publication was
+  introduced.
+
+UI-041, RULE-042 and DEV-059 are now resolved against their implementation
+commits and this full-gate SHA. Reviewing every assigned ticket confirms all ten
+Milestone 33 engineering acceptance criteria are satisfied. The 17/17 mutation
+controls, 32/32 public coaching/replay games and unchanged 120/120 private season
+games above remain applicable: executable runtime and audit-tool source are
+byte-identical to `d518ba2`. Full traces, scoring, statistics, timing, saved
+continuations and coaching behavior were reconciled, rather than treating
+completed games alone as proof.
+
+The review includes the independent read-only code/E2E reviews recorded above,
+exact runtime manifest membership, all 15 public sample hashes and public-safe
+outgoing paths. No private chart, save or detailed report is committed. QB Sneak
+and RZDZ remain supported; the deferred Advanced II defensive options remain
+unavailable. M34 generator work and scheduled M35 coffin-corner work stay on
+separate workstreams.
+
+Remaining limits are explicit: local Chromium cannot launch under this sandbox;
+valid browser evidence comes from the hosted run. Passing frontend tests retain
+the baseline React act/duplicate-fixture-key warnings (DEV-044/DEV-064), npm's
+existing deprecation and Vitest performance advice. Native three-target evidence
+for DEV-060/DEV-061 belongs to baseline `03d1992`, not a new M33 executable build.
+No release was dispatched or published by this work. Gameplay tickets remain
+resolved, not closed, pending owner play-test confirmation. Coaching call counts
+above are descriptive audits, not universal balance or calibrated team-strength
+claims.
+
+Final acceptance pre-push checks: `.venv/bin/python -m pytest --cov
+--cov-report=term-missing -q` passes **3,392 tests in 768.11s (12:48)** with
+**93.05% branch-aware coverage**, no skips or Python warnings. Pinned Node/npm:
+`npm ci --ignore-scripts`, `npm test` (**130 tests, 16 files, 4.96s**),
+`npm run build` (**579ms**) and `npm audit` (**zero vulnerabilities**) pass.
+Ruff check/format (**541 files**), pip check, all **18** tracker tests,
+all **900** local Markdown links and `git diff --check` pass. All ten assigned
+tickets are resolved with tested commits; none is closed. The final acceptance
+commit changes documentation/status only; reviewed executable source remains
+identical to the fully passing hosted `eed362c`.

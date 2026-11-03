@@ -16,7 +16,7 @@ sys.path.insert(0, str(ROOT))
 
 from backend.app import create_app  # noqa: E402
 from bowl_bound.sample_teams import install_samples  # noqa: E402
-from tests.synthetic_teams import default_teams, with_pat_result, write_team  # noqa: E402
+from tests.synthetic_teams import default_teams, team_chart, with_pat_result, write_team  # noqa: E402
 from tests.test_special_teams import special_chart, yards  # noqa: E402
 
 
@@ -48,6 +48,14 @@ def main() -> None:
             json.dumps({"rb": [label + " Fictional " + "Q" * 80], "qb": [label + " Passer"]}),
             encoding="utf-8",
         )
+    for label in ("Home", "Away"):
+        chart = replace(
+            team_chart("Guidance " + label, season=2002, offense=0, defense=0),
+            special_teams=special_chart(
+                label, kickoff=yards(40), kickoff_return=yards(10)
+            ).special_teams,
+        )
+        write_team(seasons, chart)
     install_samples(seasons)
     uvicorn.run(
         create_app(seasons, ROOT / "frontend" / "dist"),

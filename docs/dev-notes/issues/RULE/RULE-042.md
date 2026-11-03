@@ -1,18 +1,20 @@
 ---
 id: RULE-042
 title: Offer a timeout as a pre-play modifier after kickoff
-status: open
+status: resolved
 priority: Medium
 milestone: '33'
 created-at: 2026-11-02
-resolved-at: null
+resolved-at: 2026-11-02
 closed-at: null
 tags:
 - rules-profile
 - timing
 - usability
 links: []
-commits: []
+commits:
+- 3e321f1
+- eed362c7daacff66c092a11d1ba8a896d1a9a1eb
 ---
 
 ## Description
@@ -44,3 +46,70 @@ introduce a runtime dependency.
 Reassigned from Milestone 23 to the owner-prioritized Milestone 33 playability
 follow-up scope. The first scrimmage play after a kickoff must not omit an
 otherwise legal defensive timeout.
+
+
+--- 2026-11-02 20:40 ---
+Verified Paydirt routes.py request validation/forwarding at lines 427–430,
+1078–1089 and 1186–1191, and tests/test_timeout_clock_interactions.py before
+implementation. Adapted the interaction and boundary-test approach only; no NFL
+two-minute warning, minute-based clock, random 35-second timing or runtime code
+is reused. Parent confirmed the single side-owned modifier, own cancellation,
+no-overwrite and preserved post-play choices.
+
+Test-first: 17 expected failures exposed absent post-kickoff actions. Later red
+regressions exposed the safe-kneel calculation ignoring an armed offensive
+10-second play, and a stale arm after a prior intentional delay ended Q1. Both
+were corrected. An initial synthetic sentinel used an invalid black die face;
+fixed to legal (3,4,5) before checking exactly-once consumption. A punt fixture
+now completes its real fair-catch decision; spending before that would be wrong.
+Hard’s actual RZDZ continuation is replayed and checked while the arm remains.
+
+Review preserved the existing no-time elected-safety rule: its unused arm clears
+without consuming a timeout or clock. A dedicated red test showed the new timeout
+path initially overrode that rule; fixed the implementation rather than changing
+Bowl Bound timing. The earlier generic elected-safety 10-second expectation was
+replaced with this explicit approved-rule regression. No existing assertions
+were weakened. `clock:spike` creates the next play under combined timing; cancel
+the armed timeout before choosing that separate next-play timing treatment.
+A red regression verifies it is unavailable while armed and restored on cancel.
+Existing prior-play timeout/hurry/delay choices remain available. Validation and
+committed reference pending; browser coverage is required before resolution.
+
+
+RULE-042 focused validation (2026-11-02):
+- `.venv/bin/python -m pytest tests/test_armed_timeouts.py tests/test_coaching_invariants.py tests/test_regulation.py tests/test_api_regulation.py tests/test_cli_timeout_controls.py tests/test_cli_shortcuts.py tests/test_kneel_safety.py tests/test_save_game.py tests/test_coaching_saves.py tests/test_fumble_penalty_order.py tests/test_fourth_down_guidance.py tests/test_issue_tracker.py -q`: **425 passed in 44.04s**, including **37 new armed-timeout cases**, no skips/warnings.
+- Pinned Node/npm in `frontend/`: `npm test` **130 passed (16 files)** and `npm run build` passed. Focused clock/no-rules tests: **22 passed**.
+- Ruff check and format check passed (**535 files**), and `git diff --check` passed.
+- Added real-engine browser cases for each human side after kickoff: offered own-side arm, unchanged clock/budget, raw-text save/load, legal offensive/defensive call, one 10-second charge and reset. Browser acceptance remains pending the fresh hosted branch run; the local process-launch restriction is not counted as a pass.
+
+
+Implementation committed as tested 3e321f15265da078363decb90a4439ed8ef84f1f. Ticket stays open pending fresh hosted browser cases; no owner play-test confirmation is claimed.
+
+
+Browser self-review: the timeout cases now use the invented all-zero guidance
+teams with an explicit 40-yard kickoff/10-yard return. Using the ordinary
+interception fixture could require an unrelated human recovery choice depending
+on the private CPU seed. All-zero scrimmage columns isolate the timeout lifecycle
+without fixing/revealing CPU seeds, mocking responses, or changing engine rules.
+RZDZ's CPU-owned continuation can still run through the real coordinator.
+
+--- 2026-11-02 21:44 ---
+Both new side-owned timeout browser cases pass on hosted run 41571415572.
+Two older compact-controls cases fail because they still require a disabled
+Timeout placeholder immediately after kickoff. That expectation predates this
+approved feature. They now retain every menu/geometry/focus assertion and check
+both enabled timeout actions with exact backend-provided keys and labels from the
+real kickoff response, no arm yet, and no stale placeholder. No production or
+football policy changes; browser regression must rerun before resolution.
+
+--- 2026-11-02 22:18 ---
+Resolved after automatic [Tests 41575358111](https://github.com/rtulloh/bowl_bound/actions/runs/41575358111)
+passed at exact tested commit `eed362c7daacff66c092a11d1ba8a896d1a9a1eb`:
+**3,392 Python tests in 820.51s, 93.03% branch-aware coverage; 130 frontend
+tests; build and audit (zero vulnerabilities); all 38 real-engine browser cases
+in 4.1m**. Ruff, formatting and dependency checks pass. The original failing
+run and corrected browser expectations remain recorded above. Existing frontend
+warnings remain tracked in DEV-044/DEV-064; no warnings or assertions were hidden.
+Both human-side timeout cases and both compact-controls cases pass, including
+engine-owned availability/labels, arm/save/load, one 10-second charge and reset.
+No owner play-test confirmation is claimed; the ticket is resolved, not closed.

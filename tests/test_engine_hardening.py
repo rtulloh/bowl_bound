@@ -420,7 +420,7 @@ def test_end_zone_return_retreat_to_own_end_line_is_a_safety(
     assert result.points == points
 
 
-def test_declined_scrimmage_penalty_can_continue_into_end_zone_recovery_choice() -> None:
+def test_scrimmage_penalty_waits_for_end_zone_recovery_before_decline() -> None:
     from bowl_bound.dice import DefensiveRoll
     from bowl_bound.models import PenaltyCode, PenaltyData, PenaltyTeam, Play
     from bowl_bound.session import PlaySession
@@ -442,7 +442,7 @@ def test_declined_scrimmage_penalty_can_continue_into_end_zone_recovery_choice()
         ),
     )
     game = PlaySession.new(home, return_team("Away"), seed=1, start_yards_to_goal=5)
-    game.snap(
+    pending = game.snap(
         "1",
         "A",
         dice=ScriptedDice(
@@ -454,8 +454,12 @@ def test_declined_scrimmage_penalty_can_continue_into_end_zone_recovery_choice()
             ]
         ),
     )
-    assert game.decide("decline").outcome == "end_zone_recovery_pending"
-    report = game.decide("end_zone:touchback")
+    assert pending.outcome == "end_zone_recovery_pending"
+    assert game.view().state.possession == "home" and not game.view().log
+    game.decide("end_zone:touchback")
+    assert "decline" in {c.id for c in game.view().pending.choices}
+    assert game.view().state.possession == "home" and not game.view().log
+    report = game.decide("decline")
     assert report.state_after.yards_to_goal == 80
     assert [e.section for e in report.trace] == [
         "offense",

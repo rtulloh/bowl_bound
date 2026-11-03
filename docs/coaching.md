@@ -57,9 +57,13 @@ the stable Formation A–F identifiers; naming does not alter chart lookups or d
 Legacy save digests canonicalize only defensive selector wording back to those
 identifiers, preserving their original gameplay/trace checks.
 
-**Timeout**, **Spike**, and **Intentional delay** are one-shot engine decisions, not modes. They appear
-in the play-modifier row only when the engine offers them after an eligible play;
-there is no persistent Spike button. **OOB** and **IB** appear when offered as
+**Timeout**, **Spike**, and **Intentional delay** are one-shot engine decisions.
+Existing post-play clock choices apply to the completed play. Separately, each
+eligible side may arm its own timeout before the next play, including immediately
+after kickoff. Arming/canceling changes no clock, dice or budget. The next
+completed legal play consumes it, takes 10 seconds, and clears it. One side-owned
+modifier may be armed at a time; the other side cannot overwrite it. Mandatory
+play continuations retain it until completion. No persistent Spike button exists. **OOB** and **IB** appear when offered as
 mutually exclusive declarations for the next scrimmage play. They clear after
 that play, and the engine applies the five-yard cost and rulebook exceptions.
 They are not clock-only overrides. Chart-generated OOB outcomes already follow
@@ -116,7 +120,15 @@ and clock choices remain engine-constrained. These are bounded heuristics, not a
 coach, exact win probabilities, or a guarantee of increasing win rate.
 
 Easy CLI assistance is [documented separately](cli.md#easy-only-coaching-helper).
-There is no Medium/Hard helper or browser helper panel.
+The chart-ranking helper remains Easy-only in the CLI. Separately, all normal
+difficulties show read-only fourth-down guidance in the browser and CLI, using
+the same public policy as that difficulty’s CPU. The engine supplies the
+recommendation, public field-goal distance and wording. It reads no kick chart,
+selects no play, consumes no dice and changes no history. It appears only for
+the offense on an eligible fourth down with an offered kick; mandatory choices,
+conversions, overtime and finished games are excluded. Explicit development
+policies do not claim this shared normal-play guidance. Team/season range
+settings remain future work (AI-031).
 
 Coaching uses a separate private seed and deterministic local streams keyed by
 public observations and role. Previews/retries do not consume dice or future calls.
@@ -230,6 +242,12 @@ it. Difficulty supplies only the public aggression choice (Easy .3, Medium .5, H
 chart to decide whether to attempt a field goal. The engine still uses the selected
 team's chart to resolve the actual kick. Future public season/team range adjustments
 are tracked in AI-031.
+
+`coaching.public_fourth_down_call` is the engine's single public policy entry
+point. It takes only the allowlisted observation, declared aggression, and the
+approved late-game window. The current CPU delegates to it. Its public-only inputs also support player
+guidance with the same decision basis. `field_goal_attempt_distance` supplies the conventional
+public distance. These functions do not evaluate kick charts or consume dice.
 
 Audit JSON includes `behavior_profile` and `audit_profile` for each game. The
 separate `coaching-audit-v1` profile names replay and advisory concentration

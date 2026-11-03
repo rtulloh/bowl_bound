@@ -59,3 +59,25 @@ it('sends the selected game type without choosing an overtime era in the UI', as
   fireEvent.click(screen.getByTestId('start-game'))
   await waitFor(() => expect(api.newGame).toHaveBeenCalledWith({ home: 'a', away: 'b', mode: 'regulation', game_type: 'postseason', difficulty: 'medium' }))
 })
+
+
+it('shows engine-offered next-play timeout actions beside existing post-play choices', async () => {
+  const before = view({ phase: 'clock_choice', clock_optional: true,
+    pending: { choices: [{ id: 'clock:timeout:home', label: 'Prior play timeout', enabled: true }] },
+    clock_modifiers: [{ id: 'clock:timeout:home', label: 'Prior play timeout', enabled: true }],
+    game_actions: [{ key: 'timeout:home', label: 'Arm Home timeout for next play (3)' }],
+  })
+  api.newGame.mockResolvedValue({ game_id: 'synthetic', seed: 1, view: before })
+  api.gameAction.mockResolvedValue({ report: null, view: { ...before, armed_timeout: 'home', armed_timeout_label: 'Home timeout armed for the next legal play; that play takes 10 seconds.', game_actions: [{ key: 'timeout:home', label: 'Cancel Home timeout for next play (3)' }] } })
+  render(<App />)
+  await screen.findByTestId('start-game')
+  fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
+  fireEvent.click(screen.getByTestId('start-game'))
+  expect(await screen.findByRole('radio', { name: 'Prior play timeout' })).not.toBeChecked()
+  fireEvent.click(screen.getByRole('button', { name: 'Arm Home timeout for next play (3)' }))
+  await waitFor(() => expect(api.gameAction).toHaveBeenCalledWith('synthetic', 'timeout:home'))
+  expect(await screen.findByText('Home timeout armed for the next legal play; that play takes 10 seconds.')).toBeVisible()
+  expect(screen.getByRole('button', { name: 'Cancel Home timeout for next play (3)' })).toBeEnabled()
+  expect(api.snap).not.toHaveBeenCalled()
+  expect(api.decide).not.toHaveBeenCalled()
+})
