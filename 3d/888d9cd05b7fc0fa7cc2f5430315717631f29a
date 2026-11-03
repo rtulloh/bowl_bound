@@ -1,0 +1,23 @@
+docs/dev-notes/issues/DEV/DEV-063.md
+  s_cee2f5c7a51f19::t_51189280ace53f 14,47-58
+docs/dev-notes/milestone-33.md
+  s_cee2f5c7a51f19::t_1d138f2c7fe8f9 66-69,137-140,531-544
+tests/test_local_season_runner.py
+  s_cee2f5c7a51f19::t_869de78d5266aa 504-506,508-511
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "3d888d9cd05b7fc0fa7cc2f5430315717631f29a",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
