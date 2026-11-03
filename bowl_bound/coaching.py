@@ -50,6 +50,18 @@ class CoachChoice:
     fallback: bool = False
 
 
+@dataclass(frozen=True)
+class FourthDownGuidance:
+    """Read-only public recommendation shared with the normal CPU policy."""
+
+    action: str
+    label: str
+    summary: str
+    attempt_distance: int
+    difficulty: str
+    aggression: float
+
+
 def safe_choice(candidate: str, legal: tuple[str, ...]) -> CoachChoice:
     """Constrain a policy suggestion to the supplied enabled engine options."""
     if not legal:

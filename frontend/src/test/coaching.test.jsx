@@ -239,3 +239,19 @@ it.each(['easy', 'medium', 'hard'])('submits %s difficulty without adding a brow
   await waitFor(() => expect(api.newGame).toHaveBeenCalledWith(expect.objectContaining({ difficulty }), 'home'))
   expect(screen.queryByText(/Easy helper/)).toBeNull()
 })
+
+it('displays and clears fourth-down guidance supplied by the engine without deriving it', async () => {
+  const guidance = { action: 'punt', label: 'Backend recommendation', summary: 'Backend public policy explanation', attempt_distance: 48, difficulty: 'medium', aggression: 0.5 }
+  api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, revision: 0, view: view({ fourth_down_guidance: guidance }), turn: turn('offense') })
+  api.coachStep.mockResolvedValue({ revision: 1, view: view({ fourth_down_guidance: null }), turn: turn('offense') })
+  render(<App />)
+  await screen.findByTestId('start-game')
+  fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'home' } })
+  fireEvent.click(screen.getByTestId('start-game'))
+  expect(await screen.findByText(guidance.label)).toBeVisible()
+  expect(screen.getByText(guidance.summary)).toBeVisible()
+  expect(api.coachStep).not.toHaveBeenCalled()
+  fireEvent.click(screen.getByTestId('offense-play-1'))
+  await waitFor(() => expect(screen.queryByText(guidance.label)).toBeNull())
+  expect(screen.queryByText(guidance.summary)).toBeNull()
+})

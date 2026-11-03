@@ -180,9 +180,13 @@ def _report_data(session: SavedGame, report: PlayReport | None) -> dict[str, obj
     }
 
 
-def _view_data(session: SavedGame, view: SessionView | RegulationView) -> dict[str, object]:
+def _view_data(
+    session: SavedGame, view: SessionView | RegulationView, human_side: HumanSide | None = None
+) -> dict[str, object]:
     data = asdict(view)
     data["log"] = [_report_data(session, report) for report in view.log]
+    guidance = session.fourth_down_guidance(human_side, view=view)
+    data["fourth_down_guidance"] = asdict(guidance) if guidance else None
     return data
 
 
@@ -293,7 +297,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
             "game_id": game_id,
             "seed": session.seed,
             **coaching,
-            "view": _view_data(session, view),
+            "view": _view_data(session, view, registered.human_side),
             "turn": asdict(turn),
             "revision": session.revision,
         }
@@ -316,7 +320,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
             raise coordinator_conflict() from error
         return {
             "report": _report_data(session, report),
-            "view": _view_data(session, view),
+            "view": _view_data(session, view, human_side),
             "turn": asdict(turn),
             "revision": session.revision,
         }
@@ -386,7 +390,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
             raise coordinator_conflict() from error
         return {
             "report": _report_data(session, report),
-            "view": _view_data(session, view),
+            "view": _view_data(session, view, body.human_side),
             "turn": asdict(turn),
             "revision": session.revision,
         }

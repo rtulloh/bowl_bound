@@ -295,7 +295,11 @@ export default function App() {
         {view.overtime_toss_dice?.length > 0 && <p>Overtime toss</p>}{view.overtime_toss_dice?.map((roll, i) => <DiceRoll key={`ot-${i}`} roll={roll} />)}
       </details>}
       {!clockChoice && pending && <PenaltyChoices pending={pending} onChoose={choose} disabled={busy} />}
-      {playPanels}
+        {view.fourth_down_guidance && <section aria-label="Fourth-down guidance" className="panel">
+          <h2 className="font-bold">{view.fourth_down_guidance.label}</h2>
+          <p>{view.fourth_down_guidance.summary}</p>
+        </section>}
+        {playPanels}
       </div>
       <aside className="order-1 space-y-3 lg:order-2">
       <section aria-label="Play modifiers" className="play-modifiers rounded-lg border border-slate-600 bg-slate-800/80 p-3 text-sm space-y-3" data-testid="modifier-card">

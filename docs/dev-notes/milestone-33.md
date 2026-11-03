@@ -350,3 +350,36 @@ Validation:
   **57 passed in 1.73s** after tracking updates. All **15** selected sample hashes
   match, **75** relative documentation links resolve, and `git diff --check`
   passed.
+
+
+## UI-041 — equivalent public fourth-down guidance
+
+The Paydirt fourth-down code/tests reviewed for AI-027 informed the UI-041
+review too; the approved Bowl Bound policy remains authoritative. No NFL make
+rates, team-derived kick advice, randomness or special punt variants are reused.
+`SavedGame.fourth_down_guidance` uses the same AI-027 public helper with the
+normal difficulty's declared profile. It accepts the captured response view so
+concurrent API commands cannot attach advice for a different state. API
+serialization and browser/CLI rendering contain no football policy. Guidance is
+read-only and disappears outside eligible offensive fourth-down scrimmage with
+legal kicks. Future public team/season ranges remain outside this milestone.
+
+Test-first evidence: 25 synthetic Python failures on the missing engine method,
+and one frontend failure on absent backend wording, before implementation.
+Coverage includes both possession sides, all normal difficulties, public distance
+bands, short-yardage go, wrong-side/unavailable contexts, chart-read rejection,
+repeated-preview dice/journal/history purity, save/load equivalence, atomic-view
+use, CLI wording, and API load/get/coached/kick response lifecycle. A frontend
+fixture deliberately has first-down state alongside a backend recommendation:
+the browser renders the supplied text rather than deriving football meaning.
+Full browser execution remains subject to the documented local Chromium sandbox
+limitation; fresh branch-hosted coverage is required before final acceptance.
+
+
+UI-041 focused validation (2026-11-02):
+- `.venv/bin/python -m pytest tests/test_fourth_down_guidance.py tests/test_public_fourth_down.py tests/test_coaching_invariants.py tests/test_api.py tests/test_cli.py tests/test_issue_tracker.py -q`: **265 passed in 25.15s**; the new guidance file contains **29 cases**.
+- Pinned Node/npm, `frontend/`: `npm test` **129 passed (16 files)**; `npm run build` passed. Focused coaching/no-rules tests: **44 passed**.
+- Ruff check and format check passed (**533 files**); `git diff --check` passed.
+- Added three real-engine Playwright cases for normal difficulty guidance, three legal snaps, displayed backend facts, save/load and kick clearing. The local focused run failed all three **before assertions** with Chromium `bootstrap_check_in` Permission denied 1100 / SIGTRAP; existing color-environment warnings remained visible. No skips or browser assertion changes. These cases require the fresh branch-hosted browser run before acceptance.
+- Review corrected a synthetic short-yardage fixture from a 48-yard attempt (approved policy always kicks there) to 47 yards (Medium fourth-and-one goes). The existing approved bands and production policy were unchanged.
+- No runtime module was added; all modified runtime modules already belong to `release/manifest.json`. No sample allowlist/hash or private data changed.

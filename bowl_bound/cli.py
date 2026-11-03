@@ -199,6 +199,10 @@ class TerminalGame:
             self._print("Inspect, save or quit; gameplay is finished.")
             self._postgame_call_summary(view)
             return
+        guidance = self.game.fourth_down_guidance(self.human_side, view=view)
+        if guidance:
+            self._print(guidance.label)
+            self._print(guidance.summary)
         self._controls(view, turn, compact=self.compact)
         if self.game.player_advice_available(self.human_side):
             self._print("Easy helper: " + ("on" if self.helper_enabled else "off") + " [Z] toggle")

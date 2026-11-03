@@ -121,3 +121,10 @@ supports only its documented PDF layout, not arbitrary scans.
 
 Please [report problems](reporting-bugs.md), preferably reproduced with the
 fictional samples. Keep your personal charts and detailed chart traces private.
+
+
+On eligible fourth downs, the browser and CLI display the engine's public
+recommendation and field-goal distance. All normal difficulties use the same
+policy as their CPU. Guidance does not select a play or change the controls;
+choose any enabled legal action. It uses public game facts, with actual kick
+results resolved from the team chart after the call.

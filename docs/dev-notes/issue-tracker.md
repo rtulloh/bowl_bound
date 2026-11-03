@@ -75,7 +75,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | [UI-016](issues/UI/UI-016.md) | Medium | [19](project-plan.md#19-complete-the-human-playable-ui) | Keep Snap ball and core game controls visible using Paydirt layout as a guide | created 2026-10-26 |
 | [UI-018](issues/UI/UI-018.md) | Medium | [19](project-plan.md#19-complete-the-human-playable-ui) | Frontend-authored status wording and clock radio semantics mislead players | created 2026-10-26 |
 | [UI-038](issues/UI/UI-038.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Add browser tests for coach-mode hurry, automatic guard, finished loads, defender clock window and stale responses | created 2026-10-27 |
-| [UI-041](issues/UI/UI-041.md) | Medium | [33](project-plan.md#33-correct-core-playability-and-make-validation-status-visible) | Give players an equivalent basis for chart-aware kick decisions | created 2026-11-01 |
+| [UI-041](issues/UI/UI-041.md) | Medium | [33](project-plan.md#33-correct-core-playability-and-make-validation-status-visible) | Display shared public fourth-down guidance for players | created 2026-11-01 |
 | [UI-047](issues/UI/UI-047.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Scope hurry-up controls and commentary to the acting offense | created 2026-11-02 |
 | [AI-031](issues/AI/AI-031.md) | Low | [23](project-plan.md#23-establish-the-complete-regression-gate) | Make public fourth-down field-goal distance policy season/team configurable | created 2026-11-01 |
 | [CLI-001](issues/CLI/CLI-001.md) | Low | [20a](project-plan.md#20a-add-an-interactive-cli-for-play-testing) | Separate terminal issue tracking from web UI tickets | created 2026-10-27 |
@@ -570,4 +570,4 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 - [DEV-061](issues/DEV/DEV-061.md) (open, Medium) — Standalone runtime omits current application dependencies
 - [RULE-041](issues/RULE/RULE-041.md) (resolved, High) — Resolve fumble recovery before offering a penalty choice
 - [RULE-042](issues/RULE/RULE-042.md) (open, Medium) — Offer a timeout as a pre-play modifier after kickoff
-- [UI-041](issues/UI/UI-041.md) (open, Medium) — Give players an equivalent basis for chart-aware kick decisions
+- [UI-041](issues/UI/UI-041.md) (open, Medium) — Display shared public fourth-down guidance for players

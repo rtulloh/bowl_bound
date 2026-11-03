@@ -116,7 +116,15 @@ and clock choices remain engine-constrained. These are bounded heuristics, not a
 coach, exact win probabilities, or a guarantee of increasing win rate.
 
 Easy CLI assistance is [documented separately](cli.md#easy-only-coaching-helper).
-There is no Medium/Hard helper or browser helper panel.
+The chart-ranking helper remains Easy-only in the CLI. Separately, all normal
+difficulties show read-only fourth-down guidance in the browser and CLI, using
+the same public policy as that difficulty’s CPU. The engine supplies the
+recommendation, public field-goal distance and wording. It reads no kick chart,
+selects no play, consumes no dice and changes no history. It appears only for
+the offense on an eligible fourth down with an offered kick; mandatory choices,
+conversions, overtime and finished games are excluded. Explicit development
+policies do not claim this shared normal-play guidance. Team/season range
+settings remain future work (AI-031).
 
 Coaching uses a separate private seed and deterministic local streams keyed by
 public observations and role. Previews/retries do not consume dice or future calls.

@@ -48,3 +48,15 @@ as presentation-ready fields. `score.home` and `score.away` remain the explicit
 score values. Clients should use these named fields rather than infer the
 opposing team or select timeout counts by tuple position; `clock.timeouts` stays
 available for compatibility.
+
+
+Every game response view includes `fourth_down_guidance`, either null or an
+engine-owned object containing `action` (`field_goal`, `punt`, or `go`), `label`,
+`summary`, `attempt_distance`, `difficulty`, and the declared `aggression`.
+Current normal difficulties share the CPU's public policy. Guidance is available
+only on an eligible fourth-down scrimmage with a legal kick, for the human offense
+(or the current offense in manual mode). Pending mandatory choices, conversions,
+overtime and finished games have no guidance. Adapters pass the captured response
+view to `SavedGame.fourth_down_guidance`; clients display its text and never compute
+kick range, chart probabilities, or the policy. This read-only field consumes no
+dice and changes no coaching history, command revision or save contents.

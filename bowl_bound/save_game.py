@@ -17,7 +17,13 @@ from secrets import randbits
 from threading import RLock
 from typing import Any
 
-from .coaching import BaselineCoach, CoachChoice
+from .coaching import (
+    BaselineCoach,
+    CoachChoice,
+    FourthDownGuidance,
+    field_goal_attempt_distance,
+    public_fourth_down_call,
+)
 from .coaching_session import CoachingTurn, plan_turn
 from .commentary import narrate_report
 from .dice import DefensiveRoll, DiceSequenceError, OffensiveRoll, RandomDice, ScriptedDice
@@ -507,6 +513,57 @@ class SavedGame:
             report = self._execute(operation, [value])
             view, next_turn = self.coach_view(human_side)
             return report, view, next_turn
+
+    def fourth_down_guidance(
+        self,
+        human_side: str | None,
+        *,
+        view: SessionView | RegulationView | None = None,
+    ) -> FourthDownGuidance | None:
+        """Describe the public policy without selecting calls or inspecting charts.
+
+        Adapters supply their captured response view so concurrent commands cannot
+        attach a later state's guidance to an earlier command's response.
+        """
+        from .coaching_session import observe_game
+
+        with self._lock:
+            if human_side not in {None, "home", "away"}:
+                raise ValueError("human side must be home or away")
+            if self.difficulty is None or self._coach.version < 10:
+                return None
+            view = self.view() if view is None else view
+            if (
+                view.finished
+                or view.state is None
+                or (view.pending and not getattr(view, "clock_optional", False))
+                or (human_side is not None and view.state.possession != human_side)
+                or not view.actions.offense
+                or not any(a.key in {"field_goal", "punt"} for a in view.actions.special)
+            ):
+                return None
+            public = observe_game(view, view.state.possession)
+            action = public_fourth_down_call(
+                public,
+                aggression=self._coach.aggression,
+                chase_seconds=self._coach.behavior.chase_seconds,
+            )
+            if action is None:
+                return None
+            label = {"field_goal": "Field goal", "punt": "Punt", "go": "Go for it"}[action]
+            distance = field_goal_attempt_distance(public)
+            return FourthDownGuidance(
+                action=action,
+                label=f"Fourth down: {label}",
+                summary=(
+                    f"{distance}-yard field-goal distance. "
+                    f"{self.difficulty.title()} public policy, shared with the computer. "
+                    "Actual kick results use the team's chart."
+                ),
+                attempt_distance=distance,
+                difficulty=self.difficulty,
+                aggression=self._coach.aggression,
+            )
 
     def player_advice_available(self, human_side: str) -> bool:
         """Check Easy helper availability without analyzing charts or selecting CPU calls."""
