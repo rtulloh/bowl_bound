@@ -659,6 +659,33 @@ Tracked work: [RULE-043](issues/RULE/RULE-043.md) and
 
 **Commit:** `milestone 35: add optional coffin-corner punts`
 
+### 36. Bring the Easy coaching helper to the web UI
+
+Added 2026-11-03 at the owner's request during play testing. Easy CPU difficulty
+already works in the browser; the missing feature is the Easy player coaching
+helper, currently available only in the CLI. This is future investigation and
+implementation scope, separate from M33 owner review, the active generator
+workstream and M35 coffin-corner punts.
+
+**Deliver:** inventory the existing engine/CLI offensive, defensive and pending
+decision assistance, reconcile related CLI-047 presentation work, and define a
+read-only engine/API contract for an Easy-only browser helper and toggle. Reuse
+verified Bowl Bound helper logic; document remaining differences instead of
+assuming CLI/browser parity. Keep current shared fourth-down guidance consistent.
+
+**Validate:** use synthetic engine/API/frontend/browser tests for legal and
+unavailable contexts, honest numeric-chart coverage, concealed-call independence,
+preview purity, Easy/Medium/Hard boundaries, toggle behavior and new/load/control
+mode lifecycle. Assistance must not mutate gameplay state, journal or randomness,
+choose a play automatically, expose private chart/source data, or change the
+approved human/CPU information policy. Update player/API/coaching/save guidance
+as applicable, then run focused and full gates and obtain owner play testing.
+
+Tracked work: [UI-053](issues/UI/UI-053.md). See the
+[Milestone 36 planning note](milestone-36.md).
+
+**Commit:** `milestone 36: bring the Easy coaching helper to the web UI`
+
 ## Decision gates
 
 Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.
