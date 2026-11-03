@@ -1,0 +1,23 @@
+docs/coaching.md
+  s_cee2f5c7a51f19::t_34a8d36af48b3f 87-88,104-106
+docs/dev-notes/issue-tracker.md
+  s_cee2f5c7a51f19::t_01ba4c82f491aa 8,10,26,447
+docs/dev-notes/issues/AI/AI-034.md
+  s_cee2f5c7a51f19::t_ed1702f5e89560 1-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "87100fc09b99e411fb1053ff027612237749605f",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
