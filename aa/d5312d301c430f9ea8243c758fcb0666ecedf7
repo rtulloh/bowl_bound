@@ -1,0 +1,63 @@
+backend/app.py
+  s_cee2f5c7a51f19::t_d42e8ff54898fe 73,102,113,115,117
+bowl_bound/coaching.py
+  s_cee2f5c7a51f19::t_3b91c1f8d3882d 13,43,133-134,158-159
+bowl_bound/coaching_audit.py
+  s_cee2f5c7a51f19::t_02aeffc72df223 370,437,472,477,479,481,483
+bowl_bound/coaching_profiles.py
+  s_cee2f5c7a51f19::t_ec6a5a1bcaf814 9,82,116,118,120,122,137,171,173,175,177
+bowl_bound/coaching_session.py
+  s_cee2f5c7a51f19::t_654e595eb59223 72,83-84
+bowl_bound/decision_facts.py
+  s_cee2f5c7a51f19::t_a8c4df28023526 6-7,61-69
+bowl_bound/difficulty.py
+  s_cee2f5c7a51f19::t_b7e29a9e5b878d 61-62,107-108
+bowl_bound/save_game.py
+  s_cee2f5c7a51f19::t_2140df87849d7a 340,375,377,379,396,814,849,854,856,858,1259
+bowl_bound/session.py
+  s_cee2f5c7a51f19::t_f864ea2074cd63 11,274,927-933
+docs/api.md
+  s_cee2f5c7a51f19::t_6b73c676ab2c7d 37-47
+docs/dev-notes/issues/RULE/RULE-028.md
+  s_cee2f5c7a51f19::t_29b7960c392f46 12,50-54
+docs/dev-notes/project-plan.md
+  s_cee2f5c7a51f19::t_2f8d5c807e0f11 631-633
+docs/playing.md
+  s_cee2f5c7a51f19::t_33177b84643140 42-45
+docs/saves.md
+  s_cee2f5c7a51f19::t_7ef4801916eb08 127-128,130-135,144-145
+tests/test_api.py
+  s_cee2f5c7a51f19::t_9f48c94e45c58b 122-130
+tests/test_chart_coaching.py
+  s_cee2f5c7a51f19::t_05880d68be4dad 117
+tests/test_chart_coaching_contract.py
+  s_cee2f5c7a51f19::t_d5c2829bc0bea6 11,155,167
+tests/test_cli_help_example.py
+  s_cee2f5c7a51f19::t_c03c04203261d3 9,32
+tests/test_coaching.py
+  s_cee2f5c7a51f19::t_4b731cf4dcbb40 116
+tests/test_coaching_audit_matrix.py
+  s_cee2f5c7a51f19::t_6af78bb56506d7 6,23-25
+tests/test_coaching_profiles.py
+  s_cee2f5c7a51f19::t_d8f43e9c86fdc9 99-103
+tests/test_difficulty.py
+  s_cee2f5c7a51f19::t_07bc09d6bd2d01 154-156
+tests/test_difficulty_interfaces.py
+  s_cee2f5c7a51f19::t_886d23fc912637 11,80-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "aad5312d301c430f9ea8243c758fcb0666ecedf7",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
