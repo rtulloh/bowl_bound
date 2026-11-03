@@ -1,0 +1,23 @@
+docs/dev-notes/issues/DATA/DATA-012.md
+  s_e06e375ba9891d::t_1b34e659a74ae3 1-28
+docs/dev-notes/issues/DATA/DATA-013.md
+  s_e06e375ba9891d::t_11c124ac76ef24 1-27
+docs/dev-notes/project-plan.md
+  s_e06e375ba9891d::t_49d0ccaa85fc28 658-687
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "0295e43c18dbd551ba7c43b5273a269eb58c6695",
+  "prompts": {},
+  "sessions": {
+    "s_e06e375ba9891d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f07-7008-7201-b15a-cd4a7dec87df",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
