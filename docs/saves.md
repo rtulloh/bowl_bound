@@ -113,8 +113,11 @@ Older `bowl-bound-m19-v1` saves are rejected before team lookup. No migration or
 deletion of those unsupported private saves is performed. Do not hand-edit engine profiles to bypass
 this check.
 
-New games enable Advanced II. A team's printed defense-chart markers are copied into
-the private save and verified against the installed team metadata on load. Current saves
+Normal games keep deferred Advanced II defensive options unavailable. Legacy
+Advanced II settings are replayed only for compatibility and then disabled; this
+does not enable Wild Card, Run/Pass, Nickel Zone or Red Zone calls for new play.
+A team's printed defense-chart markers remain private save metadata and are
+verified against the installed team metadata on load. Current saves
 write `defense_chart_markers`; older saves using `privileges` remain readable. If a save
 contains markers, the loader must return both the matching chart and metadata; chart-only
 loaders remain supported for saves without markers. This preserves free versus conditional
