@@ -1,0 +1,27 @@
+.github/workflows/tests.yml
+  s_e06e375ba9891d::t_64735d95fee5cc 60-87
+docs/college-cohort-generator.md
+  s_e06e375ba9891d::t_37ab8b5270f01a 191-200
+docs/dev-notes/issues/DATA/DATA-021.md
+  s_e06e375ba9891d::t_e28b48cada1b53 28-42
+docs/dev-notes/milestone-34a.md
+  s_e06e375ba9891d::t_1b8569ce5b0242 273-297
+tests/test_tests_workflow.py
+  s_e06e375ba9891d::t_4004420dbe8b25 31-59,62,74-82,92,109-118,142-157,170,174
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "d4d937d3b7fd2999d8267ea15100c5fa25880dc9",
+  "prompts": {},
+  "sessions": {
+    "s_e06e375ba9891d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f07-7008-7201-b15a-cd4a7dec87df",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
