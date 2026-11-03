@@ -390,7 +390,7 @@ class RegulationGame:
                             game_actions.append(
                                 Action(
                                     f"timeout:{team.value}",
-                                    f"{label} ({available})",
+                                    label,
                                 )
                             )
                             conditional_label = (
@@ -401,7 +401,7 @@ class RegulationGame:
                             game_actions.append(
                                 Action(
                                     f"timeout_after:{team.value}",
-                                    f"{conditional_label} ({available})",
+                                    conditional_label,
                                 )
                             )
                 game_actions.append(Action("kneel", "Kneel"))

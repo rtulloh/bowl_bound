@@ -133,13 +133,13 @@ choose any enabled legal action. It uses public game facts, with actual kick
 results resolved from the team chart after the call.
 
 
-The Clock controls offer **Use [team] timeout on next play (N)**.
+The Clock controls offer **Use [team] timeout on next play**.
 Select your team's request, then choose the play or defensive formation. This
 matches the normal CLI `AT` timing intent: spend one timeout and use 10 seconds
 only if the resolved play would offer a post-play timeout. An incomplete pass,
 interception, other possession change, or any play already taking 10 seconds
-or less spends none. **Cancel [team] timeout (N)** removes the request; `(N)`
-is the remaining budget. Only one side's request can be selected at a time.
+or less spends none. **Cancel [team] timeout** removes the request. Remaining
+timeouts appear on the scoreboard. Only one side's request can be selected at a time.
 
 The web request stays with that selected play through required decisions and
 private save/load, then clears once the play is complete. The CLI suffix

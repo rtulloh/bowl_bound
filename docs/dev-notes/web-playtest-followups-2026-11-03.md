@@ -29,3 +29,23 @@ Trace a synthetic touchdown/PAT/kickoff/return sequence through committed report
 API serialization and the rendered history. Distinguish durable history from the
 latest-result panel and retain the engine's combined kick/return report model.
 Record the reproduced failure and focused checks before a behavioral correction.
+
+## UI-055 validation
+
+Four synthetic label cases failed against unchanged `78ffa23`, then passed after
+removing only the duplicated suffix. Ran:
+
+```text
+PYTHONPATH=. .venv/bin/python -m pytest tests/test_timeout_button_labels.py tests/test_conditional_timeouts.py tests/test_armed_timeouts.py tests/test_timeout_continuations.py tests/test_issue_tracker.py -q
+PATH=<Node 24 directory>:$PATH npm test -- src/test/clockFlow.test.jsx
+PATH=<Node 24 directory>:$PATH npm test
+PATH=<Node 24 directory>:$PATH npm run build
+PYTHONPATH=. .venv/bin/python -m ruff check bowl_bound/regulation.py tests/test_timeout_button_labels.py
+PYTHONPATH=. .venv/bin/python -m ruff format --check bowl_bound/regulation.py tests/test_timeout_button_labels.py
+git diff --check
+```
+
+Results: 104 Python cases, five focused/frontend clock cases, all 131 frontend
+cases and build/lint/format passed. These checks cover the presentation change;
+they do not claim a fresh full Python gate or automated browser execution. No
+push or change to a running frozen server is included in this checkpoint.

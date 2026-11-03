@@ -18,17 +18,17 @@ it('keeps timeout selection serialized with defense and displays prior and selec
   const choices = [{ id: 'clock:timeout:away', label: 'Away timeout (3)', enabled: true }]
   const human = { human_side: 'away', human_role: 'defense', automatic: false, status: 'Choose defense',
     actions: { offense: [], defense: view().actions.defense, special: [] },
-    game_actions: [{ key: 'timeout:away', label: 'Legacy reservation (3)' }, { key: 'timeout_after:away', label: 'Use Away timeout on next play (3)' }],
+    game_actions: [{ key: 'timeout:away', label: 'Legacy reservation (3)' }, { key: 'timeout_after:away', label: 'Use Away timeout on next play' }],
     pending: { choices },
   }
   const before = view({ phase: 'clock_choice', clock_optional: true, clock_modifiers: choices,
-    clock_timing_label: priorTiming, log: [report()] })
+    clock_timing_label: priorTiming, home_timeouts: 3, away_timeouts: 3, log: [report()] })
   api.newGame.mockResolvedValue({ game_id: 'timeout-game', revision: 4, view: before, turn: human })
   let selectTimeout
   api.gameAction.mockImplementation(() => new Promise((resolve) => { selectTimeout = resolve }))
   const timing = 'Away timeout used; this play took 10 seconds.'
   api.coachStep.mockResolvedValue({ revision: 6, report: report({ number: 2, timing_label: timing }),
-    view: view({ log: [report(), report({ number: 2, timing_label: timing })] }),
+    view: view({ home_timeouts: 3, away_timeouts: 2, log: [report(), report({ number: 2, timing_label: timing })] }),
     turn: { ...human, pending: null },
   })
   render(<App />)
@@ -38,19 +38,25 @@ it('keeps timeout selection serialized with defense and displays prior and selec
   expect(await screen.findByText(priorTiming)).toBeVisible()
   expect(screen.queryByText('Choose one action for the next play.')).toBeNull()
   expect(screen.queryByRole('button', { name: 'Legacy reservation (3)' })).toBeNull()
-  fireEvent.click(screen.getByRole('button', { name: 'Use Away timeout on next play (3)' }))
+  expect(screen.getByTestId('home-timeouts')).toHaveTextContent('Timeouts: 3')
+  expect(screen.getByTestId('away-timeouts')).toHaveTextContent('Timeouts: 3')
+  expect(screen.queryByRole('button', { name: /timeout.*\(\d+\)/i })).toBeNull()
+  fireEvent.click(screen.getByRole('button', { name: 'Use Away timeout on next play' }))
   fireEvent.click(screen.getByTestId('defense-play-a'))
   expect(api.coachStep).not.toHaveBeenCalled()
   expect(api.gameAction).toHaveBeenCalledWith('timeout-game', 'timeout_after:away', 'away')
   const selected = 'Away timeout requested for the next play if eligible.'
   selectTimeout({ revision: 5, report: null, view: { ...before, armed_timeout: 'away', conditional_timeout: true, armed_timeout_label: selected },
-    turn: { ...human, game_actions: [{ key: 'timeout_after:away', label: 'Cancel Away timeout (3)' }] },
+    turn: { ...human, game_actions: [{ key: 'timeout_after:away', label: 'Cancel Away timeout' }] },
   })
   expect(await screen.findByText(selected)).toBeVisible()
+  expect(screen.getByRole('button', { name: 'Cancel Away timeout' })).toBeEnabled()
+  expect(screen.queryByRole('button', { name: /timeout.*\(\d+\)/i })).toBeNull()
   fireEvent.click(screen.getByTestId('defense-play-a'))
   await waitFor(() => expect(api.coachStep).toHaveBeenCalledWith('timeout-game', 'away', 5, 'A'))
   expect(await screen.findAllByText(timing)).toHaveLength(2)
   expect(screen.queryByText(selected)).toBeNull()
+  expect(screen.getByTestId('away-timeouts')).toHaveTextContent('Timeouts: 2')
   expect(api.decide).not.toHaveBeenCalled()
 })
 
@@ -106,19 +112,19 @@ it('shows engine-offered next-play timeout actions beside existing post-play cho
   const before = view({ phase: 'clock_choice', clock_optional: true,
     pending: { choices: [{ id: 'clock:timeout:home', label: 'Prior play timeout', enabled: true }] },
     clock_modifiers: [{ id: 'clock:timeout:home', label: 'Prior play timeout', enabled: true }],
-    game_actions: [{ key: 'timeout:home', label: 'Use Home timeout on next play (3)' }],
+    game_actions: [{ key: 'timeout:home', label: 'Use Home timeout on next play' }],
   })
   api.newGame.mockResolvedValue({ game_id: 'synthetic', seed: 1, view: before })
-  api.gameAction.mockResolvedValue({ report: null, view: { ...before, armed_timeout: 'home', armed_timeout_label: 'Home timeout selected for the next play; that play takes 10 seconds.', game_actions: [{ key: 'timeout:home', label: 'Cancel Home timeout (3)' }] } })
+  api.gameAction.mockResolvedValue({ report: null, view: { ...before, armed_timeout: 'home', armed_timeout_label: 'Home timeout selected for the next play; that play takes 10 seconds.', game_actions: [{ key: 'timeout:home', label: 'Cancel Home timeout' }] } })
   render(<App />)
   await screen.findByTestId('start-game')
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
   fireEvent.click(screen.getByTestId('start-game'))
   expect(await screen.findByRole('radio', { name: 'Prior play timeout' })).not.toBeChecked()
-  fireEvent.click(screen.getByRole('button', { name: 'Use Home timeout on next play (3)' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Use Home timeout on next play' }))
   await waitFor(() => expect(api.gameAction).toHaveBeenCalledWith('synthetic', 'timeout:home'))
   expect(await screen.findByText('Home timeout selected for the next play; that play takes 10 seconds.')).toBeVisible()
-  expect(screen.getByRole('button', { name: 'Cancel Home timeout (3)' })).toBeEnabled()
+  expect(screen.getByRole('button', { name: 'Cancel Home timeout' })).toBeEnabled()
   expect(api.snap).not.toHaveBeenCalled()
   expect(api.decide).not.toHaveBeenCalled()
 })
