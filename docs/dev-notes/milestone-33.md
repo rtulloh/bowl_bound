@@ -976,3 +976,28 @@ timeout ownership, logs and strict replay remain unchanged. Cumulative Python
 parity includes prior30+selected10 at late41s→1s. Natural10s web reservations
 are not AT-equivalent; owner authorizes a distinct conditional intent next.
 Original M33 acceptance is historical; RULE044 remains open.
+
+
+RULE-044 conditional-intent checkpoint (2026-11-03): parent/owner approved
+`timeout_after:<side>` rather than altering recorded legacy actions. Its single
+side-owned request persists through mandatory decisions, but charges only if
+normal resolved-play timing would offer a post-play timeout (>10s). Natural10s,
+no-time and unsupported paths are explicit; unsupported keeps the request.
+`conditional_timeout=true` is semantic; false and new view-only action offers
+are excluded for legacy digest compatibility. Normal/frozen coach observations
+exclude new UI request keys; CPU policy versions are unchanged. CLI AT's human
+pending limitation is documented, not silently changed.
+
+15 meaningful engine failures, six new API command failures and one frontend
+primary-control failure preceded implementation. 44 focused/7.43s and568
+cumulative/73.23s pass; frontend131/4.80s, production build1.08s and Ruff
+check/format554files pass. Existing browser selectors now use conditional offers;
+two fictional pending-interception cases were added, not claimed executed.
+Fresh full gate and immutable owner re-test are pending.
+
+Review follow-up: pre-call primary label remains the approved Use TEAM timeout
+on next play; if-eligible status says next until a mandatory choice is pending.
+A meaningful red CLI menu test exposed the new key leaking as an implementation
+name; both prefixes are now excluded without changing terminal T/AT. Both new
+browser-fixture INT paths pass through TestClient, not a browser. Isolated real
+runtime,18 tracker,pip check and npm audit0 also pass.

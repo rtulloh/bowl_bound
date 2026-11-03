@@ -1292,6 +1292,8 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
                     continue
                 if key == "bounds_declaration" and item is None:
                     continue
+                if key == "conditional_timeout" and item is False:
+                    continue
                 if key == "armed_timeout" and item is None:
                     continue
                 if key == "guaranteed_out_of_bounds" and item is False:
@@ -1304,7 +1306,7 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
                         and not (
                             data.get("clock") is not None
                             and data.get("overtime") is None
-                            and action.get("key", "").startswith("timeout:")
+                            and action.get("key", "").startswith(("timeout:", "timeout_after:"))
                         )
                     ]
                 canonical[key] = semantic(item)

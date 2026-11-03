@@ -83,6 +83,7 @@ class RegulationView(SessionView):
     armed_timeout: str | None = None
     armed_timeout_label: str | None = None
     clock_timing_label: str | None = None
+    conditional_timeout: bool = False
 
     def timing_label(self, play_number: int) -> str | None:
         """Describe only recorded timing, or the completed play awaiting a choice."""
@@ -159,6 +160,7 @@ class RegulationGame:
         self._hurried = False
         self._bounds_declaration: BoundsDeclaration | None = None
         self._armed_timeout: Possession | None = None
+        self._conditional_timeout = False
         self._untimed = False
         self._pending_timing_seconds = 0
         self._last_report: PlayReport | None = None
@@ -391,6 +393,17 @@ class RegulationGame:
                                     f"{label} ({available})",
                                 )
                             )
+                            conditional_label = (
+                                f"Cancel {self._names[team]} timeout"
+                                if self._armed_timeout is team
+                                else f"Use {self._names[team]} timeout on next play"
+                            )
+                            game_actions.append(
+                                Action(
+                                    f"timeout_after:{team.value}",
+                                    f"{conditional_label} ({available})",
+                                )
+                            )
                 game_actions.append(Action("kneel", "Kneel"))
                 game_actions.append(Action("elect_safety", "Elect a safety"))
                 if (
@@ -502,6 +515,7 @@ class RegulationGame:
         defense_name = (
             self._names[Possession(base.state.possession).other] if base.state is not None else None
         )
+        timeout_play = "this play" if base.pending and not clock_optional else "the next play"
         return RegulationView(
             **values,
             clock=clock_view,
@@ -531,8 +545,18 @@ class RegulationGame:
             ),
             game_type=self._game_type.value,
             armed_timeout=self._armed_timeout.value if self._armed_timeout else None,
+            conditional_timeout=self._conditional_timeout,
             armed_timeout_label=(
-                f"{self._names[self._armed_timeout]} timeout selected for this play; "
+                f"{self._names[self._armed_timeout]} timeout requested for "
+                f"{timeout_play} if eligible; "
+                "no timeout is used if the play already takes 10 seconds or less."
+                + (
+                    " Complete the required decision first."
+                    if base.pending and not clock_optional
+                    else ""
+                )
+                if self._armed_timeout and self._conditional_timeout
+                else f"{self._names[self._armed_timeout]} timeout selected for this play; "
                 "it will take 10 seconds after the required decision is complete."
                 if self._armed_timeout and base.pending and not clock_optional
                 else f"{self._names[self._armed_timeout]} timeout selected for the next play; "
@@ -694,6 +718,7 @@ class RegulationGame:
                     index = 0 if self._armed_timeout is Possession.HOME else 1
                     if not self._clock.timeouts[index]:
                         self._armed_timeout = None
+                        self._conditional_timeout = False
                 seconds = TIMEOUT_SECONDS
             elif choice == "clock:hurry":
                 self._hurried = True
@@ -721,13 +746,19 @@ class RegulationGame:
 
     def action(self, action: str, *, dice: DiceSource | None = None) -> PlayReport | None:
         self._legacy_halftime_choice_pending = False
-        if action.startswith("timeout:") and self._phase is not RegulationPhase.OVERTIME:
+        if (
+            action.startswith(("timeout:", "timeout_after:"))
+            and self._phase is not RegulationPhase.OVERTIME
+        ):
             if self.view().finished:
                 raise SessionFinishedError("regulation has ended")
             if action not in {a.key for a in self.view().game_actions}:
                 raise InvalidDecisionError("that game action is unavailable")
             team = Possession(action.split(":")[1])
             self._armed_timeout = None if self._armed_timeout is team else team
+            self._conditional_timeout = self._armed_timeout is not None and action.startswith(
+                "timeout_after:"
+            )
             return None
         if self._phase is RegulationPhase.CLOCK:
             if action not in {a.key for a in self.view().game_actions}:
@@ -790,8 +821,10 @@ class RegulationGame:
         conversion = before.phase in {"conversion_choice", "two_point_try"}
         seconds = 0 if conversion or self._untimed else duration(report.timing, self._clock)
         timeout = self._armed_timeout
+        conditional = self._conditional_timeout
         self._armed_timeout = None
-        if report.timing.no_elapsed_time:
+        self._conditional_timeout = False
+        if report.timing.no_elapsed_time or (conditional and seconds <= TIMEOUT_SECONDS):
             timeout = None
         if timeout is not None:
             self._clock = self._clock.timeout(timeout)
@@ -832,6 +865,7 @@ class RegulationGame:
                 return
             self._hurried = False
             self._armed_timeout = None
+            self._conditional_timeout = False
             if self._clock.quarter == 2:
                 self._phase = RegulationPhase.HALFTIME
                 self._kick_after = None

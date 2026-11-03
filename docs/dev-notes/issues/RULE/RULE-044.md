@@ -57,3 +57,36 @@ AT only uses a subsequently offered timeout and cannot retain its request across
 a human interception decision. A distinct prospective conditional command is
 being implemented next; this ticket remains open. Do not change the meaning of
 recorded legacy timeout actions or claim complete CLI parity prematurely.
+
+--- 2026-11-03 15:40 ---
+Owner explicitly requires AT-style conditional eligibility. Added a distinct
+`timeout_after:<side>` prospective request; recorded `timeout:<side>` actions
+retain original unconditional semantics. The web primary action displays the
+engine's conditional offer, while old adapters/saves retain their original keys.
+Natural 10-second results use no timeout; mandatory decisions preserve the
+request for that same play, then clear it once without charging twice. This
+extends persistence beyond CLI AT's current human-pending limitation rather
+than pretending the existing terminal suffix already does that.
+
+Test-first: 15 engine tests failed on absent command, six new API branches on
+422, frontend on displaying the legacy control instead of the conditional offer.
+An initial new API test had a missing parametrized function argument; corrected
+that fixture before recording meaningful API failures. Focused current result:
+44 passed in7.43s; cumulative568 in73.23s. Frontend131 in4.80s/build1.08s; Ruff
+check/format554files pass. New real-engine browser controls include conditional
+requests/side ownership and both human interception decisions on fictional
+all-interception charts (explicit baseline-v2 avoids another RZDZ decision).
+These browser assertions remain unverified locally because of sandbox launch
+restrictions. Fresh full-source regression remains pending; ticket is open.
+
+--- 2026-11-03 15:45 ---
+Review kept the owner's approved pre-call button wording Use TEAM timeout on
+next play; eligibility is in the engine status/help. Status changes from next
+play to THIS play only after a call has a required continuation. A new red CLI
+menu regression caught the new web-only key leaking into SPECIAL PLAYS; both
+timeout prefixes are now excluded there, with historical T/AT bindings retained.
+Two browser-fixture interception paths also pass directly through the real API
+(TestClient), which is not a browser execution claim. Runtime isolation test,
+18 tracker checks, pip check and npm audit (zero vulnerabilities) pass. An
+initial runtime-stage command used a nonexistent test filename; rerun the actual
+release-package isolated-runtime test successfully. No check was skipped.

@@ -37,8 +37,8 @@ for (const width of [1280, 390]) {
     const modifiers = page.getByRole('region', { name: 'Play modifiers' })
     const hurry = modifiers.getByRole('checkbox', { name: 'Enable/Disable Hurry-Up' })
     await expect(hurry).toBeVisible()
-    const timeoutActions = kickoffView.game_actions.filter((action) => action.key.startsWith('timeout:'))
-    expect(timeoutActions.map((action) => action.key)).toEqual(['timeout:home', 'timeout:away'])
+    const timeoutActions = kickoffView.game_actions.filter((action) => action.key.startsWith('timeout_after:'))
+    expect(timeoutActions.map((action) => action.key)).toEqual(['timeout_after:home', 'timeout_after:away'])
     expect(kickoffView.armed_timeout).toBeNull()
     for (const action of timeoutActions) {
       const timeout = modifiers.getByTestId('game-play-' + action.key)

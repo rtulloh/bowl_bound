@@ -218,7 +218,8 @@ export default function App() {
   const clockChoice = pending && view.phase === 'clock_choice'
   const blocking = (Boolean(pending) && !view.clock_optional) || Boolean(turn?.automatic)
   const gameActions = (turn ? turn.game_actions : view.game_actions) || []
-  const timeoutActions = gameActions.filter((action) => action.key.startsWith("timeout:"))
+  const conditionalTimeouts = gameActions.filter((action) => action.key.startsWith("timeout_after:"))
+  const timeoutActions = conditionalTimeouts.length ? conditionalTimeouts : gameActions.filter((action) => action.key.startsWith("timeout:"))
   const boundsActions = gameActions.filter((action) => action.key.startsWith("bounds:"))
   const boundsStatus = view.bounds_declaration === 'out_of_bounds'
     ? 'Out of bounds selected for the next play.'
@@ -232,7 +233,7 @@ export default function App() {
   }
   const extraPlays = [
     ...(actions.special || []).map((action) => ({ ...action, prefix: 'special', displayKey: displayKeys[action.key], shortLabel: action.key === 'field_goal' ? 'FG' : action.label })),
-    ...gameActions.filter((action) => !action.key.startsWith("timeout:") && !action.key.startsWith("bounds:")).map((action) => ({ ...action, prefix: 'game', displayKey: displayKeys[action.key] })),
+    ...gameActions.filter((action) => !action.key.startsWith("timeout:") && !action.key.startsWith("timeout_after:") && !action.key.startsWith("bounds:")).map((action) => ({ ...action, prefix: 'game', displayKey: displayKeys[action.key] })),
   ]
   const offensePlays = [...actions.offense, ...(!turn || turn.human_role === 'offense' ? extraPlays : [])]
   const defensePlays = [...actions.defense, ...(turn && turn.human_role !== 'offense' ? extraPlays : [])]

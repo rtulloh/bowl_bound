@@ -58,7 +58,8 @@ def observe_game(view: GameView, side: str) -> CoachObservation:
         game_actions=tuple(
             a.key
             for a in getattr(view, "game_actions", ())
-            if not a.key.startswith("timeout:") or a.key == f"timeout:{side}"
+            if not a.key.startswith("timeout_after:")
+            and (not a.key.startswith("timeout:") or a.key == f"timeout:{side}")
         ),
         choices=tuple(
             c.id
@@ -166,8 +167,11 @@ def plan_turn(view: GameView, human_side: str, coach: BaselineCoach) -> _Plan:
     human_actions = tuple(
         a
         for a in getattr(view, "game_actions", ())
-        if a.key == f"timeout:{human_side}"
-        or (view.state.possession == human_side and not a.key.startswith("timeout:"))
+        if a.key in {f"timeout:{human_side}", f"timeout_after:{human_side}"}
+        or (
+            view.state.possession == human_side
+            and not a.key.startswith(("timeout:", "timeout_after:"))
+        )
     )
     if view.state.possession == human_side:
         turn = CoachingTurn(

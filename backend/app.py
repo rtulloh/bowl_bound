@@ -147,6 +147,8 @@ class GameAction(BaseModel):
         "elect_safety",
         "timeout:home",
         "timeout:away",
+        "timeout_after:home",
+        "timeout_after:away",
         "bounds:oob",
         "bounds:ib",
     ]

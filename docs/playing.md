@@ -133,18 +133,21 @@ choose any enabled legal action. It uses public game facts, with actual kick
 results resolved from the team chart after the call.
 
 
-The Clock controls also show each engine-offered next-play timeout. Choose
-**Use [team] timeout on next play (N)** for your team, then choose the play or
-defensive formation. The clock and timeout budget stay unchanged until the play
-completes; then that play takes 10 seconds and one timeout is spent. Choose
-**Cancel [team] timeout (N)** to remove the selection; `(N)` is the remaining
-timeout budget. Only one side's modifier can be armed at a time. It survives
-required play decisions and private save/load, and clears after the play. The
-existing post-play clock choices continue to adjust the completed play.
+The Clock controls offer **Use [team] timeout on next play (N)**.
+Select your team's request, then choose the play or defensive formation. This
+matches the normal CLI `AT` timing intent: spend one timeout and use 10 seconds
+only if the resolved play would offer a post-play timeout. An incomplete pass,
+interception, other possession change, or any play already taking 10 seconds
+or less spends none. **Cancel [team] timeout (N)** removes the request; `(N)`
+is the remaining budget. Only one side's request can be selected at a time.
 
-
-Cancel an armed timeout before choosing the separate combined next-spike timing
-option; the engine withholds that choice while the timeout is armed.
+The web request stays with that selected play through required decisions and
+private save/load, then clears once the play is complete. The CLI suffix
+currently cannot retain a request across a required human decision; it reports
+that no timeout was offered. Existing post-play Clock choices apply to the
+completed play. Old saved next-play reservations retain their original behavior.
+Cancel a selected request before choosing the separate combined next-spike
+option; the engine withholds that choice while a request is selected.
 
 When a completed play's timing is still pending, the Clock controls explain its
 normal time charge. Selecting another play applies that previous charge first;

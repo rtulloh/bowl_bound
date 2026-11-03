@@ -18,7 +18,7 @@ it('keeps timeout selection serialized with defense and displays prior and selec
   const choices = [{ id: 'clock:timeout:away', label: 'Away timeout (3)', enabled: true }]
   const human = { human_side: 'away', human_role: 'defense', automatic: false, status: 'Choose defense',
     actions: { offense: [], defense: view().actions.defense, special: [] },
-    game_actions: [{ key: 'timeout:away', label: 'Use Away timeout on next play (3)' }],
+    game_actions: [{ key: 'timeout:away', label: 'Legacy reservation (3)' }, { key: 'timeout_after:away', label: 'Use Away timeout on next play (3)' }],
     pending: { choices },
   }
   const before = view({ phase: 'clock_choice', clock_optional: true, clock_modifiers: choices,
@@ -37,12 +37,14 @@ it('keeps timeout selection serialized with defense and displays prior and selec
   fireEvent.click(screen.getByTestId('start-game'))
   expect(await screen.findByText(priorTiming)).toBeVisible()
   expect(screen.queryByText('Choose one action for the next play.')).toBeNull()
+  expect(screen.queryByRole('button', { name: 'Legacy reservation (3)' })).toBeNull()
   fireEvent.click(screen.getByRole('button', { name: 'Use Away timeout on next play (3)' }))
   fireEvent.click(screen.getByTestId('defense-play-a'))
   expect(api.coachStep).not.toHaveBeenCalled()
-  const selected = 'Away timeout selected for the next play; that play takes 10 seconds.'
-  selectTimeout({ revision: 5, report: null, view: { ...before, armed_timeout: 'away', armed_timeout_label: selected },
-    turn: { ...human, game_actions: [{ key: 'timeout:away', label: 'Cancel Away timeout (3)' }] },
+  expect(api.gameAction).toHaveBeenCalledWith('timeout-game', 'timeout_after:away', 'away')
+  const selected = 'Away timeout requested for the next play if eligible.'
+  selectTimeout({ revision: 5, report: null, view: { ...before, armed_timeout: 'away', conditional_timeout: true, armed_timeout_label: selected },
+    turn: { ...human, game_actions: [{ key: 'timeout_after:away', label: 'Cancel Away timeout (3)' }] },
   })
   expect(await screen.findByText(selected)).toBeVisible()
   fireEvent.click(screen.getByTestId('defense-play-a'))

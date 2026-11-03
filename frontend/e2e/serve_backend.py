@@ -15,8 +15,10 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from backend.app import create_app  # noqa: E402
+from bowl_bound.models import NormalizedCell, Play, ResultKind  # noqa: E402
 from bowl_bound.sample_teams import install_samples  # noqa: E402
 from tests.synthetic_teams import default_teams, team_chart, with_pat_result, write_team  # noqa: E402
+from tests.test_models import provenance  # noqa: E402
 from tests.test_special_teams import special_chart, yards  # noqa: E402
 
 
@@ -56,6 +58,20 @@ def main() -> None:
             ).special_teams,
         )
         write_team(seasons, chart)
+    interception = NormalizedCell(ResultKind.INTERCEPTION, provenance(), yards=15)
+    chart = replace(
+        team_chart(
+            "Timeout Home",
+            season=2002,
+            offense=0,
+            defense=0,
+            plays={play: interception for play in Play},
+        ),
+        special_teams=special_chart(
+            "Timeout Home", kickoff=yards(40), kickoff_return=yards(10)
+        ).special_teams,
+    )
+    write_team(seasons, chart)
     install_samples(seasons)
     uvicorn.run(
         create_app(seasons, ROOT / "frontend" / "dist"),

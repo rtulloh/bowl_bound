@@ -357,7 +357,8 @@ class TerminalGame:
         special_plays = tuple(
             a
             for a in game_actions
-            if not a.key.startswith("timeout:") and not a.key.startswith("bounds:")
+            if not a.key.startswith(("timeout:", "timeout_after:"))
+            and not a.key.startswith("bounds:")
         )
         if special_plays:
             self._print("\n  SPECIAL PLAYS:")

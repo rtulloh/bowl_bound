@@ -73,17 +73,25 @@ kick range, chart probabilities, or the policy. This read-only field consumes no
 dice and changes no coaching history, command revision or save contents.
 
 
-Regulation views add nullable `armed_timeout` (`home`/`away`) and the engine's
-`armed_timeout_label`. Legal `game_actions` may offer `timeout:<side>` to arm or
-cancel that side's next-play timeout. Coached responses offer only the human's
-own action. Submit the ID to the existing action endpoint; the null report and
-unchanged clock mean no play or timeout has been spent. A subsequent completed
-legal play consumes it once and records `timeout:<side>` plus 10 seconds in
-`timing_log`. Pending continuations preserve the modifier; no-time elected
-safeties and period boundaries clear it unused. The API/frontend never infer
-eligibility from counts, possession or phase. Existing `clock:timeout:<side>`
-decisions retain their prior-play meaning; overtime's action retains its own
-existing immediate budget rule.
+Regulation views add nullable `armed_timeout` (`home`/`away`), semantic boolean
+`conditional_timeout`, and the engine's `armed_timeout_label`. The primary web
+`game_actions` offer `timeout_after:<side>`: request/cancel an eligible timeout
+for the selected next call. Coached responses offer only the human's own side.
+Submit the engine ID to the action endpoint. Selection consumes no play, clock,
+budget or dice. Mandatory continuations/save/load preserve it. At the final
+supported report, use one timeout and 10 seconds only if normal timing would
+allow a post-play timeout (more than 10 seconds); otherwise clear it unused.
+Unsupported outcomes preserve the intent. No-time plays, tries and period
+boundaries do not invent a charge. Clients never compute this eligibility.
+
+Legacy `timeout:<side>` remains an unconditional next-play reservation with its
+original replay/API semantics and menus; current browser controls prefer the
+new conditional action when offered. Actual spent timeouts still record
+`timeout:<side>` plus 10 seconds in `timing_log`. Existing
+`clock:timeout:<side>` decisions retain their completed-play meaning. Overtime's
+legacy action retains its immediate budget rule and has no conditional intent.
+The new semantic flag is hashed when true; its false default and view-only
+conditional action offers are omitted when validating legacy save digests.
 
 Regulation `clock_timing_label` explains a completed play's still-pending normal
 charge. It is engine-generated presentation and excluded from semantic save

@@ -70,8 +70,14 @@ def test_web_selected_play_timeout_matches_cli_at_on_same_normal_state(
 
 @pytest.mark.parametrize("quarter,remaining", [(1, 900), (2, 41), (4, 41)])
 @pytest.mark.parametrize("choice", ["interception:return", "interception:decline"])
+@pytest.mark.parametrize("conditional", [False, True])
 def test_timeout_waits_for_cpu_owned_continuation_after_prior_timing(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, quarter: int, remaining: int, choice: str
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    quarter: int,
+    remaining: int,
+    choice: str,
+    conditional: bool,
 ) -> None:
     charts = saved_after_kickoff()._charts
     home = charts["home"]
@@ -115,7 +121,8 @@ def test_timeout_waits_for_cpu_owned_continuation_after_prior_timing(
     before = loaded.json()
     key = before["game_id"]
     selected = client.post(
-        f"/api/games/{key}/action?human_side=away", json={"action": "timeout:away"}
+        f"/api/games/{key}/action?human_side=away",
+        json={"action": "timeout_after:away" if conditional else "timeout:away"},
     )
     assert selected.status_code == 200, selected.text
     selected_data = selected.json()
@@ -137,28 +144,45 @@ def test_timeout_waits_for_cpu_owned_continuation_after_prior_timing(
     assert not data["turn"]["automatic"]
     pending = data["view"]
     assert pending["armed_timeout"] == "away"
+    assert pending["conditional_timeout"] is conditional
     assert pending["clock"]["remaining"] == remaining - 30
     assert pending["clock"]["timeouts"] == [3, 3]
     prior_number = before["view"]["log"][-1]["number"]
     assert pending["timing_log"][-1]["play_number"] == prior_number
     assert pending["timing_log"][-1]["seconds"] == 30
+    pending_text = client.get(f"/api/games/{key}/save").text
+    resumed = client.post(
+        "/api/games/load?human_side=away",
+        content=pending_text,
+        headers={"content-type": "application/json"},
+    )
+    assert resumed.status_code == 200, resumed.text
+    assert resumed.json()["view"] == pending
+    resumed_key = resumed.json()["game_id"]
     finished = client.post(f"/api/games/{key}/decision?human_side=away", json={"choice": choice})
     assert finished.status_code == 200, finished.text
     final = finished.json()
     assert not final["report"]["pending"]
+    resumed_final = client.post(
+        f"/api/games/{resumed_key}/decision?human_side=away", json={"choice": choice}
+    )
+    assert resumed_final.status_code == 200, resumed_final.text
+    assert resumed_final.json()["view"] == final["view"]
     view = final["view"]
     assert view["clock"]["quarter"] == quarter
     assert view["clock"]["remaining"] == remaining - 40
-    assert view["clock"]["timeouts"] == [3, 2]
+    assert view["clock"]["timeouts"] == ([3, 3] if conditional else [3, 2])
     assert view["armed_timeout"] is None and view["armed_timeout_label"] is None
     assert view["timing_log"][-1]["play_number"] == final["report"]["number"]
     assert view["timing_log"][-1]["seconds"] == 10
-    assert view["timing_log"][-1]["method"] == "timeout:away"
+    assert view["timing_log"][-1]["method"] == ("standard" if conditional else "timeout:away")
     assert "armed" not in pending["armed_timeout_label"].lower()
     assert "this play" in pending["armed_timeout_label"]
     assert "previous play" in selected_data["view"]["clock_timing_label"].lower()
     assert "30 seconds" in selected_data["view"]["clock_timing_label"]
-    assert final["report"]["timing_label"] == "Away timeout used; this play took 10 seconds."
+    assert final["report"]["timing_label"] == (
+        None if conditional else "Away timeout used; this play took 10 seconds."
+    )
     assert view["log"][-1]["timing_label"] == final["report"]["timing_label"]
     stable = client.get(f"/api/games/{key}?human_side=away").json()
     assert stable["view"]["clock"] == view["clock"]
