@@ -38,6 +38,14 @@ Reviewed local Paydirt sources before planning:
 
 No Paydirt source code, team data, or runtime dependency is reused.
 
+The implementation pass independently reread Paydirt's
+`tests/test_ai_offense_variety.py`, `tests/test_ai_trailing_defense.py`, and
+`tests/test_ai_mode_consistency.py` before AI-010. Adapted exact categorical
+probability checks, coaching RNG isolation, committed-history invariants, and
+one-coach-per-CLI-game instrumentation. The NFL call families, probability
+weights, clock decisions, and field-position policies are deliberately excluded;
+the tests exercise Bowl Bound's versioned behavior profiles and synthetic charts.
+
 ## Dependency order
 
 1. Establish the AI-010 deterministic regression harness needed by the gameplay
@@ -53,6 +61,45 @@ No Paydirt source code, team data, or runtime dependency is reused.
 ## Acceptance record
 
 Pending implementation.
+
+## AI-010 — Coaching contract harness
+
+Added `tests/test_coaching_invariants.py` with synthetic charts only. It checks
+all three tiers' hidden-call independence and pending penalty, conversion, and
+overtime save/replay; Hard preview/rejection history purity; exact counters and
+bounded recent/situational histories after 220 actual snaps across both teams;
+and selection purity through scrimmage, kicks, kneel, Hail Mary, tries, and
+decision branches. Cache checks assert tuple identity, true LRU refresh/eviction,
+and opponent-count sensitivity. Other checks cover private-plan fallback flags
+and reset, exact exploration/exploitation weights, exact Medium group weights
+and symbolic-chart fallback, and one coach instance per new/resumed CLI game.
+
+`scripts/audit_coaching_contracts.py` copies only source and public tests to a
+temporary directory, injects one fault at a time, and requires the corresponding
+regression to fail an assertion. It never mutates the live checkout or copies
+local seasons/private data. The 17 faults cover preview/rejection learning,
+pending-save and long-history loss, concealed-input leakage, gameplay-dice and
+chart mutation, selection-history mutation, LRU/key errors, hidden fallback,
+omitted exploration/Medium tilt, invented symbolic bias, and repeated CLI coach
+construction. Run it with `.venv/bin/python scripts/audit_coaching_contracts.py`.
+
+The 75 new cases pass against unchanged production. The mutation audit
+detects all 17 faults. No gameplay behavior or existing expectation changes.
+
+Validation:
+
+- `.venv/bin/python -m pytest tests/test_coaching_invariants.py -q`: **75 passed
+  in 6.94s**; includes unmocked Hard analysis for both roles.
+- `.venv/bin/python -m pytest tests/test_coaching*.py tests/test_difficulty*.py tests/test_chart_coaching.py tests/test_cli.py -q`:
+  **418 passed in 72.22s** (the two additional unmocked-analysis cases were
+  validated by the focused run above).
+- `.venv/bin/python scripts/audit_coaching_contracts.py`: clean baseline passes;
+  **17/17 deliberate faults detected by assertions**.
+- `.venv/bin/python -m pytest tests/test_issue_tracker.py -q`: **18 passed**.
+- `.venv/bin/python -m ruff check .` and
+  `.venv/bin/python -m ruff format --check .`: passed; **530 files** formatted.
+
+No skips or warnings in these checks. The milestone-wide gate remains pending.
 
 ## DEV-060 — Stale sample metadata hashes (2026-11-02)
 
