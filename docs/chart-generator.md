@@ -110,6 +110,10 @@ may add incomplete/INT/QT responses. All combinations resolve through the engine
 priority table. This model needs play testing; it is not an observed tactical chart.
 
 Scrimmage and observed return fumbles have separate sampling denominators.
+The simulation fumble diagnostic counts a scrimmage report with a recovery
+consultation, including a possible later return-chain fumble; it is not a causal
+or lost-fumble ownership estimate. Full traces and source ownership evidence are
+retained for review.
 Scrimmage fumble and interception locations currently use an explicit fixed +0
 modeling prior, rather than reconstructed air yards or recovery coordinates.
 Fumbles, recovery/lost ownership, interception returns, penalties and positive

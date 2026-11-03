@@ -1,14 +1,14 @@
 ---
 id: DATA-005
 title: Season audit rejects lawful overtime series state resets
-status: resolved
+status: open
 priority: High
 milestone: '34'
 created-at: 2026-11-02
-resolved-at: '2026-11-02'
+resolved-at: null
 closed-at: null
 tags:
-- tested
+- reproduced
 links: []
 commits:
 - 3e699aa
@@ -39,3 +39,6 @@ concealing earlier failed engine/audit evidence.
 --- 2026-11-02 20:51 ---
 Synthetic lawful/undeclared/stale/malformed overtime boundary checks pass; all four retained original failing seeds pass unchanged-chart replay. Readiness also requires zero selected-training/held-out/coaching failures (61dec6c).
 Focused cumulative gate at 9565398: 121 passed. Owner play-test confirmation remains unrecorded, so this ticket is not closed.
+
+--- 2026-11-02 21:04 ---
+Parallel M33 adversarial review found missing controls for forged reverse boundary order and an untied regulation score. Reopened pending narrow strict guards and synthetic red/green tests. Actual recorded pilot boundaries will be rechecked; engine outcomes and chart values are unchanged.

@@ -196,11 +196,18 @@ def validate_game(
         ),
         default=0,
     )
+    if overtime_starts and (
+        not regulation_end
+        or len(period_scores) < 5
+        or sum(home for home, _ in period_scores[:4]) != sum(away for _, away in period_scores[:4])
+    ):
+        raise ValueError("overtime boundary requires completed, tied regulation")
+    previous_start_number = regulation_end
     for start in overtime_starts:
         if expected_overtime is None:
             expected_overtime = OvertimeState(Possession(start.first_possession))
         if (
-            start.report_number <= regulation_end
+            start.report_number <= previous_start_number
             or start.report_number in starts
             or start.report_number > len(view.log)
             or start.round_number != expected_overtime.round_number
@@ -211,6 +218,7 @@ def validate_game(
         ):
             raise ValueError("invalid overtime series boundary evidence")
         starts[start.report_number] = start
+        previous_start_number = start.report_number
         expected_overtime = expected_overtime.next_series()
 
     previous_state: tuple[object, ...] | None = None

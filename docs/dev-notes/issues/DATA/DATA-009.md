@@ -1,16 +1,17 @@
 ---
 id: DATA-009
 title: Return calibration needs semantic trace aliases and an exposed legal policy
-status: open
+status: resolved
 priority: High
 milestone: '34'
 created-at: 2026-11-02
-resolved-at: null
+resolved-at: '2026-11-02'
 closed-at: null
 tags:
-- reproduced
+- tested
 links: []
-commits: []
+commits:
+- 1f84e56
 ---
 
 ## Description
@@ -35,3 +36,7 @@ no punts, despite legal return choices. Interrupted before held-out validation a
 retained all artifacts. Compose the existing situation-aware baseline offense with
 current public-observation pending decisions, identically for both sides. New
 regressions require actual punt and punt-return exposure plus saved replay.
+
+--- 2026-11-02 21:11 ---
+Final explicit baseline-v1 calls/clock plus baseline-v10 non-clock decisions passed the fresh pilot:384 pairedtraining and512 held-out games, all 12declaredstatisticalgates,4saved replays andfour separate coaching checks. Actual punt/return exposure and policy versions are recorded; interrupted earlier runs are retained.
+Owner play-test confirmation is unrecorded; ticket remains resolved, not closed.

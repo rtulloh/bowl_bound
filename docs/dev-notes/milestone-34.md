@@ -240,3 +240,31 @@ The synthetic replay fixture uses long kickoff fields, realistic punt distances
 and asymmetric gains to require punts while avoiding an artificial deterministic
 endless overtime tie; assertions remain intact. All previous pilot artifacts are
 retained and superseded, not represented as current fit evidence.
+
+
+## Final pinned-engine private pilot
+
+At `1f84e56`, final pilot 05 selected candidate 02 using384 paired training games,
+then passed all 12 predeclared efficiency/turnover/kick-return/PAT gates over512
+separate held-out games. All896 games reconciled; four additional midpoint/final
+replay checks and four mixed-policy coaching assessments passed. Each team has
+512 held-out games, not an assumed NFL season length. Diagnostics average about
+30 points and72.6 offensive plays per team-game. Field-goal accuracy remains a
+distance/mix diagnostic rather than an unqualified source-fit claim.
+
+Both final local bundles were regenerated from the recorded profile/source/seed
+and tactical prior: all10 chart/provenance files are byte-identical to the selected
+candidate. The ordinary terminal catalog lists both generated teams. Private
+operator instructions and full four-reference address comparisons are saved beside
+the bundles. Reference charts and public release allowlists remain unchanged.
+
+Full Python gate at `1f84e56`:3,183 passed in858.35 seconds,92.06% branch-aware coverage.
+This run preceded the final strict overtime-audit guards; the final tree needs a
+renewed full gate. Browser startup remains sandbox-blocked locally (33 tests);
+branch-hosted Tests is required before final milestone acceptance.
+
+Independent M33 review added strict rejection of reversed overtime boundary order
+and untied/incomplete regulation. Synthetic red tests reproduced two acceptance
+errors and the late incomplete-clock rejection; the narrow reviewed guards from
+0a89a68 are adapted without M33 engine changes. The series-order fixture now has
+tied regulation and sufficient reports/periods so it exercises the intended guard.
