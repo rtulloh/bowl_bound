@@ -12,7 +12,8 @@ GitHub status.
 [DEV-060](issues/DEV/DEV-060.md) is a focused packaging repair for the reported
 standalone-build failure, independent of the pending gameplay and workflow work.
 [DEV-061](issues/DEV/DEV-061.md) tracks missing runtime modules exposed by the
-next native smoke run.
+next native smoke run. [DEV-062](issues/DEV/DEV-062.md) corrects the stale
+save-guide assertion that normal games enable deferred Advanced II options.
 
 Milestone 32 remains completed. Imported teams, historical charts, rosters, and
 local audit output remain private and excluded from ordinary test collection,
@@ -435,3 +436,33 @@ now resolved against tested commit `03d1992`; DEV-060 retains tested `ca3d3bb` w
 end-to-end native confirmation. Neither is closed on unconfirmed owner play-test.
 No release tag, manifest hash or baseline snapshot was changed by this evidence
 update. Current milestone changes require fresh branch-hosted browser validation.
+
+
+## DEV-059 — automatic Tests and manual native release builds
+
+Reviewed local Paydirt `.github/workflows/test.yml` and `release.yml`: reused the
+separate workflow purpose/names, while excluding NFL/private audits, mutable
+action tags, optional installer failures and automatic publication. Bowl Bound's
+complete established source gate is reusable `tests.yml`, with push/PR triggers
+for main and isolated workstreams. The native workflow calls it, then performs
+the unchanged three-target packaging/installer gate. Its manual dispatch,
+read-only permissions, exact pins, artifact-only outputs and explicit publication
+boundary are retained.
+
+Checked [GitHub's reusable workflow reference](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations)
+and [workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax):
+the local reusable workflow comes from the caller commit; caller/callee
+concurrency prefixes differ to avoid cancellation. Full optional source SHA
+validation prevents a branch moving between source/native checkouts. No secrets
+are passed and token permissions remain read-only. Exact source commit selection
+is a build input, not a publication authorization.
+
+Four new regression tests were red before workflow creation; a further red guard
+regression preceded immutable-source validation. Six synthetic Bash cases check
+SHA/ref validation. Existing assertions follow moved source commands into the
+reusable gate and continue to require coverage/browser/pins/failure propagation.
+Maintainer docs distinguish automatic source status, manual native acceptance,
+and separately authorized publication. Hosted branch validation remains required.
+
+
+DEV-059 implementation is committed at `2b11cd6`. Focused cumulative packaging/workflow/tracker/metadata validation: **197 passed in 6.35s**, with 11 new workflow cases. Ruff/format (**539 files**) and diff checks passed. The automatic branch-hosted run and final milestone gate remain pending.
