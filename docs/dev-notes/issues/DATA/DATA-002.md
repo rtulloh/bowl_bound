@@ -27,3 +27,10 @@ A public season snapshot can contain every scheduled game while event flags and 
 
 --- 2026-11-02 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+
+--- 2026-11-02 20:29 ---
+Source review added regressions for explicit PAT-label precedence, non-return zero
+flags, unknown fumble evidence, return ownership/display-name consistency and
+separate scrimmage/return-fumble denominators. The adapter preserves these facts;
+official mismatches are reported rather than hidden behind cumulative substitutions.

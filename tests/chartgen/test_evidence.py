@@ -123,3 +123,95 @@ def test_accepted_no_play_penalty_counted_without_offensive_credit() -> None:
     summary = summarize_events([event], "1")
     assert summary["rush_attempts"] == 0
     assert summary["penalties"] == 1
+
+
+def test_scrimmage_and_special_fumbles_have_separate_denominators() -> None:
+    rush = classify_espn(row(fumble_vec=True))
+    punt = classify_espn(
+        row(
+            **{
+                "id": "p2",
+                "type.text": "Punt",
+                "punt_play": True,
+                "rush": False,
+                "yds_punted": 40,
+                "fumble_vec": True,
+            }
+        )
+    )
+    assert rush is not None and punt is not None
+    totals = summarize_events([rush, punt], "1")
+    assert totals["fumbles"] == 2 and totals["scrimmage_fumbles"] == 1
+
+
+@pytest.mark.parametrize(
+    "text,flags",
+    [
+        ("Punt for 40 yards, touchback.", {"punt_tb": True}),
+        ("Punt for 40 yards, fair catch.", {"punt_fair_catch": True}),
+        ("Punt for 40 yards, downed.", {"punt_downed": True}),
+    ],
+)
+def test_non_returns_do_not_become_zero_yard_return_observations(text: str, flags: dict) -> None:
+    event = classify_espn(
+        row(
+            **{
+                "type.text": "Punt",
+                "punt_play": True,
+                "rush": False,
+                "yds_punted": 40,
+                "yds_punt_return": 0,
+                "text": text,
+                **flags,
+            }
+        )
+    )
+    assert event is not None and event.return_yards is None
+
+
+def test_explicit_zero_yard_return_is_retained() -> None:
+    event = classify_espn(
+        row(
+            **{
+                "type.text": "Punt",
+                "punt_play": True,
+                "rush": False,
+                "yds_punted": 40,
+                "yds_punt_return": 0,
+                "text": "Punt for 40 yards, Player returns for no gain.",
+            }
+        )
+    )
+    assert event is not None and event.return_yards == 0
+
+
+def test_missing_fumble_flags_stay_unknown() -> None:
+    event = classify_espn(row())
+    assert event is not None and event.fumble is None
+    totals = summarize_events([event], "1")
+    assert totals["fumble_unknown_samples"] == 1
+
+
+def test_normalized_boolean_strings_rejected() -> None:
+    event = classify_espn(row())
+    assert event is not None
+    value = event.to_dict() | {"no_play": "false"}
+    with pytest.raises(ValueError, match="boolean"):
+        Event.from_dict(value)
+
+
+def test_kick_ownership_swap_preserves_matching_display_names() -> None:
+    event = classify_espn(
+        row(
+            **{
+                "type.text": "Kickoff",
+                "kickoff_play": True,
+                "kicking_team": "2",
+                "def_pos_team": "Harbor Tech",
+                "yds_kickoff": 60,
+                "rush": False,
+            }
+        )
+    )
+    assert event is not None and event.team == "2" and event.opponent == "1"
+    assert event.team_name == "Harbor Tech" and event.opponent_name == "Cedar Valley"

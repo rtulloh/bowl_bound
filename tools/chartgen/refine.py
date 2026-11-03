@@ -24,6 +24,8 @@ from scripts.run_local_season import GameSpec, _play_one, stable_seed
 
 from .evidence import Event, summarize_events
 from .generate import CalibrationProfile, generate_team, write_bundle
+from .private_io import private_destination
+from .tactics import TacticalProfile
 
 # Declared before pilot outcomes. These are experimental play-test tolerances,
 # not evidence that the source is complete or an exact historical schedule fit.
@@ -83,6 +85,7 @@ def engine_identity() -> dict[str, Any]:
     for path in sorted(Path(__file__).parent.glob("*.py")):
         tool_digest.update(path.name.encode())
         tool_digest.update(path.read_bytes())
+    tool_digest.update((root / "scripts" / "run_local_season.py").read_bytes())
     return {
         "git_commit": commit,
         "engine_sha256": digest.hexdigest(),
@@ -125,7 +128,9 @@ def aggregate_games(
                 row for row in result["engine_log"] if row["state_before"]["possession"] == side
             ]
             fumbles = sum(
-                any(entry["section"] == "fumble_recovery" for entry in row["trace"]) for row in logs
+                any(entry["section"] == "fumble_recovery" for entry in row["trace"])
+                for row in logs
+                if row["statistics"]["kind"] != "excluded"
             )
             if attempts + rushing:
                 counters["fumble"].append((fumbles, attempts + rushing))
@@ -202,7 +207,7 @@ def source_targets(events: Sequence[Event], teams: Sequence[str]) -> dict[str, f
             "interceptions",
             "sacks",
             "pass_yards",
-            "fumbles",
+            "scrimmage_fumbles",
         )
     }
     attempts, rushes, sacks = totals["pass_attempts"], totals["rush_attempts"], totals["sacks"]
@@ -210,10 +215,19 @@ def source_targets(events: Sequence[Event], teams: Sequence[str]) -> dict[str, f
         "completion": totals["completions"] / attempts,
         "interception": totals["interceptions"] / attempts,
         "sack": sacks / (attempts + sacks),
-        "fumble": totals["fumbles"] / (attempts + rushes),
         "rush_yards_per_attempt": totals["rush_yards"] / rushes,
         "pass_yards_per_attempt": totals["pass_yards"] / attempts,
     }
+    fumble_sample = [
+        e
+        for e in events
+        if e.team in teams
+        and not e.no_play
+        and e.kind in {"rush", "complete", "incomplete", "interception", "sack"}
+        and e.fumble is not None
+    ]
+    if fumble_sample:
+        targets["fumble"] = sum(e.fumble is True for e in fumble_sample) / len(fumble_sample)
     for kind in ("punt", "kickoff"):
         values = [
             e.yards
@@ -383,12 +397,12 @@ def run_refinement(
     seed_plan: SeedPlan,
     generation_seed: int = 1,
     iterations: int = 3,
+    tactics: TacticalProfile | None = None,
     progress: Callable[[int, int, str], None] | None = None,
 ) -> dict[str, Any]:
     """Preserve every candidate, select by training only, then validate once."""
-    if "private-data" not in output.absolute().parts:
-        raise ValueError("simulation reports require private-data")
-    if output.exists() or any(parent.is_symlink() for parent in (output, *output.parents)):
+    output = private_destination(output)
+    if output.exists():
         raise ValueError("refinement output must be a new path without symlinks")
     if not 1 <= iterations <= 8:
         raise ValueError("iterations must be within [1, 8]")
@@ -404,7 +418,13 @@ def run_refinement(
             from .audit import audit_chart
 
             bundle = generate_team(
-                events, identity, name, season, seed=generation_seed, profile=profile
+                events,
+                identity,
+                name,
+                season,
+                seed=generation_seed,
+                profile=profile,
+                tactics=tactics,
             )
             write_bundle(candidate, bundle)
             probability_dir = candidate / "probability-audits"
@@ -473,6 +493,9 @@ def run_refinement(
         "actual_validation_games_per_team": seed_plan.validation_games,
         "generation_seed": generation_seed,
         "targets": targets,
+        "tactical_profile": None
+        if tactics is None
+        else {"sha256": tactics.sha256, "origin": tactics.origin},
         "training_history": history,
         "selected_candidate": str(selected_path),
         "selected_profile": asdict(selected_profile),
@@ -480,7 +503,8 @@ def run_refinement(
         "heldout_assessment": assessment,
         "save_replay_audits": replay,
         "coaching_assessment": aggregate_games(coaching_assessments),
-        "mechanics_ready": not validation["failed_games"]
+        "mechanics_ready": best[0][0] == 0
+        and not validation["failed_games"]
         and all(r["save_continuation_verified"] for r in replay)
         and not any(r["status"] != "passed" for r in coaching_assessments),
         "historical_fit_claim": False,

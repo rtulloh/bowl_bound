@@ -44,7 +44,9 @@ this file unchanged. Each event retains stable team/opponent and game/event IDs,
 source text, observed result class, scoring yardage, family confidence, penalty
 accepted/declined/no-play distinctions, fumbles/lost/recovery evidence, kick and
 return yards, sack loss and available situation/clock facts. Unknown yardage is
-`null`, never a zero-yard observation. Explicit original kick result labels take
+`null`, never a zero-yard observation. Missing fumble flags remain unknown; an
+explicit two-outcome-per-216 prior is recorded if no fumble evidence exists.
+Fair catches, downed kicks and touchbacks do not become zero-yard return samples. Explicit original kick result labels take
 precedence over unpopulated derived flags; older ESPN PAT flags need this policy.
 
 College sacks count as rushing attempts/losses and are excluded from passing
@@ -83,7 +85,8 @@ quantize to zero. Multiple rare categories compete for available row masses.
 
 Every chart has nine offensive columns, B/QR/QT supplemental columns, six defensive
 formations with five weighted subrows, six special-team columns, PAT results and a
-recovery range. B uses a documented empirical upper-tail split; QR uses pooled
+recovery range. B uses a joint empirical upper-tail distribution from runs and completions,
+with each primary column's reference frequency estimated to preserve its mean; QR uses pooled
 rushing evidence and QT observed sacks. Option SOP/BLP and pass QR have explicit
 small modeled priors (two physical outcomes per 216 before quantization). These
 are experimental mechanics priors, not observations of designed calls.
@@ -106,10 +109,11 @@ yards. Weak pass defenses may use parenthesized numeric responses; strong ones
 may add incomplete/INT/QT responses. All combinations resolve through the engine's
 priority table. This model needs play testing; it is not an observed tactical chart.
 
+Scrimmage and observed return fumbles have separate sampling denominators.
 Fumbles, recovery/lost ownership, interception returns, penalties and positive
 narrative OOB evidence are modeled explicitly. Ordinary penalties use named
-approved engine tokens; `DEF 5Y` retains the engine's approved policy. Fixed
-empirical cells replace unidentified DS/T/X responses. No variable or guaranteed
+approved engine tokens; `DEF 5Y` retains the engine's approved policy. Observed zero-yard primary results use explicit white no-change boxes, preserving
+QB Sneak color semantics. Fixed empirical cells replace unidentified DS/T/X responses. No variable or guaranteed
 TD response is invented from absent evidence. The engine retains QB Sneak/RZDZ;
 Advanced II user options remain disabled.
 
@@ -131,6 +135,36 @@ historical calibration while reconciliation fails.
 Generated provenance uses a clearly labeled virtual evidence table and normalized
 source hash, not invented PDF coordinates. Original downloaded evidence remains
 in the normalized source file and its raw-source manifest.
+
+## Optional private tactical prior
+
+Neutral tactics deliberately contain no historical coefficients. To make A–F
+formation roles meaningful for local play testing, an operator with authorized
+reference charts can estimate a **private** pooled prior:
+
+```sh
+.venv/bin/python learn_college_tactics.py \
+  --reference private-data/references/2007/fictional-a \
+  --reference private-data/references/2008/fictional-b \
+  --output private-data/chartgen/tactical-prior.json
+```
+
+This command reads complete local team folders without modifying them. It pools
+numeric and semantic response frequencies, centers every effect across formations
+within each play, and applies a fixed 50% shrinkage. Centering removes the overall
+team-strength component. Bounds are four yards and 0.12 probability per effect;
+scaling preserves centering. These are declared experimental safeguards, not
+claimed empirical constants. It stores source hashes and 54 aggregate effects,
+not reference rows or a chart template. Reference-derived profiles are private.
+
+Pass `--tactics private-data/chartgen/tactical-prior.json` to **both** generation
+and refinement. The profile hash/origin is recorded in candidate manifests and
+refinement reports. PBP still supplies offensive/defensive team strength; these
+priors only introduce explicitly inferred formation differences. Negative rate
+effects and coarse five-row probabilities may be infeasible; inspect the exact
+engine probability audits rather than treating requested deltas as achieved rates.
+The four-reference pilot is a small modeled prior, not independent evidence of
+historical defensive formations or a cell-by-cell cloning target.
 
 ## Phase 2: real-engine refinement
 

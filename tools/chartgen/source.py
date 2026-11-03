@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import os
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
@@ -66,7 +67,15 @@ ESPN_FIELDS = (
     "xp_made",
     "punt_blocked",
     "punt_tb",
+    "punt_fair_catch",
+    "punt_downed",
+    "punt_oob",
+    "punt_return_player_name",
     "kickoff_tb",
+    "kickoff_fair_catch",
+    "kickoff_downed",
+    "kickoff_oob",
+    "kickoff_return_player_name",
     "touchdown",
     "td_play",
 )
@@ -104,7 +113,8 @@ def write_normalized(path: Path, events: Sequence[Event], source: dict[str, Any]
         "events_sha256": hashlib.sha256(encoded.encode()).hexdigest(),
         "events": [event.to_dict() for event in events],
     }
-    with path.open("x", encoding="utf-8") as stream:
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
         json.dump(value, stream, indent=2)
         stream.write("\n")
 

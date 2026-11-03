@@ -27,3 +27,10 @@ The generator pilot exposed a local-season audit assumption: adjacent states mus
 
 --- 2026-11-02 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+
+--- 2026-11-02 20:29 ---
+Readiness also requires zero reconciliation failures in the selected training
+candidate, held-out batch and separate coaching checks. Added a synthetic
+end-to-end declared training failure to prevent a clean held-out average from
+concealing earlier failed engine/audit evidence.

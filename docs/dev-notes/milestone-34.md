@@ -109,3 +109,34 @@ All four retained private seeds then passed the corrected audit with unchanged
 charts and midpoint/final replay; one exercised four overtime rounds.
 `python -m pytest tests/test_local_season_runner.py -q` — 34 passed.
 The correction changes development audit evidence, not football rules or charts.
+
+
+## Evidence and model review before renewed calibration
+
+The simplify review retained the production codec/dice/priority engine and reused
+one privacy guard across normalization, bundle output and refinement. Added red/green
+coverage for resolved-path traversal, owner-only source files, non-return zeros,
+unknown fumble evidence, source boolean validation, return fumbles and calibrated
+family-specific yardage. Observed zero gains use white no-change boxes so engine
+QB Sneak color behavior is preserved. Joint run/completion tails support pass B.
+
+Neutral formations alone are not a convincing tactical play test. Added an optional
+private pooled formation prior learned from the four authorized reference charts.
+Every effect is centered per play to separate formation roles from team strength;
+public defaults/tests remain neutral/synthetic. No cell rows/templates or private
+coefficients are committed. Bounded 50% shrinkage is an explicit modeling choice,
+not a claim that defensive calls were observed. Both phases record the profile hash.
+Four latest private tactical pilot games completed and reconciled successfully.
+
+Saved official school source files/hashes and schedule review privately, including
+Ohio State's 13 games and LSU's 14 with conference/title games. Normalized source
+versus official aggregate deltas remain visible; no hidden aggregate replacement
+or historical-schedule fit claim is made. The private source/PAT/non-return fixes
+use a new versioned evidence file. Earlier inputs and failed audits are retained.
+
+
+Pre-calibration focused cumulative gate: 101 passed across generator,
+local-season audit and issue tracker. Ruff check, format check (555 files),
+`pip check`, frontend 128 tests, production build and npm audit (zero findings)
+passed. npm reports the existing `whatwg-encoding` deprecation; no warning was
+suppressed. No runtime engine files or packaging/sample allowlists changed.

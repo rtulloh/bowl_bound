@@ -505,3 +505,18 @@ def test_overtime_series_evidence_requires_engine_order() -> None:
     start = OvertimeSeriesStart(2, 2, 1, "home", "home", False, _state_facts(state))
     with pytest.raises(ValueError, match="overtime"):
         validate_game(view, ((3, 0), (0, 0), (0, 0), (0, 0), (0, 0)), overtime_starts=(start,))
+
+
+def test_failed_game_retains_actionable_private_error_evidence(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr("scripts.run_local_season.MAX_GAME_ACTIONS", 0)
+    spec = GameSpec(1, 2007, "2007/away", "2007/home", 31415)
+    bundles = {
+        "2007/home": (team_chart("Home", season=2007), metadata()),
+        "2007/away": (team_chart("Away", season=2007), metadata()),
+    }
+    result = _play_one(spec, bundles)
+    assert result["status"] == "failed" and result["error"] == "TimeoutError"
+    assert "game action limit" in result["error_detail"]
+    assert result["spec"]["seed"] == spec.seed

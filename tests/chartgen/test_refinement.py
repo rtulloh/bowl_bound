@@ -54,3 +54,14 @@ def test_failed_games_cannot_be_hidden_by_successful_averages() -> None:
     report = aggregate_games([{"status": "failed", "error": "SyntheticFailure"}])
     assert report["failed_games"] == 1 and report["passed_games"] == 0
     assert report["metrics"] == {}
+
+
+def test_missing_fumble_evidence_does_not_become_zero_target() -> None:
+    from tools.chartgen.evidence import Event
+    from tools.chartgen.refine import source_targets
+
+    sample = [
+        Event(2007, "g", "1", "a", "b", "A", "B", "rush", 5),
+        Event(2007, "g", "2", "a", "b", "A", "B", "complete", 10),
+    ]
+    assert "fumble" not in source_targets(sample, ["a"])

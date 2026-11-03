@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from dataclasses import asdict
 from pathlib import Path
 
 from .generate import CalibrationProfile, generate_team, write_bundle
+from .private_io import private_destination
 from .source import coverage_report, import_espn, read_normalized, write_normalized
+from .tactics import TacticalProfile, learn_tactics
 
 
 def normalize_main(argv: list[str] | None = None) -> int:
@@ -21,8 +24,7 @@ def normalize_main(argv: list[str] | None = None) -> int:
     parser.add_argument("--source-url", required=True)
     args = parser.parse_args(argv)
     try:
-        if "private-data" not in args.output.absolute().parts:
-            raise ValueError("historical source evidence must stay under private-data")
+        args.output = private_destination(args.output)
         events, source = import_espn(args.input, url=args.source_url)
         args.output.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         write_normalized(args.output, events, source)
@@ -48,6 +50,7 @@ def generate_main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--profile", type=Path)
+    parser.add_argument("--tactics", type=Path, help="optional private centered tactical prior")
     parser.add_argument(
         "--coverage", type=Path, help="optional expected_games and official totals JSON"
     )
@@ -62,8 +65,19 @@ def generate_main(argv: list[str] | None = None) -> int:
             if args.profile
             else CalibrationProfile()
         )
+        tactics = (
+            TacticalProfile.from_dict(json.loads(args.tactics.read_text()))
+            if args.tactics
+            else None
+        )
         bundle = generate_team(
-            events, args.team, args.name, args.season, seed=args.seed, profile=profile
+            events,
+            args.team,
+            args.name,
+            args.season,
+            seed=args.seed,
+            profile=profile,
+            tactics=tactics,
         )
         coverage = json.loads(args.coverage.read_text()) if args.coverage else {}
         bundle[2].update(
@@ -100,12 +114,18 @@ def refine_main(argv: list[str] | None = None) -> int:
     parser.add_argument("--training-games", type=int, default=128)
     parser.add_argument("--validation-games", type=int, default=512)
     parser.add_argument("--iterations", type=int, default=3)
+    parser.add_argument("--tactics", type=Path, help="same private prior as baseline generation")
     args = parser.parse_args(argv)
     try:
         pilot = dict(item.split("=", 1) for item in args.team)
         if len(args.team) != 2 or len(pilot) != 2 or any(not k or not v for k, v in pilot.items()):
             raise ValueError("supply exactly two distinct ID=Display Name pilot teams")
         events, source = read_normalized(args.source)
+        tactics = (
+            TacticalProfile.from_dict(json.loads(args.tactics.read_text()))
+            if args.tactics
+            else None
+        )
         report = run_refinement(
             events,
             pilot,
@@ -114,6 +134,7 @@ def refine_main(argv: list[str] | None = None) -> int:
             seed_plan=SeedPlan(args.seed, args.training_games, args.validation_games),
             generation_seed=args.generation_seed,
             iterations=args.iterations,
+            tactics=tactics,
             progress=lambda done, total, status: (
                 print(f"Games {done}/{total}: {status}", flush=True)
                 if done % 16 == 0 or status != "passed"
@@ -134,3 +155,34 @@ def refine_main(argv: list[str] | None = None) -> int:
         f"held-out statistical gates: {report['heldout_assessment']['passed']}"
     )
     return 0 if report["mechanics_ready"] else 1
+
+
+def learn_tactics_main(argv: list[str] | None = None) -> int:
+    from bowl_bound.team_csv import load_team
+
+    parser = argparse.ArgumentParser(
+        description="Learn a private centered tactical prior from authorized charts"
+    )
+    parser.add_argument(
+        "--reference", type=Path, action="append", required=True, help="local team directory"
+    )
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args(argv)
+    try:
+        destination = private_destination(args.output)
+        charts = [load_team(path.parent, path.name)[0] for path in args.reference]
+        profile = learn_tactics(charts)
+        destination.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        descriptor = os.open(destination, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+            json.dump(profile.to_dict(), stream, indent=2)
+            stream.write("\n")
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(
+            f"Tactical estimation failed: {type(error).__name__}; "
+            "inspect private input/output contracts",
+            file=sys.stderr,
+        )
+        return 2
+    print("Saved centered private tactical prior; reference teams were not modified")
+    return 0

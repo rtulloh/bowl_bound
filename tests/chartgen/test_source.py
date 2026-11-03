@@ -33,3 +33,10 @@ def test_coverage_distinguishes_missing_games_and_aggregate_deltas() -> None:
     assert report["missing_games"] == ["g2"]
     assert report["official_deltas"]["rush_yards"] == -8
     assert not report["historical_reconciliation_passed"]
+
+
+def test_normalized_source_files_are_owner_only(tmp_path: Path) -> None:
+    event = Event(2007, "g1", "e1", "1", "2", "Cedar Valley", "Harbor Tech", "rush", 9)
+    path = tmp_path / "source.json"
+    write_normalized(path, [event], {})
+    assert path.stat().st_mode & 0o777 == 0o600

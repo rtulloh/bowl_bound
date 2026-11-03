@@ -29,7 +29,7 @@ class Event:
     called_family: int | None = None
     family_confidence: str = "unknown"
     touchdown: bool = False
-    fumble: bool = False
+    fumble: bool | None = None
     fumble_lost: bool | None = None
     recovery_team: str | None = None
     return_yards: int | None = None
@@ -75,6 +75,12 @@ class Event:
             raise ValueError("unknown normalized event kind")
         if event.yards is not None and type(event.yards) is not int:
             raise ValueError("yardage must be an integer or null")
+        for name in ("touchdown", "penalty", "penalty_declined", "no_play", "blocked", "touchback"):
+            if type(getattr(event, name)) is not bool:
+                raise ValueError("normalized flags must be booleans")
+        for name in ("fumble", "fumble_lost", "out_of_bounds", "kick_good"):
+            if getattr(event, name) is not None and type(getattr(event, name)) is not bool:
+                raise ValueError("normalized optional flags must be booleans or null")
         return event
 
 
@@ -121,6 +127,10 @@ def classify_espn(row: Mapping[str, Any]) -> Event | None:
     if not team or not opponent or team == opponent:
         return None
     text = str(row.get("text") or "")
+    team_name, opponent_name = (
+        str(row.get("pos_team") or team),
+        str(row.get("def_pos_team") or opponent),
+    )
     label = str(row.get("type.text") or "").lower()
     lower = text.lower()
     sack = _flag(row, "sack") or label == "sack"
@@ -174,11 +184,25 @@ def classify_espn(row: Mapping[str, Any]) -> Event | None:
         "kickoff": "yds_kickoff_return",
         "interception": "yds_int_return",
     }
+    return_yards = (
+        _yards(row, returns[kind])
+        if kind in returns
+        else (_yards(row, "yds_fumble_return") if _flag(row, "fumble_vec") else None)
+    )
+    if kind in {"punt", "kickoff"}:
+        prefix = "punt" if kind == "punt" else "kickoff"
+        non_return = any(
+            _flag(row, prefix + "_" + suffix) for suffix in ("tb", "fair_catch", "downed", "oob")
+        ) or any(marker in lower for marker in ("touchback", "fair catch", "downed", "no return"))
+        explicit_return = "return" in lower or bool(row.get(prefix + "_return_player_name"))
+        if non_return or (return_yards == 0 and not explicit_return):
+            return_yards = None
     kicking = row.get("kicking_team")
     # String team names cannot replace stable numerical identities.
     if kind in {"punt", "kickoff", "field_goal", "pat"} and kicking is not None:
         if _identity(kicking) == opponent:
             team, opponent = opponent, team
+            team_name, opponent_name = opponent_name, team_name
     lost = row.get("fumble_lost")
     # Older bulk seasons leave derived PAT flags false for every event. The
     # unambiguous original event label carries stronger evidence than that default.
@@ -197,21 +221,19 @@ def classify_espn(row: Mapping[str, Any]) -> Event | None:
         event_id=_identity(row.get("id")),
         team=team,
         opponent=opponent,
-        team_name=str(row.get("pos_team") or team),
-        opponent_name=str(row.get("def_pos_team") or opponent),
+        team_name=team_name,
+        opponent_name=opponent_name,
         kind=kind,
         yards=yards,
         called_family=family,
         family_confidence="narrative" if family else "unknown",
         touchdown=_flag(row, "touchdown") or _flag(row, "td_play"),
-        fumble=_flag(row, "fumble_vec") or _flag(row, "fumble_or_muff"),
+        fumble=(_flag(row, "fumble_vec") or _flag(row, "fumble_or_muff"))
+        if row.get("fumble_vec") is not None or row.get("fumble_or_muff") is not None
+        else None,
         fumble_lost=None if lost is None else _flag(row, "fumble_lost"),
         recovery_team=_identity(row.get("recovery_team")) or None,
-        return_yards=_yards(row, returns[kind])
-        if kind in returns
-        else _yards(row, "yds_fumble_return")
-        if _flag(row, "fumble_vec")
-        else None,
+        return_yards=return_yards,
         penalty=_flag(row, "penalty_flag") or _flag(row, "isPenalty"),
         penalty_declined=_flag(row, "penalty_declined") or _flag(row, "penalty_all_declined"),
         no_play=_flag(row, "penalty_no_play")
@@ -251,7 +273,15 @@ def summarize_events(events: Iterable[Event], team: str) -> dict[str, Any]:
             counts["pass_yards"] += event.yards
         if event.kind in {"rush", "sack", "complete", "punt", "kickoff", "field_goal"}:
             counts["unknown_yardage"] += event.yards is None
-        counts["fumbles"] += event.fumble
+        counts["fumbles"] += event.fumble is True
+        counts["fumble_unknown_samples"] += event.fumble is None
+        counts["scrimmage_fumbles"] += event.fumble is True and event.kind in {
+            "rush",
+            "sack",
+            "complete",
+            "incomplete",
+            "interception",
+        }
         counts["fumbles_lost"] += event.fumble_lost is True
     counts["penalties"] = sum(event.penalty and not event.penalty_declined for event in all_own)
     return {
@@ -265,6 +295,8 @@ def summarize_events(events: Iterable[Event], team: str) -> dict[str, Any]:
                 "pass_yards",
                 "unknown_yardage",
                 "fumbles",
+                "scrimmage_fumbles",
+                "fumble_unknown_samples",
                 "fumbles_lost",
                 "penalties",
             )

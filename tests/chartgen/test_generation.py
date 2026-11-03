@@ -2,6 +2,7 @@
 
 from dataclasses import replace
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -218,3 +219,120 @@ def test_two_phase_refinement_retains_baseline_and_heldout(
     assert (output / "candidate-00" / "2007" / "cedar-valley" / "offense.csv").is_file()
     assert (output / "selected-profile.json").is_file()
     assert all(a["save_continuation_verified"] for a in report["save_replay_audits"])
+
+
+def test_observed_return_fumbles_are_supported(events: list[Event]) -> None:
+    risky = [replace(e, fumble=True, fumble_lost=True) if e.kind == "punt" else e for e in events]
+    chart, _, manifest = generate_team(risky, "1", "Cedar Valley", 2007)
+    assert any(
+        c.cell.kind is ResultKind.FUMBLE
+        for c in chart.special_teams
+        if c.column.value == "punt_return"
+    )
+    assert manifest["special_evidence"]["punt_return"]["fumbles"] > 0
+
+
+def test_private_output_cannot_escape_with_parent_traversal(
+    tmp_path: Path, events: list[Event]
+) -> None:
+    with pytest.raises(ValueError, match="private-data"):
+        write_bundle(
+            tmp_path / "private-data" / ".." / "public",
+            generate_team(events, "1", "Cedar Valley", 2007),
+        )
+    assert not (tmp_path / "public").exists()
+
+
+def test_pass_breakaways_use_observed_completion_tails(events: list[Event]) -> None:
+    chart, _, manifest = generate_team(events, "1", "Cedar Valley", 2007)
+    assert all(
+        any(c.cell.kind is ResultKind.BREAKAWAY for c in chart.offense if c.play is play)
+        for play in [Play.SIX, Play.SEVEN, Play.EIGHT, Play.NINE]
+    )
+    assert (
+        manifest["modeled_priors"]["breakaway_tail_method"]
+        == "joint empirical run/completion upper tails"
+    )
+
+
+def test_observed_zero_run_is_white_no_change_for_qb_sneak(events: list[Event]) -> None:
+    from itertools import product
+
+    from bowl_bound.dice import (
+        BLACK_FACES,
+        WHITE_ONE_FACES,
+        WHITE_TWO_FACES,
+        OffensiveRoll,
+        ScriptedDice,
+    )
+    from bowl_bound.resolution import resolve_qb_sneak
+
+    zero_runs = [replace(e, yards=0) if e.kind == "rush" else e for e in events]
+    chart, _, _ = generate_team(zero_runs, "1", "Cedar Valley", 2007)
+    blank = next(
+        (c for c in chart.offense if c.play is Play.ONE and c.cell.kind is ResultKind.NO_CHANGE),
+        None,
+    )
+    assert blank is not None
+    faces = next(
+        f
+        for f in product(BLACK_FACES, WHITE_ONE_FACES, WHITE_TWO_FACES)
+        if OffensiveRoll(*f).total == blank.roll
+    )
+    result = resolve_qb_sneak(
+        chart, None, ScriptedDice([OffensiveRoll(*faces)]), free_wildcard=False
+    )
+    assert result.result.yards == 0
+
+
+def test_centered_tactics_make_formations_distinct_without_changing_offense(
+    events: list[Event],
+) -> None:
+    from tools.chartgen.tactics import TacticalProfile
+
+    neutral = TacticalProfile.neutral()
+    effects = tuple(
+        replace(
+            effect,
+            yard_offset=1
+            if effect.formation.value == "A"
+            else -1
+            if effect.formation.value == "B"
+            else 0,
+        )
+        for effect in neutral.effects
+    )
+    tactical = TacticalProfile(effects, "synthetic", ())
+    first = generate_team(events, "1", "Cedar Valley", 2007)
+    second = generate_team(events, "1", "Cedar Valley", 2007, tactics=tactical)
+    assert first[0].offense == second[0].offense
+    assert first[0].defense != second[0].defense
+    assert second[2]["tactical_profile"]["sha256"] == tactical.sha256
+    assert sum(effect.yard_offset for effect in tactical.effects) == 0
+
+
+def test_training_reconciliation_failure_blocks_readiness_even_if_heldout_passes(
+    tmp_path: Path,
+    events: list[Event],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import tools.chartgen.refine as refine
+
+    original = refine.run_batch
+
+    def declared_failure(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        result = original(*args, **kwargs)
+        if args[2].name == "training":
+            result["failed_games"] = 1
+        return result
+
+    monkeypatch.setattr(refine, "run_batch", declared_failure)
+    report = refine.run_refinement(
+        events,
+        {"1": "Cedar Valley", "2": "Harbor Tech"},
+        2007,
+        tmp_path / "private-data" / "failed-training",
+        seed_plan=refine.SeedPlan(411, 1, 1),
+        iterations=1,
+    )
+    assert not report["mechanics_ready"]

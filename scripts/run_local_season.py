@@ -519,6 +519,7 @@ def _play_one(
     calls: list[dict[str, Any]] = []
     period_totals: dict[int, list[int]] = {quarter: [0, 0] for quarter in range(1, 5)}
     failure: str | None = None
+    failure_detail: str | None = None
     checkpoint_verified = False
     final_replay_verified = False
     overtime_starts: list[OvertimeSeriesStart] = []
@@ -640,11 +641,13 @@ def _play_one(
                 raise ValueError("missing or divergent saved-game replay verification")
     except Exception as error:
         failure = type(error).__name__
+        failure_detail = str(error)
         view = game.view()
 
     return {
         "status": "failed" if failure else "passed",
         "error": failure,
+        "error_detail": failure_detail,
         "save_replay": {
             "requested": verify_replay,
             "checkpoint_verified": checkpoint_verified,

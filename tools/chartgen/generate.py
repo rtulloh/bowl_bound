@@ -18,7 +18,7 @@ from itertools import product
 from pathlib import Path
 from random import Random
 from statistics import mean
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from bowl_bound.dice import BLACK_FACES, GREEN_FACES, RED_FACES, WHITE_ONE_FACES, WHITE_TWO_FACES
 from bowl_bound.models import (
@@ -47,6 +47,10 @@ from bowl_bound.team_csv import (
 )
 
 from .evidence import Event, summarize_events
+from .private_io import private_destination
+
+if TYPE_CHECKING:
+    from .tactics import TacticalProfile
 
 TOOL_VERSION = "college-chartgen-v1"
 MINIMUM_FAMILY_SAMPLES = 30
@@ -163,7 +167,11 @@ def _cell(token: str, source_hash: str, filename: str, row: int, column: int) ->
 
 
 def _known(events: Sequence[Event], kind: str) -> list[int]:
-    return [event.yards for event in events if event.kind == kind and event.yards is not None]
+    return [
+        event.yards
+        for event in events
+        if event.kind == kind and event.yards is not None and not (kind == "punt" and event.blocked)
+    ]
 
 
 def _pool(
@@ -258,9 +266,13 @@ def generate_team(
     *,
     seed: int = 1,
     profile: CalibrationProfile | None = None,
+    tactics: TacticalProfile | None = None,
 ) -> tuple[TeamChart, TeamFileMetadata, dict[str, Any]]:
     """Build a complete local-only bundle from normalized evidence, without I/O."""
     profile = profile or CalibrationProfile()
+    from .tactics import TacticalProfile
+
+    tactics = tactics or TacticalProfile.neutral()
     if any(e.season != season for e in events):
         raise ValueError("source season differs from requested chart season")
     live = [e for e in events if not e.no_play]
@@ -306,7 +318,12 @@ def generate_team(
         ),
     )
     snaps = [e for e in own if e.kind in {"rush", "complete", "incomplete", "interception", "sack"}]
-    fumble_rate = sum(e.fumble for e in snaps) / len(snaps) * profile.fumble_scale
+    known_fumbles = [e for e in snaps if e.fumble is not None]
+    fumble_rate = (
+        (sum(e.fumble is True for e in known_fumbles) / len(known_fumbles))
+        if known_fumbles
+        else 2 / 216
+    ) * profile.fumble_scale
     penalties = [e for e in events if e.team == team and e.penalty and not e.penalty_declined]
     penalty_rate = min(0.08, len(penalties) / max(1, len(snaps)))
     # Explicit sparse mechanics priors: two physical outcomes each, independent of
@@ -315,7 +332,10 @@ def generate_team(
     oob = sum(e.out_of_bounds is True for e in own) / max(1, sum(e.yards is not None for e in own))
     offense = []
     family_diagnostics = {}
-    tail = sorted(rush)[max(0, int(len(rush) * 0.9)) :]
+    tail = (
+        sorted(rush)[max(0, int(len(rush) * 0.9)) :]
+        + sorted(complete)[max(0, int(len(complete) * 0.9)) :]
+    )
     for play in Play:
         specific = [e.yards for e in own if e.called_family == play.value and e.yards is not None]
         if len(specific) >= MINIMUM_FAMILY_SAMPLES:
@@ -333,13 +353,18 @@ def generate_team(
             else "pooled-pass",
         }
         specials = [("F", fumble_rate), ("OFF 5", penalty_rate / 2), ("DEF 5Y", penalty_rate / 2)]
+        body = sorted(values)[: max(1, int(len(values) * 0.9))]
+        difference = mean(tail) - mean(body)
+        break_probability = (mean(values) - mean(body)) / difference if difference > 0 else rare
+        break_probability = min(0.3, max(0, break_probability)) if mean(tail) > 0 else 0
+        values = body
         if play.value <= 5:
-            specials += [("B", 0.1)]
-            values = sorted(values)[: max(1, int(len(values) * 0.9))]
+            specials += [("B", break_probability)]
             if play is Play.FIVE:
                 specials += [("SOP", rare), ("BLP", rare)]
         else:
             specials += [
+                ("B", complete_rate * break_probability),
                 ("INT 0", int_rate),
                 ("QT", sack_rate),
                 ("QR", rare),
@@ -359,7 +384,17 @@ def generate_team(
             ]
         column = _column(values, specials, seed=_seed(seed, f"offense/{play}"), out_of_bounds=oob)
         offense.extend(
-            OffensiveCell(play, row, _cell(token, source_hash, filename, row, play.value))
+            OffensiveCell(
+                play,
+                row,
+                _cell(
+                    "" if token == "0" else "*" if token == "0*" else token,
+                    source_hash,
+                    filename,
+                    row,
+                    play.value,
+                ),
+            )
             for row, token in column.items()
         )
     supplemental = []
@@ -384,20 +419,37 @@ def generate_team(
     for formation in Defense:
         for play in Play:
             effect = (run_effects if play.value <= 5 else pass_effects).get(team, 0.0)
-            # No formations are observed: neutral tactical responses, with only a
-            # regularized team/opponent yardage effect. Do not invent INT/QT calls.
-            value = max(-4, min(4, round(effect)))
+            tactical = tactics.lookup(formation, play)
+            value = round(max(-4, min(4, effect)) + tactical.yard_offset)
             tokens = dict.fromkeys(range(1, 6), str(value) if value else "")
-            if play.value >= 6:
+            if play.value >= 6 or tactics.origin != "neutral":
                 remaining = defensive_weights()
-                completion_effect = rate_effects["complete"].get(team, 0)
+                completion_effect = rate_effects["complete"].get(team, 0) if play.value >= 6 else 0
+                interception_effect = (
+                    rate_effects["interception"].get(team, 0) if play.value >= 6 else 0
+                )
+                sack_effect = rate_effects["sack"].get(team, 0) if play.value >= 6 else 0
+                response_mean = mean(complete if play.value >= 6 else rush) + value
                 desired = [
-                    ("INT 0", max(0, rate_effects["interception"].get(team, 0))),
-                    ("QT", max(0, rate_effects["sack"].get(team, 0))),
-                    ("BLACK", max(0, -completion_effect) / max(0.1, league_completion)),
+                    ("INT 0", max(0, interception_effect + tactical.interception_delta)),
+                    ("QT", max(0, sack_effect + tactical.sack_delta)),
+                    ("QR", max(0, tactical.scramble_delta)),
+                    ("(B)", max(0, tactical.breakaway_delta)),
                     (
-                        f"({round(mean(complete))})",
-                        max(0, completion_effect) / max(0.1, 1 - league_completion),
+                        "BLACK",
+                        max(
+                            0,
+                            -completion_effect / max(0.1, league_completion)
+                            + tactical.incomplete_delta,
+                        ),
+                    ),
+                    (
+                        f"({round(response_mean)})",
+                        max(
+                            0,
+                            completion_effect / max(0.1, 1 - league_completion)
+                            + tactical.override_delta,
+                        ),
                     ),
                 ]
                 for index, (token, probability) in enumerate(
@@ -420,6 +472,7 @@ def generate_team(
                     )
                 )
     specials = []
+    special_evidence: dict[str, Any] = {}
     for index, column in enumerate(SpecialTeamsColumn):
         if column in {SpecialTeamsColumn.PUNT, SpecialTeamsColumn.KICKOFF}:
             kind = "punt" if column is SpecialTeamsColumn.PUNT else "kickoff"
@@ -464,7 +517,11 @@ def generate_team(
                 if e.opponent == team and e.kind == kind and e.return_yards is not None
             ]
             values = [round(e.return_yards * profile.return_yards_scale) for e in sample]
+            empirical_sample = sample
             if not values:
+                empirical_sample = [
+                    e for e in live if e.kind == kind and e.return_yards is not None
+                ]
                 values = [
                     round(e.return_yards * profile.return_yards_scale)
                     for e in live
@@ -473,7 +530,21 @@ def generate_team(
                 diagnostics[column.value] = {"samples": 0, "fallback": "league-empirical"}
             if not values:
                 raise ValueError(f"no {column.value} evidence; supply source/aggregate evidence")
-            tokens = _column(values, [], seed=_seed(seed, column.value))
+            fumbles = [e for e in empirical_sample if e.fumble]
+            known_fumble_sample = [e for e in empirical_sample if e.fumble is not None]
+            fumble_probability = (
+                len(fumbles) / len(known_fumble_sample) if known_fumble_sample else 2 / 216
+            ) * profile.fumble_scale
+            location = round(mean(e.return_yards for e in fumbles)) if fumbles else 0
+            token = "F" if not location else f"F {'-' if location < 0 else '+'} {abs(location)}"
+            tokens = _column(values, [(token, fumble_probability)], seed=_seed(seed, column.value))
+            special_evidence[column.value] = {
+                "known_return_samples": len(sample),
+                "modeled_samples": len(empirical_sample),
+                "fumbles": len(fumbles),
+                "fumble_probability_fallback": not known_fumble_sample,
+                "return_ownership": "opponent of original kicking/passing team",
+            }
         specials.extend(
             SpecialTeamsCell(column, row, _cell(token, source_hash, filename, row, 20 + index))
             for row, token in tokens.items()
@@ -530,7 +601,14 @@ def generate_team(
         "profile": asdict(profile),
         "source_summary": summarize_events(events, team),
         "source_scope": "all supplied live events, including postseason and overtime",
-        "tactical_evidence": "inferred-neutral",
+        "tactical_evidence": "inferred-neutral"
+        if tactics.origin == "neutral"
+        else "inferred-private-prior",
+        "tactical_profile": {
+            "origin": tactics.origin,
+            "sha256": tactics.sha256,
+            "source_hashes": list(tactics.source_hashes),
+        },
         "family_evidence": family_diagnostics,
         "opponent_model": {
             "yardage_effects": {
@@ -543,13 +621,16 @@ def generate_team(
             },
         },
         "sparse_categories": diagnostics,
+        "special_evidence": special_evidence,
         "modeled_priors": {
             "option_SOP_probability": rare,
             "option_BLP_probability": rare,
             "pass_QR_probability": rare,
             "breakaway_tail_fraction": 0.1,
+            "breakaway_tail_method": "joint empirical run/completion upper tails",
             "recovery_probability": recovery,
             "recovery_fallback": not fumbles,
+            "fumble_probability_fallback": not known_fumbles,
             "defense_effect_bound_yards": 4,
             "opponent_ridge_play_count": 100,
         },
@@ -582,11 +663,7 @@ def write_bundle(
     bundle: tuple[TeamChart, TeamFileMetadata, dict[str, Any]],
 ) -> None:
     """Write a new immutable private candidate; refuse overwrite and symlink paths."""
-    absolute = root.absolute()
-    if "private-data" not in absolute.parts:
-        raise ValueError("generated historical outputs require a private-data path")
-    if any(parent.is_symlink() for parent in (absolute, *absolute.parents)):
-        raise ValueError("output paths may not contain a symlink")
+    root = private_destination(root)
     chart, metadata, manifest = bundle
     slug = team_folder_name(chart.name)
     season = root / str(chart.season)
