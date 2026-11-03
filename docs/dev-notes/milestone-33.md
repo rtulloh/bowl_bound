@@ -1082,3 +1082,37 @@ confirmation; RULE-044 is resolved with offense-only confirmation, awaiting
 defense. UI-056/M37 is future planning only. Original M33 acceptance remains
 historical. No live server was changed, and no push, merge, release or tag
 was performed. No further heavy validation job is running in this workstream.
+
+
+### AI-035 late-half report investigation (isolated follow-up)
+
+Work is isolated on `fix/late-half-coaching` from `6c1289c`, leaving the root
+checkout and live play-test servers untouched. Parent's read-only evidence
+clarified that the reported running call was at a Q1-to-Q2 transition, not
+halftime; no kickoff was due. No late-half failure is claimed for that game.
+
+Before the phase, reviewed local Paydirt `paydirt/computer_ai.py:1138` and
+`:1193` (offensive/defensive timeout intent),
+`tests/test_cpu_timeout.py`, `tests/test_timeout_clock_interactions.py` and
+`tests/test_half_ending_clock_trace.py`. Adapt only public-state boundary and
+offered-action tests. Do not inherit NFL timeout thresholds, two-minute-warning
+behavior, random fractional runoff, private chart data or runtime code. Bowl
+Bound's own timing chart and engine offers remain authoritative. Any separate
+synthetic clock-policy gap needs red evidence and a reviewed version plan before
+production changes; frozen historical coaching behavior must remain stable.
+
+The bounded follow-up separately reproduces a pending-timing scoring loss:
+12 current-policy red cases and 12 green controls in 1.38s. All tiers choose a
+public-policy field goal that expires before any roll, although the engine
+offers a useful own timeout or hurry. The owner's Q1 report remains valid and
+unrelated. [The review plan](late-half-cpu-clock-plan-2026-11-03.md) proposes one
+derived engine view fact and a versioned clock-policy method instead of
+changing observation/analysis hashes. Production is unchanged and AI-035 stays
+open at this deliberate red checkpoint; no full-green claim or publication.
+
+Checkpoint validation (production unchanged): the complete new module remains
+intentionally red at 12 failed / 12 passed; its green-control selection passes
+12 (12 desired-fix cases explicitly deselected), and existing regulation,
+optional-clock, coordinator and tracker checks pass 74 in 3.05s. Focused Ruff
+check/format and diff checks pass. This is investigation evidence, not a green
+implementation or completed acceptance.
