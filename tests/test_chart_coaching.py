@@ -114,6 +114,7 @@ def test_new_public_context_does_not_change_baseline_v1_selection_stream() -> No
         public.pop("can_kneel_out_game", None)  # The v1 stream does not include this v2 field.
         public.pop("advanced_ii", None)  # Added public context is not part of baseline-v1.
         public.pop("free_advanced_defense", None)  # Added in v9; absent from baseline-v1.
+        public.pop("razzle_context")  # Revealed v11 context must not alter the frozen v1 stream.
         assert set(public) == {
             "side",
             "possession",

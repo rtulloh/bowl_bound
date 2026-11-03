@@ -39,7 +39,10 @@ roll chooses who selects an offensive chart result: offense when its roll is
 lower or tied, defense when its roll is lower. The offense chooses from its
 lower total; the defense may choose from either total. Penalty cells are excluded
 unless every available cell is a penalty. The selected result then follows the
-normal defensive priority and follow-up rules. When defending,
+normal defensive priority and follow-up rules. A B, QR, QT or Option selection
+commits to a gamble: its fresh follow-up roll happens after the choice. The
+computer can compare possibilities from the available charts but cannot know
+that future result. When defending,
 choose an offered formation (A–F). Against the computer, your single selection
 submits the call; its simultaneous call is concealed until the result. In
 two-sided manual mode, the second of the offensive/defensive selections submits

@@ -124,9 +124,15 @@ loaders remain supported for saves without markers. This preserves free versus c
 calls when a game resumes without storing chart files.
 
 CLI/API games save `difficulty` (`easy`, `medium`, or `hard`) and load it through the
-current coach. Older difficulty policies such as `medium-v9` are read as `medium`;
+current coach (revision 11 includes Razzle-Dazzle choice comparison). Older
+difficulty policies such as `medium-v9` or `medium-v10` are read as `medium`;
 their revision is ignored. Explicit baseline/chart policies remain development-only
-audit compatibility options. No additional mutable coaching RNG state is serialized.
+audit compatibility options. No additional mutable coaching RNG state is serialized. Development replay with
+`preserve_development_policy=True` retains frozen revisions, including v10
+Razzle-Dazzle first-choice behavior. The pending context is reconstructed from
+the recorded comparison rolls and call, not saved as a new source of truth.
+Completed decisions and actual future dice still replay from ordinary commands
+and the physical roll tape; expected-value analysis is never replayed as a result.
 
 Coached commands journal resolved ordinary engine calls rather than rerunning
 the selector on load. Successful committed snap pairs rebuild difficulty
@@ -135,7 +141,8 @@ concealed current calls are not training data. The command is journaled before
 its derived-history callback, so save/reload can recover if that callback fails.
 
 The semantic digest excludes derived `dice`, `dice_label`, `chooser_side`,
-`toss_dice` and `overtime_toss_dice` presentation fields; recorded physical faces
+`toss_dice`, `overtime_toss_dice` and derived `razzle_context` presentation fields;
+recorded physical faces
 and gameplay fields remain protected.
 
 The loader rejects missing/unknown fields, duplicate JSON keys, invalid types,

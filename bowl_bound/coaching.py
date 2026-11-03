@@ -10,7 +10,7 @@ from json import dumps
 from random import Random
 
 from .coaching_profiles import behavior_for_policy
-from .decision_facts import DecisionOutcome, DecisionOutcomeKind
+from .decision_facts import DecisionOutcome, DecisionOutcomeKind, RazzleDazzleContext
 
 
 class NoLegalAction(ValueError):
@@ -40,6 +40,7 @@ class CoachObservation:
     phase: str = "scrimmage"
     can_kneel_out_game: bool = False
     decision_outcomes: tuple[DecisionOutcome, ...] = ()
+    razzle_context: RazzleDazzleContext | None = None
     advanced_ii: bool = False
     free_advanced_defense: bool = False
 
@@ -129,8 +130,8 @@ class BaselineCoach:
     """
 
     def __init__(self, seed: int, *, version: int = 1) -> None:
-        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}:
-            raise ValueError("baseline policy version must be 1 through 10")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}:
+            raise ValueError("baseline policy version must be 1 through 11")
         self._seed = seed
         self.version = version
         if version == 1:
@@ -154,6 +155,8 @@ class BaselineCoach:
 
     def _random(self, observation: CoachObservation, role: str) -> Random:
         facts = asdict(observation)
+        if self.version < 11:
+            facts.pop("razzle_context")
         if self.version < 9:
             facts.pop("advanced_ii")
             facts.pop("free_advanced_defense")

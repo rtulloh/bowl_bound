@@ -5,7 +5,12 @@ from dataclasses import replace
 from math import exp
 
 from .coaching import BaselineCoach, CoachObservation, safe_choice
-from .coaching_evaluation import ActionEstimate, evaluate_action
+from .coaching_evaluation import (
+    ActionEstimate,
+    RazzleChoiceEstimate,
+    evaluate_action,
+    sample_razzle_decisions,
+)
 from .coaching_profiles import behavior_for_policy
 from .models import TeamChart
 
@@ -27,6 +32,9 @@ class ChartAwareCoach(BaselineCoach):
             tuple[CoachObservation, str, tuple[float, ...] | None], tuple[ActionEstimate, ...]
         ] = OrderedDict()
         self.analysis_fallback = False
+        self._decision_cache: OrderedDict[CoachObservation, tuple[RazzleChoiceEstimate, ...]] = (
+            OrderedDict()
+        )
 
     @property
     def cached_situations(self) -> int:
@@ -132,6 +140,23 @@ class ChartAwareCoach(BaselineCoach):
 
     def decision(self, observation: CoachObservation) -> str:
         self.analysis_fallback = False
+        if self.version >= 11 and observation.razzle_context is not None:
+            model = replace(observation, play_number=0)
+            if model not in self._decision_cache:
+                self._decision_cache[model] = sample_razzle_decisions(self._home, self._away, model)
+                while len(self._decision_cache) > self.behavior.cache_entries:
+                    self._decision_cache.popitem(last=False)
+            self._decision_cache.move_to_end(model)
+            estimates = self._decision_cache[model]
+            if estimates and all(
+                estimate.complete and estimate.mean_utility is not None for estimate in estimates
+            ):
+                choose = max if observation.side == observation.possession else min
+                return choose(estimates, key=lambda item: item.mean_utility).key
+            self.analysis_fallback = True
+            choice = super().decision(observation)
+            self.analysis_fallback = True
+            return choice
         if observation.side != observation.possession and "clock:standard" in observation.choices:
             timeout = f"clock:timeout:{observation.side}"
             if (

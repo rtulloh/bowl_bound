@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 
 from backend.app import create_app
 from bowl_bound.cli import TerminalGame, main
+from bowl_bound.coaching_profiles import CURRENT_DIFFICULTY_VERSION
 from bowl_bound.save_game import SavedGame, SaveFormatError, dumps_game, loads_game
 from tests.synthetic_teams import default_teams, write_team
 
@@ -151,7 +152,7 @@ def test_cli_hard_flag_and_legacy_chart_resume_preserve_distinct_policies(
         )
         == 0
     )
-    assert policies == ["hard-v10"]
+    assert policies == [f"hard-v{CURRENT_DIFFICULTY_VERSION}"]
     path = tmp_path / "private-test.json"
     game = SavedGame.new(
         *teams,
@@ -163,7 +164,7 @@ def test_cli_hard_flag_and_legacy_chart_resume_preserve_distinct_policies(
     )
     path.write_text(dumps_game(game))
     assert main(["--seasons", str(tmp_path), "--load", str(path), "--compact"]) == 0
-    assert policies == ["hard-v10", "chart-v1"]
+    assert policies == [f"hard-v{CURRENT_DIFFICULTY_VERSION}", "chart-v1"]
 
 
 @pytest.mark.parametrize(

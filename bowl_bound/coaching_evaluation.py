@@ -6,16 +6,23 @@ No live engine, gameplay seed, hidden call or dice source is accepted.
 """
 
 from dataclasses import asdict, dataclass, replace
+from fractions import Fraction
 from hashlib import sha256
 from json import dumps
-from math import isfinite
+from math import fsum, isfinite, sqrt
 from random import Random
 from typing import Literal
 
 from .coaching import BaselineCoach, CoachObservation
+from .coaching_probabilities import (
+    _DEFENSIVE_GROUPS,
+    _OFFENSIVE_GROUPS,
+    _NeedRoll,
+    _PrefixDice,
+)
 from .coaching_profiles import CHART_V1, HARD_V1
 from .coaching_session import observe_game
-from .dice import RandomDice
+from .dice import DefensiveRoll, DiceSource, OffensiveRoll, RandomDice
 from .game_state import FieldState, Possession
 from .models import TeamChart
 from .resolution import ChartResolutionError
@@ -127,7 +134,9 @@ def _utility(
     return value, float(points), bool(lost)
 
 
-def _settle(session: PlaySession, report: PlayReport, dice: RandomDice) -> SessionView:
+def _settle(
+    session: PlaySession, report: PlayReport, dice: DiceSource, *, coach_version: int = 1
+) -> SessionView:
     for _ in range(CHART_V1.settle_decisions):
         if not report.supported:
             raise EvaluationError("unsupported hypothetical engine result")
@@ -139,7 +148,7 @@ def _settle(session: PlaySession, report: PlayReport, dice: RandomDice) -> Sessi
         side = view.pending.chooser_side
         if side not in {"home", "away"}:
             raise EvaluationError("hypothetical decision lacks side ownership")
-        choice = BaselineCoach(0).decision(observe_game(view, side))
+        choice = BaselineCoach(0, version=coach_version).decision(observe_game(view, side))
         report = session.decide(choice, dice=dice)
     raise EvaluationError("hypothetical decision limit reached")
 
@@ -196,6 +205,7 @@ def evaluate_action(
         observation.distance,
     )
     facts = asdict(replace(observation, play_number=0))
+    facts.pop("razzle_context")  # Preserve all historical one-action analysis streams.
     if not observation.advanced_ii:
         facts.pop("advanced_ii")
     if not observation.free_advanced_defense:
@@ -281,3 +291,249 @@ def evaluate_action(
         None if failed else lost / samples,
         None if failed else points / samples,
     )
+
+
+@dataclass(frozen=True)
+class RazzleDecisionEstimate:
+    """Exact weighted engine utility, or explicitly incomplete/failed mass."""
+
+    key: str
+    mean_utility: float | None
+    unexplored_probability: Fraction
+    failed_probability: Fraction
+    evaluations: int
+
+    @property
+    def complete(self) -> bool:
+        return self.unexplored_probability == 0 and self.failed_probability == 0
+
+
+def evaluate_razzle_decisions(
+    home: TeamChart,
+    away: TeamChart,
+    observation: CoachObservation,
+    *,
+    max_evaluations: int = 10_000,
+) -> tuple[RazzleDecisionEstimate, ...]:
+    """Library/test oracle for exact RZDZ branches, not the normal request path.
+
+    Both immutable supplied boards, including possible supplemental rows, are
+    coach-available. These means are gamble estimates, never future results.
+    Only the two public comparison rolls are fixed. Every future roll branches
+    with physical-face multiplicity; no live session, dice, seed or hidden call
+    is accepted. Grouping by total/direct sum retains black and white-sum facts
+    used by engine continuations, including end-zone depth and variable yardage.
+    Branches settle with the frozen v10 legal continuation preferences, and use
+    the existing documented Hard field/score utility from the offense's side.
+    Conversion/kickoff/another snap is outside this one-action boundary.
+    Failed/unexplored mass invalidates a candidate, never silently becomes zero.
+    """
+    context = observation.razzle_context
+    if (
+        context is None
+        or not observation.choices
+        or any(not key.startswith("razzle:") for key in observation.choices)
+    ):
+        raise ValueError("Razzle-Dazzle analysis requires its revealed legal context")
+    if type(max_evaluations) is not int or max_evaluations <= 0:
+        raise ValueError("analysis budget must be a positive integer")
+    field = FieldState(
+        Possession(observation.possession),
+        observation.yards_to_goal,
+        observation.down,
+        observation.distance,
+    )
+    offense_observation = replace(
+        observation,
+        side=observation.possession,
+        score_difference=observation.score_difference
+        if observation.side == observation.possession
+        else -observation.score_difference,
+    )
+    advanced = context.defense not in {"A", "B", "C", "D", "E", "F"}
+    defender = field.possession.other.value
+    estimates = []
+    for key in observation.choices:
+        frontier: list[tuple[tuple[OffensiveRoll | DefensiveRoll, ...], Fraction]] = [
+            ((), Fraction(1))
+        ]
+        expected = Fraction()
+        failed = Fraction()
+        evaluations = 0
+        while frontier and evaluations < max_evaluations:
+            prefix, probability = frontier.pop()
+            evaluations += 1
+            source = _PrefixDice((*context.rolls, *prefix))
+            session = PlaySession.for_analysis(
+                home,
+                away,
+                field,
+                overtime=observation.overtime,
+                phase=SessionPhase.TWO_POINT_TRY
+                if observation.phase == SessionPhase.TWO_POINT_TRY.value
+                else SessionPhase.SCRIMMAGE,
+                advanced_ii=advanced,
+                home_privileges=("W",) if context.free_wildcard and defender == "home" else (),
+                away_privileges=("W",) if context.free_wildcard and defender == "away" else (),
+            )
+            try:
+                session.snap("RZDZ", context.defense, dice=source, hurried=observation.hurried)
+                report = session.decide(key)
+                view = _settle(session, report, source, coach_version=10)
+                value, _, _ = _utility(view, offense_observation, field, utility_policy="hard-v1")
+            except _NeedRoll as request:
+                groups = _OFFENSIVE_GROUPS if request.offensive else _DEFENSIVE_GROUPS
+                frontier.extend(((*prefix, roll), probability * weight) for roll, weight in groups)
+            except (
+                EvaluationError,
+                ChartResolutionError,
+                InvalidDecisionError,
+                PendingDecisionError,
+                SessionFinishedError,
+                ValueError,
+            ):
+                failed += probability
+            else:
+                expected += probability * Fraction(value)
+        unexplored = sum((probability for _, probability in frontier), Fraction())
+        estimates.append(
+            RazzleDecisionEstimate(
+                key,
+                None if failed or unexplored else float(expected),
+                unexplored,
+                failed,
+                evaluations,
+            )
+        )
+    return tuple(estimates)
+
+
+RAZZLE_SAMPLE_BUDGET = 288
+RAZZLE_MAX_CANDIDATE_SAMPLES = 32
+
+
+@dataclass(frozen=True)
+class RazzleChoiceEstimate:
+    """Sampled utility and sampling uncertainty, never a known future result."""
+
+    key: str
+    samples: int
+    failed_samples: int
+    mean_utility: float | None
+    standard_error: float | None
+
+    @property
+    def complete(self) -> bool:
+        """All requested samples succeeded; this is not exhaustive probability."""
+        return self.failed_samples == 0
+
+
+class _RazzleSampleDice:
+    """Replay revealed comparisons, then use an independent hypothetical stream."""
+
+    def __init__(self, rolls: tuple[OffensiveRoll, OffensiveRoll], seed: int) -> None:
+        self._rolls = rolls
+        self._position = 0
+        self._future = RandomDice(Random(seed))
+
+    def offensive(self) -> OffensiveRoll:
+        if self._position < len(self._rolls):
+            roll = self._rolls[self._position]
+            self._position += 1
+            return roll
+        return self._future.offensive()
+
+    def defensive(self) -> DefensiveRoll:
+        return self._future.defensive()
+
+
+def sample_razzle_decisions(
+    home: TeamChart,
+    away: TeamChart,
+    observation: CoachObservation,
+    *,
+    total_samples: int = RAZZLE_SAMPLE_BUDGET,
+) -> tuple[RazzleChoiceEstimate, ...]:
+    """Compare legal RZDZ choices with a small shared, deterministic rollout budget.
+
+    All candidates use the same hypothetical streams, derived only from revealed
+    observations. Actual gameplay/coach seeds and future dice are unavailable.
+    Equal samples per candidate and explicit failures prevent selective dropping
+    or renormalization. Standard error describes sampling variation, not a bound
+    on heuristic bias or a guarantee of the selected gamble's future result.
+    """
+    context = observation.razzle_context
+    if (
+        context is None
+        or not observation.choices
+        or any(not key.startswith("razzle:") for key in observation.choices)
+    ):
+        raise ValueError("Razzle-Dazzle analysis requires its revealed legal context")
+    if (
+        type(total_samples) is not int
+        or not len(observation.choices) <= total_samples <= RAZZLE_SAMPLE_BUDGET
+    ):
+        raise ValueError(
+            f"shared sample budget must cover each candidate and be at most {RAZZLE_SAMPLE_BUDGET}"
+        )
+    samples = min(RAZZLE_MAX_CANDIDATE_SAMPLES, total_samples // len(observation.choices))
+    public = dumps(
+        asdict(replace(observation, play_number=0)), sort_keys=True, separators=(",", ":")
+    )
+    seed = int.from_bytes(sha256(f"razzle-choice-estimate-v11:{public}".encode()).digest(), "big")
+    field = FieldState(
+        Possession(observation.possession),
+        observation.yards_to_goal,
+        observation.down,
+        observation.distance,
+    )
+    offense_observation = replace(
+        observation,
+        side=observation.possession,
+        score_difference=observation.score_difference
+        if observation.side == observation.possession
+        else -observation.score_difference,
+    )
+    defender = field.possession.other.value
+    estimates = []
+    for key in observation.choices:
+        values = []
+        failed = 0
+        for index in range(samples):
+            dice = _RazzleSampleDice(context.rolls, seed + index)
+            session = PlaySession.for_analysis(
+                home,
+                away,
+                field,
+                overtime=observation.overtime,
+                phase=SessionPhase.TWO_POINT_TRY
+                if observation.phase == SessionPhase.TWO_POINT_TRY.value
+                else SessionPhase.SCRIMMAGE,
+                advanced_ii=context.defense not in {"A", "B", "C", "D", "E", "F"},
+                home_privileges=("W",) if context.free_wildcard and defender == "home" else (),
+                away_privileges=("W",) if context.free_wildcard and defender == "away" else (),
+            )
+            try:
+                session.snap("RZDZ", context.defense, dice=dice, hurried=observation.hurried)
+                report = session.decide(key)
+                view = _settle(session, report, dice, coach_version=10)
+                value, _, _ = _utility(view, offense_observation, field, utility_policy="hard-v1")
+            except (
+                EvaluationError,
+                ChartResolutionError,
+                InvalidDecisionError,
+                PendingDecisionError,
+                SessionFinishedError,
+                ValueError,
+            ):
+                failed += 1
+            else:
+                values.append(value)
+        mean = None if failed else fsum(values) / samples
+        error = (
+            sqrt(fsum((value - mean) ** 2 for value in values) / (samples - 1) / samples)
+            if mean is not None and samples > 1
+            else None
+        )
+        estimates.append(RazzleChoiceEstimate(key, samples, failed, mean, error))
+    return tuple(estimates)

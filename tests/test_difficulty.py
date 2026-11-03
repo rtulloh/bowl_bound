@@ -151,7 +151,9 @@ def test_legacy_difficulty_save_reconstructs_facts_with_the_current_tier(mode: s
     assert saved_facts(game) == before
     restored = loads_game(dumps_game(game), lambda key: home if key.endswith("home") else away)
     assert restored.difficulty == mode
-    assert restored.coach_policy == f"{mode}-v10"
+    from bowl_bound.coaching_profiles import CURRENT_DIFFICULTY_VERSION
+
+    assert restored.coach_policy == f"{mode}-v{CURRENT_DIFFICULTY_VERSION}"
     before["config"] = saved_facts(restored)["config"]
     assert saved_facts(restored) == before
 

@@ -3,6 +3,7 @@
 import pytest
 
 from bowl_bound.coaching_audit import compare_policies
+from bowl_bound.coaching_profiles import CURRENT_DIFFICULTY_VERSION
 from bowl_bound.models import TeamChart
 
 
@@ -19,9 +20,9 @@ def test_default_comparison_includes_baseline_both_arrangements_and_sides(
     assert len(seen) == 32
     assert {entry[2]["policy"] for entry in seen} == {
         "baseline-v2",
-        "easy-v10",
-        "medium-v10",
-        "hard-v10",
+        f"easy-v{CURRENT_DIFFICULTY_VERSION}",
+        f"medium-v{CURRENT_DIFFICULTY_VERSION}",
+        f"hard-v{CURRENT_DIFFICULTY_VERSION}",
     }
     assert {entry[2]["cpu_side"] for entry in seen} == {"home", "away"}
     assert len({(home, away) for home, away, _ in seen}) == 2

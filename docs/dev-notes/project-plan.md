@@ -628,6 +628,9 @@ This milestone does not publish a release or implement Milestones 34/35.
 Owner play-test follow-up: [UI-052](issues/UI/UI-052.md) replaces timeout button
 copy with the owner's approved plain language on the unmerged M33 review branch.
 It preserves the completed `f82ad47` engineering snapshot and changes no rules.
+[AI-033](issues/AI/AI-033.md) separately tracks the subsequent owner-reported
+Razzle-Dazzle CPU choice-quality problem on that same review branch; it remains
+open until its own tested follow-up is accepted.
 
 **Commit:** `milestone 33: correct core playability and validation status`
 

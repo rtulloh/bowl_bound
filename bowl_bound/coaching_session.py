@@ -69,6 +69,7 @@ def observe_game(view: GameView, side: str) -> CoachObservation:
         if view.pending
         else (),
         decision_outcomes=view.pending.decision_outcomes if view.pending else (),
+        razzle_context=view.pending.razzle_context if view.pending else None,
         advanced_ii=any(
             action.key not in {"A", "B", "C", "D", "E", "F"} for action in view.actions.defense
         ),
@@ -79,6 +80,8 @@ def observe_game(view: GameView, side: str) -> CoachObservation:
 def observe_policy(view: GameView, side: str, policy_version: int) -> CoachObservation:
     """Apply the selected policy's versioned public observation contract."""
     observation = observe_game(view, side)
+    if policy_version < 11:
+        observation = replace(observation, razzle_context=None)
     if policy_version >= 9:
         return observation
     return replace(

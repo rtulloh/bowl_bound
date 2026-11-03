@@ -3,6 +3,8 @@
 from dataclasses import dataclass
 from enum import Enum
 
+from .dice import OffensiveRoll
+
 
 class DecisionOutcomeKind(str, Enum):
     """How much of a choice's next result is deterministic before another roll."""
@@ -56,3 +58,12 @@ class DecisionOutcome:
             self.scoring_side is None
         ):
             raise ValueError("scoring outcomes require a scoring side")
+
+
+@dataclass(frozen=True)
+class RazzleDazzleContext:
+    """Already revealed comparison dice and defense, never a future dice source."""
+
+    defense: str
+    rolls: tuple[OffensiveRoll, OffensiveRoll]
+    free_wildcard: bool = False

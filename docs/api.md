@@ -34,6 +34,17 @@ Older saves paused before a fumble's recovery expose a single engine-owned
 endpoint; loading and inspecting that pending step consume no new dice. Current
 saves use replay profile `bowl-bound-m33-v1`; the JSON schema remains version 1.
 
+## Razzle-Dazzle pending context
+
+A Razzle-Dazzle pending decision includes additive `razzle_context` with the
+already declared `defense`, both observed comparison `rolls` (physical black and
+white faces), and `free_wildcard` access status. Other pending decisions use null.
+These are revealed engine facts, not a future dice source. Choices retain their
+unresolved B/QR/QT/Option symbols until selected and rolled; `decision_outcomes`
+does not report an exact future result for them. Computer probability estimates
+are not serialized. Clients display engine choices and reports without reading
+charts or calculating outcome probabilities.
+
 ## Engine-owned play bounds declarations
 
 Regulation views offer `game_actions` with `bounds:oob` and `bounds:ib` only

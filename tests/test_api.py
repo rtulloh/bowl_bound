@@ -119,7 +119,15 @@ def test_api_exposes_razzle_result_choice_and_resolves_it_from_engine(client: Te
     pending = response.json()
     assert pending["report"]["pending"] is True
     assert pending["report"]["called_play"] == "Razzle-Dazzle"
-    choices = pending["view"]["pending"]["choices"]
+    decision = pending["view"]["pending"]
+    context = decision["razzle_context"]
+    assert context["defense"] == "A" and context["free_wildcard"] is False
+    assert len(context["rolls"]) == 2
+    assert all(set(roll) == {"black", "white_one", "white_two"} for roll in context["rolls"])
+    assert decision["decision_outcomes"] == []
+    assert "mean_utility" not in response.text
+    assert client.get(f"/api/games/{game['game_id']}").json()["view"] == pending["view"]
+    choices = decision["choices"]
     assert 1 <= len(choices) <= 18
     resolved = client.post(
         f"/api/games/{game['game_id']}/decision", json={"choice": choices[0]["id"]}

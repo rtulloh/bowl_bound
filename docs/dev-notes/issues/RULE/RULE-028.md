@@ -9,7 +9,7 @@ resolved-at: 2026-11-01
 closed-at: null
 tags:
 - advanced-option
-links: [RULE-022]
+links: [RULE-022, AI-033]
 commits: [33a53da, 427b42e]
 ---
 
@@ -47,3 +47,8 @@ required its normal further roll. This follows the approved chooser rule; a
 human offensive result prompt is required only when offense wins or ties.
 No gameplay implementation change or ticket-closure claim follows from this
 clarification. Private team names, cell values and traces are omitted.
+
+--- 2026-11-03 ---
+[AI-033](../AI/AI-033.md) separately investigates CPU result-choice quality during
+M33 owner review. Its first-legal-choice fallback is distinct from this ticket's
+correct comparison/chooser ownership and engine follow-up procedures.

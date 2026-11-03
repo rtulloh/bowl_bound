@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 
 from backend.app import create_app
 from bowl_bound.cli import TerminalGame, main
+from bowl_bound.coaching_profiles import CURRENT_DIFFICULTY_VERSION
 from bowl_bound.sample_teams import install_samples
 from bowl_bound.save_game import SavedGame, dumps_game, loads_game
 from tests.synthetic_teams import default_teams
@@ -76,8 +77,8 @@ def test_legacy_difficulty_save_uses_current_coach_on_load() -> None:
     )
 
     assert restored.difficulty == "medium"
-    assert restored.coach_policy == "medium-v10"
-    assert restored._coach.version == 10
+    assert restored.coach_policy == f"medium-v{CURRENT_DIFFICULTY_VERSION}"
+    assert restored._coach.version == CURRENT_DIFFICULTY_VERSION
 
 
 def test_new_difficulty_save_persists_the_tier_without_a_policy_revision() -> None:

@@ -8,7 +8,7 @@ from dataclasses import dataclass, replace
 from enum import Enum
 from random import Random
 
-from .decision_facts import DecisionOutcome, DecisionOutcomeKind
+from .decision_facts import DecisionOutcome, DecisionOutcomeKind, RazzleDazzleContext
 from .dice import DiceSource, OffensiveRoll, RandomDice, roll_view
 from .game_state import (
     EndZonePending,
@@ -271,6 +271,7 @@ class PendingDecisionView:
     choices: tuple[PenaltyChoice, ...]
     chooser_side: str | None = None
     decision_outcomes: tuple[DecisionOutcome, ...] = ()
+    razzle_context: RazzleDazzleContext | None = None
 
 
 @dataclass(frozen=True)
@@ -923,6 +924,13 @@ class PlaySession:
                 self._charts[chooser].name,
                 choices,
                 chooser_side=chooser.value,
+                razzle_context=RazzleDazzleContext(
+                    defensive.key
+                    if isinstance(defensive, AdvancedDefenseCall)
+                    else defensive.value,
+                    rolls,
+                    free_wildcard,
+                ),
             )
             self._razzle_pending = _PendingRazzleDazzle(
                 defensive,

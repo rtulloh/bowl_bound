@@ -775,3 +775,136 @@ Validation (copy-only follow-up):
 - No full simulation/regression rerun or push is needed for this local copy
   review. The previous `f82ad47` full-gate evidence stays historical; it is not
   presented as testing this new label change. Port 8033 remains running untouched.
+
+
+## Owner play-test follow-up — AI-033 (2026-11-03)
+
+The owner questioned a defensive Razzle-Dazzle supplemental choice. This is a
+separate [AI-033](issues/AI/AI-033.md) follow-up on the unmerged review branch;
+the completed `f82ad47` engineering acceptance above remains historical.
+No private team names, chart cells, actual game traces or saves are reproduced.
+
+Before implementation, independently consulted local Paydirt
+`paydirt/computer_ai.py:1242` (`should_accept_penalty`), related shared-fumble/
+return-penalty previews in `paydirt/game_engine.py`, and
+`tests/test_cpu_penalty_decision.py` / `tests/test_fumble.py`. Adapted the principle
+of comparing eligible engine outcomes and synthetic recovery/choice tests.
+Paydirt has no direct RZDZ equivalent in these references. Its NFL penalty rules,
+recovery ranges, return procedures, field heuristics, team fixtures and runtime
+code are deliberately excluded. Bowl Bound engine semantics and its existing
+versioned utility remain authoritative.
+
+The meaningful red regression gave all three unchanged v10 difficulty tiers a
+first-legal uniformly positive B and a later known loss. All chose B, proving the
+first-ID fallback defect independently of any favorable realized roll. RZDZ had
+no deterministic pending `decision_outcomes`, so ordinary penalty comparison did
+not apply. Another red regression showed floating weighted addition broke exact
+ties between identical ordinary and supplemental outcomes; rational accumulation
+preserves the engine's legal ordering.
+
+The initial, superseded v11 prototype compared complete possible outcomes through isolated real-engine
+branches with exact physical dice multiplicities. Offense maximizes and defense
+minimizes the existing Hard field/score utility. This is not an unconditional
+symbol hierarchy: BLACK means the normalized incompletion, fumble recovery is
+probabilistic, QT may be favorable or unfavorable, and fourth-down receiving spot
+can outweigh a turnover label. Tests preserve those distinctions. An initial
+fumble fixture assumed its recovery spot was always favorable; the corrected
+fixture varies the actual recovery distribution at a spot where the unchanged
+utility supports the expected ordering. No new state-utility heuristic was added.
+
+### Information and commitment boundary
+
+`ChartAwareCoach` explicitly permits both immutable supplied boards and excludes
+the live session, human selected call, gameplay seed and future dice. All normal
+tiers inherit that boundary. Existing Easy/Medium restrictions describe ordinary
+play-call mixtures, which this fix leaves unchanged; v11 explicitly adds a forced
+RZDZ result-choice comparison to all three tiers. It reads the possible supplemental
+rows and already revealed RZDZ comparison/formation facts, never an actual future
+roll. A probability distribution over legal chart information is not a prediction
+of the next draw. QT/B/QR/Option stay unresolved gambles; the selected symbol is
+committed before the engine draws and resolves its actual future result. Private
+expected utility is not attached to `decision_outcomes` or shown as a known result.
+
+Three-tier invariance tests hold the observed pending state/charts constant and
+change the unobserved future stream. The selected QT remains identical; actual
+committed outcomes differ. Repeated decisions/plans preserve gameplay tape/source
+position, saved facts, journal, view and Hard committed-call history. Current and
+frozen-v10 pending saves replay actual committed choices and dice. The prototype
+adds only derived revealed context; no future source or expected outcome is saved.
+
+The owner clarified that available-chart probability estimates are permitted,
+while the actual future roll remains unknowable. The information review is
+complete on that existing boundary; no new hidden data access is introduced.
+The implementation remains uncommitted pending validation. The existing
+8033/8034 in-memory games remain untouched; parent owns any future updated server.
+No push, release or live server restart is part of this follow-up.
+
+
+Follow-up hardening also reproduced two RZDZ try-phase failures in the new evaluator:
+its sandbox initially used scrimmage, so the existing two-point utility correctly
+rejected the result. Passing the observed two-point phase now preserves 0/2-point
+try outcomes for both choosers without retaining scrimmage field potential.
+Ten red version-contract cases identified the development API/audit CLI allowlists
+missing v11; both now accept the revision, while old IDs remain supported. The
+audit's default normal-tier matrix follows v11. Existing current-tier identity
+assertions use the declared current revision; explicit frozen tests still pin old
+versions. Export-purity comparisons exclude only the existing `saved_at` timestamp
+and its integrity checksum, retaining commands, rolls, RNG state, configuration
+and final state digest.
+
+
+The first full-Python attempt was deliberately interrupted after **1,073 passed,
+4 failed in 539.00s** while completing the policy-interface migration and try-phase
+hardening. The failures were exact current-policy identity expectations in two CLI
+tests and two explicit observation-shape allowlists. The current identity checks
+now follow the declared revision; the public allowlist adds only revealed RZDZ
+context, and the frozen-v1 stream oracle explicitly excludes it. No legacy stream
+assertion or hidden-opponent/future-dice restriction is removed. This interrupted
+attempt is not a full regression pass; a fresh final-source run is required.
+
+
+### AI-033 bounded comparison and performance review
+
+The initial exact production prototype passed **3,446 Python cases in 1,042.31s,
+93.13% branch coverage**. This is pre-revision evidence, not the final code's
+full gate. A separate private plausibility benchmark found one of 18 candidates
+incomplete at 10,000 evaluations: **99.18s cold** and a whole-comparison fallback.
+That is not acceptable for interactive play. The old 32-game public audit was
+interrupted on this newly found blocker; no result is claimed from it.
+
+The approved smallest revision reuses isolated one-action rollouts with a strict
+shared budget: **288 total, equal per candidate, at most 32 each**. All candidates
+share deterministic hypothetical streams derived solely from the revealed public
+observation and a v11 analysis namespace. Real gameplay and private coaching seeds
+are unavailable. Physical dice still use the Bowl Bound distributions; the exact
+216-by-36 regression/oracle remains explicit and outside the request path.
+Sample means and standard errors are estimates, not exact future outcomes;
+failures invalidate the full comparison without renormalization. Frozen policies,
+existing state utility, symbolic pending choices and commitment-before-roll remain.
+
+The fictional branching B/QT/fumble/penalty regression was red on engine
+invocation **289** in the old path; it now succeeds within the shared budget and
+does not collapse to the first B. Further controls check common streams, exact
+identical-outcome ties, sampling-error diagnostics, invalid budgets, and explicit
+failed samples. The same installed-board benchmark at a synthetic spot/formation
+now has **288 successful samples, zero fallbacks, 59.35ms cold / 0.021ms cached**.
+It is not the actual live-game state or a latency guarantee; the old 99s measurement
+also occurred during host contention. Only aggregate evidence is public.
+
+The unchanged baseline local-season control passes **120/120 games, zero failures
+or fallbacks**. This is a mechanics/replay control, not current-v11 coaching
+calibration. Detailed reports, chart inputs and comparative findings remain in
+ignored private paths. A current public coaching/replay audit and fresh full
+Python gate are still required after the bounded source freezes. No push, release
+or live-server restart is included; the parent will use an immutable new snapshot
+for owner review while regression remains explicitly pending.
+
+
+Stable-source handoff: **372 focused cumulative tests passed in 58.93s**. A
+second read-only benchmark uses the board pair referenced by the owner's actual
+private save, at the explicitly synthetic spot/formation: **18 choices, 288
+successful samples, zero fallback, 60.15ms cold / 0.023ms cached**, and a later
+legal selection. Neither benchmark predicts or replays the unknown original
+RZDZ field state/future result. Current source is offered as a focused commit
+for an immutable local play test; AI-033 stays open until fresh full validation
+and owner review. Prior full-Python evidence is explicitly pre-revision.

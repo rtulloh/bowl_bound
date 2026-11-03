@@ -337,6 +337,7 @@ class SavedGame:
             "chart-v8",
             "chart-v9",
             "chart-v10",
+            "chart-v11",
         }:
             from .chart_coaching import ChartAwareCoach
 
@@ -371,8 +372,11 @@ class SavedGame:
             "medium-v9",
             "hard-v9",
             "easy-v10",
+            "easy-v11",
             "medium-v10",
+            "medium-v11",
             "hard-v10",
+            "hard-v11",
         }:
             from .difficulty import DifficultyCoach
 
@@ -389,6 +393,7 @@ class SavedGame:
                 "baseline-v8": 8,
                 "baseline-v9": 9,
                 "baseline-v10": 10,
+                "baseline-v11": 11,
             }.get(self.coach_policy, 1)
             self._coach = BaselineCoach(self._config["coach_seed"], version=version)
         self._tape = tape
@@ -806,6 +811,7 @@ def _validate_config(config: Any) -> None:
             "baseline-v8",
             "baseline-v9",
             "baseline-v10",
+            "baseline-v11",
             "chart-v1",
             "chart-v2",
             "easy-v1",
@@ -840,12 +846,16 @@ def _validate_config(config: Any) -> None:
             "chart-v8",
             "chart-v9",
             "chart-v10",
+            "chart-v11",
             "easy-v9",
             "medium-v9",
             "hard-v9",
             "easy-v10",
+            "easy-v11",
             "medium-v10",
+            "medium-v11",
             "hard-v10",
+            "hard-v11",
         }
     ):
         _fail()
@@ -1246,6 +1256,7 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         "away_timeouts",
         "can_kneel_out_game",
         "decision_outcomes",
+        "razzle_context",
         "free_advanced",
         "presentation",
         "presentation_row",

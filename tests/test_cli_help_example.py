@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from bowl_bound.cli import TerminalGame, main
+from bowl_bound.coaching_profiles import CURRENT_DIFFICULTY_VERSION
 from bowl_bound.sample_teams import install_samples
 
 
@@ -28,4 +29,4 @@ def test_displayed_help_example_starts_medium_solitaire(
 
     monkeypatch.setattr(TerminalGame, "run", run)
     assert main([*command[3:], "--seasons", str(tmp_path)]) == 0
-    assert seen == ["medium-v10"]
+    assert seen == [f"medium-v{CURRENT_DIFFICULTY_VERSION}"]

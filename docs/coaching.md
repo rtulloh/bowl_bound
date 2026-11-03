@@ -75,9 +75,9 @@ The engine owns legality, dice, results and rules. Choose **Easy (0.3)**,
 **Medium (0.5, default)** or **Hard (0.7)** at browser setup or with CLI `-d`.
 The numbers are coaching aggression settings, not dice multipliers.
 
-- Easy uses conservative situational mixtures, independent of chart strength.
+- Easy uses conservative ordinary play-call mixtures, independent of chart strength.
 - Medium uses balanced mixtures with a coarse run/pass strength tilt on first
-  and second down; it does not rank individual chart plays.
+  and second down; its ordinary play-call mixture does not rank individual chart plays.
 - In v4, Easy/Medium continuously adjust pass/run weights from late-half
   score margin and time; runs retain positive weight, and protecting a lead
   tilts the mix toward runs. Long-down mixtures also vary by tier aggression.
@@ -110,9 +110,11 @@ Ordinary overtime series remain scrimmage, without hypothetical kickoffs.
 Policies receive an immutable public-observation allowlist: side, possession,
 down/distance, spot, phase, quarter/time, score difference, completed-play count,
 overtime, hurry status, the engine's safe-kneel query and offered action/decision
-IDs. Medium/Hard can analyze supplied charts, but receive no live engine, future
-dice, gameplay seed/RNG or concealed current opponent selection. Hard learns only
-committed calls, not previews.
+IDs. Coaches may read both supplied immutable board charts, including possible
+supplemental rows. They receive no live engine, future dice, gameplay seed/RNG or
+concealed current opponent selection. Easy/Medium retain the ordinary play-call
+mixtures described above; the forced Razzle-Dazzle choice below has its own
+comparison policy. Hard learns only committed calls, not previews.
 Every suggestion is constrained to enabled engine IDs; an empty legal set fails
 clearly. The web API returns HTTP 409 with a stable message when it cannot prepare
 a legal coached turn. Conversions, tosses, kick receptions, turnovers, penalties
@@ -253,6 +255,48 @@ Audit JSON includes `behavior_profile` and `audit_profile` for each game. The
 separate `coaching-audit-v1` profile names replay and advisory concentration
 thresholds; it never constrains legal play usage.
 
+### Razzle-Dazzle result choices
+
+Version 11 compares all engine-offered Razzle-Dazzle cells for Easy, Medium,
+Hard and development chart coaches. The offense maximizes and the defense
+minimizes the existing Hard field/score utility described above; exact ties keep
+legal menu order. This replaces the former first-legal-cell fallback. It does not
+change ordinary Easy/Medium call mixtures or fourth-down guidance.
+
+Only the already revealed comparison dice and declared defensive formation are
+fixed. The evaluator uses isolated engine rollouts with ordinary physical-face
+dice distributions. All candidates share independent hypothetical streams derived
+from the public observation, never a gameplay or coaching seed. Each gets equal
+samples, capped at 32; a comparison uses at most 288 total rollouts (16 each for
+18 choices). Normal priority, supplemental B/QR/QT/Option branches, penalties and
+turnover/recovery procedures remain engine rules. Follow-up decisions use frozen
+v10 legal preferences. Evaluation stops after that action; it does not simulate a
+later conversion, kickoff or another snap. A called two-point try retains its
+actual 0/2-point phase and has no residual scrimmage field preference. A fumble's
+sampled recovery is not a guaranteed possession change; actual receiving spot
+can make a fourth-down loss preferable to an interception. No token always wins.
+
+Internal diagnostics report sample count, failed samples, estimated mean and
+standard error. These are estimates, not exact distributions or confidence in the
+underlying heuristic; standard error measures only sample variation, and is
+unknown with one sample. Any failed rollout invalidates the whole comparison,
+without dropping failures or renormalizing successes. The legal fallback is
+flagged. At most 128 comparisons are cached. The exhaustive rational enumerator
+remains an explicit library/test oracle and is not used for normal requests.
+
+QT, B, QR and Option remain gambles. A probability-weighted estimate from the
+available charts does **not** reveal which future roll or result will occur.
+The computer commits its choice before the fresh gameplay roll. Pending labels
+retain the unresolved chart symbol; hypothetical utility values are private
+coaching diagnostics, never projected actual results in the game view. Repeated
+previews consume no gameplay dice, commands or call history, and changing an
+unobserved future dice stream cannot change the same observed choice.
+
+Frozen v1–v10 policies retain their former decisions and streams; normal
+difficulty loads use the current revision. Ordinary 32-sample play-call analysis
+retains its earlier one-action continuation defaults; this forced-choice
+comparison is not a recursive search for optimal future play.
+
 ### Shared policy interface and exact-analysis foundation
 
 All coaches declare an analysis-fallback flag and a committed-call hook; baseline
@@ -265,7 +309,8 @@ builder; the old private name remains a compatibility alias only.
 
 `coaching_probabilities.analyze_play` is an intentional **library-only exact
 chart-analysis foundation**, exercised with synthetic tests. It is not called by
-a current policy or presented as complete-game odds. Hard instead uses the bounded
-real-engine sampled evaluator so pending penalties/returns can settle. The exact
+a current policy or presented as complete-game odds. Ordinary Hard play-call
+comparisons use the bounded real-engine sampled evaluator so pending penalties/
+returns can settle; v11 forced RZDZ choices use the separate shared rollout budget. The exact
 library keeps failed/unexplored mass explicit rather than pretending those
 branches are known football outcomes.
