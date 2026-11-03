@@ -1,0 +1,37 @@
+docs/chart-generator.md
+  s_cee2f5c7a51f19::t_21cddfa5f69e67 164-166
+docs/dev-notes/issue-tracker.md
+  s_cee2f5c7a51f19::t_39687a15010bad 8,10,19,586
+docs/dev-notes/issues/DATA/DATA-005.md
+  s_e06e375ba9891d::t_42e5bf4e802e75 1-29
+docs/dev-notes/milestone-34.md
+  s_cee2f5c7a51f19::t_7a4c4ca7ed50de 93-111
+scripts/run_local_season.py
+  s_e06e375ba9891d::t_dfad5f9662e1ef 26,28,41-53,173-178,189-215,226-236,524-525,594-609,633,653
+tests/test_local_season_runner.py
+  s_e06e375ba9891d::t_6261c66a4d6c05 452-507
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "3e699aaf2c2adfe4b1db99f5115f8ea7ef3af0ee",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    },
+    "s_e06e375ba9891d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f07-7008-7201-b15a-cd4a7dec87df",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
