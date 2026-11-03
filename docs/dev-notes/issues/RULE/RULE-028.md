@@ -38,3 +38,12 @@ Runtime behavior remains unavailable until the test-first implementation lands.
 --- 2026-11-01 ---
 Updated the API regression to complete the newly offered Razzle-Dazzle decision
 before asserting the final play log; tested in `427b42e`.
+
+--- 2026-11-03 ---
+Owner play-test question: a human-called Razzle-Dazzle completed without a human
+result prompt. Review confirmed the computer defense had the lower comparison
+total, so it owned the chart-cell choice. A selected supplemental result then
+required its normal further roll. This follows the approved chooser rule; a
+human offensive result prompt is required only when offense wins or ties.
+No gameplay implementation change or ticket-closure claim follows from this
+clarification. Private team names, cell values and traces are omitted.
