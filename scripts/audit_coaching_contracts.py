@@ -67,8 +67,9 @@ MUTATIONS = (
     Mutation(
         "replay loses recent history",
         "save_game",
-        "return result\n\n    def snap",
-        'self._coach._recent[("home", "offense")].clear()\n        return result\n\n    def snap',
+        "return result\n\n    def _finish_legacy_fumble_prefix",
+        'self._coach._recent[("home", "offense")].clear()\n'
+        "        return result\n\n    def _finish_legacy_fumble_prefix",
         "hard_history_replays_over_one_hundred",
     ),
     Mutation(

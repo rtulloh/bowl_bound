@@ -427,8 +427,12 @@ actual penalty enforcement and keeps penalty/defensive-return yards out of offen
   end zone is a safety. An own-end-zone fumble recovered by the fumbling team is a
   safety under VI-13(D)(iv), distinct from a return that never crosses its goal line.
   [Turnover details](turnovers.md) include return fouls and recovery chains.
-- Declining a prepared turnover penalty resumes its actual engine procedure,
-  without repeated chart rolls or a duplicate committed play. Own-recovery return
+- A fumble's recovery and required return/end-zone consequences finish before
+  the original penalty choice compares the completed result with enforcement.
+  The engine prepares those facts without committing state, points, statistics,
+  or timing. Declining applies that result without repeated recovery rolls;
+  accepting discards it. Interception penalties retain their explicit subsequent
+  interception choice. Neither path records a duplicate committed play. Own-recovery return
   fouls retain the original down and line to gain unless enforcement earns a first down.
 - Field goals are not offered from own 7 or closer (the hold would be outside
   the field); an invalid direct request is refused before rolling. A fourth-down

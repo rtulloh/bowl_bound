@@ -34,7 +34,14 @@ the chart column** it was printed in. After a penalty the session shows the choi
 A decision applies **exactly once**. An unknown or disabled choice is refused (422) and
 changes nothing. A decision with nothing pending is refused (409).
 
-Declining an interception/fumble reroll continues the real turnover procedure,
+For a fumble reroll, the engine resolves recovery, any permitted return, and any
+required end-zone or return-penalty choice **before** offering the original
+penalty decision. The decline option describes the completed possession, field
+position, or score. These prepared facts do not commit points, statistics, clock,
+or a play-log entry. Declining applies that same result; accepting discards it
+and enforces the selected penalty. Recovery dice are never rolled twice.
+
+Declining an interception reroll continues the real interception procedure,
 including any end-zone choice, with the original prepared cells and dice source.
 It does not reroll a lookup or record a second play. Variable yardage is resolved
 by the full-feature method before the decision. Genuinely unsupported results

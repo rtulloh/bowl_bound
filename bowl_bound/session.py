@@ -329,6 +329,8 @@ class _PendingDecision:
     turnover_resolution: TurnoverResolution | None = None
     turnover_location: int | None = None
     bounds_declaration: BoundsDeclaration | None = None
+    deferred_penalty: PreparedPlay | None = None
+    return_credit: int | None = None
 
 
 @dataclass(frozen=True)
@@ -376,6 +378,7 @@ class PlaySession:
         self._safety_free_kick = False
         self._hail_mary = False
         self._overtime = False
+        self._legacy_fumble_penalties = False
 
     @classmethod
     def new(
@@ -1011,7 +1014,7 @@ class PlaySession:
     ) -> PlayReport:
         """Apply a prepared chart result through the shared penalty/state path."""
         resolution = prepared.resolution
-        offense, defense = self._charts[field.possession], self._charts[field.possession.other]
+        offense = self._charts[field.possession]
         if hail_mary:
             prefix = f"{offense.name}: Hail Mary vs blank defense"
         elif resolution.razzle_dazzle:
@@ -1054,34 +1057,10 @@ class PlaySession:
                 yards=0,
                 no_elapsed_time=prepared.no_elapsed_time,
             )
-        if prepared.penalties:
-            pending_view = _pending_view(
-                prepared.penalties,
-                resolution,
-                field,
-                offense.name,
-                defense.name,
-                bounds_declaration=bounds_declaration,
-            )
-            if self._phase is SessionPhase.TWO_POINT_TRY and (
-                resolution.result.kind is ResultKind.TOUCHDOWN
-                or (
-                    resolution.result.kind is ResultKind.YARDS
-                    and _gain(resolution) >= field.yards_to_goal
-                )
-            ):
-                destination = "next overtime series" if self._overtime else "kickoff"
-                carry = tuple(
-                    PenaltyChoice(
-                        f"accept:{index}:kickoff",
-                        f"Keep the two points; carry {penalty.yards} yards to the {destination}",
-                        True,
-                    )
-                    for index, penalty in enumerate(prepared.penalties)
-                    if penalty.from_end_of_gain and penalty.source.team.value == "defense"
-                )
-                pending_view = replace(pending_view, choices=(*pending_view.choices, *carry))
-            self._pending = _PendingDecision(
+        if prepared.penalties and (
+            resolution.result.kind is not ResultKind.FUMBLE or self._legacy_fumble_penalties
+        ):
+            return self._offer_penalty_decision(
                 prepared,
                 called,
                 defensive,
@@ -1089,24 +1068,8 @@ class PlaySession:
                 before,
                 trace,
                 prefix,
-                pending_view,
-                dice=source,
+                source,
                 bounds_declaration=bounds_declaration,
-            )
-            return PlayReport(
-                len(self._log) + 1,
-                True,
-                True,
-                "penalty_pending",
-                resolution.result.yards,
-                _reported_play_label(resolution, resolved=False),
-                _reported_play_label(resolution, resolved=True),
-                _reported_defense_label(resolution, defensive),
-                before,
-                before,
-                f"{prefix} - penalty decision required.",
-                None,
-                trace,
             )
         return self._apply_live_result(
             prepared,
@@ -1118,6 +1081,84 @@ class PlaySession:
             prefix,
             source,
             bounds_declaration=bounds_declaration,
+            deferred_penalty=prepared if prepared.penalties else None,
+        )
+
+    def _offer_penalty_decision(
+        self,
+        prepared: PreparedPlay,
+        called: Play,
+        defensive: DefenseCall,
+        field: FieldState,
+        before: StateView,
+        trace: tuple[TraceEntry, ...],
+        prefix: str,
+        source: DiceSource,
+        *,
+        bounds_declaration: BoundsDeclaration | None = None,
+        turnover: TurnoverResolution | None = None,
+        return_credit: int | None = None,
+    ) -> PlayReport:
+        """Expose prepared alternatives; an optional turnover is already complete."""
+        resolution = prepared.resolution
+        offense, defense = self._charts[field.possession], self._charts[field.possession.other]
+        pending_view = _pending_view(
+            prepared.penalties,
+            resolution,
+            field,
+            offense.name,
+            defense.name,
+            bounds_declaration=bounds_declaration,
+            turnover=turnover,
+        )
+        if self._phase is SessionPhase.TWO_POINT_TRY and (
+            resolution.result.kind is ResultKind.TOUCHDOWN
+            or (
+                resolution.result.kind is ResultKind.YARDS
+                and _gain(resolution) >= field.yards_to_goal
+            )
+        ):
+            destination = "next overtime series" if self._overtime else "kickoff"
+            carry = tuple(
+                PenaltyChoice(
+                    f"accept:{index}:kickoff",
+                    f"Keep the two points; carry {penalty.yards} yards to the {destination}",
+                    True,
+                )
+                for index, penalty in enumerate(prepared.penalties)
+                if penalty.from_end_of_gain and penalty.source.team.value == "defense"
+            )
+            pending_view = replace(pending_view, choices=(*pending_view.choices, *carry))
+        self._pending = _PendingDecision(
+            prepared,
+            called,
+            defensive,
+            field,
+            before,
+            trace,
+            prefix,
+            pending_view,
+            dice=source,
+            bounds_declaration=bounds_declaration,
+            turnover_resolution=turnover,
+            return_credit=return_credit,
+        )
+        return PlayReport(
+            len(self._log) + 1,
+            True,
+            True,
+            "penalty_pending",
+            resolution.result.yards,
+            _reported_play_label(resolution, resolved=False),
+            _reported_play_label(resolution, resolved=True),
+            _reported_defense_label(resolution, defensive),
+            before,
+            before,
+            f"{prefix} - penalty decision required.",
+            None,
+            (*trace, *(_turnover_trace_entry(entry) for entry in turnover.trace))
+            if turnover is not None
+            else trace,
         )
 
     def _apply_live_result(
@@ -1132,6 +1173,7 @@ class PlaySession:
         source: DiceSource,
         *,
         bounds_declaration: BoundsDeclaration | None = None,
+        deferred_penalty: PreparedPlay | None = None,
     ) -> PlayReport:
         """Continue an already prepared play; never repeat lookup after a decline."""
         resolution = _live_resolution(prepared.resolution, bounds_declaration)
@@ -1201,9 +1243,38 @@ class PlaySession:
             resolution = replace(resolution, result=replace(resolution.result, yards=location))
             turnover = replace(turnover, trace=(*location_trace, *turnover.trace))
             return self._apply_turnover(
-                turnover, resolution, called, defensive, before, trace, prefix, dice=source
+                turnover,
+                resolution,
+                called,
+                defensive,
+                before,
+                trace,
+                prefix,
+                dice=source,
+                deferred_penalty=deferred_penalty,
             )
         return self._apply_prepared(resolution, called, defensive, field, before, trace, prefix)
+
+    def _upgrade_pending_fumble(self) -> bool:
+        """Offer a no-gamble recovery step for a legacy save, without drawing dice."""
+        pending = self._pending
+        if (
+            pending is None
+            or pending.turnover
+            or not pending.prepared.penalties
+            or pending.prepared.resolution.result.kind is not ResultKind.FUMBLE
+            or pending.turnover_resolution is not None
+        ):
+            return False
+        self._pending = replace(
+            pending,
+            view=replace(
+                pending.view,
+                choices=(PenaltyChoice("fumble:resolve", "Resolve fumble recovery", True),),
+                decision_outcomes=(),
+            ),
+        )
+        return True
 
     def decide(self, choice: str, *, dice: DiceSource | None = None) -> PlayReport:
         """Apply exactly one enabled choice from the current penalty decision."""
@@ -1277,6 +1348,20 @@ class PlaySession:
             raise InvalidDecisionError("unknown penalty decision")
         if not selected.enabled:
             raise InvalidDecisionError(selected.reason or "penalty decision cannot be selected")
+        if choice == "fumble:resolve":
+            self._pending = None
+            return self._apply_live_result(
+                pending.prepared,
+                pending.called,
+                pending.defensive,
+                pending.field,
+                pending.before,
+                pending.trace,
+                pending.prefix,
+                pending.dice or self._dice,
+                bounds_declaration=pending.bounds_declaration,
+                deferred_penalty=pending.prepared,
+            )
         if pending.turnover and pending.turnover_resolution is not None:
             turnover = pending.turnover_resolution
             if turnover.end_zone_recovery is not None:
@@ -1310,6 +1395,7 @@ class PlaySession:
                     pending.trace,
                     pending.prefix,
                     dice=pending.dice,
+                    deferred_penalty=pending.deferred_penalty,
                 )
             facts = turnover.return_facts
             if facts is None:
@@ -1373,6 +1459,7 @@ class PlaySession:
                 pending.prefix,
                 dice=pending.dice,
                 return_credit=return_credit,
+                deferred_penalty=pending.deferred_penalty,
             )
         if pending.turnover:
             if pending.dice is None:
@@ -1402,6 +1489,18 @@ class PlaySession:
             )
         if choice == "decline":
             self._pending = None
+            if pending.turnover_resolution is not None:
+                return self._apply_turnover(
+                    pending.turnover_resolution,
+                    pending.prepared.resolution,
+                    pending.called,
+                    pending.defensive,
+                    pending.before,
+                    pending.trace,
+                    pending.prefix,
+                    dice=pending.dice,
+                    return_credit=pending.return_credit,
+                )
             return self._apply_live_result(
                 pending.prepared,
                 pending.called,
@@ -1457,7 +1556,12 @@ class PlaySession:
             pending.defensive,
             pending.before,
             self._state_view(state),
-            pending.trace,
+            (
+                *pending.trace,
+                *(_turnover_trace_entry(entry) for entry in pending.turnover_resolution.trace),
+            )
+            if pending.turnover_resolution is not None
+            else pending.trace,
             None,
             description,
             outcome="penalty_accepted",
@@ -1551,6 +1655,7 @@ class PlaySession:
         *,
         dice: DiceSource | None = None,
         return_credit: int | None = None,
+        deferred_penalty: PreparedPlay | None = None,
     ) -> PlayReport:
         """Record one completed turnover sequence without presentation-layer rules."""
         if turnover.end_zone_recovery is not None:
@@ -1586,6 +1691,7 @@ class PlaySession:
                 dice=dice,
                 turnover=True,
                 turnover_resolution=turnover,
+                deferred_penalty=deferred_penalty,
             )
             return PlayReport(
                 len(self._log) + 1,
@@ -1636,6 +1742,7 @@ class PlaySession:
                 dice=dice,
                 turnover=True,
                 turnover_resolution=turnover,
+                deferred_penalty=deferred_penalty,
             )
             return PlayReport(
                 len(self._log) + 1,
@@ -1651,6 +1758,24 @@ class PlaySession:
                 f"{prefix} - return penalty decision required.",
                 None,
                 (*trace, *(_turnover_trace_entry(entry) for entry in turnover.trace)),
+            )
+        if deferred_penalty is not None:
+            if dice is None:
+                raise RuntimeError("prepared fumble penalty is missing its dice source")
+            original = FieldState(
+                Possession(before.possession), before.yards_to_goal, before.down, before.yards_to_go
+            )
+            return self._offer_penalty_decision(
+                replace(deferred_penalty, resolution=resolution),
+                called,
+                defensive,
+                original,
+                before,
+                trace,
+                prefix,
+                dice,
+                turnover=turnover,
+                return_credit=return_credit,
             )
         self._field = turnover.state
         self._award_delta(turnover.points)
@@ -2049,6 +2174,7 @@ def _pending_view(
     defense_name: str,
     *,
     bounds_declaration: BoundsDeclaration | None = None,
+    turnover: TurnoverResolution | None = None,
 ) -> PendingDecisionView:
     """Expose alternatives without attempting an unsupported result transition."""
     first = penalties[0]
@@ -2084,7 +2210,12 @@ def _pending_view(
     choices.append(
         PenaltyChoice(
             "decline",
-            f"Decline penalties: {_penalty_result_text(decline_resolution, field)}",
+            "Decline penalties: "
+            + (
+                _completed_fumble_text(turnover, offense_name, defense_name, field.possession)
+                if turnover is not None
+                else _penalty_result_text(decline_resolution, field)
+            ),
             decline_enabled,
             decline_reason,
         )
@@ -2096,7 +2227,7 @@ def _pending_view(
         offered,
         chooser_side=side.value,
         decision_outcomes=_penalty_decision_outcomes(
-            offered, penalties, resolution, decline_resolution, field
+            offered, penalties, resolution, decline_resolution, field, turnover=turnover
         ),
     )
 
@@ -2107,6 +2238,8 @@ def _penalty_decision_outcomes(
     resolution: PlayResolution,
     decline_resolution: PlayResolution,
     field: FieldState,
+    *,
+    turnover: TurnoverResolution | None = None,
 ) -> tuple[DecisionOutcome, ...]:
     """Project enabled penalty options using the same pure engine transitions as play."""
     outcomes: list[DecisionOutcome] = []
@@ -2114,7 +2247,14 @@ def _penalty_decision_outcomes(
         if not choice.enabled:
             continue
         if choice.id == "decline":
-            outcomes.append(_declined_play_outcome(choice.id, decline_resolution, field))
+            if turnover is not None:
+                outcomes.append(
+                    _field_decision_outcome(choice.id, turnover.state)
+                    if turnover.state is not None
+                    else _scoring_decision_outcome(choice.id, turnover)
+                )
+            else:
+                outcomes.append(_declined_play_outcome(choice.id, decline_resolution, field))
             continue
         _, index_text, spot = choice.id.split(":")
         penalty = penalties[int(index_text)]
@@ -2255,6 +2395,27 @@ def _scoring_decision_outcome(choice_id: str, turnover: TurnoverResolution) -> D
     if turnover.points[1]:
         return DecisionOutcome(choice_id, kind, scoring_side="away")
     return DecisionOutcome(choice_id, DecisionOutcomeKind.UNRESOLVED)
+
+
+def _completed_fumble_text(
+    turnover: TurnoverResolution,
+    offense_name: str,
+    defense_name: str,
+    offense: Possession,
+) -> str:
+    """Describe completed recovery facts without applying state or scoring."""
+    names = {offense: offense_name, offense.other: defense_name}
+    if turnover.state is not None:
+        field = turnover.state
+        return (
+            f"fumble: {turnover.outcome.value.replace('_', ' ')}; "
+            f"{names[field.possession]} possession, down {field.down}, "
+            f"{field.yards_to_go} yards to go, {field.yards_to_goal} yards from goal"
+        )
+    scoring = _scoring_decision_outcome("decline", turnover)
+    if scoring.scoring_side is None:
+        raise RuntimeError("completed fumble requires a field position or scoring outcome")
+    return f"fumble: {scoring.kind.value} for {names[Possession(scoring.scoring_side)]}"
 
 
 def _penalty_result_text(resolution: PlayResolution, field: FieldState) -> str:

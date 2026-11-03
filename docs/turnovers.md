@@ -58,8 +58,11 @@ and kicks as described in [the rules profile](rules-profile.md).
 
 ## Penalties and continuation
 
-Declining a scrimmage penalty resumes its already-prepared turnover procedure
-without rerolling lookups or committing a duplicate play.
+A scrimmage fumble's recovery and required return/end-zone consequences finish
+before the original penalty accept/decline choice is offered. Declining applies
+those prepared facts without rerolling recovery; accepting discards them.
+Interception penalties continue with the interception choice after a decline.
+Neither path rerolls lookups or commits a duplicate play.
 
 An Interception Return penalty rerolls that column and offers the offended team
 accept/decline. Defensive fouls are marked from the return end; an offensive foul
@@ -77,7 +80,9 @@ Synthetic suites: `test_turnovers.py`, `test_session_turnovers.py`,
 `test_statistics.py`, `test_return_fumble_series.py` and `test_save_game.py`.
 No historical charts are required.
 
-The corrected return-series rules use replay profile `bowl-bound-m21-v1`. Saves
-from the previous `bowl-bound-m19-v1` profile are rejected as incompatible before
-team loading, rather than replayed under different down rules. No automatic
-migration or deletion of private saves is performed.
+Current saves use replay profile `bowl-bound-m33-v1`. Profiles `m21-v1` and
+`m22-v1` remain readable with their recorded historical command ordering. A save
+paused before fumble recovery offers a required recovery step without drawing
+dice during loading; see [save compatibility](saves.md#schema-and-compatibility).
+The earlier `bowl-bound-m19-v1` profile remains rejected before team loading.
+Private saves are never deleted or overwritten by migration.

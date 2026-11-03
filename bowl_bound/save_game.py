@@ -39,8 +39,8 @@ from .team_csv import DEFENSE_CHART_MARKERS, TeamFileMetadata
 from .timing import Clock
 
 SCHEMA_VERSION = 1
-ENGINE_PROFILE = "bowl-bound-m22-v1"
-_SUPPORTED_ENGINE_PROFILES = {"bowl-bound-m21-v1", ENGINE_PROFILE}
+ENGINE_PROFILE = "bowl-bound-m33-v1"
+_SUPPORTED_ENGINE_PROFILES = {"bowl-bound-m21-v1", "bowl-bound-m22-v1", ENGINE_PROFILE}
 MAX_SAVE_BYTES = 2 * 1024 * 1024
 MAX_COMMANDS = 10_000
 MAX_ROLLS = 50_000
@@ -307,6 +307,7 @@ class SavedGame:
         self._charts = {"home": home, "away": away}
         self._rosters: tuple[Roster | None, Roster | None] = (None, None)
         self._config = dict(config)
+        self._legacy_fumble_view: SessionView | RegulationView | None = None
         self._config.setdefault("coach_seed", randbits(63))
         if self.difficulty is not None:
             from .coaching_profiles import CURRENT_DIFFICULTY_VERSION
@@ -607,6 +608,12 @@ class SavedGame:
 
     def _execute(self, operation: str, arguments: list[str]) -> PlayReport | None:
         record = {"operation": operation, "arguments": arguments, "error": None}
+        session = (
+            self._engine._session if isinstance(self._engine, RegulationGame) else self._engine
+        )
+        session._legacy_fumble_penalties = len(self._commands) < self._config.get(
+            "legacy_fumble_commands", 0
+        )
         before = self._engine.view()
         roll_count, position = len(self._tape.rolls), self._tape.position
         try:
@@ -639,10 +646,12 @@ class SavedGame:
                 or self._engine.view() != before
             ):
                 self._commands.append(record)
+                self._finish_legacy_fumble_prefix()
             raise
         # The engine command is authoritative; derived history must not prevent
         # its journal entry after state/dice have already advanced.
         self._commands.append(record)
+        self._finish_legacy_fumble_prefix()
         if operation == "snap" and result is not None and result.supported:
             from .coaching_session import observe_policy
 
@@ -653,6 +662,17 @@ class SavedGame:
                 observation=observe_policy(before, offense_side, self._coach.version),
             )
         return result
+
+    def _finish_legacy_fumble_prefix(self) -> None:
+        """Keep historical rolls exact, then expose current recovery ordering."""
+        if len(self._commands) != self._config.get("legacy_fumble_commands", 0):
+            return
+        session = (
+            self._engine._session if isinstance(self._engine, RegulationGame) else self._engine
+        )
+        before = self.view()
+        if session._upgrade_pending_fumble():
+            self._legacy_fumble_view = before
 
     def snap(self, play: str, formation: str) -> PlayReport:
         return self._run("snap", [play, formation])
@@ -699,11 +719,17 @@ def _dumps_game(game: SavedGame) -> str:
 
 def _validate_config(config: Any) -> None:
     optional = (
-        {"coach_seed", "coach_policy", "difficulty", "advanced_ii"} & config.keys()
+        {"coach_seed", "coach_policy", "difficulty", "advanced_ii", "legacy_fumble_commands"}
+        & config.keys()
         if isinstance(config, dict)
         else set()
     )
     _keys(config, {"seed", "mode", "start_yards_to_goal", "game_type", "clock"} | optional)
+    if "legacy_fumble_commands" in optional and (
+        type(config["legacy_fumble_commands"]) is not int
+        or not 0 <= config["legacy_fumble_commands"] <= MAX_COMMANDS
+    ):
+        _fail()
     if "coach_seed" in optional and (
         type(config["coach_seed"]) is not int or not 0 <= config["coach_seed"] <= 2**63 - 1
     ):
@@ -860,6 +886,11 @@ def _validate(data: Any) -> None:
                 _fail()
     if not isinstance(data["commands"], list) or len(data["commands"]) > MAX_COMMANDS:
         _fail()
+    if "legacy_fumble_commands" in data["config"] and (
+        data["engine_profile"] != ENGINE_PROFILE
+        or data["config"]["legacy_fumble_commands"] > len(data["commands"])
+    ):
+        _fail()
     for record in data["commands"]:
         _keys(record, {"operation", "arguments", "error"})
         operation, arguments = record["operation"], record["arguments"]
@@ -942,6 +973,8 @@ def loads_game(
             if preserve_development_policy
             else _current_difficulty_config(data["config"])
         )
+        if data["engine_profile"] != ENGINE_PROFILE:
+            config = {**config, "legacy_fumble_commands": len(data["commands"])}
         game = SavedGame(
             home,
             away,
@@ -972,6 +1005,8 @@ def loads_game(
             _legacy_m21_post_m27_view_digest(view),
             _legacy_m27_view_digest(view, getattr(game._engine, "_pending_timing_seconds", None)),
         }
+        if data["engine_profile"] != ENGINE_PROFILE and game._legacy_fumble_view is not None:
+            valid_digests.add(_view_digest(game._legacy_fumble_view))
         if legacy_halftime is not None:
             valid_digests.update(
                 {

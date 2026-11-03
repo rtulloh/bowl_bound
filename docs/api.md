@@ -20,7 +20,19 @@ null. Create/get/action/coached/load responses use the same serialization. Names
 are illustrative labels, not player statistics. Phrase selection is stable for
 the report number and consumes no randomness. Saves do not contain commentary,
 highlights, or rosters. Load may refresh names from current installed rosters.
-The save schema, semantic digest and engine profile are unchanged.
+Commentary and highlights do not change save replay semantics.
+
+For a scrimmage penalty followed by a fumble, the engine completes recovery and
+any required return/end-zone choices before exposing the original accept/decline
+controls. `pending.decision_outcomes` then contains the known decline field or
+scoring result, and the decline label describes it. Pending reports include the
+actual recovery rolls in their structured trace. The view's committed field,
+score, statistics, clock and log advance only after the original penalty choice.
+Clients display these backend facts without predicting recovery or enforcement.
+Older saves paused before a fumble's recovery expose a single engine-owned
+`fumble:resolve` pending choice first. Selecting it uses the ordinary decision
+endpoint; loading and inspecting that pending step consume no new dice. Current
+saves use replay profile `bowl-bound-m33-v1`; the JSON schema remains version 1.
 
 ## Engine-owned play bounds declarations
 

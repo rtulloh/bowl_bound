@@ -40,7 +40,8 @@ from tests.test_special_teams import penalty, procedure, special_chart, with_rol
         (
             NormalizedCell(ResultKind.FUMBLE, provenance(), yards=3),
             65,
-            "fumble 3 yards downfield; recovery still to be resolved",
+            "fumble: defensive recovery; Away possession, down 1, "
+            "10 yards to go, 38 yards from goal",
         ),
     ],
 )
@@ -55,7 +56,9 @@ def test_scrimmage_decline_names_prepared_result_without_committing_or_rolling(
     )
     sentinel = OffensiveRoll(3, 0, 0)
     dice = ScriptedDice(
-        [OffensiveRoll(1, 0, 0), DefensiveRoll(1, 0), OffensiveRoll(2, 0, 0), sentinel]
+        [OffensiveRoll(1, 0, 0), DefensiveRoll(1, 0), OffensiveRoll(2, 0, 0)]
+        + ([OffensiveRoll(3, 0, 0)] if cell.kind is ResultKind.FUMBLE else [])
+        + [sentinel]
     )
     before = session.view().state
     session.snap("1", "A", dice=dice)

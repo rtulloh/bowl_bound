@@ -101,6 +101,63 @@ Validation:
 
 No skips or warnings in these checks. The milestone-wide gate remains pending.
 
+## RULE-041 — Recovery before penalty comparison
+
+Before implementation, reviewed Paydirt's `tests/test_fumble.py` and
+`tests/test_flagged_play_timing.py`. Adapt the synthetic recovery/possession
+matrix and exactly-once flagged-play timing checks. Do not reuse Paydirt's
+recovery ranges, NFL clock charges, return/scoring exceptions, or resolver code.
+Bowl Bound's existing turnover resolver supplies the complete prepared facts;
+only the session's decision ordering changes.
+
+The session now resolves fumble recovery and any required end-zone/return-foul
+consequences before offering the original penalty choice. The engine retains
+the completed turnover and return-yardage credit, exposes its known field or
+scoring projection, and commits it once on decline. Accepting enforcement
+discards the prepared result. Pending views do not alter the field, ledger,
+statistics, clock, or play log. Every actually consulted recovery/return roll
+appears once in both pending and final traces.
+
+The ordering change requires replay profile `bowl-bound-m33-v1`. Old `m21-v1` and
+`m22-v1` journals replay their validated historical command prefix with the old
+order; subsequent commands use the corrected order. A legacy save paused before
+recovery exposes only `fumble:resolve` until recovery and its consequences are
+known. Loading/resaving never draws fresh dice. The normal decision command
+records that recovery step, and later saves preserve both the historical prefix
+and current continuation. Strict prefix validation and a forged-old-digest
+regression prevent the compatibility path from accepting a different final
+state. Unsupported `m19-v1` saves remain rejected.
+
+Changed existing expectations are limited to the scrimmage fumble decline label
+(completed recovery/possession instead of unresolved recovery) and three assertions
+of the current replay-profile identifier. The label fixture now supplies its
+recovery roll explicitly before the unchanged sentinel assertion. No assertion
+was weakened. Runtime changes remain in already-allowlisted `session.py` and
+`save_game.py`; no new module or public sample is staged. Reviewed the exact
+runtime manifest and preserved all sample hashes.
+
+Validation:
+
+- Before implementation, **22 expected failures** in the new fumble matrix:
+  absent recovery traces, unknown decline projections and too few recorded dice.
+  Three additional legacy-journal regressions then reproduced pending/accepted
+  replay failure and the obsolete profile identifier before compatibility work.
+- `.venv/bin/python -m pytest tests/test_fumble_penalty_order.py -q`:
+  **47 passed in 2.28s**. Covers both possessions, offensive/defensive recovery,
+  fourth-down consequences, touchdowns/safeties, nested return fouls, prepared
+  return-yardage credit, timing/statistics, sentinel dice, current/legacy replay,
+  API transport and CLI controls.
+- `.venv/bin/python -m pytest tests/test_session*.py tests/test_turnovers.py tests/test_return_fumble_series.py tests/test_penalty_choice_labels.py tests/test_coaching_decisions_v8.py tests/test_save_game.py tests/test_regulation.py tests/test_fumble_penalty_order.py tests/test_api.py tests/test_api_coaching.py tests/test_cli.py tests/test_release_metadata.py tests/test_commentary_replay.py tests/test_coaching_invariants.py -q`:
+  **450 passed in 44.73s**; the four subsequently added API/CLI/return-credit cases
+  pass in the focused run above.
+- `.venv/bin/python scripts/audit_coaching_contracts.py`: clean baseline passes,
+  **17/17 faults detected** after updating its codec-helper mutation target.
+- `.venv/bin/python -m pytest tests/test_commentary_replay.py tests/test_release_metadata.py tests/test_issue_tracker.py -q`:
+  **28 passed in 6.99s**.
+- Ruff lint/format passed; **531 files** formatted. No skips or warnings.
+
+Owner play-test confirmation and milestone-wide regression remain pending.
+
 ## DEV-060 — Stale sample metadata hashes (2026-11-02)
 
 Consulted local Paydirt `.github/workflows/release.yml` and

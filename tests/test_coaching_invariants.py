@@ -1,9 +1,11 @@
 """AI-010: exact, synthetic coaching contracts independent of football randomness."""
 
+from collections.abc import Sequence
 from copy import deepcopy
 from dataclasses import replace
 from math import exp
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -19,6 +21,7 @@ from bowl_bound.models import (
     PenaltyTeam,
     Play,
     ResultKind,
+    TeamChart,
 )
 from bowl_bound.save_game import GameRevisionConflict, SavedGame, dumps_game, loads_game
 from bowl_bound.session import InvalidDecisionError
@@ -36,17 +39,19 @@ class RecordedRandom:
     def __init__(self) -> None:
         self.calls: list[tuple[tuple[str, ...], tuple[float, ...]]] = []
 
-    def choices(self, population, weights, *, k):
+    def choices(self, population: Sequence[str], weights: Sequence[float], *, k: int) -> list[str]:
         assert k == 1
         self.calls.append((tuple(population), tuple(weights)))
         return [population[0]]
 
 
-def coach(mode: str = "hard", **kwargs) -> DifficultyCoach:
+def coach(mode: str = "hard", **kwargs: Any) -> DifficultyCoach:
     return DifficultyCoach(31, team_chart("Home"), team_chart("Away"), mode, **kwargs)
 
 
-def game(*, tier="hard", teams=None, **kwargs) -> SavedGame:
+def game(
+    *, tier: str = "hard", teams: tuple[TeamChart, TeamChart] | None = None, **kwargs: Any
+) -> SavedGame:
     return SavedGame.new(
         *(teams or charts()),
         home_id="2002/home",
@@ -72,7 +77,7 @@ def fast_analysis(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
 
-def test_hard_previews_and_rejected_steps_preserve_all_history(fast_analysis) -> None:
+def test_hard_previews_and_rejected_steps_preserve_all_history(fast_analysis: None) -> None:
     saved = game()
     saved.snap("1", "A")
     before = saved_facts(saved), history(saved._coach), deepcopy(saved._charts)
@@ -96,7 +101,9 @@ def test_real_hard_engine_analysis_preserves_live_game_sources(human: str) -> No
     assert (saved_facts(saved), history(saved._coach), saved._charts) == before
 
 
-def test_hard_history_replays_over_one_hundred_real_snaps_and_possessions(fast_analysis) -> None:
+def test_hard_history_replays_over_one_hundred_real_snaps_and_possessions(
+    fast_analysis: None,
+) -> None:
     incomplete = NormalizedCell(ResultKind.INCOMPLETE, provenance())
     teams = tuple(
         replace(t, offense=team_chart(t.name, plays={Play.SIX: incomplete}).offense)
@@ -145,7 +152,9 @@ def test_hard_history_replays_over_one_hundred_real_snaps_and_possessions(fast_a
 
 @pytest.mark.parametrize("tier", ["easy", "medium", "hard"])
 @pytest.mark.parametrize("human,calls", [("home", ("1", "9")), ("away", ("A", "F"))])
-def test_all_tiers_choose_before_the_hidden_human_input(tier, human, calls, fast_analysis) -> None:
+def test_all_tiers_choose_before_the_hidden_human_input(
+    tier: str, human: str, calls: tuple[str, str], fast_analysis: None
+) -> None:
     results = [game(tier=tier)._coach_step_with_choice(human, call) for call in calls]
     assert results[0][3] == results[1][3]
     assert all(result[0].supported for result in results)
@@ -153,7 +162,9 @@ def test_all_tiers_choose_before_the_hidden_human_input(tier, human, calls, fast
 
 @pytest.mark.parametrize("tier", ["easy", "medium", "hard"])
 @pytest.mark.parametrize("pending", ["penalty", "conversion", "overtime"])
-def test_each_tier_resumes_pending_engine_procedures(tier, pending, fast_analysis) -> None:
+def test_each_tier_resumes_pending_engine_procedures(
+    tier: str, pending: str, fast_analysis: None
+) -> None:
     teams = charts(gain=100 if pending == "conversion" else 0)
     options = {}
     if pending == "penalty":
@@ -232,7 +243,7 @@ def test_each_tier_resumes_pending_engine_procedures(tier, pending, fast_analysi
     ],
 )
 def test_every_coaching_branch_preserves_game_dice_tape_charts_and_history(
-    tier, method, changes, fast_analysis
+    tier: str, method: str, changes: dict[str, Any], fast_analysis: None
 ) -> None:
     saved = game(tier=tier)
     before = saved_facts(saved), deepcopy(saved._charts), history(saved._coach)
@@ -249,7 +260,7 @@ def test_every_coaching_branch_preserves_game_dice_tape_charts_and_history(
     assert (saved_facts(saved), saved._charts, history(saved._coach)) == before
 
 
-def test_estimate_cache_is_lru_and_retains_hit_identity(fast_analysis) -> None:
+def test_estimate_cache_is_lru_and_retains_hit_identity(fast_analysis: None) -> None:
     computer = coach()
     computer.behavior = replace(computer.behavior, cache_entries=2)
     first, second, third = (observation(distance=i, special=()) for i in (7, 8, 9))
@@ -266,7 +277,7 @@ def test_estimate_cache_is_lru_and_retains_hit_identity(fast_analysis) -> None:
     "role,side,play,defense", [("offense", "home", "1", "F"), ("defense", "away", "9", "A")]
 )
 def test_opponent_counts_are_part_of_cache_identity(
-    role, side, play, defense, fast_analysis
+    role: str, side: str, play: str, defense: str, fast_analysis: None
 ) -> None:
     computer = coach()
     obs = observation(special=())
@@ -278,7 +289,9 @@ def test_opponent_counts_are_part_of_cache_identity(
 
 
 @pytest.mark.parametrize("human", ["home", "away"])
-def test_hard_analysis_fallback_reaches_private_plan_and_resets(human, monkeypatch) -> None:
+def test_hard_analysis_fallback_reaches_private_plan_and_resets(
+    human: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
     saved = game()
     monkeypatch.setattr(
         DifficultyCoach,
@@ -298,7 +311,7 @@ def test_hard_analysis_fallback_reaches_private_plan_and_resets(human, monkeypat
 
 
 @pytest.mark.parametrize("role", ["offense", "defense"])
-def test_exact_exploration_exploitation_mixture(role, monkeypatch) -> None:
+def test_exact_exploration_exploitation_mixture(role: str, monkeypatch: pytest.MonkeyPatch) -> None:
     computer = coach()
     rng = RecordedRandom()
     monkeypatch.setattr(computer, "_random", lambda obs, role: rng)
@@ -318,7 +331,9 @@ def test_exact_exploration_exploitation_mixture(role, monkeypatch) -> None:
 
 
 @pytest.mark.parametrize("symbolic", [False, True])
-def test_medium_exact_group_tilt_and_symbolic_fallback(symbolic, monkeypatch) -> None:
+def test_medium_exact_group_tilt_and_symbolic_fallback(
+    symbolic: bool, monkeypatch: pytest.MonkeyPatch
+) -> None:
     run_cell = NormalizedCell(ResultKind.BREAKAWAY, provenance()) if symbolic else yards(5)
     passing_cell = NormalizedCell(ResultKind.BREAKAWAY, provenance()) if symbolic else yards(1)
     home = team_chart(
@@ -339,7 +354,9 @@ def test_medium_exact_group_tilt_and_symbolic_fallback(symbolic, monkeypatch) ->
 
 
 @pytest.mark.parametrize("resumed", [False, True])
-def test_cli_keeps_one_coach_for_all_commands(tmp_path: Path, monkeypatch, resumed) -> None:
+def test_cli_keeps_one_coach_for_all_commands(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, resumed: bool
+) -> None:
     teams = charts()
     for chart in teams:
         write_team(tmp_path, chart)
@@ -348,13 +365,13 @@ def test_cli_keeps_one_coach_for_all_commands(tmp_path: Path, monkeypatch, resum
     created = []
     original = DifficultyCoach.__init__
 
-    def record(self, *args, **kwargs):
+    def record(self, *args: Any, **kwargs: Any) -> None:
         original(self, *args, **kwargs)
         created.append(self)
 
     monkeypatch.setattr(DifficultyCoach, "__init__", record)
 
-    def run(terminal):
+    def run(terminal: TerminalGame) -> int:
         identity = terminal.game._coach
         for _ in range(8):
             terminal.public_view()
