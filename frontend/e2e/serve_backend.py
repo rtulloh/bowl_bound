@@ -49,7 +49,13 @@ def main() -> None:
             encoding="utf-8",
         )
     for label in ("Home", "Away"):
-        write_team(seasons, team_chart("Guidance " + label, season=2002, offense=0, defense=0))
+        chart = replace(
+            team_chart("Guidance " + label, season=2002, offense=0, defense=0),
+            special_teams=special_chart(
+                label, kickoff=yards(40), kickoff_return=yards(10)
+            ).special_teams,
+        )
+        write_team(seasons, chart)
     install_samples(seasons)
     uvicorn.run(
         create_app(seasons, ROOT / "frontend" / "dist"),

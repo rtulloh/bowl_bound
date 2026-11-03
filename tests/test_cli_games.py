@@ -153,6 +153,9 @@ def test_terminal_pending_interception_resume_matches_api_exact_future(
     def expected_api_view() -> dict:
         view = app.game.view()
         expected = jsonable_encoder(view)
+        expected["fourth_down_guidance"] = jsonable_encoder(
+            app.game.fourth_down_guidance(app.human_side, view=view)
+        )
         for item, report in zip(expected["log"], view.log, strict=True):
             item["commentary"] = app.game.commentary(report)
             item["highlights"] = list(report.highlight_tags)

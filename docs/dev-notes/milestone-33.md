@@ -466,3 +466,11 @@ and separately authorized publication. Hosted branch validation remains required
 
 
 DEV-059 implementation is committed at `2b11cd6`. Focused cumulative packaging/workflow/tracker/metadata validation: **197 passed in 6.35s**, with 11 new workflow cases. Ruff/format (**539 files**) and diff checks passed. The automatic branch-hosted run and final milestone gate remain pending.
+
+
+Final-gate follow-up: two `test_cli_games` pending-interception API parity cases
+were red on the new additive null guidance field. Their expected transport view
+now serializes `SavedGame.fourth_down_guidance` while retaining the entire exact
+view and future-replay comparison. This changes the API-shape expectation only;
+no football or private replay rule changes. The initial full pass is recorded as
+failing and the complete gate must rerun after this correction.

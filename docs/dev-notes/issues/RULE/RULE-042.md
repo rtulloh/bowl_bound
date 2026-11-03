@@ -83,3 +83,11 @@ RULE-042 focused validation (2026-11-02):
 
 
 Implementation committed as tested 3e321f15265da078363decb90a4439ed8ef84f1f. Ticket stays open pending fresh hosted browser cases; no owner play-test confirmation is claimed.
+
+
+Browser self-review: the timeout cases now use the invented all-zero guidance
+teams with an explicit 40-yard kickoff/10-yard return. Using the ordinary
+interception fixture could require an unrelated human recovery choice depending
+on the private CPU seed. All-zero scrimmage columns isolate the timeout lifecycle
+without fixing/revealing CPU seeds, mocking responses, or changing engine rules.
+RZDZ's CPU-owned continuation can still run through the real coordinator.

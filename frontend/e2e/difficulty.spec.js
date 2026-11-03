@@ -71,7 +71,7 @@ for (const difficulty of ['easy', 'medium', 'hard']) {
 
 for (const side of ['home', 'away']) {
   test('next-play timeout is side-owned after kickoff for human ' + side, async ({ page, request }) => {
-    const created = await request.post('/api/games', { data: { home: '2002/alpha-tech', away: '2002/beta-state', mode: 'regulation', seed: 7, difficulty: 'medium' } })
+    const created = await request.post('/api/games', { data: { home: '2002/guidance-home', away: '2002/guidance-away', mode: 'regulation', seed: 7, difficulty: 'medium' } })
     expect(created.ok()).toBeTruthy()
     const gameId = (await created.json()).game_id
     expect((await request.post('/api/games/' + gameId + '/decision', { data: { choice: 'toss:kick' } })).ok()).toBeTruthy()
