@@ -68,6 +68,23 @@ review and fresh hosted browser confirmation are in progress. The records below
 retain earlier failures and follow-up checks; none establish owner play-test
 confirmation or release publication.
 
+| Ticket | Implementation commit | Acceptance evidence / remaining verification |
+| --- | --- | --- |
+| AI-010 | `33b752d` | 75 contract cases; 17/17 injected faults caught; full coaching and policy audits. |
+| RULE-041 | `4b64796` | 47 new recovery/penalty cases; 109 focused hardening/fumble cases; current and legacy replay. |
+| AI-027 | `32649b2` | 70 public-policy cases; unchanged approved bands, chart access forbidden at selection. |
+| UI-041 | `b4b8fdf` | 29 engine/API/CLI cases and frontend display coverage; three hosted guidance cases require corrected transport fixture rerun. |
+| RULE-042 | `3e321f1` | 37 engine/API/CLI/save cases; both new hosted timeout cases pass; old compact-layout expectations require rerun. |
+| DEV-059 | `2b11cd6` | 15 workflow checks; actual automatic Tests run and failure propagation confirmed; green full run pending. |
+| DEV-060 | `ca3d3bb` | Exact sample staging tests and baseline native confirmation on all three targets. |
+| DEV-061 | `03d1992` | Isolated staged runtime probe, baseline native/extracted-app/installer confirmation. |
+| DEV-062 | `c22df25` | Corrected deferred Advanced II save guidance; save/tracker and full regression pass. |
+| DEV-063 | `0a89a68` | 39 local-audit cases; unchanged 120-game audit passes, including strict overtime boundary validation. |
+
+Gameplay tickets await owner play-test confirmation before closure. Existing
+DEV-044 and newly recorded DEV-064 frontend warning cleanup remain M23 follow-up;
+they do not expand this milestone’s implementation scope.
+
 ## AI-010 — Coaching contract harness
 
 Added `tests/test_coaching_invariants.py` with synthetic charts only. It checks
@@ -601,3 +618,57 @@ blocked before assertions as recorded above; fresh hosted Tests/browser coverage
 is required before resolving UI-041, RULE-042 and DEV-059 or accepting the whole
 milestone. Only `milestone/33-core-playability` is authorized for this push. No
 main, release branch, tag, native build or publication is included.
+
+
+Independent read-only integration review of `03d1992..d518ba2` by the parallel
+college-generator worker found no blocking mismatch in `session.py`,
+`regulation.py`, `save_game.py`, the shared policy/difficulty wrapper, or API/CLI
+guidance. The review checked deferred recovery/return credit across nested
+continuations, discarded accepted outcomes, exactly-once traces, legacy prefix
+upgrades/digests without load-time draws, armed side/timing/reset/exhaustion/spike
+behavior, and captured-view guidance. This is code/test review, not another runtime
+run or owner play-test. The generator’s separate calibration remains pinned to
+`03d1992` until its workstream explicitly integrates and recalibrates the engine.
+
+
+## First hosted M33 run — browser fixture follow-up
+
+Automatic [Tests 41571415572](https://github.com/rtulloh/bowl_bound/actions/runs/41571415572)
+at `d518ba2` passes Python/lint/format/pip (**3,392 tests in 1,081.55s,
+93.03% branch-aware coverage**) and frontend/build/audit (**130 tests,
+0 vulnerabilities**). Browser outcome is **33 passed, 5 failed in 5.0m**,
+so this is a failing full gate. Both new armed-timeout browser cases pass.
+
+Two compact-controls cases encoded the retired disabled timeout placeholder
+after kickoff. They now compare both enabled side actions with exact keys/labels
+from the actual engine response, verify no arm initially and no stale placeholder,
+and retain every existing geometry/focus/menu/play assertion. The three guidance
+cases supplied invalid API mode `scrimmage`, producing 422 before any controls;
+the transport fixture now requests supported `drive` mode and verifies success
+and initial engine scrimmage phase. All actual guidance/save/kick assertions stay.
+No production behavior, engine charts, clock rules or CPU seed changes.
+
+Hosted frontend warnings include existing React act(...) warnings (DEV-044),
+a duplicate PlayLog fixture-key warning now tracked as DEV-064, and the known
+npm deprecation. These are not suppressed, not browser-failure causes, and remain
+M23 follow-up scope. This record corrects any inference that a passing frontend
+suite establishes warning-free output. Fresh branch-hosted coverage remains
+required before milestone acceptance.
+
+
+Browser follow-up pre-push gate: **3,392 Python tests passed in 771.66s,
+93.05% branch-aware coverage**, no skips or Python warnings; **84** focused
+guidance/timeout/tracker cases pass in **6.68s**. Pinned Node/npm: syntax checks
+for both changed E2E files pass; frontend **130 tests in 4.56s**, build **587ms**,
+audit **0 vulnerabilities**, and Playwright discovery **38 cases / seven files**
+pass. Ruff check/format, pip check and diff checks pass. The existing npm
+deprecation and Vitest performance advice remain visible.
+
+A second independent read-only review of the two E2E corrections confirms valid
+`drive` transport, initial engine scrimmage phase, three zero-yard snaps to the
+48-yard public attempt, and exact engine-provided timeout labels/keys after
+kickoff. It found no test weakening or obvious setup mismatch. Runtime and audit
+tool source are byte-identical to the preceding hosted source-green `d518ba2`;
+the 17-fault/32-public-game/120-private-game evidence still applies unchanged.
+Fresh hosted browser verification is pending; the previous failing run remains
+recorded above.

@@ -32,7 +32,7 @@ for (const difficulty of ['easy', 'medium', 'hard']) {
   test('fourth-down public guidance ' + difficulty + ' comes from the real engine', async ({ page, request }) => {
     await page.route('**/api/games?*', async (route) => {
       const body = route.request().postDataJSON()
-      await route.continue({ postData: JSON.stringify({ ...body, seed: 7, mode: 'scrimmage', start_yards_to_goal: 31 }) })
+      await route.continue({ postData: JSON.stringify({ ...body, seed: 7, mode: 'drive', start_yards_to_goal: 31 }) })
     })
     await page.goto('/')
     await page.getByLabel('Control mode').selectOption('home')
@@ -41,7 +41,11 @@ for (const difficulty of ['easy', 'medium', 'hard']) {
     await page.getByTestId('away-select').selectOption('2002/guidance-away')
     const created = page.waitForResponse((response) => response.url().includes('/api/games?') && response.request().method() === 'POST')
     await page.getByTestId('start-game').click()
-    const gameId = (await (await created).json()).game_id
+    const createdResponse = await created
+    expect(createdResponse.ok()).toBeTruthy()
+    const initial = await createdResponse.json()
+    expect(initial.view.phase).toBe('scrimmage')
+    const gameId = initial.game_id
     await expect(page.getByTestId('offense-play-1')).toBeVisible()
     await expect(page.getByRole('region', { name: 'Fourth-down guidance' })).toHaveCount(0)
     let body

@@ -91,3 +91,12 @@ interception fixture could require an unrelated human recovery choice depending
 on the private CPU seed. All-zero scrimmage columns isolate the timeout lifecycle
 without fixing/revealing CPU seeds, mocking responses, or changing engine rules.
 RZDZ's CPU-owned continuation can still run through the real coordinator.
+
+--- 2026-11-02 21:44 ---
+Both new side-owned timeout browser cases pass on hosted run 41571415572.
+Two older compact-controls cases fail because they still require a disabled
+Timeout placeholder immediately after kickoff. That expectation predates this
+approved feature. They now retain every menu/geometry/focus assertion and check
+both enabled timeout actions with exact backend-provided keys and labels from the
+real kickoff response, no arm yet, and no stale placeholder. No production or
+football policy changes; browser regression must rerun before resolution.
