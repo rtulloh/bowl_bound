@@ -423,3 +423,15 @@ RULE-042 focused validation (2026-11-02):
 - Pinned Node/npm in `frontend/`: `npm test` **130 passed (16 files)** and `npm run build` passed. Focused clock/no-rules tests: **22 passed**.
 - Ruff check and format check passed (**535 files**), and `git diff --check` passed.
 - Added real-engine browser cases for each human side after kickoff: offered own-side arm, unchanged clock/budget, raw-text save/load, legal offensive/defensive call, one 10-second charge and reset. Browser acceptance remains pending the fresh hosted branch run; the local process-launch restriction is not counted as a pass.
+
+
+## Hosted DEV-060/DEV-061 confirmation
+
+Baseline [run 41558282571](https://github.com/rtulloh/bowl_bound/actions/runs/41558282571)
+completed successfully at `03d1992d3a3811cf89879bce985e23937e3a3dc0`: source/browser
+test job plus macOS Intel, macOS ARM64 and Windows x64 native jobs all passed.
+Applicable extracted-app and Windows installer smoke checks passed. DEV-061 is
+now resolved against tested commit `03d1992`; DEV-060 retains tested `ca3d3bb` with
+end-to-end native confirmation. Neither is closed on unconfirmed owner play-test.
+No release tag, manifest hash or baseline snapshot was changed by this evidence
+update. Current milestone changes require fresh branch-hosted browser validation.

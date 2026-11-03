@@ -12,7 +12,8 @@ tags:
 - timing
 - usability
 links: []
-commits: []
+commits:
+- 3e321f1
 ---
 
 ## Description
@@ -79,3 +80,6 @@ RULE-042 focused validation (2026-11-02):
 - Pinned Node/npm in `frontend/`: `npm test` **130 passed (16 files)** and `npm run build` passed. Focused clock/no-rules tests: **22 passed**.
 - Ruff check and format check passed (**535 files**), and `git diff --check` passed.
 - Added real-engine browser cases for each human side after kickoff: offered own-side arm, unchanged clock/budget, raw-text save/load, legal offensive/defensive call, one 10-second charge and reset. Browser acceptance remains pending the fresh hosted branch run; the local process-launch restriction is not counted as a pass.
+
+
+Implementation committed as tested 3e321f15265da078363decb90a4439ed8ef84f1f. Ticket stays open pending fresh hosted browser cases; no owner play-test confirmation is claimed.
