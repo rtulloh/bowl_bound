@@ -1,0 +1,37 @@
+docs/chart-generator.md
+  s_e06e375ba9891d::t_57faf1638b80a7 193-195,198-202,214-216,223-226,228-231
+docs/dev-notes/issues/DATA/DATA-009.md
+  s_e06e375ba9891d::t_3e5da03c0f8d4d 30-37
+scripts/run_local_season.py
+  s_e06e375ba9891d::t_1040e77521f7c3 496,499,510-512,522,534-543,560-569,700
+tests/chartgen/test_generation.py
+  s_e06e375ba9891d::t_c11d80b0435d23 148-149
+tests/chartgen/test_refinement.py
+  s_e06e375ba9891d::t_e40d6591d759d5 182-202
+tools/chartgen/refine.py
+  s_cee2f5c7a51f19::t_ad157ed02cf70c 94-96,415,511
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "95653989c0052f6e7f5df05a0c954f3391cb1703",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    },
+    "s_e06e375ba9891d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f07-7008-7201-b15a-cd4a7dec87df",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
