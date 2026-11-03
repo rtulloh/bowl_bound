@@ -182,11 +182,41 @@ def test_current_public_observation_policy_is_recorded_for_both_cpu_sides() -> N
 
 
 def test_composed_training_decisions_preserve_punts_and_saved_replay() -> None:
+    from dataclasses import replace
+
+    from bowl_bound.models import SpecialTeamsColumn
     from scripts.run_local_season import GameSpec, _play_one
     from tests.synthetic_teams import metadata, team_chart
 
     teams = {
-        f"2007/{name.lower()}": (team_chart(name, season=2007), metadata()) for name in ("A", "B")
+        f"2007/{name.lower()}": (
+            team_chart(name, season=2007, offense=8 if name == "A" else 1, defense=0),
+            metadata(),
+        )
+        for name in ("A", "B")
+    }
+    # Realistic synthetic kicks create long fields; asymmetric gains avoid a
+    # deterministic endless overtime tie while forcing the weaker team to punt.
+    distances = {
+        SpecialTeamsColumn.KICKOFF: 60,
+        SpecialTeamsColumn.PUNT: 40,
+        SpecialTeamsColumn.KICKOFF_RETURN: 20,
+        SpecialTeamsColumn.PUNT_RETURN: 5,
+    }
+    teams = {
+        identity: (
+            replace(
+                chart,
+                special_teams=tuple(
+                    replace(row, cell=replace(row.cell, yards=distances[row.column]))
+                    if row.column in distances
+                    else row
+                    for row in chart.special_teams
+                ),
+            ),
+            meta,
+        )
+        for identity, (chart, meta) in teams.items()
     }
     result = _play_one(
         GameSpec(1, 2007, "2007/a", "2007/b", 817),
@@ -200,3 +230,5 @@ def test_composed_training_decisions_preserve_punts_and_saved_replay() -> None:
     sections = {t["section"] for row in result["engine_log"] for t in row["trace"]}
     assert {"punt", "punt_return"} <= sections
     assert result["configuration"]["decision_coach_policy"] == "baseline-v10"
+    assert not any(c["choice"] == "clock:spike" for c in result["coaching_calls"])
+    assert not any(row["called_play"] == "Spike" for row in result["engine_log"])

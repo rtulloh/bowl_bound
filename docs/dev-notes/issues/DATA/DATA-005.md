@@ -1,16 +1,17 @@
 ---
 id: DATA-005
 title: Season audit rejects lawful overtime series state resets
-status: open
+status: resolved
 priority: High
 milestone: '34'
 created-at: 2026-11-02
-resolved-at: null
+resolved-at: '2026-11-02'
 closed-at: null
 tags:
-- reproduced
+- tested
 links: []
-commits: []
+commits:
+- 3e699aa
 ---
 
 ## Description
@@ -34,3 +35,7 @@ Readiness also requires zero reconciliation failures in the selected training
 candidate, held-out batch and separate coaching checks. Added a synthetic
 end-to-end declared training failure to prevent a clean held-out average from
 concealing earlier failed engine/audit evidence.
+
+--- 2026-11-02 20:51 ---
+Synthetic lawful/undeclared/stale/malformed overtime boundary checks pass; all four retained original failing seeds pass unchanged-chart replay. Readiness also requires zero selected-training/held-out/coaching failures (61dec6c).
+Focused cumulative gate at 9565398: 121 passed. Owner play-test confirmation remains unrecorded, so this ticket is not closed.

@@ -1,16 +1,17 @@
 ---
 id: DATA-008
 title: Calibration uncertainty must cluster independent games
-status: open
+status: resolved
 priority: High
 milestone: '34'
 created-at: 2026-11-02
-resolved-at: null
+resolved-at: '2026-11-02'
 closed-at: null
 tags:
-- reproduced
+- tested
 links: []
-commits: []
+commits:
+- c0cbf10
 ---
 
 ## Description
@@ -27,3 +28,7 @@ The first aggregator counted both sides of a game as independent core-metric clu
 
 --- 2026-11-02 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-02 20:51 ---
+Synthetic unequal-exposure complete-game clusters verify raw counts, Kish effective exposure and cluster-robust ratio standard-error math. Retained original pilot games were reanalyzed privately; candidate selection and tolerances were not changed.
+Focused cumulative gate at 9565398: 121 passed. Owner play-test confirmation remains unrecorded, so this ticket is not closed.

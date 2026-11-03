@@ -557,7 +557,7 @@ def _play_one(
                 break
             advanced = False
             for side in ("home", "away"):
-                if decision_coaches and view.pending is not None:
+                if decision_coaches and view.pending is not None and view.phase != "clock_choice":
                     observation = observe_game(view, side)
                     if observation.choices:
                         choice = safe_choice(

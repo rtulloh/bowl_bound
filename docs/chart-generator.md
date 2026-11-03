@@ -110,6 +110,8 @@ may add incomplete/INT/QT responses. All combinations resolve through the engine
 priority table. This model needs play testing; it is not an observed tactical chart.
 
 Scrimmage and observed return fumbles have separate sampling denominators.
+Scrimmage fumble and interception locations currently use an explicit fixed +0
+modeling prior, rather than reconstructed air yards or recovery coordinates.
 Fumbles, recovery/lost ownership, interception returns, penalties and positive
 narrative OOB evidence are modeled explicitly. Ordinary penalties use named
 approved engine tokens; `DEF 5Y` retains the engine's approved policy. Observed zero-yard primary results use explicit white no-change boxes, preserving
@@ -195,9 +197,11 @@ game-rate variance and denominator-weighted Kish effective game exposure so
 precision can be judged. Increase counts before making tight fit claims.
 
 The production `SavedGame` and local-season audit run every game. The public,
-situation-aware baseline-v1 offense/defense plus baseline-v10 pending-decision
+situation-aware baseline-v1 offense/defense plus baseline-v10 non-clock pending-decision
 preferences make legal actions without chart lookahead. This explicit development
 composition preserves punts and exercises returns, identically for both sides.
+Clock prompts remain entirely with the production coaching adapter, including its
+implicit normal-timing option and side ownership.
 Standalone baseline-v10 is not used as a full training policy because its
 fourth-down kick preferences belong to the chart-coaching wrapper. Structured observations and calls are retained. Overtime series starts are
 recorded from the real engine and checked against report state and engine series

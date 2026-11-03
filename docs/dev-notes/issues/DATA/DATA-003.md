@@ -1,16 +1,17 @@
 ---
 id: DATA-003
 title: Derived ESPN PAT flags can contradict explicit original event labels
-status: open
+status: resolved
 priority: High
 milestone: '34'
 created-at: 2026-11-02
-resolved-at: null
+resolved-at: '2026-11-02'
 closed-at: null
 tags:
-- reproduced
+- tested
 links: []
-commits: []
+commits:
+- 55f530d
 ---
 
 ## Description
@@ -26,3 +27,7 @@ In the audited older ESPN-derived snapshot, extra-point success flags are unpopu
 
 --- 2026-11-02 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-02 20:51 ---
+Synthetic explicit-good/explicit-missed/unknown PAT precedence regressions pass. The retained versioned private input corrects original-label interpretation without changing the raw snapshot.
+Focused cumulative gate at 9565398: 121 passed. Owner play-test confirmation remains unrecorded, so this ticket is not closed.

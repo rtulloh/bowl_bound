@@ -92,7 +92,7 @@ def engine_identity() -> dict[str, Any]:
         "tool_sha256": tool_digest.hexdigest(),
         "rules_profile": "approved current Bowl Bound; Advanced II disabled",
         "training_policy": (
-            "baseline-v1 offense/defense + baseline-v10 pending decisions; public observation only"
+            "baseline-v1 calls/clock; baseline-v10 non-clock decisions; public observation only"
         ),
         "audit_runner": "scripts.run_local_season._play_one",
     }

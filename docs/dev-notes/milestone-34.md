@@ -199,3 +199,44 @@ Focused composition/cumulative regression: 121 passed across generator, shared
 local-season runner, issue tracker and workflow tests. Ruff check/format passed.
 The required synthetic integration now asserts nonzero actual punt and punt-return
 exposure; the composition-specific full game verifies midpoint/final replay.
+
+
+## Source terms and private comparison review
+
+Rechecked the current primary provider documentation. The SportsDataverse
+[release-store README](https://github.com/sportsdataverse/sportsdataverse-data/blob/main/README.md)
+advertises CC BY 4.0; its
+[LICENSE](https://github.com/sportsdataverse/sportsdataverse-data/blob/main/LICENSE)
+grants MIT software permissions. These are not a finding that all underlying
+sports content or generated historical charts can be redistributed. The
+[upstream ESPN/Disney terms](https://disneytermsofuse.com/english/) separately
+restrict uses and transformations, including AI-related uses. No distribution or
+commercial-use clearance is claimed; historical artifacts remain local under the
+owner's existing private comparison direction. Public tools/tests are source-neutral
+and synthetic. Any publication needs a separate rights decision.
+
+The local reference diagnostic enumerates all 810 normalized addresses across all
+four authorized 2007/2008 teams, with numeric ranges and semantic kinds retained
+privately. Both generated pilot bundles load through the strict production codec
+and have a private address-level comparison. This is a structural diagnostic, not
+a cell-by-cell cloning objective or a claim that four examples define legal bounds.
+
+
+## Clock-adapter boundary regression
+
+Training-only pilot04 exposed excessive clock:spike selections from the new
+development override (DATA-010). Its first interpretation as missing calls was
+wrong: calls were present under the full clock:spike ID. Production plan_turn
+adds implicit normal timing and side ownership; the override had bypassed both.
+This is a harness defect, not a production engine defect. Interrupted the pilot
+and incomplete full-coverage run, retained evidence, and added a failing full-game
+regression forbidding clock:spike/Spike under this training policy. The override
+now excludes clock_choice entirely; production timing remains authoritative.
+No held-out seeds were consumed and no chart strengths were changed.
+
+The corrected boundary passes eight fresh private smoke games with zero spikes,
+zero failures, actual punt/return exposure and 71 offensive plays per team-game.
+The synthetic replay fixture uses long kickoff fields, realistic punt distances
+and asymmetric gains to require punts while avoiding an artificial deterministic
+endless overtime tie; assertions remain intact. All previous pilot artifacts are
+retained and superseded, not represented as current fit evidence.
