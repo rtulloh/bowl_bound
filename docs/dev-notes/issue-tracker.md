@@ -99,7 +99,6 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | [DEV-064](issues/DEV/DEV-064.md) | Low | [23](project-plan.md#23-establish-the-complete-regression-gate) | Give rendered play-highlight fixtures distinct engine report numbers | created 2026-11-02 |
 | [UI-046](issues/UI/UI-046.md) | Low | [23](project-plan.md#23-establish-the-complete-regression-gate) | Add an accessible scoring celebration in the web game | created 2026-11-02 |
 | [UI-051](issues/UI/UI-051.md) | Low | [23](project-plan.md#23-establish-the-complete-regression-gate) | Clarify the persistent opening-toss audit during gameplay | created 2026-11-02 |
-| [UI-055](issues/UI/UI-055.md) | Low | [33](project-plan.md#33-correct-core-playability-and-make-validation-status-visible) | Remove duplicated timeout counts from web timeout buttons | created 2026-11-03 |
 
 ## Resolved (awaiting play-test confirmation) (143)
 
@@ -248,6 +247,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | [UI-010](issues/UI/UI-010.md) | Low | [20a](project-plan.md#20a-add-an-interactive-cli-for-play-testing) | Simplify Punt and Field Goal controls to single descriptive labels | created 2026-10-26; resolved 2026-10-27 |
 | [UI-021](issues/UI/UI-021.md) | Low | [20a](project-plan.md#20a-add-an-interactive-cli-for-play-testing) | Play summaries use opaque Formation identifiers instead of friendly defense names | created 2026-10-26; resolved 2026-10-26 |
 | [UI-037](issues/UI/UI-037.md) | Low | [22](project-plan.md#22-add-advanced-options-one-at-a-time) | Spike button can never be enabled and dead timeout key mappings remain | created 2026-10-27; resolved 2026-11-01 |
+| [UI-055](issues/UI/UI-055.md) | Low | [33](project-plan.md#33-correct-core-playability-and-make-validation-status-visible) | Remove duplicated timeout counts from web timeout buttons | created 2026-11-03; resolved 2026-11-03 |
 
 ## Closed (28)
 
@@ -597,7 +597,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 - [UI-041](issues/UI/UI-041.md) (resolved, Medium) — Display shared public fourth-down guidance for players
 - [UI-052](issues/UI/UI-052.md) (closed, Low) — Use plain language for next-play timeout controls
 - [UI-054](issues/UI/UI-054.md) (open, Medium) — Verify PAT kickoff and kickoff-return outcomes remain visible in web play history
-- [UI-055](issues/UI/UI-055.md) (open, Low) — Remove duplicated timeout counts from web timeout buttons
+- [UI-055](issues/UI/UI-055.md) (resolved, Low) — Remove duplicated timeout counts from web timeout buttons
 
 ### Milestone [35](project-plan.md#35-add-optional-coffin-corner-punts-and-a-halftime-summary)
 
