@@ -1,0 +1,69 @@
+docs/chart-generator.md
+  s_e06e375ba9891d::t_66aa23f0e6ec00 47-49,88-89,112,115-116,139-168
+docs/dev-notes/issue-tracker.md
+  s_e06e375ba9891d::t_b0f8a4120ba5e6 8,10,20,588
+docs/dev-notes/issues/DATA/DATA-006.md
+  s_e06e375ba9891d::t_c28bbba316cc26 1-28
+learn_college_tactics.py
+  s_0e32a34de270af::t_c22540d7db8fc0 1-6
+scripts/run_local_season.py
+  s_e06e375ba9891d::t_63be1dbb08c661 522,644,650
+tests/chartgen/test_evidence.py
+  s_e06e375ba9891d::t_23d6f9eeb1b8d7 126-217
+tests/chartgen/test_generation.py
+  s_e06e375ba9891d::t_17d90bbf0a31b0 5,222-338
+tests/chartgen/test_refinement.py
+  s_cee2f5c7a51f19::t_85a83f36c4bef1 57-67
+tests/chartgen/test_source.py
+  s_e06e375ba9891d::t_2265fe129a2487 36-42
+tests/chartgen/test_tactics.py
+  s_e06e375ba9891d::t_4dbab900bceadc 1-55
+tests/test_local_season_runner.py
+  s_e06e375ba9891d::t_2205839bbe1185 508-522
+tools/chartgen/cli.py
+  s_e06e375ba9891d::t_3d870e49a2005e 7,13,15,27,53,68-72,74-80,117,124-128,137,158-188
+tools/chartgen/evidence.py
+  s_e06e375ba9891d::t_97fb7e270f09d2 32,78-83,130-133,187-199,205,224-225,231-233,236,276-284,298-299
+tools/chartgen/generate.py
+  s_e06e375ba9891d::t_818a5eea9807b0 21,50-53,170-174,269,273-275,321-326,335-338,356-360,362,367,387-397,422-423,425,427-432,434-445,447-452,475,520,522-524,533-547,604-611,624,630,633,666
+tools/chartgen/private_io.py
+  s_e06e375ba9891d::t_bcd14dd5f6e8b5 1-14
+tools/chartgen/refine.py
+  s_e06e375ba9891d::t_6bd3254743b2a0 27-28,88,131-133,210,221-230,400,404-405,421-427,496-498,506-507
+tools/chartgen/source.py
+  s_e06e375ba9891d::t_832e86490fb69c 8,70-73,75-78,116-117
+tools/chartgen/tactics.py
+  s_e06e375ba9891d::t_ba72a696f88e24 1-179
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "61dec6c34934c9c5207833ebb8dff1b6307200a5",
+  "prompts": {},
+  "sessions": {
+    "s_0e32a34de270af": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19e3e-91b5-7fc3-a61a-a2d9b854b5e1",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    },
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    },
+    "s_e06e375ba9891d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f07-7008-7201-b15a-cd4a7dec87df",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
