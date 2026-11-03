@@ -1,0 +1,31 @@
+bowl_bound/regulation.py
+  s_cee2f5c7a51f19::t_6a17abb72ddfa8 361-365,369
+docs/dev-notes/issue-tracker.md
+  s_cee2f5c7a51f19::t_2fec8d18ddbeb7 8,10,95,581
+docs/dev-notes/issues/UI/UI-052.md
+  s_cee2f5c7a51f19::t_464635c2e28c7b 1-43
+docs/dev-notes/milestone-33.md
+  s_cee2f5c7a51f19::t_64918c8625d89e 742-777
+docs/dev-notes/project-plan.md
+  s_cee2f5c7a51f19::t_b5ad99f41039a4 628-631
+docs/playing.md
+  s_cee2f5c7a51f19::t_cf3fa1ef61915f 133-140
+frontend/src/test/clockFlow.test.jsx
+  s_cee2f5c7a51f19::t_e73d5175afa7cf 68,71,77,80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "3c8595e0c8a2babd38f693b6a8a3f1a687a1b206",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
