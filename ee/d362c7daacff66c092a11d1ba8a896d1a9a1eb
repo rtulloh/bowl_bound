@@ -1,0 +1,25 @@
+docs/dev-notes/issues/RULE/RULE-042.md
+  s_cee2f5c7a51f19::t_e690937d6c0077 94-102
+docs/dev-notes/issues/UI/UI-041.md
+  s_cee2f5c7a51f19::t_7c0d28a7663304 81-89
+frontend/e2e/compactControls.spec.js
+  s_cee2f5c7a51f19::t_f921c5255d6911 16,18-20,40-49
+frontend/e2e/difficulty.spec.js
+  s_cee2f5c7a51f19::t_3e9a941897febd 35,44-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "eed362c7daacff66c092a11d1ba8a896d1a9a1eb",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
