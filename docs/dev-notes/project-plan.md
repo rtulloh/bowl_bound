@@ -714,7 +714,9 @@ email-compose link to the documented support address. Preserve kick/PAT/return
 outcomes, pending decisions and timing evidence. Keep export user-initiated and
 previewable; do not bundle team charts, source PDFs or unrelated local files.
 Opening a mail client must not send automatically or pretend to attach a file.
-Tracked work: [UI-056](issues/UI/UI-056.md).
+Tracked work: [UI-056](issues/UI/UI-056.md) and
+[UI-057](issues/UI/UI-057.md). Player-facing audit/report wording uses contextual
+result labels instead of spreadsheet terminology.
 
 **Validate:** synthetic engine/API/frontend/browser tests cover partial and
 completed games, saves, long logs, supported privacy boundaries, accurate integer
