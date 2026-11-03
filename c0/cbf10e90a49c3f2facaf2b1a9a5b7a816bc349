@@ -1,0 +1,21 @@
+docs/dev-notes/issues/DATA/DATA-007.md
+  s_cee2f5c7a51f19::t_164e495ff8b26a 1-28
+tests/chartgen/__init__.py
+  s_cee2f5c7a51f19::t_dcef9c5b00e6ae 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "c0cbf10e90a49c3f2facaf2b1a9a5b7a816bc349",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
