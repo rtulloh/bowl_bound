@@ -1,0 +1,47 @@
+bowl_bound/save_game.py
+  s_cee2f5c7a51f19::t_d1d2768d8e86df 42-43,310,611-616,649,654,666-676,722-723,728-732,889-893,976-977,1008-1009
+bowl_bound/session.py
+  s_cee2f5c7a51f19::t_96b614307df00c 332-333,381,1017,1060-1063,1071,1084-1161,1176,1246-1254,1258-1278,1351-1364,1398,1462,1492-1503,1559-1564,1658,1694,1745,1762-1779,2177,2213-2218,2230,2241-2242,2250-2257,2400-2420
+docs/api.md
+  s_cee2f5c7a51f19::t_a2659f6c4b06fa 23-35
+docs/dev-notes/issues/RULE/RULE-041.md
+  s_cee2f5c7a51f19::t_848ebe029c557c 38-63
+docs/dev-notes/milestone-33.md
+  s_cee2f5c7a51f19::t_c1d0457ecc8ab5 104-160
+docs/penalties.md
+  s_cee2f5c7a51f19::t_be7fafae022315 37-44
+docs/rules-profile.md
+  s_cee2f5c7a51f19::t_b73ef75bbead26 430-435
+docs/saves.md
+  s_cee2f5c7a51f19::t_d232b5d9844622 63-67,81,85,97-111,113
+docs/turnovers.md
+  s_cee2f5c7a51f19::t_a55491649c2995 61-65,83-88
+scripts/audit_coaching_contracts.py
+  s_cee2f5c7a51f19::t_8f516812c5d938 70-72
+tests/test_coaching_invariants.py
+  s_cee2f5c7a51f19::t_346a90c25bfcd8 3,8,24,42,48,52-54,80,104-106,155-157,165-167,246,263,280,292-294,314,334-336,357-359,368,374
+tests/test_commentary_replay.py
+  s_cee2f5c7a51f19::t_c7bb84f0f11b5f 28
+tests/test_penalty_choice_labels.py
+  s_cee2f5c7a51f19::t_2f81933249cb20 43-44,59-61
+tests/test_release_metadata.py
+  s_cee2f5c7a51f19::t_4d207a327d9d05 32
+tests/test_return_fumble_series.py
+  s_cee2f5c7a51f19::t_0a183b03e62265 148
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "4b647969f1438aba8cdce5cdaf6e29e029c619f0",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
