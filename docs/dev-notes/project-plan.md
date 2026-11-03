@@ -617,6 +617,34 @@ Tracked work: [AI-010](issues/AI/AI-010.md), [AI-027](issues/AI/AI-027.md),
 
 **Commit:** `milestone 33: correct core playability and validation status`
 
+### 35. Add optional coffin-corner punts and coaching support
+
+Added 2026-11-02 at the owner's request. Milestone 34 is reserved for the
+independent college chart-generator workstream; this follow-up does not expand
+Milestones 33 or 34 or the alpha 4 release.
+
+**Deliver:** an explicitly enabled Bowl Bound coffin-corner punt option, with
+engine-owned eligibility, declared adjustments, resolution, clock/statistics,
+structured traces, and save/replay support. Expose legal choices through API,
+browser and terminal controls, and extend fourth-down coaching and equivalent
+human guidance. Verify the exact Bowl Bound procedure before implementation;
+do not inherit Paydirt yardage thresholds or NFL behavior. Other deferred
+Advanced III/IV options remain outside this milestone.
+
+**Validate:** test first with synthetic charts, exact offensive/defensive dice
+distributions where used, field-position and legal-adjustment boundaries,
+return/no-return/touchback and applicable special-result/penalty paths, both
+possession sides, option-disabled behavior, deterministic coaching, save/replay,
+and engine/API/CLI/browser parity. Preserve the approved public-information
+coaching policy unless separately changed through review. Finish focused and
+full regression gates and play-test acceptance before release claims.
+
+Tracked work: [RULE-043](issues/RULE/RULE-043.md) and
+[AI-030](issues/AI/AI-030.md). See the
+[Milestone 35 planning note](milestone-35.md).
+
+**Commit:** `milestone 35: add optional coffin-corner punts`
+
 ## Decision gates
 
 Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.
