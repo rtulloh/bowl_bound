@@ -200,3 +200,11 @@ saves remain compatible; loading uses current validated local rosters only after
 replay succeeds. Changed names may alter displayed history, never saved facts or
 future dice/coaching streams. Missing files stay generic; malformed present
 rosters reject adapter load without replacing the current game.
+
+
+Armed next-play timeouts replay through ordinary `action timeout:<side>` journal
+commands. `armed_timeout` is semantic state when present and must match the final
+state digest. Its label and derived action labels are presentation facts. Unarmed
+additive fields do not invalidate older supported save digests. Saving/loading
+an arm or a pending play continuation neither spends a timeout nor consumes dice;
+only the final completed legal play applies its 10-second timing modifier.

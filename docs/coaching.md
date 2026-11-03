@@ -57,9 +57,13 @@ the stable Formation A–F identifiers; naming does not alter chart lookups or d
 Legacy save digests canonicalize only defensive selector wording back to those
 identifiers, preserving their original gameplay/trace checks.
 
-**Timeout**, **Spike**, and **Intentional delay** are one-shot engine decisions, not modes. They appear
-in the play-modifier row only when the engine offers them after an eligible play;
-there is no persistent Spike button. **OOB** and **IB** appear when offered as
+**Timeout**, **Spike**, and **Intentional delay** are one-shot engine decisions.
+Existing post-play clock choices apply to the completed play. Separately, each
+eligible side may arm its own timeout before the next play, including immediately
+after kickoff. Arming/canceling changes no clock, dice or budget. The next
+completed legal play consumes it, takes 10 seconds, and clears it. One side-owned
+modifier may be armed at a time; the other side cannot overwrite it. Mandatory
+play continuations retain it until completion. No persistent Spike button exists. **OOB** and **IB** appear when offered as
 mutually exclusive declarations for the next scrimmage play. They clear after
 that play, and the engine applies the five-yard cost and rulebook exceptions.
 They are not clock-only overrides. Chart-generated OOB outcomes already follow

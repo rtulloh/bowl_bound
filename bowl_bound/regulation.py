@@ -80,6 +80,8 @@ class RegulationView(SessionView):
     overtime_toss_dice: tuple[dict[str, object], ...] = ()
     bounds_declaration: str | None = None
     play_modifiers: tuple[PenaltyChoice, ...] = ()
+    armed_timeout: str | None = None
+    armed_timeout_label: str | None = None
 
 
 class RegulationGame:
@@ -134,6 +136,7 @@ class RegulationGame:
         self._phase = RegulationPhase.OPENING
         self._hurried = False
         self._bounds_declaration: BoundsDeclaration | None = None
+        self._armed_timeout: Possession | None = None
         self._untimed = False
         self._pending_timing_seconds = 0
         self._last_report: PlayReport | None = None
@@ -225,7 +228,7 @@ class RegulationGame:
                             True,
                         )
                     )
-                if self._session.view().state.down < 4:
+                if self._session.view().state.down < 4 and self._armed_timeout is None:
                     choices.append(
                         PenaltyChoice(
                             "clock:spike", "Spike next; combined plays save 10 seconds", True
@@ -289,6 +292,10 @@ class RegulationGame:
             return False
 
         kneel_seconds = duration(TimingFacts(), self._clock)
+        # An armed offensive timeout shortens the first kneel too. Defensive
+        # armed timeouts are already counted among the opponent's timeouts.
+        if self._armed_timeout is possession:
+            opponent_timeouts += 1
         max_kneels = 4 - state.down
         for kneels in range(1, max_kneels + 1):
             if state.yards_to_goal + 2 * kneels > 99:
@@ -348,6 +355,17 @@ class RegulationGame:
             and base.state is not None
         ):
             if base.phase == "scrimmage":
+                if not normal_timing_ends_period and not self._untimed:
+                    for team, available in zip(Possession, self._clock.timeouts, strict=True):
+                        if available and self._armed_timeout in {None, team}:
+                            verb = "Cancel" if self._armed_timeout is team else "Arm"
+                            game_actions.append(
+                                Action(
+                                    f"timeout:{team.value}",
+                                    f"{verb} {self._names[team]} timeout "
+                                    f"for next play ({available})",
+                                )
+                            )
                 game_actions.append(Action("kneel", "Kneel"))
                 game_actions.append(Action("elect_safety", "Elect a safety"))
                 if (
@@ -487,6 +505,13 @@ class RegulationGame:
                 else ()
             ),
             game_type=self._game_type.value,
+            armed_timeout=self._armed_timeout.value if self._armed_timeout else None,
+            armed_timeout_label=(
+                f"{self._names[self._armed_timeout]} timeout armed for the next legal play; "
+                "that play takes 10 seconds."
+                if self._armed_timeout
+                else None
+            ),
             overtime=(
                 OvertimeView(
                     ot.round_number,
@@ -630,6 +655,10 @@ class RegulationGame:
             seconds = self._pending_timing_seconds
             if choice.startswith("clock:timeout:"):
                 self._clock = self._clock.timeout(Possession(choice.split(":")[-1]))
+                if self._armed_timeout is not None:
+                    index = 0 if self._armed_timeout is Possession.HOME else 1
+                    if not self._clock.timeouts[index]:
+                        self._armed_timeout = None
                 seconds = TIMEOUT_SECONDS
             elif choice == "clock:hurry":
                 self._hurried = True
@@ -657,6 +686,14 @@ class RegulationGame:
 
     def action(self, action: str, *, dice: DiceSource | None = None) -> PlayReport | None:
         self._legacy_halftime_choice_pending = False
+        if action.startswith("timeout:") and self._phase is not RegulationPhase.OVERTIME:
+            if self.view().finished:
+                raise SessionFinishedError("regulation has ended")
+            if action not in {a.key for a in self.view().game_actions}:
+                raise InvalidDecisionError("that game action is unavailable")
+            team = Possession(action.split(":")[1])
+            self._armed_timeout = None if self._armed_timeout is team else team
+            return None
         if self._phase is RegulationPhase.CLOCK:
             if action not in {a.key for a in self.view().game_actions}:
                 raise InvalidDecisionError("that game action is unavailable")
@@ -717,6 +754,13 @@ class RegulationGame:
                 )
         conversion = before.phase in {"conversion_choice", "two_point_try"}
         seconds = 0 if conversion or self._untimed else duration(report.timing, self._clock)
+        timeout = self._armed_timeout
+        self._armed_timeout = None
+        if report.timing.no_elapsed_time:
+            timeout = None
+        if timeout is not None:
+            self._clock = self._clock.timeout(timeout)
+            seconds = TIMEOUT_SECONDS
         self._untimed = False
         if self._phase is RegulationPhase.KICKOFF:
             self._phase = RegulationPhase.LIVE
@@ -724,7 +768,7 @@ class RegulationGame:
             self._pending_timing_seconds = seconds
             self._phase = RegulationPhase.CLOCK
         else:
-            self._charge(seconds, "standard")
+            self._charge(seconds, f"timeout:{timeout.value}" if timeout else "standard")
             self._untimed = report.extends_quarter and not conversion and self._clock.remaining == 0
             self._advance()
         return report
@@ -752,6 +796,7 @@ class RegulationGame:
             if self._untimed:
                 return
             self._hurried = False
+            self._armed_timeout = None
             if self._clock.quarter == 2:
                 self._phase = RegulationPhase.HALFTIME
                 self._kick_after = None

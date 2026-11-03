@@ -296,3 +296,19 @@ human offense can legally choose a kick. This uses the CPU's shared public
 policy and shows the public field-goal distance; it does not estimate a team’s
 make probability or activate a play. It is independent of the Easy helper and
 of Enter's scrimmage-only default. The browser displays the same engine text.
+
+
+The engine can offer a next-play timeout immediately after kickoff and before
+other eligible scrimmage plays. `T` arms/cancels your own modifier when no
+post-play timeout choice takes precedence. The displayed engine label states
+whether it arms or cancels; the armed status persists through mandatory play
+choices and save/load. Explicit offered `action timeout:<side>` controls remain
+available alongside optional prior-play clock choices. Arming spends no clock,
+dice or budget. The next completed legal play uses 10 seconds and consumes one
+timeout. Invalid calls retain the arm; a new game starts unarmed. A `7T`/`AT`
+suffix continues to request the completed play's timeout and never arms a future
+play when a post-play choice is unavailable.
+
+
+Cancel an armed timeout before choosing the separate combined next-spike timing
+option; the engine withholds that choice while the timeout is armed.

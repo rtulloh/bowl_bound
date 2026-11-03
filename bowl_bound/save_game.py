@@ -1240,6 +1240,7 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         "toss_dice",
         "overtime_toss_dice",
         "play_modifiers",
+        "armed_timeout_label",
         "defense_name",
         "home_timeouts",
         "away_timeouts",
@@ -1279,11 +1280,20 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
                     continue
                 if key == "bounds_declaration" and item is None:
                     continue
+                if key == "armed_timeout" and item is None:
+                    continue
                 if key == "guaranteed_out_of_bounds" and item is False:
                     continue
                 if key == "game_actions" and isinstance(item, (list, tuple)):
                     item = [
-                        action for action in item if not action.get("key", "").startswith("bounds:")
+                        action
+                        for action in item
+                        if not action.get("key", "").startswith("bounds:")
+                        and not (
+                            data.get("clock") is not None
+                            and data.get("overtime") is None
+                            and action.get("key", "").startswith("timeout:")
+                        )
                     ]
                 canonical[key] = semantic(item)
             return canonical

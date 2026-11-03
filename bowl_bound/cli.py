@@ -203,6 +203,8 @@ class TerminalGame:
         if guidance:
             self._print(guidance.label)
             self._print(guidance.summary)
+        if getattr(view, "armed_timeout_label", None):
+            self._print(view.armed_timeout_label)
         self._controls(view, turn, compact=self.compact)
         if self.game.player_advice_available(self.human_side):
             self._print("Easy helper: " + ("on" if self.helper_enabled else "off") + " [Z] toggle")
@@ -242,14 +244,11 @@ class TerminalGame:
                 if not getattr(view, "clock_optional", False):
                     bindings.setdefault(str(choice_index), target)
         action_id = f"timeout:{self.human_side}"
-        if any(action.key == action_id for action in game_actions):
+        choice_id = f"clock:timeout:{self.human_side}"
+        if pending and any(choice.id == choice_id and choice.enabled for choice in pending.choices):
+            bindings.setdefault("T", ("choose", choice_id))
+        elif any(action.key == action_id for action in game_actions):
             bindings.setdefault("T", ("action", action_id))
-        else:
-            choice_id = f"clock:timeout:{self.human_side}"
-            if pending and any(
-                choice.id == choice_id and choice.enabled for choice in pending.choices
-            ):
-                bindings.setdefault("T", ("choose", choice_id))
         return bindings
 
     def _postgame_call_summary(self, view: GameView) -> None:
@@ -492,6 +491,8 @@ class TerminalGame:
         self.advance_computer()
         view, turn = self.public_view()
         timeout = self._shortcuts(view, turn).get("T")
+        if timeout and timeout[0] == "action" and getattr(view, "overtime", None) is None:
+            timeout = None  # A suffix requests a post-play timeout, never a new arm.
         if timeout is None:
             self._print("Play applied; your timeout was not offered after that play.")
             return True

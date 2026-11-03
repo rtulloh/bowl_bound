@@ -128,3 +128,16 @@ recommendation and field-goal distance. All normal difficulties use the same
 policy as their CPU. Guidance does not select a play or change the controls;
 choose any enabled legal action. It uses public game facts, with actual kick
 results resolved from the team chart after the call.
+
+
+The Clock controls also show each engine-offered next-play timeout. Choose your
+own timeout to arm it, then choose the play or defensive formation. The clock
+and timeout budget stay unchanged until the play completes; then that play takes
+10 seconds and one timeout is spent. The engine's cancel control removes the
+selection. Only one side's modifier can be armed at a time. It survives required
+play decisions and private save/load, and clears after the play. The existing
+post-play clock choices continue to adjust the completed play.
+
+
+Cancel an armed timeout before choosing the separate combined next-spike timing
+option; the engine withholds that choice while the timeout is armed.

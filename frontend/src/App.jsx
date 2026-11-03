@@ -315,13 +315,15 @@ export default function App() {
           <span className="font-bold">Clock</span>
           <span className="text-xs text-gray-300">Choose one action for the next play.</span>
           <ClockChoices pending={pending} modifiers={turn ? view.clock_modifiers?.filter((c) => pending.choices.some((offered) => offered.id === c.id)) : view.clock_modifiers} onChoose={choose} disabled={busy} />
-        </div> : <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-600 pt-2">
+        </div> : null}
+        {(!clockChoice || timeoutActions.length > 0) && <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-600 pt-2">
           <span className="font-bold">Clock</span>
           {timeoutActions.map((action) => <button key={action.key} type="button" className="play-button"
             disabled={busy || blocking || view.finished} title={action.label} data-testid={'game-play-' + action.key}
             onClick={() => special(action.key, true)}>{action.label}</button>)}
-          {!timeoutActions.length && <button type="button" className="play-button" disabled title="Available when the engine offers a timeout after an eligible play.">Timeout</button>}
+          {!timeoutActions.length && <button type="button" className="play-button" disabled title="Available when the engine offers an eligible timeout.">Timeout</button>}
         </div>}
+        {view.armed_timeout_label && <p role="status">{view.armed_timeout_label}</p>}
         {boundsActions.length > 0 && <div role="group" aria-label="Next-play result instruction" className="border-t border-slate-600 pt-2">
           <span className="font-bold">Next-play result</span>
           <div className="mt-2 grid grid-cols-2 gap-2" data-testid="bounds-actions">

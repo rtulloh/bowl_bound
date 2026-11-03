@@ -60,3 +60,16 @@ overtime and finished games have no guidance. Adapters pass the captured respons
 view to `SavedGame.fourth_down_guidance`; clients display its text and never compute
 kick range, chart probabilities, or the policy. This read-only field consumes no
 dice and changes no coaching history, command revision or save contents.
+
+
+Regulation views add nullable `armed_timeout` (`home`/`away`) and the engine's
+`armed_timeout_label`. Legal `game_actions` may offer `timeout:<side>` to arm or
+cancel that side's next-play timeout. Coached responses offer only the human's
+own action. Submit the ID to the existing action endpoint; the null report and
+unchanged clock mean no play or timeout has been spent. A subsequent completed
+legal play consumes it once and records `timeout:<side>` plus 10 seconds in
+`timing_log`. Pending continuations preserve the modifier; no-time elected
+safeties and period boundaries clear it unused. The API/frontend never infer
+eligibility from counts, possession or phase. Existing `clock:timeout:<side>`
+decisions retain their prior-play meaning; overtime's action retains its own
+existing immediate budget rule.

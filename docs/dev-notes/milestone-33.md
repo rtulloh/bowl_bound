@@ -383,3 +383,43 @@ UI-041 focused validation (2026-11-02):
 - Added three real-engine Playwright cases for normal difficulty guidance, three legal snaps, displayed backend facts, save/load and kick clearing. The local focused run failed all three **before assertions** with Chromium `bootstrap_check_in` Permission denied 1100 / SIGTRAP; existing color-environment warnings remained visible. No skips or browser assertion changes. These cases require the fresh branch-hosted browser run before acceptance.
 - Review corrected a synthetic short-yardage fixture from a 48-yard attempt (approved policy always kicks there) to 47 yards (Medium fourth-and-one goes). The existing approved bands and production policy were unchanged.
 - No runtime module was added; all modified runtime modules already belong to `release/manifest.json`. No sample allowlist/hash or private data changed.
+
+
+## RULE-042 — armed, side-owned pre-play timeout
+
+Reviewed Paydirt `paydirt-web/backend/routes.py` request/control flow (427–430,
+1078–1089, 1186–1191) and `tests/test_timeout_clock_interactions.py`. Adapted the
+pre-play interaction and boundary-test strategy; excluded NFL two-minute warnings,
+minute clocks, random 35-second play timing and any runtime dependency. The
+approved Bowl Bound 10-second timing and three-per-half budgets stay in the engine.
+
+Eligible regulation scrimmage views offer own-side arm/cancel actions, including
+after kickoff. Parent confirmed one armed modifier, own cancellation and no
+overwrite by the other side. Arming does not commit prior optional timing or
+spend dice/budget. The completed legal play consumes it exactly once, logs the
+10-second charge and clears it. Pending penalty/kick/RZDZ continuations retain it;
+unsupported/invalid actions do not spend it. The no-time elected safety and period
+boundaries clear unused arms, preserving existing rules. Existing prior-play
+clock decisions and overtime timeouts remain separate. Exhausting the armed
+side’s last budget through an explicit prior-play timeout clears the unavailable
+arm. Cancel an arm before choosing the separate combined next-spike timing;
+no simultaneous next-play clock rule is invented. Safe-kneel queries account for
+an armed offensive timeout.
+
+New synthetic tests were red before each discovered behavior correction: absent
+post-kickoff actions (17 initial failures), the safe-kneel forecast, prior-delay
+period boundary, elected safety’s no-time rule, and combined-spike exclusion.
+Corrected two test setup errors (illegal sentinel face, unfinished punt) and the
+generic elected safety expectation against the approved rule; documented in
+RULE-042. Save tests include pending real Hard RZDZ decisions and reject a forged
+unarmed digest for an armed journal. API/CLI tests cover ownership, no overwrite,
+preview/save purity, clock/budget changes and replay. Browser fixtures use actual
+synthetic engine commands and raw private-seed-preserving save text, never mocked
+outcomes. All modified runtime modules already belong to the release manifest.
+
+
+RULE-042 focused validation (2026-11-02):
+- `.venv/bin/python -m pytest tests/test_armed_timeouts.py tests/test_coaching_invariants.py tests/test_regulation.py tests/test_api_regulation.py tests/test_cli_timeout_controls.py tests/test_cli_shortcuts.py tests/test_kneel_safety.py tests/test_save_game.py tests/test_coaching_saves.py tests/test_fumble_penalty_order.py tests/test_fourth_down_guidance.py tests/test_issue_tracker.py -q`: **425 passed in 44.04s**, including **37 new armed-timeout cases**, no skips/warnings.
+- Pinned Node/npm in `frontend/`: `npm test` **130 passed (16 files)** and `npm run build` passed. Focused clock/no-rules tests: **22 passed**.
+- Ruff check and format check passed (**535 files**), and `git diff --check` passed.
+- Added real-engine browser cases for each human side after kickoff: offered own-side arm, unchanged clock/budget, raw-text save/load, legal offensive/defensive call, one 10-second charge and reset. Browser acceptance remains pending the fresh hosted branch run; the local process-launch restriction is not counted as a pass.

@@ -67,3 +67,46 @@ for (const difficulty of ['easy', 'medium', 'hard']) {
     await expect(page.getByRole('region', { name: 'Fourth-down guidance' })).toHaveCount(0)
   })
 }
+
+
+for (const side of ['home', 'away']) {
+  test('next-play timeout is side-owned after kickoff for human ' + side, async ({ page, request }) => {
+    const created = await request.post('/api/games', { data: { home: '2002/alpha-tech', away: '2002/beta-state', mode: 'regulation', seed: 7, difficulty: 'medium' } })
+    expect(created.ok()).toBeTruthy()
+    const gameId = (await created.json()).game_id
+    expect((await request.post('/api/games/' + gameId + '/decision', { data: { choice: 'toss:kick' } })).ok()).toBeTruthy()
+    const kicked = await request.post('/api/games/' + gameId + '/kick', { data: { action: 'kickoff' } })
+    expect(kicked.ok()).toBeTruthy()
+    const before = (await kicked.json()).view
+    const initial = await request.get('/api/games/' + gameId + '/save')
+    await page.goto('/')
+    await page.getByLabel('Control mode').selectOption(side)
+    const loadedResponse = page.waitForResponse((response) => response.url().includes('/api/games/load?'))
+    await page.getByLabel('Load saved game', { exact: true }).setInputFiles({ name: 'synthetic.json', mimeType: 'application/json', buffer: Buffer.from(await initial.text()) })
+    const loaded = await (await loadedResponse).json()
+    const other = side === 'home' ? 'away' : 'home'
+    await expect(page.getByTestId('game-play-timeout:' + other)).toHaveCount(0)
+    const actionResponse = page.waitForResponse((response) => response.url().includes('/action?'))
+    await page.getByTestId('game-play-timeout:' + side).click()
+    const armed = await (await actionResponse).json()
+    expect(armed.report).toBeNull()
+    expect(armed.view.clock).toEqual(before.clock)
+    expect(armed.view.armed_timeout).toBe(side)
+    await expect(page.getByText(armed.view.armed_timeout_label, { exact: true })).toBeVisible()
+    const text = await (await request.get('/api/games/' + loaded.game_id + '/save')).text()
+    await page.reload()
+    await page.getByLabel('Control mode').selectOption(side)
+    const resumedResponse = page.waitForResponse((response) => response.url().includes('/api/games/load?'))
+    await page.getByLabel('Load saved game', { exact: true }).setInputFiles({ name: 'armed.json', mimeType: 'application/json', buffer: Buffer.from(text) })
+    const resumed = await (await resumedResponse).json()
+    expect(resumed.view.armed_timeout).toBe(side)
+    await expect(page.getByText(armed.view.armed_timeout_label, { exact: true })).toBeVisible()
+    await page.getByTestId(side === 'home' ? 'offense-play-1' : 'defense-play-a').click()
+    await expect(page.getByText(armed.view.armed_timeout_label, { exact: true })).toHaveCount(0)
+    const after = await (await request.get('/api/games/' + resumed.game_id + '?human_side=' + side)).json()
+    expect(after.view.armed_timeout).toBeNull()
+    expect(after.view.clock.remaining).toBe(before.clock.remaining - 10)
+    expect(after.view.clock.timeouts).toEqual(side === 'home' ? [2, 3] : [3, 2])
+    expect(after.view.timing_log.at(-1).method).toBe('timeout:' + side)
+  })
+}
