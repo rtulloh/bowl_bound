@@ -1,0 +1,55 @@
+docs/chart-generator.md
+  s_e06e375ba9891d::t_2240365e66e45d 113-114,200,203-204
+docs/dev-notes/issue-tracker.md
+  s_cee2f5c7a51f19::t_eaee1198e3f917 8,10,17,105,114-120,587-592,594,596
+docs/dev-notes/issues/DATA/DATA-001.md
+  s_e06e375ba9891d::t_88993d3e2c7f99 4,8,11,13-14,30-33
+docs/dev-notes/issues/DATA/DATA-002.md
+  s_e06e375ba9891d::t_f5b69f94ef485c 4,8,11,13-14,38-41
+docs/dev-notes/issues/DATA/DATA-003.md
+  s_e06e375ba9891d::t_f5e94d75aa84aa 4,8,11,13-14,30-33
+docs/dev-notes/issues/DATA/DATA-004.md
+  s_e06e375ba9891d::t_6f3c06d40f1ade 4,8,11,13-14,30-33
+docs/dev-notes/issues/DATA/DATA-005.md
+  s_e06e375ba9891d::t_59c5de5c9f7842 4,8,11,13-14,38-41
+docs/dev-notes/issues/DATA/DATA-006.md
+  s_e06e375ba9891d::t_7512dd4574aab4 4,8,11,13-14,30-33
+docs/dev-notes/issues/DATA/DATA-008.md
+  s_e06e375ba9891d::t_f8ca96c92a956a 4,8,11,13-14,31-34
+docs/dev-notes/issues/DATA/DATA-009.md
+  s_e06e375ba9891d::t_af561f1dc73f1d 31
+docs/dev-notes/issues/DATA/DATA-010.md
+  s_cee2f5c7a51f19::t_2a3f5cfa1434eb 1-29
+docs/dev-notes/milestone-34.md
+  s_cee2f5c7a51f19::t_cc1c5e5229967e 202-242
+scripts/run_local_season.py
+  s_e06e375ba9891d::t_476b9cff2ec36d 560
+tests/chartgen/test_refinement.py
+  s_e06e375ba9891d::t_cc012bd9ec17a1 185-187,192-219,233-234
+tools/chartgen/refine.py
+  s_e06e375ba9891d::t_7a25275abf909e 95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "1f84e56860a20ba7f70d8e1ee4dd097b1bfc8ea5",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    },
+    "s_e06e375ba9891d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f07-7008-7201-b15a-cd4a7dec87df",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
