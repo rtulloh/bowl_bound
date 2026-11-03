@@ -1,0 +1,19 @@
+docs/chart-generator.md
+  s_e06e375ba9891d::t_a3e1ac072956da 252-254,262-270
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "20e5f73d6580b97baef10700a36ae42674423234",
+  "prompts": {},
+  "sessions": {
+    "s_e06e375ba9891d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f07-7008-7201-b15a-cd4a7dec87df",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
