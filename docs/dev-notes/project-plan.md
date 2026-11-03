@@ -706,6 +706,23 @@ Tracked work: [UI-053](issues/UI/UI-053.md). See the
 
 **Commit:** `milestone 36: bring the Easy coaching helper to the web UI`
 
+### 37. Download and prepare support reports from the web UI
+
+Owner-requested future work, added 2026-11-03. Provide a complete downloadable
+record of the game's committed play history and diagnostic context, plus an
+email-compose link to the documented support address. Preserve kick/PAT/return
+outcomes, pending decisions and timing evidence. Keep export user-initiated and
+previewable; do not bundle team charts, source PDFs or unrelated local files.
+Opening a mail client must not send automatically or pretend to attach a file.
+Tracked work: [UI-056](issues/UI/UI-056.md).
+
+**Validate:** synthetic engine/API/frontend/browser tests cover partial and
+completed games, saves, long logs, supported privacy boundaries, accurate integer
+serialization and missing mail-client/download support. Export changes no game
+state, commands, dice or coaching. See the [planning note](milestone-37.md).
+
+**Commit:** `milestone 37: add downloadable support reports`
+
 ## Decision gates
 
 Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.
