@@ -438,3 +438,121 @@ def test_prepare_cohort_generates_charts_and_exact_historical_review_scope(
     assert (root / "charts" / "2007" / "cedar-valley" / "offense.csv").is_file()
     with pytest.raises(ValueError, match="new"):
         prepare_cohort(source, contracts, 2007, root, source_provenance={}, minimum_source_games=1)
+
+
+def test_offensive_refinement_preserves_independently_modeled_defense(events: list[Event]) -> None:
+    from tools.chartgen.tactics import TacticalProfile
+
+    neutral = TacticalProfile.neutral()
+    effects = tuple(
+        replace(
+            e,
+            override_delta=0.08
+            if e.formation.value == "A"
+            else -0.08
+            if e.formation.value == "B"
+            else 0,
+        )
+        for e in neutral.effects
+    )
+    tactics = TacticalProfile(effects, "synthetic", ())
+    first = generate_team(events, "1", "Cedar Valley", 2007, tactics=tactics)[0]
+    second = generate_team(
+        events,
+        "1",
+        "Cedar Valley",
+        2007,
+        tactics=tactics,
+        profile=CalibrationProfile(pass_yards_scale=1.4),
+    )[0]
+    assert first.offense != second.offense
+    assert first.defense == second.defense
+
+
+def test_defensive_calibration_is_bounded_and_preserves_offense(events: list[Event]) -> None:
+    from tools.chartgen.generate import DefensiveProfile
+
+    first = generate_team(events, "1", "Cedar Valley", 2007)[0]
+    second = generate_team(
+        events,
+        "1",
+        "Cedar Valley",
+        2007,
+        defensive_profile=DefensiveProfile(run_yards_offset=1.5, completion_shift=-0.06),
+    )[0]
+    assert first.offense == second.offense
+    assert first.defense != second.defense
+    with pytest.raises(ValueError, match="bound"):
+        DefensiveProfile(run_yards_offset=3)
+    with pytest.raises(ValueError, match="finite"):
+        DefensiveProfile(sack_shift=float("nan"))
+
+
+def test_historical_cohort_two_phase_driver_preserves_baseline_and_unused_validation(
+    tmp_path: Path, events: list[Event]
+) -> None:
+    import json
+
+    from tools.chartgen.cohort_refinement import run_cohort_refinement
+    from tools.chartgen.cohort_sources import HistoricalContracts
+    from tools.chartgen.prepare import prepare_cohort
+    from tools.chartgen.scope import HistoricalGame, TeamSeason
+
+    source = [
+        replace(e, period=int(e.event_id.split("-")[-1]) % 4 + 1, clock="0:20") for e in events
+    ]
+    contracts = HistoricalContracts(
+        {
+            "1": TeamSeason("1", "Cedar Valley", "cfb:sec", "fbs"),
+            "2": TeamSeason("2", "Harbor Tech", "cfb:sec", "fbs"),
+        },
+        tuple(HistoricalGame(f"g{i}", 2007, "1", "2") for i in range(4)),
+        {},
+    )
+    prepared = tmp_path / "private-data" / "prepared"
+    prepare_cohort(source, contracts, 2007, prepared, source_provenance={}, minimum_source_games=1)
+    manifest = json.loads((prepared / "review" / "manifest.json").read_text())
+    targets = json.loads((prepared / "review" / "targets.json").read_text())
+    output = tmp_path / "private-data" / "refinement"
+    report = run_cohort_refinement(
+        source,
+        manifest,
+        targets,
+        output,
+        reviewed_manifest_sha256=manifest["manifest_sha256"],
+        training_repetitions=1,
+        validation_repetitions=1,
+        coaching_repetitions=1,
+        iterations=1,
+        master_seed=77,
+    )
+    assert report["mechanics_ready"]
+    assert not report["all_team_statistical_gates_passed"]
+    assert report["historical_full_season_fit_claim"] is False
+    assert report["training_history"][0]["summary"]["domain"] == "training"
+    assert report["heldout"]["domain"] == "heldout"
+    assert report["coaching_assessment"]["completed_runs"] == 4
+    assert report["selected_regeneration_identical"]
+    import csv
+
+    with (output / "calibration-matchups.csv").open() as stream:
+        used = list(csv.DictReader(stream))
+    assert {r["game_id"] for r in used} == {f"g{i}" for i in range(4)}
+    assert all(r["training_runs"] == "1" and r["heldout_runs"] == "1" for r in used)
+    assert all(r["failed_runs"] == "0" for r in used)
+    assert (output / "calibration-matchups.md").is_file()
+    assert (output / "candidate-00" / "charts" / "2007" / "cedar-valley" / "offense.csv").exists()
+    assert (output / "playtest-charts" / "2007" / "cedar-valley" / "offense.csv").exists()
+    assert report == run_cohort_refinement(
+        source,
+        manifest,
+        targets,
+        output,
+        reviewed_manifest_sha256=manifest["manifest_sha256"],
+        training_repetitions=1,
+        validation_repetitions=1,
+        coaching_repetitions=1,
+        iterations=1,
+        master_seed=77,
+        resume=True,
+    )

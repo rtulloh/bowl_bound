@@ -26,3 +26,8 @@ The accepted prototype only calibrates two-team pooled outcomes. Follow-up needs
 
 --- 2026-11-03 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-03 target integrity ---
+New report test demonstrated missing target-value hash: matching fixture IDs alone
+does not freeze the actual statistical goals. The manifest now hashes the complete
+restricted targets, and the runner rejects changed values before starting a game.

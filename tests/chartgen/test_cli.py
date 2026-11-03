@@ -59,3 +59,27 @@ def test_cohort_cli_rejects_missing_inputs_without_private_data_output(
     assert status == 2
     assert "input file is unavailable" in capsys.readouterr().err
     assert not (tmp_path / "private-data").exists()
+
+
+def test_cohort_refinement_cli_requires_actual_existing_frozen_inputs(
+    tmp_path: Path, capsys
+) -> None:
+    from tools.chartgen.cohort_refine_cli import main
+
+    status = main(
+        [
+            "--source",
+            str(tmp_path / "missing.json"),
+            "--manifest",
+            str(tmp_path / "manifest.json"),
+            "--targets",
+            str(tmp_path / "targets.json"),
+            "--reviewed-manifest-sha256",
+            "reviewed-example-hash",
+            "--output",
+            str(tmp_path / "private-data" / "refinement"),
+        ]
+    )
+    assert status == 2
+    assert "input file is unavailable" in capsys.readouterr().err
+    assert not (tmp_path / "private-data").exists()

@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import json
+import re
 from collections import defaultdict
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -204,3 +206,77 @@ def audit_espn_headers(
         "independent_official_confirmation": False,
         "event_completeness_claim": False,
     }
+
+
+def apply_primary_overrides(contracts: HistoricalContracts, path: Path) -> HistoricalContracts:
+    """Apply explicit operator-curated evidence without replacing raw source facts."""
+    payload = json.loads(path.read_text())
+    if set(payload) != {"schema_version", "games"} or payload["schema_version"] != 1:
+        raise ValueError("unsupported primary fixture override schema")
+    indexed = {g.game_id: g for g in contracts.games}
+    changes, seen = [], set()
+    for row in payload["games"]:
+        if set(row) != {
+            "game_id",
+            "season",
+            "home",
+            "away",
+            "neutral_site",
+            "classification",
+            "evidence",
+        }:
+            raise ValueError("primary override fields differ from explicit fixture contract")
+        game = indexed.get(row["game_id"])
+        if game is None or (row["season"], row["home"], row["away"]) != (
+            game.season,
+            game.home,
+            game.away,
+        ):
+            raise ValueError("primary override fixture identity differs from historical schedule")
+        if game.game_id in seen:
+            raise ValueError("duplicate primary override identity")
+        seen.add(game.game_id)
+        if type(row["neutral_site"]) is not bool:
+            raise ValueError("primary neutral flag must be an explicit boolean")
+        if row["classification"] not in {
+            "regular",
+            "conference_championship",
+            "bowl",
+            "BCS",
+            "BCS_national_championship",
+        }:
+            raise ValueError("unsupported primary fixture classification")
+        if not row["evidence"] or any(
+            set(e) != {"url", "sha256", "locator"}
+            or not e["url"].startswith("https://")
+            or re.fullmatch(r"[0-9a-f]{64}", e["sha256"]) is None
+            or not e["locator"].strip()
+            for e in row["evidence"]
+        ):
+            raise ValueError("primary override requires source URL, SHA256 and evidence locator")
+        updated = replace(
+            game,
+            neutral_site=row["neutral_site"],
+            classification=row["classification"],
+            classification_evidence="operator-curated primary evidence: "
+            + "; ".join(e["url"] + " # " + e["locator"] for e in row["evidence"]),
+        )
+        indexed[game.game_id] = updated
+        changes.append(
+            {"before": asdict(game), "after": asdict(updated), "evidence": row["evidence"]}
+        )
+    provenance = {
+        **contracts.provenance,
+        "primary_overrides": {
+            "filename": path.name,
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "changes": changes,
+            "scope": (
+                "fixture classification/neutral only; "
+                "membership and event completeness not established"
+            ),
+        },
+    }
+    return replace(
+        contracts, games=tuple(indexed[g.game_id] for g in contracts.games), provenance=provenance
+    )

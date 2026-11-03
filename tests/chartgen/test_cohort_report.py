@@ -42,6 +42,9 @@ def test_private_report_matches_targets_and_actual_fixtures(tmp_path: Path) -> N
     assert [r["game_id"] for r in rows] == ["ab", "ac"]
     assert len({r["game_id"] for r in rows}) == 2
     assert len(report["manifest_sha256"]) == 64
+    from tools.chartgen.cohort_report import canonical_hash
+
+    assert report["targets_sha256"] == canonical_hash(targets)
     assert rows[0]["manifest_sha256"] == report["manifest_sha256"]
     assert rows[0]["profiles_sha256"] == "3" * 64
     assert report["teams"]["a"]["full_source_game_ids"] == ["ab", "ac"]

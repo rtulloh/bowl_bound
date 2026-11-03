@@ -105,3 +105,51 @@ Markdown/CSV/JSON paths, hashes and a bounded proposed run budget for owner revi
 No broad simulations were started. Original M34 pilots/reference charts remain
 untouched. Added maintained operator/source/report guidance in
 `docs/college-cohort-generator.md`.
+
+## Phase-two implementation checkpoint
+
+Reconsulted Paydirt's tuning runner and tests before this phase. Adapt globally
+selected paired candidates and immutable profiles, not its NFL sample schedule
+or coefficients. New cohort runner uses the existing engine audit, actual
+fixture sides/postseason configuration, distinct seed domains, at most two
+submitted tasks, per-team OFF/DEF and conference summaries, atomic retained
+results and checksum-verified resume. Complete synthetic two-phase integration
+with generation/training/held-out saved replay/coaching assessment/identical
+regeneration/resume passed in 35.65 seconds. Sparse metric Infinity serialization
+was reproduced and tracked under DATA-015; explicit null/failed assessments
+preserve the sample gates. DATA-013 also records the supported-Python buffering
+regression caught by the two-worker test.
+
+DATA-016's failing synthetic case showed offensive yardage refinement altering
+defensive forced-completion responses. Defense now uses an explicit league
+completion prior plus independent defensive effect. Separate bounded defense
+residual knobs preserve offense. Revised private phase-one v2 cohorts retain the
+same actual fixture sets and old artifacts. All 236 revised charts reloaded and
+passed exact weighted physical priority audits, with zero failures.
+
+DATA-017 records that provider neutral flags and championship labels can be wrong
+even when related sources agree. Identity-matched primary-evidence overrides
+preserve raw values and hashes. Parent is researching corroborating historical
+labels; current proposed reports disclose unresolved classifications. No broad
+historical simulation has started before the requested concrete-slate review.
+
+Frontend/dependency checkpoint: fresh `npm ci`, all 130 Vitest cases, production
+build and npm audit passed with zero vulnerabilities; Python `pip check` passed.
+Install output retained the existing whatwg-encoding deprecation and optional
+fsevents install-script notices; no scripts were approved or warnings suppressed.
+A focused resume regression correctly rejected a run while tool source changed
+during implementation; stable-source reruns are required. A later genuine CSV
+LF/CRLF resume mismatch was reproduced under DATA-013 and corrected with an
+explicit LF export contract, retaining exact content checks.
+
+Stable-source phase-two cumulative gate: 139 generator/runner/tracker tests passed
+in 76.92 seconds, including two-worker interrupted resume and exact final
+matchup usage exports. Ruff checks/format passed. The existing runner expectation
+adds only `game_type: regular`, reflecting a newly recorded audit configuration;
+its default engine behavior is unchanged. Historical postseason runs now pass
+the existing engine's postseason option explicitly. No runtime module or release
+manifest change is needed: all changes remain development tooling/tests/docs.
+
+This is a testable implementation boundary, not completed 34a acceptance. Full
+regression, fresh hosted browser checks, concrete slate review and measured
+historical calibration remain outstanding.

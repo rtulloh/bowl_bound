@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 from collections.abc import Callable, Mapping, Sequence
@@ -9,12 +10,26 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from bowl_bound.team_csv import team_folder_name
+from bowl_bound.models import TeamChart
+from bowl_bound.team_csv import TeamFileMetadata, team_folder_name, team_to_files
 
 from .evidence import Event
-from .generate import CalibrationProfile, EvidenceModel, generate_team, write_bundle
+from .generate import (
+    CalibrationProfile,
+    DefensiveProfile,
+    EvidenceModel,
+    generate_team,
+    write_bundle,
+)
 from .private_io import private_destination
 from .tactics import TacticalProfile
+
+
+def bundle_hash(chart: TeamChart, metadata: TeamFileMetadata) -> str:
+    """Hash normalized reloadable chart content independently of artifact ordering."""
+    return hashlib.sha256(
+        json.dumps(team_to_files(chart, metadata), sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
 
 
 def write_json_new(path: Path, payload: Any) -> None:
@@ -33,6 +48,7 @@ def generate_cohort(
     *,
     seed: int = 1,
     profiles: Mapping[str, CalibrationProfile] | None = None,
+    defensive_profiles: Mapping[str, DefensiveProfile] | None = None,
     tactics: TacticalProfile | None = None,
     model: EvidenceModel | None = None,
     progress: Callable[[int, int, str], None] | None = None,
@@ -51,10 +67,12 @@ def generate_cohort(
     records = {}
     for index, (team, name) in enumerate(sorted(teams.items())):
         profile = (profiles or {}).get(team, CalibrationProfile())
+        defense = (defensive_profiles or {}).get(team, DefensiveProfile())
         record = {
             "name": name,
             "catalog_id": f"{season}/{team_folder_name(name)}",
             "profile": asdict(profile),
+            "defensive_profile": asdict(defense),
         }
         try:
             bundle = generate_team(
@@ -64,6 +82,7 @@ def generate_cohort(
                 season,
                 seed=seed,
                 profile=profile,
+                defensive_profile=defense,
                 tactics=tactics,
                 model=model,
             )
@@ -72,6 +91,7 @@ def generate_cohort(
                 state="generated",
                 source_summary=bundle[2]["source_summary"],
                 source_sha256=bundle[2]["source_sha256"],
+                bundle_sha256=bundle_hash(*bundle[:2]),
             )
         except ValueError as error:
             record.update(state="unidentifiable", reason=str(error))

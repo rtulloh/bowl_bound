@@ -78,6 +78,25 @@ class CalibrationProfile:
                 raise ValueError(f"profile {name} outside bounds [{lower}, {upper}]")
 
 
+@dataclass(frozen=True)
+class DefensiveProfile:
+    """Independent bounded residuals; zero preserves the source-fitted defense."""
+
+    run_yards_offset: float = 0.0
+    pass_yards_offset: float = 0.0
+    completion_shift: float = 0.0
+    interception_shift: float = 0.0
+    sack_shift: float = 0.0
+
+    def __post_init__(self) -> None:
+        for name, value in asdict(self).items():
+            if type(value) not in {int, float} or not math.isfinite(value):
+                raise ValueError(f"defensive profile {name} must be finite")
+            bound = 2.0 if name.endswith("offset") else 0.08 if name == "completion_shift" else 0.03
+            if abs(value) > bound:
+                raise ValueError(f"defensive profile {name} outside bounds [-{bound}, {bound}]")
+
+
 def offensive_weights() -> dict[int, int]:
     return dict(
         sorted(
@@ -305,11 +324,13 @@ def generate_team(
     *,
     seed: int = 1,
     profile: CalibrationProfile | None = None,
+    defensive_profile: DefensiveProfile | None = None,
     tactics: TacticalProfile | None = None,
     model: EvidenceModel | None = None,
 ) -> tuple[TeamChart, TeamFileMetadata, dict[str, Any]]:
     """Build a complete local-only bundle from normalized evidence, without I/O."""
     profile = profile or CalibrationProfile()
+    defensive_profile = defensive_profile or DefensiveProfile()
     from .tactics import TacticalProfile
 
     tactics = tactics or TacticalProfile.neutral()
@@ -453,6 +474,10 @@ def generate_team(
             for row, token in tokens.items()
         )
     defense = []
+    neutral_response_means = {
+        kind: mean(e.yards for e in live if e.kind == kind and e.yards is not None)
+        for kind in ("rush", "complete")
+    }
     league_dropbacks = [
         e for e in live if e.kind in {"complete", "incomplete", "interception", "sack"}
     ]
@@ -460,6 +485,11 @@ def generate_team(
     for formation in Defense:
         for play in Play:
             effect = (run_effects if play.value <= 5 else pass_effects).get(team, 0.0)
+            effect += (
+                defensive_profile.run_yards_offset
+                if play.value <= 5
+                else defensive_profile.pass_yards_offset
+            )
             tactical = tactics.lookup(formation, play)
             value = round(max(-4, min(4, effect)) + tactical.yard_offset)
             tokens = dict.fromkeys(range(1, 6), str(value) if value else "")
@@ -470,7 +500,13 @@ def generate_team(
                     rate_effects["interception"].get(team, 0) if play.value >= 6 else 0
                 )
                 sack_effect = rate_effects["sack"].get(team, 0) if play.value >= 6 else 0
-                response_mean = mean(complete if play.value >= 6 else rush) + value
+                if play.value >= 6:
+                    completion_effect += defensive_profile.completion_shift
+                    interception_effect += defensive_profile.interception_shift
+                    sack_effect += defensive_profile.sack_shift
+                response_mean = (
+                    neutral_response_means["complete" if play.value >= 6 else "rush"] + value
+                )
                 desired = [
                     ("INT 0", max(0, interception_effect + tactical.interception_delta)),
                     ("QT", max(0, sack_effect + tactical.sack_delta)),
@@ -640,6 +676,7 @@ def generate_team(
         "seed": seed,
         "source_sha256": source_hash,
         "profile": asdict(profile),
+        "defensive_profile": asdict(defensive_profile),
         "source_summary": summarize_events(events, team),
         "source_scope": "all supplied live events, including postseason and overtime",
         "tactical_evidence": "inferred-neutral"
@@ -674,6 +711,9 @@ def generate_team(
             "fumble_probability_fallback": not known_fumbles,
             "defense_effect_bound_yards": 4,
             "opponent_ridge_play_count": 100,
+            "defensive_completion_yards": (
+                "source league completion mean plus defensive effect; independent of own offense"
+            ),
         },
         "mechanics": {
             "guaranteed_TD_cells": False,

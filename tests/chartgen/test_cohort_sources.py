@@ -95,3 +95,44 @@ def test_raw_pbp_headers_must_match_canonical_sides_and_source_hash(tmp_path: Pa
         audit_espn_headers(
             raw, contracts, expected_raw_sha256=hashlib.sha256(raw.read_bytes()).hexdigest()
         )
+
+
+def test_primary_override_preserves_raw_facts_and_cannot_invent_fixture(tmp_path: Path) -> None:
+    import json
+
+    from tools.chartgen.cohort_sources import HistoricalContracts, apply_primary_overrides
+    from tools.chartgen.scope import HistoricalGame
+
+    original = HistoricalContracts({}, (HistoricalGame("g", 2007, "a", "b"),), {})
+    payload = {
+        "schema_version": 1,
+        "games": [
+            {
+                "game_id": "g",
+                "season": 2007,
+                "home": "a",
+                "away": "b",
+                "neutral_site": True,
+                "classification": "conference_championship",
+                "evidence": [
+                    {
+                        "url": "https://example.org/fictional-guide",
+                        "sha256": "1" * 64,
+                        "locator": "original fictional neutral championship fixture",
+                    }
+                ],
+            }
+        ],
+    }
+    path = tmp_path / "override.json"
+    path.write_text(json.dumps(payload))
+    updated = apply_primary_overrides(original, path)
+    assert not original.games[0].neutral_site
+    assert updated.games[0].neutral_site
+    assert updated.games[0].classification == "conference_championship"
+    assert updated.provenance["primary_overrides"]["changes"][0]["before"]["neutral_site"] is False
+    assert updated.independent_membership_confirmation is False
+    payload["games"][0]["away"] = "invented"
+    path.write_text(json.dumps(payload))
+    with pytest.raises(ValueError, match="identity"):
+        apply_primary_overrides(original, path)

@@ -2,8 +2,8 @@
 
 This extends the two-phase [chart generator](chart-generator.md). Phase one can
 prepare private multi-team bundles and a reviewable historical matchup slate.
-Cohort calibration and resume tooling are under development in Milestone 34a;
-the established two-team commands remain available.
+The cohort runner and resume tooling are implemented and under validation in
+Milestone 34a; the established two-team commands remain available.
 
 ## Prepare an immutable historical slate
 
@@ -83,3 +83,68 @@ Public tests use original fictional data. Historical matchup reports contain no
 raw play text or private reference cells and remain private despite their
 review-oriented format. Generated charts are development/playtest inputs and
 are not approved for publication or runtime packaging.
+
+## Historical simulation and residual refinement
+
+The new cohort runner accepts only the frozen actual fixture manifest. Candidate
+profiles share the same training seeds by season/game/repetition; held-out and
+coaching domains are separate. Neutral-site designation is retained as metadata;
+no extra home-field rule is invented. Postseason configuration is passed to the
+existing engine. Provider flags may be corrected only through an identity-matched
+`--primary-overrides` file with primary URL, SHA256, evidence locator and preserved
+before/after values. Classification correction does not establish event or
+membership completeness.
+
+Engine audit artifacts retain full outcomes, clocks, scoring, statistics, traces
+and calls. At most two engine processes are submitted at once. Complete artifacts
+are published atomically without replacing earlier files; resume checks source,
+manifest, engine/tool, profiles, targets, charts, seed plans and every result hash.
+Malformed or changed artifacts fail for investigation. In-memory summaries retain
+only verified metric facts, with full logs kept privately on disk.
+
+Separate offensive profiles retain the original bounded knobs. Defensive residual
+profiles add run/pass yard offsets bounded to two yards, completion shifts bounded
+to 0.08 and interception/sack shifts bounded to 0.03. Defensive completion response
+yards use a source-league prior plus the independently fitted defensive effect,
+never the same team's offensive chart strength. The finite defensive dice can
+leave a requested correction unexpressed. No defensive fumble knob or observed
+formation claim is invented.
+
+A residual update needs at least 250 simulated metric observations and takes a
+half-step multiplied by `n / (n + 1000)`. Three candidates is the default declared
+iteration bound. Global candidates are compared by equal-team, equal-OFF/DEF
+normalized error, rather than selecting mutually incompatible team profiles from
+different opponent fits. Training gates require 1000 primary observations and
+held-out gates 2000; established special-team minimums/tolerances remain explicit.
+Sparse, unavailable, saturated and unchanged finite-dice outcomes remain failed
+or unidentifiable gates. They are never converted to zero or silently passed.
+The selected profile is regenerated from the source model and compared with the
+selected candidate before private playtest output is accepted.
+
+A fresh-seed result is simulation validation on source-fitted actual fixtures.
+Whole-game source partitioning excludes a withheld game's rows from both sides
+and every opponent fit; a genuinely unseen-source diagnostic must also use
+uncontaminated neutral priors and independently fitted profiles. The main final
+full-source generation does not claim unseen-source validation.
+
+After the user reviews the concrete slate, run the separate second phase with
+that exact manifest hash (replace the synthetic placeholder below):
+
+```bash
+.venv/bin/python -m tools.chartgen.cohort_refine_cli \
+  --source private-data/example/normalized.json \
+  --manifest private-data/example/prepared-01/review/manifest.json \
+  --targets private-data/example/prepared-01/review/targets.json \
+  --reviewed-manifest-sha256 REVIEWED_SHA256 \
+  --output private-data/example/refinement-01 \
+  --training-repetitions 4 --validation-repetitions 8 \
+  --coaching-repetitions 1 --iterations 3 --workers 2
+```
+
+Use the identical command with `--resume` after interruption; changed tool/engine
+inputs require a new run, rather than silently continuing old calibration.
+`calibration-matchups.csv` and `.md` report actual attempted training, held-out
+and coaching repetitions/failures for each frozen physical fixture. The final
+JSON includes per-team assessments, raw denominators, game-cluster uncertainty,
+source/engine/profile hashes and retained candidate history. Statistical failure
+may accompany mechanically usable charts and must remain visible.

@@ -297,6 +297,7 @@ def test_simulator_uses_engine_and_records_calls_and_full_trace() -> None:
         "engine_coach_policy": "baseline",
         "simulation_coach_policy": "baseline",
         "advanced_ii": False,
+        "game_type": "regular",
         "defense_chart_markers": {"home": [], "away": []},
     }
 

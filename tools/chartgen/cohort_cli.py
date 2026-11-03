@@ -7,7 +7,7 @@ import json
 import sys
 from pathlib import Path
 
-from .cohort_sources import audit_espn_headers, load_contracts
+from .cohort_sources import apply_primary_overrides, audit_espn_headers, load_contracts
 from .prepare import prepare_cohort
 from .source import read_normalized
 from .tactics import TacticalProfile
@@ -23,6 +23,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--groups", type=Path, required=True)
     parser.add_argument("--season", type=int, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--primary-overrides", type=Path, help="versioned primary fixture corrections"
+    )
     parser.add_argument("--raw-source", type=Path, help="verify original PBP canonical headers")
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--minimum-source-games", type=int, default=6)
@@ -35,13 +38,19 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
     inputs = [args.source, args.membership, args.schedule, args.groups]
-    inputs += [p for p in (args.tactics, args.acquisition, args.raw_source) if p is not None]
+    inputs += [
+        p
+        for p in (args.tactics, args.acquisition, args.raw_source, args.primary_overrides)
+        if p is not None
+    ]
     if any(not path.is_file() for path in inputs):
         print("Cohort preparation failed: input file is unavailable", file=sys.stderr)
         return 2
     try:
         events, source = read_normalized(args.source)
         contracts = load_contracts(args.membership, args.schedule, args.groups, season=args.season)
+        if args.primary_overrides:
+            contracts = apply_primary_overrides(contracts, args.primary_overrides)
         tactics = (
             TacticalProfile.from_dict(json.loads(args.tactics.read_text()))
             if args.tactics

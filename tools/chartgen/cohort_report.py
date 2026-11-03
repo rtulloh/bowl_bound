@@ -107,6 +107,7 @@ def write_matchup_report(
         "teams": team_index,
         "excluded": list(slate.excluded),
         "target_game_ids": sorted(g.game_id for g in slate.games),
+        "targets_sha256": canonical_hash(targets),
         "historical_completeness_claim": False,
         "heldout_definition": "fresh simulation seeds are not source-held-out matchups",
     }
@@ -170,6 +171,7 @@ def write_matchup_report(
         f"Source-contract SHA256: `{payload['source_sha256']}`",
         f"Engine/tool identity SHA256: `{payload['engine_sha256']}`",
         f"Profiles SHA256: `{profiles_sha256}`",
+        f"Restricted-target values SHA256: `{payload['targets_sha256']}`",
         "",
         "Review before broad calibration. Fresh simulation seeds are not source-held-out evidence.",
         "Sequence screening does not prove official event completeness. No invented opponents.",

@@ -60,6 +60,7 @@ class GameSpec:
     away_id: str
     home_id: str
     seed: int
+    game_type: str = "regular"
 
 
 def stable_seed(master_seed: int, identity: str) -> int:
@@ -487,6 +488,7 @@ def _new_audit_game(
         away_id=spec.away_id,
         seed=spec.seed,
         mode="regulation",
+        game_type=spec.game_type,
         coach_seed=stable_seed(spec.seed, "engine-coach"),
         advanced_ii=False,
         coach_policy=coach_policy,
@@ -510,6 +512,7 @@ def _audit_configuration(
         if simulation_coach_version == 1
         else f"baseline-v{simulation_coach_version}",
         "advanced_ii": False,
+        "game_type": spec.game_type,
         "defense_chart_markers": {
             "home": list(teams[spec.home_id][1].defense_chart_markers),
             "away": list(teams[spec.away_id][1].defense_chart_markers),

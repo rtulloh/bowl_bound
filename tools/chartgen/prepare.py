@@ -12,7 +12,7 @@ from .batch import generate_cohort, write_json_new
 from .cohort_report import canonical_hash, write_matchup_report
 from .cohort_sources import HistoricalContracts
 from .evidence import Event
-from .generate import CalibrationProfile, EvidenceModel
+from .generate import CalibrationProfile, DefensiveProfile, EvidenceModel
 from .private_io import private_destination
 from .refine import engine_identity
 from .scope import LIVE_KINDS, MAJOR_CONFERENCES, build_slate, qualified_games, slate_targets
@@ -143,7 +143,12 @@ def prepare_cohort(
         targets,
         source=source,
         engine=engine_identity(),
-        profiles_sha256=canonical_hash({t: asdict(CalibrationProfile()) for t in available}),
+        profiles_sha256=canonical_hash(
+            {
+                t: {"offense": asdict(CalibrationProfile()), "defense": asdict(DefensiveProfile())}
+                for t in available
+            }
+        ),
         chart_qualifications=qualifications,
     )
     result = {
