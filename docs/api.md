@@ -84,3 +84,10 @@ safeties and period boundaries clear it unused. The API/frontend never infer
 eligibility from counts, possession or phase. Existing `clock:timeout:<side>`
 decisions retain their prior-play meaning; overtime's action retains its own
 existing immediate budget rule.
+
+Regulation `clock_timing_label` explains a completed play's still-pending normal
+charge. It is engine-generated presentation and excluded from semantic save
+digests. Response reports/log entries add nullable `timing_label`, generated from
+the captured regulation view's recorded timeout charge. Pending reports do not
+claim a timeout was consumed. Clients display these labels without deriving
+timing or joining chart results. Old command and replay semantics remain strict.

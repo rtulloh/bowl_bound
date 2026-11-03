@@ -5,12 +5,51 @@ import * as api from '../api'
 import { report, view } from './fixtures'
 
 vi.mock('../api', () => ({
-  listTeams: vi.fn(), newGame: vi.fn(), decide: vi.fn(), snap: vi.fn(), kick: vi.fn(), gameAction: vi.fn(),
+  listTeams: vi.fn(), newGame: vi.fn(), decide: vi.fn(), snap: vi.fn(), kick: vi.fn(), gameAction: vi.fn(), coachStep: vi.fn(),
 }))
 
 beforeEach(() => {
   vi.resetAllMocks()
   api.listTeams.mockResolvedValue({ teams: [{ id: 'a', name: 'Alpha', season: 2002 }, { id: 'b', name: 'Beta', season: 2002 }] })
+})
+
+it('keeps timeout selection serialized with defense and displays prior and selected-play timing from the engine', async () => {
+  const priorTiming = 'Previous play timing is pending: normal timing is 30 seconds. Clock options adjust that play; selecting a play applies its normal timing first.'
+  const choices = [{ id: 'clock:timeout:away', label: 'Away timeout (3)', enabled: true }]
+  const human = { human_side: 'away', human_role: 'defense', automatic: false, status: 'Choose defense',
+    actions: { offense: [], defense: view().actions.defense, special: [] },
+    game_actions: [{ key: 'timeout:away', label: 'Use Away timeout on next play (3)' }],
+    pending: { choices },
+  }
+  const before = view({ phase: 'clock_choice', clock_optional: true, clock_modifiers: choices,
+    clock_timing_label: priorTiming, log: [report()] })
+  api.newGame.mockResolvedValue({ game_id: 'timeout-game', revision: 4, view: before, turn: human })
+  let selectTimeout
+  api.gameAction.mockImplementation(() => new Promise((resolve) => { selectTimeout = resolve }))
+  const timing = 'Away timeout used; this play took 10 seconds.'
+  api.coachStep.mockResolvedValue({ revision: 6, report: report({ number: 2, timing_label: timing }),
+    view: view({ log: [report(), report({ number: 2, timing_label: timing })] }),
+    turn: { ...human, pending: null },
+  })
+  render(<App />)
+  await screen.findByTestId('start-game')
+  fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'away' } })
+  fireEvent.click(screen.getByTestId('start-game'))
+  expect(await screen.findByText(priorTiming)).toBeVisible()
+  expect(screen.queryByText('Choose one action for the next play.')).toBeNull()
+  fireEvent.click(screen.getByRole('button', { name: 'Use Away timeout on next play (3)' }))
+  fireEvent.click(screen.getByTestId('defense-play-a'))
+  expect(api.coachStep).not.toHaveBeenCalled()
+  const selected = 'Away timeout selected for the next play; that play takes 10 seconds.'
+  selectTimeout({ revision: 5, report: null, view: { ...before, armed_timeout: 'away', armed_timeout_label: selected },
+    turn: { ...human, game_actions: [{ key: 'timeout:away', label: 'Cancel Away timeout (3)' }] },
+  })
+  expect(await screen.findByText(selected)).toBeVisible()
+  fireEvent.click(screen.getByTestId('defense-play-a'))
+  await waitFor(() => expect(api.coachStep).toHaveBeenCalledWith('timeout-game', 'away', 5, 'A'))
+  expect(await screen.findAllByText(timing)).toHaveLength(2)
+  expect(screen.queryByText(selected)).toBeNull()
+  expect(api.decide).not.toHaveBeenCalled()
 })
 
 it('allows the next snap without a separate clock request', async () => {
@@ -68,7 +107,7 @@ it('shows engine-offered next-play timeout actions beside existing post-play cho
     game_actions: [{ key: 'timeout:home', label: 'Use Home timeout on next play (3)' }],
   })
   api.newGame.mockResolvedValue({ game_id: 'synthetic', seed: 1, view: before })
-  api.gameAction.mockResolvedValue({ report: null, view: { ...before, armed_timeout: 'home', armed_timeout_label: 'Home timeout armed for the next legal play; that play takes 10 seconds.', game_actions: [{ key: 'timeout:home', label: 'Cancel Home timeout (3)' }] } })
+  api.gameAction.mockResolvedValue({ report: null, view: { ...before, armed_timeout: 'home', armed_timeout_label: 'Home timeout selected for the next play; that play takes 10 seconds.', game_actions: [{ key: 'timeout:home', label: 'Cancel Home timeout (3)' }] } })
   render(<App />)
   await screen.findByTestId('start-game')
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
@@ -76,7 +115,7 @@ it('shows engine-offered next-play timeout actions beside existing post-play cho
   expect(await screen.findByRole('radio', { name: 'Prior play timeout' })).not.toBeChecked()
   fireEvent.click(screen.getByRole('button', { name: 'Use Home timeout on next play (3)' }))
   await waitFor(() => expect(api.gameAction).toHaveBeenCalledWith('synthetic', 'timeout:home'))
-  expect(await screen.findByText('Home timeout armed for the next legal play; that play takes 10 seconds.')).toBeVisible()
+  expect(await screen.findByText('Home timeout selected for the next play; that play takes 10 seconds.')).toBeVisible()
   expect(screen.getByRole('button', { name: 'Cancel Home timeout (3)' })).toBeEnabled()
   expect(api.snap).not.toHaveBeenCalled()
   expect(api.decide).not.toHaveBeenCalled()

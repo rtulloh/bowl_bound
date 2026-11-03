@@ -145,3 +145,9 @@ existing post-play clock choices continue to adjust the completed play.
 
 Cancel an armed timeout before choosing the separate combined next-spike timing
 option; the engine withholds that choice while the timeout is armed.
+
+When a completed play's timing is still pending, the Clock controls explain its
+normal time charge. Selecting another play applies that previous charge first;
+it does not belong to the newly selected play. If the new play requires a
+decision, its selected timeout stays attached to that play until the decision
+completes. The result and history show the engine's timeout usage once charged.

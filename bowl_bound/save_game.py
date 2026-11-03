@@ -1251,6 +1251,7 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         "overtime_toss_dice",
         "play_modifiers",
         "armed_timeout_label",
+        "clock_timing_label",
         "defense_name",
         "home_timeouts",
         "away_timeouts",

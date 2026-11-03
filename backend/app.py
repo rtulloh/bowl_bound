@@ -175,13 +175,18 @@ class RegisteredGame:
     human_side: HumanSide | None
 
 
-def _report_data(session: SavedGame, report: PlayReport | None) -> dict[str, object] | None:
+def _report_data(
+    session: SavedGame, report: PlayReport | None, view: SessionView | RegulationView
+) -> dict[str, object] | None:
     if report is None:
         return None
     return {
         **asdict(report),
         "commentary": session.commentary(report),
         "highlights": list(report.highlight_tags),
+        "timing_label": view.timing_label(report.number)
+        if isinstance(view, RegulationView)
+        else None,
     }
 
 
@@ -189,7 +194,7 @@ def _view_data(
     session: SavedGame, view: SessionView | RegulationView, human_side: HumanSide | None = None
 ) -> dict[str, object]:
     data = asdict(view)
-    data["log"] = [_report_data(session, report) for report in view.log]
+    data["log"] = [_report_data(session, report, view) for report in view.log]
     guidance = session.fourth_down_guidance(human_side, view=view)
     data["fourth_down_guidance"] = asdict(guidance) if guidance else None
     return data
@@ -313,7 +318,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
         if human_side is None:
             report, view = session.execute_with_view(operation, [value])
             return {
-                "report": _report_data(session, report),
+                "report": _report_data(session, report, view),
                 "view": _view_data(session, view),
                 "revision": session.revision,
             }
@@ -324,7 +329,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
         except ValueError as error:
             raise coordinator_conflict() from error
         return {
-            "report": _report_data(session, report),
+            "report": _report_data(session, report, view),
             "view": _view_data(session, view, human_side),
             "turn": asdict(turn),
             "revision": session.revision,
@@ -394,7 +399,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
         except ValueError as error:
             raise coordinator_conflict() from error
         return {
-            "report": _report_data(session, report),
+            "report": _report_data(session, report, view),
             "view": _view_data(session, view, body.human_side),
             "turn": asdict(turn),
             "revision": session.revision,
@@ -415,7 +420,7 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
         except ChartResolutionError as error:
             raise HTTPException(status_code=422, detail=str(error)) from error
         return {
-            "report": _report_data(session, report),
+            "report": _report_data(session, report, view),
             "view": _view_data(session, view),
             "revision": session.revision,
         }

@@ -313,7 +313,7 @@ export default function App() {
         </div>}
         {clockChoice ? <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-600 pt-2">
           <span className="font-bold">Clock</span>
-          <span className="text-xs text-gray-300">Choose one action for the next play.</span>
+          {view.clock_timing_label && <span className="text-xs text-gray-300">{view.clock_timing_label}</span>}
           <ClockChoices pending={pending} modifiers={turn ? view.clock_modifiers?.filter((c) => pending.choices.some((offered) => offered.id === c.id)) : view.clock_modifiers} onChoose={choose} disabled={busy} />
         </div> : null}
         {(!clockChoice || timeoutActions.length > 0) && <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-600 pt-2">

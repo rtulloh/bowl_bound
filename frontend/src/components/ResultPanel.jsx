@@ -7,6 +7,7 @@ export default function ResultPanel({ report }) {
     <div className="board-panel h-[13rem] min-w-0 overflow-y-auto p-3" data-testid="result-panel">
       <div className="min-w-0 break-all text-sm font-bold" role="status" aria-atomic="true" data-testid="result-description">{report.commentary ?? report.description}</div>
       <PlayHighlights report={report} />
+      {report.timing_label && <p className="text-xs mt-1">{report.timing_label}</p>}
       {!report.supported && (
         <div className="mt-1 text-xs font-bold text-red-800" data-testid="unsupported-notice">
           Not yet supported: {report.unsupported_reason}. The play was not applied and the situation is unchanged.

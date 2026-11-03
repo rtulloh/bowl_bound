@@ -11,7 +11,7 @@ tags:
 - rules-profile
 - timing
 - usability
-links: []
+links: [RULE-044]
 commits:
 - 3e321f1
 - eed362c7daacff66c092a11d1ba8a896d1a9a1eb
@@ -113,3 +113,8 @@ warnings remain tracked in DEV-044/DEV-064; no warnings or assertions were hidde
 Both human-side timeout cases and both compact-controls cases pass, including
 engine-owned availability/labels, arm/save/load, one 10-second charge and reset.
 No owner play-test confirmation is claimed; the ticket is resolved, not closed.
+
+--- 2026-11-03 15:35 ---
+Follow-up [RULE-044](../RULE/RULE-044.md) records remaining status wording and
+prior-versus-selected-play timing confusion, then the owner-requested conditional
+AT behavior. This preserves the earlier tested acceptance and button confirmation.

@@ -82,6 +82,28 @@ class RegulationView(SessionView):
     play_modifiers: tuple[PenaltyChoice, ...] = ()
     armed_timeout: str | None = None
     armed_timeout_label: str | None = None
+    clock_timing_label: str | None = None
+
+    def timing_label(self, play_number: int) -> str | None:
+        """Describe only recorded timing, or the completed play awaiting a choice."""
+        charges = [charge for charge in self.timing_log if charge.play_number == play_number]
+        if not charges:
+            if self.clock_optional and self.log and self.log[-1].number == play_number:
+                return self.clock_timing_label
+            return None
+        charge = charges[-1]
+        timeout_names = {
+            "timeout:home": self.home,
+            "clock:timeout:home": self.home,
+            "timeout:away": self.away,
+            "clock:timeout:away": self.away,
+        }
+        if charge.method in timeout_names:
+            return (
+                f"{timeout_names[charge.method]} timeout used; "
+                f"this play took {charge.seconds} seconds."
+            )
+        return None
 
 
 class RegulationGame:
@@ -510,9 +532,19 @@ class RegulationGame:
             game_type=self._game_type.value,
             armed_timeout=self._armed_timeout.value if self._armed_timeout else None,
             armed_timeout_label=(
-                f"{self._names[self._armed_timeout]} timeout armed for the next legal play; "
+                f"{self._names[self._armed_timeout]} timeout selected for this play; "
+                "it will take 10 seconds after the required decision is complete."
+                if self._armed_timeout and base.pending and not clock_optional
+                else f"{self._names[self._armed_timeout]} timeout selected for the next play; "
                 "that play takes 10 seconds."
                 if self._armed_timeout
+                else None
+            ),
+            clock_timing_label=(
+                "Previous play timing is pending: normal timing is "
+                f"{self._pending_timing_seconds} seconds. Clock options adjust that play; "
+                "selecting a play applies its normal timing first."
+                if clock_optional
                 else None
             ),
             overtime=(

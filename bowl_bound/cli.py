@@ -203,6 +203,8 @@ class TerminalGame:
         if guidance:
             self._print(guidance.label)
             self._print(guidance.summary)
+        if getattr(view, "clock_timing_label", None):
+            self._print(view.clock_timing_label)
         if getattr(view, "armed_timeout_label", None):
             self._print(view.armed_timeout_label)
         self._controls(view, turn, compact=self.compact)

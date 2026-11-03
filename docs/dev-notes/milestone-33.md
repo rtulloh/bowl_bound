@@ -955,3 +955,24 @@ The parent independently verified health/frontend/assets, v11 imports from the
 frozen checkout, and the owner's exact saved-game load/re-save/reload with only
 timestamp/integrity differences. This is not invented owner RZDZ confirmation.
 No live game was stopped, restarted or edited; no main/release/tag was changed.
+
+
+### RULE-044 timeout play-test follow-up, presentation checkpoint
+
+Owner's interception screenshot separated deferred prior timing from the selected
+play awaiting a mandatory decision. Current rules charge the previous normal
+play when the next call starts; its selected timeout waits for that call's final
+continuation. Paydirt `game_engine.py:3105` and
+`tests/test_timeout_clock_interactions.py` informed ownership/boundary tests; NFL
+clock/warning behavior and code were deliberately not reused. Bowl Bound CLI AT
+and T were read directly, not assumed equivalent.
+
+Six meaningful red synthetic API cases exposed remaining armed/next-legal-play
+status and absent timing explanations; frontend red exposed the missing prior
+charge explanation. Presentation now names the in-progress play correctly and
+reports recorded timeout use in both latest result and history. Exact clock,
+timeout ownership, logs and strict replay remain unchanged. Cumulative Python
+435/50.97s; frontend131/4.60s and build1.16s; focused Ruff pass. Normal CLI AT
+parity includes prior30+selected10 at late41s→1s. Natural10s web reservations
+are not AT-equivalent; owner authorizes a distinct conditional intent next.
+Original M33 acceptance is historical; RULE044 remains open.
