@@ -3,6 +3,7 @@
 import hashlib
 import json
 import subprocess
+import sys
 from pathlib import Path
 from unittest.mock import patch
 
@@ -31,6 +32,58 @@ def test_real_release_inputs_stage_with_all_pinned_public_samples(tmp_path: Path
         "release/manifest.json",
         ".release-inputs.json",
     }
+
+
+def test_real_release_runtime_imports_without_checkout_fallback(tmp_path: Path) -> None:
+    """Import the selected application with checkout/editable fallbacks blocked."""
+    root = Path(__file__).resolve().parents[1]
+    stage, runtime = tmp_path / "public stage", tmp_path / "public runtime"
+    stage_sources(root, stage)
+    fake_frontend(stage)
+    assemble_runtime(stage, runtime)
+    probe = """
+import importlib
+import sys
+from importlib.machinery import ModuleSpec, PathFinder
+from pathlib import Path
+from types import ModuleType
+
+runtime = Path(sys.argv[1]).resolve()
+
+class RuntimeOnlyFinder:
+    @staticmethod
+    def find_spec(
+        fullname: str, path: list[str] | None = None, target: ModuleType | None = None
+    ) -> ModuleSpec | None:
+        if fullname.split('.')[0] not in {'backend', 'bowl_bound'}:
+            return None
+        spec = PathFinder.find_spec(fullname, [str(runtime)] if path is None else path)
+        if spec is None:
+            raise ModuleNotFoundError(f'Missing release module: {fullname}', name=fullname)
+        assert Path(spec.origin).resolve().is_relative_to(runtime), fullname
+        return spec
+
+sys.meta_path.insert(0, RuntimeOnlyFinder)
+for name in ('backend.app', 'backend.launcher', 'bowl_bound.cli'):
+    importlib.import_module(name)
+
+from backend.app import NewGame, create_app
+
+app = create_app(runtime / 'seasons', runtime / 'frontend/dist')
+new_game = next(route.endpoint for route in app.routes if route.path == '/api/games')
+game = new_game(NewGame(home='2007/cedar-valley', away='2007/harbor-tech', seed=7))
+assert game['difficulty'] == 'medium'
+assert game['game_id']
+"""
+    result = subprocess.run(
+        [sys.executable, "-I", "-B", "-c", probe, str(runtime)],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert not list(runtime.rglob("*.pyc"))
 
 
 def put(root: Path, name: str, text: str) -> None:

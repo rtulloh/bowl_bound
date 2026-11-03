@@ -11,6 +11,8 @@ GitHub status.
 
 [DEV-060](issues/DEV/DEV-060.md) is a focused packaging repair for the reported
 standalone-build failure, independent of the pending gameplay and workflow work.
+[DEV-061](issues/DEV/DEV-061.md) tracks missing runtime modules exposed by the
+next native smoke run.
 
 Milestone 32 remains completed. Imported teams, historical charts, rosters, and
 local audit output remain private and excluded from ordinary test collection,
@@ -130,3 +132,86 @@ and the release manifest only; no private charts, PDFs, reports, saves, or logs.
 The browser limitation is recorded rather than treated as a passing full gate.
 A fresh hosted standalone workflow must confirm browser and native builds after
 the push; DEV-060 remains resolved pending that confirmation.
+
+## DEV-061 — Incomplete application runtime selection (2026-11-02)
+
+Consulted local Paydirt `.github/workflows/release.yml` and
+`tests/test_ci_workflow.py` before this follow-up. Adapt the distinction between
+source regression and native packaging, with explicit required validation.
+Paydirt's broad freezer inputs do not provide Bowl Bound's exact application/data
+selection; retain the existing privacy allowlist and add coverage at its boundary.
+No Paydirt source, team data, NFL behavior or runtime dependency is reused.
+
+Run [41538136008](https://github.com/rtulloh/bowl_bound/actions/runs/41538136008)
+at `28dea63` passed source tests and the real-engine browser gate. All three native
+targets successfully staged and froze the app, confirming the DEV-060 hash repair,
+then failed the extracted-executable smoke with the launcher's generic
+"Web dependencies are missing" message. This was an application selection error,
+not an absent installed web distribution.
+
+An isolated macOS ARM64 prototype reproduced the underlying
+`ModuleNotFoundError: bowl_bound.decision_facts`. The runtime manifest also omitted
+`return_recovery` and `team_catalog`. Adding those allowed startup, but the actual
+game-creation smoke exposed the deferred `difficulty` import of
+`coaching_situations`. All four are current runtime code and are now explicitly
+selected. An AST audit found no other unselected application imports; the two
+development-only coaching audit modules remain excluded. No sample hash, privacy
+selection, gameplay implementation or smoke expectation changes.
+
+The new regression stages and assembles only approved public inputs with a
+synthetic frontend, starts an isolated child interpreter, blocks application
+imports from the checkout/editable installation, imports the entry points and
+creates a default Medium game with the original fictional samples. It first
+failed on `decision_facts`, then failed on `coaching_situations` when expanded to
+cover deferred game-creation imports. Both expected failures were demonstrated
+before the respective manifest additions. The probe requires a pristine runtime
+without generated Python caches.
+
+Validation is recorded below before committing/pushing the repair. This work
+does not complete Milestone 33 or begin either parallel feature stream.
+
+Validation:
+
+- `.venv/bin/python -m pytest --cov --cov-report=term-missing -q`:
+  **3,116 passed in 721.67s**, **92.90% branch-aware coverage** (75% required),
+  with no skips or Python warnings.
+- `.venv/bin/python -m pytest -q tests/test_release_package.py -k real_release_runtime_imports`:
+  expected failures on `decision_facts` before repair and on
+  `coaching_situations` after adding game-creation coverage, before the fourth
+  manifest addition. Existing assertions were retained.
+- `.venv/bin/python -m pytest -q tests/test_release_package.py tests/test_release_archive.py tests/test_standalone_build.py tests/test_standalone_smoke.py tests/test_windows_installer.py tests/test_native_notices.py tests/test_sample_teams.py tests/test_sample_playability.py tests/test_build_workflow.py tests/test_issue_tracker.py tests/test_create_issue.py`:
+  **200 passed in 7.81s**, no skips or warnings.
+- Created an isolated `/private/tmp/bowl-bound-dev061-native-env` with
+  `.venv/bin/python -m venv`, then installed
+  `--only-binary=:all: --no-deps -r release/requirements-native.txt` using that
+  interpreter. Used real `stage_sources`, `build_frontend`, `assemble_runtime`
+  and `write_spec` calls under `/private/tmp/bowl-bound-dev061-complete`, with
+  pinned Node **24.22.1** / npm **11.19.1**. Ran the environment's Python with
+  `-I -B -m PyInstaller --noconfirm --clean --distpath
+  /private/tmp/bowl-bound-dev061-complete/dist --workpath
+  /private/tmp/bowl-bound-dev061-complete/analysis
+  /private/tmp/bowl-bound-dev061-complete/freeze/BowlBound.spec` and
+  `PYTHONDONTWRITEBYTECODE=1`. Real `inspect_modules` and `smoke_executable` calls
+  passed: version, startup, UI/assets, exact fictional sample catalog, snap,
+  save/load and graceful shutdown. The standard launcher entry was unchanged.
+  This is an engineering ARM64 prototype under Python **3.12.8**, not the
+  workflow's pinned **3.13.17** native-notice/ZIP/installer acceptance. No prototype
+  artifact is approved for publication.
+- `.venv/bin/python -m ruff check .`,
+  `.venv/bin/python -m ruff format --check .` (**528 files**) and
+  `.venv/bin/python -m pip check`: passed.
+- From `frontend/` with the pinned Node/npm, `npm ci --ignore-scripts`,
+  `npm test` (**128 passed, 16 files**), `npm run build` and `npm audit`
+  (**0 vulnerabilities**) passed. Existing `whatwg-encoding@3.1.1` deprecation
+  and Vitest performance advice remain visible.
+- `BB_E2E_SEASONS=/private/tmp/bowl-bound-dev061-e2e npm run test:e2e`:
+  **33 failed before application assertions** because this environment denies
+  Chromium's macOS process registration (`bootstrap_check_in`, Permission denied
+  1100). Existing color-environment warnings also appeared. The reported hosted
+  run passed its browser gate; a new hosted run remains required. No browser tests
+  were skipped or weakened.
+- `.venv/bin/python scripts/build_issue_index.py` and
+  `.venv/bin/python -m pytest -q tests/test_issue_tracker.py tests/test_release_package.py`:
+  **57 passed in 1.73s** after tracking updates. All **15** selected sample hashes
+  match, **75** relative documentation links resolve, and `git diff --check`
+  passed.

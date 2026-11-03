@@ -28,6 +28,15 @@ selected with owner approval (DEV-042); every other roster remains excluded.
 Unknown file categories, traversal, duplicate entries, missing inputs and
 symlinked files/ancestors fail before output creation.
 
+When adding or moving application modules, update the runtime selection for their
+imports, including dependencies loaded only when a game is created. Source tests
+can find modules that an exact staged runtime lacks; successful freezing alone
+does not prove those imports resolve. The release regression imports the staged
+web/CLI entry points and creates a default game with only the original fictional
+samples while blocking checkout/editable application fallbacks. Keep the frozen
+executable smoke required as well: it exercises packaging and third-party dynamic
+imports that a source-level probe cannot certify.
+
 Keep the repository `.gitattributes` policy when checking out release inputs:
 tracked text uses LF even when Windows Git has `core.autocrlf=true`; binary
 files retain their bytes. This preserves pinned sample hashes and version
