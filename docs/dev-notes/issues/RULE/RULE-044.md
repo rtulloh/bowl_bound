@@ -90,3 +90,10 @@ Two browser-fixture interception paths also pass directly through the real API
 18 tracker checks, pip check and npm audit (zero vulnerabilities) pass. An
 initial runtime-stage command used a nonexistent test filename; rerun the actual
 release-package isolated-runtime test successfully. No check was skipped.
+
+Final-source full gate initially exposed two stale exact CLI/API drive-log
+expectations missing additive `timing_label: null`. Both failed meaningfully,
+then both passed in0.67s with only that documented field added; all strict
+football/save/future comparisons remain. The early full run was interrupted
+at511passed/2failed in278.38s and is not acceptance evidence. Executable source
+remains e3d6516; a fresh complete gate follows this test-contract correction.

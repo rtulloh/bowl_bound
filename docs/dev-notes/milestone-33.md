@@ -1001,3 +1001,10 @@ A meaningful red CLI menu test exposed the new key leaking as an implementation
 name; both prefixes are now excluded without changing terminal T/AT. Both new
 browser-fixture INT paths pass through TestClient, not a browser. Isolated real
 runtime,18 tracker,pip check and npm audit0 also pass.
+
+Final-source full gate initially exposed two stale exact CLI/API drive-log
+expectations missing additive `timing_label: null`. Both failed meaningfully,
+then both passed in0.67s with only that documented field added; all strict
+football/save/future comparisons remain. The early full run was interrupted
+at511passed/2failed in278.38s and is not acceptance evidence. Executable source
+remains e3d6516; a fresh complete gate follows this test-contract correction.

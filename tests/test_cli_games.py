@@ -159,6 +159,7 @@ def test_terminal_pending_interception_resume_matches_api_exact_future(
         for item, report in zip(expected["log"], view.log, strict=True):
             item["commentary"] = app.game.commentary(report)
             item["highlights"] = list(report.highlight_tags)
+            item["timing_label"] = None  # Drive views have no regulation clock charge.
         return expected
 
     assert expected_api_view() == loaded.json()["view"]
