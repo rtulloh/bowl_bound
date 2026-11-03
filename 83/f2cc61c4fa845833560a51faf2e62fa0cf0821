@@ -1,0 +1,39 @@
+docs/college-cohort-generator.md
+  s_e06e375ba9891d::t_b0184971899b98 163-190
+docs/dev-notes/issue-tracker.md
+  s_e06e375ba9891d::t_3390d474bbe3f3 8,10,20,625
+docs/dev-notes/issues/DATA/DATA-020.md
+  s_e06e375ba9891d::t_0bddf11ba52d87 1-42
+docs/dev-notes/milestone-34a.md
+  s_e06e375ba9891d::t_f0208851862a0e 201-245
+tests/chartgen/test_artifacts.py
+  s_e06e375ba9891d::t_84d24157572e93 1-86
+tests/chartgen/test_cohort_storage.py
+  s_e06e375ba9891d::t_71416a6c912a6c 1-91
+tests/chartgen/test_generation.py
+  s_e06e375ba9891d::t_87fca7c7669c7a 502-504,512,526-535,548,550-551,582,585-608
+tools/chartgen/artifacts.py
+  s_e06e375ba9891d::t_7eb6bfa69ce9e6 1-130
+tools/chartgen/cohort_refine_cli.py
+  s_e06e375ba9891d::t_2d2c4fad58b443 10,30-35,59,68-70
+tools/chartgen/cohort_refinement.py
+  s_e06e375ba9891d::t_deef379f1ea44a 13,236,250,296,316-321,324,354,425,440
+tools/chartgen/cohort_simulation.py
+  s_e06e375ba9891d::t_ff5758ad028639 18-25,116-120,287,292,314,317-318,325,327-332,339-343,364-368,406-412
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "83f2cc61c4fa845833560a51faf2e62fa0cf0821",
+  "prompts": {},
+  "sessions": {
+    "s_e06e375ba9891d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f07-7008-7201-b15a-cd4a7dec87df",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
