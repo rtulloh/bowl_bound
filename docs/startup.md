@@ -44,3 +44,19 @@ ordinary local play.
 On Windows, Ctrl+Break is also handled as a graceful stop, like Ctrl+C. Save
 before stopping. Closing the console window or ending the process through Task
 Manager is not the same as a graceful stop.
+
+## Concurrent source development and play testing
+
+Run a live play test from a dedicated checkout pinned to the reviewed commit,
+with its frontend built there and Python imports directed to that same checkout.
+Keep that checkout unchanged until the session ends. Use a different worktree
+for ongoing edits and a separate port for each server; sharing a dependency
+virtual environment does not isolate the imported project code.
+
+Do not edit or switch branches beneath a running source server. Python can retain
+an older model in memory and later import a changed module, producing a mixed
+runtime even without a reloader. Such a response failure does not by itself mean
+the downloaded save is damaged. Preserve the original file and live session,
+start a separate server from one consistent snapshot, and load the file there.
+Confirm restoration before stopping the old server. Review a traceback or report
+the problem if loading still fails; do not hand-edit save integrity or replay data.
