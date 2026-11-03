@@ -23,7 +23,9 @@ from bowl_bound.cli import TeamCatalog, TeamEntry
 from bowl_bound.coaching import BaselineCoach, CoachChoice, CoachObservation, safe_choice
 from bowl_bound.coaching_audit import reconcile_period_scores
 from bowl_bound.coaching_session import GameView, observe_game
+from bowl_bound.game_state import Possession
 from bowl_bound.models import TeamChart
+from bowl_bound.overtime import OvertimeState
 from bowl_bound.save_game import SavedGame, dumps_game, loads_game
 from bowl_bound.statistics import summarize
 from bowl_bound.team_csv import TeamFileMetadata
@@ -34,6 +36,19 @@ DEFAULT_MASTER_SEED = 20311031
 MAX_GAME_ACTIONS = 1500
 DEFAULT_OUTPUT = Path("private-data/local-season-audits")
 AuditTeams = dict[str, tuple[TeamChart, TeamFileMetadata]]
+
+
+@dataclass(frozen=True)
+class OvertimeSeriesStart:
+    """Engine-observed series boundary, retained separately from play outcomes."""
+
+    report_number: int
+    round_number: int
+    series_number: int
+    first_possession: str
+    possession: str
+    paired_tries: bool
+    state: tuple[object, ...]
 
 
 @dataclass(frozen=True)
@@ -155,7 +170,12 @@ def build_schedule(
     )
 
 
-def validate_game(view: GameView, period_scores: tuple[tuple[int, int], ...]) -> None:
+def validate_game(
+    view: GameView,
+    period_scores: tuple[tuple[int, int], ...],
+    *,
+    overtime_starts: tuple[OvertimeSeriesStart, ...] = (),
+) -> None:
     """Reject unfinished games and reconcile scoring, statistics, and timing."""
     if not view.finished or view.phase != "final":
         raise ValueError("game did not reach the engine's final phase")
@@ -165,6 +185,33 @@ def validate_game(view: GameView, period_scores: tuple[tuple[int, int], ...]) ->
         raise ValueError("final game has no engine reports")
     if view.home == view.away:
         raise ValueError("home and away names must differ for score reconciliation")
+
+    starts = {}
+    expected_overtime = None
+    regulation_end = max(
+        (
+            charge.play_number
+            for charge in getattr(view, "timing_log", ())
+            if charge.quarter == 4 and charge.after == 0
+        ),
+        default=0,
+    )
+    for start in overtime_starts:
+        if expected_overtime is None:
+            expected_overtime = OvertimeState(Possession(start.first_possession))
+        if (
+            start.report_number <= regulation_end
+            or start.report_number in starts
+            or start.report_number > len(view.log)
+            or start.round_number != expected_overtime.round_number
+            or start.series_number != expected_overtime.series_number
+            or start.first_possession != expected_overtime.first.value
+            or start.possession != expected_overtime.offense.value
+            or len(period_scores) < start.round_number + 4
+        ):
+            raise ValueError("invalid overtime series boundary evidence")
+        starts[start.report_number] = start
+        expected_overtime = expected_overtime.next_series()
 
     previous_state: tuple[object, ...] | None = None
     report_numbers: set[int] = set()
@@ -176,7 +223,17 @@ def validate_game(view: GameView, period_scores: tuple[tuple[int, int], ...]) ->
         before = _state_facts(getattr(report, "state_before", None))
         after = _state_facts(getattr(report, "state_after", None), allow_missing=True)
         halftime_kickoff = getattr(report, "called_play", None) == "Kickoff"
-        if previous_state is not None and before != previous_state and not halftime_kickoff:
+        overtime_start = starts.get(report.number)
+        if overtime_start and (
+            before != overtime_start.state or before[0] != overtime_start.possession
+        ):
+            raise ValueError("overtime series evidence differs from report state")
+        if (
+            previous_state is not None
+            and before != previous_state
+            and not halftime_kickoff
+            and overtime_start is None
+        ):
             raise ValueError("engine report state transition is disconnected")
         previous_state = after
         report_numbers.add(report.number)
@@ -464,6 +521,8 @@ def _play_one(
     failure: str | None = None
     checkpoint_verified = False
     final_replay_verified = False
+    overtime_starts: list[OvertimeSeriesStart] = []
+    previous_overtime_series: tuple[int, int] | None = None
     try:
         for _ in range(MAX_GAME_ACTIONS):
             view = game.view()
@@ -532,6 +591,22 @@ def _play_one(
             if not advanced:
                 raise ValueError("neither team has a legal automated action")
             after = game.view()
+            overtime = getattr(view, "overtime", None)
+            if overtime is not None and len(after.log) > len(view.log):
+                series = (overtime.round_number, overtime.series_number)
+                if series != previous_overtime_series:
+                    overtime_starts.append(
+                        OvertimeSeriesStart(
+                            len(view.log) + 1,
+                            overtime.round_number,
+                            overtime.series_number,
+                            overtime.first_possession,
+                            overtime.possession,
+                            overtime.paired_tries,
+                            _state_facts(view.state),
+                        )
+                    )
+                    previous_overtime_series = series
             if verify_replay and not checkpoint_verified and len(after.log) >= 25:
                 restored = loads_game(
                     dumps_game(game), lambda key: teams[key][0], preserve_development_policy=True
@@ -555,7 +630,7 @@ def _play_one(
             raise TimeoutError("game action limit reached")
         view = game.view()
         period_scores = tuple(tuple(period_totals[key]) for key in sorted(period_totals))
-        validate_game(view, period_scores)
+        validate_game(view, period_scores, overtime_starts=tuple(overtime_starts))
         if verify_replay:
             restored = loads_game(
                 dumps_game(game), lambda key: teams[key][0], preserve_development_policy=True
@@ -575,6 +650,7 @@ def _play_one(
             "checkpoint_verified": checkpoint_verified,
             "final_replay_verified": final_replay_verified,
         },
+        "overtime_series_starts": _json_value(overtime_starts),
         "spec": asdict(spec),
         "teams": {"home": spec.home_id, "away": spec.away_id},
         "configuration": _audit_configuration(spec, teams, coach_policy=coach_policy),

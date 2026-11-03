@@ -90,3 +90,22 @@ redistribution rights for all underlying sports content.
   and a separate `chart-v10` coaching-policy assessment. Insufficient statistical
   exposure remains a failed fit gate even when mechanics pass.
 - Full regression, bounded private refinement and acceptance review pending.
+
+
+## Initial private pilot and overtime audit finding
+
+Prototype commit: `55f530d`. Focused cumulative checks at that boundary:
+`python -m pytest tests/chartgen tests/test_local_season_runner.py tests/test_issue_tracker.py -q`
+— 79 passed. Ruff check/format passed. No runtime engine files changed.
+
+The first 128-game baseline training batch completed every game, but four games
+failed the development audit because lawful overtime series resets were treated
+as disconnected states (DATA-005). The run was interrupted during the next
+candidate; no held-out seeds were consumed. All artifacts were retained.
+
+Added failing synthetic tests requiring exact engine-observed series boundary
+state, chronology and OvertimeState order. Undeclared/stale boundaries still fail.
+All four retained private seeds then passed the corrected audit with unchanged
+charts and midpoint/final replay; one exercised four overtime rounds.
+`python -m pytest tests/test_local_season_runner.py -q` — 34 passed.
+The correction changes development audit evidence, not football rules or charts.

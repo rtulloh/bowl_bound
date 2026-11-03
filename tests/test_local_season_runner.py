@@ -449,3 +449,59 @@ def test_output_path_outside_private_data_is_rejected(tmp_path, monkeypatch) -> 
 
     with pytest.raises(ValueError, match="private-data"):
         _private_run_dir(tmp_path / "reports", master_seed=1)
+
+
+def test_overtime_reset_requires_matching_observed_series_evidence() -> None:
+    from scripts.run_local_season import OvertimeSeriesStart, _state_facts
+
+    view = finished_view()
+    original = view.log[0]
+    state = SimpleNamespace(
+        **(
+            vars(original.state_before)
+            | {
+                "possession": "away",
+                "possession_name": "Away",
+                "yards_to_goal": 25,
+                "spot": "opp 25",
+                "ball_from_left": 75,
+                "first_down_from_left": 85,
+            }
+        )
+    )
+    view.log += (
+        SimpleNamespace(
+            **(
+                vars(original)
+                | {
+                    "number": 2,
+                    "state_before": state,
+                    "state_after": state,
+                    "called_play": "Counter",
+                }
+            )
+        ),
+    )
+    start = OvertimeSeriesStart(2, 1, 1, "away", "away", False, _state_facts(state))
+    periods = ((3, 0), (0, 0), (0, 0), (0, 0), (0, 0))
+    with pytest.raises(ValueError, match="disconnected"):
+        validate_game(view, periods)
+    validate_game(view, periods, overtime_starts=(start,))
+    with pytest.raises(ValueError, match="overtime"):
+        validate_game(
+            view,
+            periods,
+            overtime_starts=(replace(start, state=_state_facts(original.state_before)),),
+        )
+    with pytest.raises(ValueError, match="overtime"):
+        validate_game(view, periods, overtime_starts=(replace(start, report_number=1),))
+
+
+def test_overtime_series_evidence_requires_engine_order() -> None:
+    from scripts.run_local_season import OvertimeSeriesStart, _state_facts
+
+    view = finished_view()
+    state = view.log[0].state_before
+    start = OvertimeSeriesStart(2, 2, 1, "home", "home", False, _state_facts(state))
+    with pytest.raises(ValueError, match="overtime"):
+        validate_game(view, ((3, 0), (0, 0), (0, 0), (0, 0), (0, 0)), overtime_starts=(start,))

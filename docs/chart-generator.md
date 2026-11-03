@@ -161,7 +161,9 @@ sizes so precision can be judged. Increase counts before making tight fit claims
 
 The production `SavedGame` and local-season audit run every game. The public,
 situation-aware baseline coaching policy makes legal actions without chart
-lookahead. Structured observations and calls are retained. Clock, scores, scoring
+lookahead. Structured observations and calls are retained. Overtime series starts are
+recorded from the real engine and checked against report state and engine series
+order; lawful reset boundaries are distinct from broken state transitions. Clock, scores, scoring
 ledger, state transitions, statistics and roll traces are reconciled. Failures are
 retained and count against candidate selection. Four held-out seeds additionally
 verify save/replay continuation with both CPU possessions.
