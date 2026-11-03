@@ -1060,3 +1060,25 @@ Merged-source focused validation: 108 timeout/label/API/tracker cases pass in
 files and diff checks pass. Actual application runtime diff against frozen
 855d4bb is empty. Repeated gate is explicitly for the merged label source and
 four new regressions; the prior 3,499 green remains valid historical evidence.
+
+Final combined source `61d75fda95dae6247e308ac99656102fe3b6baff` passed
+`.venv/bin/python -m pytest --cov --cov-report=term-missing -q`: **3,503 passed
+in 879.31s (14:39), 93.17% branch coverage**, with no skips or warnings. This is
+a fresh gate after the four label tests and reviewed runtime `9d5071f`, not a
+reuse of the earlier 3,499-case result. The integrated implementation aliases
+are e62925d / 1472238 / 9d5071f / 8bd8838, with tracker reconciliation in 61d75fd.
+
+Focused 108 / 13.36s, frontend 131 / 5.00s, build 1.33s, Ruff check/format
+560 files, pip check, 1,245 local Markdown links and diff checks pass. Frontend
+output retains the existing Vitest jsdom performance recommendation. No new
+automated browser execution is claimed: the documented Chromium sandbox
+restriction remains, and the 40-case browser suite has collection/API-fixture
+evidence rather than a fresh browser pass. Parent independently verified the
+immutable 8039 HTTP candidate and copied saved-game semantics without advancing
+the original game. No private payload is committed.
+
+UI-054 remains under investigation; UI-055 is resolved pending owner
+confirmation; RULE-044 is resolved with offense-only confirmation, awaiting
+defense. UI-056/M37 is future planning only. Original M33 acceptance remains
+historical. No live server was changed, and no push, merge, release or tag
+was performed. No further heavy validation job is running in this workstream.

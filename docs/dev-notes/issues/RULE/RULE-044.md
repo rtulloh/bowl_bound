@@ -146,3 +146,12 @@ Owner confirmed offense on the immutable candidate. **Defensive owner play-test
 confirmation remains pending**, so the ticket is resolved rather than closed.
 Original M33 acceptance remains historical; subsequent button-count wording and
 play-history work are separate owner requests.
+
+--- 2026-11-03 — reviewed label integration ---
+The subsequent UI-055 change removes only duplicate button counts. Merged head
+`61d75fd` passed 3,503 Python cases in 879.31s at 93.17% branch coverage, including
+the unchanged timeout behavior and four new label regressions. Application
+runtime matches the parent's frozen 8039 candidate. This supplements, rather
+than replaces, the preceding conditional-timeout verification. Defensive owner
+confirmation and automated browser execution remain pending; no closure or new
+milestone acceptance is claimed.

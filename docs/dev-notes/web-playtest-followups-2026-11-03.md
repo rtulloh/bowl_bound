@@ -49,3 +49,20 @@ Results: 104 Python cases, five focused/frontend clock cases, all 131 frontend
 cases and build/lint/format passed. These checks cover the presentation change;
 they do not claim a fresh full Python gate or automated browser execution. No
 push or change to a running frozen server is included in this checkpoint.
+
+## Combined branch verification
+
+Reviewed label implementation `81dc6e4` is integrated as `9d5071f`; runtime matches
+the immutable parent play-test candidate at `855d4bb`. Tested merged head
+`61d75fd` passes **3,503 Python tests in 879.31s, 93.17% branch coverage**, with
+no skips or warnings. The integration's focused timeout/label/API/tracker run
+passes 108 in 13.36s; frontend 131, build, Ruff, pip, link and diff checks pass.
+This replaces the earlier full-gate-pending state for this merged source only;
+automated browser execution remains unverified locally under the known sandbox
+restriction.
+
+UI-055 remains resolved awaiting owner confirmation. UI-054 remains open: API
+and SSR/JSDOM retain the inspected PAT and complete kick/return entries, while
+actual bounded-list scrolling/viewport visibility still needs verification.
+UI-056/M37 only plans future support-log tools. No speculative event-loss fix,
+publication or running-server change is part of this integration.
