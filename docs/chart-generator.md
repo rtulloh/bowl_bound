@@ -30,6 +30,9 @@ turnovers, kick/return ownership, down/distance/field position and clock.
 Absent optional fields are recorded. Events without distinct possession/opponent
 identities are excluded with counts. Duplicate game/event identities fail.
 Scans, PDFs and NCAA/CFBD-specific layouts are not accepted by this adapter.
+Full-game refinement uses the current engine’s supported seasons, 1940–2023.
+For ESPN bulk snapshots (2004 onward), the practical refinement range is
+2004–2023; source availability does not extend the approved engine rules.
 
 ```sh
 .venv/bin/python normalize_college_pbp.py \
@@ -207,10 +210,10 @@ composition preserves punts and exercises returns, identically for both sides.
 Clock prompts remain entirely with the production coaching adapter, including its
 implicit normal-timing option and side ownership.
 Standalone baseline-v10 is not used as a full training policy because its
-fourth-down kick preferences belong to the chart-coaching wrapper. Structured observations and calls are retained. Overtime series starts are
-recorded from the real engine and checked against report state and engine series
-order; lawful reset boundaries are distinct from broken state transitions. Clock, scores, scoring
-ledger, state transitions, statistics and roll traces are reconciled. Failures are
+fourth-down kick preferences belong to the chart-coaching wrapper. Structured
+observations and calls are retained. Overtime series starts are recorded from the real engine and checked against report state and engine series
+order; lawful reset boundaries are distinct from broken state transitions. Clock,
+scores, scoring ledger, state transitions, statistics and roll traces are reconciled. Failures are
 retained and count against candidate selection. Four held-out seeds additionally
 verify save/replay continuation with both CPU possessions.
 
@@ -218,8 +221,8 @@ Profiles jointly adjust run/pass yards, completion, interceptions, sacks and
 fumbles. Multipliers are bounded to 0.6–1.4; completion/field-goal shifts to
 −0.15–0.15. Return and field-goal knobs are reserved for diagnosed refinements;
 the initial automatic proposal does not fit kick-location or coaching defects.
-Predeclared efficiency tolerances appear in the report. Core efficiency exposure under 1,000 training or 2,000 validation observations
-fails a metric gate. Missing live rush/sack/completion yardage blocks calibration;
+Predeclared efficiency tolerances appear in the report. Core efficiency exposure
+under 1,000 training or 2,000 validation observations fails a metric gate. Missing live rush/sack/completion yardage blocks calibration;
 it cannot become a zero-efficiency target. Drawn special-team and PAT metrics
 require at least 100 observations. Stop when training
 passes, a proposed bounded profile is unchanged, or the iteration limit is reached.

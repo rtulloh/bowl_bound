@@ -1,17 +1,18 @@
 ---
 id: DATA-005
 title: Season audit rejects lawful overtime series state resets
-status: open
+status: resolved
 priority: High
 milestone: '34'
 created-at: 2026-11-02
-resolved-at: null
+resolved-at: '2026-11-02'
 closed-at: null
 tags:
-- reproduced
+- tested
 links: []
 commits:
 - 3e699aa
+- 1a0e76d
 ---
 
 ## Description
@@ -42,3 +43,6 @@ Focused cumulative gate at 9565398: 121 passed. Owner play-test confirmation rem
 
 --- 2026-11-02 21:04 ---
 Parallel M33 adversarial review found missing controls for forged reverse boundary order and an untied regulation score. Reopened pending narrow strict guards and synthetic red/green tests. Actual recorded pilot boundaries will be rechecked; engine outcomes and chart values are unchanged.
+
+--- 2026-11-02 21:14 ---
+Narrow reviewed strict guards from M33 0a89a68 adapted in tested 1a0e76d: 40 local-season cases and 126 focused cumulative cases pass. All 904 retained final-pilot engine reports, including 17 overtime games, pass current production validate_game through a documented private serialized-fact adapter. Simulation function, generation code and runtime engine are unchanged since calibration; original evidence remains intact. Owner play-test confirmation is absent, so this ticket is resolved, not closed.

@@ -52,7 +52,9 @@ in ignored `private-data/chart-generator/`.
 The public SportsDataverse ESPN-derived Parquet releases contain 2007 and 2008.
 The initial file audit finds all 13 Ohio State and 14 LSU scheduled games, including
 LSU's conference championship and the January title game under season 2007.
-Event-level completeness and official aggregate reconciliation remain under audit.
+Game coverage has been checked against the official schedules. Event-level
+coverage diagnostics and unresolved official aggregate deltas remain explicit;
+source data is not silently replaced with revised totals.
 NCAA-derived bulk data begins in 2013 and cannot supply this pilot.
 
 Primary references checked 2026-11-02:
@@ -235,7 +237,7 @@ now excludes clock_choice entirely; production timing remains authoritative.
 No held-out seeds were consumed and no chart strengths were changed.
 
 The corrected boundary passes eight fresh private smoke games with zero spikes,
-zero failures, actual punt/return exposure and 71 offensive plays per team-game.
+zero failures and actual punt/return exposure. Play-volume diagnostics stay private.
 The synthetic replay fixture uses long kickoff fields, realistic punt distances
 and asymmetric gains to require punts while avoiding an artificial deterministic
 endless overtime tie; assertions remain intact. All previous pilot artifacts are
@@ -244,12 +246,12 @@ retained and superseded, not represented as current fit evidence.
 
 ## Final pinned-engine private pilot
 
-At `1f84e56`, final pilot 05 selected candidate 02 using384 paired training games,
-then passed all 12 predeclared efficiency/turnover/kick-return/PAT gates over512
-separate held-out games. All896 games reconciled; four additional midpoint/final
+At `1f84e56`, final pilot 05 selected candidate 02 using 384 paired training games,
+then passed all 12 predeclared efficiency/turnover/kick-return/PAT gates over 512
+separate held-out games. All 896 games reconciled; four additional midpoint/final
 replay checks and four mixed-policy coaching assessments passed. Each team has
-512 held-out games, not an assumed NFL season length. Diagnostics average about
-30 points and72.6 offensive plays per team-game. Field-goal accuracy remains a
+512 held-out games, not an assumed NFL season length. Scoring and play-volume
+diagnostics are retained privately. Field-goal accuracy remains a
 distance/mix diagnostic rather than an unqualified source-fit claim.
 
 Both final local bundles were regenerated from the recorded profile/source/seed
@@ -268,3 +270,16 @@ and untied/incomplete regulation. Synthetic red tests reproduced two acceptance
 errors and the late incomplete-clock rejection; the narrow reviewed guards from
 0a89a68 are adapted without M33 engine changes. The series-order fixture now has
 tied regulation and sufficient reports/periods so it exercises the intended guard.
+
+Strict auditor commit `1a0e76d`: 40 local-season cases and 126 focused cumulative
+cases pass; Ruff check/format pass. A private adapter feeds retained serialized
+engine facts back to production `validate_game`: all 904 final-pilot reports,
+including 17 overtime games, pass without changing any original artifact. The
+adapter states that omitted pending/final flags rely on the original passing
+validation; new guards use retained clock/period/boundary facts directly. It proves
+the `_play_one` AST, generation-module bytes and engine hash are unchanged from
+calibration. A separate strict-auditor identity/hash is recorded rather than
+rewriting the original report. Final-tree coverage at `1a0e76d` passes: 3,188 tests
+in 825.10 seconds, 92.06% branch-aware coverage. Fresh Ruff check, format check
+(563 files), `pip check` and `git diff --check` pass. Hosted browser verification
+remains pending because the local Chromium sandbox cannot launch.
