@@ -63,3 +63,11 @@ new coaching behavior. No new release or runtime play-test server is needed.
 
 The browser-enabled regression gate must run these cases before publication.
 This local tests-only checkpoint is not a full regression or M35 acceptance claim.
+
+## Owner play-test confirmation
+
+After continuing the existing web game through Q2, the owner confirmed that the
+first half ended normally and was followed by a kickoff. This verifies that
+observed manual browser path, independently of the blocked automated Chromium
+run. It does not establish all eight browser cases passing or complete the
+planned M35 recap enhancement.
