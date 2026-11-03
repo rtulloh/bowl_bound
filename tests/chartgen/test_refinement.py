@@ -65,3 +65,117 @@ def test_missing_fumble_evidence_does_not_become_zero_target() -> None:
         Event(2007, "g", "2", "a", "b", "A", "B", "complete", 10),
     ]
     assert "fumble" not in source_targets(sample, ["a"])
+
+
+def test_missing_yardage_cannot_create_a_zero_efficiency_target() -> None:
+    from tools.chartgen.evidence import Event
+    from tools.chartgen.refine import source_targets
+
+    sample = [
+        Event(2007, "g", "1", "a", "b", "A", "B", "rush", None),
+        Event(2007, "g", "2", "a", "b", "A", "B", "complete", 10),
+    ]
+    with pytest.raises(ValueError, match="yardage"):
+        source_targets(sample, ["a"])
+
+
+def test_pooled_uncertainty_clusters_whole_games_and_preserves_raw_exposure() -> None:
+    def game(home_attempts: int, away_attempts: int, returns: int) -> dict:
+        def statistics(attempts: int) -> dict:
+            return {
+                "passing_attempts": attempts,
+                "completions": attempts // 2,
+                "interceptions": 0,
+                "sacks_taken": 0,
+                "rushing_attempts": 10,
+                "rushing_yards": 40,
+                "passing_yards": attempts * 6,
+            }
+
+        return {
+            "status": "passed",
+            "teams": {"home": "A", "away": "B"},
+            "final": {
+                "statistics": {
+                    "home": statistics(home_attempts),
+                    "away": statistics(away_attempts),
+                },
+                "home_score": 7,
+                "away_score": 3,
+            },
+            "engine_log": [],
+            "coaching_calls": [],
+            "normalized_chart_draws": [
+                {"team_id": "A", "column": "punt_return", "yards": 10} for _ in range(returns)
+            ],
+        }
+
+    first = game(10, 20, 2)
+    first["final"]["statistics"]["home"]["completions"] = 8
+    first["final"]["statistics"]["away"]["completions"] = 12
+    report = aggregate_games([first, game(20, 20, 1)])
+    completion = report["metrics"]["completion"]
+    assert completion["n"] == 70
+    assert completion["value"] == pytest.approx(40 / 70)
+    assert completion["standard_error"] == pytest.approx(4 / 49)
+    assert completion["clusters"] == 2
+    assert completion["effective_sample_size"] == pytest.approx(70**2 / (30**2 + 40**2))
+    drawn = report["metrics"]["drawn_punt_return_yards"]
+    assert drawn["n"] == 3 and drawn["clusters"] == 2
+    assert drawn["effective_sample_size"] == pytest.approx(9 / 5)
+    assert drawn["standard_error"] == 0
+    assert report["per_team"]["A"]["metrics"]["completion"]["n"] == 30
+
+
+def test_normalized_return_observer_uses_engine_sections_not_display_text() -> None:
+    from bowl_bound.models import SpecialTeamsColumn
+    from tests.synthetic_teams import metadata, team_chart
+    from tools.chartgen.refine import observe_chart_draws
+
+    chart = team_chart("Synthetic A")
+    teams = {"A": (chart, metadata())}
+    roll = next(
+        r.roll for r in chart.special_teams if r.column is SpecialTeamsColumn.INTERCEPTION_RETURN
+    )
+    report = {
+        "engine_log": [
+            {
+                "trace": [
+                    {
+                        "team": chart.name,
+                        "section": section,
+                        "roll": {"total": roll},
+                        "cell": "display is deliberately irrelevant",
+                    }
+                    for section in (
+                        "turnover_return",
+                        "turnover_return_reroll",
+                        "end_zone_recovery_return",
+                        "punt_return",
+                    )
+                ]
+            }
+        ]
+    }
+    draws = observe_chart_draws(report, teams)
+    assert [d["column"] for d in draws] == ["interception_return"] * 3 + ["punt_return"]
+    assert all(d["team_id"] == "A" for d in draws)
+
+
+def test_current_public_observation_policy_is_recorded_for_both_cpu_sides() -> None:
+    from scripts.run_local_season import GameSpec, _play_one
+    from tests.synthetic_teams import metadata, team_chart
+
+    teams = {
+        f"2007/{name.lower()}": (team_chart(name, season=2007), metadata()) for name in ("A", "B")
+    }
+    result = _play_one(
+        GameSpec(1, 2007, "2007/a", "2007/b", 340010),
+        teams,
+        coach_policy="baseline-v10",
+        simulation_coach_version=10,
+    )
+    assert result["status"] == "passed", result.get("error_detail")
+    assert result["configuration"]["engine_coach_policy"] == "baseline-v10"
+    assert result["configuration"]["simulation_coach_policy"] == "baseline-v10"
+    assert {c["team_id"] for c in result["coaching_calls"]} == {"2007/a", "2007/b"}

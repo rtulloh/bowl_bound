@@ -488,12 +488,18 @@ def _new_audit_game(
 
 
 def _audit_configuration(
-    spec: GameSpec, teams: AuditTeams, *, coach_policy: str = "baseline"
+    spec: GameSpec,
+    teams: AuditTeams,
+    *,
+    coach_policy: str = "baseline",
+    simulation_coach_version: int = 1,
 ) -> dict[str, Any]:
     """Return the rules and chart-marker configuration recorded with an audit."""
     return {
         "engine_coach_policy": coach_policy,
-        "simulation_coach_policy": "baseline",
+        "simulation_coach_policy": "baseline"
+        if simulation_coach_version == 1
+        else f"baseline-v{simulation_coach_version}",
         "advanced_ii": False,
         "defense_chart_markers": {
             "home": list(teams[spec.home_id][1].defense_chart_markers),
@@ -508,12 +514,17 @@ def _play_one(
     *,
     verify_replay: bool = False,
     coach_policy: str = "baseline",
+    simulation_coach_version: int = 1,
 ) -> dict[str, Any]:
     """Play a complete regulation game through SavedGame's engine/coaching API."""
     team_ids = {"home": spec.home_id, "away": spec.away_id}
     coaches = {
-        "home": BaselineCoach(stable_seed(spec.seed, "home-coach")),
-        "away": BaselineCoach(stable_seed(spec.seed, "away-coach")),
+        "home": BaselineCoach(
+            stable_seed(spec.seed, "home-coach"), version=simulation_coach_version
+        ),
+        "away": BaselineCoach(
+            stable_seed(spec.seed, "away-coach"), version=simulation_coach_version
+        ),
     }
     game = _new_audit_game(spec, teams, coach_policy=coach_policy)
     calls: list[dict[str, Any]] = []
@@ -656,7 +667,12 @@ def _play_one(
         "overtime_series_starts": _json_value(overtime_starts),
         "spec": asdict(spec),
         "teams": {"home": spec.home_id, "away": spec.away_id},
-        "configuration": _audit_configuration(spec, teams, coach_policy=coach_policy),
+        "configuration": _audit_configuration(
+            spec,
+            teams,
+            coach_policy=coach_policy,
+            simulation_coach_version=simulation_coach_version,
+        ),
         "final": {
             "finished": view.finished,
             "phase": view.phase,

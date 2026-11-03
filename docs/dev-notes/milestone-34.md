@@ -140,3 +140,42 @@ local-season audit and issue tracker. Ruff check, format check (555 files),
 `pip check`, frontend 128 tests, production build and npm audit (zero findings)
 passed. npm reports the existing `whatwg-encoding` deprecation; no warning was
 suppressed. No runtime engine files or packaging/sample allowlists changed.
+
+
+## Full-gate findings and renewed observation coverage
+
+The first full pytest run stopped at collection: the generator and terminal CLI
+tests shared an unqualified module name (DATA-007). A package marker preserves
+both suites; targeted collection then found all 30 tests. The full gate must be
+rerun. Local Chromium could not start any of 33 tests because the macOS sandbox
+denied MachPortRendezvous bootstrap (1100); this is not a passing browser gate.
+
+Four additional failing synthetic regressions expose missing primary yardage in
+calibration targets, independent-game uncertainty clustering, engine return-trace
+section aliases and explicit current baseline policy selection (DATA-002/008/009).
+The first pilot remains frozen; all candidate charts and game reports are retained.
+Its baseline-v1 coaching always fair-catches punts, so a renewed pilot needs a
+recorded current public-observation policy and a fresh held-out seed domain.
+No football engine changes or tolerance widening are authorized by these findings.
+
+
+The frozen pilot completed 384 training games, 512 held-out games, four
+midpoint/final save-replay checks and four mixed coaching assessments with zero
+reconciliation failures. All predeclared core efficiency gates passed in the
+selected candidate and held-out batch. The original report honestly failed return
+gates. Reanalysis of retained traces using the corrected observer and independent
+game clusters leaves only the unobserved punt-return gate failing; the selected
+candidate remains unchanged. Original reports and hashes remain intact.
+
+The shared runner keeps its historical baseline-v1 defaults. Generator training
+now explicitly selects public-observation baseline-v10 for both roles, retaining
+team-independent legal choices and no chart lookahead. This covers punt returns;
+a fresh paired training/held-out domain is required. Missing primary yardage fails
+calibration before targets are constructed. Synthetic red/green checks cover
+aliases, exposure-weighted game clusters and known ratio standard-error math.
+
+`python -m pytest tests/chartgen tests/test_local_season_runner.py
+tests/test_issue_tracker.py tests/test_build_workflow.py tests/test_tests_workflow.py -q`
+— 120 passed. Ruff check/format passed (562 files). Reviewed and integrated
+workflow-only DEV-059 so branch-scoped hosted browser regression can run without
+native release builds. No engine behavior changed.

@@ -18,7 +18,7 @@ from pathlib import Path
 from statistics import mean, variance
 from typing import Any
 
-from bowl_bound.models import SpecialTeamsColumn, TeamChart
+from bowl_bound.models import TeamChart
 from bowl_bound.team_csv import TeamFileMetadata, team_folder_name
 from scripts.run_local_season import GameSpec, _play_one, stable_seed
 
@@ -91,7 +91,7 @@ def engine_identity() -> dict[str, Any]:
         "engine_sha256": digest.hexdigest(),
         "tool_sha256": tool_digest.hexdigest(),
         "rules_profile": "approved current Bowl Bound; Advanced II disabled",
-        "training_policy": "baseline public observation; no chart lookahead",
+        "training_policy": "baseline-v10 public observation; no chart lookahead",
         "audit_runner": "scripts.run_local_season._play_one",
     }
 
@@ -108,6 +108,7 @@ def aggregate_games(
     calls: Counter[str] = Counter()
     scores, plays = [], []
     for result in passed:
+        game_counters: dict[str, list[tuple[float, int]]] = defaultdict(list)
         for side, identity in result["teams"].items():
             if team_filter is not None and identity != team_filter:
                 continue
@@ -123,7 +124,7 @@ def aggregate_games(
                 ("pass_yards_per_attempt", stat["passing_yards"], attempts),
             ):
                 if denominator:
-                    counters[name].append((numerator, denominator))
+                    game_counters[name].append((numerator, denominator))
             logs = [
                 row for row in result["engine_log"] if row["state_before"]["possession"] == side
             ]
@@ -133,7 +134,7 @@ def aggregate_games(
                 if row["statistics"]["kind"] != "excluded"
             )
             if attempts + rushing:
-                counters["fumble"].append((fumbles, attempts + rushing))
+                game_counters["fumble"].append((fumbles, attempts + rushing))
             scores.append(result["final"][f"{side}_score"])
             plays.append(attempts + rushing)
         for call in result["coaching_calls"]:
@@ -150,7 +151,7 @@ def aggregate_games(
                 "punt_return",
                 "interception_return",
             }:
-                counters[f"drawn_{draw['column']}_yards"].append((draw["yards"], 1))
+                game_counters[f"drawn_{draw['column']}_yards"].append((draw["yards"], 1))
         for row in result["engine_log"]:
             if (
                 team_filter is not None
@@ -159,22 +160,35 @@ def aggregate_games(
                 continue
             # Kicks and makes use engine-provided semantic outcomes and traces.
             if row["outcome"] in {"field_goal_good", "field_goal_missed"}:
-                counters["field_goal"].append((row["outcome"] == "field_goal_good", 1))
+                game_counters["field_goal"].append((row["outcome"] == "field_goal_good", 1))
             if row["outcome"] in {"pat_good", "pat_missed"}:
-                counters["pat"].append((row["outcome"] == "pat_good", 1))
+                game_counters["pat"].append((row["outcome"] == "pat_good", 1))
+        # Both possessions and every return/kick in this game share one cluster.
+        for name, samples in game_counters.items():
+            counters[name].append((sum(n for n, _ in samples), sum(d for _, d in samples)))
     metrics = {}
     for name, samples in counters.items():
         numerator, denominator = sum(n for n, _ in samples), sum(d for _, d in samples)
         game_values = [n / d for n, d in samples]
+        ratio = numerator / denominator
+        clusters = len(samples)
+        ratio_variance = (
+            clusters
+            / (clusters - 1)
+            * sum((n - ratio * d) ** 2 for n, d in samples)
+            / denominator**2
+            if clusters > 1
+            else None
+        )
         metrics[name] = {
-            "value": numerator / denominator,
+            "value": ratio,
             "n": denominator,
             "numerator": numerator,
-            "clusters": len(samples),
+            "clusters": clusters,
+            "effective_sample_size": denominator**2 / sum(d**2 for _, d in samples),
             "variance": variance(game_values) if len(game_values) > 1 else 0.0,
-            "standard_error": math.sqrt(variance(game_values) / len(samples))
-            if len(samples) > 1
-            else None,
+            "standard_error": math.sqrt(ratio_variance) if ratio_variance is not None else None,
+            "uncertainty_method": "independent-game cluster-robust ratio; Kish exposure",
         }
     output = {
         "passed_games": len(passed),
@@ -196,6 +210,16 @@ def aggregate_games(
 
 
 def source_targets(events: Sequence[Event], teams: Sequence[str]) -> dict[str, float]:
+    if any(
+        e.team in teams
+        and not e.no_play
+        and e.kind in {"rush", "sack", "complete"}
+        and e.yards is None
+        for e in events
+    ):
+        raise ValueError(
+            "calibration requires known primary-play yardage; reconcile evidence first"
+        )
     summaries = [summarize_events(events, team) for team in teams]
     totals = {
         key: sum(summary[key] for summary in summaries)
@@ -211,6 +235,8 @@ def source_targets(events: Sequence[Event], teams: Sequence[str]) -> dict[str, f
         )
     }
     attempts, rushes, sacks = totals["pass_attempts"], totals["rush_attempts"], totals["sacks"]
+    if not attempts or not rushes:
+        raise ValueError("calibration requires observed rushing and passing attempts")
     targets = {
         "completion": totals["completions"] / attempts,
         "interception": totals["interceptions"] / attempts,
@@ -288,7 +314,8 @@ def assess_metrics(
             "required_samples": required_samples,
             "passed": not insufficient and error <= tolerance,
             "standard_error": observation.get("standard_error"),
-            "effective_sample_size": observation.get("clusters", 0),
+            "effective_sample_size": observation.get("effective_sample_size", 0),
+            "independent_game_clusters": observation.get("clusters", 0),
             "raw_sample_size": observation.get("n", 0),
         }
     return {
@@ -329,6 +356,43 @@ def propose_profile(
     return CalibrationProfile(**values)
 
 
+def observe_chart_draws(
+    result: dict[str, Any], teams: dict[str, tuple[TeamChart, TeamFileMetadata]]
+) -> list[dict[str, Any]]:
+    """Observe actual normalized consultations using production engine section names.
+
+    Turnover and end-zone return routines use the interception-return column for
+    their first draw and subsequent rerolls. This map follows those engine APIs;
+    it interprets neither display tokens nor football results.
+    """
+    aliases = {
+        "turnover_return": "interception_return",
+        "turnover_return_reroll": "interception_return",
+        "end_zone_recovery_return": "interception_return",
+    }
+    lookup = {
+        (chart.name, record.column.value, record.roll): (identity, record.cell)
+        for identity, (chart, _) in teams.items()
+        for record in chart.special_teams
+    }
+    draws = []
+    for row in result["engine_log"]:
+        for entry in row["trace"]:
+            column = aliases.get(entry["section"], entry["section"])
+            key = (entry["team"], column, entry["roll"].get("total"))
+            if key in lookup:
+                identity, cell = lookup[key]
+                draws.append(
+                    {
+                        "team_id": identity,
+                        "column": column,
+                        "kind": cell.kind.value,
+                        "yards": cell.yards,
+                    }
+                )
+    return draws
+
+
 def run_batch(
     teams: dict[str, tuple[TeamChart, TeamFileMetadata]],
     seeds: Sequence[int],
@@ -346,32 +410,8 @@ def run_batch(
     for index, seed in enumerate(seeds):
         away, home = identities if index % 2 == 0 else identities[::-1]
         spec = GameSpec(index + 1, season, away, home, seed)
-        result = _play_one(spec, teams)
-        # Preserve normalized chart facts consulted by the real engine. This is an
-        # observation of actual trace rolls, not parsing display text or a second
-        # kick/return resolver. Draw means are labeled separately from net outcomes.
-        lookup = {
-            (chart.name, column.value, record.roll): record.cell
-            for chart, _ in teams.values()
-            for column in SpecialTeamsColumn
-            for record in chart.special_teams
-            if record.column is column
-        }
-        team_by_name = {chart.name: identity for identity, (chart, _) in teams.items()}
-        result["normalized_chart_draws"] = []
-        for row in result["engine_log"]:
-            for entry in row["trace"]:
-                key = (entry["team"], entry["section"], entry["roll"].get("total"))
-                if key in lookup:
-                    cell = lookup[key]
-                    result["normalized_chart_draws"].append(
-                        {
-                            "team_id": team_by_name[entry["team"]],
-                            "column": entry["section"],
-                            "kind": cell.kind.value,
-                            "yards": cell.yards,
-                        }
-                    )
+        result = _play_one(spec, teams, coach_policy="baseline-v10", simulation_coach_version=10)
+        result["normalized_chart_draws"] = observe_chart_draws(result, teams)
         (output / f"game-{index + 1:05d}.json").write_text(json.dumps(result, indent=2) + "\n")
         results.append(result)
         if progress:
@@ -462,7 +502,13 @@ def run_refinement(
     identities = sorted(teams)
     for index, seed in enumerate(seed_plan.validation[:4]):
         away, home = identities if index % 2 == 0 else identities[::-1]
-        result = _play_one(GameSpec(index + 1, season, away, home, seed), teams, verify_replay=True)
+        result = _play_one(
+            GameSpec(index + 1, season, away, home, seed),
+            teams,
+            verify_replay=True,
+            coach_policy="baseline-v10",
+            simulation_coach_version=10,
+        )
         (output / f"save-replay-{index + 1}.json").write_text(json.dumps(result, indent=2) + "\n")
         replay.append(
             {
@@ -478,7 +524,10 @@ def run_refinement(
     for index, seed in enumerate(seed_plan.validation[:4]):
         away, home = identities if index % 2 == 0 else identities[::-1]
         result = _play_one(
-            GameSpec(index + 1, season, away, home, seed), teams, coach_policy="chart-v10"
+            GameSpec(index + 1, season, away, home, seed),
+            teams,
+            coach_policy="chart-v10",
+            simulation_coach_version=10,
         )
         (output / f"coaching-assessment-{index + 1}.json").write_text(
             json.dumps(result, indent=2) + "\n"
