@@ -1037,3 +1037,26 @@ load/re-save checks pass. Owner confirms offense; defense confirmation is pendin
 RULE-044 is resolved with tested refs, **not closed**. No new M33 acceptance,
 push, merge, release or tag is claimed; root owns subsequent UI requests on its
 separate worktree. All heavy validation jobs have completed.
+
+
+### Reviewed web follow-up integration
+
+After the clean 3,499-case timeout gate, integrated the parent's reviewed
+0a7065f/78ffa23/81dc6e4/855d4bb work. UI-055 removes only the duplicated budget
+suffix from the two engine Use/Cancel labels, preserving action keys, clock and
+scoreboard counts. UI-054 stays open: API plus SSR/JSDOM retain all eleven
+reports in the authorized inspected game, but actual scroll/lifecycle visibility
+is not verified. UI-056/M37 is owner-requested future support-log planning only.
+No implementation of the support exporter or speculative history repair occurs.
+
+Generated tracker conflicts were resolved by regeneration, preserving RULE-044
+resolved with offense-only confirmation. Application runtime files exactly match
+the parent's frozen 855d4bb candidate; browser continuation tests and validation
+notes remain separate. A fresh merged-source 3,503-case Python gate follows,
+with focused label/timeout/API/tracker and frontend checks first.
+
+Merged-source focused validation: 108 timeout/label/API/tracker cases pass in
+13.36s; frontend131 pass in5.00s, production build1.33s, Ruff check/format560
+files and diff checks pass. Actual application runtime diff against frozen
+855d4bb is empty. Repeated gate is explicitly for the merged label source and
+four new regressions; the prior 3,499 green remains valid historical evidence.
