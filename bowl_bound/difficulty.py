@@ -13,7 +13,13 @@ from math import exp
 from random import Random
 
 from .chart_coaching import ChartAwareCoach
-from .coaching import BaselineCoach, CoachObservation, safe_choice
+from .coaching import (
+    BaselineCoach,
+    CoachObservation,
+    field_goal_attempt_distance,
+    public_fourth_down_call,
+    safe_choice,
+)
 from .coaching_evaluation import ActionEstimate, evaluate_action
 from .coaching_profiles import behavior_for_policy
 from .coaching_situations import SituationBucket, situation_bucket
@@ -214,56 +220,15 @@ class DifficultyCoach(ChartAwareCoach):
     @staticmethod
     def _public_field_goal_distance(observation: CoachObservation) -> int:
         """Return the conventional attempt distance visible from the line of scrimmage."""
-        return observation.yards_to_goal + 17
+        return field_goal_attempt_distance(observation)
 
     def _public_fourth_down_call(self, observation: CoachObservation) -> str | None:
-        """Choose a kick, punt, or go decision without inspecting team chart data.
-
-        Version 10's fourth-down policy is deliberately shared with a human
-        player: line of scrimmage, yards to gain, clock, score, and difficulty
-        aggression are its only inputs. The engine still resolves any selected
-        kick from its chart.
-        """
-        if (
-            self.version < 10
-            or observation.overtime
-            or observation.phase == SessionPhase.TWO_POINT_TRY.value
-            or observation.down != 4
-        ):
+        """Use the same visible policy offered to players for current normal play."""
+        if self.version < 10:
             return None
-
-        field_goal_available = "field_goal" in observation.special
-        punt_available = "punt" in observation.special
-        field_goal_distance = self._public_field_goal_distance(observation)
-        late_trailing = (
-            observation.quarter == 4
-            and observation.remaining <= self.behavior.chase_seconds
-            and observation.score_difference < 0
+        return public_fourth_down_call(
+            observation, aggression=self.aggression, chase_seconds=self.behavior.chase_seconds
         )
-        if late_trailing:
-            if (
-                observation.score_difference >= -3
-                and field_goal_available
-                and field_goal_distance <= 55
-            ):
-                return "field_goal"
-            return "go"
-
-        if field_goal_available and field_goal_distance <= 35:
-            return "field_goal"
-        if field_goal_available and field_goal_distance <= 47:
-            if observation.distance == 1 and self.aggression >= 0.5:
-                return "go"
-            return "field_goal"
-        if field_goal_available and field_goal_distance <= 50:
-            return "field_goal"
-        if field_goal_available and field_goal_distance <= 55:
-            if self.aggression >= 0.5:
-                return "field_goal"
-            return "punt" if punt_available else "go"
-        if observation.distance == 1 and self.aggression >= 0.5:
-            return "go"
-        return "punt" if punt_available else "go"
 
     def offense(self, observation: CoachObservation) -> str:
         self.analysis_fallback = False

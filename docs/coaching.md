@@ -231,6 +231,12 @@ chart to decide whether to attempt a field goal. The engine still uses the selec
 team's chart to resolve the actual kick. Future public season/team range adjustments
 are tracked in AI-031.
 
+`coaching.public_fourth_down_call` is the engine's single public policy entry
+point. It takes only the allowlisted observation, declared aggression, and the
+approved late-game window. The current CPU delegates to it. Its public-only inputs also support player
+guidance with the same decision basis. `field_goal_attempt_distance` supplies the conventional
+public distance. These functions do not evaluate kick charts or consume dice.
+
 Audit JSON includes `behavior_profile` and `audit_profile` for each game. The
 separate `coaching-audit-v1` profile names replay and advisory concentration
 thresholds; it never constrains legal play usage.

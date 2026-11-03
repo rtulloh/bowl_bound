@@ -158,6 +158,37 @@ Validation:
 
 Owner play-test confirmation and milestone-wide regression remain pending.
 
+## AI-027 / UI-041 — One public fourth-down policy
+
+Before this phase, independently reviewed Paydirt's
+`paydirt/computer_ai.py:311-365` and `tests/test_fourth_down.py`. Its boundary-test
+structure is useful. Its historical 1983 NFL rates, random coffin-corner choices,
+punt variants and game rules are excluded. The exact Bowl Bound bands remain
+those already approved and documented in [coaching](../coaching.md): no new
+distance, clock, short-yardage, or aggression policy is introduced.
+
+Current version-10 CPU behavior already implements those bands. AI-027 extracts
+them into `coaching.public_fourth_down_call`, accepting only the public observation
+and declared aggression/clock threshold. CPU selection and the following UI-041
+guidance work use this one engine function. `field_goal_attempt_distance` supplies
+the shared public distance. The actual selected kick remains chart-resolved.
+
+AI-027 validation:
+
+- The new shared-policy test initially failed collection because the public
+  function did not exist; the existing CPU decision was then extracted without
+  changing any policy band or expectation.
+- `.venv/bin/python -m pytest tests/test_public_fourth_down.py tests/test_coaching_decisions_v3.py tests/test_coaching_invariants.py tests/test_difficulty.py tests/test_coaching_saves.py -q`:
+  **237 passed in 18.95s**. Includes 70 new public-policy cases: all tier/distance
+  boundaries with chart reads and evaluation forbidden, late-clock boundaries,
+  legal-action filtering, CPU delegation, and saved choice stability while strong
+  and weak charts still produce different actual kick outcomes.
+- Ruff lint/format passed; **532 files** formatted. No skips or warnings.
+
+The two changed runtime modules were already in the exact release manifest; no
+module or sample addition is needed. Owner play-test confirmation, UI-041's
+display work and the final milestone gate remain pending.
+
 ## DEV-060 — Stale sample metadata hashes (2026-11-02)
 
 Consulted local Paydirt `.github/workflows/release.yml` and
