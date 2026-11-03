@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import json
 import math
-import os
-import tempfile
 from collections import deque
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from concurrent.futures import ProcessPoolExecutor
@@ -17,6 +15,14 @@ from bowl_bound.models import TeamChart
 from bowl_bound.team_csv import TeamFileMetadata, team_to_files
 from scripts.run_local_season import GameSpec, _play_one, stable_seed
 
+from .artifacts import (
+    ArtifactCompression,
+    check_capacity,
+    game_artifact_path,
+    read_artifact,
+    storage_policy,
+    write_artifact,
+)
 from .batch import write_json_new
 from .cohort_report import canonical_hash, validate_simulation_fixtures
 from .private_io import private_destination
@@ -107,19 +113,11 @@ def _bounded_results(
             pending.append(executor.submit(_execute_run, task))
 
 
-def _publish(path: Path, payload: Any) -> None:
-    """Publish complete bytes atomically without overwriting any prior artifact."""
-    descriptor, temporary = tempfile.mkstemp(prefix=".pending-", dir=path.parent)
-    pending = Path(temporary)
-    try:
-        with os.fdopen(descriptor, "w") as stream:
-            json.dump(payload, stream, sort_keys=True, allow_nan=False)
-            stream.write("\n")
-            stream.flush()
-            os.fsync(stream.fileno())
-        os.link(pending, path)
-    finally:
-        pending.unlink(missing_ok=True)
+def _publish(
+    path: Path, payload: Any, *, compression: ArtifactCompression = ArtifactCompression.JSON
+) -> None:
+    """Retain the existing atomic publication boundary for summaries and games."""
+    write_artifact(path, payload, compression=compression)
 
 
 def compact_metric_result(result: Mapping[str, Any]) -> dict[str, Any]:
@@ -286,10 +284,12 @@ def run_historical_batch(
     workers: int = 1,
     resume: bool = False,
     verify_replay: bool = False,
+    compression: ArtifactCompression = ArtifactCompression.JSON,
     progress: Callable[[int, int, str], None] | None = None,
 ) -> dict[str, Any]:
     """Replay only frozen actual fixtures; verify every retained result on resume."""
     output = private_destination(output)
+    compression = ArtifactCompression(compression)
     if type(workers) is not int or not 1 <= workers <= 2:
         raise ValueError("cohort workers must be within [1, 2]")
     if canonical_hash(targets) != report.get("targets_sha256"):
@@ -311,28 +311,36 @@ def run_historical_batch(
             key: canonical_hash(team_to_files(*value)) for key, value in teams.items()
         },
         "verify_replay": verify_replay,
+        "artifact_storage_policy": storage_policy(compression),
     }
     contract_hash = canonical_hash(contract)
-    if output.exists():
+    existing_output = output.exists()
+    if existing_output:
         if not resume:
             raise ValueError("simulation output exists; choose a new path or explicit resume")
         if json.loads((output / "run-contract.json").read_text()) != contract:
             raise ValueError("resume contract differs from source/engine/charts/targets/seeds")
-    else:
-        output.mkdir(parents=True, mode=0o700)
-        write_json_new(output / "run-contract.json", contract)
     retained, missing = {}, []
     for run in runs:
-        path = output / f"game-{run.number:06d}.json"
+        path = game_artifact_path(output, run.number, compression)
         if path.exists():
-            value = json.loads(path.read_text())
-            if value.get("contract_sha256") != contract_hash or value.get("run") != asdict(run):
+            value = read_artifact(path)
+            if (
+                not isinstance(value, dict)
+                or value.get("contract_sha256") != contract_hash
+                or value.get("run") != asdict(run)
+            ):
                 raise ValueError("retained fixture contract differs")
             if canonical_hash(value["result"]) != value.get("result_sha256"):
                 raise ValueError("retained game checksum differs; preserve and investigate")
             retained[run.number] = compact_metric_result(value["result"])
         else:
             missing.append(run)
+    capacity = check_capacity(output, len(missing), compression=compression)
+    if not existing_output:
+        output.mkdir(parents=True, mode=0o700)
+        write_json_new(output / "run-contract.json", contract)
+        write_json_new(output / "storage-preflight.json", capacity)
     _initialize_worker(teams)
     executor = (
         ProcessPoolExecutor(max_workers=workers, initializer=_initialize_worker, initargs=(teams,))
@@ -353,7 +361,11 @@ def run_historical_batch(
                 "result": result,
                 "result_sha256": canonical_hash(result),
             }
-            _publish(output / f"game-{run.number:06d}.json", payload)
+            _publish(
+                game_artifact_path(output, run.number, compression),
+                payload,
+                compression=compression,
+            )
             retained[run.number] = compact_metric_result(result)
             if progress:
                 progress(len(retained), len(runs), result["status"])
@@ -391,6 +403,13 @@ def run_historical_batch(
         repetitions=repetitions,
         completed_runs=len(ordered),
         failures_retained=sum(r["status"] != "passed" for r in ordered),
+        artifact_storage={
+            "compression": compression.value,
+            "complete_artifact_count": len(runs),
+            "complete_artifact_bytes": sum(
+                game_artifact_path(output, run.number, compression).stat().st_size for run in runs
+            ),
+        },
     )
     summary_path = output / "summary.json"
     if summary_path.exists():

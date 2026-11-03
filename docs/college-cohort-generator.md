@@ -160,3 +160,31 @@ Every unjoined source game is listed separately and excluded from the strength
 model/restricted targets. External teams' remaining full schedules are not
 claimed. All run configurations record complete OFF/DEF profile bounds, the
 measured gate scope and the current Bowl Bound rules baseline.
+
+
+## Retained-report storage
+
+The cohort refinement CLI defaults to `--artifact-compression gzip`. Complete
+engine reports, saves, traces and semantic checksums are streamed into
+`game-NNNNNN.json.gz`; nothing is truncated or discarded. Gzip uses fixed level 6,
+zero mtime and no embedded filename, so identical payloads produce identical
+bytes. Atomic publication never overwrites prior artifacts. Legacy plain JSON
+remains readable; use `--artifact-compression json` for new plain-JSON runs. The
+Python batch/refinement APIs retain their plain-JSON default for compatibility.
+
+Before a new refinement, capacity is checked for the declared maximum candidates
+and repetitions. Each batch also checks its missing reports before starting any
+engine work. The conservative budget is 256 KiB per gzip report or 4 MiB per
+plain report, plus 64 MiB for metadata and 3 GiB kept free. These are engineering
+estimates, not report size limits; measure actual pilot outputs before extending
+a study. Concurrent filesystem usage can change after a point-in-time check.
+
+The storage policy is part of the immutable run contract. Initial free-space
+evidence is retained separately in `cohort-storage-preflight.json` and each
+batch's `storage-preflight.json`; changing free space does not change seeds or
+make an otherwise valid resume differ. Resume verifies retained complete reports
+and their semantic checksums, rejects corrupt/truncated files without repairing
+or deleting them, and checks capacity only for missing engine reports. Summaries
+record actual complete artifact counts/bytes. Existing outputs are never migrated
+or overwritten; source/tool version checks still require the matching frozen
+checkout when resuming an older run.

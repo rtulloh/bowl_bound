@@ -499,18 +499,17 @@ def test_defensive_calibration_is_bounded_and_preserves_offense(events: list[Eve
         DefensiveProfile(sack_shift=float("nan"))
 
 
-def test_historical_cohort_two_phase_driver_preserves_baseline_and_unused_validation(
-    tmp_path: Path, events: list[Event]
-) -> None:
+def _prepare_refinement_example(
+    tmp_path: Path, evidence: list[Event]
+) -> tuple[list[Event], dict, dict]:
     import json
 
-    from tools.chartgen.cohort_refinement import run_cohort_refinement
     from tools.chartgen.cohort_sources import HistoricalContracts
     from tools.chartgen.prepare import prepare_cohort
     from tools.chartgen.scope import HistoricalGame, TeamSeason
 
     source = [
-        replace(e, period=int(e.event_id.split("-")[-1]) % 4 + 1, clock="0:20") for e in events
+        replace(e, period=int(e.event_id.split("-")[-1]) % 4 + 1, clock="0:20") for e in evidence
     ]
     contracts = HistoricalContracts(
         {
@@ -524,6 +523,16 @@ def test_historical_cohort_two_phase_driver_preserves_baseline_and_unused_valida
     prepare_cohort(source, contracts, 2007, prepared, source_provenance={}, minimum_source_games=1)
     manifest = json.loads((prepared / "review" / "manifest.json").read_text())
     targets = json.loads((prepared / "review" / "targets.json").read_text())
+    return source, manifest, targets
+
+
+@pytest.mark.parametrize("compression", ["json", "gzip"])
+def test_historical_cohort_two_phase_driver_preserves_baseline_and_unused_validation(
+    tmp_path: Path, events: list[Event], compression: str
+) -> None:
+    from tools.chartgen.cohort_refinement import run_cohort_refinement
+
+    source, manifest, targets = _prepare_refinement_example(tmp_path, events)
     output = tmp_path / "private-data" / "refinement"
     report = run_cohort_refinement(
         source,
@@ -536,7 +545,10 @@ def test_historical_cohort_two_phase_driver_preserves_baseline_and_unused_valida
         coaching_repetitions=1,
         iterations=1,
         master_seed=77,
+        compression=compression,
     )
+    assert report["config"]["artifact_storage_policy"]["compression"] == compression
+    assert report["heldout"]["artifact_storage"]["compression"] == compression
     assert report["mechanics_ready"]
     assert set(report["config"]["profile_bounds"]) == {"offense", "defense"}
     assert report["config"]["profile_bounds"]["defense"]["run_yards_offset"] == [-2.0, 2.0]
@@ -567,5 +579,30 @@ def test_historical_cohort_two_phase_driver_preserves_baseline_and_unused_valida
         coaching_repetitions=1,
         iterations=1,
         master_seed=77,
+        compression=compression,
         resume=True,
     )
+
+
+def test_refinement_capacity_preflight_precedes_candidate_generation(
+    tmp_path: Path, events: list[Event], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from types import SimpleNamespace
+
+    from tools.chartgen import artifacts, cohort_refinement
+
+    source, manifest, targets = _prepare_refinement_example(tmp_path, events)
+    monkeypatch.setattr(artifacts.shutil, "disk_usage", lambda _: SimpleNamespace(free=1024))
+    monkeypatch.setattr(
+        cohort_refinement, "_candidate_charts", lambda *args: pytest.fail("candidate generated")
+    )
+    output = tmp_path / "private-data" / "insufficient-refinement"
+    with pytest.raises(artifacts.StorageCapacityError, match="insufficient storage"):
+        cohort_refinement.run_cohort_refinement(
+            source,
+            manifest,
+            targets,
+            output,
+            reviewed_manifest_sha256=manifest["manifest_sha256"],
+        )
+    assert not output.exists()

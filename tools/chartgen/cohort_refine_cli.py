@@ -7,6 +7,7 @@ import json
 import sys
 from pathlib import Path
 
+from .artifacts import ArtifactCompression, StorageCapacityError
 from .cohort_refinement import run_cohort_refinement
 from .source import read_normalized
 from .tactics import TacticalProfile
@@ -26,6 +27,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--master-seed", type=int, default=20081103)
     parser.add_argument("--generation-seed", type=int, default=1)
     parser.add_argument("--workers", type=int, default=1)
+    parser.add_argument(
+        "--artifact-compression",
+        choices=[value.value for value in ArtifactCompression],
+        default=ArtifactCompression.GZIP.value,
+        help="complete retained game reports: gzip (default) or legacy json",
+    )
     parser.add_argument("--resume", action="store_true")
     args = parser.parse_args(argv)
     if any(not path.is_file() for path in (args.source, args.manifest, args.targets)):
@@ -49,6 +56,7 @@ def main(argv: list[str] | None = None) -> int:
             master_seed=args.master_seed,
             generation_seed=args.generation_seed,
             workers=args.workers,
+            compression=ArtifactCompression(args.artifact_compression),
             tactics=tactics,
             resume=args.resume,
             progress=lambda done, total, status: (
@@ -57,6 +65,9 @@ def main(argv: list[str] | None = None) -> int:
                 else None
             ),
         )
+    except StorageCapacityError as error:
+        print(f"Cohort refinement failed: {error}", file=sys.stderr)
+        return 2
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(
             f"Cohort refinement failed: {type(error).__name__}; "

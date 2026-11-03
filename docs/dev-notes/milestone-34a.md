@@ -198,3 +198,48 @@ seconds; repository Ruff check/format and diff whitespace checks passed. The
 pytest executable alone does not put this source checkout root on the import
 path; the established `.venv/bin/python -m pytest` invocation was used for the
 valid run. No missing-script collection failure is counted as a passing test.
+
+
+Frozen-source full regression at `e74dc06364ad2ac695238fe2a82e84eae061e567`:
+`.venv/bin/python -m pytest --cov` completed 3,480 passing cases in 1,120.78
+seconds, 91.52% branch-aware coverage, no skips or warnings in the final summary.
+This validates that source only; subsequent storage changes require renewed checks.
+
+Private v3 reports preserve the same 345/359 actual fixture sets and numerical
+charts. All 236 charts reload, and report/target/simulation IDs plus target-value
+hashes reconcile. Primary archives now identify ten BCS games and six conference
+titles, plus six additional 2007 neutral-site corrections. Original provider
+values remain in provenance. CFP's ordinary bowl results do not independently
+establish every neutral flag. Membership and event completeness remain limited.
+Owner CLI startup was separately verified by parent in a detached `e74dc06`
+checkout, using explicit local-source import selection and coaching version 10;
+this is startup evidence, not a completed-game or calibration claim.
+
+DATA-020 pre-run storage investigation found the proposed uncompressed upper
+budget exceeded available capacity. The bounded private artifact measurement and
+exact estimates remain ignored. Parent authorized deterministic streaming gzip
+and conservative capacity preflight while preserving all complete reports,
+checksums, failures, legacy JSON reading and existing artifacts. Before this
+phase, reconsulted Paydirt `paydirt/chart_tuning.py`, its tests, the tuning dev note
+and generation workflow. They support preserving complete reproducible evidence
+but provide no relevant compression/capacity helper to copy. This implementation
+uses the Python standard library and adds no runtime or Paydirt dependency.
+
+New synthetic storage tests first failed at absent module collection, then the
+real-engine batch cases failed on the unsupported compression argument. The
+initial implementation passed nine focused cases, including full evidence/replay,
+exact compressed resume, checksum tamper, truncated files and insufficient space
+without engine/output work. Both plain and compressed complete two-phase flows
+are under cumulative validation. No broad historical simulations have started
+before concrete matchup-report review.
+
+Changed-source cumulative storage/generator/runner/tracker gate: 172 passed in
+122.51 seconds. A final valid-gzip/non-object-JSON corruption control then
+reproduced an AttributeError; retained contract validation now rejects that shape
+with a clear ValueError. Corrected-source focused storage/resume/tracker gate:
+51 passed in 12.45 seconds. Repository-wide Ruff check/format, pip check and diff
+whitespace checks passed. Independent read-only sibling review found no introduced
+blocking issue and confirmed gzip footer/fsync ordering, atomic publication,
+preflight placement and strict resume checks. Legacy payload reading does not
+automatically migrate old source/tool run contracts; documentation states this
+limit explicitly. A renewed full gate follows the focused storage commit.

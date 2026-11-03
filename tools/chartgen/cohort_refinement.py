@@ -10,6 +10,7 @@ from typing import Any
 
 from bowl_bound.team_csv import load_team
 
+from .artifacts import ArtifactCompression, check_capacity, storage_policy
 from .batch import bundle_hash, generate_cohort, write_json_new
 from .cohort_report import canonical_hash, validate_simulation_fixtures
 from .cohort_run_report import write_matchup_usage
@@ -232,6 +233,7 @@ def run_cohort_refinement(
     master_seed: int = 20081103,
     generation_seed: int = 1,
     workers: int = 1,
+    compression: ArtifactCompression = ArtifactCompression.JSON,
     tactics: TacticalProfile | None = None,
     resume: bool = False,
     progress: Callable[[int, int, str], None] | None = None,
@@ -245,6 +247,7 @@ def run_cohort_refinement(
     from .scope import HistoricalGame
 
     output = private_destination(output)
+    compression = ArtifactCompression(compression)
     if reviewed_manifest_sha256 != report["manifest_sha256"]:
         raise ValueError("reviewed manifest hash differs from concrete proposed slate")
     if canonical_hash(targets) != report.get("targets_sha256"):
@@ -290,6 +293,7 @@ def run_cohort_refinement(
         "master_seed": master_seed,
         "generation_seed": generation_seed,
         "tactics_sha256": tactics.sha256,
+        "artifact_storage_policy": storage_policy(compression),
         "tolerances": TOLERANCES,
         "profile_bounds": profile_bounds(),
         "statistical_gate_scope": (
@@ -309,8 +313,15 @@ def run_cohort_refinement(
         if not resume or json.loads((output / "cohort-run-config.json").read_text()) != config:
             raise ValueError("cohort resume configuration differs or output already exists")
     else:
+        capacity = check_capacity(
+            output,
+            len(games)
+            * (iterations * training_repetitions + validation_repetitions + coaching_repetitions),
+            compression=compression,
+        )
         output.mkdir(parents=True, mode=0o700)
         write_json_new(output / "cohort-run-config.json", config)
+        write_json_new(output / "cohort-storage-preflight.json", capacity)
     offense = {t: CalibrationProfile() for t in names}
     defense = {t: DefensiveProfile() for t in names}
     history, best, previous_fingerprint = [], None, None
@@ -340,6 +351,7 @@ def run_cohort_refinement(
             repetitions=training_repetitions,
             master_seed=master_seed,
             workers=workers,
+            compression=compression,
             resume=resume,
             progress=progress,
         )
@@ -410,6 +422,7 @@ def run_cohort_refinement(
         repetitions=validation_repetitions,
         master_seed=master_seed,
         workers=workers,
+        compression=compression,
         resume=resume,
         verify_replay=True,
         progress=progress,
@@ -424,6 +437,7 @@ def run_cohort_refinement(
         repetitions=coaching_repetitions,
         master_seed=master_seed,
         workers=workers,
+        compression=compression,
         resume=resume,
         progress=progress,
     )
