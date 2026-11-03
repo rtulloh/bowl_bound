@@ -1,0 +1,61 @@
+docs/dev-notes/issues/DATA/DATA-001.md
+  s_e06e375ba9891d::t_194e6c817e2504 1-28
+docs/dev-notes/issues/DATA/DATA-002.md
+  s_e06e375ba9891d::t_43e5809d1f9a77 1-29
+docs/dev-notes/issues/DATA/DATA-003.md
+  s_e06e375ba9891d::t_0d76d624e996e3 1-28
+docs/dev-notes/issues/README.md
+  s_e06e375ba9891d::t_e1309a687dabf7 15-16
+docs/dev-notes/project-plan.md
+  s_e06e375ba9891d::t_4ed501cf5ea3c1 620-647
+generate_college_charts.py
+  s_e06e375ba9891d::t_4e01e4c347cb28 1-6
+normalize_college_pbp.py
+  s_e06e375ba9891d::t_d806adff09281a 1-6
+pyproject.toml
+  s_e06e375ba9891d::t_8b6a649efc1f8c 33
+refine_college_charts.py
+  s_e06e375ba9891d::t_f1a5cae25ad4da 1-6
+tests/chartgen/test_cli.py
+  s_cee2f5c7a51f19::t_16fa131118ce4c 1-35
+tests/chartgen/test_evidence.py
+  s_cee2f5c7a51f19::t_aaacaa8527e3fc 1-125
+tests/chartgen/test_refinement.py
+  s_cee2f5c7a51f19::t_e8f8803efeb4ae 1-56
+tests/chartgen/test_source.py
+  s_cee2f5c7a51f19::t_34b4ea3f6200f7 1-35
+tools/chartgen/__init__.py
+  s_e06e375ba9891d::t_8d6f9b7e264913 1
+tools/chartgen/audit.py
+  s_cee2f5c7a51f19::t_26f876b9751534 1-44
+tools/chartgen/cli.py
+  s_e06e375ba9891d::t_b80f2541deb6fc 1-136
+tools/chartgen/evidence.py
+  s_cee2f5c7a51f19::t_abd691d48fe6e0 1-278
+tools/chartgen/source.py
+  s_cee2f5c7a51f19::t_c9285a2b346869 1-202
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "55f530d325d64a66679062b284daa2709fb9f2a9",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    },
+    "s_e06e375ba9891d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f07-7008-7201-b15a-cd4a7dec87df",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
