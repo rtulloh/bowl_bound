@@ -80,12 +80,33 @@ player release notes.
 
 ## Manual native workflow and Windows installer
 
+`.github/workflows/tests.yml` is named **Tests** and runs automatically on
+branch pushes (including main and isolated workstreams) and pull requests. Its
+run is associated with the pushed/PR commit. The Ubuntu gate runs coverage,
+lint/format, pip check, frontend unit/build/audit and real-engine Chromium tests.
+It neither builds native executables nor publishes releases.
+
 `.github/workflows/build.yml` is manually dispatched from GitHub Actions →
-**Build standalone apps** → **Run workflow** after the workflow is approved and
-pushed. It does not create tags or GitHub releases. `contents: read`, pinned
-action SHAs and disabled checkout credentials limit the workflow permissions.
-The Ubuntu gate runs coverage, lint/format, frontend unit/build/audit and real
-engine Chromium tests. Native builds depend on that gate and run on macOS 26
+**Build and Release Standalone Executables** → **Run workflow** after the
+workflow is approved and pushed. The name describes the release-build purpose;
+its existing controls remain artifact-only. It creates no tags or GitHub
+releases and has no automatic tag/build/publication trigger. `contents: read`,
+exact action SHAs and disabled checkout credentials remain required.
+
+The manual workflow calls the same **Tests** gate before native builds. Optional
+`source_ref` must be a full 40-character lowercase commit SHA for an approved main
+snapshot; a floating branch/tag is rejected before checkout. Leaving it blank
+uses the dispatch commit SHA. Both test and native jobs check out that same
+immutable source. For example, after review and workflow publication:
+
+```sh
+gh workflow run build.yml --ref main -f source_ref=<reviewed-full-main-commit-SHA>
+```
+
+Run the standalone workflow only when native artifacts are needed; ordinary
+regression status comes from **Tests**. A passing source test run does not replace
+native executable/installer acceptance or authorize publication. Native builds
+run on macOS 26
 arm64, Windows Server 2025 x64 and macOS 26 Intel x86_64. These runner labels
 were checked against actions/runner-images; availability is still exercised
 by the first actual run. Linux is a test host, not an artifact target.

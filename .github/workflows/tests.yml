@@ -1,0 +1,74 @@
+name: Tests
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_call:
+    inputs:
+      source_ref:
+        description: Full approved source commit SHA to validate for a manual native build
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: '3.13.17'
+  NODE_VERSION: '24.22.1'
+  PYTHONNOUSERSITE: '1'
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Validate requested source commit
+        env:
+          SOURCE_REF: ${{ inputs.source_ref || github.sha }}
+        run: |
+          if [[ ! "$SOURCE_REF" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::source_ref must be a full 40-character commit SHA"
+            exit 1
+          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ inputs.source_ref || github.sha }}
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - name: Install source test dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -e ".[dev,web,pdf]"
+      - name: Python tests, lint and formatting
+        run: |
+          .venv/bin/python -m pytest --cov --cov-report=term-missing -q
+          .venv/bin/python -m ruff check .
+          .venv/bin/python -m ruff format --check .
+          .venv/bin/python -m pip check
+      - name: Frontend tests, build and audit
+        working-directory: frontend
+        run: |
+          npm ci --ignore-scripts
+          npm test
+          npm run build
+          npm audit
+      - name: Real-engine browser regression
+        working-directory: frontend
+        env:
+          BB_E2E_SEASONS: ${{ runner.temp }}/bowl-bound-browser-samples
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:e2e
+
