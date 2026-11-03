@@ -1,11 +1,25 @@
 # Bowl Bound release notes
 
-## Unreleased
+## 0.1.0-alpha.4 — Fourth alpha
 
-- Adds the Basic VI-8 onside kickoff as a choice for the assigned kicking team;
-  the kick travels 12 yards and uses the 13–20 recovery range.
-- Adds the Bowl Bound QB Sneak and Advanced II defensive calls to engine-offered
-  controls and v9 coaching policies.
+- Adds engine-offered QB Sneak, Razzle-Dazzle (RZDZ), onside kickoffs,
+  intentional delay, elected safeties, and in-bounds/out-of-bounds declarations.
+- Improves computer coaching for clock management, penalties, play variety, and
+  fourth-down decisions, including chart-aware punt and field-goal choices.
+- Refines browser and terminal play controls, modifier indicators, and penalty
+  prompts; fixes return scoring, penalty enforcement, and older-save compatibility.
+- Updates imported team metadata and chart validation for defense markers while
+  preserving source tokens. Use the matching source checkout for the optional
+  PDF extractor; the standalone game does not import PDFs itself. See the
+  [import guide](docs/importing-teams.md). You can find
+  [a few free sample Bowl Bound charts at Mays Football](https://maysfootball.com/stuff.htm)
+  to import for your personal use, subject to the source's terms.
+- Repairs standalone packaging so the required game and coaching modules are
+  included on all three platforms.
+
+Advanced II defensive calls remain deferred for eventual user-selectable options.
+Historical charts and PDFs are not bundled. Builds remain unsigned alpha software;
+keep save backups and follow the [installation guide](docs/installation.md).
 
 ## 0.1.0-alpha.3 — Third alpha
 
