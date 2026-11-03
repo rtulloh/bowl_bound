@@ -1,0 +1,21 @@
+docs/dev-notes/issue-tracker.md
+  s_cee2f5c7a51f19::t_3c003a13b67805 8,10,100,139,566
+docs/dev-notes/issues/AI/AI-010.md
+  s_cee2f5c7a51f19::t_222b162b9e04e9 4,8,12,46-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "ebbe047138ae98e94d915f85e64aed1b3d59f6d2",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
