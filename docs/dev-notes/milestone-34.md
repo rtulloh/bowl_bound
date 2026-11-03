@@ -1,7 +1,7 @@
 # Milestone 34 — two-phase college chart generator
 
-Status: in progress; owner requested independent parallel work with Milestone 33
-on 2026-11-02. Engine baseline: `03d1992d3a3811cf89879bce985e23937e3a3dc0`.
+Status: implementation and regression complete; ready for milestone review. The
+owner requested independent parallel work with Milestone 33 on 2026-11-02. Engine baseline: `03d1992d3a3811cf89879bce985e23937e3a3dc0`.
 No fit from this branch applies automatically after engine/coaching changes.
 
 ## Paydirt consultation
@@ -91,7 +91,8 @@ redistribution rights for all underlying sports content.
   disjoint held-out seeds, real complete games, restored continuation, final replay
   and a separate `chart-v10` coaching-policy assessment. Insufficient statistical
   exposure remains a failed fit gate even when mechanics pass.
-- Full regression, bounded private refinement and acceptance review pending.
+- At this initial boundary, full regression, bounded private refinement and
+  acceptance review remained pending; later results follow below.
 
 
 ## Initial private pilot and overtime audit finding
@@ -273,7 +274,7 @@ tied regulation and sufficient reports/periods so it exercises the intended guar
 
 Strict auditor commit `1a0e76d`: 40 local-season cases and 126 focused cumulative
 cases pass; Ruff check/format pass. A private adapter feeds retained serialized
-engine facts back to production `validate_game`: all 904 final-pilot reports,
+engine facts back to production `validate_game`: all 904 retained final-pilot game reports,
 including 17 overtime games, pass without changing any original artifact. The
 adapter states that omitted pending/final flags rely on the original passing
 validation; new guards use retained clock/period/boundary facts directly. It proves
@@ -283,3 +284,55 @@ rewriting the original report. Final-tree coverage at `1a0e76d` passes: 3,188 te
 in 825.10 seconds, 92.06% branch-aware coverage. Fresh Ruff check, format check
 (563 files), `pip check` and `git diff --check` pass. Hosted browser verification
 remains pending because the local Chromium sandbox cannot launch.
+
+
+Final operator smoke checks: both generated team IDs list in the ordinary
+catalog, and the real web backend creates games in both home/away orientations
+with legal engine actions. The private `PLAYTEST.md` records terminal and browser
+commands, pinned engine and interpretation limits. Source generation and game
+simulation code remain unchanged during hosted verification.
+
+
+## Acceptance and review boundary
+
+Both phases satisfy the acceptance criteria on the pinned engine. Phase 1 creates
+complete deterministic bundles with explicit provenance, coverage and fallbacks.
+Phase 2 preserves the neutral baseline, records bounded profiles and paired seeds,
+selects using training only, and validates once against a separate held-out domain.
+The final pilot passes all 12 fixed held-out gates; all 904 retained games pass
+strict reconciliation, with four save/replay checks and four separate coaching
+assessments. Private probability audits cover both generated offense/defense
+pairings. All ten regenerated team/provenance files match the selected candidate
+byte for byte. Private final charts are ready for owner play testing.
+
+Full hosted [Tests run 41572345677](https://github.com/rtulloh/bowl_bound/actions/runs/41572345677)
+passes at `3c1bb9b39e70b7085dc296693d256b62832dac6b`:
+
+- Python: 3,188 passed in 1,596.20 seconds; 92.05% branch-aware coverage.
+- Ruff check, format check (563 files) and `pip check`: passed.
+- Frontend: 128 passed; production build passed; npm audit found zero vulnerabilities.
+- Real-engine Chromium browser regression: 33 passed in 5.2 minutes; no skips.
+
+The local full run also passed 3,188 tests with 92.06% coverage. Local Chromium's
+MachPort restriction remains accurately recorded; hosted results provide the
+browser evidence. Hosted frontend logs retain the existing `whatwg-encoding`
+deprecation, React `act(...)` warnings and duplicate synthetic fixture-key warning.
+Parallel work tracks those warning findings as DEV-044 and DEV-064 in Milestone 23;
+none was suppressed or silently counted as a clean warning-free run.
+
+Final self-review checked source/seed/profile identity, production-engine reuse,
+quantization and state audit boundaries, command examples, private output guards,
+tracked history and unchanged runtime/package sample allowlists. No historical
+charts, source rows, numerical reference audits, learned profiles or generated
+historical bundles are tracked. The acceptance commit changes only operator and
+milestone documentation; executable files are identical to the hosted green head.
+Applicable documentation/tracker checks are rerun before that commit.
+
+DATA-001 through DATA-010 are resolved at tested commits. They remain unclosed
+because owner play-test confirmation has not occurred. Source-versus-official
+statistical deltas, unobserved families/formations, sparse categories, fixed +0
+turnover locations and modeled special-team behavior remain disclosed limitations.
+This is a two-team mechanics study, not a historical-schedule reconstruction or
+redistribution clearance. Renew calibration after reviewed Milestone 33 engine or
+coaching changes are integrated. Stop here for parent/owner milestone review;
+Milestone 35 implementation has not started.

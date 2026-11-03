@@ -249,13 +249,24 @@ Do not adjust chart strengths to hide a known engine or coaching bug.
 ## Local play testing and review
 
 Load candidate teams with the ordinary game catalog, without replacing reference
-charts. Point `--seasons` at the selected candidate root; for fictional examples:
+charts. Point `--seasons` at the selected candidate root. The fictional example
+below loads the immutable baseline; replace `candidate-00` with the selected
+candidate recorded in the refinement report for calibrated play testing:
 
 ```sh
 .venv/bin/python -m bowl_bound \
   --seasons private-data/chartgen/refinement-01/candidate-00 \
   --home 2007/cedar-valley --away 2007/harbor-tech
 ```
+
+For browser play, [build the frontend](startup.md), then use the same catalog:
+
+```sh
+.venv/bin/python -m backend.launcher \
+  --seasons private-data/chartgen/refinement-01/candidate-00 --port 8001
+```
+
+The launcher only reads that catalog; reference charts remain separate.
 
 Review `generation-manifests/`, `training/summary.json`, `heldout/summary.json`,
 `selected-profile.json` and `refinement-report.json` first. Keep bad seeds and
