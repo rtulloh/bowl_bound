@@ -1,0 +1,39 @@
+README.md
+  s_0e32a34de270af::t_3e1a8807825030 9-10
+RELEASE_NOTES.md
+  s_0e32a34de270af::t_c8e34e4d3a4ae9 3,5-22
+bowl_bound/__init__.py
+  s_0e32a34de270af::t_18e33dad5c63ba 7-8
+docs/dev-notes/release-alpha4.md
+  s_0e32a34de270af::t_55c07b88e8baa6 1-36
+docs/installation.md
+  s_0e32a34de270af::t_3170d8a82f77b0 15,50,52,80
+docs/versioning.md
+  s_0e32a34de270af::t_6df960781f7f1c 3-4,15
+frontend/package-lock.json
+  s_0e32a34de270af::t_ec5a170ea95f17 3,9
+frontend/package.json
+  s_0e32a34de270af::t_8aa7c569f78b7e 3
+pyproject.toml
+  s_0e32a34de270af::t_bc30a4026cccf3 7
+tests/test_launcher.py
+  s_0e32a34de270af::t_ee4c899113037d 34
+tests/test_release_metadata.py
+  s_0e32a34de270af::t_14c0911873b23f 17-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "9ab58e4de99e95cd8885d50a37e4cc013038afd5",
+  "prompts": {},
+  "sessions": {
+    "s_0e32a34de270af": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19e3e-91b5-7fc3-a61a-a2d9b854b5e1",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
