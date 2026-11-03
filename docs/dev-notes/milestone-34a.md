@@ -270,3 +270,28 @@ source completeness or remove sparse exposure: 19 and 23 teams respectively have
 only one selected fixture. Private v3 reports/charts are unchanged. No broad
 historical batch has started before the owner's concrete-slate review. This is
 an engineering checkpoint, not completed 34a acceptance or renewed calibration.
+
+## CI timing investigation (DATA-021)
+
+The unchanged-source duration run passed all 98 generator tests in 113.37 seconds.
+The two complete cohort-driver cases took 33.97/34.10 seconds without coverage.
+A bounded cProfile run of the gzip case passed: existing v10 chart coaching
+evaluation accounted for most instrumented time. No historical data, chart values,
+engine behavior or coaching policy was changed to make this cheaper.
+
+Before this workflow phase, consulted Paydirt `.github/workflows/test.yml` and
+`release.yml`. Adapt its separation of browser checks into an independently
+bounded job. Reject its mutable action tags, different Python matrix, optional
+failure handling, publication and historical audit settings. Preserve Bowl Bound's
+exact action/runtime pins, read-only permissions and immutable source validation.
+
+A new contract test failed against the single-job workflow as expected. Python
+retains the complete coverage/lint/dependency commands and 45-minute limit; a
+separate 15-minute web job retains every frontend/build/audit/browser command.
+Both validate and check out the same requested SHA before setup. Native builds
+still depend on the entire reusable Tests workflow, including both jobs. Updated
+layout expectations reflect this scheduling change; all previous check, pin,
+failure-propagation and malformed-ref assertions remain. Focused workflow checks
+pass; refreshed cumulative and hosted validation follow the workflow commit.
+
+Workflow-change cumulative gate: 170 workflow, packaging, standalone and tracker cases passed in 5.81 seconds; repository Ruff check/format and whitespace checks passed. Tool and engine source remain unchanged. Fresh full Python and independent-job hosted validation follow the focused commit.

@@ -188,3 +188,13 @@ or deleting them, and checks capacity only for missing engine reports. Summaries
 record actual complete artifact counts/bytes. Existing outputs are never migrated
 or overwritten; source/tool version checks still require the matching frozen
 checkout when resuming an older run.
+
+## Development regression
+
+The reusable GitHub Tests workflow runs two required jobs on the same validated
+immutable source: `test` runs the complete Python suite with branch coverage,
+Ruff and dependency checks within 45 minutes; `web` runs frontend tests, build,
+audit and all real-engine browser cases within 15 minutes. These jobs can run
+independently. A manual native build still waits for the entire reusable workflow,
+so neither result substitutes for the other. This changes CI scheduling only;
+it does not change chart generation, the engine or calibration coaching policy.

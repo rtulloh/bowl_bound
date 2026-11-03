@@ -28,9 +28,38 @@ def test_tests_runs_for_branch_pushes_pull_requests_and_native_gate_calls() -> N
     assert "github.ref" in data["concurrency"]["group"]
 
 
+def test_expanded_gate_has_independent_source_identical_python_and_web_budgets() -> None:
+    """DATA-021: browser time cannot consume the Python job's remaining budget."""
+    data = workflow("tests.yml")
+    assert set(data["jobs"]) == {"test", "web"}
+    for name, timeout in (("test", 45), ("web", 15)):
+        job = data["jobs"][name]
+        assert int(job["timeout-minutes"]) == timeout
+        assert "needs" not in job and "if" not in job
+        steps = job["steps"]
+        guard_index = next(
+            i
+            for i, step in enumerate(steps)
+            if step.get("name") == "Validate requested source commit"
+        )
+        checkout_index = next(
+            i
+            for i, step in enumerate(steps)
+            if step.get("uses", "").startswith("actions/checkout@")
+        )
+        assert guard_index < checkout_index
+        assert steps[guard_index]["env"]["SOURCE_REF"] == "${{ inputs.source_ref || github.sha }}"
+        assert steps[checkout_index]["with"]["ref"] == "${{ inputs.source_ref || github.sha }}"
+        assert all("if" not in step for step in steps)
+
+    native = workflow("build.yml")
+    assert native["jobs"]["test"]["uses"] == "./.github/workflows/tests.yml"
+    assert native["jobs"]["build"]["needs"] == "test"
+
+
 def test_automatic_gate_retains_the_whole_established_regression() -> None:
     data = workflow("tests.yml")
-    assert set(data["jobs"]) == {"test"}
+    assert set(data["jobs"]) == {"test", "web"}
     job = data["jobs"]["test"]
     assert job["runs-on"] == "ubuntu-24.04"
     assert int(job["timeout-minutes"]) == 45
@@ -42,6 +71,15 @@ def test_automatic_gate_retains_the_whole_established_regression() -> None:
         ".venv/bin/python -m ruff check .",
         ".venv/bin/python -m ruff format --check .",
         ".venv/bin/python -m pip check",
+    ):
+        assert required in commands
+    web = data["jobs"]["web"]
+    assert web["runs-on"] == "ubuntu-24.04"
+    assert int(web["timeout-minutes"]) == 15
+    commands = "\n".join(step.get("run", "") for step in web["steps"])
+    for required in (
+        "python -m venv .venv",
+        ".[dev,web,pdf]",
         "npm ci --ignore-scripts",
         "npm test",
         "npm run build",
@@ -51,7 +89,7 @@ def test_automatic_gate_retains_the_whole_established_regression() -> None:
     ):
         assert required in commands
     browser = next(
-        step for step in job["steps"] if step.get("name") == "Real-engine browser regression"
+        step for step in web["steps"] if step.get("name") == "Real-engine browser regression"
     )
     assert browser["working-directory"] == "frontend"
     assert "runner.temp" in browser["env"]["BB_E2E_SEASONS"]
@@ -67,18 +105,17 @@ def test_manual_native_workflow_reuses_tests_for_the_same_requested_commit() -> 
     assert gate["uses"] == "./.github/workflows/tests.yml"
     assert native["jobs"]["build"]["needs"] == "test"
     checkout = native["jobs"]["build"]["steps"][0]
-    test_checkout = next(
-        step
-        for step in source["jobs"]["test"]["steps"]
-        if step.get("uses", "").startswith("actions/checkout@")
-    )
     expected = "${{ inputs.source_ref || github.sha }}"
-    assert (
-        checkout["with"]["ref"]
-        == gate["with"]["source_ref"]
-        == test_checkout["with"]["ref"]
-        == expected
-    )
+    for job in source["jobs"].values():
+        test_checkout = next(
+            step for step in job["steps"] if step.get("uses", "").startswith("actions/checkout@")
+        )
+        assert (
+            checkout["with"]["ref"]
+            == gate["with"]["source_ref"]
+            == test_checkout["with"]["ref"]
+            == expected
+        )
     assert native["env"] == source["env"]
 
 
@@ -102,18 +139,22 @@ def test_both_workflows_retain_exact_pins_and_propagate_failures_without_publica
 
 
 def test_requested_native_source_is_an_immutable_commit_before_checkout() -> None:
-    steps = workflow("tests.yml")["jobs"]["test"]["steps"]
-    guard = next(step for step in steps if step.get("name") == "Validate requested source commit")
-    assert steps.index(guard) < next(
-        index
-        for index, step in enumerate(steps)
-        if step.get("uses", "").startswith("actions/checkout@")
-    )
-    assert guard["env"]["SOURCE_REF"] == "${{ inputs.source_ref || github.sha }}"
-    assert "^[0-9a-f]{40}$" in guard["run"]
-    assert "exit 1" in guard["run"]
+    for job in workflow("tests.yml")["jobs"].values():
+        steps = job["steps"]
+        guard = next(
+            step for step in steps if step.get("name") == "Validate requested source commit"
+        )
+        assert steps.index(guard) < next(
+            index
+            for index, step in enumerate(steps)
+            if step.get("uses", "").startswith("actions/checkout@")
+        )
+        assert guard["env"]["SOURCE_REF"] == "${{ inputs.source_ref || github.sha }}"
+        assert "^[0-9a-f]{40}$" in guard["run"]
+        assert "exit 1" in guard["run"]
 
 
+@pytest.mark.parametrize("job_name", ["test", "web"])
 @pytest.mark.parametrize(
     "source_ref,expected",
     [
@@ -126,11 +167,11 @@ def test_requested_native_source_is_an_immutable_commit_before_checkout() -> Non
     ],
 )
 def test_source_commit_guard_rejects_mutable_or_malformed_refs(
-    source_ref: str, expected: int
+    job_name: str, source_ref: str, expected: int
 ) -> None:
     guard = next(
         step
-        for step in workflow("tests.yml")["jobs"]["test"]["steps"]
+        for step in workflow("tests.yml")["jobs"][job_name]["steps"]
         if step.get("name") == "Validate requested source commit"
     )
     result = subprocess.run(

@@ -25,3 +25,18 @@ The synthetic full regression at 83f2cc6 passed hosted Tests 41673619396, but th
 
 --- 2026-11-03 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-03 17:20 ---
+Bounded synthetic profiling passed 98 generator cases in 113.37 seconds without
+coverage. The two complete cohort driver cases took about 34 seconds each; a
+passing cProfile case attributes most instrumented time to existing v10 chart
+coaching evaluation. Compression and source parsing are not the dominant cost.
+Engine and coaching behavior remain pinned and unchanged.
+
+A new workflow contract test failed on the original single-job arrangement.
+The proposed fix preserves the entire Python/coverage/lint/pip job and its
+45-minute bound, while moving unchanged frontend/build/audit/real-browser commands
+to a separate 15-minute job. Both source guards/checkouts use the same immutable
+SHA. Native builds still wait for the entire reusable workflow. All 18 focused
+workflow cases pass, including malformed source guards in both jobs. Final
+cumulative/hosted verification remains pending; this ticket stays open.
