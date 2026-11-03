@@ -449,3 +449,160 @@ def test_output_path_outside_private_data_is_rejected(tmp_path, monkeypatch) -> 
 
     with pytest.raises(ValueError, match="private-data"):
         _private_run_dir(tmp_path / "reports", master_seed=1)
+
+
+def test_overtime_reset_requires_matching_observed_series_evidence() -> None:
+    from scripts.run_local_season import OvertimeSeriesStart, _state_facts
+
+    view = finished_view()
+    original = view.log[0]
+    state = SimpleNamespace(
+        **(
+            vars(original.state_before)
+            | {
+                "possession": "away",
+                "possession_name": "Away",
+                "yards_to_goal": 25,
+                "spot": "opp 25",
+                "ball_from_left": 75,
+                "first_down_from_left": 85,
+            }
+        )
+    )
+    view.log += (
+        SimpleNamespace(
+            **(
+                vars(original)
+                | {
+                    "number": 2,
+                    "state_before": state,
+                    "state_after": state,
+                    "called_play": "Counter",
+                }
+            )
+        ),
+    )
+    start = OvertimeSeriesStart(2, 1, 1, "away", "away", False, _state_facts(state))
+    periods = ((0, 0), (0, 0), (0, 0), (0, 0), (3, 0))
+    with pytest.raises(ValueError, match="disconnected"):
+        validate_game(view, periods)
+    validate_game(view, periods, overtime_starts=(start,))
+    with pytest.raises(ValueError, match="overtime"):
+        validate_game(
+            view,
+            periods,
+            overtime_starts=(replace(start, state=_state_facts(original.state_before)),),
+        )
+    with pytest.raises(ValueError, match="overtime"):
+        validate_game(view, periods, overtime_starts=(replace(start, report_number=1),))
+
+
+def test_overtime_series_evidence_requires_engine_order() -> None:
+    from scripts.run_local_season import OvertimeSeriesStart, _state_facts
+
+    view = finished_view()
+    state = view.log[0].state_before
+    start = OvertimeSeriesStart(2, 2, 1, "home", "home", False, _state_facts(state))
+    with pytest.raises(ValueError, match="overtime"):
+        validate_game(view, ((3, 0), (0, 0), (0, 0), (0, 0), (0, 0)), overtime_starts=(start,))
+
+
+def test_simulator_reconciles_a_real_engine_overtime_reset() -> None:
+    from tests.test_special_teams import special_chart, yards
+
+    teams = {
+        f"2007/synthetic-{side}": (
+            replace(
+                team_chart("Synthetic " + side.title(), season=2007, offense=0, defense=0),
+                special_teams=special_chart(
+                    side,
+                    kickoff=yards(40),
+                    kickoff_return=yards(10),
+                    punt=yards(40),
+                    punt_return=yards(0),
+                    field_goal=yards(40 if side == "home" else 0),
+                ).special_teams,
+            ),
+            metadata(),
+        )
+        for side in ("home", "away")
+    }
+
+    result = _play_one(GameSpec(1, 2007, "2007/synthetic-away", "2007/synthetic-home", 7), teams)
+
+    assert result["status"] == "passed", result["error"]
+    assert result["final"]["finished"]
+    assert (result["final"]["home_score"], result["final"]["away_score"]) == (3, 0)
+    starts = result["overtime_series_starts"]
+    assert [(start["round_number"], start["series_number"]) for start in starts] == [(1, 1), (1, 2)]
+    assert {start["possession"] for start in starts} == {"home", "away"}
+    assert all(start["state"][4] == 25 for start in starts)
+    assert len(result["period_scores"]) == 5
+
+
+@pytest.mark.parametrize(
+    "problem", ["reverse_reports", "duplicate", "untied_regulation", "no_regulation_end"]
+)
+def test_overtime_boundary_evidence_cannot_hide_a_disconnected_report(problem: str) -> None:
+    from scripts.run_local_season import OvertimeSeriesStart, _state_facts
+
+    view = finished_view()
+    original = view.log[0]
+    states = [
+        SimpleNamespace(
+            **(
+                vars(original.state_before)
+                | {
+                    "possession": side,
+                    "possession_name": side.title(),
+                    "yards_to_goal": 25,
+                    "spot": "opp 25",
+                    "ball_from_left": 75,
+                    "first_down_from_left": 85,
+                }
+            )
+        )
+        for side in ("home", "away")
+    ]
+    view.log += tuple(
+        SimpleNamespace(
+            **(
+                vars(original)
+                | {
+                    "number": number,
+                    "state_before": state,
+                    "state_after": state,
+                }
+            )
+        )
+        for number, state in enumerate(states, 2)
+    )
+    starts = (
+        OvertimeSeriesStart(2, 1, 1, "home", "home", False, _state_facts(states[0])),
+        OvertimeSeriesStart(3, 1, 2, "home", "away", False, _state_facts(states[1])),
+    )
+    periods = ((0, 0), (0, 0), (0, 0), (0, 0), (3, 0))
+    if problem == "reverse_reports":
+        starts = (
+            replace(starts[0], report_number=3),
+            replace(starts[1], report_number=2),
+        )
+        # Keep each forged report's possession matching its claimed boundary.
+        view.log = (
+            original,
+            replace_namespace(view.log[1], state_before=states[1], state_after=states[1]),
+            replace_namespace(view.log[2], state_before=states[0], state_after=states[0]),
+        )
+    elif problem == "duplicate":
+        starts = (starts[0], starts[0])
+    elif problem == "untied_regulation":
+        periods = ((3, 0), (0, 0), (0, 0), (0, 0), (0, 0))
+    else:
+        view.timing_log = tuple(charge for charge in view.timing_log if charge.quarter != 4)
+
+    with pytest.raises(ValueError, match="overtime"):
+        validate_game(view, periods, overtime_starts=starts)
+
+
+def replace_namespace(value: SimpleNamespace, **changes: object) -> SimpleNamespace:
+    return SimpleNamespace(**(vars(value) | changes))

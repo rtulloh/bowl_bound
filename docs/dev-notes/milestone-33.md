@@ -14,6 +14,8 @@ standalone-build failure, independent of the pending gameplay and workflow work.
 [DEV-061](issues/DEV/DEV-061.md) tracks missing runtime modules exposed by the
 next native smoke run. [DEV-062](issues/DEV/DEV-062.md) corrects the stale
 save-guide assertion that normal games enable deferred Advanced II options.
+[DEV-063](issues/DEV/DEV-063.md) corrects the local audit’s rejection of valid,
+engine-observed overtime series resets discovered during final acceptance.
 
 Milestone 32 remains completed. Imported teams, historical charts, rosters, and
 local audit output remain private and excluded from ordinary test collection,
@@ -483,3 +485,42 @@ the end zone before offering/declining the original penalty, retaining final
 field, exact trace and one committed log entry and adding pre-commit purity
 assertions. This completes the intentional expectation migration for RULE-041;
 no production behavior changes in this follow-up.
+
+
+## DEV-063 — strict engine-observed overtime audit boundaries
+
+The first final private season audit completed 120 games, but rejected six at
+valid overtime field resets: **114 passed, 6 failed, 0 fallbacks**. The final-view
+validator incorrectly required regulation field continuity into and between
+overtime series. Detailed game evidence remains private. This is a development
+audit defect; no engine, chart, timing policy or coaching behavior changes.
+
+Before this repair, reviewed Paydirt `tests/test_full_season_runner.py` for strict
+final/scoring validation and preservation of failing reproductions. Adapt its
+failure-accounting discipline, not its NFL schedule, historical seeds, overtime
+rules or runtime. Independently reviewed the parallel generator worker’s
+`3e699aa` runner correction. Reused only its `OvertimeSeriesStart` evidence and
+engine-owned `OvertimeState.next_series` ordering; no generator implementation,
+DATA ticket, private input, replay override or policy change is brought here.
+
+The runner records the actual public engine view before the first committed
+report of each overtime series. Validation accepts a field reset only with exact
+report/state/possession evidence, completed and tied regulation, increasing report
+numbers, and the engine’s series order. Ordinary missing/disconnected states,
+forged/mismatched/stale/duplicate/premature evidence and non-tied regulation remain
+failures. All existing scoring, statistics, traces and four-quarter clock checks
+remain. Private game JSON adds `overtime_series_starts`; public outputs and runtime
+save formats are unchanged.
+
+Test-first evidence: two boundary tests initially failed on the absent evidence
+type. A separate fictional complete game was run against the unchanged runner
+loaded from HEAD: it failed with the same `ValueError` as the six local games.
+The corrected runner passes that game with both first-round series recorded.
+Adversarial controls then showed the initial reviewed boundary implementation
+accepted reversed report numbers and non-tied regulation; both were corrected.
+A no-regulation-end test now rejects boundary evidence at that boundary, retaining
+the independent clock reconciliation too. No assertion was weakened or skipped.
+
+Focused validation: `.venv/bin/python -m pytest tests/test_local_season_runner.py tests/test_overtime.py tests/test_coaching_audit.py tests/test_issue_tracker.py -q`:
+**87 passed in 28.31s**. The local-season suite contains 39 cases. Full regression
+and the unchanged 120-game private audit must rerun after this committed repair.

@@ -613,7 +613,8 @@ Tracked work: [AI-010](issues/AI/AI-010.md), [AI-027](issues/AI/AI-027.md),
 [RULE-041](issues/RULE/RULE-041.md), [RULE-042](issues/RULE/RULE-042.md),
 [UI-041](issues/UI/UI-041.md), [DEV-059](issues/DEV/DEV-059.md),
 [DEV-060](issues/DEV/DEV-060.md), [DEV-061](issues/DEV/DEV-061.md), and
-[DEV-062](issues/DEV/DEV-062.md). See the
+[DEV-062](issues/DEV/DEV-062.md), and
+[DEV-063](issues/DEV/DEV-063.md). See the
 [Milestone 33 work log](milestone-33.md).
 
 **Commit:** `milestone 33: correct core playability and validation status`
