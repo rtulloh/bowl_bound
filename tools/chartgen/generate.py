@@ -190,7 +190,11 @@ def _pool(
         }
         # Partial pooling gives the observed team increasing influence. No values
         # are invented if the entire supplied source lacks this category.
-        values = values + fallback[: max(0, MINIMUM_FAMILY_SAMPLES - len(values))]
+        # Cover the whole empirical distribution rather than early source rows.
+        # These are pooled observations, not additional independent samples.
+        ordered = sorted(fallback)
+        needed = min(len(ordered), max(0, MINIMUM_FAMILY_SAMPLES - len(values)))
+        values += [ordered[int((index + 0.5) * len(ordered) / needed)] for index in range(needed)]
     else:
         diagnostics[kind] = {"samples": len(values), "fallback": None}
     if not values:
@@ -258,6 +262,41 @@ def _rate_effects(events: tuple[Event, ...], kind: str) -> dict[str, float]:
     return defense
 
 
+@dataclass(frozen=True)
+class EvidenceModel:
+    """One immutable source snapshot with reusable provenance and opponent fits."""
+
+    events: tuple[Event, ...]
+    live: tuple[Event, ...]
+    by_team: Mapping[str, tuple[Event, ...]]
+    seasons: frozenset[int]
+    source_hash: str
+    source_filename: str
+    run_effects: Mapping[str, float]
+    pass_effects: Mapping[str, float]
+    rate_effects: Mapping[str, Mapping[str, float]]
+
+    @classmethod
+    def from_events(cls, events: Sequence[Event]) -> EvidenceModel:
+        snapshot = tuple(events)
+        live = tuple(e for e in snapshot if not e.no_play)
+        grouped: dict[str, list[Event]] = defaultdict(list)
+        for event in live:
+            grouped[event.team].append(event)
+        source_hash, filename = _source(snapshot)
+        return cls(
+            snapshot,
+            live,
+            {t: tuple(rows) for t, rows in grouped.items()},
+            frozenset(e.season for e in snapshot),
+            source_hash,
+            filename,
+            _opponent_effects(live, "rush"),
+            _opponent_effects(live, "complete"),
+            {kind: _rate_effects(live, kind) for kind in ("complete", "interception", "sack")},
+        )
+
+
 def generate_team(
     events: Sequence[Event],
     team: str,
@@ -267,25 +306,29 @@ def generate_team(
     seed: int = 1,
     profile: CalibrationProfile | None = None,
     tactics: TacticalProfile | None = None,
+    model: EvidenceModel | None = None,
 ) -> tuple[TeamChart, TeamFileMetadata, dict[str, Any]]:
     """Build a complete local-only bundle from normalized evidence, without I/O."""
     profile = profile or CalibrationProfile()
     from .tactics import TacticalProfile
 
     tactics = tactics or TacticalProfile.neutral()
-    if any(e.season != season for e in events):
+    if model is not None and model.events is not events and model.events != tuple(events):
+        raise ValueError("cached model differs from supplied evidence")
+    model = model or EvidenceModel.from_events(events)
+    if model.seasons != {season}:
         raise ValueError("source season differs from requested chart season")
-    live = [e for e in events if not e.no_play]
-    own = [e for e in live if e.team == team]
+    live = model.live
+    own = model.by_team.get(team, ())
     if not own:
         raise ValueError("requested team has no source events")
-    source_hash, filename = _source(events)
+    source_hash, filename = model.source_hash, model.source_filename
     diagnostics: dict[str, Any] = {}
     rush = _pool(own, live, "rush", diagnostics)
     complete = _pool(own, live, "complete", diagnostics)
     sacks = _pool(own, live, "sack", diagnostics)
-    run_effects = _opponent_effects(tuple(live), "rush")
-    pass_effects = _opponent_effects(tuple(live), "complete")
+    run_effects = model.run_effects
+    pass_effects = model.pass_effects
     run_correction = mean(run_effects.get(e.opponent, 0.0) for e in own)
     pass_correction = mean(pass_effects.get(e.opponent, 0.0) for e in own)
     rush = [round((yards - run_correction) * profile.run_yards_scale) for yards in rush]
@@ -294,9 +337,7 @@ def generate_team(
     if not dropbacks:
         raise ValueError("no pass outcome evidence")
     count = len(dropbacks)
-    rate_effects = {
-        kind: _rate_effects(tuple(live), kind) for kind in ("complete", "interception", "sack")
-    }
+    rate_effects = model.rate_effects
     int_correction = mean(rate_effects["interception"].get(e.opponent, 0) for e in dropbacks)
     sack_correction = mean(rate_effects["sack"].get(e.opponent, 0) for e in dropbacks)
     completion_correction = mean(rate_effects["complete"].get(e.opponent, 0) for e in dropbacks)

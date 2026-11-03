@@ -655,6 +655,36 @@ Tracked work uses the dedicated DATA prefix. See the
 
 **Commit:** `milestone 34: add two-phase college chart generation`
 
+### 34a. Expand historical college cohorts and matched-slate calibration
+
+Added 2026-11-03 after owner review accepted Milestone 34 as a play-test prototype.
+Use both 2007 and 2008 first, preserving that completed branch and the private
+Ohio State/LSU and Oklahoma/Florida references. Recent seasons remain later work.
+This independent follow-up uses the reviewed Milestone 33 engine; Milestone 35
+remains separate.
+
+**Deliver:** cached batch generation, season-specific membership and historical
+schedule contracts, a bounded core/eligible-outer/external opponent graph, and
+reproducible restricted-slate real-engine refinement. Keep observed external
+opponents as statistical context without recursive chart dependencies. Record every
+excluded game and match offensive and defensive targets to exactly the eligible
+game IDs. Preserve full-season evidence separately. Add per-team and conference
+assessments, bounded/shrunk per-team profiles, finite-dice diagnostics and safe
+immutable checkpoints/resume. Keep the two-team CLI compatible.
+
+**Validate:** synthetic test-first coverage/scoping, historical identity joins,
+source uncertainty and leakage checks; deterministic schedule/seeds and batch
+outputs; checkpoint integrity; per-team/defensive gates and explicit sparse/no-fit
+states. Audit and generate a concrete two-season checkpoint before broad candidate
+runs. Reconcile real-engine complete games, replay, clock, statistics, traces and
+coaching; renew calibration on the integrated engine. A fresh simulation seed on
+source-fitted matchups is not an unseen-source test. Preserve raw failures and
+private artifacts, then finish applicable full regression and hosted browser gates.
+
+See the [Milestone 34a work log](milestone-34a.md). DATA-011 onward track this work.
+
+**Commit:** `milestone 34a: expand historical college cohort calibration`
+
 ### 35. Add optional coffin-corner punts and coaching support
 
 Added 2026-11-02 at the owner's request. Milestone 34 is reserved for the

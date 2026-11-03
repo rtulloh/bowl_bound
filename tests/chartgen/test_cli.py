@@ -33,3 +33,29 @@ def test_normalizer_requires_explicit_source_url(tmp_path: Path) -> None:
             ["--input", str(tmp_path / "source.parquet"), "--output", str(tmp_path / "e.json")]
         )
     assert error.value.code == 2
+
+
+def test_cohort_cli_rejects_missing_inputs_without_private_data_output(
+    tmp_path: Path, capsys
+) -> None:
+    from tools.chartgen.cohort_cli import main
+
+    status = main(
+        [
+            "--source",
+            str(tmp_path / "missing.json"),
+            "--membership",
+            str(tmp_path / "member.csv"),
+            "--schedule",
+            str(tmp_path / "schedule.csv"),
+            "--groups",
+            str(tmp_path / "groups.csv"),
+            "--season",
+            "2007",
+            "--output",
+            str(tmp_path / "private-data" / "new"),
+        ]
+    )
+    assert status == 2
+    assert "input file is unavailable" in capsys.readouterr().err
+    assert not (tmp_path / "private-data").exists()

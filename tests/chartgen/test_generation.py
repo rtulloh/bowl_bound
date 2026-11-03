@@ -97,6 +97,67 @@ def test_complete_bundle_roundtrip_determinism(events: list[Event]) -> None:
     assert any(c.cell.kind is ResultKind.BOOTLEG_PASS for c in chart.offense if c.play is Play.FIVE)
 
 
+def test_cached_evidence_model_preserves_outputs_and_fits_once(
+    events: list[Event], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from tools.chartgen import generate
+
+    expected = [
+        generate_team(events, team, name, 2007, seed=19)
+        for team, name in [("1", "Cedar Valley"), ("2", "Harbor Tech")]
+    ]
+    original = generate._source
+    calls = []
+
+    def source_once(sample: list[Event]) -> tuple[str, str]:
+        calls.append(len(sample))
+        assert len(calls) == 1, "batch must not repeatedly encode full evidence"
+        return original(sample)
+
+    monkeypatch.setattr(generate, "_source", source_once)
+    model = generate.EvidenceModel.from_events(events)
+    actual = [
+        generate_team(model.events, team, name, 2007, seed=19, model=model)
+        for team, name in [("1", "Cedar Valley"), ("2", "Harbor Tech")]
+    ]
+    assert actual == expected and len(calls) == 1
+    with pytest.raises(ValueError, match="model.*evidence"):
+        generate_team(events[:-1], "1", "Cedar Valley", 2007, model=model)
+
+
+def test_sparse_fallback_covers_full_distribution_independent_of_source_order() -> None:
+    from statistics import mean
+
+    from tools.chartgen.generate import _pool
+
+    source = [
+        Event(2007, "g", str(i), "x", "y", "X", "Y", "rush", yards)
+        for i, yards in enumerate([0] * 30 + [100] * 30)
+    ]
+    first = _pool([], source, "rush", {})
+    second = _pool([], source[::-1], "rush", {})
+    assert first == second
+    assert min(first) == 0 and max(first) == 100 and mean(first) == 50
+
+
+def test_batch_preserves_every_requested_team_and_refuses_overwrite(
+    tmp_path: Path, events: list[Event]
+) -> None:
+    from tools.chartgen.batch import generate_cohort
+
+    root = tmp_path / "private-data" / "cohort"
+    names = {"1": "Cedar Valley", "2": "Harbor Tech", "missing": "Pine College"}
+    result = generate_cohort(events, names, 2007, root, seed=19)
+    assert set(result["teams"]) == set(names)
+    assert result["teams"]["1"]["state"] == "generated"
+    assert result["teams"]["missing"]["state"] == "unidentifiable"
+    assert "no source events" in result["teams"]["missing"]["reason"]
+    chart, _ = load_team(root / "2007", "cedar-valley")
+    assert chart == generate_team(events, "1", "Cedar Valley", 2007, seed=19)[0]
+    with pytest.raises(ValueError, match="new"):
+        generate_cohort(events, names, 2007, root)
+
+
 def test_missing_run_evidence_is_not_silently_zero(events: list[Event]) -> None:
     missing = [replace(e, yards=None) if e.kind == "rush" else e for e in events]
     with pytest.raises(ValueError, match="rush yardage"):
@@ -338,3 +399,42 @@ def test_training_reconciliation_failure_blocks_readiness_even_if_heldout_passes
         iterations=1,
     )
     assert not report["mechanics_ready"]
+
+
+def test_prepare_cohort_generates_charts_and_exact_historical_review_scope(
+    tmp_path: Path, events: list[Event]
+) -> None:
+    from tools.chartgen.cohort_sources import HistoricalContracts
+    from tools.chartgen.prepare import prepare_cohort
+    from tools.chartgen.scope import HistoricalGame, TeamSeason
+
+    source = [
+        replace(e, period=int(e.event_id.split("-")[-1]) % 4 + 1, clock="0:20") for e in events
+    ]
+    contracts = HistoricalContracts(
+        {
+            "1": TeamSeason("1", "Cedar Valley", "cfb:sec", "fbs"),
+            "2": TeamSeason("2", "Harbor Tech", "cfb:sec", "fbs"),
+            "3": TeamSeason("3", "Pine College", "cfb:sec", "fbs"),
+        },
+        tuple(HistoricalGame(f"g{i}", 2007, "1", "2") for i in range(4))
+        + (HistoricalGame("absent", 2007, "1", "3"),),
+        {"membership": {"sha256": "synthetic"}},
+    )
+    root = tmp_path / "private-data" / "prepared"
+    result = prepare_cohort(
+        source, contracts, 2007, root, source_provenance={"synthetic": True}, minimum_source_games=1
+    )
+    assert result["generated_teams"] == 2
+    assert result["selected_fixtures"] == 4
+    assert result["excluded_fixtures"] == 1
+    import json
+
+    manifest = json.loads((root / "review" / "manifest.json").read_text())
+    targets = json.loads((root / "review" / "targets.json").read_text())
+    assert manifest["teams"]["3"]["chart_qualification"]["state"] == "insufficient_evidence"
+    assert set(manifest["target_game_ids"]) == {f"g{i}" for i in range(4)}
+    assert targets["1"]["game_ids"] == manifest["teams"]["1"]["offensive_game_ids"]
+    assert (root / "charts" / "2007" / "cedar-valley" / "offense.csv").is_file()
+    with pytest.raises(ValueError, match="new"):
+        prepare_cohort(source, contracts, 2007, root, source_provenance={}, minimum_source_games=1)
