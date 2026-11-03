@@ -63,19 +63,22 @@ the tests exercise Bowl Bound's versioned behavior profiles and synthetic charts
 
 ## Acceptance record
 
-Implementation and focused checks are committed. Final regression, private audit,
-review and fresh hosted browser confirmation are in progress. The records below
-retain earlier failures and follow-up checks; none establish owner play-test
-confirmation or release publication.
+All ten assigned tickets have tested implementations and their engineering
+acceptance criteria are satisfied. Automatic
+[Tests 41575358111](https://github.com/rtulloh/bowl_bound/actions/runs/41575358111)
+passes the complete gate at `eed362c7daacff66c092a11d1ba8a896d1a9a1eb`, including
+all 38 real-engine browser cases. The private audit, coaching audits and review
+also pass. The records below retain earlier failures and follow-up checks; none
+establish owner play-test confirmation or release publication.
 
 | Ticket | Implementation commit | Acceptance evidence / remaining verification |
 | --- | --- | --- |
 | AI-010 | `33b752d` | 75 contract cases; 17/17 injected faults caught; full coaching and policy audits. |
 | RULE-041 | `4b64796` | 47 new recovery/penalty cases; 109 focused hardening/fumble cases; current and legacy replay. |
 | AI-027 | `32649b2` | 70 public-policy cases; unchanged approved bands, chart access forbidden at selection. |
-| UI-041 | `b4b8fdf` | 29 engine/API/CLI cases and frontend display coverage; three hosted guidance cases require corrected transport fixture rerun. |
-| RULE-042 | `3e321f1` | 37 engine/API/CLI/save cases; both new hosted timeout cases pass; old compact-layout expectations require rerun. |
-| DEV-059 | `2b11cd6` | 15 workflow checks; actual automatic Tests run and failure propagation confirmed; green full run pending. |
+| UI-041 | `b4b8fdf` | 29 engine/API/CLI cases, frontend display coverage and all three hosted difficulty/guidance cases pass at `eed362c`. |
+| RULE-042 | `3e321f1` | 37 engine/API/CLI/save cases, both side-owned timeout cases and both compact-layout browser cases pass at `eed362c`. |
+| DEV-059 | `2b11cd6` | 15 workflow checks; automatic branch Tests passes at `eed362c`; earlier failing run confirms failure propagation. |
 | DEV-060 | `ca3d3bb` | Exact sample staging tests and baseline native confirmation on all three targets. |
 | DEV-061 | `03d1992` | Isolated staged runtime probe, baseline native/extracted-app/installer confirmation. |
 | DEV-062 | `c22df25` | Corrected deferred Advanced II save guidance; save/tracker and full regression pass. |
@@ -672,3 +675,67 @@ tool source are byte-identical to the preceding hosted source-green `d518ba2`;
 the 17-fault/32-public-game/120-private-game evidence still applies unchanged.
 Fresh hosted browser verification is pending; the previous failing run remains
 recorded above.
+
+
+Independent baseline confirmation: generator-branch Tests
+[41572345677](https://github.com/rtulloh/bowl_bound/actions/runs/41572345677)
+at `3c1bb9b` passes 33 browsers with runtime/frontend pinned to `03d1992`, and
+its passing frontend stage emits the same React act(...) and duplicate-key `1`
+warnings. DEV-044/DEV-064 record this evidence; neither warning originated in
+M33’s gameplay/UI changes. This does not substitute for the 38-case M33 retry.
+
+## Completed engineering acceptance — 2026-11-02
+
+Automatic [Tests 41575358111](https://github.com/rtulloh/bowl_bound/actions/runs/41575358111)
+completed successfully at exact tested commit
+`eed362c7daacff66c092a11d1ba8a896d1a9a1eb`:
+
+- Python **3,392 passed in 820.51s (13:40)** with **93.03% branch-aware coverage**;
+  Ruff lint/format (**541 files**) and pip dependency checks pass.
+- Frontend **130 passed in 16 files**; production build **422ms**;
+  dependency audit **zero vulnerabilities**.
+- Real-engine Playwright **38/38 passed in 4.1m**. All three normal-difficulty
+  guidance cases, both side-owned post-kickoff timeout cases and both corrected
+  compact-controls cases pass. No browser case was skipped or weakened.
+- The automatic branch trigger and exact source association are confirmed;
+  the preceding failed run establishes failure propagation. Static tests retain
+  main/PR triggers, read-only permissions, exact pins, immutable source selection
+  and the separately named manual native workflow. No automatic publication was
+  introduced.
+
+UI-041, RULE-042 and DEV-059 are now resolved against their implementation
+commits and this full-gate SHA. Reviewing every assigned ticket confirms all ten
+Milestone 33 engineering acceptance criteria are satisfied. The 17/17 mutation
+controls, 32/32 public coaching/replay games and unchanged 120/120 private season
+games above remain applicable: executable runtime and audit-tool source are
+byte-identical to `d518ba2`. Full traces, scoring, statistics, timing, saved
+continuations and coaching behavior were reconciled, rather than treating
+completed games alone as proof.
+
+The review includes the independent read-only code/E2E reviews recorded above,
+exact runtime manifest membership, all 15 public sample hashes and public-safe
+outgoing paths. No private chart, save or detailed report is committed. QB Sneak
+and RZDZ remain supported; the deferred Advanced II defensive options remain
+unavailable. M34 generator work and scheduled M35 coffin-corner work stay on
+separate workstreams.
+
+Remaining limits are explicit: local Chromium cannot launch under this sandbox;
+valid browser evidence comes from the hosted run. Passing frontend tests retain
+the baseline React act/duplicate-fixture-key warnings (DEV-044/DEV-064), npm's
+existing deprecation and Vitest performance advice. Native three-target evidence
+for DEV-060/DEV-061 belongs to baseline `03d1992`, not a new M33 executable build.
+No release was dispatched or published by this work. Gameplay tickets remain
+resolved, not closed, pending owner play-test confirmation. Coaching call counts
+above are descriptive audits, not universal balance or calibrated team-strength
+claims.
+
+Final acceptance pre-push checks: `.venv/bin/python -m pytest --cov
+--cov-report=term-missing -q` passes **3,392 tests in 768.11s (12:48)** with
+**93.05% branch-aware coverage**, no skips or Python warnings. Pinned Node/npm:
+`npm ci --ignore-scripts`, `npm test` (**130 tests, 16 files, 4.96s**),
+`npm run build` (**579ms**) and `npm audit` (**zero vulnerabilities**) pass.
+Ruff check/format (**541 files**), pip check, all **18** tracker tests,
+all **900** local Markdown links and `git diff --check` pass. All ten assigned
+tickets are resolved with tested commits; none is closed. The final acceptance
+commit changes documentation/status only; reviewed executable source remains
+identical to the fully passing hosted `eed362c`.

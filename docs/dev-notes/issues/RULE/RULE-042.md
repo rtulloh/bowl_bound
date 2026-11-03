@@ -1,11 +1,11 @@
 ---
 id: RULE-042
 title: Offer a timeout as a pre-play modifier after kickoff
-status: open
+status: resolved
 priority: Medium
 milestone: '33'
 created-at: 2026-11-02
-resolved-at: null
+resolved-at: 2026-11-02
 closed-at: null
 tags:
 - rules-profile
@@ -14,6 +14,7 @@ tags:
 links: []
 commits:
 - 3e321f1
+- eed362c7daacff66c092a11d1ba8a896d1a9a1eb
 ---
 
 ## Description
@@ -100,3 +101,15 @@ approved feature. They now retain every menu/geometry/focus assertion and check
 both enabled timeout actions with exact backend-provided keys and labels from the
 real kickoff response, no arm yet, and no stale placeholder. No production or
 football policy changes; browser regression must rerun before resolution.
+
+--- 2026-11-02 22:18 ---
+Resolved after automatic [Tests 41575358111](https://github.com/rtulloh/bowl_bound/actions/runs/41575358111)
+passed at exact tested commit `eed362c7daacff66c092a11d1ba8a896d1a9a1eb`:
+**3,392 Python tests in 820.51s, 93.03% branch-aware coverage; 130 frontend
+tests; build and audit (zero vulnerabilities); all 38 real-engine browser cases
+in 4.1m**. Ruff, formatting and dependency checks pass. The original failing
+run and corrected browser expectations remain recorded above. Existing frontend
+warnings remain tracked in DEV-044/DEV-064; no warnings or assertions were hidden.
+Both human-side timeout cases and both compact-controls cases pass, including
+engine-owned availability/labels, arm/save/load, one 10-second charge and reset.
+No owner play-test confirmation is claimed; the ticket is resolved, not closed.

@@ -612,10 +612,18 @@ gameplay changes, keeping all imported teams and reports private.
 Tracked work: [AI-010](issues/AI/AI-010.md), [AI-027](issues/AI/AI-027.md),
 [RULE-041](issues/RULE/RULE-041.md), [RULE-042](issues/RULE/RULE-042.md),
 [UI-041](issues/UI/UI-041.md), [DEV-059](issues/DEV/DEV-059.md),
-[DEV-060](issues/DEV/DEV-060.md), [DEV-061](issues/DEV/DEV-061.md), and
+[DEV-060](issues/DEV/DEV-060.md), [DEV-061](issues/DEV/DEV-061.md),
 [DEV-062](issues/DEV/DEV-062.md), and
 [DEV-063](issues/DEV/DEV-063.md). See the
 [Milestone 33 work log](milestone-33.md).
+
+**Engineering acceptance:** all ten tickets resolved against tested commits.
+[Tests 41575358111](https://github.com/rtulloh/bowl_bound/actions/runs/41575358111)
+at `eed362c` passes 3,392 Python cases, 130 frontend cases and 38 real-engine
+browser cases. The unchanged private 120-game season audit and 32-game public
+coaching/replay audit pass; 17/17 deliberate coaching faults are detected.
+Owner play-test confirmation remains required before closing gameplay tickets.
+This milestone does not publish a release or implement Milestones 34/35.
 
 **Commit:** `milestone 33: correct core playability and validation status`
 
