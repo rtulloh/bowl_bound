@@ -97,3 +97,23 @@ then both passed in0.67s with only that documented field added; all strict
 football/save/future comparisons remain. The early full run was interrupted
 at511passed/2failed in278.38s and is not acceptance evidence. Executable source
 remains e3d6516; a fresh complete gate follows this test-contract correction.
+
+--- 2026-11-03 15:55 ---
+Parent verified frozen e3d6516 on a separate port: eligible same-play timeout
+spends one budget/10seconds and appears in history; health/frontend/assets pass.
+An independently generated fictional golden save from actual frozen97d9314
+loads/re-saves, preserving its legacy prior30 + selected10 charge and one timeout.
+An authorized private CLI save also loads without changing its saved public
+score/clock; no raw save, team details or play logs are copied here.
+
+Play-test confirmation (partial): owner reports the offensive control on frozen
+e3d6516 used exactly10seconds after selecting a timeout and play1. Defensive
+confirmation is still pending; this does not close the ticket.
+
+Browser self-review now handles a possible human-owned RZDZ result choice in
+the existing normal-tier timeout scenarios: wait for actual engine responses,
+assert unchanged clock/budget/intent during continuations, complete enabled
+human choices, then assert one final charge. It does not replace normal-tier
+coverage with a simpler policy or make invented decisions on the frontend.
+The fresh Python gate has passed the earlier stale-expectation point; no full
+pass or automated browser execution is claimed yet.

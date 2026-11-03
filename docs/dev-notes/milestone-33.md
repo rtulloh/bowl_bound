@@ -1008,3 +1008,11 @@ then both passed in0.67s with only that documented field added; all strict
 football/save/future comparisons remain. The early full run was interrupted
 at511passed/2failed in278.38s and is not acceptance evidence. Executable source
 remains e3d6516; a fresh complete gate follows this test-contract correction.
+
+Owner follow-up (2026-11-03): frozen e3d6516 offense timeout/play1 uses10seconds
+as confirmed by the owner; defense still awaits confirmation. Parent's separate
+HTTP/asset/history and actual97d synthetic-save compatibility checks pass; no
+existing server was restarted. Browser tests now explicitly finish possible
+human RZDZ continuations while preserving pending-state assertions, avoiding a
+concealed-call-dependent timeout. Only collection/API-fixture checks are claimed
+locally, not browser execution.

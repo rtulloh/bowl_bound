@@ -106,7 +106,28 @@ for (const side of ['home', 'away']) {
     const resumed = await (await resumedResponse).json()
     expect(resumed.view.armed_timeout).toBe(side)
     await expect(page.getByText(armed.view.armed_timeout_label, { exact: true })).toBeVisible()
+    const calledResponse = page.waitForResponse((response) => response.url().endsWith('/coach'))
     await page.getByTestId(side === 'home' ? 'offense-play-1' : 'defense-play-a').click()
+    expect((await calledResponse).ok()).toBeTruthy()
+    // A concealed CPU RZDZ call may require the human's result choice. Finish
+    // actual engine continuations while proving the intent stays on this play.
+    for (let step = 0; step < 4; step += 1) {
+      let current
+      await expect.poll(async () => {
+        current = await (await request.get('/api/games/' + resumed.game_id + '?human_side=' + side)).json()
+        return current.turn.automatic
+      }).toBe(false)
+      if (current.view.armed_timeout === null) break
+      expect(current.view.conditional_timeout).toBe(true)
+      expect(current.view.clock).toEqual(before.clock)
+      expect(current.view.timing_log).toEqual(before.timing_log)
+      expect(current.turn.human_role).toBe('decision')
+      const choice = current.turn.pending.choices.find((entry) => entry.enabled)
+      expect(choice).toBeTruthy()
+      const decisionResponse = page.waitForResponse((response) => response.url().includes('/decision?'))
+      await page.getByTestId('penalty-choice-' + choice.id).click()
+      expect((await decisionResponse).ok()).toBeTruthy()
+    }
     await expect(page.getByText(armed.view.armed_timeout_label, { exact: true })).toHaveCount(0)
     const after = await (await request.get('/api/games/' + resumed.game_id + '?human_side=' + side)).json()
     expect(after.view.armed_timeout).toBeNull()
