@@ -63,7 +63,10 @@ the tests exercise Bowl Bound's versioned behavior profiles and synthetic charts
 
 ## Acceptance record
 
-Pending implementation.
+Implementation and focused checks are committed. Final regression, private audit,
+review and fresh hosted browser confirmation are in progress. The records below
+retain earlier failures and follow-up checks; none establish owner play-test
+confirmation or release publication.
 
 ## AI-010 — Coaching contract harness
 
@@ -131,9 +134,10 @@ and current continuation. Strict prefix validation and a forged-old-digest
 regression prevent the compatibility path from accepting a different final
 state. Unsupported `m19-v1` saves remain rejected.
 
-Changed existing expectations are limited to the scrimmage fumble decline label
-(completed recovery/possession instead of unresolved recovery) and three assertions
-of the current replay-profile identifier. The label fixture now supplies its
+Changed existing expectations include the scrimmage fumble decline label
+(completed recovery/possession instead of unresolved recovery), three assertions
+of the current replay-profile identifier, and the legacy engine-hardening test’s
+recovery-before-decline command chronology documented below. The label fixture now supplies its
 recovery roll explicitly before the unchanged sentinel assertion. No assertion
 was weakened. Runtime changes remain in already-allowlisted `session.py` and
 `save_game.py`; no new module or public sample is staged. Reviewed the exact
@@ -524,3 +528,17 @@ the independent clock reconciliation too. No assertion was weakened or skipped.
 Focused validation: `.venv/bin/python -m pytest tests/test_local_season_runner.py tests/test_overtime.py tests/test_coaching_audit.py tests/test_issue_tracker.py -q`:
 **87 passed in 28.31s**. The local-season suite contains 39 cases. Full regression
 and the unchanged 120-game private audit must rerun after this committed repair.
+
+
+DEV-063 tested implementation: `0a89a68`. The unchanged private schedule now
+passes **120/120 games, 22,192 reports, 0 fallbacks**, including six overtime games
+and 16 engine-observed series. All 120 engine logs, final states, coaching calls,
+period scores and configurations exactly match the first run; only audit evidence
+and validation changed. No chart or selection adjustment was made. The baseline
+policy audit covers all 11 offered offensive calls and six normal formations.
+Under the documented comparable public-situation buckets, 2,819 offense/defense
+observations repeat 441 prior calls, with a longest streak of three. All 236
+team/role/down/distance buckets with at least 20 calls stay below 80% concentration.
+These are descriptive baseline observations, not universal usage quotas or a
+calibration claim for Medium/Hard. Full normal-tier policy audits run separately.
+Detailed reports remain private and are not part of Git history or packaging.
