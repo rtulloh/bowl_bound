@@ -56,3 +56,15 @@ as a prerelease with all 11 assets at 2026-11-03T12:17:29Z. The immutable tag
 targets the verified build commit; no Milestone 33/34 engine changes or historical
 charts were included. Existing tags/releases were preserved. Detailed download
 inspection records remain outside the repository.
+
+## Latest visibility correction — DEV-065
+
+The repository sidebar continued to show alpha 3 because its GitHub prerelease
+flag was false while alpha 4's was true. On owner follow-up, changed only alpha
+4's release metadata to regular GitHub release plus explicit Latest, matching
+alpha 3's existing classification. The latest-release API now selects alpha 4
+and retains all 11 assets. The alpha name, source tag, binaries and player alpha
+caveats remain unchanged. For this release convention, GitHub's classification
+is chosen to make the current alpha visible in the repository Latest slot; it
+does not assert production readiness. No application tests were repeated for
+this metadata-only correction.
