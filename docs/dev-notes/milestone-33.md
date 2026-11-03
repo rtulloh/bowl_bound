@@ -474,3 +474,12 @@ now serializes `SavedGame.fourth_down_guidance` while retaining the entire exact
 view and future-replay comparison. This changes the API-shape expectation only;
 no football or private replay rule changes. The initial full pass is recorded as
 failing and the complete gate must rerun after this correction.
+
+
+The initial full pass also exposed one existing engine-hardening test whose
+commands encoded the retired penalty-first order. Its independent regression
+reproduced the now-illegal early decline. Updated its command order to recover in
+the end zone before offering/declining the original penalty, retaining final
+field, exact trace and one committed log entry and adding pre-commit purity
+assertions. This completes the intentional expectation migration for RULE-041;
+no production behavior changes in this follow-up.

@@ -69,3 +69,16 @@ Focused suite: 47 passed; cumulative run: 450 passed; coaching mutation audit:
 commands and scope are recorded above and in the milestone notes. No owner
 play-test confirmation is claimed; ticket remains resolved awaiting that audit.
 The full milestone gate remains pending.
+
+
+--- 2026-11-02 20:48 ---
+The first full regression found an existing engine-hardening test explicitly
+expecting the obsolete decline-before-end-zone-recovery order. A focused unchanged
+run failed on that now-illegal decline. Updated only its command chronology to
+resolve the actual end-zone recovery, verify original possession/log remain
+uncommitted, then decline the original penalty. Preserved its final touchback,
+exact four-entry trace and single-log assertions. The new name states the corrected
+contract. This is the intended RULE-041 behavior; no production fix or assertion
+removal. The full gate reruns after this test expectation update.
+
+Focused verification after the chronology update: `.venv/bin/python -m pytest tests/test_engine_hardening.py tests/test_fumble_penalty_order.py -q`: **109 passed in 3.36s**. Ruff check/format and diff checks passed.
