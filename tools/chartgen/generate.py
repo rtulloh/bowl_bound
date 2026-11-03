@@ -723,7 +723,9 @@ def generate_team(
             "penalties": True,
             "OOB": "positive narrative evidence only",
             "special_teams": True,
-            "defensive_formations": "neutral inferred",
+            "defensive_formations": (
+                "not directly observed; modeled prior recorded in tactical_profile"
+            ),
             "variable_responses": "not identifiable; fixed empirical results used",
             "advanced_II": False,
             "QB_Sneak_RZDZ": "engine-owned legal actions",

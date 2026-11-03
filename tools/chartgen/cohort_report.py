@@ -86,6 +86,9 @@ def write_matchup_report(
             "selected_games": len(selected),
             "excluded_actual_games": excluded,
             "full_schedule_games": len(selected) + len(excluded),
+            "full_schedule_scope": (
+                "FBS-involved known fixtures; external full seasons not reconstructed"
+            ),
             "source_target_state": targets[team]["state"],
             "full_source_game_ids": targets[team]["full_source_game_ids"],
             "benchmark_status": chart_qualifications.get(team, {}).get(
@@ -175,6 +178,10 @@ def write_matchup_report(
         "",
         "Review before broad calibration. Fresh simulation seeds are not source-held-out evidence.",
         "Sequence screening does not prove official event completeness. No invented opponents.",
+        "Known schedule counts cover FBS-involved fixtures; "
+        "external full seasons are not reconstructed.",
+        "Unjoined source game IDs (excluded from model/targets): "
+        f"{', '.join(source.get('unjoined_source_game_ids', [])) or 'none'}.",
         "",
         "## Team index",
         "",

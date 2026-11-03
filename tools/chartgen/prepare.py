@@ -129,6 +129,16 @@ def prepare_cohort(
             "all completed sequence-screened actual fixtures, including external opponents"
         ),
         "target_scope": "exact selected historical fixtures only; no full-season fit claim",
+        "unjoined_source_game_ids": sorted(
+            {e.game_id for e in events} - {g.game_id for g in contracts.games}
+        ),
+        "unjoined_source_scope": (
+            "excluded from strength model and restricted targets; "
+            "full-source descriptive context retained"
+        ),
+        "expected_schedule_scope": (
+            "FBS-involved fixtures; external teams' remaining schedules are not reconstructed"
+        ),
         "sequence_policy": (
             "four periods, >=20 live plays per side, known primary yards; "
             "terminal clock uncertainty explicit"

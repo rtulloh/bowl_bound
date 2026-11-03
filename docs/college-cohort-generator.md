@@ -151,3 +151,12 @@ and coaching repetitions/failures for each frozen physical fixture. The final
 JSON includes per-team assessments, raw denominators, game-cluster uncertainty,
 source/engine/profile hashes and retained candidate history. Statistical failure
 may accompany mechanically usable charts and must remain visible.
+
+Unknown required core source metrics are recorded per role and prevent a full
+statistical pass. Unavailable offensive targets do not discard identifiable
+defensive targets; unsupported knobs remain unchanged. Each team is labeled
+`fit`, `not_fit`, `sparse_exposure` or `unidentifiable_source_targets` as applicable.
+Every unjoined source game is listed separately and excluded from the strength
+model/restricted targets. External teams' remaining full schedules are not
+claimed. All run configurations record complete OFF/DEF profile bounds, the
+measured gate scope and the current Bowl Bound rules baseline.

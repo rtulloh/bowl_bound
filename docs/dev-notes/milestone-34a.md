@@ -167,3 +167,34 @@ private synthetic fixture directory allowed the backend to start; Chromium then
 failed its sandbox MachPort bootstrap with Permission denied 1100. One launch
 failure, 37 cases not run under max-failures=1; no browser pass is claimed and no
 sandbox/test setting is weakened. A fresh branch-hosted browser gate is required.
+
+Final target-contract review DATA-019 found two related gaps before historical
+calibration: unknown fumble evidence could disappear from required core gates,
+and absent offensive targets could either trigger a completion-update KeyError
+or discard identifiable defensive targets through a shared exception handler.
+Synthetic regressions reproduced each. Target availability is now recorded per
+role, unknown required facts block full statistical passing, unsupported updates
+remain unchanged and valid opposite-role evidence is retained. Non-sparse metric
+failures explicitly say `not_fit`; all offensive/defensive knob bounds and gate
+scope are frozen in run configuration.
+
+Source-join review also records every unjoined source game and distinguishes
+FBS-involved expected schedule counts from unconstructed external full seasons.
+A synthetic extra-game regression failed before the provenance field was added.
+Actual audit found only external-only unjoined games, with no FBS rows lost.
+
+The previous renewed gate was intentionally stopped at 237 passing cases/341.81
+seconds to finish this contract review, rather than reported as a full pass.
+Completed corrected-source cumulative gate: 145 passed in 77.31 seconds. Repository-wide lint/format passed. Final metadata review also makes the
+formation evidence label accurate for neutral, synthetic and private tactical
+priors without changing any chart cell. Focused contract checks are rerun before
+committing. Sibling's
+new coaching follow-up remains separate/unmerged; this branch retains reviewed
+M33 f82/v10 engine and policy baseline. Full gate resumes on frozen source after
+this focused review, coordinated with the sibling's heavy gate.
+
+Final focused recheck: 59 contract/generation/tracker cases passed in 66.42
+seconds; repository Ruff check/format and diff whitespace checks passed. The
+pytest executable alone does not put this source checkout root on the import
+path; the established `.venv/bin/python -m pytest` invocation was used for the
+valid run. No missing-script collection failure is counted as a passing test.

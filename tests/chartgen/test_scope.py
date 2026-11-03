@@ -142,3 +142,38 @@ def test_chart_qualified_boundary_does_not_require_recursive_opponents() -> None
     assert [g.game_id for g in slate.games] == ["ab"]
     assert slate.excluded[0]["game_id"] == "bx"
     assert "missing_chart:x" in slate.excluded[0]["reasons"]
+
+
+def test_unknown_core_source_fact_remains_explicit_and_not_zero() -> None:
+    source = [replace(e, fumble=None) for e in events("ab", "a", "b")]
+    schedule = [game("ab", "a", "b")]
+    slate = build_slate(
+        schedule,
+        members(),
+        generated_teams={"a", "b"},
+        game_evidence=qualified_games(source, schedule),
+        season=2007,
+        major_conferences={"alpha"},
+    )
+    target = slate_targets(source, slate)["a"]
+    assert target["state"] == "partially_identifiable_targets"
+    assert target["unidentifiable_source_metrics"] == {"offense": ["fumble"], "defense": ["fumble"]}
+    assert "fumble" not in target["offense"] and "fumble" not in target["defense"]
+
+
+def test_unidentified_offense_does_not_discard_identifiable_defense() -> None:
+    source = [replace(e, kind="rush") if e.team == "a" else e for e in events("ab", "a", "b")]
+    schedule = [game("ab", "a", "b")]
+    slate = build_slate(
+        schedule,
+        members(),
+        generated_teams={"a", "b"},
+        game_evidence=qualified_games(source, schedule),
+        season=2007,
+        major_conferences={"alpha"},
+    )
+    target = slate_targets(source, slate)["a"]
+    assert target["offense"] == {}
+    assert target["defense"]["completion"] == 1.0
+    assert target["unidentifiable_source_metrics"]["defense"] == []
+    assert "offense" in target["source_target_limitations"]

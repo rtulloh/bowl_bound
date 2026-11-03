@@ -237,16 +237,26 @@ def slate_targets(events: Sequence[Event], slate: Slate) -> dict[str, dict[str, 
         except ValueError as error:
             record["full_season_limitation"] = str(error)
         if rows:
-            try:
-                record["offense"] = source_targets(rows, [team])
-                reversed_rows = [replace(e, team=e.opponent, opponent=e.team) for e in rows]
-                record["defense"] = {
-                    k: v
-                    for k, v in source_targets(reversed_rows, [team]).items()
-                    if k in CORE_METRICS
-                }
-                record["state"] = "restricted_source_targets"
-            except ValueError as error:
-                record["state"], record["limitation"] = "unidentifiable_targets", str(error)
+            record["state"] = "restricted_source_targets"
+            record["source_target_limitations"] = {}
+            reversed_rows = [replace(e, team=e.opponent, opponent=e.team) for e in rows]
+            for role, evidence in (("offense", rows), ("defense", reversed_rows)):
+                try:
+                    facts = source_targets(evidence, [team])
+                    record[role] = (
+                        facts
+                        if role == "offense"
+                        else {k: v for k, v in facts.items() if k in CORE_METRICS}
+                    )
+                except ValueError as error:
+                    record["state"] = "unidentifiable_targets"
+                    record["source_target_limitations"][role] = str(error)
+        record["unidentifiable_source_metrics"] = {
+            role: sorted(CORE_METRICS - set(record[role])) for role in ("offense", "defense")
+        }
+        if record["state"] == "restricted_source_targets" and any(
+            record["unidentifiable_source_metrics"].values()
+        ):
+            record["state"] = "partially_identifiable_targets"
         targets[team] = record
     return targets

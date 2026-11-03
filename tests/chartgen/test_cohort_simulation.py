@@ -163,6 +163,34 @@ def test_real_engine_cohort_resume_is_exact_and_tamper_rejected(
     compact = compact_metric_result(value["result"])
     assert aggregate_games([compact]) == aggregate_games([value["result"]])
     assert len(json.dumps(compact)) < len(json.dumps(value["result"])) / 2
+    from tools.chartgen.cohort_simulation import summarize_cohort
+    from tools.chartgen.scope import CORE_METRICS
+
+    strict_targets = {
+        t: {
+            **record,
+            "offense": dict.fromkeys(CORE_METRICS, 0.0),
+            "defense": dict.fromkeys(CORE_METRICS, 0.0),
+        }
+        for t, record in targets.items()
+    }
+    assessment = summarize_cohort(
+        [value["result"]], report, catalog, strict_targets, minimum_samples=1
+    )
+    assert assessment["per_source_team"]["a"]["state"] == "not_fit"
+    for role in ("offense", "defense"):
+        strict_targets["a"][role] = {
+            k: v["value"]
+            for k, v in assessment["per_source_team"]["a"][role]["metrics"].items()
+            if k in CORE_METRICS
+        }
+    assert (
+        summarize_cohort([value["result"]], report, catalog, strict_targets, minimum_samples=1)[
+            "per_source_team"
+        ]["a"]["state"]
+        == "fit"
+    )
+
     value["result"]["final"]["home_score"] += 1
     artifact.write_text(json.dumps(value))
     with pytest.raises(ValueError, match="checksum"):
@@ -266,3 +294,21 @@ def test_empty_historical_slate_cannot_claim_successful_simulation(tmp_path: Pat
             reviewed_manifest_sha256=report["manifest_sha256"],
         )
     assert not (tmp_path / "private-data" / "empty-refinement").exists()
+
+
+def test_unidentified_core_metric_blocks_full_fit_without_fake_target() -> None:
+    from tools.chartgen.cohort_simulation import assess_team_metrics
+
+    targets = {
+        "completion": 0.6,
+        "interception": 0.03,
+        "sack": 0.06,
+        "rush_yards_per_attempt": 4.0,
+        "pass_yards_per_attempt": 6.0,
+    }
+    measured = {k: {"n": 2000, "value": v} for k, v in targets.items()}
+    assessment = assess_team_metrics(measured, targets, minimum_samples=1000)
+    assert all(v["passed"] for v in assessment["metrics"].values())
+    assert not assessment["passed"]
+    assert assessment["unidentifiable_source_metrics"] == ["fumble"]
+    assert "fumble" not in assessment["metrics"]

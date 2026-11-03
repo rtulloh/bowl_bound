@@ -201,6 +201,17 @@ def _finite_assessment(value: Any) -> Any:
     return None if isinstance(value, float) and not math.isfinite(value) else value
 
 
+def assess_team_metrics(
+    measured: Mapping[str, Mapping[str, Any]], targets: Mapping[str, float], *, minimum_samples: int
+) -> dict[str, Any]:
+    """Unknown required source facts cannot become omitted passing fit gates."""
+    assessment = assess_metrics(dict(measured), dict(targets), minimum_samples=minimum_samples)
+    unknown = sorted(CORE_METRICS - set(targets))
+    assessment["unidentifiable_source_metrics"] = unknown
+    assessment["passed"] = assessment["passed"] and not unknown
+    return assessment
+
+
 def summarize_cohort(
     results: Sequence[dict[str, Any]],
     report: Mapping[str, Any],
@@ -218,10 +229,10 @@ def summarize_cohort(
             continue
         own = _group_summary(results, {catalog[team]})
         defense = _group_summary(results, {catalog[team]}, defense=True)
-        off_assessment = assess_metrics(
+        off_assessment = assess_team_metrics(
             own["metrics"], dict(targets[team]["offense"]), minimum_samples=minimum_samples
         )
-        def_assessment = assess_metrics(
+        def_assessment = assess_team_metrics(
             defense["metrics"], dict(targets[team]["defense"]), minimum_samples=minimum_samples
         )
         insufficient = any(
@@ -230,7 +241,14 @@ def summarize_cohort(
             for m in a["metrics"].values()
         )
         per_team[team] = {
-            "state": "sparse_exposure" if insufficient else "assessed",
+            "state": "unidentifiable_source_targets"
+            if off_assessment["unidentifiable_source_metrics"]
+            or def_assessment["unidentifiable_source_metrics"]
+            else "sparse_exposure"
+            if insufficient
+            else "fit"
+            if off_assessment["passed"] and def_assessment["passed"]
+            else "not_fit",
             "game_ids": entry["offensive_game_ids"],
             "offense": own,
             "defense": defense,

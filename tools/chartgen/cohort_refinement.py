@@ -18,11 +18,25 @@ from .evidence import Event
 from .generate import CalibrationProfile, DefensiveProfile, EvidenceModel
 from .private_io import private_destination
 from .refine import TOLERANCES, engine_identity, propose_profile
+from .scope import CORE_METRICS
 from .tactics import TacticalProfile
 
 MINIMUM_UPDATE_SAMPLES = 250
 SHRINKAGE_PSEUDO_SAMPLES = 1000
 JOINT_STEP = 0.5
+
+
+def profile_bounds() -> dict[str, dict[str, list[float]]]:
+    """JSON-ready bounds recorded before any historical candidate observations."""
+    offensive = {
+        name: [-0.15, 0.15] if name.endswith("shift") else [0.6, 1.4]
+        for name in asdict(CalibrationProfile())
+    }
+    defensive = {}
+    for name in asdict(DefensiveProfile()):
+        bound = 2.0 if name.endswith("offset") else 0.08 if name == "completion_shift" else 0.03
+        defensive[name] = [-bound, bound]
+    return {"offense": offensive, "defense": defensive}
 
 
 def source_game_partition(
@@ -52,10 +66,19 @@ def propose_team_profiles(
     A selected global candidate is assessed jointly; teams cannot independently
     cherry-pick opponents' profiles or use held-out outcomes to choose updates.
     """
-    skipped, weights = [], {}
+    skipped = [
+        f"{role}/source:{metric}"
+        for role, target in (("offense", target_offense), ("defense", target_defense))
+        for metric in sorted(CORE_METRICS - set(target))
+    ]
+    weights = {}
     usable = {}
     for role, measurements in (("offense", measured_offense), ("defense", measured_defense)):
         for metric, observation in measurements.items():
+            source_targets = target_offense if role == "offense" else target_defense
+            if metric not in source_targets:
+                skipped.append(f"{role}/source:{metric}")
+                continue
             n, value = observation.get("n", 0), observation.get("value")
             if n < MINIMUM_UPDATE_SAMPLES or value is None:
                 skipped.append(f"{role}/{metric}")
@@ -117,7 +140,7 @@ def propose_team_profiles(
             "minimum_update_samples": MINIMUM_UPDATE_SAMPLES,
             "shrinkage_pseudo_samples": SHRINKAGE_PSEUDO_SAMPLES,
             "joint_offense_defense_step": JOINT_STEP,
-            "unidentifiable_or_sparse_metrics": sorted(skipped),
+            "unidentifiable_or_sparse_metrics": sorted(set(skipped)),
             "update_weights": {"/".join(k): v for k, v in weights.items()},
             "limits": (
                 "finite dice can leave bounded residuals unfit; "
@@ -183,6 +206,7 @@ def _joint_assessment(summary: Mapping[str, Any]) -> tuple[bool, float]:
     losses = [
         sum(
             v[role]["loss"] / max(1, len(v[role]["metrics"]))
+            + 100 * len(v[role]["unidentifiable_source_metrics"])
             for role in ("offense_assessment", "defense_assessment")
         )
         / 2
@@ -267,6 +291,15 @@ def run_cohort_refinement(
         "generation_seed": generation_seed,
         "tactics_sha256": tactics.sha256,
         "tolerances": TOLERANCES,
+        "profile_bounds": profile_bounds(),
+        "statistical_gate_scope": (
+            "six identified core OFF/DEF metrics plus source-available special-team targets; "
+            "aggregate field-goal opportunity mix and designed tactical calls are not identified"
+        ),
+        "engine_rules_scope": (
+            "current approved Bowl Bound; source years identify evidence, "
+            "not historical NCAA rule emulation"
+        ),
         "minimum_training_samples": 1000,
         "minimum_validation_samples": 2000,
         "minimum_update_samples": MINIMUM_UPDATE_SAMPLES,

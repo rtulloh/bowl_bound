@@ -24,3 +24,8 @@ Generator defensive forced-completion response yardage uses the same team's scal
 
 --- 2026-11-03 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+Formation evidence label clarified: formations are not directly observed; the
+separate tactical_profile records neutral, synthetic or private-reference prior
+origin. The old generic neutral label must not obscure a supplied centered prior.
+This changes evidence wording only, not numerical chart cells or engine behavior.

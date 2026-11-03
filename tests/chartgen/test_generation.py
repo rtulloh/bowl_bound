@@ -421,6 +421,16 @@ def test_prepare_cohort_generates_charts_and_exact_historical_review_scope(
         + (HistoricalGame("absent", 2007, "1", "3"),),
         {"membership": {"sha256": "synthetic"}},
     )
+    source += [
+        replace(
+            e,
+            team="outer-a",
+            opponent="outer-b",
+            game_id="unjoined-external",
+            event_id="outer-" + e.event_id,
+        )
+        for e in source[:10]
+    ]
     root = tmp_path / "private-data" / "prepared"
     result = prepare_cohort(
         source, contracts, 2007, root, source_provenance={"synthetic": True}, minimum_source_games=1
@@ -433,6 +443,7 @@ def test_prepare_cohort_generates_charts_and_exact_historical_review_scope(
     manifest = json.loads((root / "review" / "manifest.json").read_text())
     targets = json.loads((root / "review" / "targets.json").read_text())
     assert manifest["teams"]["3"]["chart_qualification"]["state"] == "insufficient_evidence"
+    assert manifest["source"]["unjoined_source_game_ids"] == ["unjoined-external"]
     assert set(manifest["target_game_ids"]) == {f"g{i}" for i in range(4)}
     assert targets["1"]["game_ids"] == manifest["teams"]["1"]["offensive_game_ids"]
     assert (root / "charts" / "2007" / "cedar-valley" / "offense.csv").is_file()
@@ -527,6 +538,8 @@ def test_historical_cohort_two_phase_driver_preserves_baseline_and_unused_valida
         master_seed=77,
     )
     assert report["mechanics_ready"]
+    assert set(report["config"]["profile_bounds"]) == {"offense", "defense"}
+    assert report["config"]["profile_bounds"]["defense"]["run_yards_offset"] == [-2.0, 2.0]
     assert not report["all_team_statistical_gates_passed"]
     assert report["historical_full_season_fit_claim"] is False
     assert report["training_history"][0]["summary"]["domain"] == "training"

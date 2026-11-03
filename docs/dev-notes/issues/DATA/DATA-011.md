@@ -39,3 +39,10 @@ missing plays. A new synthetic regression failed before moving that condition to
 an explicit uncertainty warning. Four-period, minimum-volume and known-primary-
 yardage checks remain required; official event completeness is never asserted.
 Initial strict-screen private audits are preserved unchanged.
+
+Source-join review: a synthetic extra external-only source game was silently
+absent from the prepared provenance. Its failing test now requires explicit
+unjoined source game IDs and scope, excluded from model/restricted targets.
+Expected schedule counts cover FBS-involved fixtures; no external team's
+remaining full season is claimed. Actual audits found only external-only
+unjoined games; no FBS rows were lost to this boundary.

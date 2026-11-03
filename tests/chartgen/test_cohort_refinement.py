@@ -47,3 +47,26 @@ def test_source_holdout_excludes_game_from_both_sides_and_every_fit() -> None:
     assert {e.game_id for e in heldout} == {"withheld"}
     assert {e.team for e in heldout} == {"a", "c"}
     assert not any(e.opponent == "c" for e in train)
+
+
+def test_missing_target_has_no_update() -> None:
+    from tools.chartgen.cohort_refinement import propose_team_profiles
+
+    own, defense = CalibrationProfile(), DefensiveProfile()
+    measured = {"completion": {"n": 2000, "value": 0.7}}
+    next_own, next_defense, diagnostic = propose_team_profiles(
+        own, defense, measured, measured, {}, {}
+    )
+    assert next_own == own and next_defense == defense
+    assert "offense/source:completion" in diagnostic["unidentifiable_or_sparse_metrics"]
+
+
+def test_all_profile_bounds_are_recordable() -> None:
+    from tools.chartgen.cohort_refinement import profile_bounds
+
+    own, defense = CalibrationProfile(), DefensiveProfile()
+    bounds = profile_bounds()
+    assert set(bounds["offense"]) == set(asdict(own))
+    assert set(bounds["defense"]) == set(asdict(defense))
+    assert bounds["offense"]["run_yards_scale"] == [0.6, 1.4]
+    assert bounds["defense"]["completion_shift"] == [-0.08, 0.08]
