@@ -493,9 +493,10 @@ def _audit_configuration(
     *,
     coach_policy: str = "baseline",
     simulation_coach_version: int = 1,
+    decision_coach_version: int | None = None,
 ) -> dict[str, Any]:
     """Return the rules and chart-marker configuration recorded with an audit."""
-    return {
+    configuration = {
         "engine_coach_policy": coach_policy,
         "simulation_coach_policy": "baseline"
         if simulation_coach_version == 1
@@ -506,6 +507,9 @@ def _audit_configuration(
             "away": list(teams[spec.away_id][1].defense_chart_markers),
         },
     }
+    if decision_coach_version is not None:
+        configuration["decision_coach_policy"] = f"baseline-v{decision_coach_version}"
+    return configuration
 
 
 def _play_one(
@@ -515,6 +519,7 @@ def _play_one(
     verify_replay: bool = False,
     coach_policy: str = "baseline",
     simulation_coach_version: int = 1,
+    decision_coach_version: int | None = None,
 ) -> dict[str, Any]:
     """Play a complete regulation game through SavedGame's engine/coaching API."""
     team_ids = {"home": spec.home_id, "away": spec.away_id}
@@ -526,6 +531,16 @@ def _play_one(
             stable_seed(spec.seed, "away-coach"), version=simulation_coach_version
         ),
     }
+    decision_coaches = (
+        {
+            side: BaselineCoach(
+                stable_seed(spec.seed, f"{side}-decision-coach"), version=decision_coach_version
+            )
+            for side in ("home", "away")
+        }
+        if decision_coach_version is not None
+        else {}
+    )
     game = _new_audit_game(spec, teams, coach_policy=coach_policy)
     calls: list[dict[str, Any]] = []
     period_totals: dict[int, list[int]] = {quarter: [0, 0] for quarter in range(1, 5)}
@@ -542,6 +557,16 @@ def _play_one(
                 break
             advanced = False
             for side in ("home", "away"):
+                if decision_coaches and view.pending is not None:
+                    observation = observe_game(view, side)
+                    if observation.choices:
+                        choice = safe_choice(
+                            decision_coaches[side].decision(observation), observation.choices
+                        )
+                        game.decide(choice.key)
+                        calls.append(_call_record(view, side, "decision", choice, team_ids))
+                        advanced = True
+                        break
                 _, turn = game.coach_view(side)
                 if turn.automatic:
                     cpu_side = "away" if side == "home" else "home"
@@ -672,6 +697,7 @@ def _play_one(
             teams,
             coach_policy=coach_policy,
             simulation_coach_version=simulation_coach_version,
+            decision_coach_version=decision_coach_version,
         ),
         "final": {
             "finished": view.finished,

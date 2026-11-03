@@ -179,3 +179,24 @@ def test_current_public_observation_policy_is_recorded_for_both_cpu_sides() -> N
     assert result["configuration"]["engine_coach_policy"] == "baseline-v10"
     assert result["configuration"]["simulation_coach_policy"] == "baseline-v10"
     assert {c["team_id"] for c in result["coaching_calls"]} == {"2007/a", "2007/b"}
+
+
+def test_composed_training_decisions_preserve_punts_and_saved_replay() -> None:
+    from scripts.run_local_season import GameSpec, _play_one
+    from tests.synthetic_teams import metadata, team_chart
+
+    teams = {
+        f"2007/{name.lower()}": (team_chart(name, season=2007), metadata()) for name in ("A", "B")
+    }
+    result = _play_one(
+        GameSpec(1, 2007, "2007/a", "2007/b", 817),
+        teams,
+        decision_coach_version=10,
+        verify_replay=True,
+    )
+    assert result["status"] == "passed", result.get("error_detail")
+    assert result["save_replay"]["checkpoint_verified"]
+    assert result["save_replay"]["final_replay_verified"]
+    sections = {t["section"] for row in result["engine_log"] for t in row["trace"]}
+    assert {"punt", "punt_return"} <= sections
+    assert result["configuration"]["decision_coach_policy"] == "baseline-v10"

@@ -145,6 +145,8 @@ def test_generated_charts_complete_real_engine_games(tmp_path: Path, events: lis
     assert report["team_games"] == {"2007/cedar-valley": 2, "2007/harbor-tech": 2}
     assert report["metrics"]["completion"]["n"] > 0
     assert report["call_distribution"]
+    assert report["metrics"]["drawn_punt_yards"]["n"] > 0
+    assert report["metrics"]["drawn_punt_return_yards"]["n"] > 0
 
 
 def test_defensive_outcome_strength_is_separate_from_offense(events: list[Event]) -> None:

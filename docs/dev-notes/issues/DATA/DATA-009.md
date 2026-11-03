@@ -27,3 +27,11 @@ The baseline-v1 training policy always fair-catches punts, leaving no punt-retur
 
 --- 2026-11-02 00:00 ---
 Created with scripts/create_issue.py. Keep evidence public-safe.
+
+--- 2026-11-02 21:15 ---
+The renewed training-only run showed standalone baseline-v10 deliberately omits
+fourth-down kick preferences supplied by the chart-coaching wrapper. It produced
+no punts, despite legal return choices. Interrupted before held-out validation and
+retained all artifacts. Compose the existing situation-aware baseline offense with
+current public-observation pending decisions, identically for both sides. New
+regressions require actual punt and punt-return exposure plus saved replay.

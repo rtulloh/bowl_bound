@@ -91,7 +91,9 @@ def engine_identity() -> dict[str, Any]:
         "engine_sha256": digest.hexdigest(),
         "tool_sha256": tool_digest.hexdigest(),
         "rules_profile": "approved current Bowl Bound; Advanced II disabled",
-        "training_policy": "baseline-v10 public observation; no chart lookahead",
+        "training_policy": (
+            "baseline-v1 offense/defense + baseline-v10 pending decisions; public observation only"
+        ),
         "audit_runner": "scripts.run_local_season._play_one",
     }
 
@@ -410,7 +412,7 @@ def run_batch(
     for index, seed in enumerate(seeds):
         away, home = identities if index % 2 == 0 else identities[::-1]
         spec = GameSpec(index + 1, season, away, home, seed)
-        result = _play_one(spec, teams, coach_policy="baseline-v10", simulation_coach_version=10)
+        result = _play_one(spec, teams, decision_coach_version=10)
         result["normalized_chart_draws"] = observe_chart_draws(result, teams)
         (output / f"game-{index + 1:05d}.json").write_text(json.dumps(result, indent=2) + "\n")
         results.append(result)
@@ -506,8 +508,7 @@ def run_refinement(
             GameSpec(index + 1, season, away, home, seed),
             teams,
             verify_replay=True,
-            coach_policy="baseline-v10",
-            simulation_coach_version=10,
+            decision_coach_version=10,
         )
         (output / f"save-replay-{index + 1}.json").write_text(json.dumps(result, indent=2) + "\n")
         replay.append(

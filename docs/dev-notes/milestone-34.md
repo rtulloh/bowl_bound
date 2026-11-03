@@ -179,3 +179,23 @@ tests/test_issue_tracker.py tests/test_build_workflow.py tests/test_tests_workfl
 — 120 passed. Ruff check/format passed (562 files). Reviewed and integrated
 workflow-only DEV-059 so branch-scoped hosted browser regression can run without
 native release builds. No engine behavior changed.
+
+
+## Training-policy composition correction
+
+The fresh training-only pilot identified that standalone baseline-v10 does not
+punt: the modern chart wrapper supplies its fourth-down preferences. The initial
+v10 replacement was therefore insufficient. Interrupted this run before held-out
+validation, preserved all files, and added failing regressions requiring actual
+punt/punt-return consultations and restored replay (DATA-009).
+
+The development runner now optionally composes unchanged baseline-v1 situational
+offense/defense with baseline-v10 pending-decision preferences, selecting only
+engine-provided public legal choices for either side. Legacy defaults stay intact.
+This is an explicit training preference, not a new rule or a chart adjustment.
+The separate chart-v10 assessment retains its recorded mixed-policy scope.
+
+Focused composition/cumulative regression: 121 passed across generator, shared
+local-season runner, issue tracker and workflow tests. Ruff check/format passed.
+The required synthetic integration now asserts nonzero actual punt and punt-return
+exposure; the composition-specific full game verifies midpoint/final replay.

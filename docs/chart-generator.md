@@ -190,11 +190,16 @@ Each candidate uses identical paired training seeds. Selection uses training
 metrics only; a separate seed domain validates the selected candidate once. Never
 retune against those held-out seeds. The initial 128/512 game counts are smaller
 than Paydirt's 64/256 full-season plan; reports record actual college team exposure,
-raw event denominators, independent-game cluster-robust ratio standard errors, game-rate variance and denominator-weighted Kish effective game exposure so precision can be judged. Increase counts before making tight fit claims.
+raw event denominators, independent-game cluster-robust ratio standard errors,
+game-rate variance and denominator-weighted Kish effective game exposure so
+precision can be judged. Increase counts before making tight fit claims.
 
 The production `SavedGame` and local-season audit run every game. The public,
-situation-aware `baseline-v10` coaching policy makes legal actions without chart
-lookahead. Structured observations and calls are retained. Overtime series starts are
+situation-aware baseline-v1 offense/defense plus baseline-v10 pending-decision
+preferences make legal actions without chart lookahead. This explicit development
+composition preserves punts and exercises returns, identically for both sides.
+Standalone baseline-v10 is not used as a full training policy because its
+fourth-down kick preferences belong to the chart-coaching wrapper. Structured observations and calls are retained. Overtime series starts are
 recorded from the real engine and checked against report state and engine series
 order; lawful reset boundaries are distinct from broken state transitions. Clock, scores, scoring
 ledger, state transitions, statistics and roll traces are reconciled. Failures are
@@ -206,18 +211,24 @@ fumbles. Multipliers are bounded to 0.6–1.4; completion/field-goal shifts to
 −0.15–0.15. Return and field-goal knobs are reserved for diagnosed refinements;
 the initial automatic proposal does not fit kick-location or coaching defects.
 Predeclared efficiency tolerances appear in the report. Core efficiency exposure under 1,000 training or 2,000 validation observations
-fails a metric gate. Missing live rush/sack/completion yardage blocks calibration; it cannot become a zero-efficiency target. Drawn special-team and PAT metrics require at least 100
-observations. Stop when training
+fails a metric gate. Missing live rush/sack/completion yardage blocks calibration;
+it cannot become a zero-efficiency target. Drawn special-team and PAT metrics
+require at least 100 observations. Stop when training
 passes, a proposed bounded profile is unchanged, or the iteration limit is reached.
 The best retained candidate is selected before held-out results are examined.
 
 Reports distinguish mechanics readiness from source/statistical fit. They include
 per-team metrics, completion/INT/sack/rush/pass/fumble outcomes, drawn special-team
 chart distributions, actual kick outcomes, score/volume and legal call diagnostics.
-Drawn kick/return means are not net special-team yards. Engine turnover and end-zone return section aliases identify the consulted interception-return column, including rerolls. Both sides and all kicks/returns in one game share one uncertainty cluster; raw event counts remain separate. Sparse or missing metrics
+Drawn kick/return means are not net special-team yards. Engine turnover and
+end-zone return section aliases identify the consulted interception-return column,
+including rerolls. Both sides and all kicks/returns in one game share one
+uncertainty cluster; raw event counts remain separate. Sparse or missing metrics
 remain visible. Passing mechanics alone does not assert tolerances or historical
-accuracy. Four additional held-out games use the existing `chart-v10` engine coach against the external public-observation `baseline-v10` coach as a separate
-coaching assessment. Reports record both policies. This small assessment checks mechanics and call diagnostics;
+accuracy. Four additional held-out games use the existing `chart-v10` engine coach
+against the external public-observation `baseline-v10` coach as a separate
+coaching assessment. Reports record both policies. This small assessment checks
+mechanics and call diagnostics;
 it does not establish a cross-policy statistical fit.
 
 Record the engine hash, git commit, source hashes, seed plan and selected profile.
