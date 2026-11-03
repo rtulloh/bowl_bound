@@ -645,7 +645,8 @@ Milestones 33 or 34 or the alpha 4 release.
 
 On 2026-11-03 the owner also scheduled the pending halftime presentation
 [CLI-058](issues/CLI/CLI-058.md) for this next planned gameplay milestone,
-moving it from the M23 backlog.
+moving it from the M23 backlog. The owner also confirmed the same missing web
+transition; [UI-058](issues/UI/UI-058.md) delivers the browser counterpart here.
 
 **Deliver:** an explicitly enabled Bowl Bound coffin-corner punt option, with
 engine-owned eligibility, declared adjustments, resolution, clock/statistics,
@@ -655,9 +656,11 @@ human guidance. Verify the exact Bowl Bound procedure before implementation;
 do not inherit Paydirt yardage thresholds or NFL behavior. Other deferred
 Advanced III/IV options remain outside this milestone.
 
-Also deliver a one-time CLI halftime announcement and summary using engine-owned
-quarter scores, first-half scoring events and supported statistics. Display it
-before the second-half kickoff, including a computer-owned automatic kickoff.
+Also deliver a one-time CLI halftime announcement and a distinct web halftime
+transition, with summaries using shared engine-owned quarter scores, first-half
+scoring events and supported statistics. Display the recap before the second-half
+kickoff, including a computer-owned automatic kickoff; the browser transition must
+remain reviewable rather than being immediately overwritten by automatic play.
 Preserve Bowl Bound timing, kickoff assignment, dice and save/replay semantics.
 
 **Validate:** test first with synthetic charts, exact offensive/defensive dice
@@ -674,7 +677,8 @@ automatic computer kickoffs, both human sides and save/resume. Rendering must
 not consume time/dice or duplicate the summary; API/web facts remain engine-owned.
 
 Tracked work: [RULE-043](issues/RULE/RULE-043.md),
-[AI-030](issues/AI/AI-030.md), and [CLI-058](issues/CLI/CLI-058.md). See the
+[AI-030](issues/AI/AI-030.md), [CLI-058](issues/CLI/CLI-058.md), and
+[UI-058](issues/UI/UI-058.md). See the
 [Milestone 35 planning note](milestone-35.md).
 
 **Commit:** `milestone 35: add coffin-corner punts and halftime summary`

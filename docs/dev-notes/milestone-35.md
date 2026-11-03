@@ -16,6 +16,12 @@ moves here from M23. Include a visible one-time first-half recap before the
 scheduled second-half kickoff, including automatic computer-owned kickoff paths.
 This scheduling change implements no behavior and moves no other CLI backlog.
 
+The owner subsequently confirmed the same missing transition in the web UI.
+[UI-058](issues/UI/UI-058.md) adds a distinct browser halftime presentation and
+reviewable first-half recap to this milestone alongside CLI-058. Ensure a
+computer-owned second-half kickoff cannot immediately replace or bypass it.
+
+
 ## Paydirt consultation before planning
 
 Reviewed local Paydirt `paydirt/game_engine.py` (`_handle_punt`),
@@ -39,6 +45,15 @@ period/try completion, halftime facts, kickoff ownership and statistics. Do not
 copy Paydirt's NFL timing, kickoff procedures, mutable random patches or its
 mandatory Enter pause; a new pause is not part of this scheduling request.
 
+For the browser follow-up, also reviewed local Paydirt
+`paydirt-web/frontend/src/components/Game/Halftime.jsx`,
+`components/Game/PlayingPhase.jsx:113-124`, and
+`test/halftimeFromEngine.test.jsx`. Adapt the engine-owned transition signal,
+outstanding-try/penalty ordering and one-time presentation tests. Do not copy NFL
+kickoff/state assumptions or infer halftime merely from a client quarter counter.
+The exact browser interaction will be designed during implementation; this note
+does not independently require the Paydirt Continue button or a CLI pause.
+
 ## Planned acceptance
 
 - Confirm the Bowl Bound rule and explicit option-enable contract before coding.
@@ -54,6 +69,11 @@ mandatory Enter pause; a new pause is not part of this scheduling request.
   ordinary period ends, scoring and pending-decision paths, both human sides,
   computer-owned automatic kickoffs and save/resume. Show the recap before any
   second-half kickoff report without changing timing, dice or kickoff ownership.
+- Add UI-058's distinct web halftime transition and reviewable recap from the
+  same engine/API facts. Test automatic computer kickoff ordering, outstanding
+  tries/penalties, both human sides, manual play, new-game state and save/resume.
+  Automatic UI actions must not bypass or immediately overwrite the transition;
+  viewing it changes no football state, clock, dice or coaching decisions.
 - Complete focused and full regression gates, review synthetic/public-safe
   documentation, record tested commits and actual play-test confirmation, then
   make the dedicated Milestone 35 commit. This note records planned work only.
