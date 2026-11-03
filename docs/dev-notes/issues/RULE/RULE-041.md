@@ -1,18 +1,18 @@
 ---
 id: RULE-041
 title: Resolve fumble recovery before offering a penalty choice
-status: open
+status: resolved
 priority: High
 milestone: '33'
 created-at: 2026-11-02
-resolved-at: null
+resolved-at: 2026-11-02
 closed-at: null
 tags:
 - reproduced
 - gameplay
 - penalties
 links: []
-commits: []
+commits: [4b647969f1438aba8cdce5cdaf6e29e029c619f0]
 ---
 
 ## Description
@@ -61,3 +61,11 @@ faults. Ruff lint/format pass with no skips or warnings. Details and exact comma
 Only obsolete unresolved-fumble wording and current-profile identifiers change
 existing expectations; no assertion weakened. Keep open until tested commit is
 recorded; owner play-test confirmation and full milestone gate remain pending.
+
+--- 2026-11-02 21:04 ---
+Resolved by tested commit `4b647969f1438aba8cdce5cdaf6e29e029c619f0`.
+Focused suite: 47 passed; cumulative run: 450 passed; coaching mutation audit:
+17/17 faults detected; tracker: 18 passed; Ruff lint/format passed. The exact
+commands and scope are recorded above and in the milestone notes. No owner
+play-test confirmation is claimed; ticket remains resolved awaiting that audit.
+The full milestone gate remains pending.
