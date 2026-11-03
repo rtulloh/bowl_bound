@@ -1,0 +1,31 @@
+tests/chartgen/test_cohort_refinement.py
+  s_e06e375ba9891d::t_238a7bf8eba488 50-72
+tests/chartgen/test_cohort_simulation.py
+  s_cee2f5c7a51f19::t_a6993a0c3d5963 166-193,297-314
+tools/chartgen/cohort_simulation.py
+  s_e06e375ba9891d::t_67420e88ede624 204-214,232,235,244-251
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "e74dc06364ad2ac695238fe2a82e84eae061e567",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    },
+    "s_e06e375ba9891d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f07-7008-7201-b15a-cd4a7dec87df",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
