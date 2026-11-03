@@ -20,7 +20,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | [AI-001](issues/AI/AI-001.md) | Medium | [21](project-plan.md#21-add-chart-aware-coaching-and-audits) | Add chart-aware coaching with exact probability analysis and policy audits | created 2026-10-27 |
 | [AI-002](issues/AI/AI-002.md) | Medium | [21](project-plan.md#21-add-chart-aware-coaching-and-audits) | Restore Paydirt-style difficulty levels across CLI and browser | created 2026-10-27 |
 | [AI-018](issues/AI/AI-018.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Add coordinator-level tests driving full games only through coach paths | created 2026-10-27 |
-| [AI-030](issues/AI/AI-030.md) | Medium | [35](project-plan.md#35-add-optional-coffin-corner-punts-and-coaching-support) | Use coffin-corner punts in fourth-down kick selection | created 2026-11-01 |
+| [AI-030](issues/AI/AI-030.md) | Medium | [35](project-plan.md#35-add-optional-coffin-corner-punts-and-a-halftime-summary) | Use coffin-corner punts in fourth-down kick selection | created 2026-11-01 |
 | [AI-032](issues/AI/AI-032.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Weight short-yardage defense beyond the goal-line band | created 2026-11-02 |
 | [AI-034](issues/AI/AI-034.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Define valuation of penalty-repeated tries in one-action analysis | created 2026-11-03 |
 | [CLI-024](issues/CLI/CLI-024.md) | Medium | [20a](project-plan.md#20a-add-an-interactive-cli-for-play-testing) | CLI help lacks actionable examples and current legal choices | created 2026-10-27 |
@@ -43,7 +43,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | [CLI-052](issues/CLI/CLI-052.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Accepted kick penalties repeat procedure trace as separate-looking plays | created 2026-11-01 |
 | [CLI-056](issues/CLI/CLI-056.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Show punt landing spot in fair-catch/return decision menu | created 2026-11-02 |
 | [CLI-057](issues/CLI/CLI-057.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Distinguish multiple penalty-enforcement choices | created 2026-11-02 |
-| [CLI-058](issues/CLI/CLI-058.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Announce halftime with an engine-owned game summary | created 2026-11-02 |
+| [CLI-058](issues/CLI/CLI-058.md) | Medium | [35](project-plan.md#35-add-optional-coffin-corner-punts-and-a-halftime-summary) | Announce halftime with an engine-owned game summary | created 2026-11-02 |
 | [CLI-060](issues/CLI/CLI-060.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Show an engine-owned final game recap in the terminal | created 2026-11-02 |
 | [CLI-061](issues/CLI/CLI-061.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Do not label ordinary kickoff possession changes as turnovers | created 2026-11-02 |
 | [DEV-002](issues/DEV/DEV-002.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Inject dice sources through constructors instead of private attribute coupling | created 2026-10-26 |
@@ -66,7 +66,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | [DEV-058](issues/DEV/DEV-058.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Local-season audit treats a PAT setup as a disconnected scoring transition | created 2026-11-01 |
 | [RULE-016](issues/RULE/RULE-016.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Add end-zone, variable-yardage, return-foul and period-boundary regression coverage | created 2026-10-27 |
 | [RULE-039](issues/RULE/RULE-039.md) | Medium | [22](project-plan.md#22-add-advanced-options-one-at-a-time) | Choose supported advanced rules before starting a game | created 2026-11-01 |
-| [RULE-043](issues/RULE/RULE-043.md) | Medium | [35](project-plan.md#35-add-optional-coffin-corner-punts-and-coaching-support) | Add optional Bowl Bound coffin-corner punts | created 2026-11-02 |
+| [RULE-043](issues/RULE/RULE-043.md) | Medium | [35](project-plan.md#35-add-optional-coffin-corner-punts-and-a-halftime-summary) | Add optional Bowl Bound coffin-corner punts | created 2026-11-02 |
 | [UI-007](issues/UI/UI-007.md) | Medium | [19](project-plan.md#19-complete-the-human-playable-ui) | New drive abandons pending decisions without confirmation | created 2026-10-26 |
 | [UI-009](issues/UI/UI-009.md) | Medium | [19](project-plan.md#19-complete-the-human-playable-ui) | Team identities omit season year during play | created 2026-10-26 |
 | [UI-013](issues/UI/UI-013.md) | Medium | [19](project-plan.md#19-complete-the-human-playable-ui) | Make hurry-up a persistent on/off mode | created 2026-10-26 |
@@ -458,7 +458,6 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 - [CLI-055](issues/CLI/CLI-055.md) (open, Low) — Offer normal kickoff as Enter default after a score
 - [CLI-056](issues/CLI/CLI-056.md) (open, Medium) — Show punt landing spot in fair-catch/return decision menu
 - [CLI-057](issues/CLI/CLI-057.md) (open, Medium) — Distinguish multiple penalty-enforcement choices
-- [CLI-058](issues/CLI/CLI-058.md) (open, Medium) — Announce halftime with an engine-owned game summary
 - [CLI-059](issues/CLI/CLI-059.md) (open, Low) — Align numeric shortcuts in terminal decision menus
 - [CLI-060](issues/CLI/CLI-060.md) (open, Medium) — Show an engine-owned final game recap in the terminal
 - [CLI-061](issues/CLI/CLI-061.md) (open, Medium) — Do not label ordinary kickoff possession changes as turnovers
@@ -593,9 +592,10 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 - [UI-041](issues/UI/UI-041.md) (resolved, Medium) — Display shared public fourth-down guidance for players
 - [UI-052](issues/UI/UI-052.md) (closed, Low) — Use plain language for next-play timeout controls
 
-### Milestone [35](project-plan.md#35-add-optional-coffin-corner-punts-and-coaching-support)
+### Milestone [35](project-plan.md#35-add-optional-coffin-corner-punts-and-a-halftime-summary)
 
 - [AI-030](issues/AI/AI-030.md) (open, Medium) — Use coffin-corner punts in fourth-down kick selection
+- [CLI-058](issues/CLI/CLI-058.md) (open, Medium) — Announce halftime with an engine-owned game summary
 - [RULE-043](issues/RULE/RULE-043.md) (open, Medium) — Add optional Bowl Bound coffin-corner punts
 
 ### Milestone [36](project-plan.md#36-bring-the-easy-coaching-helper-to-the-web-ui)
