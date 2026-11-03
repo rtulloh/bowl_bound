@@ -84,7 +84,8 @@ The numbers are coaching aggression settings, not dice multipliers.
 - Hard evaluates individual legal plays through 32 isolated real-engine samples,
   blends smoothed committed opponent-call frequencies with recent-call variety,
   and retains exploration. Hypothetical dice never consume live gameplay dice.
-  At most 128 analysis situations are cached. Failed candidate analysis falls
+  At most 128 ordinary play-call analysis situations are cached; pending RZDZ
+  comparisons have a separate bounded cache. Failed candidate analysis falls
   back for the entire comparison and is recorded in the committed diagnostic.
 
 Evaluator diagnostics retain the legacy name `turnover_rate`, but it is a
@@ -100,6 +101,9 @@ for the other team it is negated. A settled scoring action has no remaining
 field preference. This keeps a touchdown worth more than an unscored goal-line
 opportunity and values a punt at the actual receiving spot rather than charging
 a fixed possession-loss premium. The existing late lead/tie bonus still applies.
+A penalty that requires a new two-point attempt can leave an ordinary one-action
+play-call estimate incomplete. That comparison uses its flagged legal fallback;
+it does not invent a completed zero/two-point result or append another snap.
 These are explicit heuristic units, **not calibrated expected points**. The
 legacy `chart-v1` policy keeps its original utility and selection streams.
 
