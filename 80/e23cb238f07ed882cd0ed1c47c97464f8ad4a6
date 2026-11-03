@@ -1,0 +1,39 @@
+docs/college-cohort-generator.md
+  s_e06e375ba9891d::t_653682b8ad59f3 119-121
+docs/dev-notes/issue-tracker.md
+  s_e06e375ba9891d::t_cbd54f267a9978 8,10,18,621
+docs/dev-notes/issues/DATA/DATA-018.md
+  s_cee2f5c7a51f19::t_8599a9f4b25d53 1-26
+docs/dev-notes/milestone-34a.md
+  s_e06e375ba9891d::t_87ea5dd61f32d4 156-169
+tests/chartgen/test_cohort_simulation.py
+  s_e06e375ba9891d::t_ef98f07fa2f9e3 221-268
+tools/chartgen/cohort_refinement.py
+  s_e06e375ba9891d::t_f93404ff4bbf8e 230-231
+tools/chartgen/cohort_simulation.py
+  s_e06e375ba9891d::t_dcea42d76762c7 45-46,48-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "80e23cb238f07ed882cd0ed1c47c97464f8ad4a6",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    },
+    "s_e06e375ba9891d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f07-7008-7201-b15a-cd4a7dec87df",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
