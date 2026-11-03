@@ -218,3 +218,51 @@ def test_actual_matchup_usage_rejects_invented_simulation_fixture(tmp_path: Path
         write_matchup_usage(
             tmp_path / "private-data", manifest, [wrong], wrong, wrong, selected_profiles={}
         )
+
+
+def test_empty_historical_slate_cannot_claim_successful_simulation(tmp_path: Path) -> None:
+    from tools.chartgen.cohort_simulation import run_historical_batch
+
+    schedule = [game("ab", "a", "b")]
+    source = events("ab", "a", "b")
+    slate = build_slate(
+        schedule,
+        members(),
+        generated_teams=set(),
+        game_evidence=qualified_games(source, schedule),
+        season=2007,
+        major_conferences={"alpha", "beta"},
+    )
+    targets = slate_targets(source, slate)
+    report = write_matchup_report(
+        tmp_path / "private-data" / "empty-review",
+        slate,
+        targets,
+        source={},
+        engine={},
+        profiles_sha256="none",
+        chart_qualifications={},
+    )
+    with pytest.raises(ValueError, match="no selected"):
+        run_historical_batch(
+            report,
+            {},
+            {},
+            targets,
+            tmp_path / "private-data" / "empty-simulation",
+            repetitions=1,
+            master_seed=77,
+            domain="training",
+        )
+    assert not (tmp_path / "private-data" / "empty-simulation").exists()
+    from tools.chartgen.cohort_refinement import run_cohort_refinement
+
+    with pytest.raises(ValueError, match="no selected"):
+        run_cohort_refinement(
+            source,
+            report,
+            targets,
+            tmp_path / "private-data" / "empty-refinement",
+            reviewed_manifest_sha256=report["manifest_sha256"],
+        )
+    assert not (tmp_path / "private-data" / "empty-refinement").exists()

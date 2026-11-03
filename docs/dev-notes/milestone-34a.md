@@ -153,3 +153,17 @@ manifest change is needed: all changes remain development tooling/tests/docs.
 This is a testable implementation boundary, not completed 34a acceptance. Full
 regression, fresh hosted browser checks, concrete slate review and measured
 historical calibration remain outstanding.
+
+Self-review DATA-018: the all-excluded coverage report is valid, but a simulation
+must not claim success on zero fixtures. A new synthetic test failed as expected;
+batch and refinement now reject before output/engine work. The old full source
+gate was intentionally interrupted after 208 passing cases/331.73 seconds, not
+reported as complete. Corrected-source focused gate: 33 passed in 8.12 seconds;
+full regression is renewed after this fix.
+
+Fresh local real-engine browser attempt: the original shared `/tmp` synthetic
+fixture directory contained an existing symlink and was preserved. An isolated
+private synthetic fixture directory allowed the backend to start; Chromium then
+failed its sandbox MachPort bootstrap with Permission denied 1100. One launch
+failure, 37 cases not run under max-failures=1; no browser pass is claimed and no
+sandbox/test setting is weakened. A fresh branch-hosted browser gate is required.

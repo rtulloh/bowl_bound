@@ -116,6 +116,9 @@ iteration bound. Global candidates are compared by equal-team, equal-OFF/DEF
 normalized error, rather than selecting mutually incompatible team profiles from
 different opponent fits. Training gates require 1000 primary observations and
 held-out gates 2000; established special-team minimums/tolerances remain explicit.
+An empty selected slate remains a valid coverage/exclusion report, but simulation
+and refinement reject it before creating outputs.
+
 Sparse, unavailable, saturated and unchanged finite-dice outcomes remain failed
 or unidentifiable gates. They are never converted to zero or silently passed.
 The selected profile is regenerated from the source model and compared with the

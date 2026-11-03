@@ -227,6 +227,8 @@ def run_cohort_refinement(
         raise ValueError("restricted target hash differs from frozen review manifest")
     games = [HistoricalGame(**g) for g in report["games"]]
     validate_simulation_fixtures(report, games, repetitions=1)
+    if not games:
+        raise ValueError("no selected historical fixtures; review coverage/exclusions first")
     if any(
         type(v) is not int or v < 1
         for v in (training_repetitions, validation_repetitions, coaching_repetitions)

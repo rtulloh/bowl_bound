@@ -42,7 +42,11 @@ def fixture_runs(
     """Pair candidates on the same actual fixtures/seeds, independent of profiles."""
     if domain not in {"training", "heldout", "replay", "coaching"}:
         raise ValueError("unknown predeclared simulation seed domain")
+    if type(repetitions) is not int or repetitions < 1:
+        raise ValueError("fixture repetitions must be positive")
     games = tuple(HistoricalGame(**row) for row in report["games"])
+    if not games:
+        raise ValueError("no selected historical fixtures; review coverage/exclusions first")
     validate_simulation_fixtures(report, list(games) * repetitions, repetitions=repetitions)
     return tuple(
         FixtureRun(
