@@ -1,0 +1,57 @@
+backend/app.py
+  s_e06e375ba9891d::t_fa346ce6215f66 183-185,188-189,300,323,393
+bowl_bound/cli.py
+  s_cee2f5c7a51f19::t_0bd7efccda1d12 202-205
+bowl_bound/coaching.py
+  s_cee2f5c7a51f19::t_2583d6d4dc7840 53-64
+bowl_bound/save_game.py
+  s_cee2f5c7a51f19::t_31bf2a25c3e8d9 20-26,517-567
+docs/api.md
+  s_cee2f5c7a51f19::t_44dd7490732767 51-62
+docs/cli.md
+  s_cee2f5c7a51f19::t_2317bde276e84b 42,292-298
+docs/coaching.md
+  s_cee2f5c7a51f19::t_3bdb9480078166 119-127
+docs/dev-notes/issue-tracker.md
+  s_cee2f5c7a51f19::t_c2f0fc6329a4a3 78,573
+docs/dev-notes/issues/UI/UI-041.md
+  s_cee2f5c7a51f19::t_c01fc3c8a39461 3,22-24,42-62
+docs/dev-notes/milestone-33.md
+  s_cee2f5c7a51f19::t_476ce527731d48 353-385
+docs/playing.md
+  s_cee2f5c7a51f19::t_45339c8f2704da 124-130
+frontend/e2e/difficulty.spec.js
+  s_cee2f5c7a51f19::t_fd999c472ce918 29-69
+frontend/e2e/serve_backend.py
+  s_cee2f5c7a51f19::t_3f1530ec49f260 19,51-52
+frontend/src/App.jsx
+  s_cee2f5c7a51f19::t_cabca3c547f9eb 298-302
+frontend/src/test/coaching.test.jsx
+  s_cee2f5c7a51f19::t_61d7ee7260fb08 242-257
+tests/test_fourth_down_guidance.py
+  s_cee2f5c7a51f19::t_de0db2a5d8a871 1-211
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "b4b8fdf91a4acf5aa7a7f5a148e45fb79fd197b7",
+  "prompts": {},
+  "sessions": {
+    "s_cee2f5c7a51f19": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19eff-d5e6-7830-8581-6268666673cc",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    },
+    "s_e06e375ba9891d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f07-7008-7201-b15a-cd4a7dec87df",
+        "model": "unknown"
+      },
+      "human_author": "Rob Tulloh <rtulloh@cloudflare.com>"
+    }
+  }
+}
