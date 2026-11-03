@@ -617,6 +617,34 @@ Tracked work: [AI-010](issues/AI/AI-010.md), [AI-027](issues/AI/AI-027.md),
 
 **Commit:** `milestone 33: correct core playability and validation status`
 
+### 34. Generate college charts from public play-by-play evidence
+
+Added 2026-11-02 at the owner's request as an independent workstream in parallel
+with Milestone 33. This explicit direction permits the two separate branches to
+progress concurrently; neither milestone expands the other's scope.
+
+**Deliver:** a deterministic, source-neutral baseline generator and a separate
+real-engine simulation/refinement tool. Preserve immutable baselines, explicit
+observed/inferred/unknown evidence, bounded calibration profiles and held-out seeds.
+Support complete Bowl Bound offense, supplemental, defense, special teams, PAT and
+recovery bundles. Begin with private 2007 Ohio State/LSU pilots if source coverage
+supports that scope. Historical inputs, reference audits, learned profiles and
+outputs remain ignored local material; public tests use synthetic teams.
+
+**Validate:** two independently testable phases: source/normalization and complete
+bundle generation, then engine-based calibration and held-out mechanics checks.
+Enumerate 216 offensive and 36 defensive combinations; verify deterministic
+quantization, unsupported/sparse evidence, provenance and safe output handling.
+Complete multi-seed engine games with reconciled clock/state/statistics/traces,
+save replay and visible policy diagnostics. Record engine/tool/source versions,
+coverage, uncertainty and calibration limits. Revalidate any fit after engine or
+coaching changes. Pass applicable full regression checks before acceptance.
+
+Tracked work uses the dedicated DATA prefix. See the
+[Milestone 34 work log](milestone-34.md).
+
+**Commit:** `milestone 34: add two-phase college chart generation`
+
 ## Decision gates
 
 Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.

@@ -12,6 +12,8 @@ No external service or Paydirt runtime dependency is required.
 - **CLI:** terminal interaction, prompts, command shortcuts, help and terminal diagnostics.
 - **UI:** web/browser interface only.
 - **DEV:** tooling, packaging, security and development workflow.
+- **DATA:** chart-generator source coverage, statistical modeling and calibration
+  findings (reserved for the independent Milestone 34 workstream).
 - Keep rules, AI and data findings under their existing domain prefixes even when
   discovered through the CLI; use cross-references for shared causes.
 

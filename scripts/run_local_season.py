@@ -24,7 +24,7 @@ from bowl_bound.coaching import BaselineCoach, CoachChoice, CoachObservation, sa
 from bowl_bound.coaching_audit import reconcile_period_scores
 from bowl_bound.coaching_session import GameView, observe_game
 from bowl_bound.models import TeamChart
-from bowl_bound.save_game import SavedGame
+from bowl_bound.save_game import SavedGame, dumps_game, loads_game
 from bowl_bound.statistics import summarize
 from bowl_bound.team_csv import TeamFileMetadata
 from bowl_bound.timing import QUARTER_SECONDS
@@ -409,7 +409,9 @@ def _submit_offense_choice(
     return None
 
 
-def _new_audit_game(spec: GameSpec, teams: AuditTeams) -> SavedGame:
+def _new_audit_game(
+    spec: GameSpec, teams: AuditTeams, *, coach_policy: str = "baseline"
+) -> SavedGame:
     """Construct an audit game with the same marker inputs as CLI/API games."""
     away, away_metadata = teams[spec.away_id]
     home, home_metadata = teams[spec.home_id]
@@ -422,15 +424,18 @@ def _new_audit_game(spec: GameSpec, teams: AuditTeams) -> SavedGame:
         mode="regulation",
         coach_seed=stable_seed(spec.seed, "engine-coach"),
         advanced_ii=False,
+        coach_policy=coach_policy,
         home_privileges=home_metadata.defense_chart_markers,
         away_privileges=away_metadata.defense_chart_markers,
     )
 
 
-def _audit_configuration(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
+def _audit_configuration(
+    spec: GameSpec, teams: AuditTeams, *, coach_policy: str = "baseline"
+) -> dict[str, Any]:
     """Return the rules and chart-marker configuration recorded with an audit."""
     return {
-        "engine_coach_policy": "baseline",
+        "engine_coach_policy": coach_policy,
         "simulation_coach_policy": "baseline",
         "advanced_ii": False,
         "defense_chart_markers": {
@@ -440,17 +445,25 @@ def _audit_configuration(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
     }
 
 
-def _play_one(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
+def _play_one(
+    spec: GameSpec,
+    teams: AuditTeams,
+    *,
+    verify_replay: bool = False,
+    coach_policy: str = "baseline",
+) -> dict[str, Any]:
     """Play a complete regulation game through SavedGame's engine/coaching API."""
     team_ids = {"home": spec.home_id, "away": spec.away_id}
     coaches = {
         "home": BaselineCoach(stable_seed(spec.seed, "home-coach")),
         "away": BaselineCoach(stable_seed(spec.seed, "away-coach")),
     }
-    game = _new_audit_game(spec, teams)
+    game = _new_audit_game(spec, teams, coach_policy=coach_policy)
     calls: list[dict[str, Any]] = []
     period_totals: dict[int, list[int]] = {quarter: [0, 0] for quarter in range(1, 5)}
     failure: str | None = None
+    checkpoint_verified = False
+    final_replay_verified = False
     try:
         for _ in range(MAX_GAME_ACTIONS):
             view = game.view()
@@ -519,6 +532,16 @@ def _play_one(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
             if not advanced:
                 raise ValueError("neither team has a legal automated action")
             after = game.view()
+            if verify_replay and not checkpoint_verified and len(after.log) >= 25:
+                restored = loads_game(
+                    dumps_game(game), lambda key: teams[key][0], preserve_development_policy=True
+                )
+                if restored.view() != after:
+                    raise ValueError("midpoint save/load state diverged")
+                # Continue from the restored engine using the same independent
+                # coaches; final journal replay checks the subsequent commands.
+                game = restored
+                checkpoint_verified = True
             score_delta = (
                 after.score.home - view.score.home,
                 after.score.away - view.score.away,
@@ -533,6 +556,13 @@ def _play_one(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
         view = game.view()
         period_scores = tuple(tuple(period_totals[key]) for key in sorted(period_totals))
         validate_game(view, period_scores)
+        if verify_replay:
+            restored = loads_game(
+                dumps_game(game), lambda key: teams[key][0], preserve_development_policy=True
+            )
+            final_replay_verified = restored.view() == view
+            if not checkpoint_verified or not final_replay_verified:
+                raise ValueError("missing or divergent saved-game replay verification")
     except Exception as error:
         failure = type(error).__name__
         view = game.view()
@@ -540,9 +570,14 @@ def _play_one(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
     return {
         "status": "failed" if failure else "passed",
         "error": failure,
+        "save_replay": {
+            "requested": verify_replay,
+            "checkpoint_verified": checkpoint_verified,
+            "final_replay_verified": final_replay_verified,
+        },
         "spec": asdict(spec),
         "teams": {"home": spec.home_id, "away": spec.away_id},
-        "configuration": _audit_configuration(spec, teams),
+        "configuration": _audit_configuration(spec, teams, coach_policy=coach_policy),
         "final": {
             "finished": view.finished,
             "phase": view.phase,
