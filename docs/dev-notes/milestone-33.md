@@ -542,3 +542,62 @@ team/role/down/distance buckets with at least 20 calls stay below 80% concentrat
 These are descriptive baseline observations, not universal usage quotas or a
 calibration claim for Medium/Hard. Full normal-tier policy audits run separately.
 Detailed reports remain private and are not part of Git history or packaging.
+
+
+## Final local regression and policy audit
+
+Source implementation is frozen at `0a89a68`; `3d888d9` strengthens the new
+series-order test fixture and records private audit evidence. The preceding
+runtime gate at `86600a4` passed **3,385 tests in 800.13s**, **93.05% branch-aware
+coverage**, without skips or warnings. The complete gate rerun includes
+all seven new DEV-063 audit cases: **3,392 passed in 793.00s (13:13)**,
+**93.05% branch-aware coverage**, no skips or Python warnings. The strengthened
+series-order fixture also passes in the 39-case focused run. The initial **3-failure / 3,382-pass** run is
+retained as failing evidence; all three intended expectation migrations were
+verified independently before the successful runtime gate.
+
+Fresh available non-Python checks, using Node **24.22.1** / npm **11.19.1**:
+`npm ci --ignore-scripts`, `npm test` (**130 passed, 16 files, 5.04s**),
+`npm run build` (**590ms**) and `npm audit` (**0 vulnerabilities**) passed.
+The existing `whatwg-encoding@3.1.1` deprecation and Vitest performance advice
+remain visible. Ruff lint/format (**540 files**), pip dependency check and
+tracker (**18 tests**) passed. The final simplify review checked shared helpers,
+state retention, response-view consistency, rule authority and workflow controls;
+removed an extra workflow EOF blank line and strengthened the audit controls.
+All changed runtime paths are manifest-selected; all 15 public sample hashes
+match. All 897 local links in changed Markdown resolve. No private inputs,
+reports or game saves are tracked in the outgoing changes.
+
+- `.venv/bin/python scripts/audit_coaching_contracts.py`:
+  **clean baseline passed; 17/17 deliberate faults detected by assertions**.
+- `.venv/bin/python -m bowl_bound.coaching_audit --seeds 101 307 --policies baseline-v2 easy-v10 medium-v10 hard-v10`:
+  **32/32 games passed**, eight per policy, both CPU sides and sample arrangements.
+  All saved continuations verify (**5,261 replayed commands**); all four regulation
+  quarters reconcile to 900 seconds per game; scoring, statistics and **11,726
+  trace rolls** reconcile across **5,413 reports**. **Zero illegal selections or
+  fallbacks**. All **5,620** committed CPU preference vectors are normalized,
+  finite, legal and assign positive probability to the selected call.
+- Comparable-call counts/repetitions: baseline **150/21**, Easy **179/25**,
+  Medium **191/46**, Hard **186/28**. Longest within-game comparable streak is
+  **two** for each policy. All 4,914 per-game situation buckets are below the
+  concentration audit’s minimum sample count; no broad balance or calibration
+  claim follows. The exact mixture/cache/history/hidden-input contracts are
+  separately protected by the AI-010 synthetic suite and mutation audit.
+- `.venv/bin/python scripts/run_local_season.py --seasons seasons --games-per-team 12 --seed 20311031 --output private-data/local-season-audits`:
+  **120/120 passed**, detailed reconciliation and limitations recorded under
+  DEV-063 above. Full game outputs stay in ignored private paths.
+
+Local `BB_E2E_SEASONS=/private/tmp/bowl-bound-m33-full-e2e npm run test:e2e`
+attempted all **38 cases**. All failed **before application assertions** because
+macOS denies Chromium’s MachPort process registration (`bootstrap_check_in`,
+Permission denied 1100 / SIGTRAP). The 38 existing color-environment warnings
+remain visible. `npm run test:e2e -- --list` lists **38 tests in seven files**.
+No skip, assertion weakening or sandbox bypass was introduced. Fresh hosted
+branch Tests/browser confirmation is required; this is not a passing browser gate.
+
+
+Pre-push status: all available full local checks pass. Local Chromium remains
+blocked before assertions as recorded above; fresh hosted Tests/browser coverage
+is required before resolving UI-041, RULE-042 and DEV-059 or accepting the whole
+milestone. Only `milestone/33-core-playability` is authorized for this push. No
+main, release branch, tag, native build or publication is included.
