@@ -22,12 +22,17 @@ def test_three_native_builds_are_test_gated_and_do_not_publish_releases() -> Non
         ("macos-x86_64", "macos-26-intel", "x64"),
         ("windows-x64", "windows-2025", "x64"),
     }
-    for job in jobs.values():
+    source_text = (ROOT / ".github/workflows/tests.yml").read_text()
+    source = yaml.load(source_text, Loader=yaml.BaseLoader)
+    assert jobs["test"]["uses"] == "./.github/workflows/tests.yml"
+    assert source["permissions"] == {"contents": "read"}
+    for job in (jobs["build"], *source["jobs"].values()):
         assert int(job["timeout-minutes"]) <= 45
         for step in job["steps"]:
             if "uses" in step:
                 assert re.fullmatch(r"actions/[a-z-]+@[a-f0-9]{40}", step["uses"])
             assert "continue-on-error" not in step
+    text += source_text
     assert "contents: write" not in text and "action-gh-release" not in text
     assert "persist-credentials: false" in text and "npm ci --ignore-scripts" in text
     assert "--cov" in text and "npm run test:e2e" in text
@@ -56,7 +61,7 @@ def test_pdf_importer_is_not_part_of_native_runtime() -> None:
 
 
 def test_browser_job_provides_the_interpreter_expected_by_the_harness() -> None:
-    workflow = yaml.load((ROOT / ".github/workflows/build.yml").read_text(), Loader=yaml.BaseLoader)
+    workflow = yaml.load((ROOT / ".github/workflows/tests.yml").read_text(), Loader=yaml.BaseLoader)
     commands = "\n".join(step.get("run", "") for step in workflow["jobs"]["test"]["steps"])
     assert "python -m venv .venv" in commands
     assert '.venv/bin/python -m pip install -e ".[dev,web,pdf]"' in commands
