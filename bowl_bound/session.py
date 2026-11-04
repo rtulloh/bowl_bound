@@ -130,6 +130,16 @@ class Action:
 
 
 @dataclass(frozen=True)
+class PresentationReview:
+    """Engine-authored review text; acknowledgment never changes football state."""
+
+    kind: str
+    title: str
+    lines: tuple[str, ...]
+    action: Action = Action("review:continue", "Continue")
+
+
+@dataclass(frozen=True)
 class AdvancedDefenseCall:
     """An offered Advanced II choice with its current eligibility label."""
 
@@ -192,6 +202,7 @@ class PlayReport:
     timing: TimingFacts = TimingFacts()
     extends_quarter: bool = False
     statistics: PlayStatistics = PlayStatistics()
+    announcements: tuple[str, ...] = ()
 
     @property
     def highlight_tags(self) -> tuple[str, ...]:
@@ -1890,6 +1901,10 @@ class PlaySession:
         if choice == "conversion:two":
             self._phase = SessionPhase.TWO_POINT_TRY
             self._field = start_drive(scorer, 2)
+            announcement = f"{self._charts[scorer].name} is going for two."
+            self._log[-1] = replace(
+                self._log[-1], announcements=(*self._log[-1].announcements, announcement)
+            )
             return PlayReport(
                 len(self._log) + 1,
                 True,
@@ -1901,7 +1916,7 @@ class PlaySession:
                 "No formation",
                 before,
                 before,
-                self._status(),
+                announcement + " Choose a play and defense.",
                 None,
                 (),
             )

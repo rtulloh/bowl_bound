@@ -51,6 +51,7 @@ export default function PlayLog({ entries, expanded: controlledExpanded, onExpan
         {entries.map((entry) => (
           <li key={entry.number} className="min-w-0" data-testid="log-entry">
             <div className="min-w-0 break-all">{entry.number}. {entry.commentary ?? entry.description}</div>
+            {entry.announcements?.map((line, i) => <p key={i} className="font-semibold">{line}</p>)}
             <PlayHighlights report={entry} />
             {entry.timing_label && <p>{entry.timing_label}</p>}
             {entry.state_before && <p>Before: {entry.state_before.possession_name} — {entry.state_before.situation} at {entry.state_before.spot}</p>}

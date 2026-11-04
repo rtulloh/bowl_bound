@@ -152,6 +152,7 @@ class Kick(BaseModel):
 class GameAction(BaseModel):
     model_config = ConfigDict(extra="forbid")
     action: Literal[
+        "review:continue",
         "kneel",
         "hail_mary",
         "elect_safety",

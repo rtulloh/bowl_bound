@@ -17,6 +17,7 @@ from .session import (
     PendingDecisionView,
     PlayReport,
     PlaySession,
+    PresentationReview,
     SessionFinishedError,
     SessionView,
 )
@@ -83,6 +84,7 @@ class RegulationView(SessionView):
     armed_timeout_label: str | None = None
     clock_timing_label: str | None = None
     conditional_timeout: bool = False
+    review: PresentationReview | None = None
 
     def timing_label(self, play_number: int) -> str | None:
         """Describe only recorded timing, or the completed play awaiting a choice."""
@@ -167,6 +169,7 @@ class RegulationGame:
         self._timing_log: tuple[TimeCharge, ...] = ()
         self._legacy_halftime_view: RegulationView | None = None
         self._legacy_halftime_choice_pending = False
+        self._review: PresentationReview | None = None
 
     def _consume_legacy_halftime_choice(self, choice: str) -> bool:
         """Replay an old save's choice when it matches the newly fixed kickoff."""
@@ -546,6 +549,7 @@ class RegulationGame:
             game_type=self._game_type.value,
             armed_timeout=self._armed_timeout.value if self._armed_timeout else None,
             conditional_timeout=self._conditional_timeout,
+            review=self._review,
             armed_timeout_label=(
                 f"{self._names[self._armed_timeout]} timeout requested for "
                 f"{timeout_play} if eligible; "
@@ -745,6 +749,11 @@ class RegulationGame:
         return self._after(before, report)
 
     def action(self, action: str, *, dice: DiceSource | None = None) -> PlayReport | None:
+        if action == "review:continue":
+            if self._review is None:
+                raise InvalidDecisionError("no presentation is awaiting review")
+            self._review = None
+            return None
         self._legacy_halftime_choice_pending = False
         if (
             action.startswith(("timeout:", "timeout_after:"))
@@ -801,6 +810,7 @@ class RegulationGame:
         return self._after(before, report)
 
     def _after(self, before: SessionView, report: PlayReport) -> PlayReport:
+        self._review = None
         self._last_report = report
         current = self._session.view()
         if report.pending or not report.supported or len(current.log) == len(before.log):
@@ -839,6 +849,13 @@ class RegulationGame:
             self._charge(seconds, f"timeout:{timeout.value}" if timeout else "standard")
             self._untimed = report.extends_quarter and not conversion and self._clock.remaining == 0
             self._advance()
+        if before.phase == "two_point_try" and report.outcome in {
+            "two_point_good",
+            "two_point_failed",
+        }:
+            self._review = PresentationReview(
+                "conversion", "Two-point result", (report.commentary,)
+            )
         return report
 
     def _charge(self, seconds: int, method: str) -> None:

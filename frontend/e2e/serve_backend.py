@@ -66,6 +66,21 @@ def main() -> None:
             ).special_teams,
         )
         write_team(seasons, chart)
+    for result in ("Good", "Failed"):
+        for side in ("Home", "Away"):
+            chart = replace(
+                team_chart(
+                    f"Try {result} {side}",
+                    season=2002,
+                    offense=100 if result == "Good" else 0,
+                    defense=0,
+                    plays={Play.TWO: yards(100)},
+                ),
+                special_teams=special_chart(
+                    side, kickoff=yards(40), kickoff_return=yards(10)
+                ).special_teams,
+            )
+            write_team(seasons, chart)
     interception = NormalizedCell(ResultKind.INTERCEPTION, provenance(), yards=15)
     chart = replace(
         team_chart(

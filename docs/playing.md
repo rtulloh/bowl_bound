@@ -171,3 +171,8 @@ plays while you are at the bottom, and preserves your position when you scroll
 back. **Show latest plays** returns to the newest entry. **Show complete history**
 uses the page's normal scrolling for every recorded entry, including PAT and
 combined kickoff/return reports. No reports are removed by switching views.
+
+A computer two-point attempt is announced before you choose its defense. The
+attempt announcement stays with the touchdown in Play history. After a two-point
+try, review the engine's result and choose **Continue** before the web game
+advances to its next automatic action. This review uses no game time or dice.

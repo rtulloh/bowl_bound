@@ -206,7 +206,12 @@ def plan_turn(view: GameView, human_side: str, coach: BaselineCoach) -> _Plan:
                 human_side,
                 "defense",
                 False,
-                "Choose your defensive formation; the computer offense stays hidden.",
+                (
+                    f"{view.state.possession_name} is going for two. "
+                    "Choose your defense; the computer play stays hidden."
+                    if view.phase == "two_point_try"
+                    else "Choose your defensive formation; the computer offense stays hidden."
+                ),
                 Actions((), view.actions.defense),
                 human_actions,
                 pending,

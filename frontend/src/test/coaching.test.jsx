@@ -255,3 +255,25 @@ it('displays and clears fourth-down guidance supplied by the engine without deri
   await waitFor(() => expect(screen.queryByText(guidance.label)).toBeNull())
   expect(screen.queryByText(guidance.summary)).toBeNull()
 })
+
+it('keeps the engine conversion review visible until Continue before an automatic kickoff', async () => {
+  const result = report({ number: 2, commentary: 'Beta State two-point conversion no good.' })
+  const review = { kind: 'conversion', title: 'Two-point result', lines: [result.commentary],
+    action: { key: 'review:continue', label: 'Continue' } }
+  api.newGame.mockResolvedValue({ game_id: 'cpu', revision: 2,
+    view: view({ phase: 'kickoff', review, log: [report({ announcements: ['Beta State is going for two.'] }), result] }),
+    turn: turn('computer') })
+  api.gameAction.mockResolvedValue({ revision: 3, view: view({ phase: 'kickoff', review: null }), turn: turn('computer') })
+  api.coachStep.mockResolvedValue({ report: report({ number: 3, commentary: 'Beta State kickoff; Alpha Tech returns.' }),
+    view: view(), turn: turn('defense') })
+  render(<App />)
+  fireEvent.click(await screen.findByTestId('start-game'))
+  const panel = await screen.findByRole('region', { name: 'Two-point result' })
+  expect(panel).toHaveTextContent(result.commentary)
+  await act(async () => { await new Promise((resolve) => setTimeout(resolve, 350)) })
+  expect(api.coachStep).not.toHaveBeenCalled()
+  expect(screen.getAllByTestId('log-entry')[0]).toHaveTextContent('Beta State is going for two.')
+  fireEvent.click(screen.getByRole('button', { name: 'Continue', exact: true }))
+  await waitFor(() => expect(api.gameAction).toHaveBeenCalledWith('cpu', 'review:continue', 'home'))
+  await waitFor(() => expect(api.coachStep).toHaveBeenCalledTimes(1))
+})

@@ -125,7 +125,7 @@ export default function App() {
     apply(await manualOrControlled(decide, game.game_id, choice))
   })
   useEffect(() => {
-    if (control === 'manual' || !game?.turn?.automatic || game.view.finished || busy || error || computerError || (game.view.phase === "opening_choice" && !openingRevealed)) return
+    if (control === 'manual' || game?.view.review || !game?.turn?.automatic || game.view.finished || busy || error || computerError || (game.view.phase === "opening_choice" && !openingRevealed)) return
     const timer = setTimeout(() => {
       run(async () => {
         if (++automaticCount.current > 12) throw new Error('Computer stopped after 12 consecutive actions. Review the game before retrying.')
@@ -216,7 +216,7 @@ export default function App() {
   const actions = turn?.actions || view.actions
   const pending = turn ? turn.pending : view.pending
   const clockChoice = pending && view.phase === 'clock_choice'
-  const blocking = (Boolean(pending) && !view.clock_optional) || Boolean(turn?.automatic)
+  const blocking = Boolean(view.review) || (Boolean(pending) && !view.clock_optional) || Boolean(turn?.automatic)
   const gameActions = (turn ? turn.game_actions : view.game_actions) || []
   const conditionalTimeouts = gameActions.filter((action) => action.key.startsWith("timeout_after:"))
   const timeoutActions = conditionalTimeouts.length ? conditionalTimeouts : gameActions.filter((action) => action.key.startsWith("timeout:"))
@@ -287,6 +287,11 @@ export default function App() {
       <Scoreboard view={view} />
       <div role="status" className={!view.finished && ["scrimmage", "clock_choice"].includes(view.phase) ? "sr-only" : "text-sm"} data-testid="session-status">{turn?.status || view.status}</div>
       <FootballField state={view.state} home={view.home} away={view.away} />
+      {view.review && <section role="region" aria-label={view.review.title} className="board-panel p-3 space-y-2">
+        <h2 className="font-bold">{view.review.title}</h2>
+        {view.review.lines.map((line, i) => <p key={i}>{line}</p>)}
+        <button type="button" className="play-button" disabled={busy} onClick={() => special(view.review.action.key, true)}>{view.review.action.label}</button>
+      </section>}
       <ResultPanel report={report} />
       <div className="grid gap-3 lg:grid-cols-[minmax(0,2fr)_minmax(16rem,1fr)]" data-testid="play-area">
       <div className="order-2 space-y-3 lg:order-1">

@@ -515,7 +515,12 @@ class SavedGame:
     ) -> tuple[PlayReport | None, SessionView | RegulationView, CoachingTurn]:
         """Apply only a human-offered non-simultaneous action under the game lock."""
         with self._lock:
-            _, turn = self.coach_view(human_side)
+            view, turn = self.coach_view(human_side)
+            review = getattr(view, "review", None)
+            if operation == "action" and review is not None and value == review.action.key:
+                report = self._execute(operation, [value])
+                view, next_turn = self.coach_view(human_side)
+                return report, view, next_turn
             legal = {
                 "decide": tuple(c.id for c in turn.pending.choices if c.enabled)
                 if turn.pending
@@ -1273,6 +1278,8 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         "armed_timeout_label",
         "clock_timing_label",
         "normal_timing_ends_period",
+        "announcements",
+        "review",
         "defense_name",
         "home_timeouts",
         "away_timeouts",

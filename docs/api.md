@@ -109,3 +109,12 @@ choice boundary to preserve an eligible public-policy field goal before Q2/Q4
 expiration. Clients pass through this fact and never calculate timing semantics.
 The derived field is excluded from legacy semantic save digests; actual clocks,
 commands and rolls remain strictly validated.
+
+Regulation views may include `review`: an engine-authored `kind`, `title`, ordered
+`lines`, and acknowledgment `action`. Adapters show these facts and hold automatic
+presentation until `/action` receives the offered `review:continue`. The action
+changes no football state, clock, dice, scoring or statistics. Existing direct
+football commands remain valid for older adapters and dismiss the previous
+review. Report `announcements` retain ordered engine commentary alongside the
+original report; they are not additional plays. Neither field enters coaching
+observations or football semantic integrity. Acknowledgments remain journaled.

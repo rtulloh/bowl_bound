@@ -1289,3 +1289,14 @@ No football facts are calculated in the frontend. 134 frontend tests, build,
 viewport cases are added; local launch limitations and owner review remain real
 acceptance limits. Paydirt's auto-follow idea is adapted with user-controlled
 reading; its frontend football computations are deliberately excluded.
+
+### UI-059 two-point presentation checkpoint
+
+Engine-owned attempt announcements are retained on the original touchdown; a
+phase-specific coaching prompt keeps CPU calls hidden. A pure journaled result
+review holds web automatic progression until Continue. Old direct kickoff
+commands remain legal and dismiss the review, preserving frozen journals. New
+review/announcement facts never enter CoachObservation and are excluded only as
+presentation from semantic digests. Runtime manifest already includes all changed
+modules; no new module or content allowance is needed. Paydirt's explicit try
+prompt is adapted; its NFL rules are not. Focused and final evidence is in UI-059.
