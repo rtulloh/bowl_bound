@@ -1836,3 +1836,7 @@ policy="hard-v15", cpu_side="home")` and reversed samples with seed 307 and CPU
 away, preserving default replay checkpoints and stand-in seed. The owner-facing
 source will be advanced only after committing these tested changes. No push,
 release, interpreter restart or full M33 acceptance is included.
+
+AI-038 tested implementation is `b120678`. The ticket is resolved for owner
+review and remains unclosed pending play-test confirmation. The 1,442-case
+cumulative run and two full-game audits above passed on this production code.
