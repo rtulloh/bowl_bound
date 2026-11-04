@@ -649,6 +649,12 @@ agent. Integrate its existing tested clock fix with the remaining changes and
 validate the combined branch. Other recommended tickets are not automatically
 added to this release scope.
 
+Owner visual follow-up (2026-11-04): [UI-060](issues/UI/UI-060.md) adapts Paydirt's
+boxed CLI halftime statistics and the owner's simple web halftime card reference.
+Detailed web tables remain behind a collapsed disclosure; this changes display
+formatting, not the completed engineering checkpoint or football rules. Browser
+execution and owner visual confirmation remain required.
+
 Follow-up implementation checkpoint `8ed9977` (browser fixture correction
 `478df71`) passes 3,688 Python tests / 93.28% branch coverage, 136 frontend
 tests/build/audit, current public 32-game replay/coaching audit and private

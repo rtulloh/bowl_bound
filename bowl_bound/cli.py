@@ -18,6 +18,7 @@ from .save_game import MAX_SAVE_BYTES, SavedGame, dumps_game, loads_game
 from .session import (
     DEFENSE_LABELS,
     PLAY_LABELS,
+    HalftimeRecap,
     PendingDecisionError,
     PlayReport,
     SessionFinishedError,
@@ -169,10 +170,62 @@ class TerminalGame:
         """Print the shared engine recap once before any automatic kickoff."""
         review = getattr(self.game.view(), "review", None)
         if review is not None and review.kind == "halftime":
-            self._print("\n" + review.title)
-            for line in review.lines:
-                self._print(line)
+            if review.halftime is not None:
+                self._halftime_box_score(review.halftime)
+            else:
+                self._print("\n" + review.title)
+                for line in review.lines:
+                    self._print(line)
             self.game.action(review.action.key)
+
+    def _halftime_box_score(self, recap: HalftimeRecap) -> None:
+        """Align engine-provided halftime facts using Paydirt's boxed layout."""
+        name_width = max(10, len(recap.home.name), len(recap.away.name))
+        score_header = f"  {'TEAM':<{name_width}}  |  {'Q1':>4}  {'Q2':>4}  |  {'TOTAL':>5}  "
+        score_rows = [
+            f"  {team.name:<{name_width}}  |  {team.first:>4}  {team.second:>4}  |  "
+            f"{team.total:>5}  "
+            for team in (recap.away, recap.home)
+        ]
+        label_width = max([22, *(len(row.label) for row in recap.statistics)])
+        away_width = max([12, len(recap.away.name), *(len(row.away) for row in recap.statistics)])
+        home_width = max([12, len(recap.home.name), *(len(row.home) for row in recap.statistics)])
+        stats_header = (
+            f"  {'Statistic':<{label_width}}  |  {recap.away.name:^{away_width}}  |  "
+            f"{recap.home.name:^{home_width}}  "
+        )
+        stats_rows = [
+            f"  {row.label:<{label_width}}  |  {row.away:^{away_width}}  |  "
+            f"{row.home:^{home_width}}  "
+            for row in recap.statistics
+        ]
+        scoring_rows = ["  " + line for line in recap.scoring]
+        width = max(
+            70,
+            *(
+                len(line)
+                for line in [score_header, stats_header, *score_rows, *stats_rows, *scoring_rows]
+            ),
+        )
+
+        def box(title: str, rows: list[str], *, header: str | None = None) -> None:
+            border = "+" + "-" * width + "+"
+            self._print("\n" + border)
+            self._print(f"|{title:^{width}}|")
+            self._print(border)
+            if header is not None:
+                self._print(f"|{header:<{width}}|")
+                self._print("|" + "-" * width + "|")
+            for row in rows:
+                self._print(f"|{row:<{width}}|")
+            self._print(border)
+
+        if recap.result is not None:
+            self._print("\n  " + recap.result)
+        box("HALFTIME STATS", score_rows, header=score_header)
+        box("SCORING SUMMARY", scoring_rows)
+        box("TEAM STATISTICS", stats_rows, header=stats_header)
+        self._print("\n  " + recap.kickoff)
 
     def display(self) -> None:
         """Display engine state, labels and public legal controls, never derived results."""

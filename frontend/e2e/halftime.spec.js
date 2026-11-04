@@ -65,10 +65,28 @@ for (const openingChoice of ['toss:receive', 'toss:kick']) {
       expect(boundary.view.review.kind).toBe('halftime')
       const recap = page.getByRole('region', { name: 'HALFTIME' })
       await expect(recap).toBeVisible()
-      for (const line of boundary.view.review.lines) await expect(recap).toContainText(line)
+      await expect(recap.getByText('End of 2nd Quarter')).toBeVisible()
+      await expect(recap.getByRole('table', { name: 'First-half score' })).toBeHidden()
+      await recap.getByText('First-half details').click()
+      const facts = boundary.view.review.halftime
+      const scores = recap.getByRole('table', { name: 'First-half score' })
+      for (const [i, team] of [facts.away, facts.home].entries()) {
+        const cells = scores.getByRole('row').nth(i + 1)
+        await expect(cells.getByRole('rowheader')).toHaveText(team.name)
+        await expect(cells.getByRole('cell')).toHaveText([String(team.first), String(team.second), String(team.total)])
+      }
+      const statistics = recap.getByRole('table', { name: 'First-half team statistics' })
+      for (const [i, row] of facts.statistics.entries()) {
+        const cells = statistics.getByRole('row').nth(i + 1)
+        await expect(cells.getByRole('rowheader')).toHaveText(row.label)
+        await expect(cells.getByRole('cell')).toHaveText([row.away, row.home])
+      }
+      for (const line of facts.scoring) await expect(recap).toContainText(line)
+      await expect(recap).toContainText(facts.kickoff)
+      if (facts.result) await expect(recap).toContainText(facts.result)
       await page.waitForTimeout(350) // Review outlasts automatic scheduling.
       await expect(page.getByTestId('log-entry')).toHaveCount(initial.view.log.length)
-      await page.getByRole('button', { name: 'Start second half', exact: true }).click()
+      await page.getByRole('button', { name: 'START 2ND HALF', exact: true }).click()
       await expect(recap).toHaveCount(0)
 
       if (control === 'manual' || control === kicker) {

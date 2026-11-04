@@ -11,6 +11,8 @@ from .overtime import GameType, OvertimeState, OvertimeView, overtime_profile
 from .session import (
     Action,
     Actions,
+    HalftimeRecap,
+    HalftimeTeamScore,
     InvalidDecisionError,
     PenaltyChoice,
     PendingDecisionError,
@@ -856,7 +858,14 @@ class RegulationGame:
             "two_point_failed",
         }:
             if self._review is not None and self._review.kind == "halftime":
-                self._review = replace(self._review, lines=(report.commentary, *self._review.lines))
+                recap = self._review.halftime
+                self._review = replace(
+                    self._review,
+                    lines=(report.commentary, *self._review.lines),
+                    halftime=replace(recap, result=report.commentary)
+                    if recap is not None
+                    else None,
+                )
             else:
                 self._review = PresentationReview(
                     "conversion", "Two-point result", (report.commentary,)
@@ -935,13 +944,13 @@ class RegulationGame:
             "two_point": "two-point conversion",
             "conversion_return": "conversion return",
         }
-        if half.scoring:
+        scoring = tuple(
+            f"Play {event.play_number}: {event.team} {score_labels[event.kind]} +{event.points}."
+            for event in half.scoring
+        )
+        if scoring:
             lines.append("First-half scoring:")
-            lines.extend(
-                f"Play {event.play_number}: {event.team} "
-                f"{score_labels[event.kind]} +{event.points}."
-                for event in half.scoring
-            )
+            lines.extend(scoring)
         else:
             lines.append("First-half scoring: none.")
         lines.extend(
@@ -949,11 +958,32 @@ class RegulationGame:
             for row in half.statistics.rows
         )
         kicker = self._opening_kicker.other
-        lines.append(
+        kickoff = (
             f"{self._names[kicker]} kicks to {self._names[kicker.other]} to start the second half."
         )
+        lines.append(kickoff)
+        summary = "Game is tied"
+        if half.score.home != half.score.away:
+            leader = half.home if half.score.home > half.score.away else half.away
+            summary = f"{leader} leads"
+        recap = HalftimeRecap(
+            home=HalftimeTeamScore(
+                half.home, first.home, half.score.home - first.home, half.score.home
+            ),
+            away=HalftimeTeamScore(
+                half.away, first.away, half.score.away - first.away, half.score.away
+            ),
+            summary=summary,
+            statistics=half.statistics.rows,
+            scoring=scoring or ("No scoring in the first half.",),
+            kickoff=kickoff,
+        )
         return PresentationReview(
-            "halftime", "HALFTIME", tuple(lines), Action("review:continue", "Start second half")
+            "halftime",
+            "HALFTIME",
+            tuple(lines),
+            Action("review:continue", "START 2ND HALF"),
+            halftime=recap,
         )
 
     def _begin_overtime(self) -> None:

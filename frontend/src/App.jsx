@@ -12,6 +12,7 @@ import TeamStatistics from './components/TeamStatistics'
 import SaveControls from './components/SaveControls'
 import CoinToss from './components/CoinToss'
 import DiceRoll from './components/DiceRoll'
+import HalftimeReview from './components/HalftimeReview'
 
 export default function App() {
   const [teams, setTeams] = useState(null)
@@ -287,11 +288,13 @@ export default function App() {
       <Scoreboard view={view} />
       <div role="status" className={!view.finished && ["scrimmage", "clock_choice"].includes(view.phase) ? "sr-only" : "text-sm"} data-testid="session-status">{turn?.status || view.status}</div>
       <FootballField state={view.state} home={view.home} away={view.away} />
-      {view.review && <section role="region" aria-label={view.review.title} className="board-panel p-3 space-y-2">
-        <h2 className="font-bold">{view.review.title}</h2>
-        {view.review.lines.map((line, i) => <p key={i}>{line}</p>)}
-        <button type="button" className="play-button" disabled={busy} onClick={() => special(view.review.action.key, true)}>{view.review.action.label}</button>
-      </section>}
+      {view.review && (view.review.halftime
+        ? <HalftimeReview review={view.review} busy={busy} onContinue={() => special(view.review.action.key, true)} />
+        : <section role="region" aria-label={view.review.title} className="board-panel p-3 space-y-2">
+          <h2 className="font-bold">{view.review.title}</h2>
+          {view.review.lines.map((line, i) => <p key={i}>{line}</p>)}
+          <button type="button" className="play-button" disabled={busy} onClick={() => special(view.review.action.key, true)}>{view.review.action.label}</button>
+        </section>)}
       <ResultPanel report={report} />
       <div className="grid gap-3 lg:grid-cols-[minmax(0,2fr)_minmax(16rem,1fr)]" data-testid="play-area">
       <div className="order-2 space-y-3 lg:order-1">

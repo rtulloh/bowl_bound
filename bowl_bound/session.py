@@ -54,6 +54,7 @@ from .scoring import ScoreKind, ScoreLedger, resolve_pat
 from .special_teams import SpecialTeamsPlay, SpecialTeamsResolution
 from .statistics import (
     PlayStatistics,
+    StatisticsRow,
     StatisticsView,
     StatKind,
     clipped_yards,
@@ -130,6 +131,29 @@ class Action:
 
 
 @dataclass(frozen=True)
+class HalftimeTeamScore:
+    """Committed points by first-half period for one team."""
+
+    name: str
+    first: int
+    second: int
+    total: int
+
+
+@dataclass(frozen=True)
+class HalftimeRecap:
+    """Engine-authored halftime facts for terminal and browser box scores."""
+
+    home: HalftimeTeamScore
+    away: HalftimeTeamScore
+    summary: str
+    statistics: tuple[StatisticsRow, ...]
+    scoring: tuple[str, ...]
+    kickoff: str
+    result: str | None = None
+
+
+@dataclass(frozen=True)
 class PresentationReview:
     """Engine-authored review text; acknowledgment never changes football state."""
 
@@ -137,6 +161,7 @@ class PresentationReview:
     title: str
     lines: tuple[str, ...]
     action: Action = Action("review:continue", "Continue")
+    halftime: HalftimeRecap | None = None
 
 
 @dataclass(frozen=True)

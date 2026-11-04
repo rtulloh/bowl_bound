@@ -1380,3 +1380,67 @@ historical validation of that unchanged runtime, not a claim that the four new
 Python cases were included. These real-API DOM checks do not verify Chromium
 layout/scroll geometry or replace the outstanding 54 real-browser cases. All
 three UI tickets remain open for browser and owner acceptance. No push/release.
+
+## UI-060 — Paydirt-style halftime presentation (2026-11-04)
+
+The owner requested visually consistent halftime formatting after reviewing the
+plain recap, then supplied the simple Paydirt web-card reference. Consulted
+Paydirt `paydirt/interactive_game.py:248–442,3834–3844` and
+`paydirt-web/frontend/src/components/Game/Halftime.jsx`/tests. Adapted boxed
+terminal sections, away/home numeric columns and the web card's hierarchy.
+NFL statistics/rules, score inference, branding and runtime dependencies are not
+reused. Detailed scoring retains Bowl Bound play numbers; no quarter/time data is
+invented.
+
+The terminal prints aligned HALFTIME STATS, SCORING SUMMARY and TEAM STATISTICS
+boxes once before the existing kickoff progression. Long names expand columns.
+The primary cream web card shows HALFTIME, End of 2nd Quarter, neutral HM/AW
+badges, names/scores, engine lead/tie wording and START 2ND HALF. First-half
+details starts collapsed and retains score/statistics tables, scoring and kickoff
+assignment. A final two-point result remains visible outside that disclosure.
+
+The engine supplies immutable `review.halftime` facts; adapters format them and
+never parse prose or calculate football. Existing `review.lines` remains for text
+clients. The action key, acknowledgment timing, clock, statistics, dice and strict
+save contract are unchanged. A pre-format fictional halftime save loads with only
+the added structured recap and requested button label differing in its full
+view/turn response. Existing semantic hashing already excludes presentation data.
+
+Test-first evidence and changed expectations are recorded in
+[UI-060](issues/UI/UI-060.md), including four initial Python failures, two
+conversion-boundary failures, absent frontend component, and red controls for the
+owner's simpler card. CLI prose checks now assert aligned cells; UI checks open
+the details disclosure before verifying every retained table fact. An inherited
+fixture's 0/0/7 typo is corrected to its declared 0/7/7. No football assertion is
+weakened.
+
+Validation on the final presentation source:
+
+- Shared supported interpreter `/Users/rtulloh/work/bowl_bound/.venv/bin/python`
+  with `-m pytest tests/test_halftime_presentation.py
+  tests/test_conversion_presentation.py tests/test_save_game.py
+  tests/test_history_fixtures.py tests/test_commentary_replay.py tests/test_api.py
+  tests/test_api_coaching.py tests/test_coaching_invariants.py
+  tests/test_coaching_saves.py tests/test_regulation.py
+  tests/test_release_package.py tests/test_issue_tracker.py -q`:
+  **353 passed in 52.13s**. The halftime module separately passes **18** cases.
+- Pinned Node **24.22.1**, `node node_modules/vitest/vitest.mjs run`: **142 passed**;
+  all four real-API integration cases are **not run** after their setup hits
+  `listen EPERM 127.0.0.1`, one uncaught socket error and its 20-second hook timeout.
+  Vitest labels those four skipped; no source skip was added. This full frontend
+  attempt exits 1 and is not a passing gate. The five new focused UI cases pass.
+- Production Vite build, Ruff check/format (**579 files**), pip check, generated
+  tracker and diff checks pass; **22** tracker/player-doc/priority-doc cases pass.
+  All **54** browser cases collect; no fresh browser
+  assertion pass is claimed under the documented Chromium/socket restrictions.
+- The two original fictional public teams reach halftime after **102 legal
+  actions**. The immutable private preview preserves exact CLI output, a real
+  API response and actual React DOM with production CSS. Its primary card starts
+  with details closed. This is static HTML for owner visual review, not a browser
+  screenshot or layout/scroll acceptance. Earlier previews remain unchanged.
+
+The simplify review kept one dedicated presentation component: the existing
+collapsible dark statistics widget has a different wrapper and home/away order.
+No general table abstraction or runtime module was added. UI-060 remains open for
+valid browser execution and owner visual confirmation. No full Python coverage
+gate, milestone completion, merge, push, publication or release is claimed here.

@@ -139,8 +139,8 @@ retains the explicit one-snap hurry choice. New/loaded games start with fresh
 selections and mode off. Hurry commits next-snap S/R hazards; a spike spends
 another down without dice. Kneel
 loses two yards without dice. Hail Mary appears only with 1–20 seconds left in
-Q2/Q4, outside conversions/untimed downs. At halftime the other toss participant
-chooses kick or receive; both teams reset to three timeouts. Q1/Q3 transitions
+Q2/Q4, outside conversions/untimed downs. At halftime the opening kicker receives
+and the opening receiver kicks; both teams reset to three timeouts. Q1/Q3 transitions
 preserve the field situation. Final games reject every gameplay request.
 **Four failed downs** hand
 the ball over, and the field shows the same ball spot from the other team's side. An interception
@@ -149,6 +149,27 @@ any authorized return. A defender recovering in its own end zone chooses a touch
 Ordinary and supplemental DS/X/T1–T3 yardage uses the full-feature physical dice
 method, including independent offensive/defensive distance rolls. Each consulted
 roll is visible in the engine trace; the resolved play advances state and timing.
+
+## Halftime recap
+
+The halftime card follows the owner's Paydirt reference: a prominent **HALFTIME**
+heading, **End of 2nd Quarter**, side-by-side team names and scores, the engine's
+lead/tie summary, and one centered **START 2ND HALF** button. Neutral circular
+HM/AW badges identify the home and away slots without inventing team colors or
+logos. The card stays visible until the button is selected, including after
+save/load. A final two-point result stays visible when it coincides with halftime.
+
+Expand **First-half details** for Q1/Q2/total scores, every scoring event,
+first-half statistics and the scheduled kickoff assignment. The tables use the
+same away/home column order as the terminal box score. Details start collapsed
+so the primary card stays as simple as the reference.
+
+The API supplies these facts in `view.review.halftime`: `home` and `away` contain
+`name`, `first`, `second` and `total`; `summary`, `statistics`, `scoring`, `kickoff`
+and optional `result` contain the engine-authored display facts. `review.lines`
+remains available for compatible text clients. The browser does not parse that
+prose, subtract quarter scores, determine the leader or recalculate statistics.
+These presentation fields do not alter gameplay or semantic save hashes.
 
 ## Team statistics
 

@@ -189,6 +189,13 @@ kickoff by default when it controls the kicker. Choosing Receive does not submit
 a human-owned kick. Loading or inspecting a pending human kickoff does not
 submit it either.
 
+At halftime, the terminal prints a Paydirt-style box score once before the
+second-half kickoff: **HALFTIME STATS** lists each team's Q1, Q2 and total points,
+**SCORING SUMMARY** retains the engine's scoring events, and **TEAM STATISTICS**
+aligns the away and home values in separate columns. The scheduled kicker and
+receiver appear below the boxes. Long team names expand the columns rather than
+being truncated. The recap does not add a terminal acknowledgment prompt.
+
 After a Hard game ends, the terminal shows each team's committed offensive and
 defensive call counts. Previewed calls are excluded.
 

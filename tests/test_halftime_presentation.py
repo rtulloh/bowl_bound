@@ -1,6 +1,7 @@
 """One engine-owned halftime recap across CLI, API and save boundaries."""
 
 import io
+import re
 from dataclasses import replace
 from pathlib import Path
 
@@ -16,7 +17,11 @@ from tests.test_conversion_presentation import conversion_game
 from tests.test_special_teams import special_chart
 
 
-def half_end(quarter: int = 2, choice: str = "toss:receive") -> SavedGame:
+def half_end(
+    quarter: int = 2,
+    choice: str = "toss:receive",
+    names: tuple[str, str] = ("Home", "Away"),
+) -> SavedGame:
     charts = [
         replace(
             team_chart(name, season=2002, offense=0, defense=0),
@@ -24,7 +29,7 @@ def half_end(quarter: int = 2, choice: str = "toss:receive") -> SavedGame:
                 name, kickoff=yards(40), kickoff_return=yards(10)
             ).special_teams,
         )
-        for name in ("Home", "Away")
+        for name in names
     ]
     game = SavedGame.new(
         *charts,
@@ -41,6 +46,91 @@ def half_end(quarter: int = 2, choice: str = "toss:receive") -> SavedGame:
     return game
 
 
+def test_halftime_provides_structured_box_score_without_parsing_recap_prose() -> None:
+    game = half_end()
+    view = game.view()
+    recap = view.review.halftime
+    assert recap.home.name == "Home"
+    assert (recap.home.first, recap.home.second, recap.home.total) == (0, 0, 0)
+    assert recap.away.name == "Away"
+    assert (recap.away.first, recap.away.second, recap.away.total) == (0, 0, 0)
+    assert recap.statistics == view.statistics.rows
+    assert recap.scoring == ("No scoring in the first half.",)
+    assert recap.summary == "Game is tied"
+    assert recap.kickoff == view.review.lines[-1]
+    restored = loads_game(dumps_game(game), lambda key: game._charts[key.rsplit("/", 1)[-1]])
+    assert restored.view().review.halftime == recap
+
+
+def test_cli_uses_paydirt_boxed_sections_and_aligned_team_columns() -> None:
+    game = half_end()
+    output = io.StringIO()
+    cli = TerminalGame(game, lambda key: game._charts[key.rsplit("/", 1)[-1]], output=output)
+    cli.display()
+    text = output.getvalue()
+    assert "+" + "-" * 70 + "+" in text
+    assert re.search(r"\|\s+HALFTIME STATS\s+\|", text)
+    assert re.search(r"\|\s+TEAM\s+\|\s+Q1\s+Q2\s+\|\s+TOTAL\s+\|", text)
+    assert re.search(r"\|\s+Away\s+\|\s+0\s+0\s+\|\s+0\s+\|", text)
+    assert re.search(r"\|\s+Home\s+\|\s+0\s+0\s+\|\s+0\s+\|", text)
+    assert text.index("Away") < text.index("Home")
+    assert "SCORING SUMMARY" in text and "TEAM STATISTICS" in text
+    assert re.search(r"\|\s+Statistic\s+\|\s+Away\s+\|\s+Home\s+\|", text)
+    recap = half_end().view().review
+    for row in recap.halftime.statistics:
+        assert re.search(
+            r"\|\s+"
+            + re.escape(row.label)
+            + r"\s+\|\s+"
+            + re.escape(row.away)
+            + r"\s+\|\s+"
+            + re.escape(row.home)
+            + r"\s+\|",
+            text,
+        )
+    assert "No scoring in the first half." in text
+    assert recap.halftime.kickoff in text
+    assert "Home — Q1" not in text
+
+
+def test_cli_box_score_preserves_long_team_names_and_equal_width_borders() -> None:
+    names = ("A Very Long Fictional Home Team Name", "Another Long Fictional Away Team")
+    game = half_end(names=names)
+    output = io.StringIO()
+    cli = TerminalGame(game, lambda key: game._charts[key.rsplit("/", 1)[-1]], output=output)
+    cli._present_halftime()
+    text = output.getvalue()
+    assert all(name in text for name in names)
+    boxed = [line for line in text.splitlines() if line.startswith(("+", "|"))]
+    assert len({len(line) for line in boxed}) == 1
+    assert "Total offense yards" in text
+
+
+def test_halftime_box_score_keeps_scoring_events_and_engine_leader() -> None:
+    game = conversion_game("home", clock=Clock(2, 20))
+    game.decide("conversion:kick")
+    recap = game.view().review.halftime
+    assert recap.home.total == 7 and recap.away.total == 0
+    assert recap.summary == "Home leads"
+    assert any("Home touchdown +6" in line for line in recap.scoring)
+    assert any("Home PAT +1" in line for line in recap.scoring)
+
+
+@pytest.mark.parametrize("good", [False, True])
+def test_boxed_halftime_retains_the_final_two_point_result(good: bool) -> None:
+    game = conversion_game("away", good=good, clock=Clock(2, 20))
+    game.decide("conversion:two")
+    report = game.snap("2", "A")
+    recap = game.view().review.halftime
+    assert recap.result == report.commentary
+    assert recap.summary == "Away leads"
+    assert recap.away.total == (8 if good else 6)
+    output = io.StringIO()
+    cli = TerminalGame(game, lambda key: game._charts[key.rsplit("/", 1)[-1]], output=output)
+    cli._present_halftime()
+    assert report.commentary in output.getvalue()
+
+
 @pytest.mark.parametrize("choice", ["toss:receive", "toss:kick"])
 def test_engine_halftime_review_precedes_reciprocal_kick_without_new_football(choice: str) -> None:
     game = half_end(choice=choice)
@@ -51,7 +141,7 @@ def test_engine_halftime_review_precedes_reciprocal_kick_without_new_football(ch
     assert "Away — Q1 0, Q2 0, Half 0." in view.review.lines
     assert "First-half scoring: none." in view.review.lines
     assert any(line.startswith("Total offensive plays:") for line in view.review.lines)
-    assert view.review.action.label == "Start second half"
+    assert view.review.action.label == "START 2ND HALF"
     kicker = view.state.possession_name
     receiver = view.home if kicker == view.away else view.away
     assert view.review.lines[-1] == f"{kicker} kicks to {receiver} to start the second half."
@@ -109,7 +199,7 @@ def test_cli_prints_recap_once_before_automatic_kick_and_resume(human: str) -> N
     cli.display()
     text = output.getvalue()
     assert text.count("HALFTIME") == 1
-    assert "Home — Q1 0, Q2 0, Half 0." in text
+    assert re.search(r"\|\s+Home\s+\|\s+0\s+0\s+\|\s+0\s+\|", text)
     if "Kickoff" in text:
         assert text.index("HALFTIME") < text.index("Kickoff")
     assert game.view().review is None
@@ -130,6 +220,10 @@ def test_api_serializes_shared_review_for_manual_or_computer_kick(
     assert response.status_code == 200, response.text
     body = response.json()
     assert body["view"]["review"]["lines"] == list(game.view().review.lines)
+    recap = body["view"]["review"]["halftime"]
+    assert recap["home"] == {"name": "Home", "first": 0, "second": 0, "total": 0}
+    assert recap["away"] == {"name": "Away", "first": 0, "second": 0, "total": 0}
+    assert recap["statistics"] == body["view"]["statistics"]["rows"]
     response = client.post(
         "/api/games/" + body["game_id"] + "/action" + suffix, json={"action": "review:continue"}
     )
@@ -159,6 +253,10 @@ def test_first_quarter_points_are_not_misattributed_to_second_quarter() -> None:
     assert view.review.kind == "halftime"
     assert f"Home — Q1 7, Q2 {view.score.home - 7}, Half {view.score.home}." in view.review.lines
     assert f"Away — Q1 0, Q2 {view.score.away}, Half {view.score.away}." in view.review.lines
+    assert view.review.halftime.home.first == 7
+    assert view.review.halftime.home.second == view.score.home - 7
+    assert view.review.halftime.away.first == 0
+    assert view.review.halftime.away.second == view.score.away
 
 
 def test_pending_defensive_penalty_and_untimed_down_finish_before_recap() -> None:
