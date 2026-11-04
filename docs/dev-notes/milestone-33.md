@@ -1652,3 +1652,8 @@ with seed=307 and cpu_side="away"; default replay checkpoints remain active.
 No private team chart or owner save content is committed. The running owner
 interpreter remains on its loaded policy until restart. No push, release or
 full milestone acceptance is claimed.
+
+AI-037 tested implementation: `24b3977`. Its final 1,240-case selection,
+focused cases and complete-game audits are recorded above. AI-037 and CLI-068
+are resolved for owner review, not closed pending confirmation. This is an
+owner-feedback follow-up, not a new milestone acceptance or release.
