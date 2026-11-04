@@ -20,13 +20,13 @@ for (const human of ['home', 'away']) {
       await expect(review).toBeVisible()
       await expect(review).toContainText(result === 'good' ? 'two-point conversion good' : 'two-point conversion no good')
       await page.waitForTimeout(500) // Longer than automatic scheduling, review must persist.
-      await expect(page.getByTestId('log-entry')).toHaveCount(3)
+      await expect(page.getByTestId('log-entry')).toHaveCount(body.view.log.length + 1)
       await expect(review).toBeVisible()
       await page.getByRole('button', { name: 'Continue', exact: true }).click()
-      await expect(page.getByTestId('log-entry')).toHaveCount(4)
-      await expect(page.getByTestId('log-entry').nth(1)).toContainText('is going for two.')
-      await expect(page.getByTestId('log-entry').nth(2)).toContainText('two-point conversion')
-      await expect(page.getByTestId('log-entry').nth(3)).toContainText('kickoff')
+      await expect(page.getByTestId('log-entry')).toHaveCount(body.view.log.length + 2)
+      await expect(page.getByTestId('log-entry').nth(body.view.log.length - 1)).toContainText('is going for two.')
+      await expect(page.getByTestId('log-entry').nth(body.view.log.length)).toContainText('two-point conversion')
+      await expect(page.getByTestId('log-entry').nth(body.view.log.length + 1)).toContainText('kickoff')
       await expect(review).toHaveCount(0)
     })
   }

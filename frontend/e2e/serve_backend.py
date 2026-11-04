@@ -74,10 +74,9 @@ def main() -> None:
                     season=2002,
                     offense=100 if result == "Good" else 0,
                     defense=0,
-                    plays={Play.TWO: yards(100)},
                 ),
                 special_teams=special_chart(
-                    side, kickoff=yards(40), kickoff_return=yards(10)
+                    side, kickoff=yards(40), kickoff_return=yards(100)
                 ).special_teams,
             )
             write_team(seasons, chart)

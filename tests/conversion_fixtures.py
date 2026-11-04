@@ -17,7 +17,6 @@ def two_point_save(seasons: Path, human: str, result: str) -> str:
     scorer = "away" if human == "home" else "home"
     game.decide("toss:receive" if game.view().pending.chooser_side == scorer else "toss:kick")
     game.kick("kickoff")
-    game.snap("2", "A")
     game.decide("conversion:two")
     assert game.view().phase == "two_point_try"
     return dumps_game(game)
