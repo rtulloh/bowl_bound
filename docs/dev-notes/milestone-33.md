@@ -1873,3 +1873,52 @@ tests/test_optional_clock.py tests/test_timing.py tests/test_interception_contex
 (`test_issue_tracker.py`, `test_priority_docs.py`, `test_release_player_docs.py`)
 passes **22 in 0.67s**; `git diff --check` passes. This is an audit of an existing sequence, not a new
 milestone acceptance or closure of earlier pending owner play-test tickets.
+
+## CLI-071 — halftime-style final summary (2026-11-04)
+
+Owner reports that the final terminal screen has only status and Hard call counts.
+Consulted Paydirt `paydirt/interactive_game.py:3834-3844` and `:4245-4265` before
+implementation: halftime and final use the same box-score renderer, with opponent
+analysis following the final boxes. Adapt the shared renderer and ordering;
+do not copy NFL rules, scoring calculations, team data or runtime code.
+
+The CLI now reuses its existing halftime layout for FINAL STATS, SCORING SUMMARY
+and TEAM STATISTICS. The engine records committed point deltas by regulation
+quarter or overtime round before advancing periods, and supplies immutable final
+recap facts. The CLI only aligns these facts. Zero-score periods remain visible,
+long team names expand all borders together, and no second-half kickoff footer
+appears at full time. Existing halftime text and its API contract are preserved.
+
+The final recap appears once on completion or when opening a finished save,
+before Hard call counts. Inspect/save commands leave that recap consumed locally;
+a successful load resets both final presentation flags for the replacement game.
+The period totals are rebuilt by normal replay, without changing the save schema,
+semantic view digests, command journal, dice, coaching policy or football rules.
+No new engine field is added to the API view.
+
+Test-first evidence: after correcting fixture setup to use the synthetic engine's
+actual automatic touchback and conversion ownership, all six new cases fail on
+unchanged production code for the missing final boxes or recap method. Coverage
+includes scoring in all four quarters, an unsuccessful final two-point try,
+scoreless regulation, two overtime rounds, compact/full rendering, restored final
+saves and successful in-session replacement. Final rendering leaves every saved
+game fact unchanged; only fresh export timestamp/integrity are excluded from that
+comparison. Focused halftime/final/Hard-summary checks pass **25 in 3.39s**.
+Further cumulative validation and tested commit reference follow below.
+
+Final focused run: supported Python `-m pytest -q tests/test_final_summary.py
+tests/test_halftime_presentation.py tests/test_postgame_call_summary.py
+tests/test_issue_tracker.py tests/test_priority_docs.py tests/test_release_player_docs.py`:
+**49 passed in 4.08s**. The eight-case final module includes two additional tests
+for successful/failed untimed final conversions. Cumulative run: **604 passed in
+77.62s**, 40 modules, no reported skips or warnings. Command: supported Python
+`-m pytest -q` on the sorted union of `test_cli*.py`, `test_*save*.py`,
+`test_*replay*.py`, `test_regulation.py`, `test_overtime.py`, `test_optional_clock.py`,
+`test_timing.py`, `test_statistics.py`, `test_conversion_presentation.py`,
+`test_halftime_presentation.py`, `test_postgame_call_summary.py`,
+`test_final_summary.py`, `test_history_fixtures.py`, `test_api*.py`,
+`test_issue_tracker.py`, `test_priority_docs.py` and `test_release_player_docs.py`.
+The cumulative run began before those two additional conversion cases were added;
+the later 49-case focused run passes both. Ruff check and format check pass on
+the five changed Python files, as does `git diff --check`. No frontend change,
+full milestone acceptance, push or process restart is included.

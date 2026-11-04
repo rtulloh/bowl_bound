@@ -210,7 +210,13 @@ aligns the away and home values in separate columns. The scheduled kicker and
 receiver appear below the boxes. Long team names expand the columns rather than
 being truncated. The recap does not add a terminal acknowledgment prompt.
 
-After a Hard game ends, the terminal shows each team's committed offensive and
+When regulation or overtime ends, the terminal prints the same three boxes:
+**FINAL STATS** includes Q1–Q4, each played overtime round and the total;
+**SCORING SUMMARY** and **TEAM STATISTICS** cover the complete game. The summary
+also appears when a finished save is loaded. Inspection and saving do not repeat
+it; loading another game resets the automatic recap for that game.
+
+After the final boxes, a Hard game shows each team's committed offensive and
 defensive call counts. Previewed calls are excluded.
 
 ## Commands during play

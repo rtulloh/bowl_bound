@@ -11,6 +11,8 @@ from .overtime import GameType, OvertimeState, OvertimeView, overtime_profile
 from .session import (
     Action,
     Actions,
+    BoxScoreRecap,
+    BoxScoreTeam,
     HalftimeRecap,
     HalftimeTeamScore,
     InvalidDecisionError,
@@ -26,6 +28,15 @@ from .session import (
 )
 from .statistics import PlayStatistics
 from .timing import TIMEOUT_SECONDS, BoundsDeclaration, Clock, TimingFacts, duration
+
+_SCORING_LABELS = {
+    "touchdown": "touchdown",
+    "field_goal": "field goal",
+    "safety": "safety",
+    "pat": "PAT",
+    "two_point": "two-point conversion",
+    "conversion_return": "conversion return",
+}
 
 
 class RegulationPhase(str, Enum):
@@ -174,6 +185,7 @@ class RegulationGame:
         self._legacy_halftime_choice_pending = False
         self._review: PresentationReview | None = None
         self._first_quarter_score = ScoreView(0, 0)
+        self._period_scores: dict[str, ScoreView] = {}
 
     def _consume_legacy_halftime_choice(self, choice: str) -> bool:
         """Replay an old save's choice when it matches the newly fixed kickoff."""
@@ -819,6 +831,12 @@ class RegulationGame:
         current = self._session.view()
         if report.pending or not report.supported or len(current.log) == len(before.log):
             return report
+        period = f"OT{self._overtime.round_number}" if self._overtime else f"Q{self._clock.quarter}"
+        points = self._period_scores.get(period, ScoreView(0, 0))
+        self._period_scores[period] = ScoreView(
+            points.home + current.score.home - before.score.home,
+            points.away + current.score.away - before.score.away,
+        )
         self._bounds_declaration = None
         if self._phase is RegulationPhase.OVERTIME:
             self._after_overtime(before, current, report)
@@ -936,16 +954,8 @@ class RegulationGame:
             f"{half.away} — Q1 {first.away}, Q2 {half.score.away - first.away}, "
             f"Half {half.score.away}.",
         ]
-        score_labels = {
-            "touchdown": "touchdown",
-            "field_goal": "field goal",
-            "safety": "safety",
-            "pat": "PAT",
-            "two_point": "two-point conversion",
-            "conversion_return": "conversion return",
-        }
         scoring = tuple(
-            f"Play {event.play_number}: {event.team} {score_labels[event.kind]} +{event.points}."
+            f"Play {event.play_number}: {event.team} {_SCORING_LABELS[event.kind]} +{event.points}."
             for event in half.scoring
         )
         if scoring:
@@ -984,6 +994,28 @@ class RegulationGame:
             tuple(lines),
             Action("review:continue", "START 2ND HALF"),
             halftime=recap,
+        )
+
+    def final_recap(self) -> BoxScoreRecap | None:
+        """Read the completed game's committed period points without changing play."""
+        if self._phase is not RegulationPhase.FINAL:
+            return None
+        base = self._session.view()
+        periods = tuple(f"Q{quarter}" for quarter in range(1, 5))
+        if self._overtime is not None:
+            periods += tuple(f"OT{number}" for number in range(1, self._overtime.round_number + 1))
+        scores = tuple(self._period_scores.get(period, ScoreView(0, 0)) for period in periods)
+        return BoxScoreRecap(
+            periods=periods,
+            home=BoxScoreTeam(base.home, tuple(score.home for score in scores), base.score.home),
+            away=BoxScoreTeam(base.away, tuple(score.away for score in scores), base.score.away),
+            statistics=base.statistics.rows,
+            scoring=tuple(
+                f"Play {event.play_number}: {event.team} "
+                f"{_SCORING_LABELS[event.kind]} +{event.points}."
+                for event in base.scoring
+            )
+            or ("No scoring in the game.",),
         )
 
     def _begin_overtime(self) -> None:

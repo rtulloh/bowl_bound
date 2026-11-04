@@ -154,6 +154,26 @@ class HalftimeRecap:
 
 
 @dataclass(frozen=True)
+class BoxScoreTeam:
+    """Engine-provided points in the recap's period order."""
+
+    name: str
+    periods: tuple[int, ...]
+    total: int
+
+
+@dataclass(frozen=True)
+class BoxScoreRecap:
+    """Committed score, scoring descriptions and statistics for a boxed recap."""
+
+    periods: tuple[str, ...]
+    home: BoxScoreTeam
+    away: BoxScoreTeam
+    statistics: tuple[StatisticsRow, ...]
+    scoring: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class PresentationReview:
     """Engine-authored review text; acknowledgment never changes football state."""
 

@@ -33,6 +33,7 @@ from .resolution import ChartResolutionError
 from .roster import Roster, RosterFormatError, load_roster
 from .session import (
     DEFENSE_LABELS,
+    BoxScoreRecap,
     InvalidDecisionError,
     PendingDecisionError,
     PlayReport,
@@ -508,6 +509,13 @@ class SavedGame:
     def view(self) -> SessionView | RegulationView:
         with self._lock:
             return self._engine.view()
+
+    def final_recap(self) -> BoxScoreRecap | None:
+        """Read regulation/overtime recap facts reconstructed by ordinary replay."""
+        with self._lock:
+            if isinstance(self._engine, RegulationGame):
+                return self._engine.final_recap()
+            return None
 
     def execute_with_view(
         self, operation: str, arguments: list[str]

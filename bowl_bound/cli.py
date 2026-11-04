@@ -18,6 +18,8 @@ from .save_game import MAX_SAVE_BYTES, SavedGame, dumps_game, loads_game
 from .session import (
     DEFENSE_LABELS,
     PLAY_LABELS,
+    BoxScoreRecap,
+    BoxScoreTeam,
     HalftimeRecap,
     PendingDecisionError,
     PlayReport,
@@ -158,6 +160,7 @@ class TerminalGame:
         self.automatic_paused = False
         self.last_report: PlayReport | None = None
         self._postgame_summary_shown = False
+        self._final_recap_shown = False
 
     def _print(self, text: str) -> None:
         print(text, file=self.output)
@@ -180,11 +183,33 @@ class TerminalGame:
 
     def _halftime_box_score(self, recap: HalftimeRecap) -> None:
         """Align engine-provided halftime facts using Paydirt's boxed layout."""
+        if recap.result is not None:
+            self._print("\n  " + recap.result)
+        self._box_score(
+            "HALFTIME STATS",
+            BoxScoreRecap(
+                periods=("Q1", "Q2"),
+                home=BoxScoreTeam(
+                    recap.home.name, (recap.home.first, recap.home.second), recap.home.total
+                ),
+                away=BoxScoreTeam(
+                    recap.away.name, (recap.away.first, recap.away.second), recap.away.total
+                ),
+                statistics=recap.statistics,
+                scoring=recap.scoring,
+            ),
+        )
+        self._print("\n  " + recap.kickoff)
+
+    def _box_score(self, title: str, recap: BoxScoreRecap) -> None:
+        """Render halftime or final facts with the same aligned columns and borders."""
         name_width = max(10, len(recap.home.name), len(recap.away.name))
-        score_header = f"  {'TEAM':<{name_width}}  |  {'Q1':>4}  {'Q2':>4}  |  {'TOTAL':>5}  "
+        periods = "  ".join(f"{period:>4}" for period in recap.periods)
+        score_header = f"  {'TEAM':<{name_width}}  |  {periods}  |  {'TOTAL':>5}  "
         score_rows = [
-            f"  {team.name:<{name_width}}  |  {team.first:>4}  {team.second:>4}  |  "
-            f"{team.total:>5}  "
+            f"  {team.name:<{name_width}}  |  "
+            + "  ".join(f"{points:>4}" for points in team.periods)
+            + f"  |  {team.total:>5}  "
             for team in (recap.away, recap.home)
         ]
         label_width = max([22, *(len(row.label) for row in recap.statistics)])
@@ -220,12 +245,9 @@ class TerminalGame:
                 self._print(f"|{row:<{width}}|")
             self._print(border)
 
-        if recap.result is not None:
-            self._print("\n  " + recap.result)
-        box("HALFTIME STATS", score_rows, header=score_header)
+        box(title, score_rows, header=score_header)
         box("SCORING SUMMARY", scoring_rows)
         box("TEAM STATISTICS", stats_rows, header=stats_header)
-        self._print("\n  " + recap.kickoff)
 
     def display(self) -> None:
         """Display engine state, labels and public legal controls, never derived results."""
@@ -260,6 +282,11 @@ class TerminalGame:
             self._print("Computer stopped. Inspect/save, then use retry to resume.")
         if view.finished:
             self._print("Inspect, save or quit; gameplay is finished.")
+            if not self._final_recap_shown:
+                recap = self.game.final_recap()
+                if recap is not None:
+                    self._box_score("FINAL STATS", recap)
+                self._final_recap_shown = True
             self._postgame_call_summary(view)
             return
         guidance = self.game.fourth_down_guidance(self.human_side, view=view)
@@ -690,6 +717,8 @@ class TerminalGame:
             self.helper_enabled = True
             self.last_report = None
             self.automatic_paused = False
+            self._final_recap_shown = False
+            self._postgame_summary_shown = False
             self._print("Loaded; terminal control mode unchanged.")
             return True
         if verb == "retry" and not args:
