@@ -1758,3 +1758,9 @@ No frontend production code, API interpretation, serializer, coaching policy or
 actual turnover resolver changes. This is relevant regression evidence, not a new
 full coverage gate, browser acceptance, milestone completion or release. Owner
 interpreter, live source, private teams/logs/saves and servers remain untouched.
+
+CLI-069/070 tested implementation: `bc60bb2bd56650b1f3e7d91fc59067b62801112e`. An additional
+post-commit focused run passes **89 in 3.37s**. Both tickets are resolved against
+this commit and remain unclosed pending owner play-test. CLI-058 alone closes
+from the explicit terminal halftime confirmation; UI-060 remains open for web
+acceptance. No push, release or restart of an existing interpreter/server.
