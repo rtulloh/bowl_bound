@@ -1314,3 +1314,41 @@ is adapted without its NFL rules or frontend period inference. Nine red cases
 and one green Q1 control preceded the implementation. Two legacy raw-digest
 failures were corrected without changing frozen hash expectations. Final combined
 validation and manual acceptance remain pending.
+
+### Six owner-selected release blockers: combined review checkpoint (2026-11-03)
+
+Implementation references: AI-035 `aa578d7`/`007056b`/`243f5e5`; AI-036
+`5a6486f`/`f0dd4a6` with tested status `de15731`; UI-054 `f465bb2`;
+UI-059 `e97d2b1`; shared CLI-058/UI-058 `8ed9977`. Browser-only fixture
+correction `478df71` guarantees both conversion outcomes regardless of the
+CPU's legal call. Runtime and all collected Python cases are byte-identical
+between `8ed9977` and `478df71`.
+
+Commands and results on supported Python 3.12.8 / Node 24.22.1 / npm 11.19.1:
+
+- `/Users/rtulloh/work/bowl_bound/.venv/bin/python -m pytest --cov --cov-report=term-missing -q`: **3,688 passed in 956.38s, 93.28% branch coverage**, exit 0, no skips/warnings reported.
+- Ruff check and format check: **577 files**, pass; `python -m pip check`: pass.
+- Fresh `npm ci --ignore-scripts`, `npm test`: **136 passed in 5.41s**; `npm run build`: pass; `npm audit`: **zero vulnerabilities**. Existing whatwg-encoding deprecation and Vitest environment advice remain visible.
+- Generated tracker and **1,276 local Markdown targets** verified; no missing targets.
+- `python -m bowl_bound.coaching_audit --seeds 101 307 --policies baseline-v2 easy-v13 medium-v13 hard-v13`: **32/32 finished and strict future replay verified**, 124.82s, zero illegal calls, all regulation quarters reconcile to 900 seconds. **5,496 reports, 11,601 trace consultations, 5,288 replayed steps**.
+- Public current-tier RZDZ means **1.5 / 1.25 / 1.25** (eight games each, CPU scrimmage-call denominators **564 / 556 / 549**), no adjacent calls. **104 current-tier revealed decisions (133 including baseline) have zero fallback**. Three separate known AI-034 initial-try analysis fallbacks remain. **719 comparable calls / 144 repeats**, longest situation streak four; all **4,921** buckets are small samples, no advisory concentration warnings. No universal frequency, balance or historical calibration claim follows. Resolved outcome/statistical-kind counters match the prior checkpoint.
+- `python scripts/run_local_season.py --seasons /Users/rtulloh/work/bowl_bound/seasons --games-per-team 12 --seed 20311031 --output private-data/m33-release-followup/final-8ed9977/private-season`: **120/120 passed in 75.44s**, zero failures/fallbacks, **22,192 reports and six OT games**. This separate baseline mechanics audit does not calibrate v13 historical coaching. Detailed reports stay private/ignored.
+- Independently generated a fictional halftime save with actual pre-presentation `f465bb2` code in a temporary checkout. Current code loads it and directly executes the scheduled kickoff with identical serialized gameplay/coaching/journal/dice facts, excluding only saved timestamp/checksum.
+- Final Playwright collection: **54 cases / 10 files**. Full execution: **54 launch failures before assertions**, each Chromium MachPort1100; temporary E2E server/link cleaned. No sandbox workaround, skip, weakened assertion or browser pass claim. Corrected conversion browser fixtures separately execute all four human/result combinations against the real coordinator.
+
+All six requested implementations are committed. AI-035/AI-036 and CLI-058
+are resolved against tested source, awaiting owner review. UI-054/UI-058/UI-059
+remain open for valid browser acceptance and owner confirmation. Prior M33
+acceptance remains historical; this checkpoint does not declare next-release
+readiness, start publication or close tickets without owner confirmation.
+
+Fresh play-test handoff: parent should freeze this branch into a new immutable
+worktree/server and preserve ports 8033–8039. Check (1) current named difficulty
+reports v13 while explicit frozen saves retain their contract; (2) occasional
+RZDZ without a forced minimum; (3) the synthetic late-half useful-own-timeout FG
+control; (4) computer going-for-two announcement before defense, result Continue
+before automatic kickoff, retained ordered history; (5) Show complete history
+and preserved older reading position; (6) HALFTIME recap before Start second
+half, with one CLI recap before automatic kickoff. Save before/after recap and
+reload to verify review persistence/no repeat. Do not mutate an existing live
+process's source. Browser/owner acceptance must be recorded before release review.

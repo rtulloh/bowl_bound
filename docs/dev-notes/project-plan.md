@@ -649,6 +649,15 @@ agent. Integrate its existing tested clock fix with the remaining changes and
 validate the combined branch. Other recommended tickets are not automatically
 added to this release scope.
 
+Follow-up implementation checkpoint `8ed9977` (browser fixture correction
+`478df71`) passes 3,688 Python tests / 93.28% branch coverage, 136 frontend
+tests/build/audit, current public 32-game replay/coaching audit and private
+120-game baseline mechanics audit. AI-035/AI-036/CLI-058 are resolved awaiting
+owner confirmation. UI-054/UI-058/UI-059 remain open: all 54 Playwright cases
+collect, but local Chromium launch is denied before assertions, and fresh owner
+acceptance is pending. This is a review checkpoint, not release readiness.
+See the [full evidence and fresh play-test handoff](milestone-33.md).
+
 **Commit:** `milestone 33: correct core playability and validation status`
 
 ### 35. Add optional coffin-corner punts
