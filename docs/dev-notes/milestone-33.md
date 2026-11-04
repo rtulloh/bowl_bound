@@ -1444,3 +1444,12 @@ collapsible dark statistics widget has a different wrapper and home/away order.
 No general table abstraction or runtime module was added. UI-060 remains open for
 valid browser execution and owner visual confirmation. No full Python coverage
 gate, milestone completion, merge, push, publication or release is claimed here.
+
+UI-060 implementation commit: `af303326409eae8de996e35a6ce49285cd71e8c3`. Its
+clean git-archive snapshot reproduces the fictional halftime and actual-App
+static preview, with independent production/SSR builds and no listening server.
+The same 353-case cumulative command passes on that clean snapshot in 51.76s;
+its five focused UI cases also pass.
+The screenshot reference is retained only as private local evidence. UI-060
+remains open for browser and owner acceptance; this follow-up does not complete
+the milestone.
