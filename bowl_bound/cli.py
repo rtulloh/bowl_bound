@@ -358,13 +358,18 @@ class TerminalGame:
             return
         bindings = self._shortcuts(view, turn)
 
-        def label(verb: str, key: str, text: str) -> str:
+        def label(
+            verb: str, key: str, text: str, *, number_width: int = 0, text_width: int = 0
+        ) -> str:
             aliases = [alias for alias, target in bindings.items() if target == (verb, key)]
             if verb == "choose":
                 aliases.sort(key=lambda alias: (not alias.isdigit(), alias))
-            shortcuts = " ".join(f"[{alias}]" for alias in aliases)
+            shortcuts = " ".join(
+                f"[{alias:>{number_width}}]" if alias.isdigit() else f"[{alias}]"
+                for alias in aliases
+            )
             command = f" ({verb} {key})" if verb == "choose" or not shortcuts else ""
-            return f"{shortcuts} {text}{command}".lstrip()
+            return f"{shortcuts} {text:<{text_width}}{command}".lstrip()
 
         actions = turn.actions
         if compact and (actions.offense or actions.defense):
@@ -444,9 +449,24 @@ class TerminalGame:
                 if any(choice.id.startswith("razzle:") for choice in pending.choices)
                 else f"{pending.chooser} chooses:"
             )
-            for choice in pending.choices:
-                if choice.enabled:
-                    self._print("    " + label("choose", choice.id, choice.label))
+            choices = tuple(choice for choice in pending.choices if choice.enabled)
+            number_width = len(str(len(choices)))
+            text_width = (
+                max((len(choice.label) for choice in choices), default=0)
+                if any(choice.presentation == "razzle_dazzle" for choice in choices)
+                else 0
+            )
+            for choice in choices:
+                self._print(
+                    "    "
+                    + label(
+                        "choose",
+                        choice.id,
+                        choice.label,
+                        number_width=number_width,
+                        text_width=text_width,
+                    )
+                )
         self._print("\n  OPTIONS:")
         for action in game_actions:
             if action.key.startswith("timeout:"):

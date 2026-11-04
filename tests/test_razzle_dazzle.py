@@ -120,9 +120,13 @@ def test_offense_wins_ties_and_can_choose_only_from_the_lower_total() -> None:
     }
 
 
-def test_razzle_dazzle_labels_a_no_change_choice_as_zero_for_players() -> None:
+@pytest.mark.parametrize("out_of_bounds", [False, True])
+def test_razzle_dazzle_labels_a_no_change_choice_as_zero_for_players(
+    out_of_bounds: bool,
+) -> None:
     home, away = _playtest_charts()
-    home = _set_cell(home, Play.TWO, 15, NormalizedCell(ResultKind.NO_CHANGE, provenance()))
+    cell = NormalizedCell(ResultKind.NO_CHANGE, provenance(), out_of_bounds=out_of_bounds)
+    home = _set_cell(home, Play.TWO, 15, cell)
     session = PlaySession.new(home, away, seed=1)
 
     session.snap("RZDZ", "A", dice=ScriptedDice([TIED, TIED]))
@@ -131,6 +135,18 @@ def test_razzle_dazzle_labels_a_no_change_choice_as_zero_for_players() -> None:
     assert decision is not None
     choice = next(item for item in decision.choices if item.id == "razzle:2:15")
     assert choice.label == "Play 2, total 15: 0"
+    assert choice.presentation_value == "0"
+    assert _cell_for(home, Play.TWO, 15) == cell
+
+
+def test_razzle_dazzle_keeps_nonzero_out_of_bounds_choice_markers() -> None:
+    home, away = _playtest_charts()
+    home = _set_cell(home, Play.TWO, 15, replace(yards(-4), out_of_bounds=True))
+    session = PlaySession.new(home, away, seed=1)
+    session.snap("RZDZ", "A", dice=ScriptedDice([TIED, TIED]))
+    choice = next(item for item in session.view().pending.choices if item.id == "razzle:2:15")
+    assert choice.label == "Play 2, total 15: -4*"
+    assert choice.presentation_value == "-4*"
 
 
 def test_exact_razzle_wild_card_ends_incomplete_without_any_dice() -> None:

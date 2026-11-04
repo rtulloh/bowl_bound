@@ -114,6 +114,11 @@ Without `--compact`, the expanded menu is shown at each turn.
 For a Razzle-Dazzle result choice, the terminal explicitly says **pick a desired
 outcome**: select the displayed chart result most favorable to your side. The
 engine applies the selected result and all ordinary follow-up rules.
+No-change choices display `0`, including cells with an out-of-bounds marker;
+the underlying marker still applies and remains visible in chart traces. Other
+values keep their markers, such as `-4*`. Numbered selectors use a consistent
+width (`[ 1]` through `[18]` for eighteen choices), and Razzle-Dazzle command
+hints line up in a separate column. Padding does not change the number to enter.
 
 During required decisions, numbers select the displayed choices, not scrimmage
 plays. Only enabled choices are displayed and numbered consecutively. During optional

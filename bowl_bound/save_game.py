@@ -1216,6 +1216,11 @@ def _legacy_m22_view_data(view: SessionView | RegulationView) -> dict[str, Any]:
 def _legacy_m19_view_digest(view: SessionView | RegulationView) -> str:
     """Recreate M19's raw view digest before the additive coaching and rules fields."""
     data = asdict(view)
+    for choice in data.get("clock_modifiers", []):
+        choice.pop("replay_label", None)
+    if data.get("pending") is not None:
+        for choice in data["pending"]["choices"]:
+            choice.pop("replay_label", None)
     data.pop("review", None)
     data["actions"]["offense"] = [
         action for action in data["actions"]["offense"] if action["key"] not in {"Q", "RZDZ"}
@@ -1293,6 +1298,7 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         "presentation_row",
         "presentation_column",
         "presentation_value",
+        "replay_label",
     }
     legacy_defenses = {
         f"{defense.value} {label}": f"Formation {defense.value}"
@@ -1351,6 +1357,8 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         action["label"] = f"Formation {action['key']}"
     if data["pending"] is not None:
         for choice in data["pending"]["choices"]:
+            if choice.get("replay_label") is not None:
+                choice["label"] = choice["replay_label"]
             if choice["id"] in {"decline", "kick:decline"}:
                 choice["label"] = "Decline penalties and take the result"
     return _digest(semantic(data))

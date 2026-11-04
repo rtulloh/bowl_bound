@@ -1453,3 +1453,48 @@ its five focused UI cases also pass.
 The screenshot reference is retained only as private local evidence. UI-060
 remains open for browser and owner acceptance; this follow-up does not complete
 the milestone.
+
+
+## Owner CLI follow-ups — 2026-11-04
+
+CLI-062 corrects no-change Razzle-Dazzle choices to `0` in engine labels and
+structured presentation values. Raw trace tokens, normalized out-of-bounds facts,
+nonzero markers and legal choice IDs remain unchanged. A nullable engine-owned
+`replay_label` preserves the old semantic digest for pending saves; it is not
+player-facing wording. An authentic pre-fix synthetic save proves strict loading
+and continuation rather than generating its expected digest with changed code.
+CLI-065 aligns one- and two-digit selectors and Razzle-Dazzle command hints in
+both compact and full menus. CLI-066 restores two existing same-season private
+rosters and source sidecars to the selected private chart bundle, with existing
+chart bytes hash-verified unchanged. Runtime roster behavior was already correct;
+no roster names, historical charts or owner logs were added to public tests.
+
+Paydirt references and adaptations: `paydirt/play_resolver.py:532-537` separates
+markers from yardage; `paydirt/interactive_game.py:2361-2365` enumerates engine
+choices; `paydirt/commentary.py:65-114` loads optional colocated rosters. Reuse only
+the separation of semantic facts and display, engine choice rendering, and roster
+placement convention. Do not reuse NFL rules/timing, private data, silent malformed
+roster fallback or its unpadded numbering. Per-ticket notes retain the test-first
+failures: bare `*` versus `0`, plus two distinct play-column offsets with eighteen
+choices in compact and full modes. Existing expectations were strengthened with
+out-of-bounds and nonzero-marker cases; none were weakened.
+
+Validation uses `/Users/rtulloh/work/bowl_bound/.venv/bin/python`:
+
+- `-m pytest tests/test_razzle_dazzle.py tests/test_cli_presentation.py
+  tests/test_cli062_compatibility.py -q`: **73 passed**.
+- Related cumulative selection (the sorted union of `tests/test_cli*.py`,
+  `tests/test_*save*.py`, `tests/test_*replay*.py`, `tests/test_*razzle*.py`,
+  `tests/test_api*.py`, `tests/test_roster.py`, `tests/test_commentary*.py`),
+  invoked once with `-m pytest -q`: **721 passed in 111.87s** across 37 modules.
+- `-m pytest tests/test_history_fixtures.py tests/test_coaching_invariants.py
+  tests/test_conversion_presentation.py tests/test_halftime_presentation.py
+  tests/test_presentation_context.py tests/test_issue_tracker.py
+  tests/test_priority_docs.py tests/test_release_player_docs.py -q`:
+  **137 passed in 12.15s**.
+
+This is an isolated owner-feedback follow-up, not milestone acceptance or a
+release. The owner's running interpreter and source checkout remain untouched.
+Roster names refresh through ordinary save/load; Python presentation changes
+require launching the updated source. Owner play-test confirmation remains
+required before closing these tickets.

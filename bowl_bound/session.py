@@ -297,6 +297,7 @@ class PenaltyChoice:
     presentation_row: str | None = None
     presentation_column: str | None = None
     presentation_value: str | None = None
+    replay_label: str | None = None  # Original label retained only for save digest compatibility.
 
 
 @dataclass(frozen=True)
@@ -945,16 +946,7 @@ class PlaySession:
                 options = nonpenalty
             chooser = field.possession if offense_wins else field.possession.other
             choices = tuple(
-                PenaltyChoice(
-                    f"razzle:{selected_play.value}:{total}",
-                    f"Play {selected_play.value}, total {total}: {format_cell(cell) or '0'}",
-                    True,
-                    presentation="razzle_dazzle",
-                    presentation_row=f"Play {selected_play.value}",
-                    presentation_column=f"Total {total}",
-                    presentation_value=format_cell(cell) or "0",
-                )
-                for selected_play, total, cell in options
+                _razzle_choice(selected_play, total, cell) for selected_play, total, cell in options
             )
             view = PendingDecisionView(
                 self._charts[chooser].name,
@@ -2710,6 +2702,23 @@ def _trace_entry(
         formation=None if entry.formation is None else f"Formation {entry.formation.value}",
         roll=shown,
         cell=format_cell(entry.cell),
+    )
+
+
+def _razzle_choice(play: Play, total: int, cell: NormalizedCell) -> PenaltyChoice:
+    """Present no-change as zero while preserving the original save identity."""
+    raw_value = format_cell(cell) or "0"
+    value = "0" if cell.kind is ResultKind.NO_CHANGE else raw_value
+    prefix = f"Play {play.value}, total {total}: "
+    return PenaltyChoice(
+        f"razzle:{play.value}:{total}",
+        prefix + value,
+        True,
+        presentation="razzle_dazzle",
+        presentation_row=f"Play {play.value}",
+        presentation_column=f"Total {total}",
+        presentation_value=value,
+        replay_label=prefix + raw_value if raw_value != value else None,
     )
 
 

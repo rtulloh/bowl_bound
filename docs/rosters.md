@@ -145,6 +145,14 @@ Snapshots are private per game, stable until explicitly reloaded, and excluded
 from saves, chart fingerprints and semantic digests. Loading uses currently
 installed rosters: historical display names may change, but game facts may not.
 
+When using `--seasons` with a generated private chart bundle, roster files must
+be beside the selected charts in that bundle. The CLI does not search another
+checkout's `seasons/` folder. Preserve an existing same-season `roster.json` and
+its `roster-sources.md` when assembling a private play-test bundle. After adding
+them during play, use `save /tmp/my-roster-refresh.json` followed by
+`load /tmp/my-roster-refresh.json` to refresh names; choose a new save filename
+if that file already exists. Historical roster files remain private.
+
 Replay compatibility is regression-checked against a pre-commentary semantic
 digest and future Hard command/choice/dice/RNG streams. Named commentary is never
 included in the semantic digest; original factual descriptions still are.

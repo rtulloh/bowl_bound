@@ -45,6 +45,13 @@ does not report an exact future result for them. Computer probability estimates
 are not serialized. Clients display engine choices and reports without reading
 charts or calculating outcome probabilities.
 
+No-change Razzle-Dazzle choices expose `0` in both `label` and
+`presentation_value`, even when the underlying cell carries an out-of-bounds
+marker. Raw trace cells and gameplay facts retain that marker. Choices also
+include nullable `replay_label`, reserved for engine save compatibility; clients
+display `label` and the presentation fields. Existing pending saves retain their
+original semantic digest and choice IDs.
+
 ## Engine-owned play bounds declarations
 
 Regulation views offer `game_actions` with `bounds:oob` and `bounds:ib` only

@@ -7,8 +7,10 @@ import pytest
 
 from bowl_bound import coaching_session
 from bowl_bound.dice import OffensiveRoll, ScriptedDice
+from bowl_bound.models import Play
 from bowl_bound.save_game import SavedGame
 from bowl_bound.session import Actions, PenaltyChoice, PendingDecisionView
+from tests.synthetic_teams import team_chart, yards
 from tests.test_cli import new_game, saved_facts, terminal
 from tests.test_cli_shortcuts import live, regulation
 
@@ -79,6 +81,35 @@ def test_razzle_dazzle_prompt_explains_that_the_chooser_selects_an_outcome() -> 
     assert not app.command("?")
 
     assert "Beta State chooses (pick a desired outcome):" in app.output.getvalue()
+
+
+@pytest.mark.parametrize("compact", [False, True])
+def test_eighteen_razzle_choices_align_selectors_labels_and_commands(compact: bool) -> None:
+    game = SavedGame.new(
+        team_chart("Alpha Tech", season=2002, plays={Play.ONE: yards(-17)}),
+        team_chart("Beta State", season=2002),
+        home_id="2002/alpha-tech",
+        away_id="2002/beta-state",
+        seed=7,
+        coach_seed=31,
+        dice=ScriptedDice((OffensiveRoll(1, 2, 3), OffensiveRoll(1, 3, 5))),
+    )
+    game.snap("RZDZ", "A")
+    app = terminal(game, "away", compact=compact)
+    before = saved_facts(game)
+    assert not app.command("?")
+    rows = [line for line in app.output.getvalue().splitlines() if "(choose razzle:" in line]
+    choices = game.view().pending.choices
+    assert len(rows) == len(choices) == 18
+    assert len({line.index("Play ") for line in rows}) == 1
+    assert len({line.index("(choose ") for line in rows}) == 1
+    for number, (line, choice) in enumerate(zip(rows, choices, strict=True), 1):
+        assert line.startswith(f"    [{number:2d}] ")
+        assert choice.label in line
+        assert line.endswith(f"(choose {choice.id})")
+    assert saved_facts(game) == before
+    assert app._shortcuts(*app.public_view())["9"] == ("choose", choices[8].id)
+    assert app._shortcuts(*app.public_view())["10"] == ("choose", choices[9].id)
 
 
 def test_finished_automatic_and_missing_state_have_no_suggestion() -> None:
