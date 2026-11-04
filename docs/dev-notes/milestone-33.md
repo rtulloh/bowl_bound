@@ -1559,3 +1559,9 @@ The first implementation is `064e03d` (CLI-062/065 and private roster assembly
 guidance for CLI-066). No push, publication or full milestone acceptance is
 claimed. The live-server integration restriction remains explicit and owner
 play-test confirmation is outstanding.
+
+Pending interception implementation: `62a2c37`. Combined final implementation
+passes the 993-case Python selection and the focused component/build checks
+recorded above. CLI-062, CLI-065, CLI-066 and CLI-067 are resolved for owner review
+and remain unclosed pending play-test confirmation. The existing socket
+restriction is retained; no live-server web acceptance is claimed.
