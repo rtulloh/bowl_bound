@@ -1922,3 +1922,42 @@ The cumulative run began before those two additional conversion cases were added
 the later 49-case focused run passes both. Ruff check and format check pass on
 the five changed Python files, as does `git diff --check`. No frontend change,
 full milestone acceptance, push or process restart is included.
+
+CLI-071 tested implementation: `15b6c9e`; all eight final-summary cases pass again
+after commit. Resolved pending owner play-test, not closed.
+
+## Private owner game-log audit (2026-11-04)
+
+The owner authorizes auditing the local captured terminal log. Reviewed Paydirt's
+shared halftime/final rendering references above, and adapted Bowl Bound's own
+`coaching_audit.py:315-339` scoring/statistics/clock reconciliation. In particular,
+do not inherit a nonempty-cell assertion: a legitimate defensive blank is still
+a valid consulted chart fact.
+
+The capture contains five launches and a rejected load, including abandoned
+continuations. Isolated the completed continuation and linked it to its strictly
+replayed original checkpoint rather than counting all launches as one game.
+All 96 report blocks in the first launch match trace prefixes of the 83 committed
+checkpoint plays, and the boundary display matches. On a disposable copy, matched
+all 137 report blocks, including exact physical dice, consulted cells, narration
+and 119 following displayed checkpoints in the completed continuation. Final
+scores, period point totals, statistics, sequential committed play numbers and
+all four 900-second clocks reconcile. No pending or unsupported committed result
+remains. All observed completed-run CPU punts are fourth-down calls and its
+field-goal attempts are within the public conventional range. Earlier abandoned
+branches contain the previously tracked AI-037/038 findings.
+
+The capture omits typed input and the CPU formations ignored by three QB Sneaks.
+Those hidden formation identities/order and the future coaching RNG cannot be
+recovered from trace text. Reconstruction uses explicit harmless formation
+placeholders on those ignored-defense snaps; this does not change their football
+outcomes, dice, statistics or display. It is audit evidence, not an exact coaching
+continuation save or a policy-optimality claim. No historical transcript, chart,
+save, local path identifier or detailed report is committed. Local evidence and
+the completed game's final boxes remain under ignored `private-data/`.
+
+One new defect is [CLI-072](issues/CLI/CLI-072.md): a QB Sneak names a running back
+as the carrier. Verified independently with synthetic charts/roster, without
+changing production commentary. The recorded football result is correct. Last-
+minute third-and-long run selection is a strategy observation for broader
+calibration, not evidence that a legal call or clock transition is wrong.
