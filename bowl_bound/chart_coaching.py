@@ -69,7 +69,12 @@ class ChartAwareCoach(BaselineCoach):
                 and observation.remaining <= self.behavior.late_seconds
             )
             if observation.down == 4 or late:
-                candidates += tuple(k for k in observation.special if k in {"punt", "field_goal"})
+                candidates += tuple(
+                    k
+                    for k in observation.special
+                    if k in {"punt", "field_goal"}
+                    and (self.version < 14 or k != "punt" or observation.down == 4)
+                )
             candidates += tuple(k for k in observation.game_actions if k == "hail_mary")
         result = tuple(self._evaluate(model, candidate, role, weights) for candidate in candidates)
         self._cache[key] = result

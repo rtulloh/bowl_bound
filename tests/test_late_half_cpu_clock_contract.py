@@ -219,7 +219,7 @@ def test_ordinary_load_upgrades_but_explicit_audit_load_keeps_v11(mode: str, sid
     frozen = loads_game(text, chart_loader(original), preserve_development_policy=True)
     current = loads_game(text, chart_loader(original))
     assert frozen._coach.version == 11
-    assert current._coach.version == CURRENT_DIFFICULTY_VERSION == 13
+    assert current._coach.version == CURRENT_DIFFICULTY_VERSION == 14
     assert current.view() == frozen.view()
     assert json.loads(dumps_game(current))["config"]["difficulty"] == mode
     assert "coach_policy" not in json.loads(dumps_game(current))["config"]

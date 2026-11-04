@@ -10,7 +10,7 @@ from math import isclose, isfinite
 
 from .coaching import BaselineCoach, CoachObservation
 from .coaching_audit_sampling import capture_preferences
-from .coaching_profiles import AUDIT_V1, behavior_for_policy
+from .coaching_profiles import AUDIT_V1, CURRENT_DIFFICULTY_VERSION, behavior_for_policy
 from .coaching_session import observe_game, observe_policy
 from .coaching_situations import situation_bucket
 from .models import TeamChart
@@ -21,6 +21,12 @@ from .statistics import summarize
 DEFAULT_REPLAY_CHECKPOINT = AUDIT_V1.replay_checkpoint
 MIN_CONCENTRATION_SAMPLES = AUDIT_V1.min_concentration_samples
 CONCENTRATION_ADVISORY_SHARE = AUDIT_V1.concentration_share
+DEFAULT_POLICIES = (
+    "baseline-v2",
+    f"easy-v{CURRENT_DIFFICULTY_VERSION}",
+    f"medium-v{CURRENT_DIFFICULTY_VERSION}",
+    f"hard-v{CURRENT_DIFFICULTY_VERSION}",
+)
 
 
 @dataclass(frozen=True)
@@ -379,7 +385,7 @@ def audit_game(
 def compare_policies(
     seeds: tuple[int, ...],
     *,
-    policies: tuple[str, ...] = ("baseline-v2", "easy-v13", "medium-v13", "hard-v13"),
+    policies: tuple[str, ...] = DEFAULT_POLICIES,
 ) -> tuple[GameAudit, ...]:
     """Compare independent dice seeds across both sample arrangements and CPU sides."""
     if (
@@ -449,6 +455,7 @@ def main(argv: list[str] | None = None) -> int:
             "baseline-v11",
             "baseline-v12",
             "baseline-v13",
+            "baseline-v14",
             "chart-v1",
             "chart-v2",
             "easy-v1",
@@ -486,6 +493,7 @@ def main(argv: list[str] | None = None) -> int:
             "chart-v11",
             "chart-v12",
             "chart-v13",
+            "chart-v14",
             "easy-v9",
             "medium-v9",
             "hard-v9",
@@ -493,16 +501,19 @@ def main(argv: list[str] | None = None) -> int:
             "easy-v11",
             "easy-v12",
             "easy-v13",
+            "easy-v14",
             "medium-v10",
             "medium-v11",
             "medium-v12",
             "medium-v13",
+            "medium-v14",
             "hard-v10",
             "hard-v11",
             "hard-v12",
             "hard-v13",
+            "hard-v14",
         ),
-        default=["baseline-v2", "easy-v13", "medium-v13", "hard-v13"],
+        default=list(DEFAULT_POLICIES),
     )
     args = parser.parse_args(argv)
     try:

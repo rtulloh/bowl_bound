@@ -59,8 +59,8 @@ class DifficultyCoach(ChartAwareCoach):
     ) -> None:
         if mode not in AGGRESSION:
             raise ValueError("difficulty must be easy, medium or hard")
-        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}:
-            raise ValueError("difficulty policy version must be 1 through 13")
+        if type(version) is not int or not 1 <= version <= 14:
+            raise ValueError("difficulty policy version must be 1 through 14")
         super().__init__(seed, home, away, version=version)
         self.mode = mode
         self.behavior = behavior_for_policy(f"{mode}-v{version}")

@@ -357,8 +357,9 @@ engine comparison and remains a gamble wherever further rolls are required.
 Public fourth-down kicks, kneeling and last-snap priorities still take precedence.
 Legal human calls and all engine outcomes, dice and rules remain unchanged.
 
-Explicit v1–12 policies retain their previous choices and mixtures. Normal named
-difficulties upgrade to v13 on ordinary load under AI-026; an explicit development
+Explicit v1–12 policies retain their previous choices and mixtures. Version 13
+introduced this preference; normal named difficulties use the current revision
+on ordinary load under AI-026. An explicit development
 preservation load keeps its recorded revision. The new preference uses only
 committed own calls and public observations, never the hidden human call or
 future gameplay stream. Frequency audits report complete-game counts and repeat
@@ -370,3 +371,17 @@ from finalized engine reports for the audited CPU side. The former records engin
 outcome IDs; the latter preserves credited statistical kinds, including excluded
 penalties. They do not label every defensive recovery as an interception or turn
 a penalty-excluded call into a credited play. No commentary parsing is involved.
+
+### Version 14 early-down punt selection
+
+Current Easy, Medium and Hard never include punts in their first-, second- or
+third-down candidate mixtures. The previous late-half comparison included punts
+alongside field goals on every down during the final two minutes, allowing its
+exploration mixture to select a first-down punt immediately after a kickoff.
+Fourth-down punts and early-down end-of-half field goals retain their existing
+selection rules. Human punt controls remain engine-legal as before.
+
+Explicit development versions 1–13 retain their original choices and seeded
+streams. Ordinary difficulty loads apply v14 to future coaching while replaying
+the already-recorded game unchanged. No chart, engine rule, timing, dice,
+observation field, save schema or historical command is changed.

@@ -1585,3 +1585,70 @@ working-directory change, including paths with spaces. Supported Python:
 tests/test_cli_games.py tests/test_cli_solitaire.py tests/test_cli_input_contract.py
 tests/test_cli062_compatibility.py tests/test_interception_context.py -q`:
 **91 passed in 9.87s**. Ruff check/format passes on the two changed Python files.
+
+
+## Early-down punt selection — 2026-11-04
+
+AI-037 traces the reported post-kickoff first-down punt to the late-half candidate
+list, which added both punts and field goals on any down. Weighted exploration
+could then choose the punt. Coaching v14 excludes punts before fourth down while
+retaining field goals and the public fourth-down priorities. All engine-legal
+human actions remain. The ordinary tier advances to v14 for future calls on
+load under AI-026; explicit development v1–v13 behavior stays frozen, including a
+captured v13 seeded selection stream. Engine facts, clocks, dice, chart values,
+recorded commands, save schema and observation allowlist are unchanged.
+
+Paydirt `paydirt/computer_ai.py:154-221` was consulted before implementing this
+follow-up. Adapt its separation of end-half field-goal opportunities and a
+fourth-down punt gate, not its NFL rules, ranges, time units or runtime code.
+Tests first produced 37 expected failures and four passing controls. The focused
+punt module passes 42 cases, including an independent real-engine Hard candidate
+check after a synthetic kickoff. Existing ordinary-load version assertions now
+expect the new current version; frozen historical assertions are retained.
+
+Supported Python commands: `-m pytest tests/test_late_half_punt_policy.py -q`
+(**42 passed**) and `-m pytest tests/test_late_half_punt_policy.py
+ tests/test_late_half_cpu_clock.py tests/test_late_half_cpu_clock_contract.py
+ tests/test_razzle_surprise_policy.py -q` (**194 passed before adding the
+one extra real-engine case**). Wider coaching/replay/interface verification is
+recorded below when complete. This follow-up does not claim milestone acceptance,
+benchmark calibration, or a release.
+
+CLI-068's tested resume-hint implementation is `eda44dc`; its 91 related
+CLI/save checks and 22 documentation checks passed.
+
+
+AI-037 wider checks initially found 12 missing v14 API/audit registration/default
+updates. The production contracts now accept v14 and both audit default paths
+share current-tier defaults; all 63 affected existing checks pass unchanged.
+Two complete public-fictional-team Hard-v14 audits (seeds 101/307; coach seed 31;
+CPU home/away with reversed arrangements) finish after 172/170 plays. Both
+reconcile scores/statistics, structured traces, four 900-second periods and save
+continuation, with zero illegal selections and zero early-down punts or punt
+preference weight. Comparable situation repeats are 11/35 and 2/25; longest
+streaks 3/2, no concentration advisories, RZDZ calls 4/2 and all nine ordinary
+plays represented. The 0/2 analysis fallback counts remain explicit; targeted
+fallback details are retained locally. These two games are smoke evidence, not
+benchmark calibration or proof of optimal strategy. The original owner save also
+strictly replays read-only using v14 for future Hard decisions.
+
+Targeted seed-307 fallback review: both records are legal two-point-try
+offense calls (6 and 4), with no punt in either preference mixture. The
+recorded conversion-analysis fallbacks are not early-down punt selections.
+
+
+Final combined verification: 1,240 passed in 164.74s, with no reported skips or
+warnings, across 66 coaching/replay/interface modules. The supported Python
+command was `-m pytest -q` on the sorted union under tests/ of
+`test_*coaching*.py`, `test_difficulty*.py`, `test_coaching*.py`,
+`test_late_half*.py`, `test_*save*.py`, `test_*replay*.py`, `test_*razzle*.py`,
+`test_cli*.py`, `test_api*.py`, `test_history_fixtures.py`,
+`test_fourth_down_guidance.py`, `test_public_fourth_down.py`,
+`test_issue_tracker.py`, `test_priority_docs.py`, `test_release_player_docs.py`.
+Ruff check/format on all changed Python files and `git diff --check` pass.
+Complete-game audit calls used `audit_game(*sample_teams(), seed=101,
+coach_seed=31, policy="hard-v14", cpu_side="home")` and the reversed samples
+with seed=307 and cpu_side="away"; default replay checkpoints remain active.
+No private team chart or owner save content is committed. The running owner
+interpreter remains on its loaded policy until restart. No push, release or
+full milestone acceptance is claimed.

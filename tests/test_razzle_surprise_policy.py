@@ -162,7 +162,7 @@ def test_frozen_load_and_current_named_upgrade_preserve_actual_commands() -> Non
     frozen = loads_game(payload, loader, preserve_development_policy=True)
     current = loads_game(payload, loader)
     assert frozen._coach.version == 12
-    assert current._coach.version == 13
+    assert current._coach.version == CURRENT_DIFFICULTY_VERSION
     assert frozen.view() == current.view() == saved.view()
     assert json.loads(dumps_game(frozen))["commands"] == json.loads(payload)["commands"]
     assert mixture(current._coach, situation())["RZDZ"] < 0.01
