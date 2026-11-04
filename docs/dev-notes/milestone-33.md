@@ -1268,3 +1268,13 @@ complete-game regression fails on that missing evidence field (one failed,
 33 deselected, 1.75s); additive counters now retain the CPU's actual finalized
 RZDZ outcome IDs and statistical kinds, including excluded penalties. Renew
 that reporting audit before resolving; selection behavior is unchanged.
+
+### AI-036 tested surprise policy checkpoint
+
+Commits `5a6486f` / `f0dd4a6`: v13 separate rare RZDZ weighting and committed
+own-side repeat deterrence; v1–12 stay frozen. The renewed 32-game audit retains
+actual per-call outcomes as well as strict replay. Current tier means are
+1.5 / 1.25 / 1.25 RZDZ calls, no adjacent repeats, no revealed-choice fallback.
+The 64 outcome/new-policy audit contracts and 368 cumulative coaching/API/save
+cases pass. AI-036 is resolved awaiting owner review; combined six-ticket gate
+remains pending. Detailed reports remain ignored.
