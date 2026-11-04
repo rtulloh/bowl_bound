@@ -52,3 +52,20 @@ clarification. Private team names, cell values and traces are omitted.
 [AI-033](../AI/AI-033.md) separately investigates CPU result-choice quality during
 M33 owner review. Its first-legal-choice fallback is distinct from this ticket's
 correct comparison/chooser ownership and engine follow-up procedures.
+
+--- 2026-11-03 ---
+Owner asked why a human defensive Razzle-Dazzle selection of QT became a black
+incomplete result. Read-only review of the private command journal confirmed the
+chosen offensive coordinate was retained, followed by an ordinary defensive
+lookup returning BLACK. The approved Priority Chart's offensive QT / defensive
+INC intersection is INC: the selected QT is overridden before any supplemental
+roll. The complete trace correctly contains the selected QT and defensive BLACK,
+with no supplemental QT roll invented. This is expected resolution, not a lost
+human choice or new coaching defect. Public evidence intentionally omits private
+team names, chart coordinates, dice and game identifiers. No production change
+or ticket closure follows from this clarification.
+
+Verification: `PYTHONPATH=. .venv/bin/python -m pytest tests/test_priority_matrix.py tests/test_priority_docs.py tests/test_razzle_dazzle.py -q --no-cov`
+passed **421 cases**; tracker checks passed **18 cases**, and the index was
+regenerated. A direct synthetic QT-versus-INC lookup also returns incomplete
+with no pending supplemental procedure.

@@ -16,10 +16,15 @@ moves here from M23. Include a visible one-time first-half recap before the
 scheduled second-half kickoff, including automatic computer-owned kickoff paths.
 This scheduling change implements no behavior and moves no other CLI backlog.
 
-The owner subsequently confirmed the same missing transition in the web UI.
+The owner subsequently requested the same transition in the web UI.
 [UI-058](issues/UI/UI-058.md) adds a distinct browser halftime presentation and
 reviewable first-half recap to this milestone alongside CLI-058. Ensure a
 computer-owned second-half kickoff cannot immediately replace or bypass it.
+
+The subsequent suspected missing kickoff in the current web game was a Q1-to-Q2
+boundary, not halftime. The existing kickoff contract now has separate focused
+[browser regression coverage](web-halftime-kickoff-regression.md); that coverage
+does not complete the planned M35 transition/recap work.
 
 
 ## Paydirt consultation before planning
