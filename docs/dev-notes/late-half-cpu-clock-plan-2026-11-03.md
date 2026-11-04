@@ -112,7 +112,7 @@ clock offers and approved shared public fourth-down policy remain authoritative.
 See [AI-035](issues/AI/AI-035.md) and the
 [Milestone 33 follow-up log](milestone-33.md).
 
-## Checkpoint commands and results
+## Original 7420d41 checkpoint commands and results
 
 ```text
 .venv/bin/python -m pytest tests/test_late_half_cpu_clock.py -q
@@ -127,8 +127,9 @@ See [AI-035](issues/AI/AI-035.md) and the
 git diff --check
 ```
 
-Static/tracker checks pass. No full-green implementation, browser pass, full
-regression, owner confirmation, push or runtime change is claimed here.
+At that original checkpoint, static/tracker checks passed. It did not claim a
+full-green implementation, browser pass, full regression, owner confirmation,
+push or runtime change. Subsequent implementation evidence follows.
 
 ## Implementation checkpoint (2026-11-03)
 
@@ -162,3 +163,70 @@ vulnerabilities. npm ci reports the existing whatwg-encoding deprecation;
 Vitest reports its jsdom performance recommendation. Ruff check/format 566 files,
 pip and diff checks pass. No new skips are hidden. Full regression remains
 pending, and this does not constitute owner play-test confirmation.
+
+
+--- 2026-11-03 — final-source regression ---
+Implementation aa578d7 and merged driver checkpoint 007056b passed the fresh
+complete Python gate: **3,630 passed in 923.40s, 93.20% branch-aware coverage**,
+exit zero. The earlier interrupted run is not acceptance evidence. Focused
+merged clock/halftime/API/save/tracker checks pass **145 in 8.75s**. Final Ruff
+check/format covers 569 files; pip check, zero-vulnerability npm audit, production
+build, frontend 131, 1,267 local Markdown links and diff checks pass. Existing
+npm deprecation and Vitest advisory remain documented above.
+
+All 48 browser cases in eight files collect. Fresh real-engine halftime browser
+execution fails at Chromium launch before assertions with macOS MachPort1100:
+one failed and seven not run under fail-fast, plus its cleanup error. This is
+an execution limitation, not a browser pass; no sandbox bypass, skip or assertion
+weakening was used. The temporary test server exited; owner servers and games
+were untouched. Complete-game coaching/replay and private local-season audits
+follow separately. Owner play-test confirmation is still required for closure.
+
+
+--- 2026-11-03 — completed audit / tested resolution ---
+Tested runtime **aa578d7**, merged regression checkpoint **007056b**. The public
+32-game matrix (seeds 101/307; baseline-v2 and Easy/Medium/Hard-v12; both sample
+orientations and CPU sides) passes mechanics and strict saved-future replay:
+5,449 reports, 11,748 trace consultations, 5,347 replayed steps, each regulation
+quarter reconciles to 900 seconds, and no illegal choices. All nine ordinary
+calls and all six defenses occur for every policy; 672 comparable choices have
+117 repeats, maximum within-bucket streak four, and zero concentration warnings.
+Current tiers select 15 own timeouts. These are audit observations, not quotas
+or calibration claims.
+
+Three initial-try analysis fallbacks (one Easy, two Medium) remain explicitly
+reported under AI-034. Isolated uniform-opponent reanalysis reproduces only the
+known `hypothetical try did not settle` limitation; it does not reconstruct
+historical opponent weights. All 135 forced RZDZ choices have zero fallbacks.
+No unresolved samples are zero-filled or hidden.
+
+The separate private local-season baseline mechanics audit passes **120/120**,
+zero errors/fallbacks, 22,192 reports and six overtime games. It reads local
+private bundles without modifying them; all detailed artifacts remain ignored.
+This is baseline mechanics evidence, not current-v12 coaching calibration.
+
+AI-035 is resolved pending owner play testing. The original reported Q1-to-Q2
+transition remains valid, unrelated to the synthetic defect. Browser execution
+is still blocked as recorded above; no full browser gate or fresh milestone
+acceptance is claimed. No push, main merge, release, tag or owner-game mutation.
+
+
+Final commands (run from the isolated worktree with the supported shared
+`/Users/rtulloh/work/bowl_bound/.venv/bin/python` interpreter):
+
+```text
+python -m pytest --cov --cov-report=term-missing -q
+# 3,630 passed / 923.40s / 93.20%, exit 0, at 007056b
+python -m bowl_bound.coaching_audit --seeds 101 307 --policies baseline-v2 easy-v12 medium-v12 hard-v12
+# 32 reconciled games with saved-future replay, exit 0
+python scripts/run_local_season.py --seasons /Users/rtulloh/work/bowl_bound/seasons --games-per-team 12 --seed 20311031 --output private-data/late-half-validation/private-season-007056b
+# 120 passed / 0 failed / 0 fallback, exit 0; detailed output private
+npx playwright test e2e/halftime.spec.js --max-failures=1
+# Chromium launch denied (1100) before assertions: 1 failed / 7 not run
+```
+
+The commands labeled `python` above identify the supported interpreter, never
+system Python 3.9. Complete audit JSON/logs and original-source fictional golden
+saves stay below ignored `private-data/late-half-validation/`. No extra full
+run was repeated after the final source passed; the acceptance follow-up is
+metadata/documentation only.

@@ -1143,3 +1143,49 @@ Browser response capture now precedes load to handle that same automatic path
 without dropping clock/kickoff/history/save assertions. The first full run was
 immediately interrupted at41passed/13.37s, not claimed as acceptance. Runtime
 remains aa578d7. Fresh merged full validation follows.
+
+
+--- 2026-11-03 — final-source regression ---
+Implementation aa578d7 and merged driver checkpoint 007056b passed the fresh
+complete Python gate: **3,630 passed in 923.40s, 93.20% branch-aware coverage**,
+exit zero. The earlier interrupted run is not acceptance evidence. Focused
+merged clock/halftime/API/save/tracker checks pass **145 in 8.75s**. Final Ruff
+check/format covers 569 files; pip check, zero-vulnerability npm audit, production
+build, frontend 131, 1,267 local Markdown links and diff checks pass. Existing
+npm deprecation and Vitest advisory remain documented above.
+
+All 48 browser cases in eight files collect. Fresh real-engine halftime browser
+execution fails at Chromium launch before assertions with macOS MachPort1100:
+one failed and seven not run under fail-fast, plus its cleanup error. This is
+an execution limitation, not a browser pass; no sandbox bypass, skip or assertion
+weakening was used. The temporary test server exited; owner servers and games
+were untouched. Complete-game coaching/replay and private local-season audits
+follow separately. Owner play-test confirmation is still required for closure.
+
+
+--- 2026-11-03 — completed audit / tested resolution ---
+Tested runtime **aa578d7**, merged regression checkpoint **007056b**. The public
+32-game matrix (seeds 101/307; baseline-v2 and Easy/Medium/Hard-v12; both sample
+orientations and CPU sides) passes mechanics and strict saved-future replay:
+5,449 reports, 11,748 trace consultations, 5,347 replayed steps, each regulation
+quarter reconciles to 900 seconds, and no illegal choices. All nine ordinary
+calls and all six defenses occur for every policy; 672 comparable choices have
+117 repeats, maximum within-bucket streak four, and zero concentration warnings.
+Current tiers select 15 own timeouts. These are audit observations, not quotas
+or calibration claims.
+
+Three initial-try analysis fallbacks (one Easy, two Medium) remain explicitly
+reported under AI-034. Isolated uniform-opponent reanalysis reproduces only the
+known `hypothetical try did not settle` limitation; it does not reconstruct
+historical opponent weights. All 135 forced RZDZ choices have zero fallbacks.
+No unresolved samples are zero-filled or hidden.
+
+The separate private local-season baseline mechanics audit passes **120/120**,
+zero errors/fallbacks, 22,192 reports and six overtime games. It reads local
+private bundles without modifying them; all detailed artifacts remain ignored.
+This is baseline mechanics evidence, not current-v12 coaching calibration.
+
+AI-035 is resolved pending owner play testing. The original reported Q1-to-Q2
+transition remains valid, unrelated to the synthetic defect. Browser execution
+is still blocked as recorded above; no full browser gate or fresh milestone
+acceptance is claimed. No push, main merge, release, tag or owner-game mutation.
