@@ -1657,3 +1657,43 @@ AI-037 tested implementation: `24b3977`. Its final 1,240-case selection,
 focused cases and complete-game audits are recorded above. AI-037 and CLI-068
 are resolved for owner review, not closed pending confirmation. This is an
 owner-feedback follow-up, not a new milestone acceptance or release.
+
+## Owner-requested late-half sequence audit (2026-11-04)
+
+Audit only; no production behavior changed. Before this phase, consulted Paydirt
+`paydirt/play_resolver.py:704-815`: it documents the blank-defense Hail Mary and
+separate table outcomes, but its T1 calculation uses the tens digit. That distance
+implementation is deliberately not reused: Bowl Bound's approved full-feature
+T1 is a new offensive total. Checked the local Bowl Bound reference Advanced I-3
+(printed p.14), Basic VI-11 (p.11), and VI-13(E)(i), (F), (G) (p.12).
+
+Reconstructed the reported sequence in a disposable engine using the selected
+local charts and exact observed rolls. The ordinary Option uses the human blitz;
+its retained out-of-bounds fact costs 10 seconds in the late-half window. Hard
+v13/v14 then select two legal Hail Mary actions at 20 and 10 seconds. Both actions
+correctly bypass the formation picker and resolve against a blank defense. The
+first incompletion costs 10 seconds; the second interception remains pending.
+Its distance roll is genuine, and the repeated trace across interception and
+end-zone choices belongs to the same uncommitted play. Neither decision consumes
+another roll, down, clock charge or committed log entry. The accepted end-zone
+interception has an actual nine-yard-deep return origin. Completing a touchback
+produces own 20, charges the play's 10 seconds exactly once, and advances halftime.
+Private reconstruction details remain only in ignored local audit storage.
+
+Two presentation defects remain open, not resolved: CLI-069 (pending reports
+fall back to Boot-leg/A Standard instead of Hail Mary/blank defense) and CLI-070
+(the context displays raw excess distance rather than the actual nine-yard depth
+for beyond-end-line interceptions). Both defects were also reproduced using
+fictional teams, both possession directions and a sentinel roll proving no
+premature return lookup. The engine's recovery and return arithmetic are correct;
+the pending scoreboard still describes the pre-play state until the play commits.
+
+Supported Python validation command:
+`/Users/rtulloh/work/bowl_bound/.venv/bin/python -m pytest -q
+tests/test_hail_mary.py tests/test_optional_clock.py tests/test_timing.py
+tests/test_turnovers.py tests/test_interception_context.py
+tests/test_coaching_shared_contract.py tests/test_issue_tracker.py`:
+**123 passed in 2.93s**, no reported skips or warnings. These checks establish the
+audited mechanics, not optimal late-half AI strategy. No running process, owner
+save, private chart, or production code was modified. No milestone acceptance or
+release is claimed.
