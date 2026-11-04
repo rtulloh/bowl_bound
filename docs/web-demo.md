@@ -278,7 +278,13 @@ regulation schedules and marks the following kickoff, including half-distance.
   API and launcher, all on synthetic teams. Original selectable samples and their
   outcome coverage/complete-game/save checks are in tests/test_sample_teams.py.
   See [sample teams](sample-teams.md) for reproducible installation and CC0 terms.
-- `frontend/src/test`: component tests and the no-rules scan (`npx vitest run`).
+- `frontend/src/test`: component tests, the no-rules scan and real-API React
+  integration checks (`npm --prefix frontend test`). Install source dependencies
+  with `.venv/bin/python -m pip install -e '.[dev,web,pdf]'` first. The integration
+  cases start and stop their own temporary local API, using only fictional teams;
+  they do not connect to a running game. They use the checkout/shared worktree
+  `.venv`, or `BB_PYTHON` when set to a supported interpreter. React's DOM harness
+  does not verify browser layout or replace Playwright coverage.
 - `frontend/e2e`: Playwright drives the production build against the real API and engine
   (`BB_E2E_CHANNEL=chrome` uses an installed Chrome).
 

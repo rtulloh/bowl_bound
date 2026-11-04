@@ -17,7 +17,12 @@ from tests.test_special_teams import special_chart
 
 
 def conversion_game(
-    scorer: str, good: bool = True, clock: Clock | None = None, *, interception: bool = False
+    scorer: str,
+    good: bool = True,
+    clock: Clock | None = None,
+    *,
+    interception: bool = False,
+    kickoff_yards: int = 40,
 ) -> SavedGame:
     charts = [
         replace(
@@ -33,7 +38,7 @@ def conversion_game(
                 },
             ),
             special_teams=special_chart(
-                label, kickoff=yards(40), kickoff_return=yards(10)
+                label, kickoff=yards(kickoff_yards), kickoff_return=yards(10)
             ).special_teams,
         )
         for label in ("Home", "Away")
@@ -44,6 +49,8 @@ def conversion_game(
     winner = game.view().pending.chooser_side
     game.decide("toss:receive" if winner == scorer else "toss:kick")
     game.kick("kickoff")
+    if game.view().pending is not None:
+        game.decide("kick:touchback")
     game.snap("1", "A")
     assert game.view().phase == "conversion_choice"
     return game
@@ -165,3 +172,35 @@ def test_pending_interception_does_not_claim_a_finished_try_result() -> None:
     report = game.decide("interception:decline")
     assert not report.pending
     assert game.view().review.lines == (report.commentary,)
+
+
+@pytest.mark.parametrize("human", ["home", "away"])
+@pytest.mark.parametrize("good", [False, True])
+def test_try_review_precedes_required_kick_reception_and_survives_pending_save(
+    human: str, good: bool
+) -> None:
+    scorer = "away" if human == "home" else "home"
+    game = conversion_game(scorer, good, kickoff_yards=70)
+    game.decide("conversion:two")
+    result = game.snap("2", "A")
+    assert game.view().review.lines == (result.commentary,)
+    game.coach_execute(human, "action", "review:continue")
+    kicked, view, turn = game.coach_step(human)
+    assert kicked.pending and view.pending.chooser_side == human
+    assert turn.human_role == "decision" and not turn.automatic
+    assert "kick:touchback" in {choice.id for choice in turn.pending.choices}
+    assert view.review is None
+    assert view.log[-1].outcome == result.outcome
+    assert view.log[-2].announcements == (
+        f"{view.away if scorer == 'away' else view.home} is going for two.",
+    )
+    charts = game._charts
+    resumed = loads_game(dumps_game(game), lambda key: charts[key.rsplit("/", 1)[-1]])
+    assert resumed.view() == view
+    for copy in (game, resumed):
+        report, after, _ = copy.coach_execute(human, "decide", "kick:touchback")
+        assert not report.pending and after.review is None
+        assert [entry.outcome for entry in after.log][-2:] == [result.outcome, report.outcome]
+        assert [entry.section for entry in report.trace] == ["kickoff"]
+        assert len(after.log) == len(view.log) + 1
+    assert resumed.view() == game.view()

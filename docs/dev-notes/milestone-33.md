@@ -1352,3 +1352,31 @@ and preserved older reading position; (6) HALFTIME recap before Start second
 half, with one CLI recap before automatic kickoff. Save before/after recap and
 reload to verify review persistence/no repeat. Do not mutate an existing live
 process's source. Browser/owner acceptance must be recorded before release review.
+
+### Additional acceptance controls after the combined runtime gate
+
+No production changes follow the combined runtime gate. Four new engine cases
+exercise both human sides and both try outcomes through an actual required
+kick-reception decision, pending save/replay, and ordered touchdown/try/kick
+history. The cumulative conversion/halftime/save/history/commentary command
+passes **114 cases in 21.67s**:
+
+```sh
+/Users/rtulloh/work/bowl_bound/.venv/bin/python -m pytest tests/test_conversion_presentation.py tests/test_halftime_presentation.py tests/test_save_game.py tests/test_history_fixtures.py tests/test_commentary_replay.py -q
+```
+
+Four additional React DOM integration cases run production API requests against
+a temporary fictional-team backend on an unused local port. They verify both
+human-side two-point prompts/reviews before a required kick-reception choice,
+halftime pending/acknowledged save-resume and the complete 43-entry scoring
+history across reload. Full frontend now passes **140 cases / 17 files**;
+production build and Ruff check/format (**578 files**) pass. Setup/cleanup owns
+only the temporary process and folder; all owner servers remain untouched.
+`docs/web-demo.md` documents the supported Python source environment needed by
+these integration cases.
+
+Runtime remains byte-identical to 8ed9977. Its full **3,688 / 93.28%** result is
+historical validation of that unchanged runtime, not a claim that the four new
+Python cases were included. These real-API DOM checks do not verify Chromium
+layout/scroll geometry or replace the outstanding 54 real-browser cases. All
+three UI tickets remain open for browser and owner acceptance. No push/release.
