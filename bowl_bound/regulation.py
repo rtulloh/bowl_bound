@@ -21,9 +21,7 @@ from .session import (
     SessionView,
 )
 from .statistics import PlayStatistics
-from .timing import BoundsDeclaration, Clock, TimingFacts, duration
-
-TIMEOUT_SECONDS = 10
+from .timing import TIMEOUT_SECONDS, BoundsDeclaration, Clock, TimingFacts, duration
 
 
 class RegulationPhase(str, Enum):
@@ -72,6 +70,7 @@ class RegulationView(SessionView):
     untimed_down: bool = False
     timing_log: tuple[TimeCharge, ...] = ()
     clock_optional: bool = False
+    normal_timing_ends_period: bool = False
     clock_modifiers: tuple[PenaltyChoice, ...] = ()
     game_type: str = "regular"
     overtime: OvertimeView | None = None
@@ -531,6 +530,7 @@ class RegulationGame:
             untimed_down=self._untimed,
             timing_log=self._timing_log,
             clock_optional=clock_optional,
+            normal_timing_ends_period=normal_timing_ends_period,
             clock_modifiers=modifiers,
             bounds_declaration=(
                 self._bounds_declaration.value if self._bounds_declaration is not None else None

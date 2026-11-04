@@ -124,12 +124,13 @@ loaders remain supported for saves without markers. This preserves free versus c
 calls when a game resumes without storing chart files.
 
 CLI/API games save `difficulty` (`easy`, `medium`, or `hard`) and load it through the
-current coach (revision 11 includes Razzle-Dazzle choice comparison). Older
-difficulty policies such as `medium-v9` or `medium-v10` are read as `medium`;
+current coach (revision 12 retains Razzle-Dazzle comparison and adds bounded
+late-half field-goal clock selection). Older difficulty policies such as
+`medium-v10` or `medium-v11` are read as `medium`;
 their revision is ignored. Explicit baseline/chart policies remain development-only
 audit compatibility options. No additional mutable coaching RNG state is serialized. Development replay with
 `preserve_development_policy=True` retains frozen revisions, including v10
-Razzle-Dazzle first-choice behavior. The pending context is reconstructed from
+Razzle-Dazzle first-choice behavior and v11 pre-correction clock selection. The pending context is reconstructed from
 the recorded comparison rolls and call, not saved as a new source of truth.
 Completed decisions and actual future dice still replay from ordinary commands
 and the physical roll tape; expected-value analysis is never replayed as a result.
@@ -215,3 +216,7 @@ state digest. Its label and derived action labels are presentation facts. Unarme
 additive fields do not invalidate older supported save digests. Saving/loading
 an arm or a pending play continuation neither spends a timeout nor consumes dice;
 only the final completed legal play applies its 10-second timing modifier.
+
+The derived `normal_timing_ends_period` view fact is not a new saved rule or
+intent. Legacy saves reconstruct it from the actual journal and clock; its
+absence does not weaken validation of timeouts, clock charges or future dice.

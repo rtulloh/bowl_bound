@@ -88,7 +88,11 @@ Open **Game → Save game** to download JSON, including during a pending choice.
 Keep that file somewhere safe. To resume, use **Load saved game** on setup or
 **Game → Load saved game** during play. Select your desired control mode on
 setup before loading. Matching team charts must remain installed and unchanged.
-An invalid load does not replace your current game.
+An invalid load does not replace your current game. Ordinary saves keep your
+chosen difficulty and use its current coaching improvements when loaded. The
+current CPU can preserve its intended fourth-down field goal before an expiring
+half with an offered useful timeout or hurry; it does not change Bowl Bound
+clock rules.
 
 There is **no automatic save**. Browser refresh, server shutdown or starting a
 new game can lose unsaved progress. Closing the browser does not stop the server.

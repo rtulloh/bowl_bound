@@ -31,7 +31,7 @@ def scoring_opportunity(quarter: int, side: str, *, own_timeouts: int = 3) -> Re
 
 @pytest.mark.parametrize("side", ["home", "away"])
 @pytest.mark.parametrize("mode", ["easy", "medium", "hard"])
-@pytest.mark.parametrize("own_timeouts", [0, 3])
+@pytest.mark.parametrize("own_timeouts", [0, 1, 3])
 def test_current_cpu_preserves_an_offered_field_goal_before_halftime(
     side: str, mode: str, own_timeouts: int
 ) -> None:

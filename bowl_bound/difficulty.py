@@ -26,6 +26,7 @@ from .coaching_situations import SituationBucket, situation_bucket
 from .models import TeamChart
 from .player_coaching import estimate_plays
 from .session import SessionPhase
+from .timing import TIMEOUT_SECONDS
 
 AGGRESSION = {
     mode: behavior_for_policy(f"{mode}-v1").aggression for mode in ("easy", "medium", "hard")
@@ -58,8 +59,8 @@ class DifficultyCoach(ChartAwareCoach):
     ) -> None:
         if mode not in AGGRESSION:
             raise ValueError("difficulty must be easy, medium or hard")
-        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}:
-            raise ValueError("difficulty policy version must be 1 through 11")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}:
+            raise ValueError("difficulty policy version must be 1 through 12")
         super().__init__(seed, home, away, version=version)
         self.mode = mode
         self.behavior = behavior_for_policy(f"{mode}-v{version}")
@@ -328,6 +329,29 @@ class DifficultyCoach(ChartAwareCoach):
             return fallback
         selection_fallback = fallback if fallback in legal else safe_choice("", legal).key
         return self._select(selection, "offense", selection_fallback)
+
+    def clock_decision(
+        self, observation: CoachObservation, *, normal_timing_ends_period: bool = False
+    ) -> str:
+        """Preserve a public-policy field goal before an expiring half in v12."""
+        if (
+            self.version >= 12
+            and normal_timing_ends_period
+            and observation.remaining > TIMEOUT_SECONDS
+            and observation.phase == "clock_choice"
+            and not observation.overtime
+            and observation.quarter in {2, 4}
+            and observation.side == observation.possession
+            and observation.score_difference <= 0
+            and self._public_fourth_down_call(observation) == "field_goal"
+        ):
+            for choice in (f"clock:timeout:{observation.side}", "clock:hurry"):
+                if choice in observation.choices:
+                    self.analysis_fallback = False
+                    return choice
+        return super().clock_decision(
+            observation, normal_timing_ends_period=normal_timing_ends_period
+        )
 
     def decision(self, observation: CoachObservation) -> str:
         """Apply versioned margin-aware try choices before the baseline fallback."""

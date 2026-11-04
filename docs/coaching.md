@@ -318,3 +318,22 @@ comparisons use the bounded real-engine sampled evaluator so pending penalties/
 returns can settle; v11 forced RZDZ choices use the separate shared rollout budget. The exact
 library keeps failed/unexplored mass explicit rather than pretending those
 branches are known football outcomes.
+
+
+### Version 12 late-half clock selection
+
+Current Easy/Medium/Hard preserve an existing public-policy fourth-down field
+goal when a pending completed play's normal timing would expire Q2 or Q4 and
+the CPU is tied or trailing. The engine supplies `normal_timing_ends_period`.
+The separate clock method chooses the CPU's offered own timeout when its
+10-second charge leaves time for the kick, otherwise offered hurry; it then
+re-plans the kick from the engine's actual clock. A useless timeout, opponent
+option or unavailable action is never manufactured. Q1/Q3, a lead, and public
+punt/go choices get no new urgency rule. Running calls and ordinary mixtures
+are unchanged in strategy; this is a bounded sequencing correction.
+
+Versions 1–11 keep their explicit decision and seeded-analysis contracts. As
+required by AI-026, ordinary saved difficulties load through the current tier;
+only `preserve_development_policy=True` retains a development revision for
+audits. The clock fact is separate from `CoachObservation`, so it adds no
+observation fields or historical analysis-seed inputs.

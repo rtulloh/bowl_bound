@@ -130,8 +130,8 @@ class BaselineCoach:
     """
 
     def __init__(self, seed: int, *, version: int = 1) -> None:
-        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}:
-            raise ValueError("baseline policy version must be 1 through 11")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}:
+            raise ValueError("baseline policy version must be 1 through 12")
         self._seed = seed
         self.version = version
         if version == 1:
@@ -221,6 +221,12 @@ class BaselineCoach:
         """Mix all offered formations without seeing the opponent offensive call."""
         safe_choice("", observation.defense)
         return self._random(observation, "defense").choice(observation.defense)
+
+    def clock_decision(
+        self, observation: CoachObservation, *, normal_timing_ends_period: bool = False
+    ) -> str:
+        """Select an offered clock action; historical policies retain their decisions."""
+        return self.decision(observation)
 
     def decision(self, observation: CoachObservation) -> str:
         """Conservative baseline preferences with engine-constrained fallback."""

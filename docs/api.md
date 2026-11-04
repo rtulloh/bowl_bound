@@ -99,3 +99,13 @@ digests. Response reports/log entries add nullable `timing_label`, generated fro
 the captured regulation view's recorded timeout charge. Pending reports do not
 claim a timeout was consumed. Clients display these labels without deriving
 timing or joining chart results. Old command and replay semantics remain strict.
+
+
+Regulation views include engine-owned Boolean `normal_timing_ends_period`. It
+is true only while a completed play awaits its default time charge and that
+charge would expire the current quarter. It predicts no future play result and
+spends no time, budget or dice. Current coaching uses it at the existing clock
+choice boundary to preserve an eligible public-policy field goal before Q2/Q4
+expiration. Clients pass through this fact and never calculate timing semantics.
+The derived field is excluded from legacy semantic save digests; actual clocks,
+commands and rolls remain strictly validated.

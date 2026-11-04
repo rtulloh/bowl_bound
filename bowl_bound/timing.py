@@ -6,6 +6,7 @@ from enum import Enum
 from .game_state import Possession
 
 QUARTER_SECONDS = 900
+TIMEOUT_SECONDS = 10
 
 
 class BoundsDeclaration(str, Enum):

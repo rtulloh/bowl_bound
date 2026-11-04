@@ -131,7 +131,14 @@ def plan_turn(view: GameView, human_side: str, coach: BaselineCoach) -> _Plan:
                 # hurry-up or spike. Normal timing is the implicit default.
                 legal = tuple(key for key in observation.choices if key == f"clock:timeout:{cpu}")
                 legal += ("clock:standard",)
-            choice = _selection(coach, coach.decision(replace(observation, choices=legal)), legal)
+            choice = _selection(
+                coach,
+                coach.clock_decision(
+                    replace(observation, choices=legal),
+                    normal_timing_ends_period=getattr(view, "normal_timing_ends_period", False),
+                ),
+                legal,
+            )
             if choice.key != "clock:standard":
                 return _Plan(
                     CoachingTurn(human_side, "computer", True, "Computer is deciding."),

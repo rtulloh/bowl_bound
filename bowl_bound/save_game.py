@@ -338,6 +338,7 @@ class SavedGame:
             "chart-v9",
             "chart-v10",
             "chart-v11",
+            "chart-v12",
         }:
             from .chart_coaching import ChartAwareCoach
 
@@ -373,10 +374,13 @@ class SavedGame:
             "hard-v9",
             "easy-v10",
             "easy-v11",
+            "easy-v12",
             "medium-v10",
             "medium-v11",
+            "medium-v12",
             "hard-v10",
             "hard-v11",
+            "hard-v12",
         }:
             from .difficulty import DifficultyCoach
 
@@ -394,6 +398,7 @@ class SavedGame:
                 "baseline-v9": 9,
                 "baseline-v10": 10,
                 "baseline-v11": 11,
+                "baseline-v12": 12,
             }.get(self.coach_policy, 1)
             self._coach = BaselineCoach(self._config["coach_seed"], version=version)
         self._tape = tape
@@ -812,6 +817,7 @@ def _validate_config(config: Any) -> None:
             "baseline-v9",
             "baseline-v10",
             "baseline-v11",
+            "baseline-v12",
             "chart-v1",
             "chart-v2",
             "easy-v1",
@@ -847,15 +853,19 @@ def _validate_config(config: Any) -> None:
             "chart-v9",
             "chart-v10",
             "chart-v11",
+            "chart-v12",
             "easy-v9",
             "medium-v9",
             "hard-v9",
             "easy-v10",
             "easy-v11",
+            "easy-v12",
             "medium-v10",
             "medium-v11",
+            "medium-v12",
             "hard-v10",
             "hard-v11",
+            "hard-v12",
         }
     ):
         _fail()
@@ -1252,6 +1262,7 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         "play_modifiers",
         "armed_timeout_label",
         "clock_timing_label",
+        "normal_timing_ends_period",
         "defense_name",
         "home_timeouts",
         "away_timeouts",

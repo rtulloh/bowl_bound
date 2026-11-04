@@ -6,7 +6,7 @@ their selection streams. Names are diagnostic and are not added to RNG inputs.
 
 from dataclasses import dataclass, replace
 
-CURRENT_DIFFICULTY_VERSION = 11
+CURRENT_DIFFICULTY_VERSION = 12
 
 
 @dataclass(frozen=True)
@@ -80,6 +80,7 @@ BASELINE_V8 = replace(BASELINE_V2, name="baseline-v8")
 BASELINE_V9 = replace(BASELINE_V8, name="baseline-v9")
 BASELINE_V10 = replace(BASELINE_V9, name="baseline-v10")
 BASELINE_V11 = replace(BASELINE_V10, name="baseline-v11")
+BASELINE_V12 = replace(BASELINE_V11, name="baseline-v12")
 CHART_V2 = replace(CHART_V1, name="chart-v2")
 EASY_V2 = replace(EASY_V1, name="easy-v2")
 MEDIUM_V2 = replace(MEDIUM_V1, name="medium-v2")
@@ -114,12 +115,16 @@ MEDIUM_V9 = replace(MEDIUM_V8, name="medium-v9")
 HARD_V9 = replace(HARD_V8, name="hard-v9")
 CHART_V10 = replace(CHART_V9, name="chart-v10")
 CHART_V11 = replace(CHART_V10, name="chart-v11")
+CHART_V12 = replace(CHART_V11, name="chart-v12")
 EASY_V10 = replace(EASY_V9, name="easy-v10")
 EASY_V11 = replace(EASY_V10, name="easy-v11")
+EASY_V12 = replace(EASY_V11, name="easy-v12")
 MEDIUM_V10 = replace(MEDIUM_V9, name="medium-v10")
 MEDIUM_V11 = replace(MEDIUM_V10, name="medium-v11")
+MEDIUM_V12 = replace(MEDIUM_V11, name="medium-v12")
 HARD_V10 = replace(HARD_V9, name="hard-v10")
 HARD_V11 = replace(HARD_V10, name="hard-v11")
+HARD_V12 = replace(HARD_V11, name="hard-v12")
 
 
 def behavior_for_policy(policy: str) -> CoachBehavior:
@@ -135,6 +140,7 @@ def behavior_for_policy(policy: str) -> CoachBehavior:
         ("baseline-v9", BASELINE_V9),
         ("baseline-v10", BASELINE_V10),
         ("baseline-v11", BASELINE_V11),
+        ("baseline-v12", BASELINE_V12),
         ("chart-v2", CHART_V2),
         ("easy-v2", EASY_V2),
         ("medium-v2", MEDIUM_V2),
@@ -169,12 +175,16 @@ def behavior_for_policy(policy: str) -> CoachBehavior:
         ("hard-v9", HARD_V9),
         ("chart-v10", CHART_V10),
         ("chart-v11", CHART_V11),
+        ("chart-v12", CHART_V12),
         ("easy-v10", EASY_V10),
         ("easy-v11", EASY_V11),
+        ("easy-v12", EASY_V12),
         ("medium-v10", MEDIUM_V10),
         ("medium-v11", MEDIUM_V11),
+        ("medium-v12", MEDIUM_V12),
         ("hard-v10", HARD_V10),
         ("hard-v11", HARD_V11),
+        ("hard-v12", HARD_V12),
     ):
         if policy == key:
             return profile

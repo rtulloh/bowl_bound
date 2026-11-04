@@ -1116,3 +1116,22 @@ intentionally red at 12 failed / 12 passed; its green-control selection passes
 optional-clock, coordinator and tracker checks pass 74 in 3.05s. Focused Ruff
 check/format and diff checks pass. This is investigation evidence, not a green
 implementation or completed acceptance.
+
+
+AI-035 approved implementation checkpoint: v12 normal clock selection preserves
+the shared public-policy FG at a pending Q2/Q4 boundary using an offered useful
+own timeout/hurry. One derived engine view Boolean is passed separately to the
+clock method; no old observation/analysis hash changes. Ordinary named-tier
+loads upgrade under AI-026; explicit development audit loads may freeze v1–11.
+The initial draft's contrary ordinary-load promise was corrected before source
+implementation. Expanded red97/green13 and useful-timeout red3 preceded final
+focused119/5.26s; twelve actual original-source fictional golden checks pass.
+Cumulative/full checks and a tested commit are pending, so AI-035 remains open.
+
+Focused/cumulative checkpoint: **365 passed in 44.77s** across difficulty/
+profiles/coordinator, strict saves, API, RZDZ, timing and new clock controls.
+Fresh pinned frontend: **131 in 4.99s**, production build 739ms, npm audit zero
+vulnerabilities. npm ci reports the existing whatwg-encoding deprecation;
+Vitest reports its jsdom performance recommendation. Ruff check/format 566 files,
+pip and diff checks pass. No new skips are hidden. Full regression remains
+pending, and this does not constitute owner play-test confirmation.
