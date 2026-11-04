@@ -4,7 +4,7 @@ The owner requested frontend tests proving that a second-half kickoff occurs.
 Read-only inspection of the current owner game found Q1-to-Q2 continuation, so
 the reported absence of a kickoff there is correct. No Q2-to-Q3 kickoff defect
 has been reproduced. A distinct halftime recap remains planned in
-[UI-058](issues/UI/UI-058.md) and [Milestone 35](milestone-35.md).
+[UI-058](issues/UI/UI-058.md), pulled forward into [Milestone 33](milestone-33.md) by the owner's next-release selection.
 
 ## Paydirt consultation
 
