@@ -1189,3 +1189,33 @@ AI-035 is resolved pending owner play testing. The original reported Q1-to-Q2
 transition remains valid, unrelated to the synthetic defect. Browser execution
 is still blocked as recorded above; no full browser gate or fresh milestone
 acceptance is claimed. No push, main merge, release, tag or owner-game mutation.
+
+## Owner-selected next-release blockers — 2026-11-03
+
+The owner selected AI-036, UI-054, CLI-058/UI-058 and UI-059 as required M33
+follow-up fixes before the next release. This moves halftime/try presentation
+forward from M35, which retains coffin-corner punts. Preserve prior engineering
+acceptance checkpoints; do not describe the new scope as already tested or
+released. The RZDZ target is normally one to three surprise calls per team per
+game with situational judgment, not a new rule limiting human legal calls.
+
+Use the separately tested v12 late-half clock fix as the integration base after
+review; preserve older explicit policies. Consult relevant local Paydirt code,
+tests and lessons before implementing this follow-up and record references.
+Each selected issue needs meaningful synthetic red-first regressions, the
+smallest correct engine-owned behavior/presentation change, focused cumulative
+checks and documentation. The integrated source must pass the full gate before
+push, with browser limitations reported honestly, followed by owner playtesting.
+Recommendations such as CLI-062 or AI-032 are separate from this explicit
+owner-selected blocker list unless subsequently approved.
+
+### Confirmed six-ticket implementation handoff
+
+The owner explicitly added AI-035 and directed the milestone agent to proceed
+with AI-035, AI-036, UI-054, CLI-058, UI-058 and UI-059 as M33 next-release
+blockers. AI-035 already has a tested v12 implementation on its isolated branch;
+remaining tickets need test-first implementation. Integrate the selected work
+without changing the chart-generator branch or frozen owner playtest servers.
+Return tested commits, documentation, a full-regression report with any browser
+limitations, and concrete playtest instructions. Do not publish or start the
+release workflow as part of this implementation handoff.

@@ -1,4 +1,12 @@
-# Milestone 35 — Optional coffin-corner punts and halftime summary
+# Milestone 35 — Optional coffin-corner punts
+
+## Current scope amendment — 2026-11-03
+
+The owner subsequently selected CLI-058/UI-058 and UI-059 as M33 next-release
+blockers. Their halftime/try presentation implementation is now M33 follow-up
+scope, not M35. Coffin-corner punts (RULE-043/AI-030) remain here. Earlier
+scheduling and Paydirt consultation below are retained as historical planning
+context; the M33 amendment supersedes their halftime milestone assignment.
 
 ## Owner direction and scope
 
@@ -69,16 +77,6 @@ does not independently require the Paydirt Continue button or a CLI pause.
 - Add thin API/CLI/browser controls and AI-030 comparisons with equivalent human
   guidance. Preserve the approved public-information policy; document and review
   any proposed change to information available to coaches separately.
-- Add CLI-058's one-time halftime announcement, score-by-quarter/first-half total,
-  scoring events and supported team statistics from engine-owned facts. Cover
-  ordinary period ends, scoring and pending-decision paths, both human sides,
-  computer-owned automatic kickoffs and save/resume. Show the recap before any
-  second-half kickoff report without changing timing, dice or kickoff ownership.
-- Add UI-058's distinct web halftime transition and reviewable recap from the
-  same engine/API facts. Test automatic computer kickoff ordering, outstanding
-  tries/penalties, both human sides, manual play, new-game state and save/resume.
-  Automatic UI actions must not bypass or immediately overwrite the transition;
-  viewing it changes no football state, clock, dice or coaching decisions.
 - Complete focused and full regression gates, review synthetic/public-safe
   documentation, record tested commits and actual play-test confirmation, then
   make the dedicated Milestone 35 commit. This note records planned work only.

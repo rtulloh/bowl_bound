@@ -635,18 +635,33 @@ current RZDZ choices with no pending-choice fallback. Owner RZDZ confirmation
 remains required before closure; the separate initial-try analysis limitation is
 tracked under M23 in [AI-034](issues/AI/AI-034.md).
 
+**Owner-selected next-release blockers (2026-11-03):** complete
+[AI-035](issues/AI/AI-035.md), [AI-036](issues/AI/AI-036.md),
+[UI-054](issues/UI/UI-054.md), [CLI-058](issues/CLI/CLI-058.md), [UI-058](issues/UI/UI-058.md), and
+[UI-059](issues/UI/UI-059.md) on the M33 owner-review branch before the next
+release. The owner explicitly pulled the halftime recap and two-point commentary
+work forward from M35. Preserve the earlier engineering acceptance as a frozen
+checkpoint; this follow-up needs its own test-first changes, full regression and
+owner review. RZDZ normal coaching use targets roughly one to three surprise
+calls per team per game, with situational judgment and recent-use deterrence.
+The owner subsequently added AI-035 and delegated all six tickets to the milestone
+agent. Integrate its existing tested clock fix with the remaining changes and
+validate the combined branch. Other recommended tickets are not automatically
+added to this release scope.
+
 **Commit:** `milestone 33: correct core playability and validation status`
 
-### 35. Add optional coffin-corner punts and a halftime summary
+### 35. Add optional coffin-corner punts
 
 Added 2026-11-02 at the owner's request. Milestone 34 is reserved for the
 independent college chart-generator workstream; this follow-up does not expand
 Milestones 33 or 34 or the alpha 4 release.
 
-On 2026-11-03 the owner also scheduled the pending halftime presentation
-[CLI-058](issues/CLI/CLI-058.md) for this next planned gameplay milestone,
-moving it from the M23 backlog. The owner also confirmed the same missing web
-transition; [UI-058](issues/UI/UI-058.md) delivers the browser counterpart here.
+The halftime presentation was initially scheduled here on 2026-11-03. The
+owner subsequently selected [CLI-058](issues/CLI/CLI-058.md),
+[UI-058](issues/UI/UI-058.md) and two-point presentation
+[UI-059](issues/UI/UI-059.md) as M33 next-release blockers, moving that work
+forward. Coffin-corner punt support remains in M35.
 
 **Deliver:** an explicitly enabled Bowl Bound coffin-corner punt option, with
 engine-owned eligibility, declared adjustments, resolution, clock/statistics,
@@ -656,13 +671,6 @@ human guidance. Verify the exact Bowl Bound procedure before implementation;
 do not inherit Paydirt yardage thresholds or NFL behavior. Other deferred
 Advanced III/IV options remain outside this milestone.
 
-Also deliver a one-time CLI halftime announcement and a distinct web halftime
-transition, with summaries using shared engine-owned quarter scores, first-half
-scoring events and supported statistics. Display the recap before the second-half
-kickoff, including a computer-owned automatic kickoff; the browser transition must
-remain reviewable rather than being immediately overwritten by automatic play.
-Preserve Bowl Bound timing, kickoff assignment, dice and save/replay semantics.
-
 **Validate:** test first with synthetic charts, exact offensive/defensive dice
 distributions where used, field-position and legal-adjustment boundaries,
 return/no-return/touchback and applicable special-result/penalty paths, both
@@ -671,17 +679,11 @@ and engine/API/CLI/browser parity. Preserve the approved public-information
 coaching policy unless separately changed through review. Finish focused and
 full regression gates and play-test acceptance before release claims.
 
-Validate the halftime presentation with synthetic regulation fixtures covering
-an ordinary period end, an end-of-half scoring play, pending decisions,
-automatic computer kickoffs, both human sides and save/resume. Rendering must
-not consume time/dice or duplicate the summary; API/web facts remain engine-owned.
-
-Tracked work: [RULE-043](issues/RULE/RULE-043.md),
-[AI-030](issues/AI/AI-030.md), [CLI-058](issues/CLI/CLI-058.md), and
-[UI-058](issues/UI/UI-058.md). See the
+Tracked work: [RULE-043](issues/RULE/RULE-043.md) and
+[AI-030](issues/AI/AI-030.md). See the
 [Milestone 35 planning note](milestone-35.md).
 
-**Commit:** `milestone 35: add coffin-corner punts and halftime summary`
+**Commit:** `milestone 35: add optional coffin-corner punts`
 
 ### 36. Bring the Easy coaching helper to the web UI
 
