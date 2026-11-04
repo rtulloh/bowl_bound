@@ -9,8 +9,10 @@ from hashlib import sha256
 from json import dumps
 from random import Random
 
-from .coaching_profiles import behavior_for_policy
+from .coaching_profiles import CURRENT_DIFFICULTY_VERSION, behavior_for_policy
 from .decision_facts import DecisionOutcome, DecisionOutcomeKind, RazzleDazzleContext
+
+MAX_PUBLIC_FIELD_GOAL_DISTANCE = 55
 
 
 class NoLegalAction(ValueError):
@@ -99,7 +101,7 @@ def public_fourth_down_call(
         if (
             observation.score_difference >= -3
             and field_goal_available
-            and field_goal_distance <= 55
+            and field_goal_distance <= MAX_PUBLIC_FIELD_GOAL_DISTANCE
         ):
             return "field_goal"
         return "go"
@@ -112,7 +114,7 @@ def public_fourth_down_call(
         return "field_goal"
     if field_goal_available and field_goal_distance <= 50:
         return "field_goal"
-    if field_goal_available and field_goal_distance <= 55:
+    if field_goal_available and field_goal_distance <= MAX_PUBLIC_FIELD_GOAL_DISTANCE:
         if aggression >= 0.5:
             return "field_goal"
         return "punt" if punt_available else "go"
@@ -130,8 +132,10 @@ class BaselineCoach:
     """
 
     def __init__(self, seed: int, *, version: int = 1) -> None:
-        if type(version) is not int or not 1 <= version <= 14:
-            raise ValueError("baseline policy version must be 1 through 14")
+        if type(version) is not int or not 1 <= version <= CURRENT_DIFFICULTY_VERSION:
+            raise ValueError(
+                f"baseline policy version must be 1 through {CURRENT_DIFFICULTY_VERSION}"
+            )
         self._seed = seed
         self.version = version
         if version == 1:

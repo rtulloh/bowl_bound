@@ -12,6 +12,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from backend.app import create_app
+from bowl_bound.coaching_profiles import CURRENT_DIFFICULTY_VERSION
 from bowl_bound.dice import OffensiveRoll, ScriptedDice
 from bowl_bound.game_state import FieldState, Possession
 from bowl_bound.models import (
@@ -176,7 +177,7 @@ def test_authentic_pre_fix_hail_mary_save_replays_and_continues(stage: str) -> N
     # Load upgrades ordinary Hard policy, retaining all past commands and exact dice/state.
     for key in ("commands", "rolls", "random_state", "state_digest", "teams"):
         assert facts[key] == frozen[key]
-    assert restored.coach_policy == "hard-v14"
+    assert restored.coach_policy == f"hard-v{CURRENT_DIFFICULTY_VERSION}"
     reference = pending_game(penalty=stage == "penalty")
     if stage in {"end-zone", "return-penalty"}:
         reference.decide("interception:return")

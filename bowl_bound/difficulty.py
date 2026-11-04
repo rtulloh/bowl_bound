@@ -14,6 +14,7 @@ from random import Random
 
 from .chart_coaching import ChartAwareCoach
 from .coaching import (
+    MAX_PUBLIC_FIELD_GOAL_DISTANCE,
     BaselineCoach,
     CoachObservation,
     field_goal_attempt_distance,
@@ -21,7 +22,7 @@ from .coaching import (
     safe_choice,
 )
 from .coaching_evaluation import ActionEstimate, evaluate_action
-from .coaching_profiles import behavior_for_policy
+from .coaching_profiles import CURRENT_DIFFICULTY_VERSION, behavior_for_policy
 from .coaching_situations import SituationBucket, situation_bucket
 from .models import TeamChart
 from .player_coaching import estimate_plays
@@ -59,8 +60,10 @@ class DifficultyCoach(ChartAwareCoach):
     ) -> None:
         if mode not in AGGRESSION:
             raise ValueError("difficulty must be easy, medium or hard")
-        if type(version) is not int or not 1 <= version <= 14:
-            raise ValueError("difficulty policy version must be 1 through 14")
+        if type(version) is not int or not 1 <= version <= CURRENT_DIFFICULTY_VERSION:
+            raise ValueError(
+                f"difficulty policy version must be 1 through {CURRENT_DIFFICULTY_VERSION}"
+            )
         super().__init__(seed, home, away, version=version)
         self.mode = mode
         self.behavior = behavior_for_policy(f"{mode}-v{version}")
@@ -309,7 +312,7 @@ class DifficultyCoach(ChartAwareCoach):
             last_snap
             and self.version >= 10
             and "field_goal" in observation.special
-            and self._public_field_goal_distance(observation) <= 55
+            and self._public_field_goal_distance(observation) <= MAX_PUBLIC_FIELD_GOAL_DISTANCE
         ):
             return "field_goal"
         if (

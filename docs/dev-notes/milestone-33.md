@@ -1764,3 +1764,75 @@ post-commit focused run passes **89 in 3.37s**. Both tickets are resolved agains
 this commit and remain unclosed pending owner play-test. CLI-058 alone closes
 from the explicit terminal halftime confirmation; UI-060 remains open for web
 acceptance. No push, release or restart of an existing interpreter/server.
+
+## AI-038 — late-half field-goal range (2026-11-04)
+
+Owner reports a CPU field goal from deep in its own territory. The conventional
+distance helper correctly computes yards to the goal line plus 17. The late-half
+comparison nevertheless admits every engine-legal field goal, bypassing the
+existing public maximum; exploration can select a guaranteed miss. This is a
+candidate guard defect, not an orientation, chart-import or kick-resolution bug.
+
+Before implementation, consulted Paydirt `paydirt/computer_ai.py:154-221`,
+particularly the end-half range guard at 189-198. Adapt range-before-selection,
+not its NFL thresholds, time units, chart data or runtime code. Bowl Bound already
+uses a 55-yard public conventional ceiling. V15 shares that constant between
+candidate eligibility, public fourth-down calls and last-snap kicks. Team/season
+range configuration remains separately deferred under AI-031.
+
+The synthetic regression first fails 92 cases with 15 passing controls; the
+corrected source passes all 107. Both directions, all difficulties, Q2/Q4,
+early downs, own territory and the 55/56 boundary are exercised. Attractive fake
+kick utilities verify that an unreachable candidate cannot enter exploration;
+failed comparisons still take a legal ordinary fallback. In-range early-down
+kicks and public fourth-down/last-snap decisions retain their behavior.
+
+Current normal coaching advances to v15. All prior explicit versions remain
+frozen, including a captured v14 call stream. Existing current-load revision
+assertions in three modules advance 14 to 15 without changing football
+expectations. Four authentic pre-fix pending Hail Mary fixtures still strictly
+replay and continue with their exact original commands, rolls and states. API/audit/save
+policy registrations include all v15 families. The owner's original save strictly
+replays read-only and uses v15 for future Hard decisions. Recorded commands,
+rolls, random source, team identity, state digests and schema remain unchanged.
+No live process is restarted. Wider verification follows below.
+
+Focused command: `/Users/rtulloh/work/bowl_bound/.venv/bin/python -m pytest -q
+tests/test_field_goal_candidate_range.py`: **107 passed in 2.12s**. This is an
+owner-feedback follow-up, not full milestone acceptance or a release.
+
+Six more range cases reach Q2 own 24 through journaled synthetic engine commands,
+then save/load and preview at every difficulty in both directions. The 93-yard
+attempt is absent from candidates and the coordinator requests the human's
+defensive formation, without changing saved facts. The range module now has 113
+cases; combined range/pending Hail Mary/punt/late-half clock checks pass **261 in
+9.29s**. An initial 69-module cumulative run passed 1,432 and failed four old
+current-v14 expectations in the Hail Mary fixture test. Those expectations now
+use the current revision while all past-fact and continuation assertions remain.
+
+Complete-game smoke audits: public samples, Hard-v15, seeds 101/307, coach seed
+31, CPU home/away and reversed arrangements. Games finish in 169/166 plays;
+scores, statistics, structured traces and four 900-second periods reconcile.
+Saved continuation verifies 159/152 steps, with zero illegal calls and zero
+analysis fallbacks. Across 66/56 out-of-range offensive selections, field goals
+receive no preference weight and are never selected. No early-down punts occur.
+All ordinary calls 1-9 appear, RZDZ counts two per game, comparable repeats 4/21
+and 5/32, longest streak two and no concentration advisories. These two games do
+not establish statistical calibration or optimal strategy. Ignored local audit
+artifacts contain only fictional samples; owner charts and saves remain private.
+
+Final cumulative result: **1,442 passed in 177.23s**, no reported skips or
+warnings, across 69 modules. Command: supported Python `-m pytest -q` on the
+sorted union under tests/ of `test_*coaching*.py`, `test_difficulty*.py`,
+`test_late_half*.py`, `test_*save*.py`, `test_*replay*.py`, `test_*razzle*.py`,
+`test_cli*.py`, `test_api*.py`, `test_history_fixtures.py`,
+`test_fourth_down_guidance.py`, `test_public_fourth_down.py`,
+`test_issue_tracker.py`, `test_priority_docs.py`, `test_release_player_docs.py`,
+`test_field_goal_candidate_range.py`, `test_pending_hail_mary.py` and
+`test_interception_context.py`. Ruff check and `ruff format --check` pass on all
+11 changed Python files; `git diff --check` passes. The two complete-game audit
+calls were `audit_game(*sample_teams(), seed=101, coach_seed=31,
+policy="hard-v15", cpu_side="home")` and reversed samples with seed 307 and CPU
+away, preserving default replay checkpoints and stand-in seed. The owner-facing
+source will be advanced only after committing these tested changes. No push,
+release, interpreter restart or full M33 acceptance is included.

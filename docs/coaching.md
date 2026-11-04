@@ -382,6 +382,22 @@ Fourth-down punts and early-down end-of-half field goals retain their existing
 selection rules. Human punt controls remain engine-legal as before.
 
 Explicit development versions 1–13 retain their original choices and seeded
-streams. Ordinary difficulty loads apply v14 to future coaching while replaying
-the already-recorded game unchanged. No chart, engine rule, timing, dice,
+streams. Ordinary difficulty loads apply the current revision to future coaching
+while replaying the already-recorded game unchanged. No chart, engine rule, timing, dice,
 observation field, save schema or historical command is changed.
+
+### Version 15 field-goal candidate range
+
+Current Easy, Medium and Hard exclude field goals beyond the shared public
+55-yard attempt limit before evaluating or sampling late-half choices. Attempt
+distance is yards to the goal line plus 17; the team's chart still determines the
+actual kick result using its line-of-scrimmage range. Previously, a late-half
+early-down kick outside the public range could enter the exploration mixture
+even when every sampled kick missed.
+
+In-range late-half kicks remain candidates on early downs. Public fourth-down
+guidance, last-snap kick priorities and the rule against early-down CPU punts
+remain in effect. This changes coaching eligibility only; human kick actions
+retain their engine legality. Explicit development v1-v14 policies keep their
+original choices and streams. Ordinary saved difficulties upgrade future
+coaching to v15 while preserving the recorded game and dice.

@@ -4,7 +4,13 @@ from collections import OrderedDict
 from dataclasses import replace
 from math import exp
 
-from .coaching import BaselineCoach, CoachObservation, safe_choice
+from .coaching import (
+    MAX_PUBLIC_FIELD_GOAL_DISTANCE,
+    BaselineCoach,
+    CoachObservation,
+    field_goal_attempt_distance,
+    safe_choice,
+)
 from .coaching_evaluation import (
     ActionEstimate,
     RazzleChoiceEstimate,
@@ -74,6 +80,12 @@ class ChartAwareCoach(BaselineCoach):
                     for k in observation.special
                     if k in {"punt", "field_goal"}
                     and (self.version < 14 or k != "punt" or observation.down == 4)
+                    and (
+                        self.version < 15
+                        or k != "field_goal"
+                        or field_goal_attempt_distance(observation)
+                        <= MAX_PUBLIC_FIELD_GOAL_DISTANCE
+                    )
                 )
             candidates += tuple(k for k in observation.game_actions if k == "hail_mary")
         result = tuple(self._evaluate(model, candidate, role, weights) for candidate in candidates)

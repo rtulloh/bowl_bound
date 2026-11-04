@@ -132,7 +132,7 @@ def test_named_save_upgrades_future_coaching_without_changing_game_replay() -> N
     frozen = loads_game(payload, loader, preserve_development_policy=True)
     current = loads_game(payload, loader)
     assert frozen._coach.version == 13
-    assert current._coach.version == CURRENT_DIFFICULTY_VERSION == 14
+    assert current._coach.version == CURRENT_DIFFICULTY_VERSION == 15
     assert frozen.view() == current.view() == saved.view()
     for key in ("commands", "rolls", "random_state", "state_digest"):
         assert json.loads(dumps_game(current))[key] == json.loads(payload)[key]
