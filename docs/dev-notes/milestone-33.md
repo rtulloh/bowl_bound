@@ -1219,3 +1219,34 @@ without changing the chart-generator branch or frozen owner playtest servers.
 Return tested commits, documentation, a full-regression report with any browser
 limitations, and concrete playtest instructions. Do not publish or start the
 release workflow as part of this implementation handoff.
+
+
+## Six selected release blockers: implementation phase
+
+Integrated the owner's 839d154 handoff with the tested v12 source at 4137be0;
+append-only histories were preserved and the issue index regenerated (18 checks
+pass). AI-035 remains tested/resolved pending owner confirmation. Remaining scope
+is AI-036, UI-054, UI-059 and the shared CLI-058/UI-058 halftime presentation.
+Earlier acceptance is historical, not acceptance of this new follow-up.
+
+Before implementation, consulted local Paydirt `paydirt/computer_ai.py:76–119`,
+`paydirt/offense_strategy.py:118–134`, `tests/test_offensive_call_history.py`,
+`paydirt/interactive_game.py:2677–2687`, `:3060–3084`, `:3834–3862`,
+`tests/test_half_ending_score_flow.py` and `tests/test_halftime_ownership.py`.
+Also reviewed its web `Game/Halftime.jsx`, `Game/PlayLogDisplay.tsx`, matching
+play-log tests and `halftimeFromEngine.test.jsx`. Adapt committed-history purity,
+decaying repeat deterrence, explicit try prompts, engine-owned recap facts and
+ordered visible transitions. Paydirt has no Bowl Bound RZDZ policy to copy;
+the owner's one-to-three surprise-use target is the coaching requirement.
+Do not inherit NFL play categories, timing/warnings, halftime ownership code,
+chart cells, private fixtures or runtime dependencies. Bowl Bound owns legal
+choices, pending completion, scoring, time, dice and presentation facts.
+
+
+AI-036 focused source checkpoint: **368 cumulative coaching/API/save/invariant
+cases pass in 61.27s**, plus 30 audit-contract checks in 40.57s and 18 tracker
+checks in 0.53s. Ruff check/format and diff checks pass. The first cumulative run
+caught the CLI audit default still listing v12; both API and CLI defaults now
+use v13, and the fresh cumulative run is green. Two mistyped optional test paths
+collected no tests and are not counted as validation. Complete-game frequency/
+replay evidence and combined final regression remain pending; ticket stays open.

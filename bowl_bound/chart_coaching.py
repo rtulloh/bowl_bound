@@ -101,6 +101,16 @@ class ChartAwareCoach(BaselineCoach):
     def _selection_role(self, role: str) -> str:
         return f"{self.policy}-{role}"
 
+    def _selection_mixture(
+        self,
+        observation: CoachObservation,
+        role: str,
+        keys: tuple[str, ...],
+        weights: list[float],
+    ) -> tuple[tuple[str, ...], list[float]]:
+        """Keep the historical mixture unless a versioned policy specializes it."""
+        return keys, weights
+
     def _select(self, observation: CoachObservation, role: str, fallback: str) -> str:
         self.analysis_fallback = False
         estimates = self.estimates(observation, role)
@@ -120,8 +130,11 @@ class ChartAwareCoach(BaselineCoach):
             self.behavior.exploration / len(weights) + self.behavior.exploitation * weight / total
             for weight in weights
         ]
+        keys, mixture = self._selection_mixture(
+            observation, role, tuple(estimate.key for estimate in estimates), mixture
+        )
         return self._random(observation, self._selection_role(role)).choices(
-            [estimate.key for estimate in estimates],
+            keys,
             weights=mixture,
             k=1,
         )[0]

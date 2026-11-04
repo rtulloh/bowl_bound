@@ -124,13 +124,13 @@ loaders remain supported for saves without markers. This preserves free versus c
 calls when a game resumes without storing chart files.
 
 CLI/API games save `difficulty` (`easy`, `medium`, or `hard`) and load it through the
-current coach (revision 12 retains Razzle-Dazzle comparison and adds bounded
-late-half field-goal clock selection). Older difficulty policies such as
+current coach (revision 13 adds rare Razzle-Dazzle surprise weighting while
+retaining revision 12's bounded late-half field-goal clock selection). Older difficulty policies such as
 `medium-v10` or `medium-v11` are read as `medium`;
 their revision is ignored. Explicit baseline/chart policies remain development-only
 audit compatibility options. No additional mutable coaching RNG state is serialized. Development replay with
 `preserve_development_policy=True` retains frozen revisions, including v10
-Razzle-Dazzle first-choice behavior and v11 pre-correction clock selection. The pending context is reconstructed from
+Razzle-Dazzle first-choice behavior v11 pre-correction clock selection and v12 pre-surprise call mixtures. The pending context is reconstructed from
 the recorded comparison rolls and call, not saved as a new source of truth.
 Completed decisions and actual future dice still replay from ordinary commands
 and the physical roll tape; expected-value analysis is never replayed as a result.

@@ -339,6 +339,7 @@ class SavedGame:
             "chart-v10",
             "chart-v11",
             "chart-v12",
+            "chart-v13",
         }:
             from .chart_coaching import ChartAwareCoach
 
@@ -375,12 +376,15 @@ class SavedGame:
             "easy-v10",
             "easy-v11",
             "easy-v12",
+            "easy-v13",
             "medium-v10",
             "medium-v11",
             "medium-v12",
+            "medium-v13",
             "hard-v10",
             "hard-v11",
             "hard-v12",
+            "hard-v13",
         }:
             from .difficulty import DifficultyCoach
 
@@ -399,6 +403,7 @@ class SavedGame:
                 "baseline-v10": 10,
                 "baseline-v11": 11,
                 "baseline-v12": 12,
+                "baseline-v13": 13,
             }.get(self.coach_policy, 1)
             self._coach = BaselineCoach(self._config["coach_seed"], version=version)
         self._tape = tape
@@ -818,6 +823,7 @@ def _validate_config(config: Any) -> None:
             "baseline-v10",
             "baseline-v11",
             "baseline-v12",
+            "baseline-v13",
             "chart-v1",
             "chart-v2",
             "easy-v1",
@@ -854,18 +860,22 @@ def _validate_config(config: Any) -> None:
             "chart-v10",
             "chart-v11",
             "chart-v12",
+            "chart-v13",
             "easy-v9",
             "medium-v9",
             "hard-v9",
             "easy-v10",
             "easy-v11",
             "easy-v12",
+            "easy-v13",
             "medium-v10",
             "medium-v11",
             "medium-v12",
+            "medium-v13",
             "hard-v10",
             "hard-v11",
             "hard-v12",
+            "hard-v13",
         }
     ):
         _fail()

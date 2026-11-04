@@ -337,3 +337,29 @@ required by AI-026, ordinary saved difficulties load through the current tier;
 only `preserve_development_policy=True` retains a development revision for
 audits. The clock fact is separate from `CoachObservation`, so it adds no
 observation fields or historical analysis-seed inputs.
+
+
+### Version 13 Razzle-Dazzle surprise preference
+
+Normal Easy/Medium/Hard treat RZDZ as a separate surprise call, rather than
+another ordinary pass. Its initial probability is 3% when a scrimmage mixture
+is selected. Divide that by one plus the team's committed RZDZ calls, then by
+one plus eight times its recent-use score. That score sums `0.5 ** age` over
+RZDZ calls in the tier's recent own-call history. Previewing a call changes
+neither count nor history. There is no forced minimum or hard maximum; the
+owner's normal full-game target is roughly one to three surprise calls per team.
+
+The same small preference applies to ordinary mixtures, late-half/Hard analysis
+and analysis fallbacks. Initial ordinary-action rollouts rank the other calls;
+RZDZ is not allowed to dominate that mixture through an estimated initial-call
+utility. Its subsequent revealed-result choice still uses v11's bounded real
+engine comparison and remains a gamble wherever further rolls are required.
+Public fourth-down kicks, kneeling and last-snap priorities still take precedence.
+Legal human calls and all engine outcomes, dice and rules remain unchanged.
+
+Explicit v1–12 policies retain their previous choices and mixtures. Normal named
+difficulties upgrade to v13 on ordinary load under AI-026; an explicit development
+preservation load keeps its recorded revision. The new preference uses only
+committed own calls and public observations, never the hidden human call or
+future gameplay stream. Frequency audits report complete-game counts and repeat
+runs; the target is a coaching preference, not an asserted historical frequency.

@@ -72,6 +72,7 @@ class NewGame(BaseModel):
             "baseline-v10",
             "baseline-v11",
             "baseline-v12",
+            "baseline-v13",
             "chart-v1",
             "chart-v2",
             "easy-v1",
@@ -102,6 +103,7 @@ class NewGame(BaseModel):
             "chart-v10",
             "chart-v11",
             "chart-v12",
+            "chart-v13",
             "easy-v7",
             "medium-v7",
             "hard-v7",
@@ -114,12 +116,15 @@ class NewGame(BaseModel):
             "easy-v10",
             "easy-v11",
             "easy-v12",
+            "easy-v13",
             "medium-v10",
             "medium-v11",
             "medium-v12",
+            "medium-v13",
             "hard-v10",
             "hard-v11",
             "hard-v12",
+            "hard-v13",
         ]
         | None
     ) = None

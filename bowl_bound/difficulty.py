@@ -59,8 +59,8 @@ class DifficultyCoach(ChartAwareCoach):
     ) -> None:
         if mode not in AGGRESSION:
             raise ValueError("difficulty must be easy, medium or hard")
-        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}:
-            raise ValueError("difficulty policy version must be 1 through 12")
+        if type(version) is not int or version not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}:
+            raise ValueError("difficulty policy version must be 1 through 13")
         super().__init__(seed, home, away, version=version)
         self.mode = mode
         self.behavior = behavior_for_policy(f"{mode}-v{version}")
@@ -190,13 +190,64 @@ class DifficultyCoach(ChartAwareCoach):
             self.behavior.min_run_probability,
             min(self.behavior.max_run_probability, run_probability),
         )
-        runs = sum(key in "12345" for key in obs.offense)
-        passes = len(obs.offense) - runs
+        ordinary = tuple(key for key in obs.offense if self.version < 13 or key != "RZDZ")
+        if not ordinary:
+            return safe_choice("", obs.offense).key
+        runs = sum(key in "12345" for key in ordinary)
+        passes = len(ordinary) - runs
         weights = [
             run_probability / runs if key in "12345" else (1 - run_probability) / passes
-            for key in obs.offense
+            for key in ordinary
         ]
-        return self._random(obs, "offense").choices(obs.offense, weights=weights, k=1)[0]
+        keys, weights = self._surprise_mixture(obs, ordinary, weights)
+        return self._random(obs, "offense").choices(keys, weights=weights, k=1)[0]
+
+    def _surprise_mixture(
+        self, observation: CoachObservation, keys: tuple[str, ...], weights: list[float]
+    ) -> tuple[tuple[str, ...], list[float]]:
+        """Add a rare legal surprise call, using committed own history only."""
+        if self.version < 13 or "RZDZ" not in observation.offense or "RZDZ" in keys:
+            return keys, weights
+        history = (observation.side, "offense")
+        recent = sum(
+            self.behavior.razzle_repeat_decay**age
+            for age, key in enumerate(reversed(self._recent[history]))
+            if key == "RZDZ"
+        )
+        probability = (
+            self.behavior.razzle_probability
+            / (1 + self._counts[history]["RZDZ"])
+            / (1 + self.behavior.razzle_repeat_multiplier * recent)
+        )
+        total = sum(weights)
+        return keys + ("RZDZ",), [weight / total * (1 - probability) for weight in weights] + [
+            probability
+        ]
+
+    def _selection_mixture(
+        self,
+        observation: CoachObservation,
+        role: str,
+        keys: tuple[str, ...],
+        weights: list[float],
+    ) -> tuple[tuple[str, ...], list[float]]:
+        if role == "offense":
+            return self._surprise_mixture(observation, keys, weights)
+        return keys, weights
+
+    def estimates(
+        self,
+        observation: CoachObservation,
+        role: str,
+        *,
+        opponent_weights: tuple[float, ...] | None = None,
+    ) -> tuple[ActionEstimate, ...]:
+        """Rank ordinary calls; v13 RZDZ uses its separate surprise preference."""
+        if self.version >= 13 and role == "offense":
+            observation = replace(
+                observation, offense=tuple(key for key in observation.offense if key != "RZDZ")
+            )
+        return super().estimates(observation, role, opponent_weights=opponent_weights)
 
     @staticmethod
     def _situational_offense(observation: CoachObservation) -> CoachObservation:

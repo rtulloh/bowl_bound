@@ -158,3 +158,10 @@ normal time charge. Selecting another play applies that previous charge first;
 it does not belong to the newly selected play. If the new play requires a
 decision, its selected timeout stays attached to that play until the decision
 completes. The result and history show the engine's timeout usage once charged.
+
+
+Computer coaches use Razzle-Dazzle as an occasional surprise, normally around
+one to three times per team in a full game. Recent use reduces its preference;
+it is never called merely to reach a minimum. You can still select any legal
+Razzle-Dazzle call yourself. Actual results and further required rolls remain
+uncertain until the engine resolves them.
