@@ -218,3 +218,36 @@ def test_surprise_call_does_not_depend_on_future_gameplay_rolls(flat_estimates: 
     assert [json.loads(dumps_game(game))["rolls"] for game in games] == [
         json.loads(value)["rolls"] for value in before
     ]
+
+
+def test_complete_game_audit_retains_actual_razzle_outcomes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from bowl_bound.coaching_audit import audit_game, audit_seed
+    from bowl_bound.sample_teams import sample_teams
+
+    captured = []
+    original = SavedGame.new
+
+    def capture(*args: object, **kwargs: object) -> SavedGame:
+        game = original(*args, **kwargs)
+        captured.append(game)
+        return game
+
+    monkeypatch.setattr(SavedGame, "new", staticmethod(capture))
+    result = audit_game(
+        *sample_teams(),
+        seed=101,
+        coach_seed=audit_seed(101, "coach:False:home:easy-v13"),
+        stand_in_seed=audit_seed(101, "stand-in:False:home:easy-v13"),
+        policy="easy-v13",
+        cpu_side="home",
+    )
+    records = [
+        report
+        for report in captured[0].view().log
+        if report.called_play == "Razzle-Dazzle" and report.state_before.possession == "home"
+    ]
+    assert records
+    assert result.razzle_outcomes == Counter(report.outcome for report in records)
+    assert result.razzle_statistics == Counter(report.statistics.kind.value for report in records)

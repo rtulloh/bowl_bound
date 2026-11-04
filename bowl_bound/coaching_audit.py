@@ -176,6 +176,8 @@ class GameAudit:
     stand_in_seed: int
     behavior_profile: str
     audit_profile: str
+    razzle_outcomes: Counter[str] = field(default_factory=Counter)
+    razzle_statistics: Counter[str] = field(default_factory=Counter)
 
 
 def _require(condition: bool, message: str) -> None:
@@ -361,6 +363,16 @@ def audit_game(
         stand_in_seed,
         behavior_for_policy(policy).name,
         AUDIT_V1.name,
+        Counter(
+            report.outcome
+            for report in view.log
+            if report.called_play == "Razzle-Dazzle" and report.state_before.possession == cpu_side
+        ),
+        Counter(
+            report.statistics.kind.value
+            for report in view.log
+            if report.called_play == "Razzle-Dazzle" and report.state_before.possession == cpu_side
+        ),
     )
 
 

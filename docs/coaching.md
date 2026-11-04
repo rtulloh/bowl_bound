@@ -363,3 +363,10 @@ preservation load keeps its recorded revision. The new preference uses only
 committed own calls and public observations, never the hidden human call or
 future gameplay stream. Frequency audits report complete-game counts and repeat
 runs; the target is a coaching preference, not an asserted historical frequency.
+
+
+The complete-game audit retains `razzle_outcomes` and `razzle_statistics` counters
+from finalized engine reports for the audited CPU side. The former records engine
+outcome IDs; the latter preserves credited statistical kinds, including excluded
+penalties. They do not label every defensive recovery as an interception or turn
+a penalty-excluded call into a credited play. No commentary parsing is involved.
