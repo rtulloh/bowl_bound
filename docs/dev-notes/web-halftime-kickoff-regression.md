@@ -71,3 +71,19 @@ first half ended normally and was followed by a kickoff. This verifies that
 observed manual browser path, independently of the blocked automated Chromium
 run. It does not establish all eight browser cases passing or complete the
 planned M35 recap enhancement.
+
+
+## Current-policy automatic-call integration
+
+AI-035 v12 integration exposed one test-driver assumption: a legal CPU kick can
+be automatic before a human defense is selected. The API control previously
+sent a human call on that automatic turn and received 422. Its transport now
+follows `turn.automatic`; the browser listener is installed before loading so it
+captures an immediate automatic boundary response. A transient initial Q2 DOM
+is asserted only for a nonautomatic turn; the loaded engine Q2 clock, complete
+Q3 boundary/kickoff/log/save results and current-tier coverage remain asserted.
+No runtime or quarter rule changed for this test correction.
+
+The early full run started alongside the focused result was immediately
+interrupted at 41 passed / 13.37s and is not acceptance evidence. A fresh full
+run follows the corrected driver.

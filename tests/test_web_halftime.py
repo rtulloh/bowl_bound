@@ -47,11 +47,17 @@ def test_browser_halftime_fixture_crosses_into_one_reciprocal_kickoff(
             path + "/coach",
             json={
                 "human_side": control,
-                "human_call": "1" if initial["turn"]["human_role"] == "offense" else "A",
+                "human_call": (
+                    None
+                    if initial["turn"]["automatic"]
+                    else "1"
+                    if initial["turn"]["human_role"] == "offense"
+                    else "A"
+                ),
                 "expected_revision": initial["revision"],
             },
         )
-    assert response.status_code == 200
+    assert response.status_code == 200, response.text
     boundary = response.json()
     view = boundary["view"]
     receiver = initial["view"]["opening_kicker"]

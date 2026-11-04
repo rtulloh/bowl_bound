@@ -12,6 +12,9 @@ async function loadPeriodEnd(page, control, quarter, openingChoice) {
   ], { cwd: '..', env: { ...process.env, PYTHONPATH: '.' } })
   await page.goto('/')
   await page.getByLabel('Control mode').selectOption(control)
+  // Capture a current-tier automatic call even if it starts immediately on load.
+  const periodResponse = control === 'manual' ? null : page.waitForResponse((r) =>
+    r.url().includes('/coach') && r.request().method() === 'POST')
   const response = page.waitForResponse((r) => r.url().includes('/api/games/load'))
   await page.getByLabel('Load saved game', { exact: true }).setInputFiles({
     name: 'synthetic-period-end.json', mimeType: 'application/json', buffer: save,
@@ -21,19 +24,21 @@ async function loadPeriodEnd(page, control, quarter, openingChoice) {
   const body = await loaded.json()
   expect(body.view.clock.quarter).toBe(quarter)
   expect(body.view.clock.remaining).toBe(10)
-  await expect(page.getByTestId('quarter')).toHaveText('Q' + quarter)
-  await expect(page.getByTestId('game-clock')).toHaveText('0:10')
-  return body
+  if (!body.turn?.automatic) {
+    await expect(page.getByTestId('quarter')).toHaveText('Q' + quarter)
+    await expect(page.getByTestId('game-clock')).toHaveText('0:10')
+  }
+  return { ...body, periodResponse }
 }
 
 async function expirePeriod(page, body, control) {
-  const completed = page.waitForResponse((r) =>
+  const completed = body.periodResponse || page.waitForResponse((r) =>
     r.url().includes('/api/games/' + body.game_id + '/') &&
     r.request().method() === 'POST')
   if (control === 'manual') {
     await page.getByTestId('offense-play-1').click()
     await page.getByTestId('defense-play-a').click()
-  } else {
+  } else if (!body.turn.automatic) {
     await page.getByTestId(body.turn.human_role === 'offense'
       ? 'offense-play-1' : 'defense-play-a').click()
   }

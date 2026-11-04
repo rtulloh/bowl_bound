@@ -1135,3 +1135,11 @@ vulnerabilities. npm ci reports the existing whatwg-encoding deprecation;
 Vitest reports its jsdom performance recommendation. Ruff check/format 566 files,
 pip and diff checks pass. No new skips are hidden. Full regression remains
 pending, and this does not constitute owner play-test confirmation.
+
+Merged root's reviewed 30aaaaa halftime/QT documentation and regression work.
+One current-tier fixture used a human call on a legal automatic CPU kick; it
+failed 422, then the driver was corrected to follow engine `turn.automatic`.
+Browser response capture now precedes load to handle that same automatic path
+without dropping clock/kickoff/history/save assertions. The first full run was
+immediately interrupted at41passed/13.37s, not claimed as acceptance. Runtime
+remains aa578d7. Fresh merged full validation follows.
