@@ -1840,3 +1840,36 @@ release, interpreter restart or full M33 acceptance is included.
 AI-038 tested implementation is `b120678`. The ticket is resolved for owner
 review and remains unclosed pending play-test confirmation. The 1,442-case
 cumulative run and two full-game audits above passed on this production code.
+
+## Owner sequence audit — penalty, interception and end-zone return (2026-11-04)
+
+Consulted Paydirt `paydirt/play_resolver.py:136-180` (penalty choice and retained
+defense) and `:818-880` (chart lookup). These are structural comparisons only;
+no NFL rules, private data or runtime code are reused. Bowl Bound authority is
+the published Priority Chart (printed p.34), Basic VI-4 and VI-13, the approved
+timing profile, and the maintained priority, penalty and turnover documentation.
+
+A disposable local reconstruction with the selected private teams and exact
+reported physical rolls confirms the whole sequence. Defensive incomplete beats
+offensive QT without a supplemental roll. A fixed offensive foul rerolls the same
+play against the original defensive cell; declining continues the prepared
+interception, whose distance takes priority over ordinary defensive yardage.
+Accepting the interception and choosing an end-zone return are separate decisions.
+The full return distance includes the depth in the defending end zone.
+
+The prior pending normal charge is applied before the next snap; the incompletion
+then costs ten seconds. All penalty/interception/end-zone prompts retain the
+committed state and consume no time or additional snap. Completing the flagged
+turnover costs ten seconds once. A sentinel roll confirms no hidden dice; repeated
+trace entries preserve existing consultations. Final possession, down/distance,
+spot, score, statistics, log lengths and timing charges reconcile. Private script
+and output remain ignored under `private-data/sequence-audits/`; no owner save,
+live game or historical chart is modified. No defect or behavior change was found.
+
+Validation: supported Python `-m pytest -q tests/test_resolution.py
+tests/test_penalties.py tests/test_session_penalties.py tests/test_turnovers.py
+tests/test_optional_clock.py tests/test_timing.py tests/test_interception_context.py`:
+**200 passed in 3.65s**. The documentation/tracker selection
+(`test_issue_tracker.py`, `test_priority_docs.py`, `test_release_player_docs.py`)
+passes **22 in 0.67s**; `git diff --check` passes. This is an audit of an existing sequence, not a new
+milestone acceptance or closure of earlier pending owner play-test tickets.
