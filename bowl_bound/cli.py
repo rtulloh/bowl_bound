@@ -449,6 +449,8 @@ class TerminalGame:
                 if any(choice.id.startswith("razzle:") for choice in pending.choices)
                 else f"{pending.chooser} chooses:"
             )
+            if pending.decision_context:
+                self._print(f"  {pending.decision_context}\n")
             choices = tuple(choice for choice in pending.choices if choice.enabled)
             number_width = len(str(len(choices)))
             text_width = (

@@ -309,6 +309,7 @@ class PendingDecisionView:
     chooser_side: str | None = None
     decision_outcomes: tuple[DecisionOutcome, ...] = ()
     razzle_context: RazzleDazzleContext | None = None
+    decision_context: str | None = None
 
 
 @dataclass(frozen=True)
@@ -1234,6 +1235,7 @@ class PlaySession:
                     PenaltyChoice("interception:decline", "Declare the pass incomplete", True),
                 ),
                 chooser_side=field.possession.other.value,
+                decision_context=_interception_context(field, location, offense.name, defense.name),
             )
             full_trace = (*trace, *(_turnover_trace_entry(entry) for entry in location_trace))
             self._pending = _PendingDecision(
@@ -2703,6 +2705,23 @@ def _trace_entry(
         roll=shown,
         cell=format_cell(entry.cell),
     )
+
+
+def _interception_context(
+    field: FieldState, location: int, offense_name: str, defense_name: str
+) -> str:
+    """Describe the known interception spot without resolving a return or possession."""
+    spot = field.yards_to_goal - location
+    if 0 < spot < GOAL_LINE:
+        return_start = start_drive(field.possession.other, GOAL_LINE - spot)
+        place = f"{defense_name} {spot_label(return_start)}"
+        preposition = "at"
+    else:
+        team = defense_name if spot <= 0 else offense_name
+        depth = -spot if spot <= 0 else spot - GOAL_LINE
+        place = f"{team} goal line" if depth == 0 else f"{team} end zone ({depth} yards deep)"
+        preposition = "at" if depth == 0 else "in"
+    return f"Interception {preposition} {place}. Return result pending."
 
 
 def _razzle_choice(play: Play, total: int, cell: NormalizedCell) -> PenaltyChoice:

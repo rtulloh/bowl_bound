@@ -52,6 +52,13 @@ include nullable `replay_label`, reserved for engine save compatibility; clients
 display `label` and the presentation fields. Existing pending saves retain their
 original semantic digest and choice IDs.
 
+Pending decisions include nullable `decision_context`, an engine-provided display
+string. Interception decisions use it to identify the already-known interception
+spot from the intercepting team's perspective, including goal-line or end-zone
+locations. It describes the ball before a return; it does not predict the return,
+award possession or change the committed `view.state`. CLI and browser display it
+beside the choices. This derived context is excluded from save digests.
+
 ## Engine-owned play bounds declarations
 
 Regulation views offer `game_actions` with `bounds:oob` and `bounds:ib` only

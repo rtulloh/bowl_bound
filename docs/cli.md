@@ -120,6 +120,11 @@ values keep their markers, such as `-4*`. Numbered selectors use a consistent
 width (`[ 1]` through `[18]` for eighteen choices), and Razzle-Dazzle command
 hints line up in a separate column. Padding does not change the number to enter.
 
+Interception choices show the engine-known interception spot above the menu,
+for example `Interception at Beta State own 45. Return result pending.` The spot
+is from the intercepting team's perspective. The scoreboard continues to show
+the last committed field state until the play's required decisions finish.
+
 During required decisions, numbers select the displayed choices, not scrimmage
 plays. Only enabled choices are displayed and numbered consecutively. During optional
 clock modifiers, `1`–`9` remain offensive calls. Enter submits a **displayed

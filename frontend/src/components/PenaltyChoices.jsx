@@ -39,6 +39,7 @@ export default function PenaltyChoices({ pending, onChoose, disabled = false }) 
   return (
     <section ref={panel} className="board-panel p-3" aria-label={pending.chooser ? pending.chooser + ': choose' : 'Required decision'} data-testid="penalty-choices">
       <h2 className="font-bold mb-2">{pending.chooser ? pending.chooser + (razzleDazzle ? ': choose a Razzle-Dazzle result' : ': choose') : 'Required decision'}</h2>
+      {pending.decision_context && <p className="mb-2 text-sm">{pending.decision_context}</p>}
       {razzleDazzle ? <RazzleDazzleChoices choices={pending.choices} disabled={disabled} onChoose={onChoose} /> : <div className="flex flex-wrap gap-3">
         {pending.choices.map((choice) => (
           <div key={choice.id}>

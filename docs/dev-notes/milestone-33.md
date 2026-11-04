@@ -1498,3 +1498,64 @@ release. The owner's running interpreter and source checkout remain untouched.
 Roster names refresh through ordinary save/load; Python presentation changes
 require launching the updated source. Owner play-test confirmation remains
 required before closing these tickets.
+
+
+## Pending interception context — 2026-11-04
+
+CLI-067 adds engine-owned `pending.decision_context` beside the CLI/browser
+result choices. The already-resolved interception location is shown from the
+intercepting team's perspective; the committed scoreboard does not move until
+resolution. Goal-line and end-zone labels preserve the known position without
+predicting a return, awarding possession or consuming more dice.
+
+Paydirt `paydirt/interactive_game.py:2483-2487` displays a turnover's field
+position. Adapt that useful decision context only; reject its UI-side calculation
+and field clamping. Bowl Bound supplies the complete label in the engine and
+adapters only render it. `decision_context` is additive presentation data and
+excluded from current/legacy digests. Choice labels/IDs, state, clock, statistics,
+dice and save schema are unchanged. An authentic pending save captured before
+this change proves strict replay compatibility.
+
+Test-first failures: 27 initial Python cases, one additional API case and one
+frontend case all failed for missing context. The focused final runs pass all
+28 Python cases and all 21 component cases. These cover both possession
+directions, ordinary and Razzle-Dazzle interception chains, zero-distance spots,
+both goal lines and both end zones. No existing expectation was weakened.
+
+Commands: supported Python `-m pytest tests/test_interception_context.py -q`;
+pinned Node 24.22.1 `node node_modules/vitest/vitest.mjs run
+src/test/components.test.jsx`. This remains an M33 owner-feedback follow-up,
+not acceptance of the full milestone or release validation.
+
+
+Final cumulative validation for the combined CLI follow-ups:
+
+- Supported Python `-m pytest -q` on the sorted union of
+  `test_cli*.py`, `test_*save*.py`, `test_*replay*.py`, `test_*razzle*.py`,
+  `test_api*.py`, `test_roster.py`, `test_commentary*.py`,
+  `test_history_fixtures.py`, `test_session.py`, `test_turnovers*.py`,
+  `test_regulation*.py`, `test_coaching_invariants.py`, `test_*presentation*.py`,
+  `test_interception_context.py`, `test_issue_tracker.py`,
+  `test_priority_docs.py`, `test_release_player_docs.py`, `test_timing.py` and
+  `test_bounds_declarations.py` under `tests/`: **993 passed in 127.48s**,
+  51 modules. No skips or warnings were reported.
+- Pinned Node `node node_modules/vitest/vitest.mjs run
+  src/test/components.test.jsx src/test/regulation.test.jsx
+  src/test/milestone19.test.jsx src/test/coaching.test.jsx
+  src/test/compactGame.test.jsx src/test/noRules.test.js
+  src/test/playLog.test.jsx src/test/reviewIntegration.test.jsx
+  src/test/halftimeReview.test.jsx src/test/commentary.test.jsx`:
+  **110 passed**. The four real-server review integration cases did not run:
+  localhost `listen EPERM 127.0.0.1` caused one uncaught socket error and a
+  20-second setup-hook timeout. Vitest labels those four skipped; no source
+  skip was added. This combined frontend attempt exits 1, not a passing gate.
+  The independent focused component run passes **21/21**.
+- `node node_modules/vite/bin/vite.js build`: production build passes.
+- Ruff check/format on changed Python files and `git diff --check` pass.
+- The earlier bounds/timing follow-up command `-m pytest
+  tests/test_bounds_declarations.py tests/test_timing.py -q` passes **44** cases.
+
+The first implementation is `064e03d` (CLI-062/065 and private roster assembly
+guidance for CLI-066). No push, publication or full milestone acceptance is
+claimed. The live-server integration restriction remains explicit and owner
+play-test confirmation is outstanding.

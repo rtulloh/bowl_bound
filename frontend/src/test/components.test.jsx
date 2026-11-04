@@ -110,6 +110,14 @@ describe('PenaltyChoices', () => {
     expect(screen.getByTestId('penalty-choice-decline-reason')).toHaveTextContent('This choice is unavailable')
   })
 
+    it('shows engine-provided pending ball context beside result choices', () => {
+      const decision_context = 'Interception at Beta State own 45. Return result pending.'
+      render(<PenaltyChoices pending={{ ...pending, decision_context }} onChoose={() => {}} />)
+
+      expect(screen.getByTestId('penalty-choices')).toHaveTextContent(decision_context)
+      expect(screen.getByTestId('penalty-choice-accept')).toBeEnabled()
+    })
+
   it('groups Razzle-Dazzle choices by play and rolled total', () => {
     const onChoose = vi.fn()
     render(<PenaltyChoices pending={{ chooser: 'Alpha Tech', choices: [
