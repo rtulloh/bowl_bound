@@ -3,11 +3,14 @@
 import io
 import shlex
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 
-from bowl_bound.save_game import loads_game
+from bowl_bound.cli import TeamCatalog, TerminalGame, main
+from bowl_bound.save_game import SavedGame, loads_game
+from tests.synthetic_teams import default_teams, write_team
 from tests.test_cli import new_game, saved_facts, terminal
 
 
@@ -54,6 +57,58 @@ def test_repeated_W_never_overwrites_a_previous_save(
     assert not app.command("w")
     assert len(tuple(directory.glob("*.json"))) == 2
     assert original.read_bytes() == content
+
+
+@pytest.mark.parametrize("command", ["W", 'save "save slots/resume game.json"'])
+def test_resume_hint_retains_custom_charts_and_loads_after_changing_directory(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, command: str
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    root = Path("generated charts")
+    for chart in default_teams():
+        write_team(root, replace(chart, season=2002))
+    catalog = TeamCatalog(root)
+    game = SavedGame.new(
+        catalog.load("2002/alpha-tech"),
+        catalog.load("2002/beta-state"),
+        home_id="2002/alpha-tech",
+        away_id="2002/beta-state",
+        seed=7,
+        difficulty="hard",
+    )
+    app = TerminalGame(
+        game,
+        catalog.load,
+        human_side="away",
+        output=io.StringIO(),
+        compact=True,
+        trace=True,
+        roster_root=root,
+    )
+    before = saved_facts(game)
+    Path("save slots").mkdir()
+    assert not app.command(command)
+    resume = next(
+        line.removeprefix("Resume: ")
+        for line in app.output.getvalue().splitlines()
+        if line.startswith("Resume: ")
+    )
+    words = shlex.split(resume)
+    assert Path(words[words.index("--seasons") + 1]) == root.resolve()
+    save = Path(words[words.index("--load") + 1])
+    assert save.is_absolute() and save.is_file()
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    monkeypatch.chdir(elsewhere)
+
+    def inspect_resumed(resumed: TerminalGame) -> int:
+        assert saved_facts(resumed.game) == before
+        assert resumed.game.difficulty == "hard"
+        assert resumed.human_side == "away" and resumed.compact and resumed.trace
+        return 0
+
+    monkeypatch.setattr(TerminalGame, "run", inspect_resumed)
+    assert main(words[3:]) == 0
 
 
 @pytest.mark.parametrize("folder", ["private-data", "private-data/saves"])

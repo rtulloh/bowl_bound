@@ -670,10 +670,12 @@ class TerminalGame:
                     "-m",
                     "bowl_bound",
                     "--load",
-                    str(path),
+                    str(path.resolve()),
                     "--human",
                     self.human_side,
                 ]
+                if self.roster_root is not None:
+                    resume.extend(["--seasons", str(self.roster_root.resolve())])
                 if self.compact:
                     resume.append("--compact")
                 if self.trace:

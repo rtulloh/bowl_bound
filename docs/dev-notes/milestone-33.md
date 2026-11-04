@@ -1565,3 +1565,23 @@ passes the 993-case Python selection and the focused component/build checks
 recorded above. CLI-062, CLI-065, CLI-066 and CLI-067 are resolved for owner review
 and remain unclosed pending play-test confirmation. The existing socket
 restriction is retained; no live-server web acceptance is claimed.
+
+
+## Resume command catalog root — 2026-11-04
+
+CLI-068 fixes the printed resume hint for custom generated chart directories:
+include absolute `--load` and `--seasons` paths through existing shell quoting.
+Human/compact/trace controls remain, and strict team fingerprint validation is
+unchanged. The reported save loads read-only with its original generated bundle,
+including saved Hard difficulty and both local roster snapshots. No owner data
+is committed or rewritten.
+
+Paydirt `paydirt/interactive_game.py:2801-2849` was consulted; it uses a separate
+saved-game loader without an equivalent custom chart-root hint, so no code is
+reused. Two synthetic test-first failures demonstrate the omitted argument for
+W and explicit saves. Tests then resume from the printed arguments after a
+working-directory change, including paths with spaces. Supported Python:
+`-m pytest tests/test_cli_save_shortcut.py tests/test_cli.py
+tests/test_cli_games.py tests/test_cli_solitaire.py tests/test_cli_input_contract.py
+tests/test_cli062_compatibility.py tests/test_interception_context.py -q`:
+**91 passed in 9.87s**. Ruff check/format passes on the two changed Python files.

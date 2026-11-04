@@ -246,8 +246,9 @@ Type **`W`** (or `w`) to save immediately. It creates `private-data/saves/` if
 needed and writes a new `bowl-bound-TIMESTAMP-RANDOM.json` file with owner-only
 permissions. Repeating W creates another file, not an overwrite. The CLI prints
 the saved path and a quoted resume command using your current Python interpreter,
-human control mode, compact mode and trace flag. Run it from the same project
-directory; retain your custom `--seasons PATH` if you use one. There is no AI
+human control mode, compact mode and trace flag. The command includes absolute
+save and selected `--seasons` paths, including a custom chart directory. Run it
+from the desired Bowl Bound checkout. There is no AI
 sidecar: the existing save already contains the coaching seed and exact future
 dice state. Save does not select a play or resume a paused computer turn.
 
