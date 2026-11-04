@@ -18,6 +18,7 @@ from .session import (
     PlayReport,
     PlaySession,
     PresentationReview,
+    ScoreView,
     SessionFinishedError,
     SessionView,
 )
@@ -170,6 +171,7 @@ class RegulationGame:
         self._legacy_halftime_view: RegulationView | None = None
         self._legacy_halftime_choice_pending = False
         self._review: PresentationReview | None = None
+        self._first_quarter_score = ScoreView(0, 0)
 
     def _consume_legacy_halftime_choice(self, choice: str) -> bool:
         """Replay an old save's choice when it matches the newly fixed kickoff."""
@@ -853,9 +855,12 @@ class RegulationGame:
             "two_point_good",
             "two_point_failed",
         }:
-            self._review = PresentationReview(
-                "conversion", "Two-point result", (report.commentary,)
-            )
+            if self._review is not None and self._review.kind == "halftime":
+                self._review = replace(self._review, lines=(report.commentary, *self._review.lines))
+            else:
+                self._review = PresentationReview(
+                    "conversion", "Two-point result", (report.commentary,)
+                )
         return report
 
     def _charge(self, seconds: int, method: str) -> None:
@@ -894,6 +899,7 @@ class RegulationGame:
                 self._phase = RegulationPhase.KICKOFF
                 self._legacy_halftime_choice_pending = True
                 self._pending_timing_seconds = 0
+                self._review = self._halftime_review(base)
                 return
             if self._clock.quarter == 4:
                 tied = base.score.home == base.score.away
@@ -903,12 +909,52 @@ class RegulationGame:
                     self._phase = RegulationPhase.FINAL
                 self._kick_after = None
                 return
+            if self._clock.quarter == 1:
+                self._first_quarter_score = base.score
             self._clock = self._clock.next_quarter()
         if self._kick_after is not None:
             team, safety = self._kick_after
             self._session.prepare_kickoff(team, safety=safety)
             self._kick_after = None
             self._phase = RegulationPhase.KICKOFF
+
+    def _halftime_review(self, half: SessionView) -> PresentationReview:
+        """Format committed first-half facts before the scheduled reciprocal kickoff."""
+        first = self._first_quarter_score
+        lines = [
+            f"{half.home} — Q1 {first.home}, Q2 {half.score.home - first.home}, "
+            f"Half {half.score.home}.",
+            f"{half.away} — Q1 {first.away}, Q2 {half.score.away - first.away}, "
+            f"Half {half.score.away}.",
+        ]
+        score_labels = {
+            "touchdown": "touchdown",
+            "field_goal": "field goal",
+            "safety": "safety",
+            "pat": "PAT",
+            "two_point": "two-point conversion",
+            "conversion_return": "conversion return",
+        }
+        if half.scoring:
+            lines.append("First-half scoring:")
+            lines.extend(
+                f"Play {event.play_number}: {event.team} "
+                f"{score_labels[event.kind]} +{event.points}."
+                for event in half.scoring
+            )
+        else:
+            lines.append("First-half scoring: none.")
+        lines.extend(
+            f"{row.label}: {half.home} {row.home}; {half.away} {row.away}."
+            for row in half.statistics.rows
+        )
+        kicker = self._opening_kicker.other
+        lines.append(
+            f"{self._names[kicker]} kicks to {self._names[kicker.other]} to start the second half."
+        )
+        return PresentationReview(
+            "halftime", "HALFTIME", tuple(lines), Action("review:continue", "Start second half")
+        )
 
     def _begin_overtime(self) -> None:
         """Use a fresh, recorded Bowl Bound dice toss; do not reuse the opening winner."""

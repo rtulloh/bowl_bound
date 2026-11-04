@@ -1300,3 +1300,17 @@ review/announcement facts never enter CoachObservation and are excluded only as
 presentation from semantic digests. Runtime manifest already includes all changed
 modules; no new module or content allowance is needed. Paydirt's explicit try
 prompt is adapted; its NFL rules are not. Focused and final evidence is in UI-059.
+
+### CLI-058 / UI-058 shared halftime checkpoint
+
+A single engine-authored review contains Q1/Q2/half scores, scoring events,
+supported statistics and second-half kickoff assignment. Q1 score is captured
+at the actual engine boundary; adapters calculate no football facts. The CLI
+prints and acknowledges this review before automatic play; web acknowledgment
+holds the recap for review. Save replay preserves pending/already reviewed
+status, and legacy journals may kick directly. Conversion-ready/penalty/untimed
+continuations do not announce halftime early. Paydirt's visible recap ordering
+is adapted without its NFL rules or frontend period inference. Nine red cases
+and one green Q1 control preceded the implementation. Two legacy raw-digest
+failures were corrected without changing frozen hash expectations. Final combined
+validation and manual acceptance remain pending.

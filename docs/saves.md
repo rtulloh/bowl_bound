@@ -220,3 +220,10 @@ only the final completed legal play applies its 10-second timing modifier.
 The derived `normal_timing_ends_period` view fact is not a new saved rule or
 intent. Legacy saves reconstruct it from the actual journal and clock; its
 absence does not weaken validation of timeouts, clock charges or future dice.
+
+Halftime and two-point result reviews reconstruct from the command journal. A
+pending review returns on load until acknowledged; an acknowledged review does
+not repeat. Legacy journals may continue directly through kickoff without a new
+acknowledgment command. Added review/announcement text is excluded from football
+semantic digests; scoring, timing, statistics, commands and dice remain validated.
+Acknowledging a review adds a command but consumes no game time or dice.

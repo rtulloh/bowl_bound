@@ -62,6 +62,15 @@ for (const openingChoice of ['toss:receive', 'toss:kick']) {
       expect(initial.view.log.at(-1).timing_label).toBeTruthy()
       expect(boundary.view.log.at(-1).timing_label).toBeNull()
 
+      expect(boundary.view.review.kind).toBe('halftime')
+      const recap = page.getByRole('region', { name: 'HALFTIME' })
+      await expect(recap).toBeVisible()
+      for (const line of boundary.view.review.lines) await expect(recap).toContainText(line)
+      await page.waitForTimeout(350) // Review outlasts automatic scheduling.
+      await expect(page.getByTestId('log-entry')).toHaveCount(initial.view.log.length)
+      await page.getByRole('button', { name: 'Start second half', exact: true }).click()
+      await expect(recap).toHaveCount(0)
+
       if (control === 'manual' || control === kicker) {
         await expect(page.getByTestId('quarter')).toHaveText('Q3')
         await expect(page.getByTestId('special-play-kickoff')).toBeEnabled()
@@ -105,7 +114,10 @@ for (const openingChoice of ['toss:receive', 'toss:kick']) {
       })
       const resumedResponse = await resumed
       expect(resumedResponse.ok()).toBeTruthy()
-      expect((await resumedResponse.json()).view.log).toEqual(after.view.log)
+      const resumedBody = await resumedResponse.json()
+      expect(resumedBody.view.log).toEqual(after.view.log)
+      expect(resumedBody.view.review).toBeNull()
+      await expect(page.getByRole('region', { name: 'HALFTIME' })).toHaveCount(0)
       await expect(page.getByTestId('log-entry')).toHaveCount(after.view.log.length)
       await expect(page.getByTestId('special-play-kickoff')).toHaveCount(0)
     })

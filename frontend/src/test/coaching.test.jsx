@@ -277,3 +277,22 @@ it('keeps the engine conversion review visible until Continue before an automati
   await waitFor(() => expect(api.gameAction).toHaveBeenCalledWith('cpu', 'review:continue', 'home'))
   await waitFor(() => expect(api.coachStep).toHaveBeenCalledTimes(1))
 })
+
+it('renders the shared halftime recap verbatim and holds computer kickoff until its offered acknowledgment', async () => {
+  const review = { kind: 'halftime', title: 'HALFTIME', lines: ['Engine quarter scores', 'Engine first-half scoring', 'Engine statistics', 'Engine kickoff assignment'],
+    action: { key: 'review:continue', label: 'Start second half' } }
+  api.newGame.mockResolvedValue({ game_id: 'cpu', revision: 20,
+    view: view({ phase: 'kickoff', review }), turn: turn('computer') })
+  api.gameAction.mockResolvedValue({ revision: 21, view: view({ phase: 'kickoff', review: null }), turn: turn('computer') })
+  api.coachStep.mockResolvedValue({ view: view(), turn: turn('defense') })
+  render(<App />)
+  fireEvent.click(await screen.findByTestId('start-game'))
+  const recap = await screen.findByRole('region', { name: 'HALFTIME' })
+  for (const line of review.lines) expect(recap).toHaveTextContent(line)
+  await act(async () => { await new Promise((resolve) => setTimeout(resolve, 350)) })
+  expect(api.coachStep).not.toHaveBeenCalled()
+  fireEvent.click(screen.getByRole('button', { name: 'Start second half' }))
+  await waitFor(() => expect(api.gameAction).toHaveBeenCalledWith('cpu', 'review:continue', 'home'))
+  await waitFor(() => expect(api.coachStep).toHaveBeenCalledTimes(1))
+  expect(screen.queryByRole('region', { name: 'HALFTIME' })).toBeNull()
+})

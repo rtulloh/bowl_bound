@@ -176,3 +176,10 @@ A computer two-point attempt is announced before you choose its defense. The
 attempt announcement stays with the touchdown in Play history. After a two-point
 try, review the engine's result and choose **Continue** before the web game
 advances to its next automatic action. This review uses no game time or dice.
+
+At halftime, the engine supplies a first-half recap with quarter scores, scoring
+events, supported statistics and the second-half kickoff assignment. The browser
+waits for **Start second half** before continuing, including a computer kickoff.
+The CLI prints the same recap once before its kickoff prompt or automatic kick.
+A pending conversion or other required decision finishes before this recap.
+Saving and loading preserves whether the recap has already been reviewed.

@@ -165,8 +165,18 @@ class TerminalGame:
         """Inspect public state without asking the coordinator for private selections."""
         return self.game.coach_view(self.human_side)
 
+    def _present_halftime(self) -> None:
+        """Print the shared engine recap once before any automatic kickoff."""
+        review = getattr(self.game.view(), "review", None)
+        if review is not None and review.kind == "halftime":
+            self._print("\n" + review.title)
+            for line in review.lines:
+                self._print(line)
+            self.game.action(review.action.key)
+
     def display(self) -> None:
         """Display engine state, labels and public legal controls, never derived results."""
+        self._present_halftime()
         view, turn = self.public_view()
         clock = getattr(view, "clock", None)
         away_timeout = f" ({clock.timeouts[1]})" if clock else ""
@@ -459,6 +469,7 @@ class TerminalGame:
         if self.automatic_paused:
             return
         for _ in range(MAX_AUTOMATIC_STEPS):
+            self._present_halftime()
             _, turn = self.public_view()
             if not turn.automatic:
                 return

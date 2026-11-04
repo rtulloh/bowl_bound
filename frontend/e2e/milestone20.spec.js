@@ -33,6 +33,12 @@ for (const human of ['home', 'away']) {
         expect(JSON.stringify(current)).not.toContain('computer_choice')
         expect(JSON.stringify(current)).not.toContain('coach_seed')
         roles.add(turn.human_role)
+        if (view.review) {
+          const reviewed = page.waitForResponse((r) => r.url().includes(path + '/action'))
+          await page.getByRole('button', { name: view.review.action.label, exact: true }).click()
+          expect((await reviewed).ok()).toBeTruthy()
+          continue
+        }
         if (view.finished) {
           await expect(page.getByTestId('snap')).toHaveCount(0)
           await expect(page.locator('[data-testid^=offense-play-]:enabled, [data-testid^=defense-play-]:enabled')).toHaveCount(0)
@@ -53,7 +59,10 @@ for (const human of ['home', 'away']) {
           return
         }
         if (turn.automatic) {
-          await expect.poll(async () => (await (await page.request.get(path + '?human_side=' + human)).json()).turn.automatic).toBe(false)
+          await expect.poll(async () => {
+            const state = await (await page.request.get(path + '?human_side=' + human)).json()
+            return !state.view.review && state.turn.automatic
+          }).toBe(false)
           continue
         }
         await expect(page.getByTestId('session-status')).toHaveText(turn.status)

@@ -1216,6 +1216,7 @@ def _legacy_m22_view_data(view: SessionView | RegulationView) -> dict[str, Any]:
 def _legacy_m19_view_digest(view: SessionView | RegulationView) -> str:
     """Recreate M19's raw view digest before the additive coaching and rules fields."""
     data = asdict(view)
+    data.pop("review", None)
     data["actions"]["offense"] = [
         action for action in data["actions"]["offense"] if action["key"] not in {"Q", "RZDZ"}
     ]
@@ -1241,6 +1242,7 @@ def _legacy_m19_view_digest(view: SessionView | RegulationView) -> str:
         for action in actions:
             action.pop("free_advanced", None)
     for report in data["log"]:
+        report.pop("announcements", None)
         legacy_defense = next(
             (
                 f"Formation {defense.value}"

@@ -164,6 +164,8 @@ for (const conversion of ['kick', 'two']) {
       await expect(page.getByTestId('special-play-punt')).toHaveCount(0)
       await snapPlay(page)
       await expect(page.getByTestId('home-score')).toHaveText('8')
+      await expect(page.getByRole('region', { name: 'Two-point result' })).toBeVisible()
+      await page.getByRole('button', { name: 'Continue', exact: true }).click()
     } else {
       await expect(page.getByTestId('home-score')).toHaveText('7')
     }
@@ -224,7 +226,9 @@ test('a complete regulation game shows quarter and half transitions and cannot r
       return
     }
     let button
-    if (view.pending && !view.clock_optional) {
+    if (view.review) {
+      button = page.getByRole('button', { name: view.review.action.label, exact: true })
+    } else if (view.pending && !view.clock_optional) {
       const choice = view.pending.choices.find((c) => c.enabled)
       button = page.getByTestId('penalty-choice-' + choice.id)
     } else if (view.phase === 'kickoff') {
@@ -294,7 +298,9 @@ test('tied regulation continues into untimed overtime and finishes without a kic
       return
     }
     let button
-    if (view.phase === 'overtime_choice') {
+    if (view.review) {
+      button = page.getByRole('button', { name: view.review.action.label, exact: true })
+    } else if (view.phase === 'overtime_choice') {
       expect(view.score.home).toBe(0)
       expect(view.score.away).toBe(0)
       button = page.getByTestId('penalty-choice-ot:offense')
