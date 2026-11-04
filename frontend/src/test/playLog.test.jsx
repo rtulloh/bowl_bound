@@ -73,3 +73,42 @@ it('can collapse the history and follows the newest recorded play while expanded
   fireEvent.click(screen.getByText('Play history'))
   expect(history.open).toBe(false)
 })
+
+it('preserves the position while reading older plays and offers an explicit return to latest', () => {
+  const entries = Array.from({ length: 40 }, (_, i) => report({ number: i + 1 }))
+  const { rerender } = render(<PlayLog entries={entries} />)
+  const log = screen.getByTestId('play-log')
+  Object.defineProperty(log, 'scrollHeight', { configurable: true, value: 2000 })
+  Object.defineProperty(log, 'clientHeight', { configurable: true, value: 256 })
+  log.scrollTop = 500
+  fireEvent.scroll(log)
+
+  rerender(<PlayLog entries={[...entries, report({ number: 41 })]} />)
+
+  expect(log.scrollTop).toBe(500)
+  fireEvent.click(screen.getByRole('button', { name: 'Show latest plays' }))
+  expect(log.scrollTop).toBe(2000)
+})
+
+it('offers complete ordered history beyond the compact scroll area, including PAT and combined kick-return reports', () => {
+  const entries = Array.from({ length: 40 }, (_, i) => report({ number: i + 1 }))
+  entries[10] = report({ number: 11, commentary: 'Alpha Tech PAT kick is good.' })
+  entries[11] = report({ number: 12, commentary: 'Alpha Tech kickoff; Beta State returns to its own 25.' })
+  render(<PlayLog entries={entries} />)
+  const complete = screen.getByRole('button', { name: 'Show complete history' })
+  expect(complete).toHaveAttribute('aria-pressed', 'false')
+  fireEvent.click(complete)
+  expect(screen.getByRole('button', { name: 'Use compact history' })).toHaveAttribute('aria-pressed', 'true')
+  expect(screen.getByTestId('play-log')).not.toHaveClass('max-h-64', 'overflow-y-auto')
+  const rows = screen.getAllByTestId('log-entry')
+  expect(rows).toHaveLength(40)
+  expect(rows[10]).toHaveTextContent(entries[10].commentary)
+  expect(rows[11]).toHaveTextContent(entries[11].commentary)
+})
+
+it('makes the compact history a named keyboard-focusable scrolling region', () => {
+  render(<PlayLog entries={[report()]} />)
+  const region = screen.getByRole('region', { name: 'Play history entries' })
+  expect(region).toHaveAttribute('tabindex', '0')
+  expect(region).toHaveTextContent(report().description)
+})

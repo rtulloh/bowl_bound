@@ -4,6 +4,9 @@ import PlayHighlights from './PlayHighlights'
 
 export default function PlayLog({ entries, expanded: controlledExpanded, onExpandedChange }) {
   const [localExpanded, setLocalExpanded] = useState(true)
+  const [complete, setComplete] = useState(false)
+  const [newEntries, setNewEntries] = useState(false)
+  const followLatest = useRef(true)
   const logRef = useRef(null)
   const latestEntryNumber = entries[entries.length - 1]?.number
   const expanded = controlledExpanded ?? localExpanded
@@ -13,16 +16,38 @@ export default function PlayLog({ entries, expanded: controlledExpanded, onExpan
   }
 
   useEffect(() => {
-    if (expanded && logRef.current) {
-      logRef.current.scrollTop = logRef.current.scrollHeight
-    }
-  }, [expanded, latestEntryNumber])
+    if (!expanded || complete || !logRef.current) return
+    if (followLatest.current) logRef.current.scrollTop = logRef.current.scrollHeight
+    else setNewEntries(true)
+  }, [expanded, complete, latestEntryNumber])
+
+  const scrolled = () => {
+    if (complete || !logRef.current) return
+    const { scrollHeight, scrollTop, clientHeight } = logRef.current
+    followLatest.current = scrollHeight - scrollTop - clientHeight <= 8
+    if (followLatest.current) setNewEntries(false)
+  }
+  const showLatest = () => {
+    followLatest.current = true
+    setNewEntries(false)
+    logRef.current.scrollTop = logRef.current.scrollHeight
+    logRef.current.focus()
+  }
 
   if (!entries.length) return null
   return (
     <details className="min-w-0" data-testid="play-history" open={expanded} onToggle={(event) => setExpanded(event.currentTarget.open)}>
       <summary className="cursor-pointer py-1 text-sm font-semibold text-slate-100">Play history</summary>
-      <ol ref={logRef} className="board-panel mt-1 min-w-0 break-words p-2 text-xs max-h-64 overflow-y-auto space-y-3" data-testid="play-log">
+      <div className="mb-1 flex flex-wrap items-center gap-2 text-xs">
+        <span>{entries.length} recorded plays</span>
+        <button type="button" className="play-button" aria-pressed={complete} onClick={() => setComplete(!complete)}>
+          {complete ? 'Use compact history' : 'Show complete history'}
+        </button>
+        {!complete && newEntries && <button type="button" className="play-button" onClick={showLatest}>Show latest plays</button>}
+      </div>
+      <div ref={logRef} role="region" aria-label="Play history entries" tabIndex={0} onScroll={scrolled}
+        className={`board-panel mt-1 min-w-0 break-words p-2 text-xs ${complete ? '' : 'max-h-64 overflow-y-auto'}`} data-testid="play-log">
+      <ol className="space-y-3">
         {entries.map((entry) => (
           <li key={entry.number} className="min-w-0" data-testid="log-entry">
             <div className="min-w-0 break-all">{entry.number}. {entry.commentary ?? entry.description}</div>
@@ -47,6 +72,7 @@ export default function PlayLog({ entries, expanded: controlledExpanded, onExpan
           </li>
         ))}
       </ol>
+      </div>
     </details>
   )
 }

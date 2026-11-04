@@ -165,3 +165,9 @@ one to three times per team in a full game. Recent use reduces its preference;
 it is never called merely to reach a minimum. You can still select any legal
 Razzle-Dazzle call yourself. Actual results and further required rolls remain
 uncertain until the engine resolves them.
+
+The expanded Play history starts with a compact scrolling list. It follows new
+plays while you are at the bottom, and preserves your position when you scroll
+back. **Show latest plays** returns to the newest entry. **Show complete history**
+uses the page's normal scrolling for every recorded entry, including PAT and
+combined kickoff/return reports. No reports are removed by switching views.

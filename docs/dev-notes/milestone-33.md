@@ -1278,3 +1278,14 @@ actual per-call outcomes as well as strict replay. Current tier means are
 The 64 outcome/new-policy audit contracts and 368 cumulative coaching/API/save
 cases pass. AI-036 is resolved awaiting owner review; combined six-ticket gate
 remains pending. Detailed reports remain ignored.
+
+### UI-054 history readability checkpoint
+
+The engine retained all events. Synthetic rendering reproduced older-reading
+position loss and missing complete-view/keyboard controls (3 red / 6 controls).
+The UI now preserves reading position and offers explicit complete/latest views.
+No football facts are calculated in the frontend. 134 frontend tests, build,
+50 API/scoring/save cases and a 43-report fictional save replay pass. Browser
+viewport cases are added; local launch limitations and owner review remain real
+acceptance limits. Paydirt's auto-follow idea is adapted with user-controlled
+reading; its frontend football computations are deliberately excluded.
