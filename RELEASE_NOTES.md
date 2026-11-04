@@ -1,5 +1,27 @@
 # Bowl Bound release notes
 
+## 0.1.0-alpha.5 — Milestone 33 candidate
+
+- Adds a shared public fourth-down policy and clearer decision guidance for
+  human and computer coaches.
+- Corrects late-half computer field-goal and punt selection, improves
+  Razzle-Dazzle choices, and keeps surprise calls uncommon.
+- Resolves fumble outcomes before penalty choices and improves pre-play timeout
+  controls without exposing the computer's committed call.
+- Adds clearer halftime presentation and two-point commentary, and displays the
+  same scoring and team-statistics boxes at the end of a terminal game.
+- Clarifies pending interception locations, result choices, save guidance, and
+  Hail Mary labels.
+
+Includes only the existing original fictional Cedar Valley and Harbor Tech
+sample teams. Generated season charts are separate work and are not included.
+The existing save schema is retained; Milestone 33 uses the
+`bowl-bound-m33-v1` engine profile. Keep copies of saves before upgrading.
+
+Known follow-up: QB Sneak commentary can name the wrong ball carrier; its
+football result is unaffected.
+This is a candidate until regression and native-build verification finish.
+
 ## 0.1.0-alpha.4 — Fourth alpha
 
 - Adds engine-offered QB Sneak, Razzle-Dazzle (RZDZ), onside kickoffs,

@@ -1961,3 +1961,25 @@ as the carrier. Verified independently with synthetic charts/roster, without
 changing production commentary. The recorded football result is correct. Last-
 minute third-and-long run selection is a strategy observation for broader
 calibration, not evidence that a legal call or clock transition is wrong.
+
+## Alpha 5 release preparation (2026-11-04)
+
+The owner authorizes merge/push/build/release and explicitly selects only the
+existing fictional samples. [Release preparation](release-alpha5.md) records
+the Paydirt consultation, sanitized public lineage, synchronized version update,
+verification and outstanding browser/network/native gates. Generated charts and
+season-validation research remain separate. [DEV-068](issues/DEV/DEV-068.md)
+tracks completion; no publication or browser acceptance is claimed by preparation.
+
+
+Alpha 5 exact-stage validation exposed DEV-069: the new halftime component was
+missing from the explicit frontend selection. A meaningful staged-import test
+fails before the one-entry manifest fix; 40 packaging cases pass after it. Fresh
+exact-stage npm install/build, runtime assembly, isolated entry-point imports and
+ZIP inventory/hash checks pass, with exactly the 15 original sample files. The
+75-file runtime input remains distinct from a native executable. Metadata, docs,
+workflow, standalone/smoke and tracker checks pass 127 cases; full frontend again
+has 143 passed and four unavailable after the EPERM hook, exiting 1. No skips
+or acceptance criteria are weakened. The owner-requested persistent release goal
+continues through a genuine verified build/publication; 403 upstream access and
+required local-service/browser failures remain explicit.

@@ -88,6 +88,7 @@
     "frontend/src/components/CoinToss.jsx",
     "frontend/src/components/DiceRoll.jsx",
     "frontend/src/components/FootballField.jsx",
+    "frontend/src/components/HalftimeReview.jsx",
     "frontend/src/components/PenaltyChoices.jsx",
     "frontend/src/components/PlayHighlights.jsx",
     "frontend/src/components/PlayLog.jsx",

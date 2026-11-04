@@ -37,6 +37,11 @@ samples while blocking checkout/editable application fallbacks. Keep the frozen
 executable smoke required as well: it exercises packaging and third-party dynamic
 imports that a source-level probe cannot certify.
 
+Frontend imports need the same selection review. The release regression checks
+local imports inside the staged JS/JSX sources; a full-checkout Vite build can
+otherwise hide a missing allowlisted component. Retain the clean staged Vite
+build as the authoritative bundler check, including any future asset/import forms.
+
 Keep the repository `.gitattributes` policy when checking out release inputs:
 tracked text uses LF even when Windows Git has `core.autocrlf=true`; binary
 files retain their bytes. This preserves pinned sample hashes and version

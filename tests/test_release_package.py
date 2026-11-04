@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -32,6 +33,29 @@ def test_real_release_inputs_stage_with_all_pinned_public_samples(tmp_path: Path
         "release/manifest.json",
         ".release-inputs.json",
     }
+
+
+def test_real_staged_frontend_contains_every_local_import(tmp_path: Path) -> None:
+    """A checkout build cannot prove the exact source allowlist is self-contained."""
+    stage = tmp_path / "public stage"
+    stage_sources(Path(__file__).resolve().parents[1], stage)
+    missing = []
+    for source in (stage / "frontend").rglob("*"):
+        if source.suffix not in {".js", ".jsx", ".mjs"}:
+            continue
+        imports = re.findall(
+            r"""(?:\bfrom\s*|\bimport\s*(?:\(\s*)?)["'](\.[^"']+)["']""",
+            source.read_text(encoding="utf-8"),
+        )
+        for name in imports:
+            target = source.parent / name
+            candidates = [target]
+            if not target.suffix:
+                candidates.extend(Path(str(target) + suffix) for suffix in (".js", ".jsx", ".json"))
+                candidates.extend(target / ("index" + suffix) for suffix in (".js", ".jsx"))
+            if not any(candidate.is_file() for candidate in candidates):
+                missing.append(f"{source.relative_to(stage)}: {name}")
+    assert not missing, "Unresolved staged local imports:\n" + "\n".join(missing)
 
 
 def test_real_release_runtime_imports_without_checkout_fallback(tmp_path: Path) -> None:
