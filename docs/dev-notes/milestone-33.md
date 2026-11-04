@@ -1697,3 +1697,64 @@ tests/test_coaching_shared_contract.py tests/test_issue_tracker.py`:
 audited mechanics, not optimal late-half AI strategy. No running process, owner
 save, private chart, or production code was modified. No milestone acceptance or
 release is claimed.
+
+
+## Pending Hail Mary presentation follow-up — 2026-11-04
+
+CLI-069/070 correct engine-provided pending labels and interception context.
+Before implementation, consulted Paydirt `paydirt/play_resolver.py:704-815`.
+Adapt named Hail Mary/blank-defense presentation across table outcomes, without
+its incompatible tens-digit T1 arithmetic, NFL rules or runtime dependency.
+Bowl Bound retains its approved full-feature distance and internal Play.EIGHT
+trace routing; there is no new defensive roll or frontend football calculation.
+
+All four pending constructors (interception, end-zone recovery, pass-interference
+penalty and return penalty) now share the existing Hail Mary presentation flag
+used by completed reports. The defense-label helper now serves both cases.
+The location context uses existing MAX_END_ZONE_DEPTH=9 for interceptions beyond
+the defending end line; opposite-goal touchdown and own-end-line safety boundaries
+remain distinct. Actual turnover/return rules and arithmetic are unchanged.
+
+On a clean unchanged `a30f112` archive, final focused tests fail 30 cases for
+the intended labels/context and pass 59 controls. The corrected source passes all
+89. Tests preserve both possession directions, A/F inputs without a defensive
+roll, ordinary/RZDZ contexts, goal/nine/ten-yard boundaries, return penalties,
+pass-interference accept/decline, touchdowns and safeties. Four small authentic
+pre-fix saves use only invented charts and captured commands/rolls, produced by
+the archive before applying code. They strictly replay and continue, preserving
+command/roll/state digests and ordinary current-Hard upgrade. Pending decisions
+commit no new time/down/log/return roll; final completion costs 10 seconds once.
+
+No save schema or digest exception is added: pending reports are returned outside
+the committed log, completed labels already match, and decision_context already
+is excluded. Changed expectations add the missing identity/location checks; no
+existing assertion or football outcome is weakened. The simplify review reuses
+the label helpers and existing field constants without a new runtime module.
+Focused command: supported interpreter `-m pytest tests/test_pending_hail_mary.py
+ tests/test_interception_context.py -q` (89 passed). Cumulative results follow.
+
+Owner explicitly confirms the terminal halftime presentation and flow with
+"half time looks good" after the pending interception/touchback sequence. The
+completed result, boxed line score/scoring/statistics and reciprocal kickoff
+announcement were visible. CLI-058 is closed; UI-060's terminal portion is
+accepted while web/browser acceptance stays open. This does not confirm
+CLI-069/070 or complete M33. Private transcript/team-specific facts are omitted.
+
+Final cumulative command uses the supported interpreter with `-m pytest -q` on
+the sorted union under tests/ of `test_cli*.py`, `test_*save*.py`,
+`test_*replay*.py`, `test_*razzle*.py`, `test_api*.py`, `test_hail_mary.py`,
+`test_pending_hail_mary.py`, `test_interception_context.py`, `test_session*.py`,
+`test_turnovers.py`, `test_regulation*.py`, `test_optional_clock.py`,
+`test_timing.py`, `test_coaching_invariants.py`, `test_coaching_shared_contract.py`,
+`test_late_half*.py`, `test_history_fixtures.py`, `test_*presentation*.py`,
+`test_commentary*.py`, `test_issue_tracker.py`, `test_priority_docs.py` and
+`test_release_player_docs.py`: **1,218 passed in 130.90s**, 60 modules, no reported
+skips or warnings. Pinned Node 24.22.1 `node node_modules/vitest/vitest.mjs run
+ src/test/components.test.jsx src/test/noRules.test.js src/test/playLog.test.jsx`:
+**49 passed**. Separate documentation/tracker selection passes **22** cases.
+Ruff check/format across **592** files and git diff --check pass.
+
+No frontend production code, API interpretation, serializer, coaching policy or
+actual turnover resolver changes. This is relevant regression evidence, not a new
+full coverage gate, browser acceptance, milestone completion or release. Owner
+interpreter, live source, private teams/logs/saves and servers remain untouched.

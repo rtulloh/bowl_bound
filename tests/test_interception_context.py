@@ -11,6 +11,7 @@ from bowl_bound.game_state import FieldState, Possession
 from bowl_bound.models import NormalizedCell, Play, ResultKind
 from bowl_bound.save_game import dumps_game, loads_game
 from bowl_bound.session import PlaySession
+from bowl_bound.turnovers import TurnoverOutcome, resolve_interception
 from tests.synthetic_teams import default_teams, team_chart, write_team
 from tests.test_cli import new_game, saved_facts, terminal
 from tests.test_models import provenance
@@ -25,8 +26,14 @@ from tests.test_models import provenance
         (68, 0, "{defender} opponent 32"),
         (20, 20, "{defender} goal line"),
         (20, 24, "{defender} end zone (4 yards deep)"),
+        (18, 27, "{defender} end zone (9 yards deep)"),
+        (18, 28, "{defender} end zone (9 yards deep)"),
+        (18, 55, "{defender} end zone (9 yards deep)"),
         (65, -35, "{offense} goal line"),
         (65, -39, "{offense} end zone (4 yards deep)"),
+        (65, -44, "{offense} end zone (9 yards deep)"),
+        (65, -45, "{offense} end line"),
+        (65, -46, "beyond the {offense} end line"),
     ],
 )
 def test_pending_context_shows_known_interception_spot_without_resolving_return(
@@ -59,6 +66,49 @@ def test_pending_context_shows_known_interception_spot_without_resolving_return(
         "interception:decline",
     ]
     assert session.view() == view
+
+
+@pytest.mark.parametrize("possession", list(Possession))
+@pytest.mark.parametrize(
+    "location,outcome,depth",
+    [
+        (18, TurnoverOutcome.END_ZONE_RETURN_PENDING, 0),
+        (19, TurnoverOutcome.END_ZONE_RETURN_PENDING, 1),
+        (27, TurnoverOutcome.END_ZONE_RETURN_PENDING, 9),
+        (28, TurnoverOutcome.END_ZONE_RETURN_PENDING, 9),
+        (55, TurnoverOutcome.END_ZONE_RETURN_PENDING, 9),
+        (-82, TurnoverOutcome.DEFENSIVE_TOUCHDOWN, None),
+        (-83, TurnoverOutcome.DEFENSIVE_TOUCHDOWN, None),
+        (-91, TurnoverOutcome.DEFENSIVE_TOUCHDOWN, None),
+        (-92, TurnoverOutcome.SAFETY, None),
+        (-93, TurnoverOutcome.SAFETY, None),
+    ],
+)
+def test_context_boundaries_leave_actual_recovery_touchdown_and_safety_unchanged(
+    possession: Possession, location: int, outcome: TurnoverOutcome, depth: int | None
+) -> None:
+    home, away = default_teams()
+    sentinel = OffensiveRoll(3, 0, 0)
+    dice = ScriptedDice([sentinel])
+    result = resolve_interception(
+        FieldState(possession, 18, 3, 8),
+        location=location,
+        interceptor=away if possession is Possession.HOME else home,
+        choice="return",
+        dice=dice,
+    )
+    assert result.outcome is outcome
+    if depth is not None:
+        assert result.end_zone_recovery.depth == depth
+        assert result.end_zone_recovery.possession is possession.other
+        assert result.points == (0, 0)
+    else:
+        assert result.end_zone_recovery is None
+        scorer = possession.other
+        points = 6 if outcome is TurnoverOutcome.DEFENSIVE_TOUCHDOWN else 2
+        assert result.points == ((points, 0) if scorer is Possession.HOME else (0, points))
+    assert result.trace == ()
+    assert dice.offensive() == sentinel
 
 
 @pytest.mark.parametrize("compact", [False, True])

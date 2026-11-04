@@ -146,6 +146,10 @@ preserve the field situation. Final games reject every gameplay request.
 the ball over, and the field shows the same ball spot from the other team's side. An interception
 requires the defense to choose a return or an incomplete pass; a fumble resolves its recovery and
 any authorized return. A defender recovering in its own end zone chooses a touchback or return.
+The pending context displays the engine's interception location, including the
+nine-yard return origin for an interception beyond the defending end line.
+Pending Hail Mary reports retain Hail Mary / Blank defense through every required
+choice. The field and scoreboard retain the last committed state until completion.
 Ordinary and supplemental DS/X/T1–T3 yardage uses the full-feature physical dice
 method, including independent offensive/defensive distance rolls. Each consulted
 roll is visible in the engine trace; the resolved play advances state and timing.

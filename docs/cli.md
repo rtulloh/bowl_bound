@@ -124,6 +124,10 @@ Interception choices show the engine-known interception spot above the menu,
 for example `Interception at Beta State own 45. Return result pending.` The spot
 is from the intercepting team's perspective. The scoreboard continues to show
 the last committed field state until the play's required decisions finish.
+An interception beyond the defending end line is marked nine yards deep for its
+return origin. The opposite goal line, end zone and end line stay distinct.
+Hail Mary reports retain **Hail Mary / Blank defense** through interception,
+end-zone and penalty choices; trace routing still shows the actual table lookups.
 
 During required decisions, numbers select the displayed choices, not scrimmage
 plays. Only enabled choices are displayed and numbered consecutively. During optional

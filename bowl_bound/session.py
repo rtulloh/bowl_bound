@@ -49,7 +49,7 @@ from .resolution import (
     resolve_qb_sneak,
     resolve_razzle_dazzle_result,
 )
-from .return_recovery import GOAL_LINE, MAX_FIELD_SPOT, TOUCHBACK_SPOT
+from .return_recovery import END_LINE, GOAL_LINE, MAX_END_ZONE_DEPTH, MAX_FIELD_SPOT, TOUCHBACK_SPOT
 from .scoring import ScoreKind, ScoreLedger, resolve_pat
 from .special_teams import SpecialTeamsPlay, SpecialTeamsResolution
 from .statistics import (
@@ -1186,9 +1186,9 @@ class PlaySession:
             True,
             "penalty_pending",
             resolution.result.yards,
-            _reported_play_label(resolution, resolved=False),
-            _reported_play_label(resolution, resolved=True),
-            _reported_defense_label(resolution, defensive),
+            _reported_play_label(resolution, resolved=False, hail_mary=self._hail_mary),
+            _reported_play_label(resolution, resolved=True, hail_mary=self._hail_mary),
+            _reported_defense_label(resolution, defensive, hail_mary=self._hail_mary),
             before,
             before,
             f"{prefix} - penalty decision required.",
@@ -1257,9 +1257,9 @@ class PlaySession:
                 True,
                 "interception_pending",
                 location,
-                _reported_play_label(resolution, resolved=False),
-                _reported_play_label(resolution, resolved=True),
-                _reported_defense_label(resolution, defensive),
+                _reported_play_label(resolution, resolved=False, hail_mary=self._hail_mary),
+                _reported_play_label(resolution, resolved=True, hail_mary=self._hail_mary),
+                _reported_defense_label(resolution, defensive, hail_mary=self._hail_mary),
                 before,
                 before,
                 f"{prefix} - interception decision required.",
@@ -1737,9 +1737,9 @@ class PlaySession:
                 True,
                 "end_zone_recovery_pending",
                 None,
-                _reported_play_label(resolution, resolved=False),
-                _reported_play_label(resolution, resolved=True),
-                _reported_defense_label(resolution, defensive),
+                _reported_play_label(resolution, resolved=False, hail_mary=self._hail_mary),
+                _reported_play_label(resolution, resolved=True, hail_mary=self._hail_mary),
+                _reported_defense_label(resolution, defensive, hail_mary=self._hail_mary),
                 before,
                 before,
                 f"{prefix} - end-zone recovery decision required.",
@@ -1788,9 +1788,9 @@ class PlaySession:
                 True,
                 "return_penalty_pending",
                 None,
-                _reported_play_label(resolution, resolved=False),
-                _reported_play_label(resolution, resolved=True),
-                _reported_defense_label(resolution, defensive),
+                _reported_play_label(resolution, resolved=False, hail_mary=self._hail_mary),
+                _reported_play_label(resolution, resolved=True, hail_mary=self._hail_mary),
+                _reported_defense_label(resolution, defensive, hail_mary=self._hail_mary),
                 before,
                 before,
                 f"{prefix} - return penalty decision required.",
@@ -2038,11 +2038,7 @@ class PlaySession:
             resolved_play=_reported_play_label(
                 resolution, resolved=True, hail_mary=self._hail_mary
             ),
-            defense=(
-                "Blank defense"
-                if self._hail_mary
-                else _reported_defense_label(resolution, defensive)
-            ),
+            defense=_reported_defense_label(resolution, defensive, hail_mary=self._hail_mary),
             state_before=before,
             state_after=after,
             description=description,
@@ -2552,7 +2548,11 @@ def _reported_play_label(
     return PLAY_LABELS[play]
 
 
-def _reported_defense_label(resolution: PlayResolution, defensive: DefenseCall) -> str:
+def _reported_defense_label(
+    resolution: PlayResolution, defensive: DefenseCall, *, hail_mary: bool = False
+) -> str:
+    if hail_mary:
+        return "Blank defense"
     if resolution.qb_sneak and not (
         isinstance(defensive, AdvancedDefenseCall) and defensive.key.startswith("WC")
     ):
@@ -2710,15 +2710,18 @@ def _trace_entry(
 def _interception_context(
     field: FieldState, location: int, offense_name: str, defense_name: str
 ) -> str:
-    """Describe the known interception spot without resolving a return or possession."""
+    """Describe the rule-resolved interception spot without rolling a return."""
     spot = field.yards_to_goal - location
-    if 0 < spot < GOAL_LINE:
+    if spot >= END_LINE:
+        place = f"the {offense_name} end line"
+        preposition = "at" if spot == END_LINE else "beyond"
+    elif 0 < spot < GOAL_LINE:
         return_start = start_drive(field.possession.other, GOAL_LINE - spot)
         place = f"{defense_name} {spot_label(return_start)}"
         preposition = "at"
     else:
         team = defense_name if spot <= 0 else offense_name
-        depth = -spot if spot <= 0 else spot - GOAL_LINE
+        depth = min(-spot, MAX_END_ZONE_DEPTH) if spot <= 0 else spot - GOAL_LINE
         place = f"{team} goal line" if depth == 0 else f"{team} end zone ({depth} yards deep)"
         preposition = "at" if depth == 0 else "in"
     return f"Interception {preposition} {place}. Return result pending."
