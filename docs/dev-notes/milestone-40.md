@@ -42,3 +42,16 @@ discovery measured at 3.01 seconds. This is supporting evidence, not final
 artifact acceptance. The failed Windows/Intel run is retained. Publication still
 requires a fresh pinned build of all three final native jobs plus Windows
 install/registry/game/save/uninstall acceptance and final asset review.
+
+## Final acceptance
+
+Committed correction `9a2897f` is retained byte-for-byte in corrected chart source
+`a95ded6`. All three final native jobs in [run 42099569172](https://github.com/rtulloh/bowl_bound/actions/runs/42099569172)
+pass without weakening assertions. Catalog discovery is 3.53s arm64, 14.26s Intel,
+6.69s portable Windows and 6.74s installed Windows. Windows actual install/registry/
+game/save/uninstall preserves an unrelated file. Final downloaded arm64 passes
+independently locally (2.81s discovery). The complete 118-team checks remain;
+ordinary requests retain their five-second deadlines. DEV-073 is resolved pending
+owner download/play-test confirmation. Alpha 6 is public Latest, with all eleven
+asset digests and the real repository Releases panel verified. See the
+[publication receipt](release-alpha6.md#published-alpha-6--2026-11-05).

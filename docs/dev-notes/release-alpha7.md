@@ -278,3 +278,60 @@ reuse the strict smoke procedure with corrected paths and assert every-team
 snap/save-load plus 236 unchanged chart books. All selected staged inputs remain
 byte-identical to the final allowed checkout files. Native dispatch/run evidence
 will be reported separately; no tag/release is created by the build workflow.
+
+
+## Native acceptance and Alpha 6 receipt integration
+
+Immutable built source: `4da8c0ff288052f7a2d60bd2d63399e49af1fa7a` on
+`release/alpha7-visual`. Exact-SHA native run
+[42102433641](https://github.com/rtulloh/bowl_bound/actions/runs/42102433641)
+passes its source gate and all three native targets. CI confirms 4,003 Python
+cases, 93.41% coverage, 157 frontend cases and 64 real-engine browser cases.
+All three portable executables pass the 118-team snap/strict-save-load smoke.
+The Windows installer additionally passes install, registry, game/save,
+uninstall and user-file preservation. A separate local run of the downloaded
+Apple Silicon executable passes all 118 teams and 236 unchanged frozen chart
+books. All 11 downloaded files pass checksums; native inventories contain the
+exact 597 approved season-related resources and reviewed frontend assets,
+licenses/notices, with no private paths. No build artifact is committed.
+
+Observed CI advisories remain visible: 75 existing React act warnings, two
+existing duplicate-key warnings in unchanged synthetic App/PlayLog tests,
+whatwg-encoding deprecation, and Windows' optional hidden-import tzdata warning.
+No skips or failing checks are concealed.
+
+Alpha 6 is published at immutable `a95ded` with all 11 inspected assets and the
+repository Releases panel verified. Its docs-only receipt
+`92f99f84fad4d95c9b3cf542cfd6e0a95a08be48` is incorporated locally here. Only
+the generated issue tracker conflicted; regenerate it from the combined tickets.
+Before this receipt phase, reconsulted Paydirt
+`docs/dev-notes/release-readiness-2026-11-02.md`,
+`.github/workflows/release.yml` and `tests/test_release_metadata.py`. Adapt
+explicit immutable source, separate validation/publication and disclosed warnings;
+reuse no NFL behavior, data, dependencies or permissive installer failure policy.
+
+The receipt merge and these acceptance records change developer documentation
+only. Verify every exact release-selected source input, frontend input/lockfile and
+chart against built `4da8c0ff`, plus native frontend resource pins; run focused
+issue-index, release metadata and player-documentation checks. The existing full
+source/native gates remain authoritative because packaged inputs do not change.
+Keep the Alpha 7 tag targeted at built `4da8c0ff`, independently of this local
+acceptance merge. Do not rebuild or retarget the tag merely for receipt records.
+
+Alpha 7 publication and main advancement remain with root after owner web play
+testing. UI-062 through UI-069 remain resolved rather than closed. Preserve all
+preview processes and games through port 8143. No tag, draft, release or main
+push occurs in this local integration step.
+
+
+Receipt verification completes: all 681 exact selected inputs/manifest bytes equal
+built `4da8c0ff` and its accepted stage; all 658 runtime file hashes remain intact.
+Every packaged non-Python resource, including frontend assets and charts, matches
+all three inspected native inventories. Preview assets equal their pre-receipt
+ordinary-checkout build; release-stage assets equal the accepted runtime. The
+clean release excludes test-tree CSS utilities, so those two intentional build
+contexts are checked against their own baselines rather than conflated.
+Only nine developer-documentation files differ from the built commit. All 22
+issue-index, player-documentation and release-metadata checks pass, and both
+working/staged diff checks are clean. No full gate or native rebuild is needed
+for these byte-identical packaged inputs.

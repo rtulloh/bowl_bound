@@ -91,3 +91,18 @@ codec: non-OOB facts, colors, source-token bases, PAT, recovery and team metadat
 match the retained charts. The final guard changes no tiny output bytes. All
 source/config/output hashes, source counts and per-team diagnoses stay in ignored
 private receipts; no historical chart values or source narratives are copied here.
+
+## Frozen repair and release acceptance
+
+The final frozen `388546e` cumulative run passes **132 tests in 472.02s**, including
+the empty-QT guard, with no skips/warnings; the earlier 131-case receipt above is
+retained as preparation history. Independent release integration at `a95ded6`
+qualifies all 116 corrected teams against the current engine/coaching, exact dice
+and retained source supports, with non-OOB semantic invariance, 128 distinct
+complete games plus two exact repeats, strict replay and independent timing/
+statistics/trace reconciliation. The full source gate and all three native jobs
+pass on the same approved chart catalog. Inspected assets are published as
+[Alpha 6](https://github.com/rtulloh/bowl_bound/releases/tag/v0.1.0-alpha.6);
+see its [acceptance receipt](release-alpha6.md#published-alpha-6--2026-11-05).
+DATA-039 is resolved pending owner play-test confirmation. The source coverage,
+unknown-status and historical-calibration limitations remain explicit.
