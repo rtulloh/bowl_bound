@@ -1,5 +1,7 @@
 """Read-only chart books from normalized engine facts, without source evidence."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from .models import (
@@ -11,6 +13,7 @@ from .models import (
     Play,
     Priority,
     ResultKind,
+    SpecialTeamsColumn,
     SupplementalColumn,
     TeamChart,
 )
@@ -30,6 +33,8 @@ class ChartCellView:
 class ChartColumn:
     key: str
     label: str
+    number: str | None = None
+    name: str | None = None
 
 
 @dataclass(frozen=True)
@@ -37,6 +42,16 @@ class ChartRow:
     label: str
     description: str
     cells: tuple[ChartCellView, ...]
+    dice_label: str | None = None
+
+
+@dataclass(frozen=True)
+class ChartGroup:
+    key: str
+    label: str
+    start: int
+    count: int
+    separate: bool = False
 
 
 @dataclass(frozen=True)
@@ -46,6 +61,12 @@ class ChartTable:
     roll_label: str
     columns: tuple[ChartColumn, ...]
     rows: tuple[ChartRow, ...]
+    column_groups: tuple[ChartGroup, ...] = ()
+    row_groups: tuple[ChartGroup, ...] = ()
+    group_label: str | None = None
+    roll_description: str | None = None
+    legend: tuple[ChartLegend, ...] = ()
+    symbols: tuple[ChartSymbol, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -80,6 +101,7 @@ class ChartBook:
     symbols: tuple[ChartSymbol, ...]
     formations: tuple[ChartColumn, ...]
     priority: PriorityChartView
+    special_teams: ChartTable
 
 
 LEGEND = (
@@ -108,6 +130,7 @@ SYMBOLS = (
     ChartSymbol("OFF / DEF / PI", "Offensive penalty / defensive penalty / pass interference."),
 )
 _NAMES = {
+    ResultKind.NO_GOOD_FIELD_GOAL: "No good",
     ResultKind.BREAKAWAY: "Breakaway",
     ResultKind.QUARTERBACK_RUN: "Quarterback run",
     ResultKind.QUARTERBACK_TRAPPED: "Quarterback trapped",
@@ -133,13 +156,31 @@ def _cell_view(cell: NormalizedCell) -> ChartCellView:
     return ChartCellView(label, color, "; ".join(details))
 
 
+_PLAY_GROUPS = (
+    ChartGroup("running", "Running Plays", 0, 4),
+    ChartGroup("option", "Option", 4, 1),
+    ChartGroup("passing", "Passing Plays", 5, 4),
+)
+
+
 def chart_book(chart: TeamChart) -> ChartBook:
     """Present every offensive/defensive cell without rolling or resolving a play."""
     plays = tuple(
-        ChartColumn(str(play.value), f"{play.value} · {PLAY_LABELS[play]}") for play in Play
+        ChartColumn(
+            str(play.value),
+            f"{play.value} · {PLAY_LABELS[play]}",
+            str(play.value),
+            PLAY_LABELS[play],
+        )
+        for play in Play
     )
     supplemental = tuple(
-        ChartColumn(column.value, f"{column.value} · {_NAMES[ResultKind(column.value)]}")
+        ChartColumn(
+            column.value,
+            f"{column.value} · {_NAMES[ResultKind(column.value)]}",
+            column.value,
+            _NAMES[ResultKind(column.value)],
+        )
         for column in SupplementalColumn
     )
     offense = {(record.roll, record.play): record.cell for record in chart.offense}
@@ -154,7 +195,7 @@ def chart_book(chart: TeamChart) -> ChartBook:
         ChartTable(
             "offense",
             "Offense",
-            "Offensive total",
+            "#",
             plays + supplemental,
             tuple(
                 ChartRow(
@@ -162,29 +203,109 @@ def chart_book(chart: TeamChart) -> ChartBook:
                     f"Offensive total {roll}",
                     tuple(_cell_view(offense[roll, play]) for play in Play)
                     + tuple(_cell_view(extra[roll, column]) for column in SupplementalColumn),
+                    str(roll),
                 )
                 for roll in range(10, 40)
             ),
+            column_groups=_PLAY_GROUPS + (ChartGroup("supplemental", "Supplemental", 9, 3, True),),
+            roll_description="Offensive dice total",
         ),
         ChartTable(
             "defense",
             "Defense",
-            "Formation · total",
+            "#",
             plays,
             tuple(
                 ChartRow(
                     f"{formation.value} · {roll}",
                     f"{formation.value} {DEFENSE_LABELS[formation]}; defensive total {roll}",
                     tuple(_cell_view(defense[formation, roll, play]) for play in Play),
+                    str(roll),
                 )
                 for formation in Defense
                 for roll in range(1, 6)
             ),
+            column_groups=_PLAY_GROUPS,
+            row_groups=tuple(
+                ChartGroup(d.value, DEFENSE_LABELS[d], i * 5, 5) for i, d in enumerate(Defense)
+            ),
+            group_label="Formation",
+            roll_description="Defensive dice total",
         ),
         LEGEND,
         SYMBOLS,
         tuple(ChartColumn(d.value, f"{d.value} · {DEFENSE_LABELS[d]}") for d in Defense),
         priority_reference(),
+        _special_table(chart),
+    )
+
+
+_SPECIAL_LEGEND = (
+    ChartLegend(
+        "green", "Green", "Read the printed result; GOOD identifies a successful extra point."
+    ),
+    ChartLegend("red", "Red", "Read the printed result; NG means no good."),
+    ChartLegend("white", "White", "No change or a named chart reference; read the cell."),
+    ChartLegend("black", "Black", "BLACK marker; consult the applicable special-teams procedure."),
+    ChartLegend("yellow", "Yellow", "Penalty; OFF, DEF or PI identifies the call."),
+)
+_SPECIAL_SYMBOLS = (
+    ChartSymbol("0 / *", "Zero yardage adjustment / out-of-bounds marker."),
+    ChartSymbol("GOOD / NG", "Extra point good / no good, from the loaded chart."),
+    ChartSymbol("FG / KO", "Field-goal / kickoff chart reference; follow the engine procedure."),
+    ChartSymbol("BK / F", "Blocked kick / fumble marker; follow the engine procedure."),
+    ChartSymbol(
+        "DS / X / T1–T3", "DS sums die faces; X is 40 minus the total. T1–T3 use fresh totals."
+    ),
+    ChartSymbol("( ) / [ ]", "Printed priority markers retained from the normalized chart."),
+)
+_SPECIAL_COLUMNS = (
+    (SpecialTeamsColumn.KICKOFF, "Kickoff"),
+    (SpecialTeamsColumn.KICKOFF_RETURN, "Kickoff return"),
+    (SpecialTeamsColumn.PUNT, "Punt"),
+    (SpecialTeamsColumn.PUNT_RETURN, "Punt return"),
+    (SpecialTeamsColumn.INTERCEPTION_RETURN, "Interception return"),
+    (SpecialTeamsColumn.FIELD_GOAL, "Field goal"),
+)
+
+
+def _special_cell_view(cell: NormalizedCell) -> ChartCellView:
+    view = _cell_view(cell)
+    if cell.kind is ResultKind.INCOMPLETE:
+        return ChartCellView(
+            "BLACK", view.color, "Special teams BLACK marker; consult the special-teams procedure."
+        )
+    return view
+
+
+def _special_table(chart: TeamChart) -> ChartTable:
+    cells = {(record.roll, record.column): record.cell for record in chart.special_teams}
+    pat = {outcome.roll: outcome.good for outcome in chart.pat_outcomes}
+    return ChartTable(
+        "special_teams",
+        "Special Teams",
+        "#",
+        tuple(ChartColumn(column.value, label) for column, label in _SPECIAL_COLUMNS)
+        + (ChartColumn("pat", "Extra point"),),
+        tuple(
+            ChartRow(
+                str(roll),
+                f"Offensive total {roll}",
+                tuple(_special_cell_view(cells[roll, column]) for column, _ in _SPECIAL_COLUMNS)
+                + (
+                    ChartCellView(
+                        "GOOD" if pat[roll] else "NG",
+                        "green" if pat[roll] else "red",
+                        "Extra point good." if pat[roll] else "Extra point no good.",
+                    ),
+                ),
+                str(roll),
+            )
+            for roll in range(10, 40)
+        ),
+        roll_description="Offensive dice total",
+        legend=_SPECIAL_LEGEND,
+        symbols=_SPECIAL_SYMBOLS,
     )
 
 

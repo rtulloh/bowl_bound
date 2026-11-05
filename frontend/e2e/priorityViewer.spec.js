@@ -22,20 +22,25 @@ for (const viewport of [{ width: 1440, height: 1120 }, { width: 1280, height: 10
     const book = await (await page.request.get(`/api/games/${game.game_id}/charts?side=home`)).json()
     await page.getByRole('button', { name: 'Charts', exact: true }).click()
     const dialog = page.getByRole('dialog')
-    for (const kind of ['offense', 'defense']) {
-      await dialog.getByRole('button', { name: kind === 'offense' ? 'Offense' : 'Defense', exact: true }).click()
-      await expect(dialog.locator('tbody tr')).toHaveCount(30)
-      const displayed = await dialog.locator('tbody td > span:first-child').allTextContents()
-      expect(displayed).toEqual(book[kind].rows.flatMap((row) => row.cells.map((cell) => cell.label)))
-      const fit = await dialog.evaluate((element) => {
-        const grid = element.querySelector('.chart-scroll')
-        const rows = element.querySelectorAll('tbody tr')
-        return { first: rows[0].getBoundingClientRect().top, last: rows[29].getBoundingClientRect().bottom, scrollHeight: grid.scrollHeight, clientHeight: grid.clientHeight, font: parseFloat(getComputedStyle(rows[0].querySelector('td')).fontSize) }
-      })
-      expect(fit.first).toBeGreaterThanOrEqual(0)
-      expect(fit.last).toBeLessThanOrEqual(viewport.height)
-      expect(fit.scrollHeight).toBeLessThanOrEqual(fit.clientHeight)
-      expect(fit.font).toBeGreaterThanOrEqual(12)
+    for (const kind of ['offense', 'defense', 'special_teams']) {
+      await dialog.getByRole('button', { name: { offense: 'Offense', defense: 'Defense', special_teams: 'Special Teams' }[kind], exact: true }).click()
+      const table = book[kind]
+      const groups = kind === 'offense' ? [table.column_groups.filter((g) => !g.separate), table.column_groups.filter((g) => g.separate)] : [null]
+      for (const [index, columns] of groups.entries()) {
+        const grid = dialog.locator('.chart-grid').nth(index)
+        await expect(grid.locator('tbody tr')).toHaveCount(30)
+        const expected = table.rows.flatMap((row) => (columns ? columns.flatMap((g) => row.cells.slice(g.start, g.start + g.count)) : row.cells).map((cell) => cell.label))
+        expect(await grid.locator('tbody td > span:first-child').allTextContents()).toEqual(expected)
+        const fit = await grid.evaluate((element) => {
+          const scroll = element.parentElement
+          const rows = element.querySelectorAll('tbody tr')
+          return { first: rows[0].getBoundingClientRect().top, last: rows[29].getBoundingClientRect().bottom, scrollHeight: scroll.scrollHeight, clientHeight: scroll.clientHeight, font: parseFloat(getComputedStyle(rows[0].querySelector('td')).fontSize) }
+        })
+        expect(fit.first).toBeGreaterThanOrEqual(0)
+        expect(fit.last).toBeLessThanOrEqual(viewport.height)
+        expect(fit.scrollHeight).toBeLessThanOrEqual(fit.clientHeight)
+        expect(fit.font).toBeGreaterThanOrEqual(12)
+      }
       await expect(dialog.locator('.chart-key')).not.toHaveAttribute('open', '')
     }
   })
@@ -86,7 +91,7 @@ for (const launcher of ['Open in new tab', 'Open in separate window']) {
     await page.getByRole(launcher === 'Open in new tab' ? 'link' : 'button', { name: launcher, exact: true }).click()
     const child = await opened
     await child.waitForLoadState()
-    await expect(child.getByRole('table')).toHaveAccessibleName(/Offense/)
+    await expect(child.getByRole('table', { name: /^Offense/ })).toHaveAccessibleName(/Offense/)
     expect(await child.evaluate(() => window.opener)).toBeNull()
     await expect(page.getByRole('dialog')).toHaveCount(0)
     await expect(page.getByTestId('opening-screen')).toBeVisible()
@@ -95,7 +100,7 @@ for (const launcher of ['Open in new tab', 'Open in separate window']) {
     await child.getByRole('button', { name: 'Priority', exact: true }).click()
     await expect(child.getByRole('table')).toHaveAccessibleName('Priority chart')
     await page.getByRole('button', { name: 'Charts', exact: true }).click()
-    await expect(page.getByRole('table')).toHaveAccessibleName(/Offense/)
+    await expect(page.getByRole('table', { name: /^Offense/ })).toHaveAccessibleName(/Offense/)
     await expect(page.getByLabel('Chart team')).toHaveValue('home')
     await expect(page.locator('.chart-key')).not.toHaveAttribute('open', '')
     await page.getByRole('button', { name: 'Close charts' }).click()

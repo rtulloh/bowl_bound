@@ -198,50 +198,26 @@ body {
 .chart-grid th, .chart-grid td {
   position: relative;
   padding: 6px 8px;
-  border-right: 1px solid #b6ab96;
-  border-bottom: 1px solid #b6ab96;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
 }
 .chart-grid thead th {
   position: sticky;
   top: 0;
   z-index: 2;
-  background: #213043;
-  color: white;
+  background: #fff;
+  color: #000;
   min-width: 80px;
 }
-.chart-grid th:first-child {
-  position: sticky;
-  left: 0;
-  background: #e4c798;
-  color: #182333;
-  min-width: 105px;
-  z-index: 1;
-}
-.chart-grid thead th:first-child { z-index: 3; }
 .chart-grid td {
   font-weight: 700;
   white-space: nowrap;
 }
-.chart-cell-green {
-  background: #bbebc6;
-  color: #12371c;
-}
-.chart-cell-red {
-  background: #f5c0ba;
-  color: #611c15;
-}
-.chart-cell-white {
-  background: #fffdf7;
-  color: #182333;
-}
-.chart-cell-black {
-  background: #202b39;
-  color: #fff;
-}
-.chart-cell-yellow {
-  background: #f7e387;
-  color: #473300;
-}
+.chart-cell-green { background: #00ff00; color: #000; }
+.chart-cell-red { background: #ff0000; color: #000; }
+.chart-cell-white { background: #fff; color: #000; }
+.chart-cell-black { background: #000; color: #fff; }
+.chart-cell-yellow { background: #ffff00; color: #000; }
 .chart-cell-unclassified {
   background: #e4e5e7;
   color: #182333;
@@ -295,4 +271,36 @@ body {
   .chart-book { padding: 12px; }
   .chart-identity h2 { font-size: 1.1rem; }
   .chart-controls select { max-width: 60vw; }
+}
+
+/* Original board layout; structure is supplied by the engine presenter. */
+.chart-tabs { flex-wrap: wrap; }
+.chart-launchers .play-button { text-decoration: none; color: #182333; font-size: .8rem; padding: 6px 10px; }
+.chart-scroll { border: 2px solid #000; border-radius: 0; background: #fff; }
+.chart-grid caption { background: #fff; color: #000; border-bottom: 2px solid #000; height: 26px; padding: 4px 6px; line-height: 16px; white-space: nowrap; }
+.chart-grid thead th { background: #fff; color: #000; border-bottom: 2px solid #000; }
+.chart-grid .chart-row-label, .chart-grid .chart-die, .chart-grid .chart-formation, .chart-grid .chart-formation-heading {
+  position: sticky; left: 0; background: #fff; color: #000; z-index: 1;
+}
+.chart-grid .chart-row-label { min-width: 105px; }
+.chart-grid .chart-die { min-width: 46px; width: 46px; max-width: 46px; padding: 1px 3px; }
+.chart-grid .chart-formation, .chart-grid .chart-formation-heading { min-width: 100px; width: 100px; max-width: 100px; padding: 2px 4px; }
+.chart-grid[data-chart="defense"] .chart-die { left: 100px; min-width: 38px; width: 38px; max-width: 38px; }
+.chart-grid thead .chart-die, .chart-grid thead .chart-row-label, .chart-grid .chart-formation-heading { z-index: 3; }
+.chart-formation-letter { display: block; font-size: 40px; line-height: 1; font-weight: 900; }
+.chart-formation-name { display: block; font-size: 12px; line-height: 1.1; margin-top: 4px; }
+.chart-die-face { display: flex; align-items: center; justify-content: center; width: 27px; height: 17px; margin: auto; border: 1px solid #000; line-height: 1; background: #fff; color: #000; }
+.chart-grid .chart-group-end { border-right: 3px solid #000; }
+.chart-grid tbody[data-formation] + tbody tr:first-child > * { border-top: 3px solid #000; }
+.chart-bands th { height: 24px; font-weight: 900; }
+.chart-bands + .chart-play-headings th { top: 24px; }
+.chart-play-number { display: block; font-size: 15px; font-weight: 900; }
+.chart-play-name { display: block; }
+.chart-offense-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.chart-offense-layout .chart-grid[data-section="main"] { min-width: 800px; }
+.chart-offense-layout .chart-grid[data-section="supplemental"] { min-width: 310px; }
+.chart-offense-layout .chart-play-headings th { height: 60px; }
+.chart-grid[data-chart="special_teams"] { min-width: 800px; }
+@media (min-width: 1200px) {
+  .chart-offense-layout { grid-template-columns: minmax(0, 1fr) 330px; }
 }
