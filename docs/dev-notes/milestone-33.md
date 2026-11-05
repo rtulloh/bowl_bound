@@ -2019,3 +2019,16 @@ tests/test_standalone_smoke.py tests/test_issue_tracker.py` passes **127 in
 3.51 seconds**. Regenerated the issue index; `git diff --check` passes. Only
 five documentation/tracker files change in this receipt update, so Python
 formatting and a repeat of the unchanged full runtime gate are not required.
+
+## Main-thread Alpha 5 local acceptance — 2026-11-04
+
+After restored execution/network access, implementation `94e6ecb` passes the
+complete pinned Python 3.13.17 gate: 3,958 tests in 787.96 seconds, 93.35%
+branch-aware coverage. Ruff check/format (602 files), pip check, 147 frontend
+unit tests, production build, online npm audit (zero vulnerabilities) and all
+54 real-engine Chromium cases pass. Existing install/performance notices remain
+recorded in [Alpha 5 preparation](release-alpha5.md). No skips/assertion weakening
+or production changes are introduced by the DEV-070/DEV-071 test-harness fixes.
+The four staged UI tickets now have valid browser evidence and are resolved;
+owner visual/play-test closure remains separate. Exact sample selection and
+sanitized-history checks pass. Native builds and publication remain pending.

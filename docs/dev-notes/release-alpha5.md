@@ -211,3 +211,43 @@ before using the existing adapter. All 168 save/context/Hail Mary/zero-choice
 regressions then pass on Python 3.13.17; all five legacy-stage cases and explicit
 cross-minor rejection pass on Python 3.12.8 (six tests). Original fixture files,
 recorded state/dice and production save policy remain unchanged.
+
+## Restored-access local acceptance — 2026-11-04
+
+The complete pinned-runtime gate on implementation `94e6ecb` now passes:
+
+- `.venv/bin/python -m pytest --cov --cov-report=term-missing -q`: **3,958 passed
+  in 787.96 seconds**, **93.35% branch-aware coverage**, unchanged 75% floor.
+  No Python skips or warnings are reported. Earlier interrupted runs are not
+  counted as passing and remain available privately.
+- Ruff check/format pass on all 602 Python files; `pip check` passes.
+- Node 24.22.1/npm 11.19.1 clean lock install, all 147 frontend tests, production
+  build and online npm audit pass; audit reports zero vulnerabilities.
+- All 54 real-engine Chromium cases pass in 3.9 minutes. The installation's
+  existing `whatwg-encoding` deprecation and Vitest's jsdom environment performance
+  advisory are retained, not suppressed. These are not failed tests or skips.
+- All 168 focused legacy-save/context/Hail Mary regressions pass; six explicit
+  legacy-stage/cross-minor cases also pass on Python 3.12.8. Fixture metadata is
+  adapted only in tests; production runtime rejection stays strict.
+- Tracker/player-doc/priority-doc checks pass 22 cases after ticket maintenance.
+
+DEV-070/DEV-071 and UI-054/UI-058/UI-059/UI-060 have committed implementations
+and valid engineering/browser verification; they are resolved pending owner
+play-test closure. The owner's earlier CLI halftime confirmation is retained.
+CLI-072 remains the disclosed minor QB Sneak commentary follow-up.
+
+The current sanitized implementation history has 4,487 reachable objects and
+2,417 blobs, with no private-path or selected credential-pattern findings. Its
+root is still `239ec044eb2e170bc6b04867e26b03883a7eaad1`. All 15 approved sample
+hashes, native dependencies and native notice catalog match Alpha 4. The Alpha 4
+release commit is a parallel metadata-only child of public main; its release
+notes are already preserved byte-for-byte and its immutable tag is retained.
+No pre-public history or chart-research branch is merged. New changes after
+`94e6ecb` record acceptance/ticket metadata only.
+
+Fresh GitHub git/API probes succeed; upstream main remains `03d1992` and Alpha 5
+is unused. Owner publication authorization remains explicit. Push the reviewed
+sanitized descendant without force, then run the manual three-platform workflow
+at its full immutable source SHA. Native verification and public publication
+remain outstanding at this checkpoint; broader native/legal audit tickets are
+not silently closed by source tests or an unchanged catalog.
