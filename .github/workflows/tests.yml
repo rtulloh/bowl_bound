@@ -64,6 +64,17 @@ jobs:
           npm test
           npm run build
           npm audit
+      - name: Audit actual generated chart probabilities and tactical policy
+        run: |
+          .venv/bin/python -m scripts.audit_generated_charts --report "$RUNNER_TEMP/generated-chart-audit.json"
+      - name: Retain generated-chart acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: generated-chart-audit-${{ github.run_id }}
+          path: ${{ runner.temp }}/generated-chart-audit.json
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Real-engine browser regression
         working-directory: frontend
         env:

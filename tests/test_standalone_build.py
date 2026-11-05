@@ -98,7 +98,13 @@ def test_archive_checksums_exact_manifest_and_safe_extraction(
     bundle = fake_bundle(runtime, tmp_path / "bundle")
     output = tmp_path / "output"
     output.mkdir()
-    archive = native.archive_bundle(bundle, runtime, output, "macos-arm64")
+    chart_audit = {
+        "passed": True,
+        "candidate_sha256": "a" * 64,
+        "engine_sha256": "b" * 64,
+        "teams": {"synthetic": {}},
+    }
+    archive = native.archive_bundle(bundle, runtime, output, "macos-arm64", chart_audit=chart_audit)
     assert archive.name == "BowlBound-0.1.0-alpha.3-macos-arm64.zip"
     checksum = archive.with_suffix(".zip.sha256").read_text().strip().split()
     assert checksum == [hashlib.sha256(archive.read_bytes()).hexdigest(), archive.name]
@@ -107,6 +113,15 @@ def test_archive_checksums_exact_manifest_and_safe_extraction(
         assert len(names) == len(set(names))
         manifest = json.loads(zipped.read("BowlBound/ARTIFACT-MANIFEST.json"))
         assert manifest["target"] == "macos-arm64"
+        assert manifest["chart_audit"]["candidate_sha256"] == "a" * 64
+        assert manifest["chart_audit"]["engine_sha256"] == "b" * 64
+        assert "teams" not in manifest["chart_audit"]
+        assert (
+            manifest["chart_audit"]["report_sha256"]
+            == hashlib.sha256(
+                json.dumps(chart_audit, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest()
+        )
         for name, digest in manifest["files"].items():
             assert hashlib.sha256(zipped.read("BowlBound/" + name)).hexdigest() == digest
     with pytest.raises(ReleaseError):

@@ -15,6 +15,7 @@ import sys
 import sysconfig
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Any
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 from .native_notices import add_native_notices, verify_native_notices
@@ -27,6 +28,7 @@ from .release_package import (
     _write_json,
     archive_runtime,
     assemble_runtime,
+    audit_staged_charts,
     build_frontend,
     stage_sources,
 )
@@ -129,7 +131,14 @@ def _sha(path: Path) -> str:
     return digest.hexdigest()
 
 
-def archive_bundle(bundle: Path, runtime: Path, output: Path, target: str) -> Path:
+def archive_bundle(
+    bundle: Path,
+    runtime: Path,
+    output: Path,
+    target: str,
+    *,
+    chart_audit: dict[str, Any] | None = None,
+) -> Path:
     """Inspect resources and archive an exact inventory with a SHA256 sidecar."""
     verify_native_notices(bundle, target)
     hashes = _runtime_files(runtime)
@@ -168,6 +177,11 @@ def archive_bundle(bundle: Path, runtime: Path, output: Path, target: str) -> Pa
     if TARGETS[target][2] not in actual:
         raise ReleaseError("Native executable is missing or incorrectly named")
     inventory = {"version": version, "target": target, "files": actual}
+    if chart_audit is not None:
+        encoded = json.dumps(chart_audit, sort_keys=True, separators=(",", ":")).encode()
+        inventory["chart_audit"] = {
+            key: value for key, value in chart_audit.items() if key != "teams"
+        } | {"report_sha256": hashlib.sha256(encoded).hexdigest()}
     _write_json(bundle, "ARTIFACT-MANIFEST.json", inventory)
     with ZipFile(archive, "x", compression=ZIP_DEFLATED) as zipped:
         for path in sorted(bundle.rglob("*")):
@@ -289,6 +303,7 @@ def build(source: Path, output: Path, target: str) -> None:
             work = Path(directory)
             stage, runtime = work / "stage", work / "runtime"
             stage_sources(source, stage)
+            chart_audit = audit_staged_charts(source, stage)
             build_frontend(stage)
             assemble_runtime(stage, runtime)
             write_notices(stage, work / "notices")
@@ -333,7 +348,7 @@ def build(source: Path, output: Path, target: str) -> None:
                         destination.chmod(0o755)
             shutil.copytree(work / "notices", bundle / "THIRD_PARTY")
             add_native_notices(source, bundle, target, python_version=platform.python_version())
-            archive_bundle(bundle, runtime, artifacts, target)
+            archive_bundle(bundle, runtime, artifacts, target, chart_audit=chart_audit)
 
 
 def main() -> None:

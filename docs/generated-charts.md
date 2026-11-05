@@ -71,3 +71,8 @@ special teams and repeated computer choices are useful observations. Follow the
 [reporting guide](reporting-bugs.md), and review attachments before sending them.
 No affiliation or endorsement by the data providers, universities or game
 publisher is implied. The code license does not grant rights to excluded content.
+
+Generated-chart releases now require an [automated probability and tactical
+audit](generated-chart-audits.md), alongside separate source qualification and
+current-engine game/coaching reviews. The gate evaluates actual chart behavior;
+different-looking cells and successful completed games alone are insufficient.

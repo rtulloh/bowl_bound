@@ -653,7 +653,8 @@
     "seasons/2007/wyoming/special.csv",
     "seasons/2007/wyoming/team.yaml",
     "docs/generated-charts.md",
-    "seasons/GENERATED-LICENSE.md"
+    "seasons/GENERATED-LICENSE.md",
+    "docs/generated-chart-audits.md"
   ],
   "frontend": [
     "frontend/package.json",
