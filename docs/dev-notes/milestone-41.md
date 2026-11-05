@@ -255,3 +255,6 @@ candidate will run the unchanged standard complete gate against its own matched
 backend and default production bundle. Existing preview sessions remain live.
 
 Final follow-up browser acceptance: all 10 cases pass (16.3s), with no skips.
+
+Board-style/Special Teams tested implementation: `d2222beca34c4392285e14f953b7f523da57eb4d`.
+UI-066 through UI-069 are resolved, awaiting owner play-test confirmation.
