@@ -333,8 +333,8 @@ class DifficultyCoach(ChartAwareCoach):
         if observation.phase == SessionPhase.TWO_POINT_TRY.value and (
             observation.down != 1 or observation.yards_to_goal != 2 or observation.distance != 2
         ):
-            # The evaluator models canonical tries from the two. Keep an
-            # engine-adjusted attempt playable without inventing a rollout.
+            # Preserve the versioned basic-call preference for displaced tries.
+            # Other analysis roles still use the engine's current goal-to-go spot.
             return fallback
         if not observation.offense or fallback == "kneel":
             return fallback

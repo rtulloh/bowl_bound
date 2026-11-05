@@ -820,6 +820,22 @@ state, commands, dice or coaching. See the [planning note](milestone-37.md).
 
 **Commit:** `milestone 37: add downloadable support reports`
 
+### 39. Analyze penalized two-point tries at their current goal-to-go spot
+
+Required Alpha 6 follow-up discovered during current-release AI validation on
+2026-11-05. The analysis sandbox must accept an engine-provided first-and-goal
+try after penalty enforcement moves it from the two-yard line. Keep ordinary
+try rules, live field state and gameplay dice authoritative and unchanged.
+
+**Validate:** synthetic red-first controls for both sides and displaced offensive/
+defensive penalty spots; reject non-first-down or non-goal-to-go analysis input;
+retain deterministic analysis and strict replay for previously supported tries.
+Run focused/cumulative coaching and try regressions, then renew full release and
+cohort acceptance. Classify bounded-analysis fallback flags separately from illegal
+committed calls and aborts. See [the work log](milestone-39.md).
+
+**Commit:** `milestone 39: analyze penalized tries at their current spot`
+
 ## Decision gates
 
 Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.

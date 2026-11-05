@@ -110,6 +110,8 @@ legacy `chart-v1` policy keeps its original utility and selection streams.
 Try-phase observations are explicit: Hard evaluates conversion and overtime
 try-only snaps through the engine’s two-point phase. Success is worth two points,
 failure ends the try, and neither retains a scrimmage field-position value.
+The analysis sandbox accepts the current first-and-goal spot after penalty
+enforcement, including tries moved away from the initial two-yard line.
 Ordinary overtime series remain scrimmage, without hypothetical kickoffs.
 Policies receive an immutable public-observation allowlist: side, possession,
 down/distance, spot, phase, quarter/time, score difference, completed-play count,

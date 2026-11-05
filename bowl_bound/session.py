@@ -485,6 +485,7 @@ class PlaySession:
         This is not a game clone or save loader. It starts with an empty ledger
         and log; evaluators supply independent hypothetical dice on every action.
         No existing session, pending decision or live random state is copied.
+        A try uses its current first-and-goal spot, including penalty enforcement.
         """
         if (
             not isinstance(field, FieldState)
@@ -497,9 +498,9 @@ class PlaySession:
         if phase not in {SessionPhase.SCRIMMAGE, SessionPhase.TWO_POINT_TRY}:
             raise ValueError("analysis supports scrimmage or two-point try phases only")
         if phase is SessionPhase.TWO_POINT_TRY and (
-            field.down != 1 or field.yards_to_goal != 2 or field.yards_to_go != 2
+            field.down != 1 or field.yards_to_go != field.yards_to_goal
         ):
-            raise ValueError("a try analysis must begin first-and-goal at the two")
+            raise ValueError("a try analysis requires first-and-goal at its current spot")
         session = cls.new(
             home,
             away,

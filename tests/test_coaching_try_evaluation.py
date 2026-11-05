@@ -74,9 +74,9 @@ def test_analysis_factory_requires_typed_phase(phase: object) -> None:
 
 
 @pytest.mark.parametrize(
-    "field", [FieldState(Possession.HOME, 3, 1, 3), FieldState(Possession.AWAY, 2, 2, 2)]
+    "field", [FieldState(Possession.HOME, 3, 1, 2), FieldState(Possession.AWAY, 2, 2, 2)]
 )
-def test_analysis_factory_refuses_noncanonical_try_start(field: FieldState) -> None:
+def test_analysis_factory_refuses_non_goal_to_go_try_state(field: FieldState) -> None:
     with pytest.raises(ValueError, match="first-and-goal"):
         PlaySession.for_analysis(
             team_chart("Home"), team_chart("Away"), field, phase=SessionPhase.TWO_POINT_TRY
