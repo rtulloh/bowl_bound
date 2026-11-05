@@ -262,7 +262,7 @@ export default function App() {
       <header className="flex items-center justify-between gap-3">
         <h1 className="font-bold">Bowl Bound</h1>
         <div className="flex items-center gap-3">
-        <ChartViewer key={game.game_id} gameId={game.game_id} home={view.home} away={view.away} initialSide={control === 'away' ? 'away' : 'home'} initialChart={turn?.human_role === 'defense' ? 'defense' : 'offense'} />
+        <ChartViewer key={game.game_id} gameId={game.game_id} initialSide={control === 'away' ? 'away' : 'home'} initialChart={turn?.human_role === 'defense' ? 'defense' : 'offense'} />
         <details ref={gameMenu} className="relative" onKeyDown={(event) => {
           if (event.key === 'Escape') {
             event.currentTarget.open = false

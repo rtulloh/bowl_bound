@@ -142,7 +142,8 @@ Unknown games return 404 and invalid sides return 422. The endpoint is available
 in manual and coached games without submitting a call or preparing a turn.
 
 The response contains `team`, `season`, explanatory `note`, `offense` and
-`defense` tables, a color `legend`, `symbols` and `formations`. Each table has
+`defense` tables, a color `legend`, `symbols`, `formations` and a shared
+`priority` reference. Each table has
 `key`, `title`, `roll_label`, `columns` (`key`, `label`) and ordered `rows`
 (`label`, `description`, `cells`). Cells contain display `label`, normalized
 `color` and accessible `description`. Offense has 30 rows and 12 columns
@@ -150,6 +151,19 @@ The response contains `team`, `season`, explanatory `note`, `offense` and
 Color categories are red/green/white/black/yellow, with `unclassified` for facts
 without a normalized color. The client displays these facts without interpreting
 CSV strings or resolving football. Source provenance and private paths are omitted.
+
+`priority` contains a `table` in the same display format, its explanatory `note`,
+a `legend` of operation labels/descriptions, and ordered exception `notes`.
+The first 13 columns reproduce the ordinary printed reference; the marked 14th
+column displays the approved defensive `(B)` extension. Its 12 rows group
+equivalent offensive facts. Every operation is derived with the engine's pure
+resolver, without dice or a second behavioral matrix. It is identical for both
+sides; the team tables remain the selected game's frozen loaded CSV charts.
+
+The browser also supports `/?charts=<game_id>&side=home|away&view=offense|defense|priority`
+as a read-only standalone shell, using this same endpoint for both matchup
+teams. It does not mount game setup or submit commands. Unknown/expired games
+show recovery controls rather than creating a replacement match.
 
 Reads do not alter revision, pending decisions, coaching state, dice, clock,
 statistics or the save journal, and do not reveal a selected computer call.

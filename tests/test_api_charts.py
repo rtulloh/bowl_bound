@@ -36,12 +36,19 @@ def test_chart_reads_preserve_save_and_revision(tmp_path: Path, human_side: str 
     # A game's already loaded charts remain authoritative if local files disappear.
     for file in tmp_path.rglob("*.csv"):
         file.unlink()
+    priority = None
     for side, name in [("home", "Alpha Tech"), ("away", "Beta State")]:
         response = client.get(path + "/charts?side=" + side)
         assert response.status_code == 200, response.text
         data = response.json()
         assert data["team"] == name
         assert len(data["offense"]["rows"]) == len(data["defense"]["rows"]) == 30
+        assert data["offense"]["rows"][0]["cells"][0]["label"] == ("4" if side == "home" else "5")
+        assert data["defense"]["rows"][0]["cells"][0]["label"] == ("3" if side == "home" else "2")
+        if priority is None:
+            priority = data["priority"]
+        assert data["priority"] == priority
+        assert len(data["priority"]["table"]["rows"]) == 12
         assert "provenance" not in response.text
     assert client.get(path + "/save").content == before
     assert client.get(path + control).json() == game

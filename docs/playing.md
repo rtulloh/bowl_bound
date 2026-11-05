@@ -84,22 +84,34 @@ penalties and ambiguous recoveries retain complete factual wording.
 
 ## Inspect team charts in the web game
 
-Select **Charts** beside the Game menu to inspect the matchup's offense and
-defense charts. The viewer starts on your controlled team and opens Defense
-during defensive play selection. Choose another team or switch
-**Offense / Defense** to compare the tables.
-Offense includes B, QR and QT supplemental columns; defense includes all six
-formations. Scroll the grid to see every roll and column. Its headings stay
-visible as you scroll.
+Select **Charts** beside the Game menu to inspect the matchup's actual loaded
+offense and defense CSV charts. The viewer starts on your controlled team and
+opens Defense during defensive play selection. Choose another team or switch
+**Offense / Defense / Priority**. Priority is the shared resolution reference;
+it keeps your selected team ready when you return to a team chart.
 
-Colors follow the normalized chart categories. Read the signed values and
-**How to read the charts** legend as well: colors alone do not determine a result.
-A white blank is shown as **0**; **INC** identifies an incomplete pass. Priority
-markers and out-of-bounds asterisks remain visible. These are chart entries; the
-engine still resolves the combined result and any required follow-up decisions.
+Offense includes B, QR and QT supplemental columns; defense includes all six
+formations. All 30 rows fit together on desktop windows at 1280×1000 or larger.
+Smaller windows and phones allow scrolling, with headings kept visible.
+
+Colors follow the normalized chart categories. Expand **How to read the charts**
+for the color and symbol legend; help starts closed. Read the signed values as
+well: colors alone do not determine a result. A white blank is shown as **0**;
+**INC** identifies an incomplete pass. Priority markers and out-of-bounds asterisks
+remain visible. These are chart entries; the engine still resolves the combined
+result and any required follow-up decisions. **How to read Priority** explains
+the operations and marked defensive (B) extension.
+
+Use **Open in new tab** or **Open in separate window** to keep charts beside your
+game or on another display. Each view has its own team and chart controls; moving
+or resizing the window uses your browser's usual controls. The in-game dialog
+closes when a detached view opens, so play can continue. If a separate window is
+blocked, use the new-tab link or allow windows for the game. A detached chart
+belongs to the current running game's session; after a server restart, reopen it
+from your active game.
 
 Opening charts does not select a play or advance the game. **Close charts** or
-press **Escape** to return to your controls.
+press **Escape** in the in-game viewer to return to your controls.
 
 ## Save and resume
 
