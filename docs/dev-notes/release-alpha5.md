@@ -204,3 +204,10 @@ protection. All 147 frontend unit cases pass, production build succeeds, and the
 online npm audit reports zero vulnerabilities. Installation retains the existing
 `whatwg-encoding` deprecation notice. Ruff/pip checks pass. The final complete
 Python/coverage gate is still running; the earlier interrupted run is not a pass.
+
+DEV-070 follow-up inventory finds the same strict-runtime envelope in CLI-067
+and all four CLI-069 stages. Their unchanged tests reproduce five failures
+before using the existing adapter. All 168 save/context/Hail Mary/zero-choice
+regressions then pass on Python 3.13.17; all five legacy-stage cases and explicit
+cross-minor rejection pass on Python 3.12.8 (six tests). Original fixture files,
+recorded state/dice and production save policy remain unchanged.

@@ -30,6 +30,7 @@ from bowl_bound.timing import Clock
 from tests.synthetic_teams import _with_legend_color, team_chart, write_team, yards
 from tests.test_cli import saved_facts
 from tests.test_models import provenance
+from tests.test_save_game import legacy_fixture_for_current_runtime
 from tests.test_special_teams import special_chart
 
 
@@ -169,7 +170,9 @@ def test_hail_mary_pass_interference_pending_and_completed_labels(choice: str) -
 
 @pytest.mark.parametrize("stage", ["interception", "end-zone", "return-penalty", "penalty"])
 def test_authentic_pre_fix_hail_mary_save_replays_and_continues(stage: str) -> None:
-    raw = (Path(__file__).parent / "fixtures" / f"cli069-{stage}.json").read_text()
+    raw = legacy_fixture_for_current_runtime(
+        Path(__file__).parent / "fixtures" / f"cli069-{stage}.json"
+    )
     charts = dict(zip(("2002/home", "2002/away"), hail_mary_teams(), strict=True))
     restored = loads_game(raw, charts.__getitem__)
     frozen = json.loads(raw)

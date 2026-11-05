@@ -15,6 +15,7 @@ from bowl_bound.turnovers import TurnoverOutcome, resolve_interception
 from tests.synthetic_teams import default_teams, team_chart, write_team
 from tests.test_cli import new_game, saved_facts, terminal
 from tests.test_models import provenance
+from tests.test_save_game import legacy_fixture_for_current_runtime
 
 
 @pytest.mark.parametrize("possession", [Possession.HOME, Possession.AWAY])
@@ -126,7 +127,9 @@ def test_cli_puts_engine_interception_context_above_the_choices(compact: bool) -
 
 def test_pre_context_interception_save_loads_without_changing_replay() -> None:
     app = terminal(new_game(), "away")
-    raw = (Path(__file__).parent / "fixtures" / "cli067-pending-interception.json").read_text()
+    raw = legacy_fixture_for_current_runtime(
+        Path(__file__).parent / "fixtures" / "cli067-pending-interception.json"
+    )
     restored = loads_game(raw, app.load_team)
     assert "Beta State own 45" in restored.view().pending.decision_context
     before = saved_facts(restored)
