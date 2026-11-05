@@ -1983,3 +1983,39 @@ has 143 passed and four unavailable after the EPERM hook, exiting 1. No skips
 or acceptance criteria are weakened. The owner-requested persistent release goal
 continues through a genuine verified build/publication; 403 upstream access and
 required local-service/browser failures remain explicit.
+
+## Alpha 5 completed gate receipts and resumed access check (2026-11-04)
+
+Reviewed Paydirt release-readiness notes again on resume: retain explicit failed
+checks and separate engineering, calibration and native acceptance claims. The
+tested candidate is `170f5e053715ae7c5abb5f73a7019f5ce25cda75`. Its full Python
+coverage command exits 1 after 3,947 passes, five launcher EPERM failures and six
+wheel build-fixture errors in 1,026.89 seconds; branch coverage is 93.02%.
+The combined `4ca8858` predecessor has 3,946 passes and the same failures/errors.
+No tests are skipped, weakened or modified to hide these failures.
+
+All seven wheel packaging cases pass separately in an immutable candidate archive
+with the verified existing build-backend cache and network disabled. Two isolated
+runtime games using only original fictional samples finish with 172/166 committed
+plays, four 900-second periods each, eleven strict save/replay checkpoints and
+zero missing imports. The corrected temporary smoke probe reconciles elapsed
+time rather than nominal charges clamped at period boundaries. This evidence
+does not replace the failed complete gate or certify native executables.
+
+DEV-069 is resolved against `170f5e0` after its 40 packaging tests, 127-case
+release selection and actual clean-stage frontend/runtime/archive checks; it
+remains unclosed pending native acceptance. DEV-068 stays open. The owner resumes
+work after an explicit pause; bounded probes still show GitHub/npm 403, loopback
+EPERM and Chromium MachPort 1100. No full-gate process remains live, and no
+upstream publication occurs. See [release evidence](release-alpha5.md) for exact
+scope, command, limitations and remaining authorized steps. Documentation-only
+receipt updates require existing documentation/tracker checks, not artificial
+behavior tests.
+
+Resume validation: supported Python `-m pytest -q tests/test_release_metadata.py
+tests/test_release_package.py tests/test_release_player_docs.py
+tests/test_tests_workflow.py tests/test_standalone_build.py
+tests/test_standalone_smoke.py tests/test_issue_tracker.py` passes **127 in
+3.51 seconds**. Regenerated the issue index; `git diff --check` passes. Only
+five documentation/tracker files change in this receipt update, so Python
+formatting and a repeat of the unchanged full runtime gate are not required.

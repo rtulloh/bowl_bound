@@ -51,9 +51,19 @@ deliberately unchanged; it does not declare the current application version.
 
 ## Verification and limits
 
-The full Python/coverage gate is in progress on the combined `4ca8858` code.
-Its final result must be recorded, followed by focused checks of the Alpha 5
-metadata/documentation and exact-allowlist staging.
+The full Python/coverage gate finished on combined `4ca8858`: **3,946 passed,
+five failed and six setup errors in 1,018.20 seconds**, with **93.02% branch
+coverage**. The committed Alpha 5 candidate
+`170f5e053715ae7c5abb5f73a7019f5ce25cda75` was then tested without source changes:
+**3,947 passed, five failed and six setup errors in 1,026.89 seconds**, with the
+same **93.02% coverage**. Both commands exit 1. The five launcher failures occur
+at loopback socket creation with EPERM; six packaging errors share an isolated
+wheel fixture that cannot acquire its build dependency. Meeting the coverage
+threshold does not make either full gate pass.
+
+Exact command on each corresponding source: supported Python
+`-m pytest --cov --cov-report=term-missing -q`. Local Python is 3.12; this does
+not certify the workflow's pinned Python 3.13.17 environment.
 
 Completed on the combined integration source:
 
@@ -108,6 +118,34 @@ the command exits 1. Ruff lint/format on 600 files and pip check pass. Fresh
 Git fetch and Alpha 5 release/tag API checks still return HTTP 403, so current
 upstream/tag availability cannot be certified. No push or dispatch was attempted.
 
+Supplemental wheel verification uses an immutable archive of `170f5e0`, with
+network disabled and the already cached setuptools 84.2.1 wheel supplied only to
+that child process. All seven unchanged `tests/test_packaging.py` cases pass.
+The cached wheel SHA-256 is
+`ca140b45d5325a9478f880e351484f62fef15f336462e449ca0c03c873d589c2`.
+This diagnoses the build-dependency acquisition failure; it does not replace the
+failed full gate or certify the pinned native dependency environment.
+
+The assembled runtime also completes two isolated public-fictional games, with
+Hard v15 controlling opposite sides and seeds 101/307. There are 172/166 committed
+plays, four reconciled 900-second periods per game, eleven successful strict
+save/replay checkpoints and no missing runtime imports. A temporary probe's first
+attempt incorrectly summed nominal timing charges; the corrected probe measures
+actual before/after elapsed time, respecting quarter-boundary clamping. The
+initial failed probe remains recorded. No engine code or test expectation changes.
+These are packaging smoke checks, not historical calibration or native acceptance.
+
+All 97 selected stage source inputs match the committed candidate byte for byte.
+The 18-file candidate delta is reviewed without private charts, PDFs, saves or
+credential-pattern findings. The original 15 sample hashes remain unchanged.
+
+After the owner's explicit commute pause and resume, bounded probes at
+2026-11-05 00:18 UTC reproduce GitHub CONNECT tunnel 403, npm audit 403
+`blocked-by-allowlist`, loopback EPERM and Chromium MachPort error 1100 before
+browser assertions. No full gate is needlessly restarted under unchanged
+restrictions. No running regression process remains. The release goal remains
+unfinished; publication authorization persists.
+
 Detailed logs and scan receipts remain ignored under `private-data/`.
 CLI-072 remains a known minor commentary follow-up; it does not alter the
 football result. The owner audit is game-specific evidence, not historical
@@ -115,8 +153,9 @@ chart calibration or full release acceptance.
 
 ## Remaining authorized steps
 
-1. Finish and record the Python, metadata, documentation and exact-allowlist
-   packaging checks. Review the final diff and commit with the M33 subject.
+1. Candidate `170f5e0` contains the tested metadata and exact-manifest fix;
+   DEV-069 is resolved against that reference and remains unclosed pending native
+   acceptance. Keep DEV-068 open until all remaining release steps succeed.
 2. In an environment that permits the required services, run the established
    complete gate in `.github/workflows/tests.yml`: pinned Python 3.13.17 and
    Node 24.22.1, Python coverage/lint/dependencies, clean frontend install,
