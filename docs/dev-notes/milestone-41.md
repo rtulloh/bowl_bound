@@ -1,6 +1,6 @@
 # Milestone 41 — Priority and full-page chart views
 
-Status: local acceptance complete; owner visual review pending. Implemented in
+Status: local and owner visual acceptance complete (2026-11-05). Implemented in
 an isolated worktree from Milestone 38 commit 89b29e4.
 
 ## Scope and acceptance
@@ -260,3 +260,20 @@ Final follow-up browser acceptance: all 10 cases pass (16.3s), with no skips.
 
 Board-style/Special Teams tested implementation: `d2222beca34c4392285e14f953b7f523da57eb4d`.
 UI-066 through UI-069 are resolved, awaiting owner play-test confirmation.
+
+
+## Owner visual acceptance
+
+Owner review on 2026-11-05 explicitly confirmed, "charts look good to me".
+Root directed recording this approval and closing the covered chart UI objectives.
+UI-062 through UI-069 close on the recorded exact source/browser/CSV-purity and
+geometry evidence plus this owner visual play-test confirmation. This does not
+claim the owner manually repeated every automated assertion. UI-061/M38 receives
+the same viewer acceptance. Earlier pending-review entries above remain history.
+
+Reconsulted Paydirt `docs/dev-notes/issues/README.md` for this acceptance receipt;
+adapt its distinction between tested resolution and play-test closure and preserve
+append-only evidence. Bowl Bound's canonical milestones and issue conventions
+remain authoritative. DATA-040, release coordination and unrelated calibration
+findings remain open. Alpha 7's immutable tag/draft/assets remain held; a new
+corrected version requires separate model/cohort/release validation.

@@ -1,6 +1,6 @@
 # Milestone 38 — Web chart viewer
 
-Status: implementation complete and reviewed; awaiting owner visual confirmation.
+Status: implementation and owner visual acceptance complete (2026-11-05).
 Separate from the Alpha 6 chart-content release.
 
 ## Scope and acceptance
@@ -101,3 +101,12 @@ with the tested reference; owner visual confirmation remains pending. The featur
 branch is `milestone/38-chart-viewer`. No push, main merge or release publication
 is part of this independent viewer acceptance. Existing owner checkout and the
 Alpha 6 release worktree were preserved.
+
+
+## Owner visual acceptance
+
+On 2026-11-05 the owner reviewed the live chart viewer and confirmed, "charts
+look good to me". UI-061 closes with the existing CSV-parity/read-only/browser
+acceptance and that explicit visual play-test confirmation. The generated tactics
+finding DATA-040 remains a separate open model issue; it does not change the
+viewer's faithful display. No calibration or corrected-data acceptance is implied.
