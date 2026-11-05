@@ -126,6 +126,7 @@ function ChartPanel({ gameId, initialSide, initialChart, onClose }) {
         <summary>{priority ? 'How to read Priority' : 'How to read the charts'}</summary>
         {!priority && <div className="chart-colors">{legend.map((entry) => <span key={entry.color}><span className={`chart-swatch chart-cell-${entry.color}`} aria-hidden="true" />{entry.label}</span>)}</div>}
         <div className="chart-legend">
+          {chart === 'defense' && <p className="chart-rule-note">For generated teams, formation tradeoffs are experimental Bowl Bound estimates, separate from measured team strength. The source does not identify historical defensive formations.</p>}
           {(priority ? reference.legend : [...legend, ...symbols]).map((entry) => <p key={entry.label}><strong>{entry.label}:</strong> {entry.description}</p>)}
           {priority && reference.notes.map((note) => <p className="chart-rule-note" key={note}>{note}</p>)}
         </div>

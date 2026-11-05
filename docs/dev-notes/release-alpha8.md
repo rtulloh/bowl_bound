@@ -2,9 +2,8 @@
 
 Status: DATA-040 correction in progress; no corrected cohort or release is accepted
 by this preparation record. The canonical generator agent owns the original
-Bowl Bound tactical-policy proposal and synthetic test-first evidence. Root must
-review concrete coefficients, rationale, uncertainty and exact-dice tradeoffs
-before the full 116-team regeneration.
+Bowl Bound tactical-policy proposal and synthetic test-first evidence. Root selected the numeric-only model for the next validation phase; a tiny
+independent comparison is required before full 116-team regeneration.
 
 ## Immutable history and scope
 
@@ -36,7 +35,7 @@ a declared authored model, not measured source estimates.
 
 Root-reviewed [audit](college-chart-defense-formation-audit.md) and
 [DATA-040](issues/DATA/DATA-040.md) prove the all-zero neutral tactics create equal
-A–F outcome distributions. [DEV-075](issues/DEV/DEV-075.md) tracks integration,
+A–F outcome distributions. [DEV-076](issues/DEV/DEV-076.md) tracks integration,
 independent acceptance and corrected release. Never conceal this with viewer
 formatting or a second engine formation bonus.
 
@@ -64,3 +63,44 @@ against unchanged Alpha 7 metadata as expected (one failed, one passed); only th
 coordinated version values then change. No football source or normalized chart
 is changed by metadata preparation. Full gates and candidate acceptance remain
 pending corrected policy/cohort integration.
+
+
+## Selected policy and review checkpoint
+
+Root technical review selects `authored-bb-yardage-v1`, policy SHA-256
+`bbb35953b3812769bde39d5c567fc21dece00b0899cb037feaad0db7aa88280c`.
+All authored response-rate deltas remain zero. The conditional yardage matrix is
+an original experimental Bowl Bound prior, separate from measured team effects;
+formation/call interactions remain unobserved rather than retrospectively fitted.
+The initial probability-changing proposal is rejected for production because
+scarce physical rows introduced unintended INC/INT changes.
+
+Before a tiny cohort, selected-policy actual-engine tests must cover protected
+parentheses, varied ordinary/special offensive facts, Option nullification and
+B/QR/QT branches, and production must reject the abandoned rate-policy origin.
+Define the selected matrix independently of the rejected factory. Then freeze
+source/config/policy identities and provide a tiny source/semantic/actual-resolved
+comparison. The full 116-team cohort waits for that review. Existing cohorts,
+Alpha 7 tag/draft/assets and all old games remain unchanged.
+
+The initial local release-ticket ID collided with a separately reserved planning
+issue. DEV-076 is canonical after checking all local branches/worktrees; historical
+commits retain their original references with this explicit correction.
+
+
+## Transferable investigation and UI disclosure
+
+The [cross-project findings note](college-chart-tactics-cross-project-findings.md)
+separates the proven Bowl Bound zero-profile cause from Paydirt's untested final
+probabilities. Paydirt has a nonzero template; that neither proves equal tactical
+behavior nor establishes the same defect. The 12/36 versus (11+1)/36 example and
+finite-row response displacement are diagnostic patterns, not Paydirt findings.
+No Paydirt source or data is changed.
+
+Defense chart help now explains that generated formation tradeoffs are experimental
+Bowl Bound estimates, separate from measured team strength and unobserved historical
+formations. The note lives inside initially closed help, applies conditionally to
+generated teams, and does not label the shared Priority rules as statistical
+estimates. A synthetic frontend regression first failed because the note was
+absent (one failed, nine passed), then passes with the original nine viewer tests.
+Chart facts, API/game actions, default collapse state and layout are unchanged.

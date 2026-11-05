@@ -172,3 +172,19 @@ it('shows supplied Special Teams facts and keeps detached controls read-only', a
   expect(screen.getByRole('table', { name: 'Priority chart' })).toBeVisible()
   expect(api.getCharts).toHaveBeenCalledTimes(2)
 })
+
+
+it('explains the experimental generated defense model inside initially closed help', async () => {
+  render(<ChartViewer gameId="game" initialSide="home" initialChart="defense" />)
+  fireEvent.click(screen.getByRole('button', { name: 'Charts' }))
+  await screen.findByRole('table', { name: /Defense/ })
+  const modelNote = screen.getByText(/For generated teams, formation tradeoffs are experimental/)
+  expect(modelNote).not.toBeVisible()
+  fireEvent.click(screen.getByText('How to read the charts'))
+  expect(modelNote).toBeVisible()
+  expect(modelNote).toHaveTextContent('separate from measured team strength')
+  expect(modelNote).toHaveTextContent('does not identify historical defensive formations')
+  fireEvent.click(screen.getByRole('button', { name: 'Offense', exact: true }))
+  expect(screen.queryByText(/For generated teams, formation tradeoffs are experimental/)).toBeNull()
+  expect(api.getCharts).toHaveBeenCalledTimes(2)
+})

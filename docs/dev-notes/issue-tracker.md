@@ -18,7 +18,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | [DEV-036](issues/DEV/DEV-036.md) | High | [24](project-plan.md#24-prepare-github-publication) | Build verified standalone alpha artifacts for supported platforms | created 2026-10-28 |
 | [DEV-037](issues/DEV/DEV-037.md) | High | [24](project-plan.md#24-prepare-github-publication) | Audit alpha publication history privacy and clean-machine readiness | created 2026-10-28 |
 | [DEV-041](issues/DEV/DEV-041.md) | High | [24](project-plan.md#24-prepare-github-publication) | Standalone artifacts omit bundled native-library notices | created 2026-10-29 |
-| [DEV-075](issues/DEV/DEV-075.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Deliver corrected generated defensive tactics in the next alpha | created 2026-11-05 |
+| [DEV-076](issues/DEV/DEV-076.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Deliver corrected generated defensive tactics in the next alpha | created 2026-11-05 |
 | [AI-001](issues/AI/AI-001.md) | Medium | [21](project-plan.md#21-add-chart-aware-coaching-and-audits) | Add chart-aware coaching with exact probability analysis and policy audits | created 2026-10-27 |
 | [AI-002](issues/AI/AI-002.md) | Medium | [21](project-plan.md#21-add-chart-aware-coaching-and-audits) | Restore Paydirt-style difficulty levels across CLI and browser | created 2026-10-27 |
 | [AI-018](issues/AI/AI-018.md) | Medium | [23](project-plan.md#23-establish-the-complete-regression-gate) | Add coordinator-level tests driving full games only through coach paths | created 2026-10-27 |
@@ -661,7 +661,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 - [DATA-039](issues/DATA/DATA-039.md) (resolved, High) — Correct positive-only out-of-bounds evidence conditioning in generated charts
 - [DATA-040](issues/DATA/DATA-040.md) (open, High) — Generated defensive formations have no tactical probability differences
 - [DEV-072](issues/DEV/DEV-072.md) (resolved, High) — Publish Alpha 6 with an exact reviewed generated-team catalog
-- [DEV-075](issues/DEV/DEV-075.md) (open, High) — Deliver corrected generated defensive tactics in the next alpha
+- [DEV-076](issues/DEV/DEV-076.md) (open, High) — Deliver corrected generated defensive tactics in the next alpha
 
 ### Milestone [34b](project-plan.md#34b-generate-recent-season-charts-starting-with-2025)
 
