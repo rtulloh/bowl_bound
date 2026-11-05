@@ -251,3 +251,56 @@ sanitized descendant without force, then run the manual three-platform workflow
 at its full immutable source SHA. Native verification and public publication
 remain outstanding at this checkpoint; broader native/legal audit tickets are
 not silently closed by source tests or an unchanged catalog.
+
+## Published Alpha 5 — 2026-11-04
+
+[Alpha 5 is published](https://github.com/rtulloh/bowl_bound/releases/tag/v0.1.0-alpha.5)
+as a prerelease with 11 verified assets. Immutable annotated tag
+`v0.1.0-alpha.5` points to `8be6c966283f1a2011807d15c7dcd36175638c22`, the
+reviewed fast-forward push of sanitized public main. No tag is replaced, no
+pre-public history is merged, and the owner's working checkouts/private teams
+remain intact. The subsequent publication receipt changes documentation only;
+it does not move the release tag or change the built source.
+
+Both [main Tests](https://github.com/rtulloh/bowl_bound/actions/runs/41963809215)
+and the reusable gate in the
+[three-platform build](https://github.com/rtulloh/bowl_bound/actions/runs/41963815576)
+pass at that source. Each passes 3,958 Python tests with 93.35% branch coverage,
+147 frontend tests, production build, zero-vulnerability npm audit, lint and
+pip checks, and all 54 real-engine Chromium cases. Main Python takes 1,426.28
+seconds and browser 5.3 minutes; the release gate takes 1,757.15 seconds and
+5.7 minutes respectively. No test skips or assertion weakening are introduced.
+
+All three extracted-executable smoke jobs pass version, UI/assets, exact
+fictional catalog, gameplay, save/load and clean shutdown. Windows additionally
+passes installer/registry/version/game/save/uninstall checks while preserving
+an unrelated user file. The downloaded arm64 artifact also passes the isolated
+smoke independently on the owner's Mac. This is native engineering acceptance,
+not certification of every end-user OS/security configuration. Builds remain
+unsigned alpha software.
+
+Independent inspection verifies exact archive inventories and every file hash,
+external/embedded manifest agreement, complete native inventories by file magic,
+both pinned native-notice copies, portable/installer SHA256 sidecars and version.
+Each archive has exactly 15 unchanged approved sample files for the original
+Cedar Valley and Harbor Tech. No historical charts, PDFs, private rosters, saves,
+logs, research output or temporary builder-input ZIP is attached. The macOS
+archives have 260 files/65 native files each; Windows has 261/69. The three
+ZIPs, three checksums, three manifests and Windows installer/checksum total 11.
+Both the draft and published GitHub assets match all inspected local hashes and
+sizes; the public prerelease is not a draft and its tag resolves to the built SHA.
+
+Warnings are retained: hosted frontend tests emit the baseline App `act(...)`
+warnings (75 in main) and one duplicate-key synthetic fixture warning, tracked
+by DEV-044/DEV-064. Installation retains `whatwg-encoding` deprecation and the
+local Vitest jsdom performance advisory. Windows freezing warns that optional
+hidden import `tzdata` is absent; the same warning exists in the verified Alpha 4
+build, the application does not use named-zone `ZoneInfo`/`tzdata`, and native
+smokes pass. No warning is suppressed. Existing broader native/static-license
+follow-ups DEV-037/DEV-041 and owner UI play-test closure are not falsely closed
+by this publication; pinned dependencies/notices are unchanged from Alpha 4.
+
+Known minor gameplay-presentation follow-up CLI-072 is disclosed in player notes.
+DEV-068 is resolved against the tested/built source and actual publication;
+owner download/play-test closure remains separate. Detailed logs, inspection,
+local smoke and remote SHA256 receipts remain ignored in private-data.

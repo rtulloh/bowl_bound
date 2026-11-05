@@ -2032,3 +2032,18 @@ or production changes are introduced by the DEV-070/DEV-071 test-harness fixes.
 The four staged UI tickets now have valid browser evidence and are resolved;
 owner visual/play-test closure remains separate. Exact sample selection and
 sanitized-history checks pass. Native builds and publication remain pending.
+
+## Alpha 5 publication — 2026-11-04
+
+Published [Alpha 5](https://github.com/rtulloh/bowl_bound/releases/tag/v0.1.0-alpha.5)
+from immutable tested/built source `8be6c966283f1a2011807d15c7dcd36175638c22`.
+[Main Tests](https://github.com/rtulloh/bowl_bound/actions/runs/41963809215) and
+[three-platform native build](https://github.com/rtulloh/bowl_bound/actions/runs/41963815576)
+pass: 3,958 Python cases/93.35% branch coverage, 147 frontend cases, all 54
+Chromium cases and required executable/Windows-installer smokes. All 11 assets
+pass independent inventory/native-notice/sample/hash inspection and remote digest
+verification. The downloaded arm64 app also passes a local isolated smoke.
+Only original fictional Cedar Valley/Harbor Tech are bundled; chart research
+remains separate. DEV-068 is resolved; owner play-test closure and disclosed
+minor CLI-072 follow-up remain separate. Baseline frontend/freezer warnings are
+retained and explained in [release acceptance](release-alpha5.md).

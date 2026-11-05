@@ -623,7 +623,7 @@ at `eed362c` passes 3,392 Python cases, 130 frontend cases and 38 real-engine
 browser cases. The unchanged private 120-game season audit and 32-game public
 coaching/replay audit pass; 17/17 deliberate coaching faults are detected.
 Owner play-test confirmation remains required before closing gameplay tickets.
-This milestone does not publish a release or implement Milestones 34/35.
+That engineering checkpoint did not publish a release or implement Milestones 34/35.
 
 Owner play-test follow-up: [UI-052](issues/UI/UI-052.md) replaces timeout button
 copy with the owner's approved plain language on the unmerged M33 review branch.
@@ -663,6 +663,21 @@ owner confirmation. UI-054/UI-058/UI-059 remain open: all 54 Playwright cases
 collect, but local Chromium launch is denied before assertions, and fresh owner
 acceptance is pending. This is a review checkpoint, not release readiness.
 See the [full evidence and fresh play-test handoff](milestone-33.md).
+
+**Alpha 5 publication (2026-11-04):** the owner-authorized follow-ups are now
+integrated on public main and shipped as
+[Alpha 5](https://github.com/rtulloh/bowl_bound/releases/tag/v0.1.0-alpha.5), at
+immutable tested/built source `8be6c966283f1a2011807d15c7dcd36175638c22`.
+[Main Tests](https://github.com/rtulloh/bowl_bound/actions/runs/41963809215) and
+[three-platform native build](https://github.com/rtulloh/bowl_bound/actions/runs/41963815576)
+pass: 3,958 Python tests/93.35% branch coverage, 147 frontend and 54 real-engine
+browser cases, all extracted-executable smokes and Windows installer acceptance.
+All 11 published assets pass independent inventory/native-notice/exact-sample
+and remote SHA256 checks. UI-054/UI-058/UI-059/UI-060 and release DEV-068 are
+resolved; owner play-test closure remains separate. Only the original fictional
+Cedar Valley/Harbor Tech samples are bundled. Earlier blocked browser/review
+checkpoints above are historical. See [release acceptance](release-alpha5.md)
+for retained warnings, minor CLI-072 and separate follow-up limits.
 
 **Commit:** `milestone 33: correct core playability and validation status`
 
