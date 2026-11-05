@@ -52,6 +52,8 @@ PUBLIC_FILES = frozenset(
         "docs/reporting-bugs.md",
         "docs/versioning.md",
         "docs/THIRD_PARTY_NOTICES.md",
+        "docs/generated-charts.md",
+        "seasons/GENERATED-LICENSE.md",
     }
 )
 FRONTEND_CONFIG = frozenset(
@@ -116,8 +118,34 @@ def _sha(data: bytes) -> str:
 
 def _manifest(root: Path) -> dict[str, Any]:
     data = _json(root, "release/manifest.json")
-    if set(data) != {"runtime", "frontend", "sample_sha256"}:
+    required = {"runtime", "frontend", "sample_sha256"}
+    if not required <= set(data) <= required | {"generated_sha256"}:
         raise ReleaseError("Unknown or missing manifest fields")
+    generated = data.get("generated_sha256", {})
+    if not isinstance(generated, dict):
+        raise ReleaseError("Generated team hashes must be an exact file map")
+    bundles: dict[str, set[str]] = {}
+    for name in generated:
+        if not isinstance(name, str) or name in SAMPLES:
+            raise ReleaseError("Not an approved generated team file category")
+        chart = re.fullmatch(
+            r"(seasons/\d{4}/[a-z0-9][a-z0-9-]*)/(team.yaml|offense.csv|defense.csv|special.csv)",
+            name,
+        )
+        provenance = re.fullmatch(r"(seasons/\d{4})/provenance/([a-z0-9][a-z0-9-]*)\.csv", name)
+        if chart:
+            team, filename = chart.groups()
+        elif provenance:
+            team = "/".join(provenance.groups())
+            filename = "provenance.csv"
+        else:
+            raise ReleaseError("Not an approved generated team file category")
+        bundles.setdefault(team, set()).add(filename)
+    if any(
+        files != {"team.yaml", "offense.csv", "defense.csv", "special.csv", "provenance.csv"}
+        for files in bundles.values()
+    ):
+        raise ReleaseError("Every generated team must select its complete charts and provenance")
     seen: set[str] = set()
     for group in ("runtime", "frontend"):
         if not isinstance(data[group], list) or not data[group]:
@@ -134,6 +162,7 @@ def _manifest(root: Path) -> dict[str, Any]:
                 allowed = (
                     name in PUBLIC_FILES
                     or name in SAMPLES
+                    or name in generated
                     or (
                         len(path.parts) == 2
                         and path.parts[0] in {"bowl_bound", "backend"}
@@ -158,6 +187,13 @@ def _manifest(root: Path) -> dict[str, Any]:
             raise ReleaseError("Invalid sample hash")
         if _sha(_read(root, name)) != digest:
             raise ReleaseError(f"Public sample hash mismatch: {name}")
+    if not set(generated) <= set(data["runtime"]):
+        raise ReleaseError("Every pinned generated team file must be selected")
+    for name, digest in generated.items():
+        if not isinstance(digest, str) or not re.fullmatch(r"[a-f0-9]{64}", digest):
+            raise ReleaseError("Invalid generated team hash")
+        if _sha(_read(root, name)) != digest:
+            raise ReleaseError(f"Generated team hash mismatch: {name}")
     return data
 
 

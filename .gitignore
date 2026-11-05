@@ -2,8 +2,9 @@
 # See AGENTS.md "Privacy, team data, and source provenance".
 private-data/
 
-# Historical team data stays private. Only these exact original fictional files
-# are public; never add wildcard exceptions for historical charts or provenance.
+# Historical imports stay private. Exact original fictional exceptions are below.
+# Alpha 6's reviewed generated outputs are tracked explicitly and hash-pinned in
+# release/manifest.json; no directory wildcard makes future local data public.
 /seasons/*
 !/seasons/README.md
 !/seasons/SAMPLE-LICENSE.md

@@ -77,16 +77,38 @@ def request(base: str, path: str, body: object = None) -> object:
         return json.load(response)
 
 
-def exercise(base: str, version: str) -> None:
-    """Reconcile assets, exact samples, a real snap, and a save/load round trip."""
+def catalog_from_inventory(files: dict[str, str]) -> frozenset[str]:
+    """Derive expected teams from the verified artifact's exact resource inventory."""
+    resources = {name.removeprefix("_internal/") for name in files}
+    teams = frozenset(
+        name.removeprefix("seasons/").removesuffix("/team.yaml")
+        for name in resources
+        if re.fullmatch(r"seasons/\d{4}/[a-z0-9][a-z0-9-]*/team.yaml", name)
+    )
+    if (
+        len(teams) < 2
+        or any(
+            f"seasons/{team}/{name}" not in resources
+            for team in teams
+            for name in ("team.yaml", "offense.csv", "defense.csv", "special.csv")
+        )
+        or any(
+            f"seasons/{team.split('/')[0]}/provenance/{team.split('/')[1]}.csv" not in resources
+            for team in teams
+        )
+    ):
+        raise ValueError("Artifact inventory must contain at least two complete team bundles")
+    return teams
+
+
+def exercise(base: str, version: str, expected_teams: frozenset[str]) -> None:
+    """Reconcile exact catalog/assets and a snap plus save/load for every packaged team."""
     assert request(base, "/api/health")["status"] == "healthy"
     assert request(base, "/api/version")["version"] == version
     catalog = request(base, "/api/teams")
     assert not catalog["problems"]
-    assert {team["id"] for team in catalog["teams"]} == {
-        "2007/cedar-valley",
-        "2007/harbor-tech",
-    }
+    assert len(catalog["teams"]) == len(expected_teams)
+    assert {team["id"] for team in catalog["teams"]} == expected_teams
     with urlopen(base + "/", timeout=5) as response:
         html = response.read().decode("utf-8")
     assets = re.findall(r'(?:src|href)="(/assets/[^" ]+)"', html)
@@ -94,25 +116,25 @@ def exercise(base: str, version: str) -> None:
     for name in assets:
         with urlopen(base + name, timeout=5) as response:
             assert response.status == 200 and response.read()
-    game = request(
-        base,
-        "/api/games",
-        {
-            "home": "2007/cedar-valley",
-            "away": "2007/harbor-tech",
-            "seed": 7,
-        },
-    )
-    path = "/api/games/" + game["game_id"]
-    played = request(base, path + "/snap", {"play": "1", "defense": "A"})
-    assert played["view"] != game["view"]
-    saved = request(base, path + "/save")
-    loaded = request(base, "/api/games/load", saved)
-    assert loaded["view"] == played["view"] and loaded["game_id"] != game["game_id"]
+    teams = sorted(expected_teams)
+    for index, home in enumerate(teams):
+        game = request(
+            base,
+            "/api/games",
+            {"home": home, "away": teams[(index + 1) % len(teams)], "seed": 7},
+        )
+        path = "/api/games/" + game["game_id"]
+        played = request(base, path + "/snap", {"play": "1", "defense": "A"})
+        assert played["view"] != game["view"]
+        saved = request(base, path + "/save")
+        loaded = request(base, "/api/games/load", saved)
+        assert loaded["view"] == played["view"] and loaded["game_id"] != game["game_id"]
 
 
 def smoke_executable(executable: Path, version: str, work: Path) -> None:
     """Exercise an extracted or installed binary and require graceful shutdown."""
+    inventory = json.loads((executable.parent / "ARTIFACT-MANIFEST.json").read_text("utf-8"))
+    expected_teams = catalog_from_inventory(inventory["files"])
     actual = subprocess.check_output(
         [str(executable), "--version"], cwd=work, text=True, timeout=30
     )
@@ -143,7 +165,7 @@ def smoke_executable(executable: Path, version: str, work: Path) -> None:
                 if time.monotonic() >= deadline:
                     raise TimeoutError("Standalone server did not become ready")
                 time.sleep(0.2)
-            exercise(base, version)
+            exercise(base, version, expected_teams)
             process.send_signal(signal.CTRL_BREAK_EVENT if os.name == "nt" else signal.SIGINT)
             if process.wait(timeout=20) != 0:
                 raise RuntimeError("Standalone shutdown returned failure")
@@ -168,7 +190,10 @@ def smoke(archive: Path) -> None:
             / ("BowlBound.exe" if manifest["target"] == "windows-x64" else "Bowl-Bound")
         )
         smoke_executable(executable, manifest["version"], work)
-    print("Standalone smoke passed: version, UI/assets, two samples, snap, save/load, shutdown")
+    print(
+        "Standalone smoke passed: version, UI/assets, exact catalog, "
+        "every-team snap/save/load, shutdown"
+    )
 
 
 def main() -> None:

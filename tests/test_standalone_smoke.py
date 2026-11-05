@@ -1,13 +1,93 @@
 """Standalone extraction rejects malicious or corrupt synthetic archives."""
 
 import hashlib
+import io
 import json
 from pathlib import Path
+from typing import Any
 from zipfile import ZipFile, ZipInfo
 
 import pytest
 
 from scripts.smoke_standalone import extract_verified
+
+
+def test_native_smoke_exercises_every_manifest_team_and_reconciles_catalog(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from scripts import smoke_standalone
+
+    expected = frozenset({"2011/alpha", "2011/beta", "2011/gamma"})
+    created: list[dict[str, Any]] = []
+    catalog = {"teams": [{"id": team} for team in sorted(expected)], "problems": []}
+
+    def request(base: str, path: str, body: Any = None) -> Any:
+        if path == "/api/health":
+            return {"status": "healthy"}
+        if path == "/api/version":
+            return {"version": "0.1.0-alpha.6"}
+        if path == "/api/teams":
+            return catalog
+        if path == "/api/games":
+            created.append(body)
+            return {"game_id": "original", "view": "before"}
+        if path.endswith("/snap"):
+            return {"view": "after"}
+        if path.endswith("/save"):
+            return {"saved": True}
+        if path == "/api/games/load":
+            assert body == {"saved": True}
+            return {"view": "after", "game_id": "loaded"}
+        raise AssertionError(path)
+
+    monkeypatch.setattr(smoke_standalone, "request", request)
+
+    class Response(io.BytesIO):
+        status = 200
+
+    monkeypatch.setattr(
+        smoke_standalone,
+        "urlopen",
+        lambda url, timeout: Response(b'<script src="/assets/app.js"></script>'),
+    )
+    smoke_standalone.exercise("http://synthetic", "0.1.0-alpha.6", expected)
+    assert {game["home"] for game in created} == expected
+    assert all(game["away"] in expected and game["home"] != game["away"] for game in created)
+
+    with pytest.raises(AssertionError):
+        smoke_standalone.exercise("http://synthetic", "0.1.0-alpha.6", expected - {"2011/gamma"})
+    with pytest.raises(AssertionError):
+        smoke_standalone.exercise("http://synthetic", "0.1.0-alpha.6", expected | {"2011/delta"})
+    catalog["teams"].append({"id": "2011/alpha"})
+    with pytest.raises(AssertionError):
+        smoke_standalone.exercise("http://synthetic", "0.1.0-alpha.6", expected)
+
+
+def test_expected_catalog_comes_from_complete_verified_artifact_bundles() -> None:
+    from scripts.smoke_standalone import catalog_from_inventory
+
+    files = {
+        f"_internal/seasons/2011/{team}/{name}": "synthetic-hash"
+        for team in ("alpha", "beta", "gamma")
+        for name in ("team.yaml", "offense.csv", "defense.csv", "special.csv")
+    }
+    files.update(
+        {
+            f"_internal/seasons/2011/provenance/{team}.csv": "synthetic-hash"
+            for team in ("alpha", "beta", "gamma")
+        }
+    )
+    files["_internal/docs/playing.md"] = "synthetic-doc-hash"
+    assert catalog_from_inventory(files) == frozenset({"2011/alpha", "2011/beta", "2011/gamma"})
+    provenance = files.pop("_internal/seasons/2011/provenance/gamma.csv")
+    with pytest.raises(ValueError, match="complete team bundles"):
+        catalog_from_inventory(files)
+    files["_internal/seasons/2011/provenance/gamma.csv"] = provenance
+    del files["_internal/seasons/2011/gamma/special.csv"]
+    with pytest.raises(ValueError, match="complete team bundles"):
+        catalog_from_inventory(files)
+    with pytest.raises(ValueError, match="at least two"):
+        catalog_from_inventory({})
 
 
 def write_archive(

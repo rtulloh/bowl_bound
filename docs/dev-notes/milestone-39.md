@@ -27,6 +27,8 @@ explicitly fall back when a hypothetical penalty needs a new snap. Retain actual
 fallback counts and evidence; do not turn failed samples into zero or ignore illegal
 calls/aborts. Final cohort checks and tested commit references follow in release
 acceptance; the initial failed audit is retained separately.
+The bounded repeated-try valuation limitation remains tracked separately as
+[AI-034](issues/AI/AI-034.md); this fix does not claim to resolve it.
 
 ## Implementation review and focused acceptance
 
@@ -50,3 +52,19 @@ tests/test_session_scoring.py tests/test_overtime.py tests/test_overtime_extra.p
 tests/test_penalized_try_analysis.py tests/test_session_scoring.py tests/test_overtime*`:
 456 passed in 70.53 seconds. Repository-wide Ruff lint/format and `pip check` pass.
 Complete release and renewed cohort acceptance follow.
+
+
+## Release acceptance follow-up
+
+Tested implementation commit: `e4bfa8b`. Current-engine/coaching audit: all 116
+cohort games plus 12 additional games pass mechanical reconciliation and strict
+midpoint/final replay, including all three formerly aborted fixtures; two complete
+canonical results repeat exactly. Independent review reconciles 21,345 primary
+snaps and all legal calls. The 53 flagged two-point comparisons are the separately
+tracked bounded repeated-try valuation limitation (AI-034), not aborts.
+
+Full local gate: 3,983 Python tests pass with 93.35% branch-inclusive coverage,
+147 frontend tests/build/audit, 54 real-engine Chromium checks, repository Ruff
+lint/format and dependency consistency. The exact 118-team isolated runtime passes
+UI/assets and every-team snap/save/load. Release build/publication remains tracked
+in the Alpha 6 note and DEV-072; overall historical calibration is not claimed.

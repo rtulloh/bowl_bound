@@ -6,9 +6,10 @@ local web game. Dice, chart results, clock, scoring and statistics are resolved
 by the game engine. No account or Internet connection is needed for local play
 after installation.
 
-**Fifth alpha: 0.1.0-alpha.5.** [Download Alpha 5](https://github.com/rtulloh/bowl_bound/releases/tag/v0.1.0-alpha.5)
-for Windows, Apple Silicon or Intel Mac. The game includes the original fictional
-Cedar Valley and Harbor Tech teams; no historical teams or chart PDFs are bundled.
+**Sixth alpha: 0.1.0-alpha.6.** [Download Alpha 6](https://github.com/rtulloh/bowl_bound/releases/tag/v0.1.0-alpha.6)
+for Windows, Apple Silicon or Intel Mac. Play 116 generated 2007 college teams
+plus the original fictional Cedar Valley and Harbor Tech samples. See the
+[generation notes and testing limits](docs/generated-charts.md).
 
 ## Get started
 
@@ -34,7 +35,8 @@ window open, save before stopping, and press Ctrl+C to shut down.
 ## License and support
 
 Original code/documentation: [MIT](LICENSE). Original fictional sample charts:
-[CC0-1.0](seasons/SAMPLE-LICENSE.md). See [third-party notices](docs/THIRD_PARTY_NOTICES.md).
+[CC0-1.0](seasons/SAMPLE-LICENSE.md). Generated statistical charts:
+[CC BY 4.0](seasons/GENERATED-LICENSE.md). See [third-party notices](docs/THIRD_PARTY_NOTICES.md).
 The code license does not grant rights to third-party game text, charts or names,
 and no publisher affiliation or endorsement is implied.
 

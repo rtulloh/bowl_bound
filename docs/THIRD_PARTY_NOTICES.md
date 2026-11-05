@@ -19,6 +19,16 @@ The original Cedar Valley and Harbor Tech chart/provenance bundles are
 board-game rulebook is licensed by this code notice. A user’s ownership of a
 chart does not automatically grant redistribution rights.
 
+## Generated statistical charts
+
+The 116 generated 2007 teams are statistical transformations of ESPN-derived
+individual-play data supplied through SportsDataverse/cfbfastR. SportsDataverse
+labels its data-release store CC BY 4.0. The generated content retains credit,
+license and modification notices under [CC BY 4.0](../seasons/GENERATED-LICENSE.md).
+See [generation provenance and limits](generated-charts.md). This narrow scope
+does not assert rights to source narratives, private benchmark charts, historical
+rosters or logos, or endorsement by the data providers or schools.
+
 ## Runtime dependencies
 
 The software uses Python and libraries including PyYAML, FastAPI, Starlette,

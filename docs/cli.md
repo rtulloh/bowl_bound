@@ -6,6 +6,8 @@ stays concealed until resolution; there is no two-sided terminal mode.
 From the repository root, install the core package (`pip install -e .`) in your
 Python 3.10+ environment. The fictional Cedar Valley and Harbor Tech bundles are
 included in the checkout; see [sample teams](sample-teams.md) to regenerate them.
+Alpha 6 also includes the [116 generated 2007 teams](generated-charts.md); use
+`--list-teams` for their exact IDs.
 
 ## Start a game
 
@@ -32,7 +34,7 @@ human home / computer away, these two sample teams, and a regular game. Use:
 | `--help` | Show all startup options |
 
 The familiar Paydirt invocation shape is retained, but these are Bowl Bound team
-IDs and difficulty levels. No Paydirt installation or historical charts are needed.
+IDs and difficulty levels. No Paydirt installation or private imported charts are needed.
 The coach selects from engine-legal controls; see [difficulty and fairness](coaching.md#policy-and-fairness).
 
 ### Easy-only coaching helper

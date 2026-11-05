@@ -1,5 +1,30 @@
 # Bowl Bound release notes
 
+## 0.1.0-alpha.6 — Generated 2007 teams
+
+- Adds 116 generated 2007 college teams, retaining the two original fictional
+  samples: 118 playable teams in the web and source-installed terminal games.
+- Pins every packaged chart and its generated virtual-cell provenance; native
+  acceptance checks the exact catalog and a snap plus save/load for every team.
+- Fixes computer analysis aborts after a penalty moves a two-point try from the
+  original two-yard spot.
+- Retains Alpha 5's coaching, halftime/final summaries and playability fixes.
+
+The new charts are statistical estimates from individual SportsDataverse/cfbfastR
+ESPN-derived events, with pooled/inferred families where source calls are unknown.
+They carry [CC BY 4.0 attribution and modification notices](seasons/GENERATED-LICENSE.md).
+See [generation provenance, coverage and limits](docs/generated-charts.md).
+No historical player rosters, private imported PDF charts or raw source data are
+included. Generated teams use generic player-role commentary.
+
+These charts are released for community feedback; historical calibration remains
+in progress. Older retained baseline-coaching season runs do not establish current
+Hard-AI accuracy. Recent seasons are separate work. Save schema and
+`bowl-bound-m33-v1` profile are unchanged; matching installed chart content remains
+required. Keep save backups. QB Sneak ball-carrier commentary remains a known
+minor issue. Builds remain unsigned alpha software; follow the
+[installation guide](docs/installation.md).
+
 ## 0.1.0-alpha.5 — Fifth alpha
 
 - Adds a shared public fourth-down policy and clearer decision guidance for

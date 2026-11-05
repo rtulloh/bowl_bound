@@ -10,8 +10,9 @@ resolves chart results, supplemental procedures, penalties, clock, scores and
 team statistics. The web interface shows legal choices and their explanations.
 Dice and chart audits let you inspect how a result was reached.
 
-The initial distribution includes **Cedar Valley** and **Harbor Tech**, original
-fictional teams for the 2007 season. They are not historical-team recreations.
+Alpha 6 includes **116 generated 2007 college teams**, plus **Cedar Valley** and
+**Harbor Tech**, the original fictional samples. Read the
+[generation notes and limits](generated-charts.md) before comparing team strength.
 You can optionally [import your own authorized charts](importing-teams.md) separately.
 
 ## Start a web game

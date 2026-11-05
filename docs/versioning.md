@@ -1,7 +1,7 @@
 # Version information
 
-The current release candidate is **0.1.0-alpha.5**. Python packaging uses the equivalent
-PEP 440 form **0.1.0a5**. Its planned immutable Git tag is `v0.1.0-alpha.5`.
+The current release candidate is **0.1.0-alpha.6**. Python packaging uses the equivalent
+PEP 440 form **0.1.0a6**. Its planned immutable Git tag is `v0.1.0-alpha.6`.
 
 `bowl_bound.__version__`, project metadata and API OpenAPI metadata use the
 Python form. Frontend package/lock metadata and `bowl_bound.DISPLAY_VERSION`

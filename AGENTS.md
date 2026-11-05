@@ -76,6 +76,18 @@ Historical team PDFs, converted team data, detailed import reports, game saves, 
 - Preserve PDF source provenance: source hash, filename, page, position, original text, and background color.
 - Never silently convert an ambiguous or missing PDF cell into a zero-yard result.
 
+On 2026-11-05 the owner explicitly authorizes Alpha 6 distribution of the reviewed
+116-team generated 2007 statistical cohort. This narrow exception covers exactly
+the 464 chart files and 116 generated virtual-cell provenance CSVs pinned in
+`release/manifest.json`, under the source attribution and scope recorded in
+`docs/generated-charts.md`. It relies on SportsDataverse's published CC BY 4.0
+data-release grant for these generated statistical transformations, not its MIT
+software license or a blanket clearance of upstream content. Source narratives,
+private PDF/imported benchmark charts, historical rosters, logos, caches and detailed
+audits remain excluded. Generated 2007 Ohio State/Miami outputs are distinct from
+the private 2002 imported charts excluded above. Do not copy the seasons tree or
+broaden the exact manifest without separate review and approval.
+
 The PDF importer is a development tool, not a runtime engine dependency. Initially support only documented digitally generated layouts; fail clearly on unsupported scans or layouts.
 
 ## Architecture principles

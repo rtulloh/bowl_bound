@@ -130,3 +130,27 @@ rosters from public release archives/runtime bundles. Only the original fictiona
 Cedar Valley and Harbor Tech samples are currently allowlisted for tracking and
 public game distribution. Do not package the whole local `seasons/` directory.
 Milestone 24 must inspect built artifacts, not rely on `.gitignore` alone.
+
+### Generated statistical outputs approved for Alpha 6 (2026-11-05)
+
+The owner's current explicit Alpha 6 request approves the reviewed 116-team
+generated 2007 cohort separately from private imported charts. Its 464 chart files
+and 116 generated virtual-cell provenance CSVs are individually pinned in
+`release/manifest.json`. They contain generated numerical/semantic statistical
+outputs and factual team identifiers, not source play narratives or private PDF
+chart copies. Original fictional samples remain CC0 and retain their two rosters.
+
+The scoped distribution basis relies on SportsDataverse's
+[data-release store CC BY 4.0 declaration](https://github.com/sportsdataverse/sportsdataverse-data),
+not its software MIT license. Credit SportsDataverse/cfbfastR and the ESPN-source
+lineage, link [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), and mark the
+classification, inference/pooling and finite-chart transformations as modifications.
+The [generated-content notice](../seasons/GENERATED-LICENSE.md) and
+[player provenance guide](generated-charts.md) accompany the outputs.
+
+This is not a blanket upstream-content clearance. No rights to source narratives,
+private benchmarks, historical rosters, logos or trademarks are asserted or granted,
+and no provider, school or publisher endorsement is implied. Generated 2007
+Ohio State/Miami outputs are distinct from the private 2002 imported charts; those
+originals remain excluded. Do not broaden the exact catalog or copy local source,
+reference, cache, save or audit directories.

@@ -7,12 +7,12 @@
 Select a standalone alpha from the project release page. Choose your
 operating system and processor, and do not confuse a GitHub source ZIP with a
 standalone app.
-Standalone archives include Python, the built web interface and the two
-fictional sample teams; players do not need Python or Node.js installed.
+Standalone archives include Python, the built web interface, 116 generated 2007
+teams and two fictional samples; players do not need Python or Node.js installed.
 An Internet connection is needed to download, not for ordinary local play.
 
 For Windows, the **installer** is
-`BowlBoundSetup-0.1.0-alpha.5-windows-x64.exe`. Verify its checksum first, then
+`BowlBoundSetup-0.1.0-alpha.6-windows-x64.exe`. Verify its checksum first, then
 run it and follow the setup wizard. It installs `BowlBound.exe` for the current
 user under `%LOCALAPPDATA%\Programs\BowlBound`, without administrator access,
 and creates Start menu and desktop shortcuts. Uninstall through Windows
@@ -47,9 +47,9 @@ organization security policy.
 
 ```powershell
 # Windows PowerShell: replace the filename with your download.
-Get-FileHash .\BowlBoundSetup-0.1.0-alpha.5-windows-x64.exe -Algorithm SHA256
+Get-FileHash .\BowlBoundSetup-0.1.0-alpha.6-windows-x64.exe -Algorithm SHA256
 # Or check the portable ZIP instead.
-Get-FileHash .\BowlBound-0.1.0-alpha.5-windows-x64.zip -Algorithm SHA256
+Get-FileHash .\BowlBound-0.1.0-alpha.6-windows-x64.zip -Algorithm SHA256
 ```
 
 On macOS use `shasum -a 256 FILE.zip`.
@@ -77,7 +77,7 @@ this narrowly removes the quarantine attribute from **that extracted game
 folder only** (replace the example path with the real folder):
 
 ```sh
-xattr -dr com.apple.quarantine "$HOME/Downloads/BowlBound-0.1.0-alpha.5-macos-arm64"
+xattr -dr com.apple.quarantine "$HOME/Downloads/BowlBound-0.1.0-alpha.6-macos-arm64"
 ```
 
 This changes the download security marker; it is not a repair or a signature.
@@ -98,7 +98,8 @@ chmod +x ./Bowl-Bound ./start.sh
 
 For official Windows/macOS/Homebrew/pip links and environment help, see
 [Python setup](python-setup.md). Use Python **3.10+**. Web builds additionally require Node **24.22.1** and npm
-**11.19.1** on PATH. The source checkout already contains the fictional samples.
+**11.19.1** on PATH. The source checkout includes the reviewed generated teams and
+fictional samples.
 These commands assume a complete approved source checkout, not an app archive.
 
 macOS/Linux, from the checkout root:

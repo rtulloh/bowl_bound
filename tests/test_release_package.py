@@ -116,6 +116,74 @@ def put(root: Path, name: str, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def generated_bundle(source: Path) -> dict[str, str]:
+    """Select synthetic generated charts and their required virtual provenance."""
+    files = {
+        f"seasons/2011/synthetic-generated/{name}": f"Synthetic generated {name}"
+        for name in ("team.yaml", "offense.csv", "defense.csv", "special.csv")
+    }
+    files["seasons/2011/provenance/synthetic-generated.csv"] = "Synthetic virtual provenance"
+    manifest_path = source / "release/manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["generated_sha256"] = {}
+    for name, content in files.items():
+        put(source, name, content)
+        manifest["runtime"].append(name)
+        manifest["generated_sha256"][name] = hashlib.sha256(content.encode()).hexdigest()
+    manifest_path.write_text(json.dumps(manifest))
+    return files
+
+
+def test_exact_generated_bundle_stages_without_neighboring_private_files(
+    source: Path, tmp_path: Path
+) -> None:
+    selected = generated_bundle(source)
+    for name in ("roster.json", "source.json", "raw-pbp.csv", "provenance.csv"):
+        put(source, f"seasons/2011/synthetic-generated/{name}", "DO NOT SHIP")
+    stage = tmp_path / "generated stage"
+    stage_sources(source, stage)
+    for name, content in selected.items():
+        assert (stage / name).read_text() == content
+    assert {p.name for p in (stage / "seasons/2011/synthetic-generated").iterdir()} == {
+        "team.yaml",
+        "offense.csv",
+        "defense.csv",
+        "special.csv",
+    }
+
+
+@pytest.mark.parametrize(
+    "mutation", ["missing-file", "missing-provenance", "unselected", "hash", "roster", "source"]
+)
+def test_generated_catalog_rejects_partial_tampered_or_unapproved_resources(
+    source: Path, tmp_path: Path, mutation: str
+) -> None:
+    files = generated_bundle(source)
+    manifest_path = source / "release/manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    name = next(iter(files))
+    if mutation in {"missing-file", "missing-provenance"}:
+        if mutation == "missing-provenance":
+            name = "seasons/2011/provenance/synthetic-generated.csv"
+        manifest["runtime"].remove(name)
+        del manifest["generated_sha256"][name]
+    elif mutation == "unselected":
+        manifest["runtime"].remove(name)
+    elif mutation == "hash":
+        put(source, name, "Changed after review")
+    else:
+        filename = "roster.json" if mutation == "roster" else "source.json"
+        name = f"seasons/2011/synthetic-generated/{filename}"
+        put(source, name, "DO NOT SHIP")
+        manifest["runtime"].append(name)
+        manifest["generated_sha256"][name] = hashlib.sha256(b"DO NOT SHIP").hexdigest()
+    manifest_path.write_text(json.dumps(manifest))
+    destination = tmp_path / "rejected generated stage"
+    with pytest.raises(ReleaseError):
+        stage_sources(source, destination)
+    assert not destination.exists()
+
+
 @pytest.fixture
 def source(tmp_path: Path) -> Path:
     root = tmp_path / "source with spaces"
