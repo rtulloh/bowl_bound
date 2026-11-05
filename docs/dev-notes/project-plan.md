@@ -681,6 +681,65 @@ for retained warnings, minor CLI-072 and separate follow-up limits.
 
 **Commit:** `milestone 33: correct core playability and validation status`
 
+### 34. Generate college charts from public play-by-play evidence
+
+Independent research workstream requested 2026-11-02. Develop deterministic
+individual-play normalization and complete chart generation, then separately
+refine through real-engine games. Preserve source hashes, observed/inferred/unknown
+evidence, immutable profiles and independent reference comparisons. Public pipeline
+tests use synthetic data. Source PBP, private benchmarks and detailed audits remain
+private; source availability does not establish distribution rights by itself.
+
+**Validate:** exact physical dice, semantic placement, source coverage and lineage,
+bounded refinement, complete-game scoring/clock/statistics/traces and save/replay.
+Do not use private reference values to construct or select the generated baseline.
+The research prototype is separate from the current release engine.
+
+**Commit:** `milestone 34: add two-phase college chart generation`
+
+### 34a. Expand historical college cohorts and matched-slate calibration
+
+Independent follow-up requested 2026-11-03, initially 2007/2008. Retain actual
+same-season matchups, explicit unavailable-team/fixture exclusions, per-team
+source uncertainty and finite-chart diagnostics. Compare candidate profiles using
+bounded training and separate validation; additional simulations do not increase
+historical source exposure. Keep calibration evidence tied to its exact engine,
+coaching, tool and chart versions and renew it after relevant changes.
+
+**Validate:** synthetic pipeline tests and deterministic multi-seed complete games
+with scoring, clock, statistics, traces and strict replay reconciliation. Mechanical
+completion does not establish historical accuracy. Overall calibration remains in
+progress. The owner separately authorizes the existing generated 2007 cohort for
+Alpha 6 community testing, subject to exact reviewed files, provenance and final
+release acceptance in [the release notes](../../RELEASE_NOTES.md). Preserve the two
+original fictional samples. Recent years belong to Milestone 34b below.
+
+**Commit:** `milestone 34a: expand historical college cohort calibration`
+
+### 34b. Generate recent-season charts starting with 2025
+
+Owner-requested future work, added 2026-11-05. Start with 2025 and work backward
+through 2024, 2023 and earlier seasons, reporting source-coverage gaps explicitly.
+This is separate from the current Alpha 6 cohort and M34a historical calibration.
+
+**Deliver:** apply the reviewed individual-play generation pipeline to recent
+seasons with source/distribution provenance, accepted/rejected-team coverage,
+reproducible configuration and year-appropriate membership/schedule/postseason
+metadata. Do not assume a benchmark Bowl Bound chart exists for these seasons.
+
+**Validate:** retain synthetic pipeline regressions; reconcile supported real-season
+evidence and deterministic multi-seed complete-game/conference-season audits,
+including clock, scoring, statistics, trace and save/replay checks. Document
+outliers, unsupported year-specific behavior and calibration limits. Separate
+source-fitted validation from held-out evidence and approve each season before
+release expansion. Private raw data, comparison charts and detailed audits stay
+private unless separately cleared for distribution.
+
+Tracked work: [DATA-037](issues/DATA/DATA-037.md). See the
+[Milestone 34b planning note](milestone-34b.md).
+
+**Commit:** `milestone 34b: generate validated recent-season college charts`
+
 ### 35. Add optional coffin-corner punts
 
 Added 2026-11-02 at the owner's request. Milestone 34 is reserved for the
