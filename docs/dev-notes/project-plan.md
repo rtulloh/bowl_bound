@@ -903,7 +903,10 @@ with the engine-owned matrix, operation key and approved exceptions. Keep it
 read-only, team-independent, keyboard-accessible and usable on phones. Show all
 30 team-chart rows together at desktop reference sizes; help starts collapsed.
 Offer independent read-only views in another browser tab or separate window
-while the game remains playable.
+while the game remains playable. Use original-board grouping, prominent launch
+controls, large formation letters and boxed dice. Include actual loaded
+special-teams/PAT facts; separate Running Plays 1–4, Option 5 and Passing Plays
+6–9, with a neighboring B/QR/QT block on wide screens.
 
 **Validate:** synthetic independent-matrix and save-purity checks, preserved
 team selection, collapsed-help controls and real-engine desktop/phone checks.
@@ -915,6 +918,8 @@ controls, and recover from blocked windows and expired sessions.
 
 **Notes:** [Milestone 41](milestone-41.md), [UI-062](issues/UI/UI-062.md),
 [UI-063](issues/UI/UI-063.md), [UI-064](issues/UI/UI-064.md),
-[UI-065](issues/UI/UI-065.md). Independent of the Alpha 6 release.
+[UI-065](issues/UI/UI-065.md), [UI-066](issues/UI/UI-066.md),
+[UI-067](issues/UI/UI-067.md), [UI-068](issues/UI/UI-068.md),
+[UI-069](issues/UI/UI-069.md). Independent of the Alpha 6 release.
 
 **Commit:** `milestone 41: add priority and full-page chart views`

@@ -183,3 +183,80 @@ smoke remain authoritative; do not copy Paydirt's packaging paths, source data,
 private audit records or NFL behavior, and add no runtime dependency.
 
 Alpha 7 candidate integration and renewed gates: [release record](release-alpha7.md).
+
+## Original-board presentation follow-up
+
+Owner feedback adds UI-066 (large grouped defense formations, boxed dice and
+stronger colors), UI-067 (Running Plays1–4, separate Option5, Passing Plays6–9
+bands and supplemental offense block), UI-068 (loaded Special Teams chart),
+and UI-069 (prominent bordered tab/window launch controls).
+Earlier Paydirt images guide layout only; later Bowl Bound references confirm
+grouping. No reference values or images are copied. CSV facts/rules stay intact.
+
+Reconsulted Paydirt paydirt/cli_charts.py for explicit offense/formation labels
+and dice/result presentation. No equivalent web chart viewer was found. Do not
+reuse its NFL play names/classification (play5 is Screen). Bowl Bound Play,
+PLAY_LABELS and DEFENSE_LABELS remain authoritative; separate Option5 explicitly.
+Use backend presentation groups rather than parse combined browser labels.
+
+Tests first cover number/name fields, group spans/dice labels, normalized Special
+Teams cells, all-row geometry and read-only controls. Existing previews/dist stay
+unchanged until root starts a matched candidate backend/bundle.
+
+
+Special Teams consultation also reviewed Paydirt `paydirt/chart_loader.py`
+(SpecialTeamsChart/parse_special_csv) and its TestSpecialChartValidation. Adapt
+explicit CSV column ordering and synthetic marker assertions only. Do not reuse
+its extra fumble-return column, NFL call labels, FC/OB/TB meanings or tolerance
+for malformed/blank cells. Bowl Bound's six supported special columns and
+loaded PAT outcomes remain authoritative. No reference chart values are copied.
+
+The renderer receives explicit column/row groups, play-number/name labels and
+dice labels from the engine presenter. Existing flat cell order and combined
+row labels remain compatible. Defense uses accessible six-row-group headings
+spanning five dice rows. Offense's supplemental block repeats totals beside the
+main table; both headers and all 30 rows align. White headings, black grid lines
+and strong normalized fills follow the requested board style. Special Teams
+preserves BLACK as a procedure marker and supplies its own color/symbol key,
+including loaded GOOD/NG PAT results. All help remains closed by default.
+
+Red-first follow-up evidence: two engine group tests initially failed for missing
+presentation fields; six Special Teams engine/API cases failed for the missing
+table. New board frontend cases initially failed for absent formation and
+supplemental groups; Special Teams and launcher assertions failed before their
+controls were present. A separate help regression rejected the scrimmage BLACK
+incomplete-pass explanation for Special Teams. Grouped-header browser regression
+also checks the second sticky header row's offset to keep both header bands
+readable on scrolling. Tests retain synthetic facts and compare browser cells
+against the actual frozen game response, rather than reference screenshot data.
+
+Changed browser expectations are intentional: offense now has two tables with
+30 rows each (the same 360 cells), and defense exposes separate formation letters
+and 1–5 dice instead of repeating combined A·1 labels. The loaded cell facts,
+game rules, engine revision and dice behavior remain unchanged.
+
+
+Follow-up focused acceptance: 434 engine/API/independent-matrix/documentation
+checks pass; all 157 frontend tests pass. Ruff check and format pass (620 files),
+production build succeeds using an external private outDir to preserve running
+preview bundles. New browser cases compare all displayed cells, formation/dice
+semantics, aligned totals and strong fills; Special Teams help has no incomplete
+pass claim, and desktop/phone launch controls remain bordered and visible.
+
+Follow-up commands:
+
+```sh
+.venv/bin/python -m pytest tests/test_chart_layout.py tests/test_special_chart_view.py tests/test_api_special_chart_view.py tests/test_chart_view.py tests/test_api_charts.py tests/test_priority_view.py tests/test_priority_matrix.py tests/test_priority_docs.py tests/test_issue_tracker.py tests/test_release_player_docs.py -q
+npm test --prefix frontend
+npm run build --prefix frontend -- --outDir /private/tmp/bb-board-browser-root/frontend/dist --emptyOutDir
+```
+
+Focused browser execution uses an ignored config/wrapper serving that external
+bundle against the actual engine and synthetic fixtures; the integrated Alpha 7
+candidate will run the unchanged standard complete gate against its own matched
+backend and default production bundle. Existing preview sessions remain live.
+
+Final follow-up browser acceptance: all 10 cases pass (16.3s), with no skips.
+
+Board-style/Special Teams tested implementation: `d2222beca34c4392285e14f953b7f523da57eb4d`.
+UI-066 through UI-069 are resolved, awaiting owner play-test confirmation.

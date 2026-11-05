@@ -86,24 +86,28 @@ penalties and ambiguous recoveries retain complete factual wording.
 ## Inspect team charts in the web game
 
 Select **Charts** beside the Game menu to inspect the matchup's actual loaded
-offense and defense CSV charts. The viewer starts on your controlled team and
+offense, defense and special-teams CSV charts. The viewer starts on your controlled team and
 opens Defense during defensive play selection. Choose another team or switch
-**Offense / Defense / Priority**. Priority is the shared resolution reference;
+**Offense / Defense / Special Teams / Priority**. Priority is the shared resolution reference;
 it keeps your selected team ready when you return to a team chart.
 
-Offense includes B, QR and QT supplemental columns; defense includes all six
-formations. All 30 rows fit together on desktop windows at 1280×1000 or larger.
+Offense separates Running Plays 1–4, Option 5 and Passing Plays 6–9, with
+B/QR/QT beside the main chart on wide screens. Defense shows all six formation
+letters beside their five boxed dice totals. Special Teams includes kicks,
+returns, field goals and extra points. All 30 rows fit together on desktop windows at 1280×1000 or larger.
 Smaller windows and phones allow scrolling, with headings kept visible.
 
 Colors follow the normalized chart categories. Expand **How to read the charts**
 for the color and symbol legend; help starts closed. Read the signed values as
 well: colors alone do not determine a result. A white blank is shown as **0**;
-**INC** identifies an incomplete pass. Priority markers and out-of-bounds asterisks
+**INC** identifies an incomplete pass in scrimmage charts. Special Teams keeps
+its **BLACK** procedure marker and has its own legend; extra points show **GOOD**
+or **NG**. Priority markers and out-of-bounds asterisks
 remain visible. These are chart entries; the engine still resolves the combined
 result and any required follow-up decisions. **How to read Priority** explains
 the operations and marked defensive (B) extension.
 
-Use **Open in new tab** or **Open in separate window** to keep charts beside your
+Use the bordered **Open in new tab** or **Open in separate window** controls to keep charts beside your
 game or on another display. Each view has its own team and chart controls; moving
 or resizing the window uses your browser's usual controls. The in-game dialog
 closes when a detached view opens, so play can continue. If a separate window is

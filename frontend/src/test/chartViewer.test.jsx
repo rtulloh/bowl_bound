@@ -82,6 +82,7 @@ it('offers a safe new-tab link and keeps a usable fallback when a popup is block
   fireEvent.click(screen.getByRole('button', { name: 'Charts' }))
   await screen.findByRole('table')
   const link = screen.getByRole('link', { name: 'Open in new tab' })
+  expect(link).toHaveClass('play-button')
   expect(link).toHaveAttribute('target', '_blank')
   expect(link.getAttribute('rel')).toContain('noopener')
   expect(link.href).toContain('charts=game&side=away&view=defense')
@@ -111,4 +112,63 @@ it('shows an accessible expired-game error in the detached shell without game co
   expect(await screen.findByRole('alert')).toHaveTextContent('game is no longer available')
   expect(screen.queryByRole('button', { name: 'Charts' })).toBeNull()
   expect(screen.getByRole('button', { name: 'Retry charts' })).toBeVisible()
+})
+
+
+it('renders engine-provided defense groups and separate boxed dice labels', async () => {
+  const defense = { ...book.defense, group_label: 'Formation', row_groups: [{ key: 'A', label: 'Standard', start: 0, count: 2 }], rows: book.defense.rows.map((r, i) => ({ ...r, label: 'opaque combined label', dice_label: String(i + 1) })) }
+  api.getCharts.mockResolvedValue({ ...book, defense })
+  render(<ChartViewer gameId="game" initialChart="defense" />)
+  fireEvent.click(screen.getByRole('button', { name: 'Charts' }))
+  await screen.findByRole('table')
+  const group = document.querySelector('.chart-formation')
+  expect(group).toHaveAttribute('scope', 'rowgroup')
+  expect(group).toHaveAttribute('rowspan', '2')
+  expect(group).toHaveTextContent('A')
+  expect(group).toHaveTextContent('Standard')
+  expect([...document.querySelectorAll('.chart-die-face')].map((e) => e.textContent)).toEqual(['1', '2'])
+})
+
+it('uses supplied offense bands and separates the supplemental block', async () => {
+  const columns = [
+    { key: '1', label: '1 · Line Plunge', number: '1', name: 'Line Plunge' },
+    { key: '5', label: '5 · Option', number: '5', name: 'Option' },
+    { key: '6', label: '6 · Screen', number: '6', name: 'Screen' },
+    { key: 'B', label: 'B · Breakaway', number: 'B', name: 'Breakaway' },
+  ]
+  const column_groups = [
+    { key: 'run', label: 'Running Plays', start: 0, count: 1 },
+    { key: 'option', label: 'Option', start: 1, count: 1 },
+    { key: 'pass', label: 'Passing Plays', start: 2, count: 1 },
+    { key: 'supplemental', label: 'Supplemental', start: 3, count: 1, separate: true },
+  ]
+  const offense = { ...book.offense, columns, column_groups, rows: book.offense.rows.map((r) => ({ ...r, cells: Array(4).fill(r.cells[0]) })) }
+  api.getCharts.mockResolvedValue({ ...book, offense })
+  render(<ChartViewer gameId="game" />)
+  fireEvent.click(screen.getByRole('button', { name: 'Charts' }))
+  await screen.findByRole('table', { name: /Offense/ })
+  expect(screen.getByRole('table', { name: /Supplemental/ })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'Running Plays' })).toHaveAttribute('colspan', '1')
+  expect(screen.getByRole('columnheader', { name: 'Option', exact: true })).toHaveAttribute('colspan', '1')
+  expect(screen.getByRole('columnheader', { name: 'Passing Plays' })).toHaveAttribute('colspan', '1')
+  expect(screen.getByRole('columnheader', { name: '5 · Option' }).querySelector('.chart-play-number')).toHaveTextContent('5')
+})
+
+
+it('shows supplied Special Teams facts and keeps detached controls read-only', async () => {
+  const special_teams = { ...table('special_teams'), title: 'Special Teams', legend: [{ color: 'black', label: 'Black', description: 'Consult the Special Teams procedure.' }], symbols: [{ label: 'GOOD / NG', description: 'Extra point good / no good.' }], columns: [{ key: 'kickoff', label: 'Kickoff' }], rows: [{ label: '10', dice_label: '10', description: 'Offensive total 10', cells: [{ label: 'BLACK', color: 'black', description: 'Special teams marker; consult the procedure.' }] }] }
+  api.getCharts.mockResolvedValue({ ...book, special_teams, legend: [{ color: 'black', label: 'Black', description: 'Incomplete pass (INC).' }] })
+  render(<DetachedCharts gameId="game" initialChart="special_teams" />)
+  expect(await screen.findByRole('table', { name: /Special Teams/ })).toBeVisible()
+  expect(screen.getByRole('button', { name: 'Special Teams', exact: true })).toHaveAttribute('aria-pressed', 'true')
+  expect(screen.getByRole('cell', { name: /BLACK/ })).toHaveClass('chart-cell-black')
+  expect(screen.getByText('How to read the charts').closest('details').open).toBe(false)
+  fireEvent.click(screen.getByText('How to read the charts'))
+  expect(screen.getByText('Consult the Special Teams procedure.')).toBeVisible()
+  expect(screen.queryByText('Incomplete pass (INC).')).toBeNull()
+  expect(screen.getByText('Extra point good / no good.')).toBeVisible()
+  expect(screen.getByRole('link', { name: 'Open in new tab' }).href).toContain('view=special_teams')
+  fireEvent.click(screen.getByRole('button', { name: 'Priority', exact: true }))
+  expect(screen.getByRole('table', { name: 'Priority chart' })).toBeVisible()
+  expect(api.getCharts).toHaveBeenCalledTimes(2)
 })

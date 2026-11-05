@@ -142,12 +142,22 @@ Unknown games return 404 and invalid sides return 422. The endpoint is available
 in manual and coached games without submitting a call or preparing a turn.
 
 The response contains `team`, `season`, explanatory `note`, `offense` and
-`defense` tables, a color `legend`, `symbols`, `formations` and a shared
+`defense` and `special_teams` tables, a color `legend`, `symbols`, `formations` and a shared
 `priority` reference. Each table has
 `key`, `title`, `roll_label`, `columns` (`key`, `label`) and ordered `rows`
-(`label`, `description`, `cells`). Cells contain display `label`, normalized
+(`label`, `description`, `cells`, nullable `dice_label`). Columns may additionally
+provide separate `number`/`name` labels. Tables provide explicit `column_groups`
+and `row_groups` (`key`, `label`, `start`, `count`, `separate`), nullable
+`group_label`/`roll_description`, and optional table-specific `legend`/`symbols`.
+These are presentation facts, not new rules. Cells contain display `label`, normalized
 `color` and accessible `description`. Offense has 30 rows and 12 columns
 (plays 1–9 plus B/QR/QT); defense has 30 rows (A–F, totals 1–5) and nine columns.
+Special Teams has 30 rows and seven columns: kickoff, kickoff return, punt,
+punt return, interception return, field goal and extra point. The six distances
+come directly from normalized special-team cells; extra points come from loaded
+PAT outcomes. Its BLACK marker retains its special-team meaning instead of
+being presented as an incomplete pass. The frontend uses supplied formation
+groups and running/Option/passing bands without parsing combined labels.
 Color categories are red/green/white/black/yellow, with `unclassified` for facts
 without a normalized color. The client displays these facts without interpreting
 CSV strings or resolving football. Source provenance and private paths are omitted.
@@ -160,7 +170,7 @@ equivalent offensive facts. Every operation is derived with the engine's pure
 resolver, without dice or a second behavioral matrix. It is identical for both
 sides; the team tables remain the selected game's frozen loaded CSV charts.
 
-The browser also supports `/?charts=<game_id>&side=home|away&view=offense|defense|priority`
+The browser also supports `/?charts=<game_id>&side=home|away&view=offense|defense|special_teams|priority`
 as a read-only standalone shell, using this same endpoint for both matchup
 teams. It does not mount game setup or submit commands. Unknown/expired games
 show recovery controls rather than creating a replacement match.
