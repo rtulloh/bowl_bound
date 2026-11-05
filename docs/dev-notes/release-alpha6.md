@@ -207,3 +207,62 @@ minutes; Ruff/dependency/docs checks pass. Renewed full Python coverage passes
 skips or warnings. All local gates complete before the corrected-source push.
 Fresh pinned native/artifact acceptance remains pending. Prior old-catalog
 game/build passes do not count as acceptance of the repaired catalog.
+
+## Published Alpha 6 — 2026-11-05
+
+[Alpha 6 is published](https://github.com/rtulloh/bowl_bound/releases/tag/v0.1.0-alpha.6)
+with all 11 inspected assets. Immutable annotated tag `v0.1.0-alpha.6` resolves to
+built public source `a95ded69082e5e65833c93d3321630bb515e49d8`. It contains the
+corrected frozen OOB cohort, not the rejected old-catalog artifacts. The release
+name/version/notes clearly identify alpha software; GitHub metadata uses an
+ordinary release marked Latest so the repository's Releases panel displays it.
+Both the Latest API and a real Chromium repository visit confirm the Alpha 6 link
+and Latest badge. The prior Alpha 5 immutable tag and all 11 asset IDs, sizes and
+digests are independently unchanged.
+
+The exact-source [manual workflow 42099569172](https://github.com/rtulloh/bowl_bound/actions/runs/42099569172)
+passes all four jobs. Its reusable source gate passes 3,984 Python tests in
+1,415.07 seconds with 93.35% branch-inclusive coverage, 147 frontend tests,
+production build, zero-vulnerability npm audit, Ruff/dependency checks and all
+54 real-engine browsers in 5.2 minutes. System-dependency installation adds about
+12 minutes before browser downloads; this is delay, not a failed test. No test
+is skipped or assertion weakened. The complete corrected local gate was already
+green before the source push, as recorded above.
+
+All three native extracted apps pass version, UI/assets, exact 118-team catalog,
+every-team real snap/save/load and clean shutdown. Initial discovery takes 3.53s
+on Apple Silicon, 14.26s on Intel and 6.69s on Windows; only catalog discovery has
+the bounded 30-second budget. The installed Windows app independently passes the
+same checks (6.74s discovery), actual installer/registry/version acceptance and
+uninstall while preserving an unrelated user file. The final downloaded arm64
+ZIP also passes independently from an isolated temporary directory on the local
+Mac, with 2.81s discovery. These are native engineering checks, not certification
+of every user's OS/security configuration; builds remain unsigned.
+
+Independent downloaded-asset inspection verifies every archive inventory/file
+hash, external/embedded manifests, portable/installer SHA256 sidecars, version,
+complete native inventory by binary magic and both pinned notice copies. Each
+Mac payload inventory lists 844 files/65 native files; Windows lists 845/69,
+plus each archive's embedded artifact manifest. Each has exactly 597 season-related
+entries: 596 selected internal resources and the approved
+accessible generated-license copy. The 580 generated resources and original
+15 sample resources match their exact manifest pins; no extra teams, source
+narratives, private benchmarks/PDFs, historical rosters, saves or audit logs are
+attached. All 11 draft and published server digests/sizes match the inspected
+downloads, and the remote tag/source resolve correctly before publication.
+
+Retain existing warnings: upstream frontend emits 75 React act warnings
+(DEV-044) and one duplicate-key synthetic fixture warning (DEV-064), plus the
+whatwg-encoding installation deprecation. The local jsdom performance advisory
+and browser color-environment warning are retained. Windows freezing reports
+optional hidden import tzdata missing, as in earlier accepted releases; the app
+does not use named-zone ZoneInfo/tzdata, and both native Windows smokes pass.
+No warning is suppressed. CLI-072 wording, AI-034 bounded hypothetical valuation,
+broader native/license follow-ups and historical calibration remain separate.
+
+DEV-072, DEV-073 and DATA-039 are resolved against committed/tested implementations
+and actual publication, awaiting owner download/play-test closure. M34a historical
+calibration remains in progress. This follow-up records documentation/metadata
+only: issue-index regeneration and 22 existing tracker/priority/player-doc checks
+pass, along with whitespace checks. No runtime, data, build workflow, asset or
+immutable release tag changes. Detailed audit/API/browser receipts remain ignored.

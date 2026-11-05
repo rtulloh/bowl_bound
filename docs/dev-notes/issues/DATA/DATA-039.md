@@ -1,15 +1,17 @@
 ---
 id: DATA-039
 title: Correct positive-only out-of-bounds evidence conditioning in generated charts
-status: open
+status: resolved
 priority: High
 milestone: 34a
 created-at: 2026-11-05
-resolved-at: null
+resolved-at: 2026-11-05
 closed-at: null
-tags: [reproduced, investigating, out-of-bounds]
+tags: [reproduced, out-of-bounds]
 links: []
-commits: []
+commits:
+- 388546e
+- a95ded6
 ---
 
 ## Description
@@ -64,3 +66,14 @@ and legal committed calls. The full local source gate also passes: 3,984 Python/
 147 frontend/build/audit, 54 browser, lint/dependency/docs and isolated 118-team
 game/save/load assembly. Fresh pinned native/artifact release gates remain;
 keep this ticket open until final integration/qualification is recorded.
+
+--- 2026-11-05 20:53 ---
+Frozen generator `388546e` passes the final 132-case cumulative run (472.02s),
+11 focused OOB controls and 22 metadata/docs checks. Corrected current-engine
+integration at `a95ded6` passes all renewed semantic/dice/source-support, timing,
+scoring/statistics/trace/replay and legal-call acceptance recorded above, followed
+by the complete local gate and successful pinned three-platform native workflow
+42099569172. Exact inspected corrected assets are published as Alpha 6 Latest.
+Source unknowns and the lower-bound narrative-incidence limitation remain explicit;
+this resolves the positive-only denominator defect, not historical calibration.
+Await owner play-test closure.
