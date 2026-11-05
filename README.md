@@ -6,9 +6,9 @@ local web game. Dice, chart results, clock, scoring and statistics are resolved
 by the game engine. No account or Internet connection is needed for local play
 after installation.
 
-**Fifth alpha candidate: 0.1.0-alpha.5.** Standalone downloads are published
-through GitHub Releases after build verification. The game includes the original fictional Cedar Valley and Harbor
-Tech teams; no historical teams or chart PDFs are bundled.
+**Fifth alpha: 0.1.0-alpha.5.** [Download Alpha 5](https://github.com/rtulloh/bowl_bound/releases/tag/v0.1.0-alpha.5)
+for Windows, Apple Silicon or Intel Mac. The game includes the original fictional
+Cedar Valley and Harbor Tech teams; no historical teams or chart PDFs are bundled.
 
 ## Get started
 

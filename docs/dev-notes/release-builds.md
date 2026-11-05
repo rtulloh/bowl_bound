@@ -83,6 +83,17 @@ manifest or npm audit. Preserve historical files locally; never delete them to
 make a build pass. Do not publish developer notes or local audit evidence as
 player release notes.
 
+## Verify public release visibility
+
+After publishing, verify both the direct release URL and the rendered repository
+Releases panel. When the owner expects the new alpha featured there, check that
+`gh api repos/rtulloh/bowl_bound/releases/latest --jq .tag_name` returns its tag.
+GitHub prereleases cannot be designated Latest; Alpha 3/4/5 use ordinary GitHub
+release metadata for that panel while retaining their alpha names and caveats.
+See [GitHub release metadata](https://docs.github.com/en/rest/releases/releases#update-a-release).
+Keep the build/tag and verified asset inventory immutable when correcting these
+visibility flags. DEV-068 records the Alpha 5 correction and actual browser check.
+
 ## Manual native workflow and Windows installer
 
 `.github/workflows/tests.yml` is named **Tests** and runs automatically on

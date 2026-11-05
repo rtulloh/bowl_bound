@@ -304,3 +304,23 @@ Known minor gameplay-presentation follow-up CLI-072 is disclosed in player notes
 DEV-068 is resolved against the tested/built source and actual publication;
 owner download/play-test closure remains separate. Detailed logs, inspection,
 local smoke and remote SHA256 receipts remain ignored in private-data.
+
+## Repository Releases panel correction — 2026-11-05
+
+The owner reports Alpha 5 absent from the repository's featured Releases panel.
+It was published with GitHub prerelease=true/latest=false, while Alpha 3/4 use
+ordinary GitHub release metadata. The latest-release endpoint still returned
+Alpha 4. Changed only the visibility flags to prerelease=false/latest=true;
+the version, name and player notes continue to identify unsigned alpha software.
+The latest-release endpoint now returns `v0.1.0-alpha.5`, and a real Chromium
+visit renders the repository link as “Bowl Bound Alpha 5” with the Latest label.
+The README now links directly to the published downloads.
+
+Before/after verification preserves the immutable tag, built source, title/notes
+and all 11 asset IDs, sizes and SHA256 digests. This corrects post-publication
+metadata on DEV-068; it does not reopen M33 gameplay acceptance or require a
+rebuild. Metadata/documentation checks apply; no gameplay behavior changes and
+no artificial unit test substitutes for the actual GitHub/API/browser check.
+The previous main snapshot's complete gate also passes in
+[Tests 41968283737](https://github.com/rtulloh/bowl_bound/actions/runs/41968283737).
+Detailed before/after metadata and the rendered-page capture remain ignored.
