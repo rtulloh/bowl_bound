@@ -1,11 +1,10 @@
 # Alpha 7 visual-chart candidate
 
-Status: corrected-catalog integration complete; renewed candidate validation in
-progress. DATA-039's correction is independently accepted and public. Keep all
-out-of-bounds markers faithful to the loaded CSV. After the final gate and review,
-a dedicated candidate branch and exact-SHA native build are authorized; tag/release
-publication remains coordinated after Alpha 6's actual release/Latest. Owner rapid
-web play testing continues on corrected preview 8143.
+Status: corrected candidate local acceptance complete. DATA-039's correction is
+independently accepted and public; all markers remain faithful to the loaded CSV.
+The dedicated release branch and exact-SHA native build are authorized after the
+completed full gate and review. Alpha 7 tag/release publication remains coordinated
+after Alpha 6's actual release/Latest. Owner play testing continues on preview 8143.
 
 ## Exact source and scope
 
@@ -219,3 +218,63 @@ web API/display are covered by the renewed viewer gate; no football rule, dice,
 clock, AI, chart normalization or gameplay state-transition source changed. The
 accepted broad corrected-data game/timing audit therefore applies without
 repeating its 128 games.
+
+
+## Corrected candidate package and review
+
+Integration source: `93765b96e8c04e60254df40138cf3b53bbcb405d`, preserving exact
+public correction `a95ded69082e5e65833c93d3321630bb515e49d8` and reviewed viewer
+history. The complete seasons tree equals that public correction byte for byte;
+only the two approved chart-view source entries extend its exact manifest.
+All common football application module bytes match the accepted Alpha 6 source;
+the deliberate differences are a7 version metadata, the existing read-only chart
+accessor, and the added chart presenter/API/display. No private generator history,
+PDF, image, audit log or save appears in the unique integration history.
+
+Renewed frontend 157 and standard real-engine Chromium 64 cases pass (4.4m),
+with no skips. Ruff check/format (634 files), pip check, production build and npm
+audit pass, with zero vulnerabilities. Production assets were built to an external
+outDir to preserve all active preview assets; its hashes equal the existing
+matched bundle. Documentation/metadata checks: 22 pass.
+
+Fresh corrected stage/runtime/archive construction passes. The runtime contains
+658 files and exactly 118 teams. Isolated Python `-I` imports originate in that
+runtime; catalog/UI/assets, every-team snap/strict-save-load and all 236 frozen
+chart books pass with unchanged saves. Actual staged Chromium checks all 30 rows
+at 1280×1000, closed help and secure detached Special Teams. Corrected runtime ZIP:
+SHA-256 `662148cb5a5b8590fe4e4a7b9290548a87bb7c98da7bc5ec48f6c2ab5619ba13`,
+under `/private/tmp/bb-alpha7-corrected-verification/`. The pre-audit archive is
+superseded. No reference values or imagery are copied into the viewer.
+
+The existing broad corrected-data 128-game audit plus two repeats applies because
+football sources are unchanged; it remains mechanics/timing/coaching/replay
+validation rather than a historical-calibration claim. Root's independent
+all-116 semantic/216-outcome/source-support audit and accepted DATA-039 record
+remain the catalog authority.
+
+Build/publication controls were reviewed: `build.yml` checks out the full
+`source_ref`, validates it through reusable `tests.yml`, builds/smokes all three
+native targets and uploads inspected artifacts without creating a release.
+Dispatch on the dedicated `release/alpha7-visual` branch with the final full SHA
+keeps its concurrency independent from Alpha 6's main-branch run. Only that
+branch may be pushed nonforce at this checkpoint; origin/main is not advanced.
+Alpha 7 tag/release publication remains coordinated after Alpha 6 is released
+and marked Latest. All previews through 8143 and their games remain live.
+
+
+Corrected full Python gate: 4,003 passed in 883.29 seconds (14m43s), 93.41%
+branch-inclusive coverage against the 75% minimum; no skips or pytest warnings.
+This is corrected-data candidate acceptance, superseding the pre-audit baseline.
+Final review confirms the accepted catalog/pins, reviewed read-only viewer and
+public-safe history; no football-source, workflow or dependency change occurred.
+Only documentation is added after the tested integration source, with focused
+metadata/player-documentation checks before the dedicated-branch push.
+
+Corrected gate commands use `/tmp/bb-alpha7-corrected-*.log` for retained private
+outputs, `BB_E2E_SEASONS=/private/tmp/bb-alpha7-corrected-e2e-seasons` for the
+standard browser gate, and `/private/tmp/bb-alpha7-corrected-verification/` for
+fresh stage/runtime/archive inputs. The ignored runtime and staged-UI helpers
+reuse the strict smoke procedure with corrected paths and assert every-team
+snap/save-load plus 236 unchanged chart books. All selected staged inputs remain
+byte-identical to the final allowed checkout files. Native dispatch/run evidence
+will be reported separately; no tag/release is created by the build workflow.

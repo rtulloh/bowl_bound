@@ -6,7 +6,7 @@ local web game. Dice, chart results, clock, scoring and statistics are resolved
 by the game engine. No account or Internet connection is needed for local play
 after installation.
 
-**Seventh alpha candidate: 0.1.0-alpha.7.** [Alpha 7 release page](https://github.com/rtulloh/bowl_bound/releases/tag/v0.1.0-alpha.7)
+**Seventh alpha: 0.1.0-alpha.7.** [Download Alpha 7](https://github.com/rtulloh/bowl_bound/releases/tag/v0.1.0-alpha.7)
 for Windows, Apple Silicon or Intel Mac. Play 116 generated 2007 college teams
 plus the original fictional Cedar Valley and Harbor Tech samples. See the
 [generation notes and testing limits](docs/generated-charts.md).
