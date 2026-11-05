@@ -93,3 +93,11 @@ git diff --check
 The canonical `/private/tmp` path avoids macOS's `/tmp` symlink, which the sample
 installer deliberately refuses. Existing browser tests require standard port 8123.
 The visual preview server uses port 8139 and is independent of test fixtures.
+
+## Acceptance record
+
+Implementation commit: `39a0e84e319094cd44fb5811447f0299edfed06c`. UI-061 is resolved
+with the tested reference; owner visual confirmation remains pending. The feature
+branch is `milestone/38-chart-viewer`. No push, main merge or release publication
+is part of this independent viewer acceptance. Existing owner checkout and the
+Alpha 6 release worktree were preserved.
