@@ -853,7 +853,7 @@ Record actual native discovery elapsed time. See [the work log](milestone-40.md)
 
 ## Decision gates
 
-Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.
+Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval. Separately, on 2026-11-05 the owner approved the reviewed generated 2007 statistical outputs for Alpha 6 under their recorded source/attribution basis. This narrow generated-output exception preserves the private imported PDF exclusion and exact reviewed release manifest; see [Alpha 6](release-alpha6.md).
 
 Roster player names come from historical data published on the internet (decided). Before Milestone 9b, choose which sites to use for each team and confirm that using their data fits those sites' terms. Until rosters are reviewed for redistribution, they stay local-only like the charts.
 

@@ -6,6 +6,9 @@
   samples: 118 playable teams in the web and source-installed terminal games.
 - Pins every packaged chart and its generated virtual-cell provenance; native
   acceptance checks the exact catalog and a snap plus save/load for every team.
+- Corrects inflated generated out-of-bounds markers and their late-half clock
+  effects while preserving all non-OOB chart facts. Missing source mentions remain
+  unknown; estimated marker rates reflect lower-bound narrative incidence.
 - Fixes computer analysis aborts after a penalty moves a two-point try from the
   original two-yard spot.
 - Retains Alpha 5's coaching, halftime/final summaries and playability fixes.

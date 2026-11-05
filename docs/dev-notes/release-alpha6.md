@@ -67,7 +67,7 @@ statistical facts and factual identifiers, with no expressive source play text,
 private benchmark cells, historical rosters or logos. Distribution scope remains
 separate from source availability and historical-fit claims.
 
-Canonical cohort: corrected-v5 review phase-one 2007, frozen generation manifest
+Initial candidate cohort: corrected-v5 review phase-one 2007, frozen generation manifest
 SHA-256 `6b22c460aa843fcd8f7bd9de51898c050554f9113188bd4c4810929ec7fa3a1a`,
 source snapshot `1f8e553002c0299a2993eb533231053d6cf406dbe0e9d41ecc400267484bb1ba`.
 All 116 normalized bundle hashes match the frozen manifest using the final release
@@ -84,7 +84,7 @@ and before rejecting its absence. No runtime codec is bypassed. Every generated
 resource is individually hash-pinned. Generated-content licensing/attribution,
 coverage, modifications and calibration limits accompany the runtime.
 
-## Current-engine acceptance and discovered follow-up
+## Initial current-engine acceptance and discovered follow-ups
 
 The first current-Hard audit failed: 113 games completed and three aborted when a
 penalty displaced a two-point try. Its zero-fallback assertion was also too broad:
@@ -98,7 +98,7 @@ overtime tests; malformed inputs and prior two-yard deterministic/replay behavio
 remain covered. No policy version, live scoring rule or gameplay dice changed.
 The independent [bounded valuation follow-up AI-034](issues/AI/AI-034.md) stays open.
 
-Renewed exact-cohort mechanics acceptance: every generated team is the current
+Before the OOB correction, every generated team was the current
 Hard-v15 computer once, against a baseline-v15 opponent in deterministic cycle
 matchups. All 116 games complete with midpoint and final strict replay. Twelve
 additional seeds/pairs also pass; these are a bounded mechanics sample, not an
@@ -144,3 +144,66 @@ The prior interrupted pre-fix Python run is retained separately, not counted as 
 
 No remote push, tag, build dispatch or publication is recorded by this preparation
 checkpoint. Native inspection, warnings and actual release URL follow.
+
+
+## OOB data hold and corrected cohort
+
+Owner playtesting identified near-universal ordinary numeric OOB flags before any
+Alpha 6 tag or release was created. The native candidate at `9a2897f` passed its
+mechanics/build checks after the bounded catalog-smoke repair, but those checks
+did not establish correct conditioning of source flags. Publication was held; old charts, native artifacts and detailed
+audit evidence are preserved. [DATA-039](issues/DATA/DATA-039.md) tracks the defect.
+
+The canonical research generator repair `388546e` retains source True/False/None
+and models weighted positive narrative mentions over all matching ordinary numeric
+outcomes. It conditions B/QT/QR on their existing outcome supports, and records
+unknown/explicit/positive counts, exact 216-combination achievement and unidentified
+states. Unknown is not observed in bounds; this is a lower-bound narrative-incidence
+model, not a fully measured historical OOB frequency. Synthetic controls first fail
+on the old implementation, including irrelevant incomplete-pass mentions and the
+empty-QT support guard. The [cause and reviewed policy](college-chart-oob-evidence-audit.md)
+records the bounded correction. Generator implementation/history is not merged
+into the standalone release runtime.
+
+Corrected frozen manifest SHA-256:
+`e0fddc5f0e888e5339a924a908a813766c729b195b8c6cf72e2e89cda0f88939`.
+Source snapshot, seed 19 and neutral profiles/tactics are unchanged. Independent
+release-codec comparison confirms all 116 teams preserve non-OOB semantics, colors,
+source-token bases, PATs, recovery and team metadata. Only 116 offense CSVs and
+116 required central provenance CSVs change; exactly 580 generated resources remain
+pinned and all 15 original sample resources remain hash-identical.
+
+Independent verification reconciles all 1,392 ordinary/supplemental columns: source
+support counts and weights, positive/all-support incidence, exact physical dice
+mass and independently nearest attainable numeric OOB allocation. Diagnostics
+retain 1,266 partial-positive and 126 unidentified states. The source-pool crosswalk
+separately checks all 1,044 ordinary columns. Frozen generator acceptance passes
+132 cumulative tests in 472.02 seconds, 11 focused OOB tests and 22 metadata/docs
+checks, with lint/format and no test skips or warnings.
+
+Renewed corrected-catalog acceptance uses the current public engine/Hard-v15 and
+baseline-v15 opponent: all 116 cycle games pass in 420.5 seconds, plus 12 further
+seed/pair games and two exact complete-result repeats. Independent primary-event
+review reconciles 19,847 snaps across 128 distinct games. Every committed call is
+legal; all recorded Hard kick roles have zero early-down punts or field-goal
+choices beyond the public 55-yard limit. All nine calls plus Q/RZDZ and A–F occur.
+Among 68 comparable-situation groups with at least 20 calls, the largest single-call
+share is 45.8%; this describes variety, not coaching optimality or historical fit.
+
+Retain 53 legal bounded comparisons (22 offense/31 defense), all two-point tries.
+Only `EvaluationError: hypothetical try did not settle` occurs in diagnostic
+instrumentation, including strict replay (863 instances); these are hypothetical
+estimates, not committed illegal calls or aborts. AI-034 remains open. Independent
+timing review checks 23,514 standard charges, exact 3,600 regulation seconds in
+every game, and ordinary late-half bounds semantics: OOB 10 seconds, in-bounds
+20/30 seconds. Midpoint/final strict replay, scoring, state, statistics and structured
+traces reconcile. Frozen source and staged resources remain hash-identical.
+
+Fresh isolated source/runtime assembly passes the exact 118-team catalog, UI/assets
+and every-team snap/save/load (catalog discovery 3.33 seconds). Frontend 147 tests,
+production build and audit pass; all 54 real-engine browser checks pass in 4.1
+minutes; Ruff/dependency/docs checks pass. Renewed full Python coverage passes
+3,984 tests in 848.97 seconds, with 93.35% branch-inclusive coverage and no test
+skips or warnings. All local gates complete before the corrected-source push.
+Fresh pinned native/artifact acceptance remains pending. Prior old-catalog
+game/build passes do not count as acceptance of the repaired catalog.
