@@ -39,7 +39,17 @@ CSVs. The provenance describes generated cell evidence, not PDF geometry. Source
 snapshot SHA-256:
 `1f8e553002c0299a2993eb533231053d6cf406dbe0e9d41ecc400267484bb1ba`.
 The frozen cohort manifest SHA-256 is
-`6b22c460aa843fcd8f7bd9de51898c050554f9113188bd4c4810929ec7fa3a1a`.
+`e0fddc5f0e888e5339a924a908a813766c729b195b8c6cf72e2e89cda0f88939`.
+This corrected cohort uses generator `college-chartgen-v5`, with the same source
+snapshot, neutral profiles and non-OOB chart facts as its preserved predecessor.
+The [OOB evidence correction](dev-notes/college-chart-oob-evidence-audit.md) fixes
+a positive-only denominator that had marked nearly every ordinary numeric cell.
+OOB allocation now uses positive narrative mentions over matching numeric-outcome
+support, with exact dice quantization. Missing mentions remain unknown: these are
+lower-bound narrative-incidence estimates, not fully observed historical OOB rates.
+Some columns have no positive evidence and remain explicitly unidentified; an
+unmarked cell does not establish that the source play was observed in bounds.
+
 No raw play-by-play, source narratives, private imported benchmark charts,
 historical rosters, logos, saves or detailed audit reports are distributed.
 Generated 2007 Ohio State and Miami charts are distinct from privately imported

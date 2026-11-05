@@ -12,7 +12,9 @@ play-by-play data releases. SportsDataverse's
 declares CC BY 4.0. The original source is factual 2007 event data; Bowl Bound
 classifies, pools/infers sparse families, adjusts, and quantizes statistical
 distributions into its own chart format. These are modified generated outputs,
-not official charts or a reproduction of source play narratives. Retain this
+not official charts or a reproduction of source play narratives. Out-of-bounds
+allocation is a modified lower-bound narrative-incidence model; absent mentions
+remain unknown, rather than verified historical in-bounds observations. Retain this
 credit, the license link, and the indication of modifications when redistributing.
 
 The license allows sharing and adaptation, including commercially, subject to

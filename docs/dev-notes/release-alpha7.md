@@ -1,10 +1,11 @@
 # Alpha 7 visual-chart candidate
 
-Status: publication held for the generated-catalog out-of-bounds marker audit
-(DATA-039). The viewer faithfully displays normalized markers from CSV; never
-hide them to mask a data issue. Current gates/artifacts are baseline evidence,
-not acceptance of corrected data. No push, tag, build dispatch or publication
-occurs in this preparation checkpoint. Owner rapid web play testing continues.
+Status: corrected-catalog integration complete; renewed candidate validation in
+progress. DATA-039's correction is independently accepted and public. Keep all
+out-of-bounds markers faithful to the loaded CSV. After the final gate and review,
+a dedicated candidate branch and exact-SHA native build are authorized; tag/release
+publication remains coordinated after Alpha 6's actual release/Latest. Owner rapid
+web play testing continues on corrected preview 8143.
 
 ## Exact source and scope
 
@@ -177,3 +178,44 @@ corrected-catalog validation and later release coordination.
 No push, main merge, remote build dispatch, tag or publication was performed.
 The port-8139, 8140, 8141 and 8142 previews and their games remain available;
 only the agent's temporary geometry server on 8144 was stopped.
+
+
+## Corrected-catalog integration phase
+
+Root accepted DATA-039 after independent all-116 semantic/216-outcome/source
+support checks, corrected current-engine timing/coaching/replay review across
+128 distinct games plus two repeats, and the renewed Alpha 6 full gate. Public
+source `a95ded69082e5e65833c93d3321630bb515e49d8` was verified with git ls-remote
+and fetched from origin/main before integration. No private generator history or
+code is imported. The corrected 116 teams and two samples retain the catalog
+scope; only approved numeric-cell out-of-bounds markers/provenance hashes and
+public-safe records change. Alpha 7 retains its viewer and coordinated a7 identity.
+
+Reconsulted Paydirt `.github/workflows/release.yml`,
+`tests/test_release_metadata.py` and the 2026-11-02 release-readiness notes before
+this integration phase. Adapt exact version/source checks, separate build and
+publication, and reconciled validation evidence. Bowl Bound's own manifests,
+permissions and college rules remain authoritative; reuse no Paydirt data,
+private audit records or NFL behavior, and add no runtime dependency.
+
+The previous pre-audit archive remains historical baseline evidence only. Renew
+one complete final candidate gate and assemble a fresh corrected exact runtime;
+no redundant complete-game cohort is needed if football application sources are
+byte-identical to the accepted Alpha 6 source. Preserve ports 8139–8143 and every
+existing game. Source/native publication awaits Alpha 6 completion and root
+coordination while the owner uses corrected preview 8143.
+
+
+Only the generated issue index conflicted when merging the accepted correction;
+regenerate it from the combined public DATA-039 and M38/M41 tickets. All accepted
+sample/generated resource pins match public `a95ded` exactly. The only additional
+manifest entries remain the reviewed `bowl_bound/chart_view.py` and
+`frontend/src/components/ChartViewer.jsx`.
+
+Application comparison against accepted Alpha 6 confirms all common Bowl Bound
+module bytes match except coordinated `__init__.py` version metadata and
+`save_game.py`'s reviewed read-only chart accessor. The added chart presenter and
+web API/display are covered by the renewed viewer gate; no football rule, dice,
+clock, AI, chart normalization or gameplay state-transition source changed. The
+accepted broad corrected-data game/timing audit therefore applies without
+repeating its 128 games.
