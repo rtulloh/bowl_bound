@@ -788,3 +788,19 @@ platform builds and final readiness. MIT is approved; the owner supplied
 `bowlboundsupport@gmail.com` as the public bug-report contact.
 This changes execution priority, not acceptance of unfinished Milestones22/23.
 No remote, tag, push or publication occurs during preparation.
+
+
+### 38. Show offense and defense charts in the web game
+
+**Deliver:** a read-only chart viewer during web play, with both teams' complete
+offense and defense grids, normalized colors, explicit zeroes, readable labels
+and a text legend. Default to the controlled team; chart inspection never submits
+a call, advances time, consumes dice or reveals the computer's selected call.
+
+**Validate:** synthetic engine/API purity and complete-grid tests, accessible web
+controls and responsive real-engine browser checks. Include viewer modules in the
+exact release manifest. CLI chart viewing is outside this milestone.
+
+**Notes:** [Milestone 38](milestone-38.md), [UI-061](issues/UI/UI-061.md).
+
+**Commit:** `milestone 38: add read-only web chart viewer`

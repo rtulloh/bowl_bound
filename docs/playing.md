@@ -82,6 +82,25 @@ rosters; other teams use generic roles unless optional rosters are installed.
 Names never affect dice, results or player ratings. Pending decisions,
 penalties and ambiguous recoveries retain complete factual wording.
 
+## Inspect team charts in the web game
+
+Select **Charts** beside the Game menu to inspect the matchup's offense and
+defense charts. The viewer starts on your controlled team and opens Defense
+during defensive play selection. Choose another team or switch
+**Offense / Defense** to compare the tables.
+Offense includes B, QR and QT supplemental columns; defense includes all six
+formations. Scroll the grid to see every roll and column. Its headings stay
+visible as you scroll.
+
+Colors follow the normalized chart categories. Read the signed values and
+**How to read the charts** legend as well: colors alone do not determine a result.
+A white blank is shown as **0**; **INC** identifies an incomplete pass. Priority
+markers and out-of-bounds asterisks remain visible. These are chart entries; the
+engine still resolves the combined result and any required follow-up decisions.
+
+Opening charts does not select a play or advance the game. **Close charts** or
+press **Escape** to return to your controls.
+
 ## Save and resume
 
 Open **Game → Save game** to download JSON, including during a pending choice.

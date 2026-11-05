@@ -132,3 +132,24 @@ football commands remain valid for older adapters and dismiss the previous
 review. Report `announcements` retain ordered engine commentary alongside the
 original report; they are not additional plays. Neither field enters coaching
 observations or football semantic integrity. Acknowledgments remain journaled.
+
+## Read-only chart book
+
+`GET /api/games/{game_id}/charts?side=home|away` returns the engine-authored
+chart book for one of the game's frozen matchup teams. `side` is required and
+restricted to `home` or `away`; no file paths or arbitrary team IDs are accepted.
+Unknown games return 404 and invalid sides return 422. The endpoint is available
+in manual and coached games without submitting a call or preparing a turn.
+
+The response contains `team`, `season`, explanatory `note`, `offense` and
+`defense` tables, a color `legend`, `symbols` and `formations`. Each table has
+`key`, `title`, `roll_label`, `columns` (`key`, `label`) and ordered `rows`
+(`label`, `description`, `cells`). Cells contain display `label`, normalized
+`color` and accessible `description`. Offense has 30 rows and 12 columns
+(plays 1–9 plus B/QR/QT); defense has 30 rows (A–F, totals 1–5) and nine columns.
+Color categories are red/green/white/black/yellow, with `unclassified` for facts
+without a normalized color. The client displays these facts without interpreting
+CSV strings or resolving football. Source provenance and private paths are omitted.
+
+Reads do not alter revision, pending decisions, coaching state, dice, clock,
+statistics or the save journal, and do not reveal a selected computer call.

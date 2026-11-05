@@ -13,6 +13,7 @@ import SaveControls from './components/SaveControls'
 import CoinToss from './components/CoinToss'
 import DiceRoll from './components/DiceRoll'
 import HalftimeReview from './components/HalftimeReview'
+import ChartViewer from './components/ChartViewer'
 
 export default function App() {
   const [teams, setTeams] = useState(null)
@@ -260,6 +261,8 @@ export default function App() {
     <main className={`${view.phase === "opening_choice" ? "max-w-xl" : "max-w-4xl"} mx-auto p-4 space-y-3 text-white`} data-testid={view.phase === "opening_choice" ? "opening-screen" : "playing-screen"}>
       <header className="flex items-center justify-between gap-3">
         <h1 className="font-bold">Bowl Bound</h1>
+        <div className="flex items-center gap-3">
+        <ChartViewer key={game.game_id} gameId={game.game_id} home={view.home} away={view.away} initialSide={control === 'away' ? 'away' : 'home'} initialChart={turn?.human_role === 'defense' ? 'defense' : 'offense'} />
         <details ref={gameMenu} className="relative" onKeyDown={(event) => {
           if (event.key === 'Escape') {
             event.currentTarget.open = false
@@ -273,6 +276,7 @@ export default function App() {
             <div className="text-xs text-gray-400">Seed {game.seed}</div>
           </div>
         </details>
+        </div>
       </header>
       {(error || computerError) && <div className="text-red-300" role="alert">{error === 'no such game' ? <>
         The local server was restarted, so this unsaved game is no longer available.
