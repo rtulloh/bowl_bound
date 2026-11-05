@@ -2,12 +2,16 @@
 
 ## 0.1.0-alpha.7 — Visual charts
 
-- Adds a Charts button with both matchup teams' actual loaded offense and
-  defense charts, readable labels, colors and explicit zeroes.
+- Adds a Charts button with both matchup teams' actual loaded offense,
+  defense and Special Teams charts, readable labels, colors and explicit zeroes.
+- Uses Running Plays / Option / Passing Plays bands, large defense formation
+  letters, boxed dice totals and a separate supplemental B/QR/QT block.
 - Shows all offensive totals 10–39 and all six defensive formation groups
   together on a desktop page; smaller windows and phones support scrolling.
 - Adds the shared Priority reference with operation definitions and the
   approved defensive Breakaway extension. Chart reading help starts closed.
+- Shows loaded kicks, returns, field goals and GOOD/NG extra points with
+  context-specific Special Teams help.
 - Opens independent chart views in a new browser tab or separate window, so
   charts can stay on another display while the game continues.
 - Chart viewing consumes no dice, selects no play and changes no game/save state.
