@@ -174,3 +174,33 @@ chart calibration or full release acceptance.
 
 The owner's authorization is already recorded. Outstanding work is technical
 verification and access, not an additional publication permission request.
+
+## Main-thread publication continuation
+
+After the owner restarted execution with full access, GitHub git/API and local
+server probes pass. Publication remains authorized from the main thread. A fresh
+Python 3.13.17 environment and Node 24.22.1 use the established workflow commands.
+
+Before the release-check repair, reconsulted Paydirt `tests/test_save_game.py`
+and `paydirt/save_game.py`: adapt explicit round-trip state assertions, not its
+NFL state or looser save compatibility. Bowl Bound retains strict Python-minor
+compatibility. DEV-070 reproduces a synthetic fixture's 3.12 envelope rejection
+on the pinned 3.13 runtime. Reusing the existing legacy-fixture runtime adapter
+changes only test envelope metadata/integrity; original fixture bytes, chart facts,
+rolls, digest checks and replay assertions remain unchanged. The unchanged
+cross-minor rejection test remains required. All 79 focused save tests pass.
+
+DEV-071 reproduces an older manual complete-game browser driver timing out at
+the new halftime review. The page correctly disables kickoff until START 2ND HALF;
+the driver omitted that acknowledgement. Adapt the existing M20 driver's
+engine-provided review action, preserving complete-game score/statistics/state
+assertions and existing timeouts. No frontend or engine behavior changes.
+Interrupted preliminary full runs are retained privately and are not counted
+as passing gates. Fresh complete gates follow the fixes.
+
+After the fixes, all 54 real-engine Chromium cases pass in 3.9 minutes, including
+manual and computer complete games, halftime, pending saves and invalid-save
+protection. All 147 frontend unit cases pass, production build succeeds, and the
+online npm audit reports zero vulnerabilities. Installation retains the existing
+`whatwg-encoding` deprecation notice. Ruff/pip checks pass. The final complete
+Python/coverage gate is still running; the earlier interrupted run is not a pass.

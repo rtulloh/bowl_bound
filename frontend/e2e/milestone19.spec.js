@@ -36,6 +36,12 @@ for (const reverse of [false, true]) {
       } else {
         await expect(page.getByTestId('game-clock')).toHaveText(view.clock.label)
       }
+      if (view.review) {
+        const reviewed = page.waitForResponse((r) => r.url().endsWith(path + '/action') && r.request().method() === 'POST')
+        await page.getByRole('button', { name: view.review.action.label, exact: true }).click()
+        expect((await reviewed).ok()).toBeTruthy()
+        continue
+      }
       if (view.finished) {
         expect(secondHalfKickoffSeen).toBe(true)
         expect(phases.has('halftime_choice')).toBe(false)

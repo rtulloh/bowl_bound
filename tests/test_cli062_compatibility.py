@@ -8,6 +8,7 @@ from bowl_bound.save_game import SavedGame, _view_digest, dumps_game, loads_game
 from bowl_bound.team_csv import format_cell
 from tests.synthetic_teams import default_teams
 from tests.test_models import provenance
+from tests.test_save_game import legacy_fixture_for_current_runtime
 
 
 def test_pre_fix_pending_zero_choice_save_replays_with_original_chart_facts() -> None:
@@ -23,7 +24,9 @@ def test_pre_fix_pending_zero_choice_save_replays_with_original_chart_facts() ->
     def loader(key: str) -> TeamChart:
         return home if key.endswith("alpha-tech") else away
 
-    raw = (Path(__file__).parent / "fixtures" / "cli062-pending-razzle.json").read_text()
+    raw = legacy_fixture_for_current_runtime(
+        Path(__file__).parent / "fixtures" / "cli062-pending-razzle.json"
+    )
     restored = loads_game(raw, loader)
     decision = restored.view().pending
     choice = next(item for item in decision.choices if item.id.startswith("razzle:2:"))

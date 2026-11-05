@@ -1,6 +1,6 @@
 # Bowl Bound release notes
 
-## 0.1.0-alpha.5 — Milestone 33 candidate
+## 0.1.0-alpha.5 — Fifth alpha
 
 - Adds a shared public fourth-down policy and clearer decision guidance for
   human and computer coaches.
@@ -20,7 +20,7 @@ The existing save schema is retained; Milestone 33 uses the
 
 Known follow-up: QB Sneak commentary can name the wrong ball carrier; its
 football result is unaffected.
-This is a candidate until regression and native-build verification finish.
+Builds are unsigned alpha software. Back up saves and report reproducible issues.
 
 ## 0.1.0-alpha.4 — Fourth alpha
 
