@@ -28,6 +28,18 @@ selected with owner approval (DEV-042); every other roster remains excluded.
 Unknown file categories, traversal, duplicate entries, missing inputs and
 symlinked files/ancestors fail before output creation.
 
+Alpha 6 also selects the owner-approved generated statistical cohort through an
+exact `generated_sha256` map: each complete four-file chart bundle and matching
+generated virtual-cell provenance CSV is hash-pinned. The two original fictional
+samples retain their original hashes and rosters; historical rosters and private
+imported benchmarks remain excluded. See [generated-content scope](../generated-charts.md).
+
+Native smoke allows 30 seconds for complete catalog discovery because listing
+validates every chart and provenance bundle. It records elapsed discovery time,
+reconciles the exact expected catalog and exercises every team's snap/save/load.
+Ordinary health, version, game/save/load and static-asset requests retain their
+five-second deadlines.
+
 When adding or moving application modules, update the runtime selection for their
 imports, including dependencies loaded only when a game is created. Source tests
 can find modules that an exact staged runtime lacks; successful freezing alone

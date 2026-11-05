@@ -68,11 +68,12 @@ def extract_verified(archive: Path, destination: Path) -> dict:
     return manifest
 
 
-def request(base: str, path: str, body: object = None) -> object:
+def request(base: str, path: str, body: object = None, *, timeout: float = 5) -> object:
     """Send local JSON only; no external service or source-game import is needed."""
     data = None if body is None else json.dumps(body).encode("utf-8")
     with urlopen(
-        Request(base + path, data=data, headers={"Content-Type": "application/json"}), timeout=5
+        Request(base + path, data=data, headers={"Content-Type": "application/json"}),
+        timeout=timeout,
     ) as response:
         return json.load(response)
 
@@ -105,10 +106,13 @@ def exercise(base: str, version: str, expected_teams: frozenset[str]) -> None:
     """Reconcile exact catalog/assets and a snap plus save/load for every packaged team."""
     assert request(base, "/api/health")["status"] == "healthy"
     assert request(base, "/api/version")["version"] == version
-    catalog = request(base, "/api/teams")
+    # Discovery validates every chart and provenance bundle, unlike health or one action.
+    started = time.monotonic()
+    catalog = request(base, "/api/teams", timeout=30)
     assert not catalog["problems"]
     assert len(catalog["teams"]) == len(expected_teams)
     assert {team["id"] for team in catalog["teams"]} == expected_teams
+    print(f"Verified {len(expected_teams)}-team catalog in {time.monotonic() - started:.2f}s")
     with urlopen(base + "/", timeout=5) as response:
         html = response.read().decode("utf-8")
     assets = re.findall(r'(?:src|href)="(/assets/[^" ]+)"', html)

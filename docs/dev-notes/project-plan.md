@@ -836,6 +836,21 @@ committed calls and aborts. See [the work log](milestone-39.md).
 
 **Commit:** `milestone 39: analyze penalized tries at their current spot`
 
+### 40. Bound complete native catalog discovery separately from game requests
+
+Required Alpha 6 packaging follow-up: the Windows app builds and becomes healthy,
+but the expanded catalog's full chart/provenance validation exceeds a legacy
+five-second smoke request budget. Preserve complete validation and exact catalog/
+every-team game/save/load acceptance with a separately bounded discovery budget.
+
+**Validate:** a synthetic HTTP catalog delayed beyond five seconds first reproduces
+the failure; discovery then completes within its explicit bound. Retain ordinary
+request deadlines and missing/extra/duplicate catalog rejection. Run focused native/
+installer regressions and full gates before the corrected-source push and rebuild.
+Record actual native discovery elapsed time. See [the work log](milestone-40.md).
+
+**Commit:** `milestone 40: bound full native catalog discovery`
+
 ## Decision gates
 
 Before Milestone 3, decide the initial rules profile—especially timing, optional rules, and historical overtime. Chart distribution: the 2026-10-25 owner statement about charts marked free is not a release-packaging instruction. On 2026-10-26 the owner directed that Ohio State and Miami remain unpublished in game packaging. Use only the two original CC0 fictional samples for public game distributions; keep historical teams local-only. Nothing is published before Milestone 24 or without explicit approval.

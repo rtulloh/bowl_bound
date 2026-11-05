@@ -21,7 +21,7 @@ def test_native_smoke_exercises_every_manifest_team_and_reconciles_catalog(
     created: list[dict[str, Any]] = []
     catalog = {"teams": [{"id": team} for team in sorted(expected)], "problems": []}
 
-    def request(base: str, path: str, body: Any = None) -> Any:
+    def request(base: str, path: str, body: Any = None, *, timeout: float = 5) -> Any:
         if path == "/api/health":
             return {"status": "healthy"}
         if path == "/api/version":
@@ -88,6 +88,67 @@ def test_expected_catalog_comes_from_complete_verified_artifact_bundles() -> Non
         catalog_from_inventory(files)
     with pytest.raises(ValueError, match="at least two"):
         catalog_from_inventory({})
+
+
+def test_native_smoke_allows_bounded_full_catalog_discovery_after_fast_health() -> None:
+    """Catalog validation may take longer than one ordinary action request."""
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+    from threading import Thread
+    from time import sleep
+
+    from scripts.smoke_standalone import exercise
+
+    expected = frozenset({"2011/alpha", "2011/beta"})
+
+    class Handler(BaseHTTPRequestHandler):
+        def log_message(self, format: str, *args: object) -> None:
+            pass
+
+        def reply(self, value: object, *, html: bool = False) -> None:
+            data = value if html else json.dumps(value).encode()
+            self.send_response(200)
+            self.end_headers()
+            try:
+                self.wfile.write(data)
+            except (BrokenPipeError, ConnectionResetError):
+                pass  # The red regression deliberately closes its timed-out client.
+
+        def do_GET(self) -> None:
+            if self.path == "/api/health":
+                self.reply({"status": "healthy"})
+            elif self.path == "/api/version":
+                self.reply({"version": "0.1.0-alpha.6"})
+            elif self.path == "/api/teams":
+                sleep(6)
+                self.reply({"teams": [{"id": key} for key in expected], "problems": []})
+            elif self.path.endswith("/save"):
+                self.reply({"saved": True})
+            elif self.path == "/":
+                self.reply(b'<script src="/assets/app.js"></script>', html=True)
+            elif self.path == "/assets/app.js":
+                self.reply(b"synthetic", html=True)
+            else:
+                self.send_error(404)
+
+        def do_POST(self) -> None:
+            self.rfile.read(int(self.headers.get("Content-Length", 0)))
+            if self.path == "/api/games":
+                self.reply({"game_id": "original", "view": "before"})
+            elif self.path == "/api/games/load":
+                self.reply({"game_id": "loaded", "view": "after"})
+            elif self.path.endswith("/snap"):
+                self.reply({"view": "after"})
+            else:
+                self.send_error(404)
+
+    with ThreadingHTTPServer(("127.0.0.1", 0), Handler) as server:
+        thread = Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            exercise(f"http://127.0.0.1:{server.server_port}", "0.1.0-alpha.6", expected)
+        finally:
+            server.shutdown()
+            thread.join(timeout=2)
 
 
 def write_archive(
