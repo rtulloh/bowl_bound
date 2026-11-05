@@ -53,3 +53,24 @@ reviewed the final gate and found no blocker. Private negative integration rejec
 all 116 old neutral generated teams. New QT/FUMBLE controls prove primary pending
 classes remain distinct from completed zero-yard outcomes; full terminal observer
 validation remains independently required.
+## Native staging follow-up
+
+The release owner's real staging review found the engine digest included
+`coaching_audit.py` and `coaching_audit_sampling.py`, which are deliberately absent
+from runtime. Before this fix, a new synthetic source-to-native staging regression
+failed with `Candidate engine differs`; a second test demonstrated unselecting
+`timing.py` escaped detection. The corrected identity hashes the canonical exact
+runtime core selection, requires the actual audit dependency modules, checks the
+candidate selects that same core, and preserves all imported-module origin and
+core byte checks. Source and native reports now share the engine digest without
+shipping development tools. Final report identities must be regenerated.
+
+Reconsulted local Paydirt `paydirt/chart_audit.py` and
+`docs/chart-generator.md` before this follow-up. Its separation of primary pending
+outcomes from full-game validation remains applicable; it provides no native
+runtime identity contract to copy. Bowl Bound retains its own exact runtime
+allowlist and resolver checks.
+
+Follow-up acceptance: all 167 relevant cumulative tests passed in 13.41s,
+including 29 synthetic chart-audit controls. Ruff lint/format, regenerated issue
+index and whitespace checks pass; no skips or warnings.

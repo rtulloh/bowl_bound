@@ -40,7 +40,11 @@ report when `--report` is supplied.
   does not treat them as completed zero-yard plays. Directional scores are numeric
   primary contribution, **not** full expected yardage or turnover utility.
 - Candidate, expectation, policy, auditor and actually imported engine identities
-  are recorded. A foreign imported engine or different candidate core is rejected.
+  are recorded. The engine identity covers the exact approved runtime module
+  inventory, so source and native stages identify the same core while development
+  audit tools remain unpackaged. Every loaded project module must originate from
+  the auditor's source tree; candidate runtime selection and all core bytes must
+  match. A foreign imported engine or different candidate core is rejected.
 
 Native builders repeat the audit against their staged bytes before frontend build
 and freezing. Each native inventory embeds the compact audit identity and full

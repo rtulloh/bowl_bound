@@ -59,3 +59,17 @@ the original passing call and never credits unresolved branches as completed
 zero-yard plays. Terminal event/statistics and calibration observers remain a
 separate release-owner verification. No skips or warnings; lint/format/index and
 whitespace pass. Keep open until corrected-cohort/CI integration is accepted.
+--- 2026-11-05 18:00 ---
+Release integration reproduced a native staging blocker: the source engine digest
+included two development audit modules intentionally excluded from runtime. Two
+new synthetic regressions fail first (valid staged candidate rejected; unselecting
+an existing runtime module accepted). The follow-up identifies the exact approved
+runtime core, requires identical candidate selection and actual core bytes, and
+retains foreign imported-module rejection. No engine rules, chart data, native
+resource selection or release assets change. Regenerate final engine/auditor
+report identities after integrating this follow-up.
+
+Follow-up verification: 167 relevant cumulative tests passed in 13.41s, including
+29 synthetic gate controls; lint/format/index and whitespace checks pass with no
+skips or warnings. The release owner must rerun the exact corrected-cohort native
+preflight and final full regression after integration.

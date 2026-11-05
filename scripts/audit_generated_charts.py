@@ -358,6 +358,15 @@ def _audit_roles(chart: TeamChart, baseline: TeamChart, key: str) -> dict[str, A
     }
 
 
+def _runtime_core(root: Path) -> list[str]:
+    runtime = _json(root / "release/manifest.json").get("runtime")
+    if not isinstance(runtime, list) or any(not isinstance(name, str) for name in runtime):
+        raise ChartAuditError("Missing or invalid runtime core inventory")
+    return sorted(
+        name for name in runtime if name.startswith("bowl_bound/") and name.endswith(".py")
+    )
+
+
 def _engine_identity(root: Path) -> str:
     # Hash the code actually used, and reject a different supplied candidate core.
     source = Path(__file__).resolve().parents[1]
@@ -369,7 +378,19 @@ def _engine_identity(root: Path) -> str:
             actual = getattr(module, "__file__", None)
             if actual is None or Path(actual).resolve() != expected.resolve():
                 raise ChartAuditError("Foreign imported engine module cannot certify candidate")
-    names = sorted(p.relative_to(source).as_posix() for p in (source / "bowl_bound").glob("*.py"))
+    # Development-only auditing modules are deliberately absent from native
+    # stages. Identify the same exact approved runtime core in both layouts.
+    names = _runtime_core(source)
+    required = {
+        "bowl_bound/__init__.py",
+        "bowl_bound/dice.py",
+        "bowl_bound/models.py",
+        "bowl_bound/normalization.py",
+        "bowl_bound/resolution.py",
+        "bowl_bound/team_csv.py",
+    }
+    if not required <= set(names) or _runtime_core(root) != names:
+        raise ChartAuditError("Candidate runtime core differs from the approved audit engine")
     hashes = {}
     for name in names:
         digest = _sha((source / name).read_bytes())

@@ -52,13 +52,20 @@ def fixture(tmp_path: Path) -> tuple[Path, dict, object]:
         "seasons/2007/provenance/synthetic-generated.csv",
     ]
     hashes = {p: hashlib.sha256((root / p).read_bytes()).hexdigest() for p in paths}
+    source = Path(__file__).resolve().parents[1]
+    approved = json.loads((source / "release/manifest.json").read_text())
+    runtime_core = [n for n in approved["runtime"] if n.startswith("bowl_bound/")]
+    frontend = ["frontend/package.json", "frontend/package-lock.json"]
+    (root / "frontend").mkdir()
+    for name in frontend:
+        shutil.copy2(source / name, root / name)
     (root / "release").mkdir()
     (root / "release/manifest.json").write_text(
         json.dumps(
             {
                 "generated_sha256": hashes,
-                "runtime": paths,
-                "frontend": ["frontend/package.json"],
+                "runtime": paths + runtime_core,
+                "frontend": frontend,
                 "sample_sha256": {},
             }
         )
@@ -112,6 +119,24 @@ def test_selected_policy_and_source_invariance_pass(tmp_path: Path) -> None:
     assert result["physical_defensive_mass"] == 36
     assert result["source_truth_revalidated"] is False
     assert result["candidate_sha256"] and result["engine_sha256"]
+
+
+def test_native_stage_engine_identity_matches_source_without_development_modules(
+    tmp_path: Path,
+) -> None:
+    from scripts.release_package import audit_staged_charts, stage_sources
+
+    root, _, _ = fixture(tmp_path)
+    source_report = audit_candidate(root)
+    stage = tmp_path / "native-stage"
+    stage_sources(root, stage)
+    assert (root / "bowl_bound/coaching_audit.py").is_file()
+    assert not (stage / "bowl_bound/coaching_audit.py").exists()
+    staged_report = audit_staged_charts(root, stage)
+    assert staged_report["passed"]
+    assert staged_report["engine_sha256"] == source_report["engine_sha256"]
+    assert staged_report["candidate_sha256"] == source_report["candidate_sha256"]
+    assert not (stage / "release/generated-chart-audit.json").exists()
 
 
 def test_neutral_defense_is_rejected_even_after_manifest_repin(tmp_path: Path) -> None:
@@ -244,6 +269,16 @@ def test_rejected_candidate_retains_machine_readable_report(tmp_path: Path) -> N
     assert rejected["policy_sha256"] == POLICY_SHA256
     assert rejected["candidate_sha256"]
     assert rejected["engine_sha256"]
+
+
+def test_candidate_cannot_unselect_runtime_engine_module(tmp_path: Path) -> None:
+    root, _, _ = fixture(tmp_path)
+    path = root / "release/manifest.json"
+    manifest = json.loads(path.read_text())
+    manifest["runtime"].remove("bowl_bound/timing.py")
+    path.write_text(json.dumps(manifest))
+    with pytest.raises(ChartAuditError, match="runtime core"):
+        audit_candidate(root)
 
 
 def test_different_candidate_engine_is_not_certified(tmp_path: Path) -> None:
