@@ -148,6 +148,8 @@ Alpha 6/M39 remain a separate stream; no publication is part of this milestone.
 
 ## Acceptance
 
+Tested implementation: `92fc811dafd6c56cabcb554451f43d2aa45bd42a`.
+
 All four objectives satisfy their documented synthetic, API, frontend and
 real-engine browser checks. Original fictional CSV screenshots provide the
 reviewable result. Reading either team, switching any reference, closing help
