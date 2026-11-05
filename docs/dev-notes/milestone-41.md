@@ -1,4 +1,4 @@
-# Milestone 40 — Priority and full-page chart views
+# Milestone 41 — Priority and full-page chart views
 
 Status: local acceptance complete; owner visual review pending. Implemented in
 an isolated worktree from Milestone 38 commit 89b29e4.
@@ -158,3 +158,26 @@ reveals no selected computer call. The main game remains playable while a
 detached chart stays open. No release, merge, tag or push was performed.
 
 UI-062 through UI-065 await owner play-test confirmation before closure.
+
+## Canonical numbering correction — 2026-11-05
+
+Public Alpha 6 commit `9a2897f7d45d9b2b6c48fc21fd311b02562d788b` assigned
+Milestone 40 to DEV-073's bounded native-catalog discovery fix. Retarget this
+local viewer work and UI-062 through UI-065 to Milestone 41 before integration.
+Original tested commits, append-only ticket evidence, screenshot paths and
+Git history retain their original labels/hashes; no implementation is changed.
+Metadata/documentation checks apply to this correction, without artificial
+behavioral tests.
+
+The next release candidate must start from that exact public commit, integrating
+only Milestone 38 and this Milestone 41 viewer work. Do not use private local main
+or alter the Alpha 6 pipeline. Preserve the port-8139/8140 previews. Owner web
+play-test review precedes any subsequent release publication.
+
+For this preparation phase, reconsulted Paydirt `.github/workflows/release.yml`,
+`tests/test_release_metadata.py` and
+`docs/dev-notes/release-readiness-2026-11-02.md`. Adapt coordinated version checks,
+separate build/publication stages and concrete complete-game validation evidence.
+Bowl Bound's own exact manifest, approved generated catalog and native catalog
+smoke remain authoritative; do not copy Paydirt's packaging paths, source data,
+private audit records or NFL behavior, and add no runtime dependency.

@@ -246,10 +246,10 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | [UI-058](issues/UI/UI-058.md) | Medium | [33](project-plan.md#33-correct-core-playability-and-make-validation-status-visible) | Show an engine-owned halftime transition and recap in the web UI | created 2026-11-03; resolved 2026-11-04 |
 | [UI-060](issues/UI/UI-060.md) | Medium | [33](project-plan.md#33-correct-core-playability-and-make-validation-status-visible) | Match Paydirt halftime box-score formatting in CLI and web | created 2026-11-04; resolved 2026-11-04 |
 | [UI-061](issues/UI/UI-061.md) | Medium | [38](project-plan.md#38-show-offense-and-defense-charts-in-the-web-game) | Show offense and defense charts during web play | created 2026-11-05; resolved 2026-11-05 |
-| [UI-062](issues/UI/UI-062.md) | Medium | [40](project-plan.md#40-add-the-web-priority-chart-and-complete-desktop-chart-view) | Add the Priority reference to the web chart viewer | created 2026-11-05; resolved 2026-11-05 |
-| [UI-063](issues/UI/UI-063.md) | Medium | [40](project-plan.md#40-add-the-web-priority-chart-and-complete-desktop-chart-view) | Fit all team chart rows together on one desktop page | created 2026-11-05; resolved 2026-11-05 |
-| [UI-064](issues/UI/UI-064.md) | Medium | [40](project-plan.md#40-add-the-web-priority-chart-and-complete-desktop-chart-view) | Keep chart reading help collapsed by default | created 2026-11-05; resolved 2026-11-05 |
-| [UI-065](issues/UI/UI-065.md) | Medium | [40](project-plan.md#40-add-the-web-priority-chart-and-complete-desktop-chart-view) | Open team charts in a separate browser tab or window | created 2026-11-05; resolved 2026-11-05 |
+| [UI-062](issues/UI/UI-062.md) | Medium | [41](project-plan.md#41-add-the-web-priority-chart-and-complete-desktop-chart-view) | Add the Priority reference to the web chart viewer | created 2026-11-05; resolved 2026-11-05 |
+| [UI-063](issues/UI/UI-063.md) | Medium | [41](project-plan.md#41-add-the-web-priority-chart-and-complete-desktop-chart-view) | Fit all team chart rows together on one desktop page | created 2026-11-05; resolved 2026-11-05 |
+| [UI-064](issues/UI/UI-064.md) | Medium | [41](project-plan.md#41-add-the-web-priority-chart-and-complete-desktop-chart-view) | Keep chart reading help collapsed by default | created 2026-11-05; resolved 2026-11-05 |
+| [UI-065](issues/UI/UI-065.md) | Medium | [41](project-plan.md#41-add-the-web-priority-chart-and-complete-desktop-chart-view) | Open team charts in a separate browser tab or window | created 2026-11-05; resolved 2026-11-05 |
 | [AI-007](issues/AI/AI-007.md) | Low | [21](project-plan.md#21-add-chart-aware-coaching-and-audits) | Name coaching constants in a versioned behavior profile instead of scattered literals | created 2026-10-27; resolved 2026-10-28 |
 | [AI-008](issues/AI/AI-008.md) | Low | [21](project-plan.md#21-add-chart-aware-coaching-and-audits) | Deduplicate DifficultyCoach and ChartAwareCoach estimate/select logic and replace duck typing | created 2026-10-27; resolved 2026-10-28 |
 | [AI-019](issues/AI/AI-019.md) | Low | [22](project-plan.md#22-add-advanced-options-one-at-a-time) | Offer a post-game summary of what the computer learned from committed calls | created 2026-10-27; resolved 2026-11-01 |
@@ -662,7 +662,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 
 - [UI-061](issues/UI/UI-061.md) (resolved, Medium) — Show offense and defense charts during web play
 
-### Milestone [40](project-plan.md#40-add-the-web-priority-chart-and-complete-desktop-chart-view)
+### Milestone [41](project-plan.md#41-add-the-web-priority-chart-and-complete-desktop-chart-view)
 
 - [UI-062](issues/UI/UI-062.md) (resolved, Medium) — Add the Priority reference to the web chart viewer
 - [UI-063](issues/UI/UI-063.md) (resolved, Medium) — Fit all team chart rows together on one desktop page

@@ -806,7 +806,7 @@ exact release manifest. CLI chart viewing is outside this milestone.
 **Commit:** `milestone 38: add read-only web chart viewer`
 
 
-### 40. Add the web Priority chart and complete desktop chart view
+### 41. Add the web Priority chart and complete desktop chart view
 
 **Deliver:** a Priority button beside Offense and Defense in the chart viewer,
 with the engine-owned matrix, operation key and approved exceptions. Keep it
@@ -823,8 +823,8 @@ Keep team charts sourced from their loaded CSV facts. Detached views isolate
 their opener, never create a game or submit commands, preserve independent
 controls, and recover from blocked windows and expired sessions.
 
-**Notes:** [Milestone 40](milestone-40.md), [UI-062](issues/UI/UI-062.md),
+**Notes:** [Milestone 41](milestone-41.md), [UI-062](issues/UI/UI-062.md),
 [UI-063](issues/UI/UI-063.md), [UI-064](issues/UI/UI-064.md),
 [UI-065](issues/UI/UI-065.md). Independent of the Alpha 6 release.
 
-**Commit:** `milestone 40: add priority and full-page chart views`
+**Commit:** `milestone 41: add priority and full-page chart views`
