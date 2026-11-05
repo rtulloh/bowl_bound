@@ -27,3 +27,5 @@ export const loadGame = (text, humanSide) => request(
   controlled('/api/games/load', humanSide),
   { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: text },
 )
+
+export const getCharts = (gameId, side) => request(`/api/games/${gameId}/charts?side=${side}`)

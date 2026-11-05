@@ -17,6 +17,7 @@ from secrets import randbits
 from threading import RLock
 from typing import Any
 
+from .chart_view import ChartBook, chart_book
 from .coaching import (
     BaselineCoach,
     CoachChoice,
@@ -505,6 +506,13 @@ class SavedGame:
     @property
     def mode(self) -> str:
         return self._config["mode"]
+
+    def charts(self, side: str) -> ChartBook:
+        """Inspect the frozen matchup chart without preparing or committing a turn."""
+        if side not in {"home", "away"}:
+            raise ValueError("chart side must be home or away")
+        with self._lock:
+            return chart_book(self._charts[side])
 
     def view(self) -> SessionView | RegulationView:
         with self._lock:

@@ -14,7 +14,9 @@ const withoutComments = (text) => text.replace(/\/\*[\s\S]*?\*\//g, '').replace(
 describe('the UI contains no football rules', () => {
   it.each(sources.map((f) => [f.slice(SRC.length + 1), withoutComments(readFileSync(f, 'utf8'))]))('%s', (_name, text) => {
     expect(text).not.toMatch(/Ln-Plg|O-Tkl|End-Rn|TE\/SL|Sneak|Kneel|Paydirt/)
-    expect(text).not.toMatch(/yards_to_go\s*[-+<>]|ball_from_left\s*[-+]|yards\s*>=|priority|Priority/)
+    expect(text).not.toMatch(/yards_to_go\s*[-+<>]|ball_from_left\s*[-+]|yards\s*>=/)
+    // A shared Priority reference may be displayed; cell-level priority resolution stays in the engine.
+    expect(text).not.toMatch(/(?:cell|offense|defense)\.priority\b|PARENTHESIZED|BRACKETED|INTERCEPTION_MIN|FUMBLE_(?:MIN|DEFENSE|END_ZONE)|resolve_cells|format_cell/)
     expect(text).not.toMatch(/parseInt|Number\(|Math\.(min|max)/)
   })
 

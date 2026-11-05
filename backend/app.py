@@ -3,7 +3,7 @@
 This module only validates input, finds teams on disk, holds in-memory sessions and
 serializes the engine's own views. It never reads chart cells, never decides football
 results and never builds wording: every label, number and sentence comes from
-bowl_bound.session.
+bowl_bound.session and bowl_bound.chart_view.
 """
 
 import secrets
@@ -274,6 +274,10 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
             for problem in catalog.problems
         ]
         return {"teams": found, "problems": problems}
+
+    @app.get("/api/games/{game_id}/charts")
+    def game_charts(game_id: str, side: HumanSide) -> dict[str, object]:
+        return asdict(lookup(game_id).session.charts(side))
 
     @app.post("/api/games")
     def new_game(body: NewGame, human_side: HumanSide | None = None) -> dict[str, object]:

@@ -878,3 +878,43 @@ platform builds and final readiness. MIT is approved; the owner supplied
 `bowlboundsupport@gmail.com` as the public bug-report contact.
 This changes execution priority, not acceptance of unfinished Milestones22/23.
 No remote, tag, push or publication occurs during preparation.
+
+
+### 38. Show offense and defense charts in the web game
+
+**Deliver:** a read-only chart viewer during web play, with both teams' complete
+offense and defense grids, normalized colors, explicit zeroes, readable labels
+and a text legend. Default to the controlled team; chart inspection never submits
+a call, advances time, consumes dice or reveals the computer's selected call.
+
+**Validate:** synthetic engine/API purity and complete-grid tests, accessible web
+controls and responsive real-engine browser checks. Include viewer modules in the
+exact release manifest. CLI chart viewing is outside this milestone.
+
+**Notes:** [Milestone 38](milestone-38.md), [UI-061](issues/UI/UI-061.md).
+
+**Commit:** `milestone 38: add read-only web chart viewer`
+
+
+### 41. Add the web Priority chart and complete desktop chart view
+
+**Deliver:** a Priority button beside Offense and Defense in the chart viewer,
+with the engine-owned matrix, operation key and approved exceptions. Keep it
+read-only, team-independent, keyboard-accessible and usable on phones. Show all
+30 team-chart rows together at desktop reference sizes; help starts collapsed.
+Offer independent read-only views in another browser tab or separate window
+while the game remains playable.
+
+**Validate:** synthetic independent-matrix and save-purity checks, preserved
+team selection, collapsed-help controls and real-engine desktop/phone checks.
+All offensive totals 10–39 and all defensive formation groups must fit at
+1440×1120 and 1280×1000 without inner vertical scrolling or page clipping.
+Keep team charts sourced from their loaded CSV facts. Detached views isolate
+their opener, never create a game or submit commands, preserve independent
+controls, and recover from blocked windows and expired sessions.
+
+**Notes:** [Milestone 41](milestone-41.md), [UI-062](issues/UI/UI-062.md),
+[UI-063](issues/UI/UI-063.md), [UI-064](issues/UI/UI-064.md),
+[UI-065](issues/UI/UI-065.md). Independent of the Alpha 6 release.
+
+**Commit:** `milestone 41: add priority and full-page chart views`

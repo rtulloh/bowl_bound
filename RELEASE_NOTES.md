@@ -1,5 +1,23 @@
 # Bowl Bound release notes
 
+## 0.1.0-alpha.7 — Visual charts
+
+- Adds a Charts button with both matchup teams' actual loaded offense and
+  defense charts, readable labels, colors and explicit zeroes.
+- Shows all offensive totals 10–39 and all six defensive formation groups
+  together on a desktop page; smaller windows and phones support scrolling.
+- Adds the shared Priority reference with operation definitions and the
+  approved defensive Breakaway extension. Chart reading help starts closed.
+- Opens independent chart views in a new browser tab or separate window, so
+  charts can stay on another display while the game continues.
+- Chart viewing consumes no dice, selects no play and changes no game/save state.
+
+Retains Alpha 6's exact 118-team catalog and generated-chart attribution.
+Football rules, save schema and the `bowl-bound-m33-v1` profile remain unchanged.
+Keep save backups and follow the [installation guide](docs/installation.md).
+Detached chart links belong to the current running game; reopen from the active
+game after restarting the server. Browser settings may control separate windows.
+
 ## 0.1.0-alpha.6 — Generated 2007 teams
 
 - Adds 116 generated 2007 college teams, retaining the two original fictional
