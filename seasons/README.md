@@ -24,6 +24,8 @@ without saving its games first.
 Alpha 6 also explicitly tracks 116 generated 2007 statistical teams under
 [CC BY 4.0](GENERATED-LICENSE.md). Their 464 chart files and 116 generated virtual
 provenance CSVs are individually hash-pinned in `release/manifest.json`; no
-historical rosters are included. Read [generation and limitations](../docs/generated-charts.md).
+historical rosters are included. Alpha 8 corrects the neutral defensive-formation
+profile with disclosed experimental yardage tradeoffs while preserving source,
+nondefensive and OOB facts. Read [generation and limitations](../docs/generated-charts.md).
 Private imported charts, other seasons, historical/other rosters, source PDFs,
 saves and detailed game records remain private and ignored. See [the sample guide](../docs/sample-teams.md) for tests and outcome coverage.

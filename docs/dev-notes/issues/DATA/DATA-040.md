@@ -58,3 +58,6 @@ index regeneration and `git diff --check` pass. Strict-codec enumeration of the
 complete cohort agrees with the parent's independent CSV and engine audit. This
 is an audit checkpoint only; no tactical correction was implemented, so the issue
 remains open. Production source is unchanged from `b232fd9`.
+
+--- 2026-11-05 18:30 ---
+The selected original numeric-only authored policy is independently accepted over all 116 teams: 812 declared roles and 1,740 pairwise benefits/costs pass exact physical priority resolution. Source/OOB/unknown and nondefensive facts are preserved; only defense/provenance bytes change. Current-engine mechanics and the complete local release gate pass. Formation A remains the declared zero-offset anchor, so equal within-A pass columns are expected. Experimental community testing is accepted; historical calibration and independent official completeness remain open, with material fit gaps disclosed. Keep open until the corrected public commit and native publication are recorded.

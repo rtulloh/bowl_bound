@@ -73,3 +73,6 @@ Follow-up verification: 167 relevant cumulative tests passed in 13.41s, includin
 29 synthetic gate controls; lint/format/index and whitespace checks pass with no
 skips or warnings. The release owner must rerun the exact corrected-cohort native
 preflight and final full regression after integration.
+
+--- 2026-11-05 18:30 ---
+Corrected source and native stage both pass the mandatory recomputed 116-team gate after integration at b0d2942; canonical computed report SHA-256 is 9781e862f3ff06bfdf9fb23e25f2b1d45aa0681f45dca8d8dc02f6fb26a34ace. Source/staged approved runtime identities match. Final complete local regression passes 4,040 tests with 93.41% branch-inclusive coverage, plus lint/format/dependencies, 158 frontend tests/build/audit and 64 real-engine browser cases. Keep open until the committed corrected candidate and upstream native integration are recorded.

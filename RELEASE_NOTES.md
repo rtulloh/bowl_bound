@@ -1,5 +1,32 @@
 # Bowl Bound release notes
 
+## 0.1.0-alpha.8 — Visual charts and generated defensive tradeoffs
+
+- Adds the web chart viewer described below: both matchup teams, offense,
+  defense, Special Teams and Priority, with independent tabs/windows.
+- Corrects the generated neutral A–F profile with original experimental
+  formation/play yardage tradeoffs. These authored tactical assumptions are
+  separate from measured team strength, not observed historical formation data.
+- Preserves the same 116 generated teams plus two fictional samples, all
+  nondefensive charts, printed response allocations and corrected OOB evidence.
+- Requires a fresh exact-probability, priority-resolved tactical and preserved-
+  baseline audit in CI and staged native builds. Stored green reports cannot
+  bypass recomputation.
+
+This remains a community-testing alpha. Current paired diagnostic games average
+3.79 pure rushing yards per attempt versus 4.77 in the supplied conditioned
+source, sacks 7.19% of dropbacks versus 5.75%, and interceptions 3.97% of attempts
+versus 3.22%; primary fumbles are 2.21% of eligible snaps versus 1.48% known
+source incidence. These balance gaps mostly predate this correction; sparse two-game
+team exposures under AI/schedule mixtures different from the historical season
+do not establish historical accuracy. Independent official season totals remain unverified. Read
+[generation and limitations](docs/generated-charts.md).
+
+Save schema and football rules are unchanged, but saves require identical chart
+bytes. Earlier generated-team saves may require their original chart catalog.
+Original fictional sample charts and rosters are unchanged. Alpha 7's immutable
+tag and unpublished draft remain preserved; Alpha 8 carries the corrected catalog.
+
 ## 0.1.0-alpha.7 — Visual charts
 
 - Adds a Charts button with both matchup teams' actual loaded offense,
