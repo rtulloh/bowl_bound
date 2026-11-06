@@ -1,15 +1,16 @@
 ---
 id: DATA-040
 title: Generated defensive formations have no tactical probability differences
-status: open
+status: resolved
 priority: High
 milestone: 34a
 created-at: 2026-11-05
-resolved-at: null
+resolved-at: 2026-11-05
 closed-at: null
 tags: [reproduced, investigating, tactical-model]
 links: []
-commits: []
+commits:
+- 5b25c82e92f26a541b7cdb69e7e9ba70f50e9903
 ---
 
 ## Description
@@ -61,3 +62,6 @@ remains open. Production source is unchanged from `b232fd9`.
 
 --- 2026-11-05 18:30 ---
 The selected original numeric-only authored policy is independently accepted over all 116 teams: 812 declared roles and 1,740 pairwise benefits/costs pass exact physical priority resolution. Source/OOB/unknown and nondefensive facts are preserved; only defense/provenance bytes change. Current-engine mechanics and the complete local release gate pass. Formation A remains the declared zero-offset anchor, so equal within-A pass columns are expected. Experimental community testing is accepted; historical calibration and independent official completeness remain open, with material fit gaps disclosed. Keep open until the corrected public commit and native publication are recorded.
+
+--- 2026-11-05 18:53 ---
+The corrected numeric-only experimental formation model is committed and delivered as Alpha 8. All 116 team roles/counterplay/source-preservation and current-engine mechanics acceptance pass, followed by full source/native/installer/downloaded-asset acceptance. The release is visibly Latest with explicit fit/source limits. This resolves the zero-tactics defect without claiming historical calibration; await owner play-test closure.

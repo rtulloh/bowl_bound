@@ -1,9 +1,10 @@
 # Alpha 8 corrected defensive-chart release preparation
 
-Status: corrected-catalog source, exact-probability, current-engine and complete
-local release gates pass. The reviewed candidate is accepted for native delivery
-and experimental community testing; upstream native builds, asset inspection and
-actual publication remain pending. Historical calibration is not accepted.
+Status: Alpha 8 is published as the regular Latest release after complete source,
+current-engine, native, installer and downloaded-artifact acceptance. The public
+repository Releases panel, index and release page visibly show Alpha 8 Latest.
+Experimental community testing is accepted; historical calibration is not. A
+bounded stale bundled-README callout remains tracked in DEV-077.
 
 ## Immutable history and scope
 
@@ -13,7 +14,8 @@ reviewed chart viewer and Alpha 6 receipt. Alpha 7's immutable tag points to
 in unpublished draft 435765520 after the owner identified DATA-040. Preserve
 that tag, draft and assets. Next unused version Alpha 8 carries the corrected
 catalog and viewer rather than retargeting or reusing Alpha 7. Alpha 5/6 tags and
-assets remain immutable, and Alpha 6 remains the currently published Latest.
+assets remain immutable. Alpha 6 was Latest through preparation; Alpha 8 is now
+the verified published Latest.
 
 User explicitly authorizes fixing the product gap and releasing a corrected new
 version after validation. Retain the same approved 116 generated teams and two
@@ -265,3 +267,129 @@ acceptance covers the DATA-040 tactical correction and mechanics, not historical
 fit. Native builds and publication must use the reviewed commit, exact approved
 118-team catalog and 11 inspected assets before a new immutable release is made
 Latest. Alpha 7 remains an unpublished preserved draft.
+
+
+## Native delivery and verified publication
+
+[Bowl Bound Alpha 8](https://github.com/rtulloh/bowl_bound/releases/tag/v0.1.0-alpha.8)
+is published as a regular Latest release, not a prerelease or hidden draft.
+Release ID `435945227` was published at `2026-11-06T00:50:52Z`. New immutable
+annotated tag `v0.1.0-alpha.8` has object
+`5aefac5ff63b8e2379b25d19b36173397c8e4002` and targets built public source
+`5b25c82e92f26a541b7cdb69e7e9ba70f50e9903`. No old tag is reused or retargeted.
+
+[Native run 42134591860](https://github.com/rtulloh/bowl_bound/actions/runs/42134591860)
+passes its source and all three native jobs at that exact source commit. The
+upstream source gate confirms 4,040 Python tests in 1,434.98 seconds, 93.41%
+branch-inclusive coverage, 158 frontend tests, production build, zero-vulnerability
+audit, Ruff/format/dependency checks, the mandatory actual generated-chart audit
+and all 64 real-engine browser cases in 5.3 minutes. Uploaded source audit facts
+match the independently reviewed local source and stage exactly.
+
+The first Windows attempt fails while acquiring pinned NSIS 3.11 because the
+Chocolatey feed returns HTTP 504. Installer compilation/acceptance and asset
+upload are skipped in that failed attempt; they are not counted as passing.
+Only the failed Windows job is retried at the same source and compiler pin. The
+retry passes actual installer compilation, installation/registry/version, the
+installed 118-team app's gameplay/save-load and uninstall with an unrelated user
+file preserved. Both Mac jobs and the source gate remain their completed passing
+checks. No gate, assertion, dependency version or source is weakened for the retry.
+
+All three extracted native apps pass version, UI/assets, exact 118-team catalog,
+every-team snap/strict save-load and clean shutdown. Catalog discovery takes
+4.07 seconds on Apple Silicon, 8.44 seconds on Intel and 3.03 seconds on Windows;
+the installed Windows copy takes 3.42 seconds. A separately downloaded Apple
+Silicon ZIP passes from an isolated local directory, including all 236 frozen
+chart books without state mutation and all 118 team snaps/strict save-loads;
+catalog discovery takes 2.66 seconds and the complete local smoke 32.17 seconds.
+These are unsigned native engineering builds, not OS/security certification.
+
+Independent downloaded inspection verifies all 11 exact asset names, archive and
+installer checksums, embedded/external inventories, binary-magic notice coverage,
+all native resources and the same actual audit report identity. Mac inventories
+contain 846 files each and Windows 847, plus the embedded artifact manifest.
+Each contains exactly 597 season-related entries: the 580 approved generated
+resources, 15 original sample resources, internal license and accessible license
+copy. All generated/sample pins match; no private charts, historical rosters, PDFs,
+raw source narratives, generator history, saves or audit logs are attached.
+All 11 draft and published server sizes/digests match the inspected downloads.
+The release body retains material source-fit/completeness limits and save/catalog
+compatibility guidance.
+
+Retain warnings rather than suppressing them: 75 existing React act warnings,
+two duplicate-key synthetic fixture warnings, whatwg-encoding installation
+deprecation, local jsdom advisory, browser color-environment advisory and the
+existing optional Windows `tzdata` hidden-import warning. Chocolatey's pinned
+NSIS package feed also labels the package “Possibly broken”; actual compiler,
+installer and installed-app checks pass on retry. No named-zone dependency or
+warning suppression is added. AI-034 and DATA-012/032/044 remain open limitations.
+
+API verification and an unauthenticated Chromium review confirm the repository
+Releases panel, Releases index and Alpha 8 page visibly show this regular Latest
+release. Alpha 5/6/7 tag objects/targets, release bodies and asset identities are
+preserved; Alpha 7's 11 assets remain in unpublished draft 435765520. All old
+previews and in-memory games are preserved.
+
+The rendered repository review also finds a stale Alpha 7 download callout in
+the built README. The actual app/CLI, filenames and release version are Alpha 8.
+[DEV-077](issues/DEV/DEV-077.md) tracks this bounded documentation defect: the
+maintained repository README now uses the stable Latest link, and release notes
+disclose the stale bundled callout. Alpha 8 tag/assets remain immutable; the next
+native version will carry the corrected guide. This post-publication README
+correction changes documentation only, not the previously verified code, charts,
+frontend build, native inventory or asset hashes.
+
+DATA-040, DATA-041, RULE-045 and DEV-076 are resolved against tested public source
+`5b25c82` (gate integration `836182f`/`b0d2942`) and actual corrected publication,
+awaiting owner play-test closure. DEV-077 remains open for the next bundled guide.
+M34a historical calibration remains in progress. Detailed receipts/screenshots
+remain ignored; the public summary contains only approved aggregate evidence.
+
+Final receipt/README verification: `.venv/bin/python -m pytest
+tests/test_issue_tracker.py tests/test_priority_docs.py
+tests/test_release_player_docs.py -q` passes all 22 checks. Index regeneration,
+whitespace and explicit built-input/staged-runtime/native-byte comparisons pass.
+The 682 selected staged inputs equal built source; the maintained README is the
+only selected-input documentation correction after that build. Code, charts,
+frontend assets, all 659 assembled runtime resources and published native hashes
+remain at their accepted identities. No unchanged full suite is rerun for this
+documentation-only receipt.
+
+
+## Bounded supplemental-symbol compatibility follow-up
+
+The transferred Paydirt QT fallback finding arrived after Alpha 8 publication
+and before this final receipt. Consulted local Paydirt
+`paydirt/play_resolver.py:896–908`: its unknown QT parse can select arbitrary
+yardage. Adapt the compatibility question only; do not copy its dice, rules,
+coefficients or fallback. Keep the accepted Bowl Bound source/cohort frozen.
+
+Strictly load all 118 shipped teams and inventory every B/QR/QT and special-teams
+cell. B and QR each contain 3,540 numeric results; QT contains 3,527 numeric
+results and 13 typed fumbles. Special teams contain numeric yardage/range, typed
+return fumbles and typed blocked punts only; there are no unsupported or penalty
+kinds in those shipped columns. All 3,540 PAT facts are explicit booleans.
+
+The actual Bowl Bound supplemental resolver executes all 10,620 shipped cells
+with blank and numeric defensive inputs: 21,240 typed dispatches preserve the
+selected kind, yards, pending flag, provenance trace and exact single scripted
+roll. All 21,240 special-teams numeric distances/locations equal stored facts
+without new dice. Numeric/F/blocked branches are explicit in the engine; missing
+kick yardage raises an actionable error, and supplemental/penalty chains have
+finite error bounds. This bounded compatibility review is not a calibration
+rerun and changes no source, chart, coefficient or published artifact.
+
+Independent canonical-generator review at the same public commit confirms all
+116 generated inventories unchanged and passes 12 finite-ScriptedDice support/
+rejection controls with ambient random functions patched to reject. Synthetic
+OFF/DEF QT penalties, absent from the shipped cohort, enter the explicit penalty
+procedure and named reroll. Unknown raw tokens/kinds and unsupported supplemental
+facts reject; yardless special-teams/interception-return facts raise errors.
+The existing resolution/penalty/special-teams/turnover/normalization regression
+passes 256 tests in 1.81 seconds. No corresponding Bowl Bound defect is reproduced.
+All-shipped-cell receipt SHA-256 is
+`051061be6ec31bb6ffaec6eef83364d161f9929971c0fab5752e69ab6fb37ff3`;
+independent synthetic compatibility receipt SHA-256 is
+`318f1220e2b825ef683437156a985240c784db6660c7f0ab448036f29362124f`.
+This completes the bounded transferred-symbol acceptance without another fit
+study or any runtime/chart/release change.

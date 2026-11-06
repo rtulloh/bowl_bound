@@ -1,15 +1,16 @@
 ---
 id: RULE-045
 title: Verify selected Bowl Bound turnover semantics against transferred raw-token hypothesis
-status: open
+status: resolved
 priority: High
 milestone: '34a'
 created-at: 2026-11-05
-resolved-at: null
+resolved-at: 2026-11-05
 closed-at: null
 tags: [chart-audit, cross-project, regression]
 links: []
-commits: []
+commits:
+- 5b25c82e92f26a541b7cdb69e7e9ba70f50e9903
 ---
 
 ## Description
@@ -43,3 +44,6 @@ reproduced; keep open until the tested public commit is recorded.
 ## Comments
 
 Tracked transferred hypothesis without changing approved Bowl Bound rules.
+
+--- 2026-11-05 18:53 ---
+Eight committed synthetic selected-semantic/terminal controls and independent 128-game eligibility, box/stat/clock/trace/replay acceptance pass unchanged production rules. Full 4,040-test source and native release gates pass at the same commit. This resolves the bounded verification task as non-reproduced; no Paydirt priority winner, raw-token classification or NFL denominator is copied. Await owner play-test closure.

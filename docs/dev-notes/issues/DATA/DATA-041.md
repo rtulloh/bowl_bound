@@ -1,17 +1,20 @@
 ---
 id: DATA-041
 title: Generated charts lack a mandatory probability and tactical release audit
-status: open
+status: resolved
 priority: High
 milestone: 34a
 created-at: 2026-11-05
-resolved-at: null
+resolved-at: 2026-11-05
 closed-at: null
 tags:
 - reproduced
 - release-gate
 links: []
-commits: []
+commits:
+- 836182f2f95d3be72f2f6aa6b5196dbbe458c4ea
+- b0d2942b05bb559b5337bd7c7dfd32b45b28dc35
+- 5b25c82e92f26a541b7cdb69e7e9ba70f50e9903
 ---
 
 ## Description
@@ -76,3 +79,6 @@ preflight and final full regression after integration.
 
 --- 2026-11-05 18:30 ---
 Corrected source and native stage both pass the mandatory recomputed 116-team gate after integration at b0d2942; canonical computed report SHA-256 is 9781e862f3ff06bfdf9fb23e25f2b1d45aa0681f45dca8d8dc02f6fb26a34ace. Source/staged approved runtime identities match. Final complete local regression passes 4,040 tests with 93.41% branch-inclusive coverage, plus lint/format/dependencies, 158 frontend tests/build/audit and 64 real-engine browser cases. Keep open until the committed corrected candidate and upstream native integration are recorded.
+
+--- 2026-11-05 18:53 ---
+Committed mandatory CI/native preflight gates pass the actual 116-team corrected catalog. Source, staged, upstream CI and all three native inventories bind canonical computed report 9781e862f3ff06bfdf9fb23e25f2b1d45aa0681f45dca8d8dc02f6fb26a34ace. All 11 delivered assets pass independent inspection and actual native/installer acceptance. Alpha 8 is published regular Latest; await owner download/play-test closure.
