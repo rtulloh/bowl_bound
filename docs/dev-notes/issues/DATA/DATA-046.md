@@ -69,3 +69,24 @@ turnover. The common conditioned source populations were independently rebound
 before 2008 research preparation. Generic deep-pass narratives remain excluded
 from designed-call support. Complete four-pair and transfer comparisons still
 await their frozen candidate identities and corrected observer coverage.
+
+--- 2026-11-07 — common source observations and four-pair primary checkpoint ---
+
+The frozen exploratory primary comparison now covers all four compatible pairs:
+864 matched four-way contexts, 216 separately labeled baseline controls and
+162,000 address checks against the independent Priority transcription. Each
+context preserves its complete physical denominator. The 2008 preparation remains
+private research using its separately identified neutral baseline; it does not
+expand the released catalog or establish historical fit.
+
+The [common source contract](../../reference-source-targets.md) adds explicit
+provider-observation denominators, game clusters, unknown yardage and INT-depth
+envelopes for the eight preregistered teams. Both canonical populations and all
+52 input/source pins reconcile unchanged. All 16 team/side known/unknown INT counts
+match the earlier inventory; designed-call depth support remains absent under
+the explicit-marker policy. Generic deep-pass language is not Drop Back truth.
+Fifteen synthetic controls and 401 applicable checks pass. Missing returns and
+source completeness remain unqualified. These observations are shared inputs to
+both chart-set comparisons; uniform call/formation chart averages are not
+observed historical-fit estimates. Full terminal/game and discrepancy acceptance
+remain outstanding. Ticket stays open.
