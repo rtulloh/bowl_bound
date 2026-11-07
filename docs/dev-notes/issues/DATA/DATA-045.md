@@ -8,7 +8,7 @@ created-at: 2026-11-05
 resolved-at: null
 closed-at: null
 tags: [chart-generator, validation, planning]
-links: [DATA-037, DATA-046, DATA-048, DATA-049, DATA-053, DATA-055, DATA-060, DATA-063]
+links: [DATA-037, DATA-046, DATA-048, DATA-049, DATA-053, DATA-055, DATA-060, DATA-063, DATA-064]
 commits: []
 ---
 

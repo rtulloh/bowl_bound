@@ -8,7 +8,7 @@ created-at: 2026-11-06
 resolved-at: null
 closed-at: null
 tags: [chart-generator, tactical-model, validation, reproduced]
-links: [DATA-045, DATA-063]
+links: [DATA-045, DATA-063, DATA-064]
 commits: []
 ---
 
