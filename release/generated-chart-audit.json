@@ -1,1064 +1,5936 @@
 {
   "model_identity": {
     "authored_experimental": true,
-    "origin": "authored-bb-yardage-v1",
-    "sha256": "bbb35953b3812769bde39d5c567fc21dece00b0899cb037feaad0db7aa88280c",
+    "origin": "authored-bb-budget-aware-v1",
+    "sha256": "a46aaf838a718e012a2ce90a4438e6de475a0d810f18ab7e92d87148603a9e5f",
     "source_sha256": "1f8e553002c0299a2993eb533231053d6cf406dbe0e9d41ecc400267484bb1ba",
-    "tool_version": "college-chartgen-v6"
+    "tool_version": "bb-chartgen-budget-alpha-v1"
   },
-  "schema_version": 1,
+  "schema_version": 2,
   "source_review": {
-    "baseline_catalog_sha256": "ac7d79712b8fd8c27f79b1ffcc4c8f35c005db3a7eec053a59b59dacc93dc197",
-    "baseline_expectations_sha256": "cf0acc5a58e1394b2021999da82ae6271835daa9c942b992a33302f79f9ac80a",
-    "candidate_sha256": "6f796e7fae11d38c41c56da7a587606d093f2a11bbd92a852a88704073b538a1",
+    "baseline_catalog_sha256": "6f796e7fae11d38c41c56da7a587606d093f2a11bbd92a852a88704073b538a1",
+    "baseline_expectations_sha256": "613799e9c2fb144c03ad0a797fc27d050af3b8d10bb64c7991220ddd8214e47c",
+    "candidate_sha256": "f8ded2d86f3c9128d7e7ff3d0b5e4791ee3e0a7684beaffa1a82e7cde985141c",
     "normalized_source_sha256": "516f698222dd82bbfb3048ceeb40a9978acfc74e03276153ede34af630e3bc98",
     "oob_review_sha256": "43506b946ecbdb6dd00e69a88d78f172ecbf4434a99e166c8e4979a63edce09f",
-    "source_review_sha256": "8d206588d1e5e15af3e30fdfcebd0dcf02e20ddf3360574376a8ba52b2f51468"
+    "source_review_sha256": "a7404c0d674e1985e73a6ff586f68f921a4e0116e42e7d684fc2b8bd15977f8e"
   },
   "teams": {
     "2007/air-force": {
-      "defense_semantics_sha256": "92edfe6e3e97acf9a81336ab992f32091c175bf6aae16153af8e3b0e718dd4a1",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "6492c2c7f76e0cb08d80acbc973a54c17f7583ff6be19b798ab58a0e46ed74b2",
-        "special.csv": "cdfb1e8e6df1081465fc6f0ec1f7eae7a4187cafae035371209ce7d02c7a839d",
-        "team.yaml": "f2f72afc1f9864c9a9cd66f2fc71a54f2b2325a872c5ed4556b1307e9edf4c43"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "79f32a1b9a65a1e485d29c187d289cc7ade93321e98914b3a2c43bc3d6c2d5ae",
+      "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/akron": {
-      "defense_semantics_sha256": "189e3d33b63bc42beb1631902b9633f6da6a5fd5420256c6a3c66bc52bb76056",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "2175e9dc809cc5bdfd54e449a87412ee2b213a96fb373a7021f8d0bdeb4fe06d",
-        "special.csv": "94e2842c49f6dae38b26ada10e0dfc1a0f11d7931146b73b94b2b83dc44b2e38",
-        "team.yaml": "8728613ff2d69bfdd94783d4ca5d7e43cc52b8e01d9c2233fd9371c75f656508"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "27ea733f2b4199be7727d8a9759dcc8d355a5f4c1197a3982c5e0cb0354461f0",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "394187ab7b83192461d2df5be713a5d5cb871c1535f8be455478c94151204d42",
+      "run_semantics_sha256": "c1477e289972490fd8c45af2e06663c51de8499b9f6251541b3ea0999269ec6c"
     },
     "2007/alabama": {
-      "defense_semantics_sha256": "90be7ab369e8fc9c887fe8d6e35b1d4d3a3ef0d92b2595b61fedf60fa5d10315",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "c12e9265e8100c45910c9f1c2a5850e41eeb58c5ff5d63bb8a4620a82e8f2d35",
-        "special.csv": "e25ac04965c106b2a813b6b671326a24551e7682a8a0c914170515426f8c0c09",
-        "team.yaml": "d48d00c6e480ca6390484497fddcc947b08b2999c0fbb5a5539fa2312183d04b"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "b217570b8c9408927fb2026201d5d16a29a9cf31366302ab2dd3b2c156e974b0",
+      "run_semantics_sha256": "44c801df710e4b57eb6d331ab7ce8bb14f440b746289d5a9b2afeb3331688c29"
     },
     "2007/arizona": {
-      "defense_semantics_sha256": "b3874953ff6983c82d5c82aaae249c6f8485ad2afb4e38605aa20dcbd9d28f87",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "e665d2f71917af3cb452ad74c1ab946cf92b3f9d5f6a29c4b802e2246be11fc3",
-        "special.csv": "85123485f620051b2470a560b3c5dcfe46dd7dadb9b709055020f6d4a9bdcd71",
-        "team.yaml": "22c798925ea0659fee6d665e711a652bd841782d79217043f2e2c23fb40a228f"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "868d8ce7e662cb8058f9a4b3d60d03696978513269c9aa1c0d953145318ba793",
+      "run_semantics_sha256": "e08c1c2cee626c6cea27b3f45e7ff07ba10dca18a0098fef5b13560a391700e1"
     },
     "2007/arizona-state": {
-      "defense_semantics_sha256": "7bf5f502daa15e754b57ae6548e40db44117b1cc4b1b22f0d4d22a9058cd9da4",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "7a437d8da12348131fcb1583e21f39701286964231687bdc30bb7e756602c7e6",
-        "special.csv": "0839a8e9f08469fbc8c36ece582330feb905850428e684d15f4830a616bcc3ea",
-        "team.yaml": "9020d5230890319bd219fb11787c9b39ab26535c4bd3055d744eb2222830ddf6"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 24,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 24,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 24,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 24,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "fd878fe1c920e4689d569e5c93880f2d845fe451f4a82739405dbcbbdb1e01a7",
+      "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/arkansas": {
-      "defense_semantics_sha256": "d52172503f1767853766e8263e3045f4519817169e350bacefd46a1571f17a95",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "7715501806af34dd85cef2eea35df84a406091f104418b6146338ae62ddc648f",
-        "special.csv": "b7a3dff35ec742ebbaf91d65feadbbf5d984720ea71302de2d6b822006e4a4c1",
-        "team.yaml": "32b3e26e649722a06a316f0ea64bf7459e55250bd6549ca5f0ecaa05be1f3d68"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 24,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 24,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 24,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 24,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "a0efc089fffa025e71b2076e80bf77df38ad22f812d4ee7ff83fea2f4b5b0577",
+      "run_semantics_sha256": "704bdc98bbba2015b473b539a6ea6c5a4244a29fdec1cf5646db14e50d8e9f67"
     },
     "2007/arkansas-state": {
-      "defense_semantics_sha256": "2a84fbcf2f38737a1d914132089e53845b36a7bf183d4726794c54ddb2978c24",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "482e849551b8c53b8be0174e5e3eaf75fd494a380ec1638c52eec534ed17a15e",
-        "special.csv": "38eec1033ca3476cb3cf0d1ebbf65e03418565cc404101ff25fc7282fc4dac41",
-        "team.yaml": "653cfeb725f01cc971132fc360dc116a4c63c542f13004410eb3b72f4874a98c"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "60d147e0386cd9f0bae2fcde5d01af2b67c45b2cfb2bacd9f8127ac9a708f192",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "2748d4ad7aaec190f4aeec1cff9703235e953e5bd2749d86fdd3c8bfd43a817f",
+      "run_semantics_sha256": "704bdc98bbba2015b473b539a6ea6c5a4244a29fdec1cf5646db14e50d8e9f67"
     },
     "2007/army": {
-      "defense_semantics_sha256": "79f581f92bef0d6374c2ae10085e48158ce0b35716e9666e27a2293f7119c251",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "910fb39da34fcea68d44491413e6efe29b4deccbd46a5d70f791ca360dae29dc",
-        "special.csv": "1966945dfe95c5eb49ee5a83076accd1b3e20e09e157d59e4113db994b8683bc",
-        "team.yaml": "3824780cc72d5029f97a2b5e90e5d07fa0475206d7420dbf024c7faf7f770f95"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "27ea733f2b4199be7727d8a9759dcc8d355a5f4c1197a3982c5e0cb0354461f0",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "336a82cda0ff1bccf3c7f895d2c9c4db6e9a716151a44af85aeeb357acf3ff36",
+      "run_semantics_sha256": "48051bd6b0a6c8a56b0d1bc385dfcf4beecc8266fccb784eab38f9b394f3c7e1"
     },
     "2007/auburn": {
-      "defense_semantics_sha256": "0c371660b4b6adf186a12e1d1f2084c91dc49293dac2a1d890438e963702475f",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "65b937f47ebf9d2fd748e80d119f55f5addf2defb5ddf2af3f54ffb2b6c63ab4",
-        "special.csv": "c86725e62efcb239b211817b11f6248936d56d1ead1978a33d1817b82491f0e2",
-        "team.yaml": "800b3c1b21ac6a3a9839b0eebcba7b1a77bd3bbd1d39d9e9169e6f9844628d56"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "1ffea64b1a063ad0457a8d27d2fa63a08a228789a9becbac8d62330329b81190",
+      "run_semantics_sha256": "a0ba3657ee9c9dfb4f3356ab721de7654a8369643c89ccd8530d3cf793603523"
     },
     "2007/ball-state": {
-      "defense_semantics_sha256": "1637a10f59802dfc08c318f7a94dbd3935b98844d9942fe453a5a578954e5817",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "cff72653a55f2525e39ae650147995d6a1d5a9f0069b4248ee788fd2001d8c5a",
-        "special.csv": "ab9f55846584c17549d8409e1049e896c31cf975d6b28e71107d1d1f270b9206",
-        "team.yaml": "bb3a66f4b2a592d726c5ce1fc2f4b0824481cbb080ebb2c404138d9295c8e575"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 1
+        },
+        "7": {
+          "INT": 1,
+          "QT": 0
+        },
+        "8": {
+          "INT": 1
+        },
+        "9": {
+          "INT": 1,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 6,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 6,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 6,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 6,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "da1bb4131b8143a852da53ffd29a79b3461affad5d3b174147c90e04057cbeba",
+      "formation_int_mass": {
+        "A": 4,
+        "B": 4,
+        "C": 4,
+        "D": 4,
+        "E": 4,
+        "F": 4
+      },
+      "nondefensive_semantics_sha256": "94d7a0d9d4dd872687d3afb9ff970432110d1d2717f03b54dae01630bc3cdc3c",
+      "run_semantics_sha256": "82ad37014e82d8f029b9cc38c9854b45d551bed115d703d2ebd56791232f86ec"
     },
     "2007/baylor": {
-      "defense_semantics_sha256": "b4fe5c6c9739a814a9305e721264e6532710771da7b4da6163587a5488a9686b",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "844d50e6af785aa95acadf92067e8b1637851de6adb9981de135bacb3cca073d",
-        "special.csv": "95cc4baadea71e1b80e9d8d699a53ed87674c8c82e44a22de1a9737f936c76ff",
-        "team.yaml": "4622b3100fb1867b80cd170fed64cce973d80fbff0367dc773dab661c7670aeb"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "27ea733f2b4199be7727d8a9759dcc8d355a5f4c1197a3982c5e0cb0354461f0",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "4fcfecc575625b7335781aa35fb8bbbad315f73470abe53a615164ea90f5bee4",
+      "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/boise-state": {
-      "defense_semantics_sha256": "5dec500d8a88db522834aa78a8cdc9b1c0a452eaab3a2c9734d81a258e006abe",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "19255389435e39c506c35a67602e18575ffc7b46bbcdb8c668e9ff40d4fa64a0",
-        "special.csv": "4365ef4c08a42b409bfd0fd4f103cc8b0df67b04decdba7b9aac7ac76f6733cf",
-        "team.yaml": "564866f09edc6bed6872faa153b503d727e7043689764d41006d003f5d8af674"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "80a0a4942601319d38e64c2b503b6640852e564fae8b55dad119782539f4be1d",
+      "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/boston-college": {
-      "defense_semantics_sha256": "2b492ac4cc832034296c301033de27371757bd557768605be3d36edb3b013e8c",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "ec546ad9507e85e059cf795548362d536bbcd9492e1a99c179bd828fd11d3b38",
-        "special.csv": "f382537bf49d9ab8c3dfecd48c3ec834db977f59e5f619b9f5aa1a8bb5a759e3",
-        "team.yaml": "eb9788870b4b93216b5016b13de87fa3134457244d6d6ec70dcb636fb8ca3de4"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "c0acff2c22852ae858d82aa231d6062d785f60246032e857ee5dc9a1d32087f2",
+      "run_semantics_sha256": "8ed407dbbbaac191f1cd4ae47745e0678a0108a9e40ac6ef5bc07d727011f50e"
     },
     "2007/bowling-green": {
-      "defense_semantics_sha256": "3d5a8f839b3df21d625228efd942e6b6d917778ac83f1ff07519c2e4a5d122c6",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "dc2761b2f7034b86a15280e5b5706e67f292710f6ab04f4bbbd34622612e0fc1",
-        "special.csv": "05c6c3b71db0f1f3a890e7c816d0e55e4e865b66ad9c4f365c7d8757857afaf8",
-        "team.yaml": "d181d357cbb1434d9967450c4005790bf089ba6f50cb5e587097734abd0da0f8"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "60d147e0386cd9f0bae2fcde5d01af2b67c45b2cfb2bacd9f8127ac9a708f192",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "462072efc35435953ea3b782efbfaa36b3d3adc504ff7ccd12ca45fab9a38ea2",
+      "run_semantics_sha256": "6ae3a3c23ae01837f3fee208389e7319dd77e599b6fd5ff0f68373880b170058"
     },
     "2007/byu": {
-      "defense_semantics_sha256": "a3bc8a2b4ad328e88f2eb9b9b2ec6220294edc402674e845c82abb6e9305f053",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "a03c576ff5316ba51ed77a346c5bbbe9e412a3f39e9357e5dd08b58a2356b04c",
-        "special.csv": "77ec25f85902c80b7752a6f7c50a5253b91e1f28555e09678b11415dd2c142d3",
-        "team.yaml": "6cdc449f09366cabe3d38f47484ee9d052a97c9f4665a08a257db620f9f77979"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "e3bce6b18b5af5ec88e7a0f619d7895b09ad7cff18f46a3a50fca39d5d059fb5",
+      "run_semantics_sha256": "a0ba3657ee9c9dfb4f3356ab721de7654a8369643c89ccd8530d3cf793603523"
     },
     "2007/california": {
-      "defense_semantics_sha256": "3ec42769eca18a7e07dc773b89b2415a0be3ddc3a3bacdb1893a25ca4c7784b9",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "de2625720ab69f52107816181c54438c70bff4bf9651c813603c7267c0068b18",
-        "special.csv": "46aa15ab4e211497dd349c02cbe54667042bc75f82eb8df75eb5a4f622f007d7",
-        "team.yaml": "92485ae1985b8f5201a51d338b09ecac1e1d7f2398cd7f8c5443e1fc6393ad86"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "6165981885a7387a5a72015658a4bd1d8222de6b4fb148b7ebf9e53ebfe0096b",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "cd6d4c25bf1b840d6444b45ad9ba9537abe90d6147c241505f19bcc4cdde83bc",
+      "run_semantics_sha256": "e08c1c2cee626c6cea27b3f45e7ff07ba10dca18a0098fef5b13560a391700e1"
     },
     "2007/central-michigan": {
-      "defense_semantics_sha256": "3db639463e40cc13ff6b50975862702399644a549b50c2c79a4eeed18d076251",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "4414db53ca250691711c8527130fb0883c84b777f41b6b2c9e3fb0fbf0789fbb",
-        "special.csv": "c67dfd5a9b7c515ed764f79de97956c4e7ffc6314071b7eb289326d6303796c6",
-        "team.yaml": "d518c9d6d6e504c35521a3eaa7e5dff9d70375c692c85064f9262636595af4fc"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "c7aca76276c0f5467752c8c5c20fb18935297724ff0fce84c141b4121014074a",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "0d7a6a12a21f80e7398ad8655474749c87d0bd0454c0b5749ad982feece2f84b",
+      "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/cincinnati": {
-      "defense_semantics_sha256": "2be364828a17cfe74f9506d7eeec732945316e3bd36a6b2cf9e668a9c106301e",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "896fc4b078f944e2e0b3a89c58412e3f0b3b35a931495e44c1eb11dd06acf8cc",
-        "special.csv": "1842d67dc5119d59d408078607620b560f25e1e06150f4ecea034ff02372d483",
-        "team.yaml": "04829c82cbb9d2049e5ef0ccaa9a0a41d006c728605be23c004ca9872a6b9f2f"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 1
+        },
+        "7": {
+          "INT": 1,
+          "QT": 0
+        },
+        "8": {
+          "INT": 1
+        },
+        "9": {
+          "INT": 1,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 6,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 6,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 6,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 6,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 4,
+        "B": 4,
+        "C": 4,
+        "D": 4,
+        "E": 4,
+        "F": 4
+      },
+      "nondefensive_semantics_sha256": "d1c7d63b44702ea673d7af011dd4129e76e6520b7657f979eddb1431bcc0beb6",
+      "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/clemson": {
-      "defense_semantics_sha256": "cdec268c7c23092eacc731bd18f17a7e62c867b47f9b290b44e34345dce2e2cd",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "7d05802f5dc7900a9ecf15f256dab816ae2c171366a85231d9ddaf0c45559e71",
-        "special.csv": "73088cc09882b0adf625f12c2c281107f2f6985eb82c794723130796ffadb120",
-        "team.yaml": "0aee0047e4e25fb8b7ac5ce59690760b7fb8fe864f46494ca79ac09f3fd47d8b"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "ae4184010c7b2aa6501f8f639af3b3a129b85b24bd33166ff8067fac049a9aec",
+      "run_semantics_sha256": "e08c1c2cee626c6cea27b3f45e7ff07ba10dca18a0098fef5b13560a391700e1"
     },
     "2007/colorado": {
-      "defense_semantics_sha256": "5d2387e579c6cd7df01db07f1b810e84f5cf22f540535128841d9e526a0464f9",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "00f81d8334a4c25bea8c5850183849b0a1a17988d75a10026840c3876ac5c5c8",
-        "special.csv": "5100351ea9ee4b35fb8d9202e7c456a0e215379d7a38bdb7a0611080cd208ad8",
-        "team.yaml": "5111f860408f6160a76723ea3a310b1720fd38b84bca24e2e8631d00cc93df01"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "b6d5b7d0284c1d7a769c6e49971006526b185a5878e2e3eaae58c89a8e6465d9",
+      "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/colorado-state": {
-      "defense_semantics_sha256": "a41b3096ebe6cd02f823fc30d5c7090f36ae36e9f713576fad27b6fd9a0af4b1",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "4a27c0f9a08694bc8f708f2ac954816d0b3845042c1a20ebeeeb6037e615b5fe",
-        "special.csv": "5075e9188bf2f47a9f618fe00a81eb2894c4ad4e524ee702b9216a840c409d28",
-        "team.yaml": "7712b821213feea2f7c24075e696b6d4bd502c55179e5b24a36ec85564e3b8e7"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "60d147e0386cd9f0bae2fcde5d01af2b67c45b2cfb2bacd9f8127ac9a708f192",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "9f5e88202cc7a4a857479a1895637b01482790fd585bc276e5daa9c5b33c1f0c",
+      "run_semantics_sha256": "82ad37014e82d8f029b9cc38c9854b45d551bed115d703d2ebd56791232f86ec"
     },
     "2007/duke": {
-      "defense_semantics_sha256": "0ef96c0210ca3a03b1e90e07d816fbbcbcbc3d9f0e2bc1702170e30f2a7241c8",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "63c7cef594838db24f33be98bd8f8e8de7fe42bdf943cefba02d37f4070ef5d8",
-        "special.csv": "c7a14de3281930adf15242346b12c17499c116844c3d8672115601f0d925a7b9",
-        "team.yaml": "33f8fe86a7f4582db35d2dc486a31a67b71f5fbf26b1268420d86e31bd577e52"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "27ea733f2b4199be7727d8a9759dcc8d355a5f4c1197a3982c5e0cb0354461f0",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "1977e106f5aedc6c44dcfd00e786ef2c5f9fbf1c81c78ec546f5b54fb026b5fa",
+      "run_semantics_sha256": "b5ab5e3129ded1f7a5aba44a8e11f01a051ce0ee3116f0e520f5a28094033263"
     },
     "2007/east-carolina": {
-      "defense_semantics_sha256": "00c026c7b685f5cd3f6ebf1f5b786ad7c20168ab48c56ec822eb264dc8ab69ce",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "532edc3696c182f3d3ccb295a1752965a13d8df83b9eb839e741fda20ae52d08",
-        "special.csv": "c2d7e68e99bfcf6529e1f036c03c5bd6b44317e924003724d97bae1dfb1c0454",
-        "team.yaml": "ca0e19dce3c7885b8125ca5af9f054844af501f17d7da6cf8ee90fdb5b382727"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "5d5bfd1bda33bc4bbd3ef92dcc39e918143f821cec6ab696ee41ed7f95d039ac",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "ae9a999a457f0115ea42d67c26ace41b5e02452ba32d572ac0e0801a582fc6b9",
+      "run_semantics_sha256": "d3addc09a7bbefd0bb009516d00c89be238cbfb3c9ac63cd149061b4ce8edd70"
     },
     "2007/eastern-michigan": {
-      "defense_semantics_sha256": "06faf1706571021b17006d3bc4cd7a9ded84dfb66bde06c9ac8423c0933488bd",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "82cc084bddd37afc25ce8741ac1d75f4052f222d6271870ccbe8afd3a89ddf30",
-        "special.csv": "158afe77c672f63c79d0ed11a1aac8eee2bf5024e36459b5badb2f05afaa459c",
-        "team.yaml": "5bb7b3aa3f1b2d706b738182757d770fe7b54b4a2c5ad6ceb8859c8fc8a96ba6"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "60d147e0386cd9f0bae2fcde5d01af2b67c45b2cfb2bacd9f8127ac9a708f192",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "bd39bf43e1a3cd55731881f1c2a7f33ee8f9faa22afb301b1c7599d84bf7878e",
+      "run_semantics_sha256": "04e8f785b74a3c2fa7231d282c680f6aba6d13cc3c4400e4d8de11f66287fe00"
     },
     "2007/florida": {
-      "defense_semantics_sha256": "7418c2919d8f65cb963a796cadd442452778d182c0889662d601847e5886e820",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "4a520908982faa96bbe261a424b26e67bf9deb14d6ead7cde584980b883ccf8d",
-        "special.csv": "36a04a3fbdad74244ea220a9eff544ecc3a5e171133fde2dc31a46da0fcfc78f",
-        "team.yaml": "dc0c5706e7846506643e76fb34970d342ae063febb1e5dff13c2b5f127697e27"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "75134101bdde3aa2f8e020b8dd6dea6f4f26f5769b9af9964456bc9f45759d5e",
+      "run_semantics_sha256": "afd88fd25668a879b93e013c81df92dfc0291e5dd22a3f17b0c7c267fb3ad470"
     },
     "2007/florida-atlantic": {
-      "defense_semantics_sha256": "e9a25823c125bba8b7c9ce17488814a8119f091c30d4a10a611d312fa4f9fd64",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "3e88b27b4c130036343d49667bdbd219784c0457ad6ebec90bbe4c3f9d298927",
-        "special.csv": "782b9e042fdae4cb95761b5088e20969bf746cd41e4651a6863730c4a081fac1",
-        "team.yaml": "7bd9641f6e47a9b50b3e7b979aec74e93b76dc20167dd84b6ec9ed79583e0c01"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "a0ed1ea0f0b10d14f7fca7dfc70f278c5896b13298fcf09543f1f6cd3369b338",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "45cfd5adab1f538967c9addf36442999fc8541eaf2d6770616585828f3446554",
+      "run_semantics_sha256": "2b65c2b3351ede12708f75ad2592a5d4bc14f810645e7077f888415a06a48e4f"
     },
     "2007/florida-international": {
-      "defense_semantics_sha256": "976f9c5100052523142ce4cfee767f8f226d2aef071b50b843cea8ba51bb1c2c",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "77ae51f4fd727c9cbf6009c6039981016748a3e6e278def3ea5a925394b1f49a",
-        "special.csv": "9de89112db4cf73fec298eafbeea109b6b5f40bfc9768b2d4b93e50ee7485763",
-        "team.yaml": "00eb45101c82b1a70163167208b687c108ebc41ea07c8bb97ef582305e60f842"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "842445e7224ac45595197042da9fc7d58e1b15baf3fb59d956ba6f51ee2ac00a",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "ba0b771bddaa2248b9daa7ef3e973b6698a8f199755b5ce26e5e108c5c2a4c3e",
+      "run_semantics_sha256": "64dabe315643b7ff778779de8950b1f2e23863a8bc96bca502ade2f136070653"
     },
     "2007/florida-state": {
-      "defense_semantics_sha256": "1538e443e13eae77a282596bb73e2527913305463640dd315432f9242b39085b",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "1e5655a66993094b634896d25b728253e822b069a51b8895a213c878e743192b",
-        "special.csv": "63ab60e4b364268d454d0ff5e15ccf57287862ce05beb7b722705a30baa486c8",
-        "team.yaml": "ce694d3575391748da5969b6ff6695ada46e21e211fa38d4ec6098d6b1f7cc37"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "f2c0ec5558cd5b6964a1b9147089493b268239196fa1b254a98fe13f3ea767da",
+      "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/fresno-state": {
-      "defense_semantics_sha256": "afabd1224bc7d94e8e8d1915c8e1cf389fce73e9a5861226f84658e130cabe28",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "9dbb49419516fd01d81776908f36aec4e7ed383f2179ae08ef7edbb4197cadd2",
-        "special.csv": "33f9589bdc0bdb92ceba438b605ed59630e2a42f2a5630eb89b21c1a28a530c7",
-        "team.yaml": "3b041483348050f16fa08428f406a0778d67a6513b827da11fee31b3793aab0b"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "e9c92554b2f2ebcbcfd17ef58e84d0d3791a28bfc9cc33bcdce099caf636de32",
+      "run_semantics_sha256": "3a14f0fe8e82ff3cbfedf1bd5a6b040ce19617d9cddc8981b589893ac58073a6"
     },
     "2007/georgia": {
-      "defense_semantics_sha256": "11ebdf990cc4f41c92b989ffaad231e640e3d379a907555d0a1c864e9e417bcf",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "11f646ee7bbfabe08cf0657127ac95ee4935ecd8a6e970dc10ee56a1873571c1",
-        "special.csv": "2f7fe41d30e6e4f26cb2a37bc0a4cd562a40ec61f145fbec6993961da93dbc88",
-        "team.yaml": "2d91a66c0ae58247039cc797ae9c704797c3a40c73ad16e7b9300c7aa19d5092"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "bbd559cc59343f52902f1850f8e15f2a5204e7dcb208f36d3039006c6fbef5f6",
+      "run_semantics_sha256": "8ed9811ad1e2ecd2d1c644f5dc26c8904444726243b71e2aa68c371ddc8355ad"
     },
     "2007/georgia-tech": {
-      "defense_semantics_sha256": "1902f212adcde716b01fb03f22b912bbab47c4be821daed0a2a6817512df237e",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "6e4a840c577e4f0249a165826633749e258ba1a5bfdced5ab70d3baa16652c9e",
-        "special.csv": "0c67fe1eb4a2f05291fed8347f00e51253038b6fa0f25d3a0a58d89a01c5ea21",
-        "team.yaml": "aad5dd4424243e4000f5696f2ec3d3950795170e354548a6e0aefd5ccb0ae256"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "a52c503c8cec170ecc323e6f5d11c10482532057f8af512ddc46ff4d10d5b2e3",
+      "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/hawai-i": {
-      "defense_semantics_sha256": "57f191221e5597a718bd34d6325d27311eebfc45e4443babc4401feace9cd270",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "8dfce5a9c6c8e9a585e90c4a1dcabdef85c7c3cad6e864ef8cc62542f06a6147",
-        "special.csv": "09316e1e64ed174effd7d188c1a392f5e532dedf9ad928a006c64a9fa71629a2",
-        "team.yaml": "98368845a5eed0753af19648ee04caecdfa8eb076e99dacea2927406177a619e"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "b1ac9407394e6538b926d5e7aa5711ad602077c365c820a1372a876fd3a4e303",
+      "run_semantics_sha256": "841e829618539070a2429a62ccc379db232701b8f8b69074ffe16cfab503a394"
     },
     "2007/houston": {
-      "defense_semantics_sha256": "ea32d8fa8dc80be6b1c7e5c1306995856c9f0a0680f505aa4dacb78c5490c26e",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "f8ffa1efce7b241893c133d700d4f5a206d190c10347f06d7f8e6cbafe90355d",
-        "special.csv": "08fb77a7b126671ea79781a27b436b78270bb0fb5c63d6a884114e5deccd26b1",
-        "team.yaml": "0a1bacc0e8d2f94e7604320b5ee6a2ddc7b0070cece7c8655f6a7e940d01961b"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "624530b45a58f33c9e8c32b37abbf6fb5cb6362ff4b87088bef6c7b16c1bd699",
+      "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/idaho": {
-      "defense_semantics_sha256": "b99db3fd28b8e0a1f7b42b067cdeada41726a1eea4f9ec498b36f5d11a84700d",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "d0a834a955b912358b19dc533025009d9e5f7fbdbe1d75d216e03ce096f32f98",
-        "special.csv": "c62396e9a5c1e8a251668ee9a5feb52940e6da928aab513a449e0152cea1a706",
-        "team.yaml": "4aa6f1c523878e506b17e7f220805d4b3dc5a55aee0ffc65bdf2cd97e4a59221"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "27ea733f2b4199be7727d8a9759dcc8d355a5f4c1197a3982c5e0cb0354461f0",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "9d2d626f4a9c89d0ea5d0a308737242e423d80aa73570dc1d6d07c870a7c8e5c",
+      "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/illinois": {
-      "defense_semantics_sha256": "d0c42527192d1bfee9abcd3171c8bd8eb349ff15cbf1ea8756a5f7e6e6ab038a",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "6af06b94ab78e4c953db74d7e03c8c2e1d090cd343dc858a9b7a168ad68013cb",
-        "special.csv": "1ba54dbc4426512752e0da076c78717067e8eee096b7c59009d5391676f9cecf",
-        "team.yaml": "d38f6c65ae95fb4edd3912ff16b9eff0435c420599b48192fb7e30efcb671d8f"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "de6ede803e95929be33e624a476f13dbd7a292b421001051701d30b5e6fb1090",
+      "run_semantics_sha256": "704bdc98bbba2015b473b539a6ea6c5a4244a29fdec1cf5646db14e50d8e9f67"
     },
     "2007/indiana": {
-      "defense_semantics_sha256": "1e1f73acff48d94cc23a8c61835bfaf94f5b35c3fc3bd465d5d9c4d8176b2048",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "cf47d0776becb5e3e015df54debae31c0379387520363b1cf560012fedb86ebc",
-        "special.csv": "716c786d83cb325fc8c26100a69b2f94850fd2bf794a9c5ae7c60efe23390c23",
-        "team.yaml": "e7619e677b0c08277ea60b5329326cb700a62c0e462e4482f35c86925882cd1b"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "60d147e0386cd9f0bae2fcde5d01af2b67c45b2cfb2bacd9f8127ac9a708f192",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "0b044dd4fa81ced163776e33cb0ae1e55e26a46d447df75688068cfe83fd9c58",
+      "run_semantics_sha256": "d3addc09a7bbefd0bb009516d00c89be238cbfb3c9ac63cd149061b4ce8edd70"
     },
     "2007/iowa": {
-      "defense_semantics_sha256": "7b3cc2979b9aa043260e69cde878077a8d2021415a058046c78637e5f629acc5",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "b42973ab09905eae23698b3233c0a433a4e23056073a8a60f6ba11c0b04bb918",
-        "special.csv": "ea098983f12024e1bd59c4426a9e60123e4efa86cd8d95763253f0a8163c65f4",
-        "team.yaml": "93f3ea7676a3fc1ac197ffa04de63735bf9d9d6c4e67c1b9b4202e90bccf1176"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "6302023a4d887c40593305fc084ee422a99dd661af842a55411b2dff44292f92",
+      "run_semantics_sha256": "afd88fd25668a879b93e013c81df92dfc0291e5dd22a3f17b0c7c267fb3ad470"
     },
     "2007/iowa-state": {
-      "defense_semantics_sha256": "cfc1d495fce570c4c3a570690d78785331a80cfafeb3bb0adc8e1845023d5752",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "1b0de1a76330eb5df02957636e8bbe0afc41ba0325d4c8de22f4ba549dd37af2",
-        "special.csv": "f30c029f6a1b99174f93ccd79dbc54c9dd792ad0d69e7c10959a31154c9629da",
-        "team.yaml": "b11b94ac9ceccb4552f80e679dcc0e67dda378f09eb7700e7a77bd5f87e820a8"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "20393b23e7a632ba87b9000b6e98fd69ffa1f598d6aac04a1f6057ed8bbea5dd",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "83c03b3a602453c076b8ac98c947b70d23aaa964faf64f3dabb32207ef53c90b",
+      "run_semantics_sha256": "e08c1c2cee626c6cea27b3f45e7ff07ba10dca18a0098fef5b13560a391700e1"
     },
     "2007/kansas": {
-      "defense_semantics_sha256": "f5bdbf1ca1d30c5cf025b61cdf0661b594c4f08cee61bd6e40f60808b631305c",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "513fa2e9aad41ad0d32b919d43c5df04e9d946f453b5ed0f686361ee3542497f",
-        "special.csv": "7d11410a07e9d21ce4f3596bfb03b586ee309ec4d001da865ffb17fe5f59d807",
-        "team.yaml": "bc9831f0144cb85a9d17f3f5cb1777c10b001d13a1e38762cd54c7ad82c8c4ba"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "4806ca74cd212f7848feb3d3b285188b45e9628a83777ee6b3e9648db3d17a52",
+      "run_semantics_sha256": "cd67d6aa0b1abaa217e080cfa6ed60862c3dad735580cee5a7366b681f1b79c9"
     },
     "2007/kansas-state": {
-      "defense_semantics_sha256": "4e58f687c652dbb636af6d5fe0816c3f9f5c6ddee9b272c47e2306867480fe72",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "d57236dba8ccd7fa5b47ee428e6c54765cb5dc70276afaf4dbaec7590e508201",
-        "special.csv": "78e5b7a0eef80720f5b86ae7364ae1ba8a1d4957b0600101bdb28e0a9a98fbbe",
-        "team.yaml": "2d3316b672096a49c97988558e5006d2fd740d717e885cac3553c4d32973dc43"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "9f2686a5c22a057a347aea33da5820572ef7a253b210048b62a333462c04ab57",
+      "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/kent-state": {
-      "defense_semantics_sha256": "aebf6f4d133a8aada082b2add42b720ff90f64449e1a200b0d1a75c72b856a80",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "19e7771ec35801d4f9a8711653d3f033577096ee9d57610d87d86f020f0d28a3",
-        "special.csv": "56df42cadc8ced6afedec8e50580e1073c352ce26896b69616a04daf31f1f83d",
-        "team.yaml": "4c288620581ad7eee9ff424448c063a8b2ec136440420f078f3bf0a42cadca4d"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "27ea733f2b4199be7727d8a9759dcc8d355a5f4c1197a3982c5e0cb0354461f0",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "b33d2b66648a3cb06dee443d8e7e976172e6f54837bb1afd7185c7c202d3db83",
+      "run_semantics_sha256": "2b65c2b3351ede12708f75ad2592a5d4bc14f810645e7077f888415a06a48e4f"
     },
     "2007/kentucky": {
-      "defense_semantics_sha256": "8c420572bbbf0d1c92fd586ffc61a215cbc053ad314601dffb39aac8ae2674a2",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "1f16c068b233ad9f048fead948033fe64098d3f71ea2618b2567be332a2d87b2",
-        "special.csv": "8ced0fb76551ef7f0775286f653b2e4dc6e64afe581d987158533702ec27c419",
-        "team.yaml": "043415aff5d882458c892381b96b12f401001c33283977860cab7c1c750cfaad"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "2b83578855b82116bca83ffe7e0fcd03437745489af529cf366b1ea86218b2c7",
+      "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/louisiana": {
-      "defense_semantics_sha256": "419092e91077fbf5e25c0e00283f7ae8c64ed5f5b1ef9e199cecdfef91a7cd5f",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "6dd4cae022cdb75b717847bf9a6439dbd2b49a509c944a1879d69d68d845652b",
-        "special.csv": "479de53bcb910f6abcbc1c12a6fabc1447de028c51579d8a172bf3c40e98baee",
-        "team.yaml": "6e655e9c79376194d6951c5858cd6c813c6b893ea323779fdcd7fa58b5bcb915"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "60d147e0386cd9f0bae2fcde5d01af2b67c45b2cfb2bacd9f8127ac9a708f192",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "b7e9e5495689f3aaacb05d6d961ed61da70ef42158bf82685101463b985935d3",
+      "run_semantics_sha256": "b5ab5e3129ded1f7a5aba44a8e11f01a051ce0ee3116f0e520f5a28094033263"
     },
     "2007/louisiana-tech": {
-      "defense_semantics_sha256": "d3d8b52ce630900b3ea18fe660a8a7762b7b0ab7f7d2d14b7eb29397aef1ac94",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "2e921025d4d13b62db1ec90148108dd16f9b59478c3dd0b881c6fa5170f36d35",
-        "special.csv": "8ee224e947bdc67b01ac837c6c738706466c22db2610888da08a6cb9ff3a2fee",
-        "team.yaml": "cef4a32e176c29b2748a6389ab77ea09638caef0bce0c742435f035241ade6b5"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "5bb64d2431f5d99914147964988bdcaf35674e7edfd267e841215a4612d87a6e",
+      "run_semantics_sha256": "c1477e289972490fd8c45af2e06663c51de8499b9f6251541b3ea0999269ec6c"
     },
     "2007/louisville": {
-      "defense_semantics_sha256": "3b988628eb91560ae84ddf2752773d39dbb5d46797cf15cbb585f85e4bf9ad7b",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "4d447fe7d7285f9e78b672a7bea4d1ec90e7a98e6c02313e477eaca1281ea896",
-        "special.csv": "e720f565d37096889f738b505256cff718ba7ca4fa553fc021b75cc34fb402de",
-        "team.yaml": "586aa4f100adcde62ef9c9851b72d909cbaa79e95eb24d946814319585de604a"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "da1bb4131b8143a852da53ffd29a79b3461affad5d3b174147c90e04057cbeba",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "a2840bb9503b571bfb396e0a0c6e18b77984f37de14a5b9595f5b4f328a2d8e5",
+      "run_semantics_sha256": "48051bd6b0a6c8a56b0d1bc385dfcf4beecc8266fccb784eab38f9b394f3c7e1"
     },
     "2007/lsu": {
-      "defense_semantics_sha256": "76cbe24d40ccce3a1dcf67dba59087a4064328f7f53ce784a43cd6b7d16a82e5",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "a929fb1cccc58d840d6103ea3ef64fec7bf0d48531ddf682b10218d3ed6ccb84",
-        "special.csv": "89b07334f779bbf98bd63cd4bad7e956713d37a8f04fe1f06ff2d88c2ade50da",
-        "team.yaml": "0b25a5f48779e99629edb9696f40b91524a17e977fbf5ec53a7085cd51b1cf33"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 1
+        },
+        "7": {
+          "INT": 1,
+          "QT": 0
+        },
+        "8": {
+          "INT": 1
+        },
+        "9": {
+          "INT": 1,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 54,
+          "INT": 6,
+          "QT": 0
+        },
+        "7": {
+          "INC": 54,
+          "INT": 6,
+          "QT": 0
+        },
+        "8": {
+          "INC": 54,
+          "INT": 6,
+          "QT": 0
+        },
+        "9": {
+          "INC": 54,
+          "INT": 6,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 4,
+        "B": 4,
+        "C": 4,
+        "D": 4,
+        "E": 4,
+        "F": 4
+      },
+      "nondefensive_semantics_sha256": "48e16c3a95df24655e6c0e041d32ad6beda5e7b6e181e94e486b16c70a988413",
+      "run_semantics_sha256": "a0ba3657ee9c9dfb4f3356ab721de7654a8369643c89ccd8530d3cf793603523"
     },
     "2007/marshall": {
-      "defense_semantics_sha256": "dc5d427b3c311233ecf970d9ff8adbe56303ff1c507c17c7e0a6c476533bad8e",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "e093e818feb2fc5738d600861a9519f5981037924dafa87ee99e190591af8133",
-        "special.csv": "dffa8e93611a288fe2ecbab9c928ccfaf9b7e191fab3f36249cf38e84556d414",
-        "team.yaml": "9200deb1c8432a3b734683df2636e2c32f844dd6e3427844a4dd855148b11317"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "845c2d1156949a6831fbba8f8cbc0a2cf0aeddea7491f6138f6083d603ed8de4",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "4d76848dc164d0e6a22f88227e18d1b7559c4161c0c7fa01d620d1c94f6985db",
+      "run_semantics_sha256": "82ad37014e82d8f029b9cc38c9854b45d551bed115d703d2ebd56791232f86ec"
     },
     "2007/maryland": {
-      "defense_semantics_sha256": "d443a256b6047ba7b59c9acc0f8c94f97a595c0fda4d5ea301cf28a50e2eb970",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "f6dbda4cfc942c9eb11712abfa66ef0ce68a422f81da285756573177dbbf54b2",
-        "special.csv": "12746a309c068097901fcbf58a9eec643b27f9c57795a3cbc4eb8ff7877bc9c5",
-        "team.yaml": "637fcdf29bd5e67b456f9b9187df60c3e6b24537464bf0ea55114df3a17bffab"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "49dcee8586da183dcfbca0d8312291cb396a17203fab50fd4ba93eeabc5ef1a6",
+      "run_semantics_sha256": "1128ac26dac09e25684d70aacd420979c641fcca7616ed2e61618c6bcc92ff6f"
     },
     "2007/memphis": {
-      "defense_semantics_sha256": "b325e252c183ff521057dc0ebc075616532c9c9f6884a88a519025ca9f408e78",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "2889da3fd8f0023ecf101fb570e13f442889175a0222db80e2ac75dd9512f15e",
-        "special.csv": "9ab54297469c76e5fbcdc0ebab848cf1e9aea3c80970f0529d399bcc7a13681b",
-        "team.yaml": "00b42c5758520ef0183e16a12bb46522f3ea7a29da6969812758e66c9a6a0127"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "8f1dac007790a0f72555bd5c7c644201e849e3005fc95001fb058ebebc36bc18",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "030ae3d9711bbfa6b9c978e3cfde1f2df60c3d720290b1a50f7ed6375174f01d",
+      "run_semantics_sha256": "bec6dd0196748618714398e211ebbf1578e5d0132d87b8cd3ed91795cbdf79c9"
     },
     "2007/miami": {
-      "defense_semantics_sha256": "b0c75ec03b0e26848bad8c98422525a488438ebee88c06e3cd4993fcaffcdf8b",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "8b12f1c731b9af609af9ed693bcb1f913efe5d7f609c067eb2ae0b74e01355cd",
-        "special.csv": "66ecb87130aefb7d2cac60ee2e2470ca7792ddb3099f34b0bd4069e5ea44587a",
-        "team.yaml": "ddafefb4964ae70f67d95e0da7ea343157b6bcfb306335c93fc24b54c1e8d67f"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "5edf4ed4e136e95451215cedc75c359a24855e45763b90646ac8b5a0704191b5",
+      "run_semantics_sha256": "8ed9811ad1e2ecd2d1c644f5dc26c8904444726243b71e2aa68c371ddc8355ad"
     },
     "2007/miami-oh": {
-      "defense_semantics_sha256": "b686f0a0b6dd487d7a7b2503ed8a74cde355bdafeffd8b24c99cedc493c3041f",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "8b742d3fa395f7bb7d3d049f9461c92400873aa8424c86a083dabb7e5de9d1ed",
-        "special.csv": "fcf2fb22fc4e208624bd5222eef9c304369090fd92b6be2930097567bc87075f",
-        "team.yaml": "b99e45f2b4ab2a2a91bc98791bfcd625b5914f2294764b84d1b105562c15b79d"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "472003f4fe556956c124d5de8f9e6beaea4055de7229b728c8595fcb302296b8",
+      "run_semantics_sha256": "c95f6f201c35484bef0533f0b313b936a34261c6105a07eeed863fde181db8e0"
     },
     "2007/michigan": {
-      "defense_semantics_sha256": "e2cf91308dcfc1e48f0d207d05f97fea239d6448b77671ba25a6180f85ec9367",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "f16983728d09c8868b0f408cb5160246efa75b3436690f49751e38c6dc0209e3",
-        "special.csv": "73370f50283859c3a004c3958fe10c982f94528f88e2dd68e58a2396ea006d0e",
-        "team.yaml": "436d8a63b96834618cc2d321fe6281d79c6828bf4f75a84ae6f62e7fa843d851"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "ab57bb9da75ce01726117d6ae3a4a833bf54a0ed85687b2b5ee174a8e0f95478",
+      "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/michigan-state": {
-      "defense_semantics_sha256": "d6145bcc5964f01df81a30e26fc3bb77cddea361f3ffc0fd232fc9906b719bbe",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "e29cd10d6f0dde3a8b8c6a67420d6caa981666fa72c3d914fd5ecb7dcb78334d",
-        "special.csv": "5382ef38681ebad0ab5e22fb3fc182dd4f67ecaf99d061e6dd5a8100a01fb6a9",
-        "team.yaml": "5dbcad3a5b31f99d04d62765f08d6692e548fbaa2385a570ee281d23816bf205"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "b6690efa169c32d3607e409e68669de29c3bf292a9d792131db2106ef8eac3a7",
+      "run_semantics_sha256": "1128ac26dac09e25684d70aacd420979c641fcca7616ed2e61618c6bcc92ff6f"
     },
     "2007/middle-tennessee": {
-      "defense_semantics_sha256": "09e86612cf5d1a874cde3f2835a55cad575dab2e32ad82830e867de4087b21a1",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "2af5f3b1aa6cf64a82de90d3fdff6c967096ddb1b89cfe5504ab7394715c927c",
-        "special.csv": "d7513f03c58b939b48c85079dd2a1974150d9899ce58e4a3f73351e992f8462d",
-        "team.yaml": "c193244b5ac895d0cfe3a91de5b1bf790470e86b20195c7cdc99cdfb59353473"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "b84c17cb9afeaad27e1ef9ee858974da60602ccd991f13e6eebf29dc57a55f90",
+      "run_semantics_sha256": "2323e90fd44f43971a4f70a364d82b4b2a1e7ac014df26213f955a4163541b91"
     },
     "2007/minnesota": {
-      "defense_semantics_sha256": "392da3adb7afccc2e797ed140754c524933ed281544af37a14b143863aff028a",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "ab5b67e768f41d6e2347de3cd2b16204be6aac9910c6fe6588f034afd42439cb",
-        "special.csv": "8fb4c527fc671bb247d7f18a40ce356c730ca24d35a6058bead373225b9462ba",
-        "team.yaml": "e4de1cc84aa32607a26c5cfc02e92f4487da917f1a55f7cb25aaa5ff8bc5ecb3"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "54e6b7b88624ee5d7ba5eeb80ab7a291d1980b80a8f4b35324447acfe9037e8e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "3d985c68011ab964b9f07b0a4b4163d1df6c1b07d1b255da69bb8d3658c45b1e",
+      "run_semantics_sha256": "cce192adc9b6b5fb7e4898ba6c185593b9940fc5239531bf82068cc5ae3cabb2"
     },
     "2007/mississippi-state": {
-      "defense_semantics_sha256": "a86536c9bbf51af31d09e4766f114adc4871609b39b3f15fc918feb6a5ab9a10",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "6a59e0e4d4c78454250fbc2dff05f2d620d1e47d040f00d3356d491a035fa5f9",
-        "special.csv": "97dddf295d3429eecfc32db73d8007c052c0808c466ce1967b483216e89b05be",
-        "team.yaml": "7eb002da1deb3ffb9cfef29453be03326230befdbab886f826d9d6ebb793d1b7"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 1
+        },
+        "7": {
+          "INT": 1,
+          "QT": 0
+        },
+        "8": {
+          "INT": 1
+        },
+        "9": {
+          "INT": 1,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 6,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 6,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 6,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 6,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 4,
+        "B": 4,
+        "C": 4,
+        "D": 4,
+        "E": 4,
+        "F": 4
+      },
+      "nondefensive_semantics_sha256": "28ad054669f88df816362c7ba55457df3f0de279fdb098adf3f430626881a856",
+      "run_semantics_sha256": "e08c1c2cee626c6cea27b3f45e7ff07ba10dca18a0098fef5b13560a391700e1"
     },
     "2007/missouri": {
-      "defense_semantics_sha256": "8807ecbe3149e274b240258a2558121866e03ce907498059a4253f9a0546cc87",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "3742488a322c11eec057df0b799c60bc1c9b09dbf78e371b7516867987531b4e",
-        "special.csv": "2e7ee0e8a7983d7856bf7a1bd044fb1e4e4a3abdc679aed29fa91f686b4fcb9f",
-        "team.yaml": "ca068cd9abf69df2a9a2c03a76e3eabe9422b6df6dc1e5b6a877e3fb598b38b7"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "7b0d424bbb8ab064d10739966bcb46df6bf0da47c569f2e76653642b274d7e1d",
+      "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/navy": {
-      "defense_semantics_sha256": "ea543d0a8014a9c485b85c1b8c89a43ee54e9845b5b4f4df314a796c63d844af",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "79c9a27d3a656d3ef805b15fda9affc8f4e87b28993c69a8c4c20bb7db675f86",
-        "special.csv": "a71cd99fc0d9d6e022b894c06a00121f70766bdb74e75598ea9c8308794aa111",
-        "team.yaml": "b270961dd08fb6124f6f9beb4c0b3b25953af2175ecea3a69bc6e3ed121d608c"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "723624f4ffe5845e0205d7d0ba64c192f8315c4d11b2804e3fe474ce15e9bd7e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "5b841603eb23c401878d0a7d967d41b69217cba4210baef4dd8e9c632be193c7",
+      "run_semantics_sha256": "2b65c2b3351ede12708f75ad2592a5d4bc14f810645e7077f888415a06a48e4f"
     },
     "2007/nc-state": {
-      "defense_semantics_sha256": "8c420572bbbf0d1c92fd586ffc61a215cbc053ad314601dffb39aac8ae2674a2",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "b9f9ca19608f75b805d1da78aa92f7be9f8ae38404335fdaf8bfb3bab8b80045",
-        "special.csv": "08bb899e331cc7f2b50f7d26e9391a23d327026a6e45aa0289c9b5e5746aab42",
-        "team.yaml": "c45e0e4b217497c4927ec21973ca50642bb207e13f95460f0f46acad044d1583"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "a1153f24914e8b98d71f21413c6e86ceba4ca67a27a319fb5d708e01fd1f3f35",
+      "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/nebraska": {
-      "defense_semantics_sha256": "9f8ee600eaa903a490788b1c9e16a66971844cee49a7ca1ff4c162a4230b8a94",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "ef01aadd4457a0bddcb117a3733ca71d7208aa946f4844055e5df52d283a1222",
-        "special.csv": "dedabf54bf04f6cf737b74254de1ecb3310b67d0091d418727848ff59bda2ca5",
-        "team.yaml": "881dbb5b5b047eaeed31ce14c5883da07145ad40743a3746c8c0a2aac06c51bd"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "5100039266bb3332d33af061534bdf6e1b12bd634aef5edbd6f45c7268956f21",
+      "run_semantics_sha256": "64dabe315643b7ff778779de8950b1f2e23863a8bc96bca502ade2f136070653"
     },
     "2007/nevada": {
-      "defense_semantics_sha256": "9b0d25ab7aaf5850442b870ed0ece9adf69849564353571b284fd813cc8f9179",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "530c4b5e94930560fa322db1c081c35ebf0df2491d350763f691d40869166a26",
-        "special.csv": "1150e4443a5ab3effb0d6975082afda0f4a5d6470ee4ba4a87cb4ebda1f254fd",
-        "team.yaml": "398915ca4262479467fe347376e362d70e93247c4db5e4904cf285457143f9ec"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "b031c94a74a527bf034caa838fd285c9f0e1e8adb662cf886a228b595f1c7241",
+      "run_semantics_sha256": "bec6dd0196748618714398e211ebbf1578e5d0132d87b8cd3ed91795cbdf79c9"
     },
     "2007/new-mexico": {
-      "defense_semantics_sha256": "602bded88edaa1d370869988721538ba0c82a32c7988ac9bdc89f3b0c526438f",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "3925e396858172d2c02f0872b2ba2d917c61090ec9dd714e579357294581e2e8",
-        "special.csv": "b6d13ecc06ad582d98069583330d87e1c60a529fbde0d0837300fe57e92438f7",
-        "team.yaml": "b01e959dfdef6b80ecb64b06b5a51d4467dc4f5433aa722003ecba2c28857877"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "6f83a516845dc42be0de81dd651e4277980043bf28269e9b7155de9f8d249f74",
+      "run_semantics_sha256": "cd67d6aa0b1abaa217e080cfa6ed60862c3dad735580cee5a7366b681f1b79c9"
     },
     "2007/new-mexico-state": {
-      "defense_semantics_sha256": "21137ae55034b87bf7b22f6144c4e2bfc73190786336f298ca3aab13bc246e88",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "2623aad1f23d53cedd7177419a6f9b6d246e8038a4f8be9625d8c34142129bdb",
-        "special.csv": "a6d988bc4af4f8420e1b20757c1700e947df18d91ad0e78b1f82b218d5cd7af8",
-        "team.yaml": "358039ded9a9f9ea81a10d1a8aef49b8ff9eda04277c929ea5d8c6764e56fe75"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "71baed864491fb167dc2b920e8a4701b1648110cd051c72e0f8d2d0aa303c72f",
+      "run_semantics_sha256": "64dabe315643b7ff778779de8950b1f2e23863a8bc96bca502ade2f136070653"
     },
     "2007/north-carolina": {
-      "defense_semantics_sha256": "8733d9d26538139fec5183583e26189ef5a17cfb581243e08e53bf7a88d3d10e",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "ce5b2d657ef82e14c1cbadf4e5c1bef5f72829ab319ccd95fd002747a9681fc8",
-        "special.csv": "48e6f136307f148da713920cfc9fb0522b050ccda2e64f2c8fb64ca34d8f6d61",
-        "team.yaml": "beb9ef5fb9c2329ab9b8e10bf9f2b1471b24cdf053b97d06ab6fd2ac63faa65a"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "05a91732ea41f587b7bd886b6878b53a32735b591b209f754db859899d46a3bd",
+      "run_semantics_sha256": "0956404573328343cb85cbe55d66d8af9815e2f28fe6f0474aa8581953ae3464"
     },
     "2007/north-texas": {
-      "defense_semantics_sha256": "d22f5fc19b56721470af2198866571f24114408a59b83c71a02b377a81cd5964",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "ef422a1120cf78291fbf2551eb93d2e1cd48c27ee1b2b60186d075a9120d4c6c",
-        "special.csv": "23052ab00d7715d25d72b9499b5f150592e277ab3166a2f340ef0acbd3b97e1a",
-        "team.yaml": "afe02af9ea48fceb13739f20b0ae009d7cb3288c82a95eb022dd7d66be444d91"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "842445e7224ac45595197042da9fc7d58e1b15baf3fb59d956ba6f51ee2ac00a",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "5e367b410678bb32609a0a8111a2808ae0af78907d477b8073a453bc38a3cccc",
+      "run_semantics_sha256": "8165503083cdb9fdae6f7803ca3d5ce13426e5fea82a887eab424087e85719d0"
     },
     "2007/northern-illinois": {
-      "defense_semantics_sha256": "4bde798222a9979e2c20c69bdaf0cb7d3724f455da86f4e7b849229bb04ed0df",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "42bc754c2c6aa551fcd6f061371d00b4189fd01459a9bdd27fee1dc5a898fcd6",
-        "special.csv": "646bb66fba9debfed8642d02fde6aaebb0c143c2f16060315af62a5df51017d0",
-        "team.yaml": "d1b69422505d815442ec51058a64d8b2d3eb2c93ca78bd5233cdef0355fe953d"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "27ea733f2b4199be7727d8a9759dcc8d355a5f4c1197a3982c5e0cb0354461f0",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "4fc9888f5fde43f0889371969147ae8cf383b90a31d02823be9d63fce9b17f0a",
+      "run_semantics_sha256": "6ae3a3c23ae01837f3fee208389e7319dd77e599b6fd5ff0f68373880b170058"
     },
     "2007/northwestern": {
-      "defense_semantics_sha256": "0d94adf6bfddfac4f1ca1ad1187753f013be09d6678a50ae713db42ae5d2e1da",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "a35f45847c0e037f80e3e7dc376bcb74f292d73364a6c6667afd0211de0e6d59",
-        "special.csv": "774872a4b24d2d88eb2beca4380833455ba21c3d839fd49e0492ac58f9881081",
-        "team.yaml": "98cf44668da062feb6c340ee3243c2aef66a30700f29417ee25ae9b31cc503ac"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "8f1dac007790a0f72555bd5c7c644201e849e3005fc95001fb058ebebc36bc18",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "c1538d2d82ff1078a96078df500ca1ca0804276d058eb7ba64e87cf7599e4edb",
+      "run_semantics_sha256": "1128ac26dac09e25684d70aacd420979c641fcca7616ed2e61618c6bcc92ff6f"
     },
     "2007/notre-dame": {
-      "defense_semantics_sha256": "ed603cd5951ce3692e8bd5903096532546672afd0ece9211834edcb76fd754e7",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "5e678b4c6dbe74c69fe1c19e72d4793464462d2f1d6c042260c6db49bb60f8c7",
-        "special.csv": "50f127304ef6aeed8603fd4e50c36c4395083f9a414ab2eab96276d4b43f4973",
-        "team.yaml": "29702f33e2e4ed1b2785f35575b2becb027bdf0e807d44ff92e797fc0dd01ee0"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "77ee71f3e92b0f914cc83ac692bf7020a9b280c803e57111309767411292fa9a",
+      "run_semantics_sha256": "d3addc09a7bbefd0bb009516d00c89be238cbfb3c9ac63cd149061b4ce8edd70"
     },
     "2007/ohio": {
-      "defense_semantics_sha256": "dc269b17eb03a858ad8919a7ea109e0e3665710dec02779e343c3e74cd61201c",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "8926bfb9cd34fa47ec34c62ec749df37ecf525f73df225994f316c8b2cac2051",
-        "special.csv": "1a6216ad479b398278506283e14647e5ca1f8f7ef7f17f512d0859152a9044bd",
-        "team.yaml": "9cd529594348d2af68547a8ec48c5c2c388a6ee328657dcb2dec29f79cdd1648"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "2f4b39331392bf0c9d8e2faed887a24ca351c5b6f873eea991fb4a94c5959c2b",
+      "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/ohio-state": {
-      "defense_semantics_sha256": "6680ae9db0febc3f9232a01f747e7ee21f9d6207e1a4c34bf5b76312954adf91",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "044764766e31fcbbb851c822120962b9389ee25e3d5bd7b6097d35a6f2156710",
-        "special.csv": "4c144a373446d9458cde57b43f5baae8ac6aa0b2c05c8c7a24058f752ddb96eb",
-        "team.yaml": "0efe0bdfd85f72243f188e17fccaf4c0a7d6ad807105e1056ea8ac42453f83e5"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "99b4e5c5cbbe03cbc1504ea66a908d65c192aeef12ac5ad88b181484d0d7663b",
+      "run_semantics_sha256": "8d0de5a5d2f276b6cc7a2dd5bb22b0898d266027ce6dbdb664ad02b04c16ba5d"
     },
     "2007/oklahoma": {
-      "defense_semantics_sha256": "a24a132fc1fc6e353d9733da78872db213d16d20ca3f37db55d39d435f30150f",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "bdbaefb7c9174556e12dec4ef1780e55ecc5443c2bc635207c12e07c0379b295",
-        "special.csv": "0912834d66fd51431ef1215341dbd580fc204e0057eda0a8254e23e8bcaf67a5",
-        "team.yaml": "8a38d757365644052d18a44ab159033c214cde1c7daf41b6bb98d3cc04aa1d30"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "79206b5a82710c80f19906a33fba7cd0e408c3a581289ff5e6945ce03f4f087c",
+      "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/oklahoma-state": {
-      "defense_semantics_sha256": "2d9224942ccc5d740425ec94ce093258dd2b4d9905c040c14d34ed6a7b543909",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "de140598f843a8a29e4251881ef15c721519c4e3e3b6b85eecbf08dd13a58e4e",
-        "special.csv": "ebcc845f84826259899082c1e92c7f8e2afeb672ee2bc94d604c45b6d7176189",
-        "team.yaml": "4611e317f0e9b50fba082b93b81be59b93ec32ce01c8ac59015fdddd70495843"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "da1bb4131b8143a852da53ffd29a79b3461affad5d3b174147c90e04057cbeba",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "bed793e7d7b8ee75b5572fa5f516bc567e499847de6fe44022881fa448785d71",
+      "run_semantics_sha256": "704bdc98bbba2015b473b539a6ea6c5a4244a29fdec1cf5646db14e50d8e9f67"
     },
     "2007/ole-miss": {
-      "defense_semantics_sha256": "24a7c50e10a8c65d9a21f58faeccf46313afe0981ef8c085ad0c7f535d1f07eb",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "20218e61837ac12a4b725a090c9f0c46a3aaa0febad6810b2aebed6914008132",
-        "special.csv": "e2ff434384f7d93f94a1038a0609b045ff6001eab267e7bc4e3f7db1c17af83b",
-        "team.yaml": "715cfd356b7e436b12cff91387ce0930392ca4cadb77633da164959e666f26a8"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "6165981885a7387a5a72015658a4bd1d8222de6b4fb148b7ebf9e53ebfe0096b",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "8680c39379d5cc6f743aed9329473f27d237ecac60f5c551108a8a28cbe52373",
+      "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/oregon": {
-      "defense_semantics_sha256": "815cd131945180f0a8832fc7ae80f67a072527b81434038659a383ebab6a7168",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "c86826381cf1b249135727ca9e3fd5d06fdd0c955116a0851a49500e84ba7322",
-        "special.csv": "309b7970b614d840b4a9410a54cfcdd36773da53fc96f3fc210134efbeae8a2e",
-        "team.yaml": "702986585ae3535deedfa7eb3f975d70549a6ab301cc1ea9c6ba7437519d2a15"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "60a83e16c5306f303723722af90b6c160ae575af6cd23022f60fe5732e7f2f4b",
+      "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/oregon-state": {
-      "defense_semantics_sha256": "b800d73dda2f578baf74519472fad8a0588aa732184258711f880e3decc1c2fe",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "4c15f82b5a0b6f499a59d830ccedf3f4548b9f99db8045c3d1d2134abad6a7af",
-        "special.csv": "c68eda006cb7a964098fe039e1e311a771b9e95dc391e7f4097ff229f647986d",
-        "team.yaml": "24fbde1df067da0cd8bbfe234b5eb04e8a3248fdf33526776fc9bb6723e42acc"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "75eec64daa01c862792ff109fa70ebf4a1a5dbe11a4549845c3ae7da00fef6f0",
+      "run_semantics_sha256": "2b1f888c135143ffd7074b9d05d0af9c35c8e41dac79c09f53180ec4e1b7aaef"
     },
     "2007/penn-state": {
-      "defense_semantics_sha256": "456919b23f662427c5218b8582d488de6c8dc07645c3d56872ed8f3514ca5204",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "1fc22c55fabddbb8760714696eb2a0bdc8f978aa246643beb2712458d4dfb9ba",
-        "special.csv": "da71c67578254f9d14299d4b8853429460d62ef6e830332bd60457466647472c",
-        "team.yaml": "357354081eaf6afa4a91a8395e6487fc9ed6f0b21483165d67f9d6cd89f8a48e"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "5fb416c0de57fb6f1fbf2b44a9cfd00bc705163f867ff1b8c2a1dfe76810fccd",
+      "run_semantics_sha256": "065b59fa1e49b245a36e206c6aafdfd5976b0e2e35271177c25d42ca6b5912f8"
     },
     "2007/pittsburgh": {
-      "defense_semantics_sha256": "ff0fa288c845e09fe1ef05ce3a30487659c6323242888860459dc32b6d08a7e4",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "7ac701ee7db20cdeb7a3c582ce4df6ebe8b179565d0b5d841d1211129d1d8e6b",
-        "special.csv": "33a8cedba8dcf3928b47f4ce1ba8dd4ad71299f39579b9d93204e5c485852985",
-        "team.yaml": "4ee3a866956ab83a18900b48178253a63ca52ecf4d40e78b20cb7799ec5531f6"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "cabbd50b002ea87b24a35f61d1168a0600e45c4ecf97d1dc713f956030795406",
+      "run_semantics_sha256": "3d077845c99c27508cd1c8dd1fa2b063f708854e1ec2956efe8e325bd20414c2"
     },
     "2007/purdue": {
-      "defense_semantics_sha256": "7ab7cecea598cfaf75883388c9caee1197fa9635413c731538db8ea4a2311ff5",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "a131b67d35fad2e14093b57d888359b57de9697cd8cf2dffe33a9337cc2c3bf0",
-        "special.csv": "b3256f9f116c842ab4486c0aef0417331902d973f62118c0255dc0e58fb72f60",
-        "team.yaml": "ffb07d7df1e3f3cf3d97b31311e2091bfc824df1fdeb7185fb0aca77d2fc88a5"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "e3ce0075c88181b2fec98a8f1f90731b100f67c97c5fb38187bca18ee3c2457a",
+      "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/rice": {
-      "defense_semantics_sha256": "ba6522393d2af2ac80f1b2928527de269b66b9018c6372e5565d4b2ed05d938b",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "b9c1ddfa550120cd6fc26493156c2eb644c85ffb54eb32f5b07d68e3d6b0ce27",
-        "special.csv": "e445cce7f118b26c0c9aed28e46f33efff7b02a9e524b9144b1eaf4c2df93911",
-        "team.yaml": "ddad42dcb639c8628233f32b2a20dedf472cde93f1524a532b8cd23d589fd400"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "a283deba4c0faf945e271ec0163fd3bad04671a02df2d4ae80aa4b94e85de3e8",
+      "run_semantics_sha256": "2323e90fd44f43971a4f70a364d82b4b2a1e7ac014df26213f955a4163541b91"
     },
     "2007/rutgers": {
-      "defense_semantics_sha256": "1b6feaf18e2a0f78464e1a517d2a670fa5ccc0fdf76f7a06be3e3acc0095a90f",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "5c46514355ac5090de613d51dadb9f04b76a248f2fa180180004118cd448a996",
-        "special.csv": "d4abeaa5ee7113c32157ff419201ecffe31c07f66d48e9a4fd2d4e1476b89816",
-        "team.yaml": "8654aef9588f1ee26e8db767190d1a2a47b9cd2f90dbc83fc7d5aabe8d91c060"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "8e5bc6ad45998f657e16399eed481a011b186074e2f5ccbcaa1fb535aa83442b",
+      "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/san-diego-state": {
-      "defense_semantics_sha256": "782671916643db5564800b64c74bbd7ad1e23de6c52c3f79c55d928e618891f7",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "7c5305bcb54dd2a0420aa21a8fe5d331790cb9e55c2a6c4775e5bf93aac1144e",
-        "special.csv": "8b5ad986034121d4bc4616290384324960bfe3740192b7b862e06942453aad9a",
-        "team.yaml": "721f61b680ff215c68afca321d680f25b1f210892365c992df160ad522ffbcb0"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "20393b23e7a632ba87b9000b6e98fd69ffa1f598d6aac04a1f6057ed8bbea5dd",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "56c388eaf33c3ee9ac05e5b12469d9306010dc8540d2faf255852d2a21e3df3f",
+      "run_semantics_sha256": "04e8f785b74a3c2fa7231d282c680f6aba6d13cc3c4400e4d8de11f66287fe00"
     },
     "2007/san-jose-state": {
-      "defense_semantics_sha256": "4c616996dac47b2a6c9561c6dbb24d12de43a07231d6a80165e7192caaa82717",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "36f935304cf3ee3fdf84831f63692f54f9ce98cc49b169651b89028c8dfb51fc",
-        "special.csv": "2b98c766d03e30431b525bcad2d2c6dc3d2ad9bec8bb851fae96597c9be0e0f3",
-        "team.yaml": "597762b39158afcd623dcac564c98aaddd5ca1b9165f316a784f725e48e5ee5c"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "957854ee5c55be4709280085ef44f965086edd299f9208c096b05086f5be4355",
+      "run_semantics_sha256": "48051bd6b0a6c8a56b0d1bc385dfcf4beecc8266fccb784eab38f9b394f3c7e1"
     },
     "2007/smu": {
-      "defense_semantics_sha256": "15955bfe2811961bab7c403dd8293a61ea2f3b650e3e180fb2e2f5cb9fd1fe5c",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "48571dd8a0b0712ba43f3fb1351740d111c9efe8b5c0cd7e072d423f60ba22de",
-        "special.csv": "4ef1b64a4a4975a3b880973660c8bd6e741a0d39e247b9b01abf2eb18fdcd54c",
-        "team.yaml": "1f727a79dcaafb60dfe4607847b406ec498e58cc02e41c21b2f5aaa9f983fea7"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "b9d57345df86342ad726e5cbf75bba1ac241022687e9051aa4f046d76c40d6a7",
+      "run_semantics_sha256": "82ad37014e82d8f029b9cc38c9854b45d551bed115d703d2ebd56791232f86ec"
     },
     "2007/south-carolina": {
-      "defense_semantics_sha256": "0c5777b5de6a8a5cf50d31f79a8e33cd5ba9f86ab15f8ae4bd3bc1cb651c109c",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "91d01c81d0fb568f284575f06dbf0c7d6439a824d0174c2ecc256e17dd05e5da",
-        "special.csv": "a234c7fa711ebf84416570a6eead8116835f87e81edb95e624f4feeeb52d21fb",
-        "team.yaml": "6d806f04dba930cbd872679e7e04a79b490de5dfcb096444b69ba5b212d0ce68"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "9caca7a83b04a67bcd9047fc5a5ec0193dceca33e3552943e293f0da78745bfd",
+      "run_semantics_sha256": "c95f6f201c35484bef0533f0b313b936a34261c6105a07eeed863fde181db8e0"
     },
     "2007/south-florida": {
-      "defense_semantics_sha256": "bc5183178ceb457894b7029a25c638e8d893ac4d7d5dbb14bc43bb99d1416fb2",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "a8355042401c996ecca0bd90da083655192758d1d38d0ad301aaa4c2563da9ba",
-        "special.csv": "72e09fede184d39648976258c0414d70c209fea6ba9eb27731af1715beb5884b",
-        "team.yaml": "f6df60916a68902d254b27702469a5a448ba060bd91da7168dee21a81fd87479"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 1
+        },
+        "7": {
+          "INT": 1,
+          "QT": 0
+        },
+        "8": {
+          "INT": 1
+        },
+        "9": {
+          "INT": 1,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 6,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 6,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 6,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 6,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 4,
+        "B": 4,
+        "C": 4,
+        "D": 4,
+        "E": 4,
+        "F": 4
+      },
+      "nondefensive_semantics_sha256": "fa3a71a7205c7ae2681c35d0742db902b780011591c4b8b012bae4e181d737df",
+      "run_semantics_sha256": "8ed9811ad1e2ecd2d1c644f5dc26c8904444726243b71e2aa68c371ddc8355ad"
     },
     "2007/southern-miss": {
-      "defense_semantics_sha256": "090286db3affd35670f9392faf827830bec8632c09617f74eda7493d07c13b25",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "2c40175a703a082980bea891f73e96ab0125e8282b7b0bd03869ebe18be490cb",
-        "special.csv": "36b997cdb3a78fc9b481eb773a151ac9e271936d08f8175fd79a162a96def027",
-        "team.yaml": "bc78007492e39b9b1f9b79477fb46adcbda061b28bf7c38865a320b556884e97"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "c2ce300859f953a8c7adb44b084368909433a3330f550c88192a0f2217f87bf4",
+      "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/stanford": {
-      "defense_semantics_sha256": "09bc8b54ada131de258194fdb507113482ca5de82c24e903447fb96e9bc97616",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "90c73a20783d332089324d3dc7feef5682da5aea609de0ccca35f4c59f43c521",
-        "special.csv": "8de08b57c9312034b8c579e42ab509625ac45db52795f301665d740afae3059a",
-        "team.yaml": "02e0eb5a7b69aa5c0a340b44aa2c004a9b864de5a4ace252c79b59126dcd5da5"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "d5942c797d13de7c6a1ebba7afb3b64581f785b8e99eb4920da96e7e7af33201",
+      "run_semantics_sha256": "c1477e289972490fd8c45af2e06663c51de8499b9f6251541b3ea0999269ec6c"
     },
     "2007/syracuse": {
-      "defense_semantics_sha256": "8bb59319fad479899fa2c4e5a0508bbff2b0d0056991d4b8191b1213b5410e06",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "2ff45d4fdca5f57e2fad2bad5e0508d38dcee6878adb8c1797ab2d4ab800efa4",
-        "special.csv": "efc4dd751bce37b3351630db6be24825f7b74683bdd448ea635d0bac35c0cd78",
-        "team.yaml": "3a9528d4b5512da4af622778d37f7e01319093bd4e8c58708484ea9a19c1896e"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "723624f4ffe5845e0205d7d0ba64c192f8315c4d11b2804e3fe474ce15e9bd7e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "51619990f9884c9dc896f57c8a4d954226fd4a2f8b118e4fb72cace5bb321133",
+      "run_semantics_sha256": "ab442d9acabfa797241ca6203d1eeb7a9c1b14fa7ed7627afe7beb6312a123b7"
     },
     "2007/tcu": {
-      "defense_semantics_sha256": "3848377fc3526403ea424d228ec706acb2e2c09ace60c90619c339d7050e0481",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "b866357a5e671bd9f7133a51b32f1616db6169fafd1d2e948016855470e529bb",
-        "special.csv": "1883704c7460c12dee1675fa3153606dea0498484d2a115fc77cff18b150b9d3",
-        "team.yaml": "dc92157527f824966ad5d94b821521e69d3e1ae57e3203a8fb181568df229ca1"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "e600eec11fc00725d3f008750fa37bb4012d9cd961b90266b0d659e27ca05d9c",
+      "run_semantics_sha256": "afd88fd25668a879b93e013c81df92dfc0291e5dd22a3f17b0c7c267fb3ad470"
     },
     "2007/temple": {
-      "defense_semantics_sha256": "fb7f7988271227b122f1ebfe0fdb9bd10a638765247bb06f9abb97a44970fa42",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "49250b67c414a34f01d547c25c7e646661267f1a25b0637183c14db05c331709",
-        "special.csv": "b6ca98073281416ea5a1a9dc126784d4cdb3976ab9371e87c6a46b44dd45373b",
-        "team.yaml": "ef602637020766aed0b5dae85b9d5eb4a6b6fa718fc32449a931013104a8bfdf"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "842445e7224ac45595197042da9fc7d58e1b15baf3fb59d956ba6f51ee2ac00a",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "a476516469763a90f03aab981224728484b807b860645d2c2b148464efd5b4fd",
+      "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/tennessee": {
-      "defense_semantics_sha256": "d2d040fb79749ce37051bb256e62d11ab654605a2b95a8e364db9a2f03fc2f7b",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "987087046ea49f77db5202fe2c0491794cdb1023e563b10356966f1302676a60",
-        "special.csv": "c03d175d5f542c04bfa1e103ef03f0ff40d7bf192683ce9cefc8e89931134649",
-        "team.yaml": "98a6fb956b8375635afaf02f7597669d98cc8c841403158d162ceabd05ae3ca7"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "60d147e0386cd9f0bae2fcde5d01af2b67c45b2cfb2bacd9f8127ac9a708f192",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "56da64a5ca945a541a70865233a931b62f2e3c2fefbe07597ae3d889fd7466f2",
+      "run_semantics_sha256": "c9b659fd7df147ecb651e4aca4efe8fc55f8f07b2578ac743ec6eaa044de7afb"
     },
     "2007/texas": {
-      "defense_semantics_sha256": "42451ca0e7452ec9b4a7646706525b4dc7a44e229ea5889ad9fd945552122b4e",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "e21d1c7d2ca09d8f1d64f8e15027e13c352e94733efce5f376502cff7daea194",
-        "special.csv": "22f8d63620346bac9d5d8b5f62d8667762387c6bdc21478ca116df72e750fb55",
-        "team.yaml": "a19be4eb2e632a7da8e63d8cc69420a62c185b076bc53021a9fb892e01b2bba3"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "60d147e0386cd9f0bae2fcde5d01af2b67c45b2cfb2bacd9f8127ac9a708f192",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "d728337230e34096bb666a3429d1e1b3aeef1b7f186a9d843ccfe714c2b3e021",
+      "run_semantics_sha256": "cd67d6aa0b1abaa217e080cfa6ed60862c3dad735580cee5a7366b681f1b79c9"
     },
     "2007/texas-a-m": {
-      "defense_semantics_sha256": "cde338a89481eaeedbb0408e59ba5ffe3f67e62d08a35a321780e34d362b8b59",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "65f93652b09d78dcc7bee4df4af883a2c1966ab272aeb02227674aacb834adae",
-        "special.csv": "1de703bc3df94c206117c0ea1ec32ca133c4709fc190474c0806635fc40e5e3f",
-        "team.yaml": "832045d3b9aab4caa56536aeed114f2613036e3c07efcea027eeb10908b6e4ec"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "7607687fc7db9c825f75ca739d92994b67f4742dd511a12e1ab35cef0ff4c7fb",
+      "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/texas-tech": {
-      "defense_semantics_sha256": "4e3aae46344045985140e0efdaf31b7486c59aa8944190928d6067feaa4b1adb",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "9684c3c18532d26d0e94cdef145210399841c307fbe7890a8ee113b0e904d7c4",
-        "special.csv": "b80c52d3f9d58ec098ec7db849db6aa9f92fb839479e92a21160c3206b4d5815",
-        "team.yaml": "0fe8273837b284182f73c7ef0029ad3959a0729cb8e8a83d759bd1d391f52fc1"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "5bcf31a3c7b7430463568cd3fab9643c34b5ab2ee10dcc551df9f738e1eebab5",
+      "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/toledo": {
-      "defense_semantics_sha256": "18e2b0dad4dbb5b0e4c82b80d8e439c0b955ca6c34f1a373e9df2e9dd7a7afd8",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "69c9a6fefc9fdc649565a491df9a457c0073f02c92fe4fc19332a192eaadd163",
-        "special.csv": "9456ac951e126c2b0dfb303f027e030147602121fdd98af9e149132f12422b66",
-        "team.yaml": "4b0ef65b11747d8e83cf2c173d9e0d918866a6ee7f18b3327947188942aa4f70"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "59af19d0ef3018bfd432e07b1bd8e0351b463f7d386551eb082bd45cf3b9a690",
+      "run_semantics_sha256": "64dabe315643b7ff778779de8950b1f2e23863a8bc96bca502ade2f136070653"
     },
     "2007/troy": {
-      "defense_semantics_sha256": "99fb9d06b3ebcbcbd605710e01b800b5d63343ffaef2f54263440681b800c5a2",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "e7176c13b1408cd750d0e6b0d545178a8b355453999d88c2f234616d30734fb8",
-        "special.csv": "3aa8da1590feb57089f087c297a0c0ac5213b5b7c535246e59907ff586b69fa2",
-        "team.yaml": "07ef1d969dd38b422410ac885be772b6789eb62b84259296f4aeebb366069055"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "0b432e14622792c08a38aa633d0f8ccf57b98851abdb0d16f826effa1ec6fa4b",
+      "run_semantics_sha256": "8d0e31ab6c7e846964e6479aab5e4954299c11db0b0f76a7c895e7f674c91d69"
     },
     "2007/tulane": {
-      "defense_semantics_sha256": "b32b2691169b1eb93a5640f07919cac76236d4f4878418bd5e60a1d89a09b6f1",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "a8badd184b777f58426e25e1b7df6647e47523f739f11a0752f59ca56ac7ee28",
-        "special.csv": "6051df6ea66e11cee290d87035d3c01b306de45f1eca134ab0a2804dfa8f58ff",
-        "team.yaml": "0034367bfda322b4c45a85258e4b06cebb40fc7fe73cfcf923e68a11569e90a3"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "845c2d1156949a6831fbba8f8cbc0a2cf0aeddea7491f6138f6083d603ed8de4",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "165b687df63638e48abe3e4dd41edcabb5c0870941ede4c6c93458e66c7cf8c1",
+      "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/tulsa": {
-      "defense_semantics_sha256": "330fa1139e54272b76e7073a397289d25b79716eb1b444e0648c8e2fb6b8450a",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "42f79b8362a3d35d117f9dc4fe5d5c5696fb0657334cbc0bf28ad0f1051d23dc",
-        "special.csv": "b7669ffc693e9138fd86ccc551b2995d3a621b45e145d04d22725317bbbe7ebc",
-        "team.yaml": "1feb382aec69595335f01a323915c4e6e7c153718f7cbbb81b70fe0e276a780e"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "60d147e0386cd9f0bae2fcde5d01af2b67c45b2cfb2bacd9f8127ac9a708f192",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "6f1c4de24d18661a2870de8d88afe69280bcf93cacca1548019d572e5e382274",
+      "run_semantics_sha256": "8d0e31ab6c7e846964e6479aab5e4954299c11db0b0f76a7c895e7f674c91d69"
     },
     "2007/ucf": {
-      "defense_semantics_sha256": "8dbea942a47f654da64cc6ef2834b47b92616f88ef634d2635060f0e4c6ee037",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "e12f03c8274875c392490dde946808eb92bbdbf33aca97b751d26bb0a293208a",
-        "special.csv": "b102dd8535d0c4365e7a69ecbb8613faba1410cacc31731ae6952de698edb82f",
-        "team.yaml": "4fcb36ac0e96a97a59ac168c963ab7a7c01535130090a6d788009044388cd527"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "4bfac7e8c0a5db56c3f18bad29694a9c5d23f2b00e6658999de255f3aac1a4d4",
+      "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/ucla": {
-      "defense_semantics_sha256": "03d302c0bef860de2ba5e53d95569f3246595083f534a98a01ab506a868d69ca",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "6fe2d4f3b6396712af8e486e25464332c25e86c986d7aa254a0ad781b51b68fa",
-        "special.csv": "8ef94d2917cdbaddc918ea17d6f0f1fc6d48a3a8218cda0182974ad4a6834cf1",
-        "team.yaml": "aa9c81008104aed991446a5d9cf8e7718cc31769e07f220e77d5cdbfb206c362"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "a6afe77e1be34c10abaaac30aef42553ad4ba8d20ad985e670ac48476f4c6144",
+      "run_semantics_sha256": "cd67d6aa0b1abaa217e080cfa6ed60862c3dad735580cee5a7366b681f1b79c9"
     },
     "2007/uconn": {
-      "defense_semantics_sha256": "31769743c17af810cd54c1c1d5a0f91cc9c89d23930441768b5c7134b4949584",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "3e0b89850c1fcfe435ec3cb9f5e9b1d83ba73a8629ac173eacf6e2c234df3a22",
-        "special.csv": "bd35e3d18dde99f7bd9dca05953fc0da1402df4310d66120646794a079146223",
-        "team.yaml": "46abf1ae0ebd7a0f85e62f1aa74eb7e9fade91037dc01288c7d79cdc25e37548"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 1
+        },
+        "7": {
+          "INT": 1,
+          "QT": 0
+        },
+        "8": {
+          "INT": 1
+        },
+        "9": {
+          "INT": 1,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 6,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 6,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 6,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 6,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 4,
+        "B": 4,
+        "C": 4,
+        "D": 4,
+        "E": 4,
+        "F": 4
+      },
+      "nondefensive_semantics_sha256": "f961f7e9ad279dcd95fdc2ff9c747e212edb001bc20d58d93f8ce5898f1c5495",
+      "run_semantics_sha256": "dfe115fbda67a9dd816cb9b836331514f721fb4be3227c74d3dbce8dc764cbde"
     },
     "2007/ul-monroe": {
-      "defense_semantics_sha256": "1b5ca80c76063d67628f8f0fdeeec6fbe9bcf202fc9380886272318092a08c7b",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "9484d37e36e4b506556c08bbef0b2e49b83588eabc19244f088fb6d499e36cac",
-        "special.csv": "ab989f82464f88add4df33127395ed624a38acfcec8ad7b795c116f47eb4e019",
-        "team.yaml": "edbd299948dd35332ef3c58bbcafd26dcfa3ccf08c44dbf7a8c07f0db6cc1495"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "842445e7224ac45595197042da9fc7d58e1b15baf3fb59d956ba6f51ee2ac00a",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "c64f1489749fe6fe79aa929b88f7de299e350236c623af959d522489bf5a8dbd",
+      "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/unlv": {
-      "defense_semantics_sha256": "2bbc7c468f3af741a1246448078f7326d580f18f69d230893bbbcb3c4bb5cc8a",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "1cf354ced0c66bcb3e702e724b44983033a3fa0470ab0ccc175d84ce098d09d1",
-        "special.csv": "7a35b17fad4c95be1a4931824a36b6e351e067c37eac33896e725a133d543602",
-        "team.yaml": "5e4821df56744e79fb714e3d2961dade571417472161b4975320015bcb1eaa85"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "9416a4f17c78bcf172513a361020e03e28585cf179db329ff47fd3b6a020eed0",
+      "run_semantics_sha256": "64dabe315643b7ff778779de8950b1f2e23863a8bc96bca502ade2f136070653"
     },
     "2007/usc": {
-      "defense_semantics_sha256": "4a9edf76a8b2bd9b7edaed06ae814df2ad1e8d4e8e71d6ae06e06df0890cc3f5",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "47d9cd6b3720df93b53380ad67f1bd4503d55d938b042a4f7bd7fbce02c143f2",
-        "special.csv": "e3f1d7a2012cb48dc0fd4176cb7a0f48967baf0b92e28b7e691bf077ed8b8e38",
-        "team.yaml": "943417b7b7435b04fc8b8bb80b2b5c3ac694e3c57760abc728f0904b9b6ec0ca"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "5155b2c640d3c122c50cd8c173bb55d65d9e18d3e4214b692c3bb2e1548e254b",
+      "run_semantics_sha256": "97fdfbba4ec0a72513921862c49090291b92db56385c68793a21cf9680f922a0"
     },
     "2007/utah": {
-      "defense_semantics_sha256": "0f8d61b2796c79b915f88b852557e005c34de61ca11f2469f16a566c4010f729",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "4a46c4b44b139450acbf5decdbd38fd86348da9e44155cdcd0214c64dfd69d07",
-        "special.csv": "7bdfe009dfd4da416ca89c5a50c66304edd62cd7359a53150569a111027aa07b",
-        "team.yaml": "1cf11debd7a169c4f75f96ec6002bd2516d6ef4f1d1b7a5967b69880415f0c79"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "e59521bb8f21db19e2ab7779ae3699e7fd23d291ccb25c5f8ca2366dcf974fbd",
+      "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/utah-state": {
-      "defense_semantics_sha256": "8df7ddcd7609edb19139d69270663a23320936b19c912e06553c9ff7265d41eb",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "413f86d47bd27eeb946dbf24ed1827d617e86f73f8fe162e9717e35161b5abf5",
-        "special.csv": "a4aa3376decc579da2e1fc3147865bf9419b8c65f3cb1fa4a07687324564f204",
-        "team.yaml": "0359ea7a79c6702c1a1615edbcda7f4b05630349c38889a95bc1030cb40ed1c3"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "8f1dac007790a0f72555bd5c7c644201e849e3005fc95001fb058ebebc36bc18",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "50a24a631dc1926d73e5cf403c38b7160f7442bdb17c84fdd621d001f0214719",
+      "run_semantics_sha256": "8d0e31ab6c7e846964e6479aab5e4954299c11db0b0f76a7c895e7f674c91d69"
     },
     "2007/vanderbilt": {
-      "defense_semantics_sha256": "a894e56099a12778bbab9d91adfc35b0677ab3c97922888a39ea381e124b6481",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "7007f31792553e18f5ffe36aeb7fbf180d4eaba435cc8fcd1d383b9a80566394",
-        "special.csv": "dad98152eaf8cb848a90d7a0dc9be4d82b209f1cb77f53ef97b8e210588716da",
-        "team.yaml": "ac76016c8d7f93d8b25780d4c2a34e4396fd1991d4d4e1855eab5637e9271990"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "a9610629acd1e72a2f96c040733a89d88c44ca813fc0b81a6dc04c412ce9ba67",
+      "run_semantics_sha256": "ab442d9acabfa797241ca6203d1eeb7a9c1b14fa7ed7627afe7beb6312a123b7"
     },
     "2007/virginia": {
-      "defense_semantics_sha256": "e6e2a18f014cd609381a61dbe08c5fdc01cd7d0474547df95df7555989a5ebc3",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "d1a38c12338225acc7424c8800db521fb52a88d1a6e5614ab1258af1cc989543",
-        "special.csv": "796d1eb65c63d4914c0a81d56c533f8a369254af115c93d78580d5a9fe1c7096",
-        "team.yaml": "2645152abc76702e7e00d1ae181ba2d30bdcebbe1eee500ba140ed2718d375d6"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "c426b44dfef85feb4a23d52cef3242bd46002d426b1ed7374685214fd98b3e78",
+      "run_semantics_sha256": "8ed9811ad1e2ecd2d1c644f5dc26c8904444726243b71e2aa68c371ddc8355ad"
     },
     "2007/virginia-tech": {
-      "defense_semantics_sha256": "33d123348391bc1e4a914d1a42728606c45fe464e85ed679145f29f9d4afce82",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "76f48fdcb825711875306755e8f0e3b12da7cb3d03901d24e835f10d0adde201",
-        "special.csv": "375512a04568c503efabaf952260791155defe2442b644dec3a455f86962a2e1",
-        "team.yaml": "41552ff32a28cefb15afa4e5574f2aab36da56cad9f830ce631c0fa4d0bb5a71"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "10a602830693f8ca5cd1b0ca656376bb40cd7b4712f768d2b07e290f3b26993a",
+      "run_semantics_sha256": "5c381826506c5552e5290b69550128064a5c29655807b3ee208e28f30d3dba1f"
     },
     "2007/wake-forest": {
-      "defense_semantics_sha256": "381200aa9df19978117c4c6d2106e2ed9a69b9b1632667dc63a409264a12aa79",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "6936fa3170d37e1b5bb5324538f2984ba62ceb8673288eb67548359a1f0901b2",
-        "special.csv": "d59ee8d4116bc6fd6728b26a34d7b80cdcd8100c760c17015d213f847a833600",
-        "team.yaml": "2ac38abd5df9102719c1cc6e6183465c945e8d070972456872bdd219848c9f4d"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "eafe9cf741e221b85bbb350b8885196a0f7a58ae99a4ef85dd88ec1fb43da586",
+      "run_semantics_sha256": "065b59fa1e49b245a36e206c6aafdfd5976b0e2e35271177c25d42ca6b5912f8"
     },
     "2007/washington": {
-      "defense_semantics_sha256": "b7d9546266c8b60d776cd314199e2bfb5dfad23d178ee93e7ea1ae45dde5fff6",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "9b85e8958a9d94514b54eaae76e065fe6f4b470e8744c3a32df0895e5adf66d8",
-        "special.csv": "24c1b0d4f86fc8db42d776b12eb8a98e3f770d0961d0c0454213db7f87ac713a",
-        "team.yaml": "c2c42d460476d85cfb349245c306bba6acfcf859a79d18c81a571172f4fff699"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "60d147e0386cd9f0bae2fcde5d01af2b67c45b2cfb2bacd9f8127ac9a708f192",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "f6225c9bf7f232db15db3e580fb9022e3fdbacb4412ebc2e8b5e6307dbd0dec4",
+      "run_semantics_sha256": "04e8f785b74a3c2fa7231d282c680f6aba6d13cc3c4400e4d8de11f66287fe00"
     },
     "2007/washington-state": {
-      "defense_semantics_sha256": "ac5a16a3206f1da424ed4ec325c78cd2c0bd4c7581517299b44053781eb01241",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "6260a450073b1b1fd73dffa05ddbcd481f97d6a17b1d1737ed1dd9becbef1e41",
-        "special.csv": "e8caaf31171e7372518c5aa114ebe41197177650da75258a58105a211a7159ec",
-        "team.yaml": "bae01b264fbcaa9292df71b4f7b7175927c506f3bc7b52cf2c5810d91f3e64b3"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 0,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "27ea733f2b4199be7727d8a9759dcc8d355a5f4c1197a3982c5e0cb0354461f0",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "beec07758f647bec9ac8c414ad7218a31cb68519c405d973ac2bac3185cb12c7",
+      "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/west-virginia": {
-      "defense_semantics_sha256": "5c1d1a15998ca1a41ee5a9945a0c9b4efcc042505a1e5cd1b1853e84015fa2f7",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "fdd2515a3d7d516e77b18b13b73df54b697a32832ec1dfe566886175119a41b0",
-        "special.csv": "ab36752775324d5a33e4f8bf1004bea936c9dbbdf897df819e1f056962e0d282",
-        "team.yaml": "be9423e79c0f298edb8e4853e2e15726889e3fefd0ac9a19e9ec72d98ede700e"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 1
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 1
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "7": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "8": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        },
+        "9": {
+          "INC": 18,
+          "INT": 0,
+          "QT": 6
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "6cad68a846aad41c930c30cab27e83277eb9d9df8e5061019b9f1862ec42ee89",
+      "run_semantics_sha256": "66c3309585eb7e447d8363b01d85553a6de46353109c4e8549b6a7c59ca3aec4"
     },
     "2007/western-michigan": {
-      "defense_semantics_sha256": "028010960a474c3686f42ddff2509cd3fe51aa58c2c75df44858acc483f66812",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "a79e3a5f4c07f3272f719f15edd549b65c0aa59e72434fadd372f2294337aa70",
-        "special.csv": "3ed3685f774c88522763c416991e35e2218a169cb813e952aeaa7b2c9d043371",
-        "team.yaml": "ebc0a3027f5cfcaeb34e243c3d5a9977b088af17ef2d86ef2c76e0b829ba6102"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 24,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 24,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 24,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 24,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "fa42715733592946e0f72416c1e125b8f55d41f94273e6cabf992b4be331cae0",
+      "run_semantics_sha256": "c1477e289972490fd8c45af2e06663c51de8499b9f6251541b3ea0999269ec6c"
     },
     "2007/wisconsin": {
-      "defense_semantics_sha256": "df211a3a2874b72c293240b085a2ce49a42de40aab8ce190559747eacd01ff27",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "51a71558bd1852da19215f7cc2be4b89802f933155d9c82e2f437c47839db794",
-        "special.csv": "035d1e68caa5125f03b4fedf94f5aeab243bd3ad00a4d0ec0159909e8e727c10",
-        "team.yaml": "2befe053663ad76807f666864ae6b11fc396cab9c78cb50ed3b06aab98f38232"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "32cf60046a897d5e63e81dc7eb0dc94a821e3d3ef4be3996f9a01c60693597cc",
+      "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/wyoming": {
-      "defense_semantics_sha256": "7d4d16711d8bfa2c3f6f838a8e908e402bb627f3adca31366112595d08bba3cb",
-      "explicit_numeric_zero": [],
-      "nondefensive_sha256": {
-        "offense.csv": "c28f36c1b5ccb19513c336e1d3fcb7881c9c546b5a1f9f25d076b150534fa7d3",
-        "special.csv": "af9bf835b59c7db573f9d0d31ebe769055c83c56c88707a7f8eac5630d4532e4",
-        "team.yaml": "440c445c9a793bb13bb59d743f987075252b043c99afb5689fd1b1d67b643059"
-      }
+      "anchor_mass": {
+        "6": {
+          "INT": 0
+        },
+        "7": {
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INT": 0
+        },
+        "9": {
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "call_family_mass": {
+        "6": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "7": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "8": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        },
+        "9": {
+          "INC": 6,
+          "INT": 0,
+          "QT": 0
+        }
+      },
+      "fixed_pass_semantics_sha256": "0cf78d917c93ad28ec9968f39cf66b8a7583eb6b1dbeb824dcfcf75c5f1a978e",
+      "formation_int_mass": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "nondefensive_semantics_sha256": "94b9332a4d58a1ff8da8401107cf384b8569d053776fff10599ffff88e1a8dd6",
+      "run_semantics_sha256": "afd88fd25668a879b93e013c81df92dfc0291e5dd22a3f17b0c7c267fb3ad470"
     }
   }
 }

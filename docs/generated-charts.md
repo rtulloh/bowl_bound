@@ -34,11 +34,14 @@ estimates, not official Bowl Bound charts or reproductions of source narratives.
 
 Alpha 9 uses the experimental `authored-bb-budget-aware-v1` policy. It redistributes
 pass-defense responses within exact existing per-call INC/INT/QT and per-formation
-INT budgets. Zero mechanisms remain dormant. Small budgets use attainable tactical
+INT budgets. These are defensive chart budgets; full plays also consult offense
+and Priority. Zero modeled mechanisms stay dormant, and source unknowns remain
+unknown. Small budgets use attainable tactical
 contrasts with explicit residuals; an equal contrast is not reported as a strict
 success. Known interception locations supply a pooled depth distribution; the
 short/long and formation roles are authored assumptions, not observed historical
-formation effects. Payload assignment preserves its physical weight/depth inventory.
+formation effects. The balancing stage preserves its incoming physical weight/depth
+inventory after source-based depth transport.
 Offense, run/Option defense, supplemental, special-teams, PAT, recovery and gameplay
 metadata retain their accepted semantics, including the corrected OOB facts.
 
