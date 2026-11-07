@@ -242,3 +242,10 @@ no retired-path dependency. The remaining sibling repositories are the main
 checkout, research cohort/generator and independent public repository. About 20 GB
 free after this and the owner's concurrent cleanup; full116 generation is running.
 Recovery archives and manifest remain private. Existing tracker/docs checks follow.
+
+DEV-079 operational resolution is recorded against tested commit a8009ac.
+Regenerated the index with `.venv/bin/python scripts/build_issue_index.py`;
+`.venv/bin/python -m pytest tests/test_issue_tracker.py tests/test_release_player_docs.py tests/test_priority_docs.py -q`
+passed all 22 checks, and `git diff --check` passed. Verified retired directories
+are absent from both the filesystem and registered worktree inventory. This is
+local maintenance acceptance, not completion of the 1.0.0 chart/release gates.
