@@ -42,3 +42,19 @@ Tracking validation: ran `.venv/bin/python scripts/build_issue_index.py` and
 `.venv/bin/python -m pytest tests/test_issue_tracker.py tests/test_create_issue.py tests/test_priority_docs.py tests/test_release_player_docs.py -q`;
 38 tests passed. `git diff --check` passed. These validate backlog documentation,
 not the unimplemented acceptance criteria.
+
+## Existing engine support verified
+
+Owner asked whether an engine update is also needed. Read-only verification on
+2026-11-07 confirms current engine and CLI already allow independent-year team
+IDs and choose the designated home year's supported rules. A synthetic 60-case
+probe exercised swapped-year/same-school cases, actual kickoff/touchback and
+historical-tie/overtime transitions, CLI launch, API creation and save/load.
+Existing special-teams/session/overtime/CLI/save regressions passed 212 tests.
+See UI-070's evidence comment. The seven inspected runtime/API modules are
+identical in the active Milestone 42 integration tree.
+
+No engine update is needed for this matchup feature within the existing
+1940–2023 home-season rules boundary. Supporting 2024+ home seasons is a separate
+rules-profile extension. UI-070 remains an open UI/integration-verification task;
+no new frontend behavior or browser acceptance is claimed here.
