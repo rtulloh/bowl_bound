@@ -17,16 +17,16 @@ from dataclasses import asdict, dataclass, fields, is_dataclass
 from datetime import UTC, datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from bowl_bound.cli import TeamCatalog, TeamEntry
 from bowl_bound.coaching import BaselineCoach, CoachChoice, CoachObservation, safe_choice
 from bowl_bound.coaching_audit import reconcile_period_scores
-from bowl_bound.coaching_session import GameView, observe_game
+from bowl_bound.coaching_session import GameView, observe_game, observe_policy
 from bowl_bound.game_state import Possession
 from bowl_bound.models import TeamChart
 from bowl_bound.overtime import OvertimeState
-from bowl_bound.save_game import SavedGame
+from bowl_bound.save_game import SavedGame, dumps_game, loads_game
 from bowl_bound.statistics import summarize
 from bowl_bound.team_csv import TeamFileMetadata
 from bowl_bound.timing import QUARTER_SECONDS
@@ -60,6 +60,7 @@ class GameSpec:
     away_id: str
     home_id: str
     seed: int
+    game_type: str = "regular"
 
 
 def stable_seed(master_seed: int, identity: str) -> int:
@@ -79,13 +80,13 @@ def _partial_regular_pairs(teams: tuple[str, ...], degree: int) -> list[tuple[st
     for offset in range(1, degree // 2 + 1):
         for index, team in enumerate(teams):
             other = teams[(index + offset) % count]
-            pairs.add(tuple(sorted((team, other))))
+            pairs.add(cast(tuple[str, str], tuple(sorted((team, other)))))
     if degree % 2:
         if count % 2:
             raise ValueError("team count and remaining games cannot form a balanced schedule")
         half = count // 2
         for index, team in enumerate(teams[:half]):
-            pairs.add(tuple(sorted((team, teams[index + half]))))
+            pairs.add(cast(tuple[str, str], tuple(sorted((team, teams[index + half])))))
     if len(pairs) * 2 != count * degree:
         raise ValueError("could not construct a balanced round-robin schedule")
     return sorted(pairs)
@@ -106,7 +107,7 @@ def _orient_even_degree_edges(
     oriented: dict[int, tuple[str, str]] = {}
     while len(used) < len(edges):
         start = next(team for team in teams if any(edge not in used for edge, _ in adjacent[team]))
-        stack = [(start, None)]
+        stack: list[tuple[str, int | None]] = [(start, None)]
         circuit_teams: list[str] = []
         circuit_edges: list[int] = []
         while stack:
@@ -233,7 +234,8 @@ def validate_game(
         halftime_kickoff = getattr(report, "called_play", None) == "Kickoff"
         overtime_start = starts.get(report.number)
         if overtime_start and (
-            before != overtime_start.state or before[0] != overtime_start.possession
+            before != overtime_start.state
+            or cast(tuple[object, ...], before)[0] != overtime_start.possession
         ):
             raise ValueError("overtime series evidence differs from report state")
         if (
@@ -372,7 +374,7 @@ def run_games(
     specifications = tuple(schedule)
     for index, spec in enumerate(specifications, start=1):
         try:
-            result = play_game(spec)
+            result: dict[str, Any] = play_game(spec)
         except Exception as error:
             result = {"status": "failed", "error": type(error).__name__}
         result.setdefault("spec", asdict(spec))
@@ -453,6 +455,11 @@ def _call_record(
     }
 
 
+def _audit_observation(view: GameView, side: str, coach: BaselineCoach) -> CoachObservation:
+    """Use the same selected policy contract as SavedGame's automatic side."""
+    return observe_policy(view, side, coach.version)
+
+
 def _offense_choice(observation: CoachObservation, coach: BaselineCoach) -> CoachChoice:
     """Keep punts and other offered actions in the offense coach's legal menu."""
     legal = observation.offense + observation.special + observation.game_actions
@@ -474,7 +481,9 @@ def _submit_offense_choice(
     return None
 
 
-def _new_audit_game(spec: GameSpec, teams: AuditTeams) -> SavedGame:
+def _new_audit_game(
+    spec: GameSpec, teams: AuditTeams, *, both_sides_policy: str | None = None
+) -> SavedGame:
     """Construct an audit game with the same marker inputs as CLI/API games."""
     away, away_metadata = teams[spec.away_id]
     home, home_metadata = teams[spec.home_id]
@@ -485,7 +494,9 @@ def _new_audit_game(spec: GameSpec, teams: AuditTeams) -> SavedGame:
         away_id=spec.away_id,
         seed=spec.seed,
         mode="regulation",
+        game_type=spec.game_type,
         coach_seed=stable_seed(spec.seed, "engine-coach"),
+        difficulty="hard" if both_sides_policy == "hard" else None,
         advanced_ii=False,
         home_privileges=home_metadata.defense_chart_markers,
         away_privileges=away_metadata.defense_chart_markers,
@@ -505,17 +516,31 @@ def _audit_configuration(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
     }
 
 
-def _play_one(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
+def _play_one(
+    spec: GameSpec,
+    teams: AuditTeams,
+    *,
+    both_sides_policy: str | None = None,
+    verify_replay: bool = False,
+) -> dict[str, Any]:
     """Play a complete regulation game through SavedGame's engine/coaching API."""
+    if both_sides_policy not in {None, "hard", "baseline"}:
+        raise ValueError("both-sides policy must be hard or baseline")
     team_ids = {"home": spec.home_id, "away": spec.away_id}
     coaches = {
         "home": BaselineCoach(stable_seed(spec.seed, "home-coach")),
         "away": BaselineCoach(stable_seed(spec.seed, "away-coach")),
     }
-    game = _new_audit_game(spec, teams)
+    game = _new_audit_game(spec, teams, both_sides_policy=both_sides_policy)
+    if both_sides_policy is not None:
+        # SavedGame owns the committed public-call history for both team roles.
+        coaches = {side: game._coach for side in ("home", "away")}
     calls: list[dict[str, Any]] = []
     period_totals: dict[int, list[int]] = {quarter: [0, 0] for quarter in range(1, 5)}
     failure: str | None = None
+    failure_detail: str | None = None
+    checkpoint_verified = False
+    final_replay_verified = False
     overtime_starts: list[OvertimeSeriesStart] = []
     previous_overtime_series: tuple[int, int] | None = None
     try:
@@ -545,7 +570,7 @@ def _play_one(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
                     continue
                 if turn.human_role in {"offense", "defense"}:
                     role = turn.human_role
-                    observation: CoachObservation = observe_game(view, side)
+                    observation = _audit_observation(view, side, coaches[side])
                     if role == "offense":
                         choice = _offense_choice(observation, coaches[side])
                         cpu_choice = _submit_offense_choice(game, side, observation, choice)
@@ -573,7 +598,7 @@ def _play_one(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
                     advanced = True
                     break
 
-                observation = observe_game(view, side)
+                observation = _audit_observation(view, side, coaches[side])
                 legal = observation.special + observation.game_actions
                 if not legal:
                     continue
@@ -586,6 +611,14 @@ def _play_one(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
             if not advanced:
                 raise ValueError("neither team has a legal automated action")
             after = game.view()
+            if verify_replay and not checkpoint_verified and len(after.log) >= 25:
+                restored = loads_game(dumps_game(game), lambda key: teams[key][0])
+                if restored.view() != after:
+                    raise ValueError("midgame save/load state diverged")
+                game = restored
+                if both_sides_policy is not None:
+                    coaches = {side: game._coach for side in ("home", "away")}
+                checkpoint_verified = True
             overtime = getattr(view, "overtime", None)
             if overtime is not None and len(after.log) > len(view.log):
                 series = (overtime.round_number, overtime.series_number)
@@ -598,7 +631,7 @@ def _play_one(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
                             overtime.first_possession,
                             overtime.possession,
                             overtime.paired_tries,
-                            _state_facts(view.state),
+                            cast(tuple[object, ...], _state_facts(view.state)),
                         )
                     )
                     previous_overtime_series = series
@@ -614,19 +647,47 @@ def _play_one(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
         else:
             raise TimeoutError("game action limit reached")
         view = game.view()
-        period_scores = tuple(tuple(period_totals[key]) for key in sorted(period_totals))
+        period_scores = tuple(
+            cast(tuple[int, int], tuple(period_totals[key])) for key in sorted(period_totals)
+        )
         validate_game(view, period_scores, overtime_starts=tuple(overtime_starts))
+        if verify_replay:
+            restored = loads_game(dumps_game(game), lambda key: teams[key][0])
+            final_replay_verified = restored.view() == view
+            if not checkpoint_verified or not final_replay_verified:
+                raise ValueError("missing or divergent save/replay verification")
     except Exception as error:
         failure = type(error).__name__
+        failure_detail = str(error)
         view = game.view()
 
     return {
         "status": "failed" if failure else "passed",
         "error": failure,
+        "error_detail": failure_detail,
+        "save_replay": {
+            "requested": verify_replay,
+            "checkpoint_verified": checkpoint_verified,
+            "final_replay_verified": final_replay_verified,
+        },
+        "coaching_history": _json_value(cast(Any, game._coach).call_history())
+        if hasattr(game._coach, "call_history")
+        else [],
         "overtime_series_starts": _json_value(overtime_starts),
         "spec": asdict(spec),
         "teams": {"home": spec.home_id, "away": spec.away_id},
-        "configuration": _audit_configuration(spec, teams),
+        "configuration": {
+            **_audit_configuration(spec, teams),
+            **(
+                {
+                    "both_sides_policy": getattr(game._coach, "policy", "baseline"),
+                    "engine_coach_policy": getattr(game._coach, "policy", "baseline"),
+                    "simulation_coach_policy": getattr(game._coach, "policy", "baseline"),
+                }
+                if both_sides_policy is not None
+                else {}
+            ),
+        },
         "final": {
             "finished": view.finished,
             "phase": view.phase,
@@ -635,7 +696,7 @@ def _play_one(spec: GameSpec, teams: AuditTeams) -> dict[str, Any]:
             "report_count": len(view.log),
             "statistics": _json_value(view.statistics),
             "scoring": _json_value(view.scoring),
-            "clock": _json_value(view.clock) if hasattr(view, "clock") else None,
+            "clock": _json_value(cast(Any, view).clock) if hasattr(view, "clock") else None,
             "timing_log": _json_value(getattr(view, "timing_log", ())),
         },
         "period_scores": [

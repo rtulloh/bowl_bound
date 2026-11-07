@@ -32,3 +32,30 @@ On 2026-11-07 the owner selected this high-priority ticket for [Milestone 42](..
 --- 2026-11-07 — outstanding-question coverage review ---
 
 Public-safe summary of the existing canonical research ticket; its ID and open status are preserved. Detailed source records and audit evidence remain private. Experimental Alpha 9 publication does not resolve this investigation. See [coverage review](../../chart-investigation-coverage.md).
+
+--- 2026-11-07 — bounded recovery implementation checkpoint ---
+
+The maintained observer now distinguishes routine two-draw kickoff returns from
+F-return recovery, with externally pinned version-2 recovery-range evidence.
+Fixed in-field own/opponent recoveries check field state, original credit owner,
+called/resolved category, full boxes, score, actual draw/row closure and timing.
+QT negative, zero and positive outcomes, QR loss and pass-origin B-F are forced
+synthetic subjects. Legal recovery advances and tainted chains remain UNVERIFIED.
+
+The exact reviewed implementation and synthetic controls are being integrated
+with a matched baseline/Hard runner and strict replay. Read-only re-audit of the
+34 frozen wrappers retains all 6,419 reports and independently closes the two
+initial recovery refusals; it is not fresh candidate/full-event acceptance.
+Five forced pending-save cases do not establish complete addressed save coverage
+for that old panel. See the [implementation contract and limits](../../milestone-42-observer.md).
+
+The reviewed `a9007c32` checkpoint adds bounded accepted-previous-spot
+commitment and separate local ten-second timing checks. Its exact safe observer
+closure is integrated without engine changes or research history. It passes
+2,149 synthetic checks; independent review verifies source and retained evidence.
+Read-only re-audit retains 6,419 reports, 121 live/122 report commitments and
+39 local clock proofs; unsupported prior chains and 83 associated clock cases
+remain unknown. The 1,042 old observed nonclock mandatory decisions have no
+addressed save evidence. An opt-in addressed capture is a separate next step;
+aggregate reconciliation and replay do not prove independent event ownership.
+Full DATA-055 remains OPEN through candidate/benchmark and final acceptance.
