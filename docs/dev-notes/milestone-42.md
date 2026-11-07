@@ -183,3 +183,30 @@ Tracking-only validation for this extension: regenerated the issue index with
 checks (`tests/test_issue_tracker.py`, `tests/test_create_issue.py`,
 `tests/test_priority_docs.py`, `tests/test_release_player_docs.py`) passed 38 tests
 using `.venv/bin/python -m pytest ... -q`; `git diff --check` passed.
+
+## Default web port for simultaneous Paydirt play
+
+Owner added [DEV-078](issues/DEV/DEV-078.md) to the next 1.0.0 release on
+2026-11-07. Both Bowl Bound web startup paths must default to 8001; the frontend
+API proxy and current player documentation follow that default. Paydirt remains
+on 8000. Explicit port overrides and existing local binding/lifecycle remain.
+
+Consulted local Paydirt paydirt/__main__.py start_web_server and main: all normal
+web paths select 8000. Choose a separate Bowl Bound default; do not copy its
+server implementation or modify Paydirt. Existing running game ports are retained.
+
+Test first: the backend parser and production-launcher listener checks both fail
+against unchanged production at 8000; the explicit 8123 override control passes.
+Changed expectation: Bowl Bound's default address is 127.0.0.1:8001, with 8002 as
+an example alternate port when occupied. No football/chart semantics change.
+Validation and tested commit references will follow before ticket resolution.
+
+DEV-078 focused verification: 24 launcher tests pass after 2 expected default-port
+failures and 1 passing explicit-port control before the implementation. Ran
+`.venv/bin/python -m pytest tests/test_launcher.py tests/test_web_launcher.py tests/test_api.py tests/test_packaging.py tests/test_release_metadata.py tests/test_release_player_docs.py tests/test_issue_tracker.py tests/test_priority_docs.py -q`:
+100 passed. Node 24.22.1 frontend `npm --prefix frontend test`: 158 passed;
+`npm --prefix frontend run build` passes. Imported the actual Vite config and
+verified its localhost:8001 proxy. Ruff lint/format and whitespace checks pass.
+Actual synthetic-resource subprocess checks start both entry points at default
+8001 while the existing HTTP service on 8000 remains unchanged. These checks do
+not substitute for final 1.0.0 integration/native release acceptance.

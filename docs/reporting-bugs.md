@@ -9,7 +9,7 @@ A short, reproducible report is more useful than a large unreviewed attachment.
 - The **game version**: run `BowlBound.exe --version` on Windows or
   `./Bowl-Bound --version` on macOS/Linux; source users can use
   `python -m backend.launcher --version`. While the server runs,
-  <http://127.0.0.1:8000/api/version> shows it too (adjust a custom port).
+  <http://127.0.0.1:8001/api/version> shows it too (adjust a custom port).
 - Your operating system, processor type and standalone/source installation.
 - Steps to reproduce; include control mode/difficulty and the game situation
   (teams, quarter, clock, down/distance) if relevant.

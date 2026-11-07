@@ -955,7 +955,9 @@ mechanics and full regression gates, and publish the correction only after the
 defined checks pass. Source-unsupported priors must remain labeled model choices.
 
 Tracked work: [DATA-064](issues/DATA/DATA-064.md),
-[DATA-055](issues/DATA/DATA-055.md), and [DATA-046](issues/DATA/DATA-046.md).
+[DATA-055](issues/DATA/DATA-055.md), [DATA-046](issues/DATA/DATA-046.md), and
+[DEV-078](issues/DEV/DEV-078.md). Owner added the Bowl Bound default web port 8001
+for simultaneous Paydirt play to this release; preserve explicit port overrides.
 Related broader calibration remains with [DATA-045](issues/DATA/DATA-045.md)
 and [DATA-060](issues/DATA/DATA-060.md). Optional defensive (B) refinement and
 new-season publication are separate follow-ups. See [Milestone 42](milestone-42.md).

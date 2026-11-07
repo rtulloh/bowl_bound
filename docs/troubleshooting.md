@@ -9,8 +9,9 @@
   folder and run `.\BowlBound.exe --no-browser` so you can read the message.
 - **Browser does not open:** enter the printed local address manually. Keep the
   server terminal open. Use `--no-browser` if automatic opening is unwanted.
-- **Port in use:** stop another copy, or run `start.bat --port 8001` on Windows
-  (`./start.sh --port 8001` on macOS/Linux). Use the new displayed URL.
+- **Port in use:** Bowl Bound defaults to 8001 and Paydirt to 8000. If 8001 is
+  occupied, run `start.bat --port 8002` on Windows (`./start.sh --port 8002` on
+  macOS/Linux), then use the new displayed URL.
 - **Missing resources/assets:** re-extract the entire standalone archive; keep
   supporting folders with the executable. Source users must build the frontend.
 - **Python/module not found:** standalone players should use the actual platform

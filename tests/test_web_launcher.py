@@ -10,7 +10,7 @@ from tests.synthetic_teams import default_teams, write_team
 
 def test_defaults_are_local_only() -> None:
     args = parse_args([])
-    assert args.host == "127.0.0.1" and args.port == 8000
+    assert args.host == "127.0.0.1" and args.port == 8001
     assert args.seasons == Path("seasons")
     assert args.static == Path("frontend/dist")
 
