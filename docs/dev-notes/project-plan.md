@@ -961,3 +961,25 @@ and [DATA-060](issues/DATA/DATA-060.md). Optional defensive (B) refinement and
 new-season publication are separate follow-ups. See [Milestone 42](milestone-42.md).
 
 **Commit:** `milestone 42: correct play-specific interception depths`
+
+### 43. Track persistent played seasons and team statistics
+
+Owner-requested backlog feature, added 2026-11-07. Let players watch team
+performance develop across completed games in a persistent season/campaign.
+
+**Deliver:** independent played-season identities, completed game history, team
+records, points for/against, supported cumulative engine statistics, per-game
+averages and a player-facing season view. Resume after save/load or restart;
+prevent duplicate completion/replay from inflating totals. Keep aggregation
+engine-backed and season data private by default.
+
+**Validate:** test first with synthetic multi-game/team/campaign cases, swapped
+roles, duplicate/retried completion, in-progress versus final games, corrections,
+save/resume and exact reconciliation to final engine boxes. Run applicable
+backend/UI/persistence checks and multi-game play testing.
+
+Tracked work: [DATA-065](issues/DATA/DATA-065.md). See
+[Milestone 43](milestone-43.md). This feature is outside the active Milestone 42
+and 1.0.0 release scope.
+
+**Commit:** `milestone 43: track persistent season team statistics`
