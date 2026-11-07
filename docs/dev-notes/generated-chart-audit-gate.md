@@ -74,3 +74,33 @@ allowlist and resolver checks.
 Follow-up acceptance: all 167 relevant cumulative tests passed in 13.41s,
 including 29 synthetic chart-audit controls. Ruff lint/format, regenerated issue
 index and whitespace checks pass; no skips or warnings.
+
+
+## Experimental budget-aware successor
+
+The owner authorizes a bounded experimental update to the existing 2007 cohort.
+Reconsulted local Paydirt `paydirt/chart_audit.py`, `docs/chart-generator.md` and
+`docs/dev-notes/defense-allocation-correction.md`. Adapt exact finite-mass and
+actual-consumer checks, whole-family interactions and explicit source limits;
+its NFL rates, private cells, grammar and tactical queues are not reused.
+
+Schema 2 replaces the obsolete requirement to reconstruct every original pass
+response coordinate with paired semantic invariants and exact event budgets.
+The standard installed loader, complete gameplay metadata, new derived identity,
+exact exported files and source/native runtime equality remain required. Numeric
+mean/depth transport and optimizer correctness are independently reviewed locally,
+not inferred from a hash or this primary gate. Existing schema-1 assertions stay
+unchanged. Patterns and unattained tactical residuals remain visible; no new
+cosmetic uniqueness cap is introduced. See the
+[versioned contract](../generated-chart-audits.md#budget-aware-experimental-schema-2).
+
+New synthetic controls first failed because the unchanged model registry refused
+the successor; those are feature REDs, not sixteen independent old defects. A
+subsequent neutral-run control meaningfully failed with DID NOT RAISE before the
+small preserved-run check. Its initial derived-provenance fixture error was
+corrected separately, not reported as a gate defect. Controls exercise legal
+redistribution, derived provenance, family/formation budgets, fixed variables,
+OOB/priority, nondefensive cells/metadata, stale identities, dormant/limited
+roles, overshoot residuals and source/native-stage equality. The previously
+accepted cc422b8 frozen-input implementation and synthetic controls are carried
+forward unchanged in scope. No historical fixture is required by CI.

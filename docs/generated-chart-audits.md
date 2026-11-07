@@ -87,6 +87,51 @@ audit-only file. It does not issue a successful audit or qualify source truth.
 Run the audit command afterward against the actual candidate. Keep detailed
 source reports in ignored storage; publish only approved aggregate provenance.
 
-The current schema deliberately supports only the reviewed model. A different
+The legacy schema deliberately supports only its reviewed numeric model. A different
 policy, source contract or cohort transformation requires an explicit versioned
 audit change, synthetic failures first, independent review and renewed acceptance.
+
+
+## Budget-aware experimental schema 2
+
+Schema 2 admits the exact reviewed `authored-bb-budget-aware-v1` model and
+`bb-chartgen-budget-alpha-v1` producer identity. Schema 1 retains its original
+coefficient, response-coordinate and primary-class checks; selecting schema 2 is
+not a way to relabel a stale schema-1 candidate. Both versions require the exact
+candidate catalog, baseline expectation, source-review and actual runtime pins.
+The accepted frozen-input correction is also applied: parse detached allowlisted
+bytes and reject original input changes before returning a green result.
+
+The new model intentionally redistributes ordinary/INC/INT/QT pass facts. Its
+paired baseline expectations preserve exact run/Option semantics, fixed pass
+whole cells, original normal/non-OOB call INC/INT/QT totals, formation INT totals
+and the explicit A INT/QT anchors. Fixed variable family mass counts in those
+budgets. Numeric support must remain. The audit independently checks signed
+non-reversal relative to the revised A, preserved run counterplay and every
+actual offensive cell's exact 216-by-36 primary denominator. Pending outcomes
+remain distinct categories. It records stripes diagnostically without imposing
+a universal appearance threshold or requiring unique rows/columns.
+
+Role reports distinguish dormant, limited and exactly requested attainment. They
+retain absolute residuals, including overshoot; equality does not establish a
+strict benefit. The gate does not rerun the production optimizer or establish
+mutable numeric/depth fit. Independent local candidate review binds the actual
+objects to the reviewed joint family/partition/numeric-mean/edit objective,
+conditional source-CDF/balance stages and residuals. Real-engine terminal/game
+checks remain separate. `optimizer_optimality_revalidated` is false and
+`source_fit` is `UNVERIFIED`.
+
+Generated evidence may be truthfully rebased to one virtual logical source per
+team. The ordinary installed loader must preserve all semantic coordinates, PAT,
+recovery and gameplay metadata; source IDs, provenance and YAML bytes may change.
+Schema 2 therefore checks nondefensive gameplay semantically rather than requiring
+old YAML/provenance bytes. All five exported team/provenance files remain pinned.
+No private preview decoder, detailed multi-source ancestry, private reference
+chart or generator dependency is required by the runtime/public gate.
+
+The owner permits a transparent experimental update of the existing 2007 cohort.
+Exact historical formations/results, optional B placement and disclosed source
+micro-reconciliation remain follow-ups, not automatic alpha rejection. This does
+not waive actual identity/denominator, probability, legal codec, engine state,
+privacy/packaging or build failures, and it does not claim historical accuracy.
+The release owner runs the established full gate and approves publication.
