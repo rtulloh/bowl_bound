@@ -237,3 +237,23 @@ independent prerequisite; do not bypass its reserve guard. All numerical,
 whole-cohort passing-cell, independent event/reference and final release checks
 remain mandatory. Do not treat visual approval as historical-fit certification
 or publish a Facebook post on the owner's behalf.
+
+## Local capacity and sibling cleanup
+
+Owner requested the November 7 local cleanup in [DEV-079](issues/DEV/DEV-079.md).
+Clearing only npm's rebuildable download cache reclaimed 6,416,461,824 bytes;
+the generation agent may proceed under the unchanged real-capacity reserve.
+Paydirt cleanup is separately assigned by the owner. Preserve the original
+checkout's dirty maintenance record, active research/integration trees and live
+previews. Retire idle late-half/web-history worktrees only after private archive,
+per-file hash, retained branch and open-file verification. Preserve the independent
+public repository's divergent work. Detailed recovery evidence stays ignored.
+
+DEV-079 retirement completed: only late-half/web-history linked checkouts removed,
+663 archived files verified, exact named branches/tags retained, original dirty
+owner files unchanged, shared dependency targets retained and all three active
+release/review previews healthy. Both current generation/event-audit lanes confirm
+no retired-path dependency. The remaining sibling repositories are the main
+checkout, research cohort/generator and independent public repository. About 20 GB
+free after this and the owner's concurrent cleanup; full116 generation is running.
+Recovery archives and manifest remain private. Existing tracker/docs checks follow.
