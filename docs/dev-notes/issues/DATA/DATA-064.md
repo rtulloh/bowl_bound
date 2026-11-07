@@ -38,3 +38,19 @@ The generator's _int_locations collects known team interception spots without co
 Read-only checks confirm the released CSV equals the immutable Alpha 9 tag. The historical 44 is catch depth, not return distance; return distance is zero. This investigation does not establish that a 44-yard Screen interception occurred. No chart/model/runtime change or release mutation was made.
 
 Consulted Paydirt DATA-040's source-conditional and physical-mass review requirements. Adapt that separation of observed support from authored allocation; do not import its NFL model, weights, source data or runtime dependencies. Private source identities and the detailed trace are retained locally.
+
+--- 2026-11-07 — paired authored prototype implemented; acceptance pending ---
+
+The [numerical policy and independent gate](../../authored-interception-depth-policy.md)
+now distinguish explicit designed-call observations from unidentified/generic-deep
+passes, retain missing locations as unknown, and encode call-specific authored
+priors without moving any INT slots. Synthetic shared-pool failures preceded the
+generator repair; independent encoding mutations reject a supported but collapsed
+distribution. Ordinary paired CSVs reload with all nondepth football facts intact
+and agree with API/browser cells. Both possession sides and bounded field/return
+consequences have separate private evidence.
+
+The prototype is awaiting the required LSU/Ohio State owner visual review.
+All-cohort, shape-sensitivity, final execution/source identities and full
+benchmark/observer/regression requirements remain outstanding. No historical
+conditional-fit approval or ticket resolution is claimed.

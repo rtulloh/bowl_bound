@@ -129,3 +129,19 @@ generator, engine, release version, tag or asset is changed by this plan.
 Scheduling checks: issue index regenerated; 38 existing issue/documentation checks
 pass; 20 local links resolve; whitespace checks pass. This validates the plan's
 tracking only, not implementation or chart accuracy.
+
+## Implementation checkpoint — paired review pending
+
+The [authored catch-depth prototype](authored-interception-depth-policy.md)
+records the provisional numerical contract, explicit observation qualification,
+finite physical-mass objective, independent checks and remaining limitations.
+The research generator reproduced the shared-pool fault with synthetic controls;
+the paired ordinary CSV/API/browser preview is now available privately for
+owner review. All 56 paired offense/formation encodings pass a separate
+exhaustive allocation check. A bounded downstream panel checks both possession
+sides at eight field anchors, retaining pending/unsupported components.
+
+Full-cohort generation is held at the required owner paired-review checkpoint.
+DATA-064, DATA-055 and DATA-046 remain open. The independent observer and reference
+inventory/comparison work proceed in isolated research lanes. No release version,
+tag or immutable Alpha 9 artifact has changed.
