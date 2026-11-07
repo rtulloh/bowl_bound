@@ -31,3 +31,7 @@ Validation for this documentation-only review: regenerated the issue index; all 
 alongside DATA-064 and authorized a high-reasoning subagent to implement that
 milestone. Their complete acceptance criteria remain in force; broader tickets
 retain their existing ownership and scope.
+
+2026-11-07 release-target update: owner selected 1.0.0 for Milestone 42's next
+release, superseding Alpha 10. DATA-046/055/064 acceptance requirements remain
+in force. See [1.0.0 preparation](release-1.0.0.md).
