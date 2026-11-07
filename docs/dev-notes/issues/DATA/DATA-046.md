@@ -90,3 +90,21 @@ source completeness remain unqualified. These observations are shared inputs to
 both chart-set comparisons; uniform call/formation chart averages are not
 observed historical-fit estimates. Full terminal/game and discrepancy acceptance
 remain outstanding. Ticket stays open.
+
+--- 2026-11-07 — bounded direct terminal field checkpoint ---
+
+The [direct-terminal component](../../reference-direct-terminal-checkpoint.md)
+checks all four retrospective pairs under 2,592 controlled field contexts with
+full 7,776 denominators. All 107,536 actual fixed semantic subjects pass the
+independent report/field/credit/full-box/score arithmetic and strict two-draw,
+two-trace boundary. Fresh independent Priority checks cover 129,600 address
+pairs; all 99 input/source pins remain unchanged. Fifteen synthetic method
+controls pass, and every compressed retained subject/weight reconciles read-only.
+
+This is partial component evidence. Selected INT/B/QR/QT/F/penalty/Option,
+pending, variable and own-end branches remain unknown. Different coverage between
+chart sets prevents interpreting known-only contributions as full strength,
+formation benefit or historical fit. The selected-INT landing/return extension,
+other conditional mechanisms, clock, pending-save and games remain separate.
+No chart/model change, new season publication or full DATA-046 acceptance follows.
+Ticket stays open.
