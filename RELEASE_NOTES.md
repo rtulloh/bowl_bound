@@ -1,5 +1,25 @@
 # Bowl Bound release notes
 
+## 0.1.0-alpha.9 — Revised generated pass defenses
+
+- Reworks generated pass-defense responses with explicit tactical opportunities
+  and source-supported interception-depth variation.
+- Preserves existing event budgets. Zero-budget mechanisms stay dormant; scarce
+  budgets show limited contrasts instead of manufactured outcomes.
+- Adds versioned release audits for these budgets, preserved chart facts, actual
+  priority outcomes and the exact files loaded by the game and native builds.
+- Retains the 116 generated 2007 teams, two fictional samples and visual chart viewer.
+
+This is an experimental community-testing release. Historical formations are
+unobserved; tactical roles and short/long depth priors are authored assumptions.
+Source completeness and historical calibration remain in progress. Additional
+seasons and refinements to rare defensive breakaway placement are follow-up work.
+Read [generation and limitations](docs/generated-charts.md).
+
+Football rules and save schema are unchanged. Revised generated charts have new
+content/provenance identities, so older saves may require their original catalog.
+Keep save backups. Original fictional sample bundles remain unchanged.
+
 ## 0.1.0-alpha.8 — Visual charts and generated defensive tradeoffs
 
 - Adds the web chart viewer described below: both matchup teams, offense,

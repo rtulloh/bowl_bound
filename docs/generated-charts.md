@@ -28,28 +28,29 @@ carry [their attribution and license](../seasons/GENERATED-LICENSE.md).
 
 The generator classifies event outcomes, uses disclosed pooling/inference where
 called play families or defensive formations are unobserved, and quantizes
-distributions into Bowl Bound dice/chart cells. It constructs these outputs from
-statistical evidence; proprietary benchmark chart values do not construct or select
-this cohort. Measured team-strength calibration profiles remain unchanged because proposed
-changes failed protected per-team safeguards. Alpha 8 adds an original experimental
-`authored-bb-yardage-v1` formation/play yardage model. It supplies explicit tactical
-benefits and costs; those interactions are authored assumptions, not observed
-historical formation effects. It changes numeric defense adjustments only, retaining
-printed response allocations, offense, supplemental and special-teams facts. The charts are modified generated estimates,
-not official Bowl Bound charts or a reproduction of source narratives.
+distributions into Bowl Bound dice/chart cells. Proprietary benchmark chart values
+do not construct or select this cohort. The charts are modified statistical
+estimates, not official Bowl Bound charts or reproductions of source narratives.
 
-The release pins exactly 464 chart files and 116 generated virtual-cell provenance
-CSVs. The provenance describes generated cell evidence, not PDF geometry. Source
-snapshot SHA-256:
+Alpha 9 uses the experimental `authored-bb-budget-aware-v1` policy. It redistributes
+pass-defense responses within exact existing per-call INC/INT/QT and per-formation
+INT budgets. Zero mechanisms remain dormant. Small budgets use attainable tactical
+contrasts with explicit residuals; an equal contrast is not reported as a strict
+success. Known interception locations supply a pooled depth distribution; the
+short/long and formation roles are authored assumptions, not observed historical
+formation effects. Payload assignment preserves its physical weight/depth inventory.
+Offense, run/Option defense, supplemental, special-teams, PAT, recovery and gameplay
+metadata retain their accepted semantics, including the corrected OOB facts.
+
+The release pins exactly 464 chart files and 116 virtual-cell provenance CSVs in
+[the exact release manifest](../release/manifest.json). Each generated team has one
+derived virtual source describing its emitted cell tokens, colors and coordinates.
+This is generated evidence, not original PDF geometry or raw play-by-play. Detailed
+source ancestry remains private. The supplied source snapshot SHA-256 remains
 `1f8e553002c0299a2993eb533231053d6cf406dbe0e9d41ecc400267484bb1ba`.
-The frozen cohort manifest SHA-256 is
-`438078733567f0bcc3f637bae432cd32ddee547a1c905f3ad96bb7ec80e8438c`.
-This corrected cohort uses generator `college-chartgen-v6` and policy SHA-256
-`bbb35953b3812769bde39d5c567fc21dece00b0899cb037feaad0db7aa88280c`.
-Its source snapshot, measured strength profiles, nondefensive facts and accepted
-OOB evidence match the preserved Alpha 6 cohort. Alpha 6 used a neutral tactical
-profile that made formation probabilities equal; Alpha 8 replaces that profile
-with the disclosed authored tradeoffs.
+The exporter is `bb-chartgen-budget-alpha-v1`; model SHA-256 is
+`a46aaf838a718e012a2ce90a4438e6de475a0d810f18ab7e92d87148603a9e5f`.
+Alpha 8's numeric formation prior remains part of this experimental lineage.
 The [OOB evidence correction](dev-notes/college-chart-oob-evidence-audit.md) fixes
 a positive-only denominator that had marked nearly every ordinary numeric cell.
 OOB allocation now uses positive narrative mentions over matching numeric-outcome
@@ -74,14 +75,12 @@ retained season audits reconciled games under frozen baseline coaching; their
 results do not establish accuracy under the current release AI. Matching a mean
 or completing a season does not establish every team's balance. Sparse families,
 unobserved formations, finite chart cells, uncertain tails and missing source
-fixtures remain limitations. Current paired diagnostic games average 3.79 pure rushing yards per attempt
-against 4.77 in the conditioned supplied source, sacks 7.19% of dropbacks against
-5.75%, interceptions 3.97% of pass attempts against 3.22%, and primary fumbles
-2.21% of eligible snaps against 1.48% known source incidence. These are material
-balance limits, largely present in the neutral predecessor as well. Two team-games
-each under current Hard and baseline coaching are a sparse AI/schedule-mixture
-diagnostic, not historical-fit certification or proof of improvement. The metadata
-power rating is a uniform placeholder, not a historical ranking. Recent seasons are separate future work.
+fixtures remain limitations. The retained Alpha 8 diagnostic below found material
+rushing, sack, interception and fumble gaps. Those historical results are not fresh
+measurements of Alpha 9. A bounded current-engine game check establishes mechanical
+consistency and supplies descriptive results; it does not certify historical fit
+or prove improvement. The metadata power rating is a uniform placeholder, not a
+historical ranking. Recent seasons are separate future work.
 
 Please report the version, matchup, difficulty, seed/save when available, and the
 decision or result that seems wrong. Scores, rushing/passing balance, turnovers,
@@ -95,14 +94,14 @@ audit](generated-chart-audits.md), alongside separate source qualification and
 current-engine game/coaching reviews. The gate evaluates actual chart behavior;
 different-looking cells and successful completed games alone are insufficient.
 
-## Current source-fit diagnostic
+## Retained Alpha 8 source-fit diagnostic
 
-The following describes 116 paired games per chart version using the current
-Hard-v15 computer against baseline-v15 coaching, with the same opponents and
-seeds between versions. Every generated team has two team-game exposures. The
-conditioned supplied source covers 1,291 team-games for these 116 subjects with
-unequal exposure and different historical opponents/calls. This is a diagnostic
-comparison, **not an accuracy pass** or historical tactical calibration.
+The following historical Alpha 8 diagnostic describes 116 paired games per chart
+version using then-current Hard-v15 against baseline-v15 coaching, with the same
+opponents and seeds between versions. Each generated team has two team-game
+exposures. The conditioned supplied source covers 1,291 team-games for these 116
+subjects with unequal exposure and different historical opponents/calls. This is
+retained evidence, not an Alpha 9 measurement or historical-accuracy pass.
 
 | Measurement | Conditioned supplied source | Neutral predecessor | Corrected catalog |
 | --- | ---: | ---: | ---: |

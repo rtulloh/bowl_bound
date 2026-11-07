@@ -709,10 +709,13 @@ coaching, tool and chart versions and renew it after relevant changes.
 **Validate:** synthetic pipeline tests and deterministic multi-seed complete games
 with scoring, clock, statistics, traces and strict replay reconciliation. Mechanical
 completion does not establish historical accuracy. Overall calibration remains in
-progress. The owner separately authorizes the existing generated 2007 cohort for
-Alpha 6 community testing, subject to exact reviewed files, provenance and final
-release acceptance in [the release notes](../../RELEASE_NOTES.md). Preserve the two
-original fictional samples. Recent years belong to Milestone 34b below.
+progress. The owner authorizes the existing 116 generated 2007 teams for experimental
+community testing, beginning with Alpha 6 and continuing through the bounded
+budget-aware Alpha 9 correction. Exact historical formations and optional defensive
+breakaway refinements remain follow-ups. Concrete identity, probability, engine,
+regression and packaging checks remain required; see [Alpha 9 acceptance](release-alpha9.md)
+and [release notes](../../RELEASE_NOTES.md). Preserve the two original fictional
+samples. Recent years belong to Milestone 34b below.
 
 **Commit:** `milestone 34a: expand historical college cohort calibration`
 
