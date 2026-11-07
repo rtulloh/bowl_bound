@@ -79,3 +79,18 @@ ordinary reload. The regression passes through the finalizer; parent incidence
 and all nondepth facts remain checked. This implements the final data-producing
 boundary; paired conditioned-source files, owner review, the approved full cohort
 and final release acceptance are still required. Ticket remains OPEN.
+
+--- 2026-11-07 — actual paired broad passing-cell census ---
+
+The [census contract](../../passing-cell-audit-method.md) now covers the four
+passing calls, Option and B/QR/QT dependencies, plus all-family repeated
+token/flag/color patterns. One meaningful synthetic RED shows why the older
+depth-only gate cannot qualify extreme pass gains; fourteen controls and 87
+related checks pass. The actual final-pipeline pair has 780 scoped cells,
+1,260 cluster cells and 120 primary contexts with 18,000 independent Priority
+address checks. No fixed gain falls outside the declared conditioned source
+diagnostic envelopes. Numeric unidentified-call support, conditional terminal
+paths and repeated-column dispositions remain explicit unresolved components;
+this is not historical or full passing-plausibility approval. All 76 consumed
+identities stayed unchanged. Full-cohort generation/audit remains held for owner
+paired review; DATA-064 remains OPEN.
