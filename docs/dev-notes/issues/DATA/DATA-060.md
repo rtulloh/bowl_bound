@@ -8,7 +8,7 @@ created-at: 2026-11-06
 resolved-at: null
 closed-at: null
 tags: [chart-generator, tactical-model, validation, reproduced]
-links: [DATA-045]
+links: [DATA-045, DATA-063]
 commits: []
 ---
 
@@ -24,6 +24,8 @@ This public release summary retains the canonical issue ID. Detailed source and 
 - Preserve physical event budgets, protected whole-cell facts and source unknowns.
 - Quantify zero/dormant mechanisms and limited finite-row contrasts without invented events or false strict-success claims.
 - Check actual priority outcomes and relevant conditional depth/yardage effects; do not require cosmetic uniqueness.
+- Qualify interception-depth variation by call and formation against known source atoms and support uncertainty. Test authored short/long/formation priors and unknown-depth sensitivity; variable displayed depths alone do not establish historical correctness.
+- Explain retained row-five stripes and other repeated mechanisms using exact conditional physical mass and tactical tradeoffs. Distinguish an intentional budget constraint from an avoidable allocator artifact.
 - Validate ordinary installed CSV loading, complete semantic round trips and exact release identities.
 - Keep broader historical calibration and optional rare defensive B policy separate from bounded experimental acceptance.
 

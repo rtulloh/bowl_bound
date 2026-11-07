@@ -8,7 +8,7 @@ created-at: 2026-11-05
 resolved-at: null
 closed-at: null
 tags: [chart-generator, validation, planning]
-links: [DATA-060]
+links: [DATA-037, DATA-046, DATA-048, DATA-049, DATA-053, DATA-055, DATA-060, DATA-063]
 commits: []
 ---
 
@@ -24,7 +24,9 @@ This public release summary retains the canonical issue ID. Detailed source reco
 - Preserve known/unknown distinctions and correct probability/exposure denominators.
 - Audit scoring, state, clock, statistics, traces, replay and legal AI decisions.
 - Distinguish descriptive simulation results from independent historical evidence.
-- Require separate per-team/source-fit assessment before stronger accuracy claims.
+- Require separate per-team/source-fit assessment before stronger accuracy claims, reconciling official totals, definitions, eligible PBP coverage and missing values.
+- Census every result family across offense, defense, supplemental and special teams: exact tokens, normalized mechanisms, rendered colors, runs/blocks, matching rows and cross-team templates. Check B, QT/QR, INC/BLACK, INT, penalties and numeric outcomes; retain supported repetition and exact physical weights rather than moving a problem cosmetically.
+- Validate the frozen method on additional teams/seasons without developer references and explain strengths/weaknesses under baseline and Hard policies; benchmarks inform validation without becoming generation inputs.
 - Record committed validation and play-test confirmation before resolving or closing.
 
 ## Comments
