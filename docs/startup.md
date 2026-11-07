@@ -19,18 +19,21 @@ The source script prefers the checkout .venv; otherwise it uses `python3`
 The existing terminal game remains available with `python -m bowl_bound`.
 The starter does not install packages or start Vite, reloaders or child servers.
 
-The web game opens <http://127.0.0.1:8000> in your browser once its local server
+The web game opens <http://127.0.0.1:8001> in your browser once its local server
 has started. If no browser opens, enter the displayed address manually. Keep
 the terminal window open while playing. Save/download your game before stopping,
 then press **Ctrl+C** in the terminal. Closing a browser tab does not stop the
 server; stopping the server discards unsaved in-memory games.
+
+Bowl Bound defaults to port **8001**; Paydirt uses **8000**, so both games can
+run at the same time. `python -m backend` uses the same Bowl Bound default.
 
 Options work with the executable, `start.sh`, `start.bat`, or
 `python -m backend.launcher`:
 
 - `--version`: print the public game version without starting a server.
 - `--no-browser`: start without opening a browser.
-- `--port 8001`: choose another port if 8000 is in use.
+- `--port 8002`: choose another port if 8001 is in use.
 - `--seasons PATH`: read a separately installed local team folder. The launcher
   does not copy, change or install teams. Browser saves use your download folder
   or browser-selected save location, not the bundled resources.

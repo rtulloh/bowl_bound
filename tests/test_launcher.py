@@ -83,6 +83,22 @@ def test_server_receives_reserved_socket_and_shuts_down_without_reload(resources
     browser.assert_not_called()
 
 
+@pytest.mark.parametrize(("port_args", "expected"), [([], 8001), (["--port", "8123"], 8123)])
+def test_default_and_custom_ports_match_listener_server_and_printed_url(
+    resources: Path, capsys: pytest.CaptureFixture[str], port_args: list[str], expected: int
+) -> None:
+    with (
+        patch.object(launcher, "resource_root", return_value=resources),
+        patch("socket.create_server") as listener,
+        patch("uvicorn.Server") as server,
+    ):
+        assert launcher.main(["--no-browser", *port_args]) == 0
+    listener.assert_called_once_with(("127.0.0.1", expected), family=socket.AF_INET)
+    assert server.call_args.args[0].port == expected
+    server.return_value.run.assert_called_once_with(sockets=[listener.return_value])
+    assert f"Open http://127.0.0.1:{expected}" in capsys.readouterr().out
+
+
 def test_browser_waits_for_actual_server_start_and_stops_on_exit() -> None:
     from threading import Event, Thread
     from types import SimpleNamespace

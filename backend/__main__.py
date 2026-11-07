@@ -31,7 +31,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--seasons", type=Path, default=Path("seasons"), help="seasons folder")
     parser.add_argument("--static", type=Path, default=Path("frontend/dist"), help="built frontend")
     parser.add_argument("--host", default="127.0.0.1")
-    parser.add_argument("--port", type=_port, default=8000)
+    parser.add_argument("--port", type=_port, default=8001)
     parser.add_argument(
         "--allow-remote", action="store_true", help="permit a non-local host (no authentication!)"
     )

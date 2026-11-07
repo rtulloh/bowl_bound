@@ -7,7 +7,7 @@ PEP 440 form **0.1.0a7**. Its planned immutable Git tag is `v0.1.0-alpha.7`.
 Python form. Frontend package/lock metadata and `bowl_bound.DISPLAY_VERSION`
 use the public form. `GET /api/version` returns both as `version` and
 `python_version`, without filesystem paths or machine details. For a local
-default server, open <http://127.0.0.1:8000/api/version>. Include `version`
+default server, open <http://127.0.0.1:8001/api/version>. Include `version`
 when reporting a problem. Standalone launcher version reporting will use the
 same public identity.
 

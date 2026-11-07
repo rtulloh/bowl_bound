@@ -38,3 +38,11 @@ clear correction notes. Existing alpha tags, assets and live games remain intact
 No version metadata, chart, runtime, tag or release asset is changed merely by
 recording this target. Detailed implementation and release evidence belongs in
 the milestone notes and a final acceptance section when actually available.
+
+## Simultaneous Bowl Bound and Paydirt play
+
+Owner explicitly requested [DEV-078](issues/DEV/DEV-078.md) for 1.0.0: Bowl Bound
+uses local port **8001** by default in standalone/source production launchers and
+`python -m backend`; Paydirt retains **8000**. Include this in release notes and
+native startup acceptance. Frontend development proxy/player URLs use the Bowl
+Bound port, and explicit `--port` overrides remain available.

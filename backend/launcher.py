@@ -42,7 +42,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     """Run one local server; no development reload, child servers or resource writes."""
     parser = argparse.ArgumentParser(description=__doc__, prog="Bowl-Bound")
     parser.add_argument("--version", action="version", version=f"Bowl Bound {DISPLAY_VERSION}")
-    parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--port", type=int, default=8001)
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument(
         "--allow-remote", action="store_true", help="allow nonlocal binding (no authentication)"
@@ -81,7 +81,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         listener = socket.create_server((args.host, args.port), family=family)
     except OSError:
         print(
-            "Could not open the local server port. Stop another copy, or choose --port 8001.",
+            "Could not open the local server port. Stop another copy, or choose --port 8002.",
             file=sys.stderr,
         )
         return 1

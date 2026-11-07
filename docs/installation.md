@@ -34,7 +34,7 @@ Open a terminal in the extracted `BowlBound` folder:
 Apple Silicon and Intel Mac builds are different; use the right one. Intel means
 64-bit x86_64, not 32-bit x86. Linux is source-only for this alpha.
 
-The browser opens <http://127.0.0.1:8000>. Keep the terminal open while playing;
+The browser opens <http://127.0.0.1:8001>. Keep the terminal open while playing;
 save your game before pressing Ctrl+C to stop. If the browser does not open,
 enter the displayed address manually. See [startup options](startup.md).
 

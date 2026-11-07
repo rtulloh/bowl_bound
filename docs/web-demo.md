@@ -26,12 +26,12 @@ nvm use
 .venv/bin/python -m bowl_bound.sample_teams         # original fictional teams
 npm --prefix frontend ci
 npm --prefix frontend run build
-.venv/bin/python -m backend --seasons seasons        # http://127.0.0.1:8000
+.venv/bin/python -m backend --seasons seasons        # http://127.0.0.1:8001
 ```
 
 The server binds to this computer only. `--host` with a non-local address is refused unless
 you also pass `--allow-remote`, because there is no authentication. For development, run
-`npx vite` in `frontend/` (port 5173, proxying `/api` to port 8000) next to the backend.
+`npx vite` in `frontend/` (port 5173, proxying `/api` to port 8001) next to the backend.
 
 Teams are read from `seasons/<season>/<team-slug>/` exactly as described in the
 [team file format](team-bundle.md). A team that cannot be read is listed as a problem, and
