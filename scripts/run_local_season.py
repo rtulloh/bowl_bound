@@ -522,6 +522,7 @@ def _play_one(
     *,
     both_sides_policy: str | None = None,
     verify_replay: bool = False,
+    resume_checkpoint: Callable[[SavedGame, Callable[[str], TeamChart]], SavedGame] | None = None,
 ) -> dict[str, Any]:
     """Play a complete regulation game through SavedGame's engine/coaching API."""
     if both_sides_policy not in {None, "hard", "baseline"}:
@@ -612,7 +613,15 @@ def _play_one(
                 raise ValueError("neither team has a legal automated action")
             after = game.view()
             if verify_replay and not checkpoint_verified and len(after.log) >= 25:
-                restored = loads_game(dumps_game(game), lambda key: teams[key][0])
+
+                def loader(key: str) -> TeamChart:
+                    return teams[key][0]
+
+                restored = (
+                    resume_checkpoint(game, loader)
+                    if resume_checkpoint is not None
+                    else loads_game(dumps_game(game), loader)
+                )
                 if restored.view() != after:
                     raise ValueError("midgame save/load state diverged")
                 game = restored

@@ -9,7 +9,7 @@ resolved-at: null
 closed-at: null
 tags: [chart-generator, validation, planning]
 links: [DATA-045, DATA-053]
-commits: []
+commits: [52c80b9]
 ---
 
 ## Description
@@ -59,3 +59,21 @@ remain unknown. The 1,042 old observed nonclock mandatory decisions have no
 addressed save evidence. An opt-in addressed capture is a separate next step;
 aggregate reconciliation and replay do not prove independent event ownership.
 Full DATA-055 remains OPEN through candidate/benchmark and final acceptance.
+
+--- 2026-11-07 — addressed-save conformance checkpoint ---
+
+An opt-in development collector now records actual-object mandatory boundaries,
+complete native saves and typed command links. Its explicit midpoint resume edge
+preserves both original and restored addresses. Optional normal-clock
+continuations remain separately counted and replayed. Synthetic mutations first
+exposed missing final boundaries, duplicated command ownership, forged phase and
+creator metadata, loose JSON types and foreign resume origins; the guards are
+implemented without changing engine behavior or weakening the original checks.
+
+The exact frozen source passes 33 synthetic checks, including a complete Hard
+game with collection on/off exact save, view, journal and dice equality plus
+native midpoint/final strict replay. That game accounts for 154 raw pending
+boundaries through 153 continuations and one handoff. The 184 related capture
+and runner checks pass. See [method and limits](../../pending-choice-capture.md).
+No fresh historical panel is claimed; the old missing addresses, independent
+causal football populations and full milestone acceptance remain outstanding.
