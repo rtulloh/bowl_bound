@@ -983,3 +983,25 @@ Tracked work: [DATA-065](issues/DATA/DATA-065.md). See
 and 1.0.0 release scope.
 
 **Commit:** `milestone 43: track persistent season team statistics`
+
+### 44. Make cross-year web matchups explicit
+
+Owner-requested backlog feature, added 2026-11-07. Let players independently
+choose home and away teams from installed eligible years, including different
+years of the same school. The designated home team's season governs gameplay.
+
+**Deliver:** clear independent year/team selection, season-qualified identities,
+a backend-provided governing home-year rules summary and preserved per-team
+chart/roster years. Retain frozen rules, game type and identities through save/load;
+provide actionable errors for unsupported home profiles. Build on the existing
+all-team selectors and documented home-season policy.
+
+**Validate:** test-first synthetic cross-year/same-year cases, swapped home/away,
+same-school/different-year, human/manual modes, unsupported profiles and save/load.
+Assert actual engine rules across supported kickoff/touchback/overtime boundaries;
+run relevant API/frontend/session/persistence regressions and a browser play-test.
+
+Tracked work: [UI-070](issues/UI/UI-070.md). See [Milestone 44](milestone-44.md).
+This is outside the active Milestone 42 and 1.0.0 correction release scope.
+
+**Commit:** `milestone 44: expose cross-year web matchups with home-season rules`
