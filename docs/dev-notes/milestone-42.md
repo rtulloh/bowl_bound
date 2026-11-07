@@ -1,9 +1,14 @@
-# Milestone 42 — Play-specific interception depths and plausibility
+# Milestone 42 — Play-specific depths and independent chart validation
 
-Status: prioritized and scoped, 2026-11-07. Implementation and validation pending.
+Status: assigned for implementation, 2026-11-07. Validation and acceptance pending.
 Owner directs this correction into the next milestone and release after Alpha 9.
 Target: Alpha 10, subject to checking the next unused immutable tag at publication.
-[DATA-064](issues/DATA/DATA-064.md) is a required next-release correction.
+Required high-priority work: [DATA-064](issues/DATA/DATA-064.md) corrects
+play-specific interception depths; [DATA-055](issues/DATA/DATA-055.md) completes
+independent per-event game accounting; [DATA-046](issues/DATA/DATA-046.md)
+compares frozen candidates with the available compatible 2007/2008 developer
+references. The owner explicitly added DATA-055/046 and requested a subagent
+with high reasoning on 2026-11-07.
 
 ## Problem and resulting behavior
 
@@ -30,6 +35,34 @@ Bowl Bound's call definitions, source model, exact dice and resolver remain the
 authority. Existing Bowl Bound generator inspection identifies _int_locations
 and generate_team as the shared-pool path; work in the maintained research
 lineage and export through the ordinary chart codec.
+
+## Added audit and benchmark acceptance
+
+For DATA-055, preserve the known failing kickoff-return recovery reproduction,
+correct the distinction between chart consultations and actual recovery draws,
+and independently verify event ownership, accepted/voided statistics, QT terminal
+classification, consulted cells/priority and relevant pending-choice save/replay.
+Use synthetic mutations and retained passing controls; rerun affected frozen
+complete-game evidence. An aggregate engine-derived reconciliation alone is not
+independent event acceptance.
+
+For DATA-046, inventory and freeze the available authorized 2007/2008 compatible
+reference pairs before running comparisons. Reuse the corrected observer and
+matched runtime/coaching/rules conditions. Compare exact weighted mechanisms,
+conditional depths/tails, tactical benefit/cost and terminal engine behavior;
+assess both chart sets against the same eligible historical evidence. Explain
+supported model differences and unresolved source questions instead of treating
+reference equality as the target. Keep charts and detailed comparison reports
+private, publish only a safe synopsis, and distinguish explored references from
+transfer evidence on additional teams without references. Research-only 2008
+candidate preparation does not add that season to the release catalog.
+
+Implement the generator correction and observer tests as separately reviewable
+changes, then freeze the candidate before numerical benchmark execution. Deliver
+one evidence-backed component verdict per ticket and an overall release decision.
+Do not close any of these three tickets through a partial helper result or an
+unexecuted acceptance requirement. Report a concrete blocker if necessary while
+continuing independent authorized work.
 
 ## Execution and acceptance
 
@@ -76,10 +109,11 @@ Correct generated data and auditing; the UI remains an engine-provided chart
 display. Do not alter Bowl Bound rules to compensate for a generation fault.
 Razzle-Dazzle is an artificial engine action, not a chart/source play family.
 
-The optional defensive (B) formula, new seasons and completion of every broader
-historical calibration investigation remain separately tracked. This milestone's
-defined correction and acceptance checks are required before the next release;
-the already published experimental Alpha 9 is not historical-accuracy approval.
+The optional defensive (B) formula, new-season publication and completion of
+broader historical calibration investigations outside DATA-046/055/064 remain
+separately tracked. All three assigned tickets are milestone work; record their
+acceptance dispositions before the next release. The already published
+experimental Alpha 9 is not historical-accuracy approval.
 
 ## Planning validation
 

@@ -927,7 +927,7 @@ controls, and recover from blocked windows and expired sessions.
 
 **Commit:** `milestone 41: add priority and full-page chart views`
 
-### 42. Correct play-specific interception depths and require plausibility checks
+### 42. Correct play-specific depths and validate charts independently
 
 Owner-prioritized on 2026-11-07 after community feedback on Ohio State's Screen
 INT 44. This is the next execution milestone and a required correction for the
@@ -940,7 +940,10 @@ support, team-level observations and authored priors when designed calls are
 unknown. Cover offense and defense across the released cohort; keep unknowns
 explicit and preserve engine authority. Add a mandatory quantitative plausibility
 gate so a real season value cannot pass solely because it appears somewhere in
-the source population.
+the source population. Owner added DATA-055 independent per-event full-game
+accounting and DATA-046 matched 2007/2008 developer-reference comparison on
+2026-11-07. Execute the corrected observer and frozen-candidate benchmarks with
+exact coverage and explicit source/model limits.
 
 **Validate:** test first with synthetic known Screen, known deep-pass,
 unidentified, sparse and zero-budget cases. Review probability, Priority,
@@ -950,9 +953,10 @@ Freeze and audit every final ordinary CSV/API/rendered chart, run relevant
 mechanics and full regression gates, and publish the correction only after the
 defined checks pass. Source-unsupported priors must remain labeled model choices.
 
-Tracked work: [DATA-064](issues/DATA/DATA-064.md); related broader calibration
-remains with [DATA-045](issues/DATA/DATA-045.md) and
-[DATA-060](issues/DATA/DATA-060.md). Optional defensive (B) refinement and new
-seasons are independent follow-ups. See [Milestone 42](milestone-42.md).
+Tracked work: [DATA-064](issues/DATA/DATA-064.md),
+[DATA-055](issues/DATA/DATA-055.md), and [DATA-046](issues/DATA/DATA-046.md).
+Related broader calibration remains with [DATA-045](issues/DATA/DATA-045.md)
+and [DATA-060](issues/DATA/DATA-060.md). Optional defensive (B) refinement and
+new-season publication are separate follow-ups. See [Milestone 42](milestone-42.md).
 
 **Commit:** `milestone 42: correct play-specific interception depths`

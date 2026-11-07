@@ -3,7 +3,7 @@ id: DATA-055
 title: Complete independent full-game event accounting beyond local-runner invariants
 status: open
 priority: High
-milestone: 34a
+milestone: 42
 created-at: 2026-11-06
 resolved-at: null
 closed-at: null
@@ -15,6 +15,8 @@ commits: []
 ## Description
 
 Aggregate scoring/stat/clock checks and engine-derived replay are useful but do not independently validate every event, statistic owner or rare branch. The Alpha 9 bounded observer explicitly leaves fumbled kickoff-return recovery cases unverified.
+
+On 2026-11-07 the owner selected this high-priority ticket for [Milestone 42](../../milestone-42.md), alongside DATA-046 and the DATA-064 generator correction. Close the known observer gap with synthetic failures first, then use the corrected independent event accounting in the milestone's candidate and benchmark checks. This assignment does not change the ticket's acceptance requirements.
 
 ## Resolution / verification
 

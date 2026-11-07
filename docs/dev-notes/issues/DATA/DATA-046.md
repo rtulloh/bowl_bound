@@ -3,7 +3,7 @@ id: DATA-046
 title: Compare frozen candidates with private 2007 and 2008 reference charts
 status: open
 priority: High
-milestone: 34a
+milestone: 42
 created-at: 2026-11-05
 resolved-at: null
 closed-at: null
@@ -15,6 +15,8 @@ commits: []
 ## Description
 
 Available developer charts are valuable diagnostic benchmarks, but are not generation targets or permission to redistribute their content. Compare stable candidates under matched conditions and use discrepancies to improve methods that must also work without a benchmark.
+
+On 2026-11-07 the owner selected this high-priority ticket for [Milestone 42](../../milestone-42.md), alongside DATA-055 and the DATA-064 generator correction. Inventory the available compatible 2007/2008 reference pairs before execution and record exact comparison coverage, missing inputs and supported conclusions. Keep private benchmark preparation separate from expanding the released season catalog.
 
 ## Resolution / verification
 

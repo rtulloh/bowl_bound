@@ -12,16 +12,16 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | ID | Priority | Milestone | Title | Dates |
 | --- | --- | --- | --- | --- |
 | [DATA-045](issues/DATA/DATA-045.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Establish all-team chart confidence gates and community play-testing | created 2026-11-05 |
-| [DATA-046](issues/DATA/DATA-046.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Compare frozen candidates with private 2007 and 2008 reference charts | created 2026-11-05 |
+| [DATA-046](issues/DATA/DATA-046.md) | High | [42](project-plan.md#42-correct-play-specific-depths-and-validate-charts-independently) | Compare frozen candidates with private 2007 and 2008 reference charts | created 2026-11-05 |
 | [DATA-053](issues/DATA/DATA-053.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Execute staged full-game and actual-season chart qualification | created 2026-11-06 |
 | [DATA-054](issues/DATA/DATA-054.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Parameterize actual-season runner and historical comparison by year | created 2026-11-06 |
-| [DATA-055](issues/DATA/DATA-055.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Complete independent full-game event accounting beyond local-runner invariants | created 2026-11-06 |
+| [DATA-055](issues/DATA/DATA-055.md) | High | [42](project-plan.md#42-correct-play-specific-depths-and-validate-charts-independently) | Complete independent full-game event accounting beyond local-runner invariants | created 2026-11-06 |
 | [DATA-056](issues/DATA/DATA-056.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Qualify complete actual-season inputs before season and probability campaigns | created 2026-11-06 |
 | [DATA-057](issues/DATA/DATA-057.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Reject ambiguous fixture phases and bind primary overrides | created 2026-11-06 |
 | [DATA-058](issues/DATA/DATA-058.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Attest actual observer origins and prefreeze lazy engine sources | created 2026-11-06 |
 | [DATA-059](issues/DATA/DATA-059.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Use the selected coaching version for both observation paths | created 2026-11-06 |
 | [DATA-060](issues/DATA/DATA-060.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Qualify formation-dependent pass-defense outcome tradeoffs beyond yardage | created 2026-11-06 |
-| [DATA-064](issues/DATA/DATA-064.md) | High | [42](project-plan.md#42-correct-play-specific-interception-depths-and-require-plausibility-checks) | Qualify pooled interception depths before assigning passing-play results | created 2026-11-07 |
+| [DATA-064](issues/DATA/DATA-064.md) | High | [42](project-plan.md#42-correct-play-specific-depths-and-validate-charts-independently) | Qualify pooled interception depths before assigning passing-play results | created 2026-11-07 |
 | [DEV-004](issues/DEV/DEV-004.md) | High | [23](project-plan.md#23-establish-the-complete-regression-gate) | Provide a single-command full regression gate that builds before browser tests | created 2026-10-26 |
 | [DEV-012](issues/DEV/DEV-012.md) | High | [24](project-plan.md#24-prepare-github-publication) | Exclude historical teams from GitHub release game packages | created 2026-10-26 |
 | [DEV-016](issues/DEV/DEV-016.md) | High | [20a](project-plan.md#20a-add-an-interactive-cli-for-play-testing) | Existing Vite and Vitest dependency chain reports critical development-tool vulnerabilities | created 2026-10-26 |
@@ -679,12 +679,10 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 - [DATA-040](issues/DATA/DATA-040.md) (resolved, High) — Generated defensive formations have no tactical probability differences
 - [DATA-041](issues/DATA/DATA-041.md) (resolved, High) — Generated charts lack a mandatory probability and tactical release audit
 - [DATA-045](issues/DATA/DATA-045.md) (open, High) — Establish all-team chart confidence gates and community play-testing
-- [DATA-046](issues/DATA/DATA-046.md) (open, High) — Compare frozen candidates with private 2007 and 2008 reference charts
 - [DATA-048](issues/DATA/DATA-048.md) (open, Medium) — Require complete coverage and failures in statistical readiness decisions
 - [DATA-049](issues/DATA/DATA-049.md) (open, Medium) — Add source-supported field-goal accuracy qualification
 - [DATA-053](issues/DATA/DATA-053.md) (open, High) — Execute staged full-game and actual-season chart qualification
 - [DATA-054](issues/DATA/DATA-054.md) (open, High) — Parameterize actual-season runner and historical comparison by year
-- [DATA-055](issues/DATA/DATA-055.md) (open, High) — Complete independent full-game event accounting beyond local-runner invariants
 - [DATA-056](issues/DATA/DATA-056.md) (open, High) — Qualify complete actual-season inputs before season and probability campaigns
 - [DATA-057](issues/DATA/DATA-057.md) (open, High) — Reject ambiguous fixture phases and bind primary overrides
 - [DATA-058](issues/DATA/DATA-058.md) (open, High) — Attest actual observer origins and prefreeze lazy engine sources
@@ -738,6 +736,8 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 - [UI-068](issues/UI/UI-068.md) (closed, Medium) — Show the loaded Special Teams chart in the web viewer
 - [UI-069](issues/UI/UI-069.md) (closed, Medium) — Make chart tab and popup launch controls prominent
 
-### Milestone [42](project-plan.md#42-correct-play-specific-interception-depths-and-require-plausibility-checks)
+### Milestone [42](project-plan.md#42-correct-play-specific-depths-and-validate-charts-independently)
 
+- [DATA-046](issues/DATA/DATA-046.md) (open, High) — Compare frozen candidates with private 2007 and 2008 reference charts
+- [DATA-055](issues/DATA/DATA-055.md) (open, High) — Complete independent full-game event accounting beyond local-runner invariants
 - [DATA-064](issues/DATA/DATA-064.md) (open, High) — Qualify pooled interception depths before assigning passing-play results
