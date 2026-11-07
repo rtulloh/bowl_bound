@@ -7,7 +7,9 @@ Status: planned, not built or published. Owner selected version **1.0.0** on
 ## Required work
 
 - [DATA-064](issues/DATA/DATA-064.md): correct play-specific interception-depth
-  generation and enforce independent plausibility checks.
+  generation and enforce independent plausibility checks. After the final fix,
+  complete the [whole-cohort passing-cell audit](milestone-42.md#whole-cohort-passing-cell-audit)
+  on actual release charts; disclose all flagged values and unresolved exceptions.
 - [DATA-055](issues/DATA/DATA-055.md): complete independent event accounting and
   close the known kickoff-return recovery observer coverage gap.
 - [DATA-046](issues/DATA/DATA-046.md): compare frozen corrected candidates with the

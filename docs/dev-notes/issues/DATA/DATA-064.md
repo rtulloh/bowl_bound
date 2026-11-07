@@ -30,6 +30,7 @@ The generator's _int_locations collects known team interception spots without co
 - Review physical INT mass, Priority, catch location, end-zone/touchback/return consequences, unknown support and team calibration together. Do not silently clip depths, relabel the number as return yards, shuffle cells cosmetically or change event budgets to conceal the mismatch.
 - Validate the chosen model on LSU/Ohio State before broader regeneration; use private developer references as diagnostics without treating them as generation targets.
 - Bind corrected ordinary CSV/API/rendered identities and rerun affected probability, mechanics and source-fit evidence. Record integrated tested commits and play-test confirmation before resolution/closure.
+- After the final INT correction, run the [whole-cohort passing-cell audit](../../milestone-42.md#whole-cohort-passing-cell-audit) on the actual release candidate: all offensive and defensive passing calls and relevant dependent pass outcomes. Check call-specific interception depths, extreme gains/losses, special-result semantics and suspicious repeated tokens/families/colors; preserve exact weighted event accounting. Report every flagged exception with evidence and a disposition, not just aggregate pass counts. Unchecked, unsupported or unparseable cases cannot silently pass.
 
 ## Comments
 

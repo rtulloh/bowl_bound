@@ -145,3 +145,56 @@ Full-cohort generation is held at the required owner paired-review checkpoint.
 DATA-064, DATA-055 and DATA-046 remain open. The independent observer and reference
 inventory/comparison work proceed in isolated research lanes. No release version,
 tag or immutable Alpha 9 artifact has changed.
+## Whole-cohort passing-cell audit
+
+Owner explicitly requested this acceptance step on 2026-11-07: after the INT fix
+is ready, audit passing cells for unreasonable values. This extends DATA-064's
+existing all-team plausibility requirement; it does not replace the generator fix.
+
+- Start with the corrected final-pipeline LSU/Ohio State pair. After owner visual
+  acceptance and approved full regeneration, repeat over every team in the
+  release candidate. Freeze model/source/chart identities and inventory every
+  applicable cell so missing teams, columns or unparsed values fail coverage.
+- Cover offense and defense Screen, Sprint Out, Boot-leg and Drop Back, plus
+  Option passing continuations and dependent B/QR/QT pass outcomes where relevant.
+  Separate primary triggers from terminal results. Razzle-Dazzle is an artificial
+  engine action, not a tenth chart/source play family.
+- Check INT catch depth against each called play's declared observed support or
+  authored policy, including legitimate behind-LOS values. Test the final
+  post-calibration/export bytes so a later stage cannot reintroduce implausible
+  depths. Distinguish catch depth, pass gain and return distance.
+- Inspect unusually large positive/negative pass gains, blank/zero semantics,
+  priority/replacement facts, incomplete-pass and special-result tokens, and
+  sideline flags. Check actual engine interpretation and field/end-zone effects;
+  a syntactically valid cell does not establish football plausibility.
+- Census exact values, normalized result families and rendered color/flag unions
+  for repeated rows, runs, cross-call/formation blocks and cross-team templates.
+  Check all families together so an INT correction cannot conceal a QT, BLACK,
+  B, penalty or ordinary-yardage allocation problem. Repetition alone is not proof
+  of a defect, and cosmetic randomization is not a correction.
+- Report raw counts and exact Bowl Bound dice-weighted primary and resolved
+  frequencies separately, including Priority and conditional branch effects.
+  Compare to declared source/model budgets where supported. Declare numerical
+  criteria and source limitations before applying them; do not invent universal
+  yardage caps, infer designed calls from unidentified passes, or tune thresholds
+  after a finding merely to obtain a pass.
+- Retain a per-finding team/call/roll/value explanation and disposition: corrected,
+  supported retained result, or unresolved issue. Quantify complete coverage and
+  unknowns. Any unresolved required plausibility finding must be surfaced in the
+  release decision. Add meaningful synthetic regression controls before fixes,
+  preserve probability controls and rerun the affected evidence.
+
+Paydirt consultation for this extension: reviewed DATA-040 and DATA-041. Adapt
+its separation of raw geometry, weighted exposure and terminal behavior, and its
+lesson to census every outcome family rather than relocating one visible stripe.
+Do not copy NFL call mappings, dice weights, thresholds, private charts or runtime
+code. Detailed team-level evidence remains private; retain a public-safe synopsis.
+
+Acceptance is pending: assigning this audit or passing documentation checks is
+not a completed chart audit or release approval.
+
+Tracking-only validation for this extension: regenerated the issue index with
+`.venv/bin/python scripts/build_issue_index.py`; existing issue/documentation
+checks (`tests/test_issue_tracker.py`, `tests/test_create_issue.py`,
+`tests/test_priority_docs.py`, `tests/test_release_player_docs.py`) passed 38 tests
+using `.venv/bin/python -m pytest ... -q`; `git diff --check` passed.
