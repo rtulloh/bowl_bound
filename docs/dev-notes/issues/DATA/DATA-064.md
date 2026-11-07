@@ -39,3 +39,14 @@ The generator's _int_locations collects known team interception spots without co
 Read-only checks confirm the released CSV equals the immutable Alpha 9 tag. The historical 44 is catch depth, not return distance; return distance is zero. This investigation does not establish that a 44-yard Screen interception occurred. No chart/model/runtime change or release mutation was made.
 
 Consulted Paydirt DATA-040's source-conditional and physical-mass review requirements. Adapt that separation of observed support from authored allocation; do not import its NFL model, weights, source data or runtime dependencies. Private source identities and the detailed trace are retained locally.
+
+--- 2026-11-07 — owner accepts corrected paired visual review ---
+
+Owner explicitly confirmed the corrected LSU/Ohio State charts looked good and
+has captured a screenshot for their own release announcement. The required paired
+visual review is accepted; proceed with full 116-team regeneration after the
+storage prerequisite is met. Bind this approval to the final-pipeline-v2 pair
+(receipt SHA-256 7fdf099f6ca167f95e33e458b7a310145a85c1a73a11444a54ae2a0e3ba9f176).
+This is visual acceptance only. Full-cohort passing-cell/source/engine audits,
+independent event/reference validation and final release gates remain required;
+the ticket is not resolved by the screenshot or approval.

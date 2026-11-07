@@ -210,3 +210,15 @@ verified its localhost:8001 proxy. Ruff lint/format and whitespace checks pass.
 Actual synthetic-resource subprocess checks start both entry points at default
 8001 while the existing HTTP service on 8000 remains unchanged. These checks do
 not substitute for final 1.0.0 integration/native release acceptance.
+
+## Paired visual review accepted
+
+On 2026-11-07 the owner explicitly accepted the corrected LSU/Ohio State pair:
+"yes, it looked good to me" and confirmed capturing a screenshot for their own
+announcement. This accepts the actual final-pipeline-v2 pair, receipt SHA-256
+7fdf099f6ca167f95e33e458b7a310145a85c1a73a11444a54ae2a0e3ba9f176, and lifts the
+owner-review hold before full 116-team regeneration. Storage capacity remains an
+independent prerequisite; do not bypass its reserve guard. All numerical,
+whole-cohort passing-cell, independent event/reference and final release checks
+remain mandatory. Do not treat visual approval as historical-fit certification
+or publish a Facebook post on the owner's behalf.
