@@ -931,7 +931,8 @@ controls, and recover from blocked windows and expired sessions.
 
 Owner-prioritized on 2026-11-07 after community feedback on Ohio State's Screen
 INT 44. This is the next execution milestone and a required correction for the
-next release after Alpha 9, targeting Alpha 10. Earlier numbered deferred
+next release after Alpha 9, targeting 1.0.0 per the owner's updated direction.
+Earlier numbered deferred
 milestones retain their existing scope.
 
 **Deliver:** replace unqualified shared interception-depth assignment with a

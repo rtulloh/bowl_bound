@@ -2,7 +2,9 @@
 
 Status: assigned for implementation, 2026-11-07. Validation and acceptance pending.
 Owner directs this correction into the next milestone and release after Alpha 9.
-Target: Alpha 10, subject to checking the next unused immutable tag at publication.
+Target: **1.0.0**, tag `v1.0.0`, per owner direction on 2026-11-07.
+This supersedes the earlier Alpha 10 target. Confirm the tag is unused before
+publication and preserve prior alpha tags/assets as immutable history.
 Required high-priority work: [DATA-064](issues/DATA/DATA-064.md) corrects
 play-specific interception depths; [DATA-055](issues/DATA/DATA-055.md) completes
 independent per-event game accounting; [DATA-046](issues/DATA/DATA-046.md)
@@ -97,11 +99,13 @@ continuing independent authorized work.
    evidence affected by the model change, and disclose any untouched historical
    accuracy or full-season qualification limits. This milestone does not require
    exact historic winners or pretend that unknown designed calls are observed.
-8. Commit the reviewed implementation, then prepare the next unused Alpha 10
-   release tag, native builds and release-page correction notes through the
-   existing release workflow. Preserve immutable Alpha 9 assets/tag and existing
-   privacy/sample/generated-team allowlists. Record tested integration commits
-   before resolution and applicable owner play-test confirmation before closure.
+8. Commit the reviewed implementation, then coordinate 1.0.0 package/application,
+   frontend, launcher, native installer and release metadata with a final regression
+   run. Prepare the unused v1.0.0 tag, verified native builds and regular Latest
+   release-page correction notes through the existing workflow. Preserve Alpha 9
+   and all previous tags/assets plus current privacy/sample/generated-team
+   allowlists. Record tested integration commits before resolution and applicable
+   owner play-test confirmation before closure. See [1.0.0 preparation](release-1.0.0.md).
 
 ## Scope boundaries
 
