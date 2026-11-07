@@ -21,7 +21,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 | [DATA-058](issues/DATA/DATA-058.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Attest actual observer origins and prefreeze lazy engine sources | created 2026-11-06 |
 | [DATA-059](issues/DATA/DATA-059.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Use the selected coaching version for both observation paths | created 2026-11-06 |
 | [DATA-060](issues/DATA/DATA-060.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Qualify formation-dependent pass-defense outcome tradeoffs beyond yardage | created 2026-11-06 |
-| [DATA-064](issues/DATA/DATA-064.md) | High | [34a](project-plan.md#34a-expand-historical-college-cohorts-and-matched-slate-calibration) | Qualify pooled interception depths before assigning passing-play results | created 2026-11-07 |
+| [DATA-064](issues/DATA/DATA-064.md) | High | [42](project-plan.md#42-correct-play-specific-interception-depths-and-require-plausibility-checks) | Qualify pooled interception depths before assigning passing-play results | created 2026-11-07 |
 | [DEV-004](issues/DEV/DEV-004.md) | High | [23](project-plan.md#23-establish-the-complete-regression-gate) | Provide a single-command full regression gate that builds before browser tests | created 2026-10-26 |
 | [DEV-012](issues/DEV/DEV-012.md) | High | [24](project-plan.md#24-prepare-github-publication) | Exclude historical teams from GitHub release game packages | created 2026-10-26 |
 | [DEV-016](issues/DEV/DEV-016.md) | High | [20a](project-plan.md#20a-add-an-interactive-cli-for-play-testing) | Existing Vite and Vitest dependency chain reports critical development-tool vulnerabilities | created 2026-10-26 |
@@ -691,7 +691,6 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 - [DATA-059](issues/DATA/DATA-059.md) (open, High) — Use the selected coaching version for both observation paths
 - [DATA-060](issues/DATA/DATA-060.md) (open, High) — Qualify formation-dependent pass-defense outcome tradeoffs beyond yardage
 - [DATA-063](issues/DATA/DATA-063.md) (open, Medium) — Define evidence-supported rare defensive breakaway allocation
-- [DATA-064](issues/DATA/DATA-064.md) (open, High) — Qualify pooled interception depths before assigning passing-play results
 - [DEV-072](issues/DEV/DEV-072.md) (resolved, High) — Publish Alpha 6 with an exact reviewed generated-team catalog
 - [DEV-076](issues/DEV/DEV-076.md) (resolved, High) — Deliver corrected generated defensive tactics in the next alpha
 - [DEV-077](issues/DEV/DEV-077.md) (open, Medium) — Alpha 8 bundled README retains the Alpha 7 download callout
@@ -738,3 +737,7 @@ See [ticket conventions](issues/README.md) and the [roadmap](project-plan.md).
 - [UI-067](issues/UI/UI-067.md) (closed, Medium) — Group offense by rushing and passing with a separate supplemental block
 - [UI-068](issues/UI/UI-068.md) (closed, Medium) — Show the loaded Special Teams chart in the web viewer
 - [UI-069](issues/UI/UI-069.md) (closed, Medium) — Make chart tab and popup launch controls prominent
+
+### Milestone [42](project-plan.md#42-correct-play-specific-interception-depths-and-require-plausibility-checks)
+
+- [DATA-064](issues/DATA/DATA-064.md) (open, High) — Qualify pooled interception depths before assigning passing-play results

@@ -14,7 +14,7 @@ Reviewed 2026-11-07 against the owner's chart-generation, benchmark, season-vali
 | Are missing opponents, fixtures, source coverage, codecs and crosswalks qualified before full-season campaigns? | [DATA-056](issues/DATA/DATA-056.md) |
 | Are source phase overrides, loaded runtime identity and versioned coaching menus trustworthy? | [DATA-057](issues/DATA/DATA-057.md), [DATA-058](issues/DATA/DATA-058.md), [DATA-059](issues/DATA/DATA-059.md) |
 | Are formation event budgets, retained INT stripes, conditional depths and authored priors justified beyond visual variety? | [DATA-060](issues/DATA/DATA-060.md) |
-| Does a genuine pooled interception depth support its assignment to Screen or another particular passing play? | [DATA-064](issues/DATA/DATA-064.md) |
+| Does a genuine pooled interception depth support its assignment to Screen or another particular passing play? | [DATA-064](issues/DATA/DATA-064.md), required next-release correction in [Milestone 42](milestone-42.md) |
 | When should rare defensive (B) cells be awarded, and what exact probability/tail effects follow? | [DATA-063](issues/DATA/DATA-063.md) |
 | Which recent and legacy years have enough lawful, reliable source support? | [DATA-037](issues/DATA/DATA-037.md) |
 | How should the AI value a penalty that repeats a two-point try? | [AI-034](issues/AI/AI-034.md) |

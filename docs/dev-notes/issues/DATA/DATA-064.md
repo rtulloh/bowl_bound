@@ -3,7 +3,7 @@ id: DATA-064
 title: Qualify pooled interception depths before assigning passing-play results
 status: open
 priority: High
-milestone: 34a
+milestone: 42
 created-at: 2026-11-07
 resolved-at: null
 closed-at: null
@@ -15,6 +15,8 @@ commits: []
 ## Description
 
 A community report asks whether Ohio State's Screen INT 44 is supported. The immutable Alpha 9 offense CSV contains that exact value at roll 18, as does Drop Back at roll 18. This is present in the data, not introduced by the visual chart.
+
+Owner prioritized this as a required correction for the next milestone and release on 2026-11-07. Assigned to [Milestone 42](../../milestone-42.md), targeting Alpha 10. This is no longer only a deferred investigation; the next release must satisfy the documented correction and plausibility gate.
 
 There is a real 44-yard interception depth in the team's 2007 source evidence. The [official Ohio State–Purdue play-by-play](https://ohiostatebuckeyes.com/documents/download/2023/6/30/2007-6-Purdue.pdf#page=18) records a second-and-seven pass from Purdue's 46 intercepted at Purdue's 2, with no return. Neither that report nor the normalized event identifies the designed play as Screen. The historical depth is supported; its assignment to Screen is not established by that event.
 

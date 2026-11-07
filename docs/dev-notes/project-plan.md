@@ -926,3 +926,33 @@ controls, and recover from blocked windows and expired sessions.
 [UI-069](issues/UI/UI-069.md). Independent of the Alpha 6 release.
 
 **Commit:** `milestone 41: add priority and full-page chart views`
+
+### 42. Correct play-specific interception depths and require plausibility checks
+
+Owner-prioritized on 2026-11-07 after community feedback on Ohio State's Screen
+INT 44. This is the next execution milestone and a required correction for the
+next release after Alpha 9, targeting Alpha 10. Earlier numbered deferred
+milestones retain their existing scope.
+
+**Deliver:** replace unqualified shared interception-depth assignment with a
+documented play-specific generation policy. Distinguish observed call-specific
+support, team-level observations and authored priors when designed calls are
+unknown. Cover offense and defense across the released cohort; keep unknowns
+explicit and preserve engine authority. Add a mandatory quantitative plausibility
+gate so a real season value cannot pass solely because it appears somewhere in
+the source population.
+
+**Validate:** test first with synthetic known Screen, known deep-pass,
+unidentified, sparse and zero-budget cases. Review probability, Priority,
+conditional depths, end-zone/return effects and uncertainty. Regenerate LSU and
+Ohio State for quantitative and owner visual review before the full cohort.
+Freeze and audit every final ordinary CSV/API/rendered chart, run relevant
+mechanics and full regression gates, and publish the correction only after the
+defined checks pass. Source-unsupported priors must remain labeled model choices.
+
+Tracked work: [DATA-064](issues/DATA/DATA-064.md); related broader calibration
+remains with [DATA-045](issues/DATA/DATA-045.md) and
+[DATA-060](issues/DATA/DATA-060.md). Optional defensive (B) refinement and new
+seasons are independent follow-ups. See [Milestone 42](milestone-42.md).
+
+**Commit:** `milestone 42: correct play-specific interception depths`
