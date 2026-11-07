@@ -535,7 +535,8 @@ def _budget_record(chart: TeamChart, metadata: TeamFileMetadata) -> dict[str, An
             f.value: sum(mass[p, f]["INT"] for p in range(6, 10)) for f in Defense
         },
         "anchor_mass": {
-            str(p): {k: mass[p, Defense.A][k] for k in ("INT", "QT")} for p in range(6, 10)
+            str(p): {k: mass[p, Defense.A][k] for k in (("INT", "QT") if p in (7, 9) else ("INT",))}
+            for p in range(6, 10)
         },
     }
 

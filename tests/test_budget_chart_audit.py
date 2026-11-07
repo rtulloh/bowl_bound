@@ -17,6 +17,7 @@ from tests.test_models import provenance
 
 def rebase(chart: TeamChart, source: str = "e" * 64) -> tuple[TeamChart, TeamFileMetadata]:
     def cell(value: NormalizedCell) -> NormalizedCell:
+        assert value.provenance is not None
         return replace(
             value,
             provenance=replace(
@@ -305,3 +306,60 @@ def test_rejected_budget_report_names_the_supported_successor_model(tmp_path: Pa
     assert rejected["schema_version"] == 2
     assert rejected["policy_sha256"] == audit.BUDGET_MODEL_SHA256
     assert rejected["passed"] is False
+
+
+@pytest.mark.parametrize("play", [6, 8])
+def test_budget_counterplay_may_redistribute_nonpressure_anchor_qt(
+    tmp_path: Path, play: int
+) -> None:
+    root, baseline, chart, meta, _, key = budget_fixture(tmp_path)
+    original, original_meta = load_team(baseline / "seasons/2007", "synthetic-generated")
+    qt = _with_legend_color(NormalizedCell(ResultKind.QUARTERBACK_TRAPPED, provenance()))
+    old = replace(
+        original,
+        defense=tuple(
+            replace(r, cell=qt)
+            if r.defense is Defense.A and r.play.value == play and r.roll == 2
+            else r
+            for r in original.defense
+        ),
+    )
+    candidate = replace(
+        chart,
+        defense=tuple(
+            replace(r, cell=qt)
+            if r.defense is Defense.B and r.play.value == play and r.roll == 2
+            else r
+            for r in chart.defense
+        ),
+    )
+    report = audit._audit_budget(candidate, meta, audit._budget_record(old, original_meta), key)
+    assert report["family_budgets_preserved"] is True
+    assert report["roles"][f"F/{play}/noncompletion"]["represented"] >= 0
+
+
+@pytest.mark.parametrize("play", [7, 9])
+def test_budget_pressure_anchor_qt_still_cannot_move(tmp_path: Path, play: int) -> None:
+    _, baseline, chart, meta, _, key = budget_fixture(tmp_path)
+    original, original_meta = load_team(baseline / "seasons/2007", "synthetic-generated")
+    qt = _with_legend_color(NormalizedCell(ResultKind.QUARTERBACK_TRAPPED, provenance()))
+    old = replace(
+        original,
+        defense=tuple(
+            replace(r, cell=qt)
+            if r.defense is Defense.A and r.play.value == play and r.roll == 2
+            else r
+            for r in original.defense
+        ),
+    )
+    candidate = replace(
+        chart,
+        defense=tuple(
+            replace(r, cell=qt)
+            if r.defense is Defense.B and r.play.value == play and r.roll == 2
+            else r
+            for r in chart.defense
+        ),
+    )
+    with pytest.raises(audit.ChartAuditError, match="family budgets"):
+        audit._audit_budget(candidate, meta, audit._budget_record(old, original_meta), key)

@@ -104,3 +104,12 @@ OOB/priority, nondefensive cells/metadata, stale identities, dormant/limited
 roles, overshoot residuals and source/native-stage equality. The previously
 accepted cc422b8 frozen-input implementation and synthetic controls are carried
 forward unchanged in scope. No historical fixture is required by CI.
+
+
+The schema-two anchor records preserve A's INT mass on all four pass calls and
+A's QT mass on pressure calls 7 and 9. QT on counterplay calls 6 and 8 may move
+within the conserved per-call budget; F's QT must still not exceed revised A.
+The first frozen cohort exposed an audit-only overrestriction that had pinned
+all four A QT values. Two synthetic false-refusal regressions now cover 6/8,
+while 7/9 refusal controls retain the pressure anchors. No model, chart or
+source change follows from this correction (DATA-060, milestone 34a).
