@@ -31,3 +31,22 @@ On 2026-11-07 the owner selected this high-priority ticket for [Milestone 42](..
 --- 2026-11-07 — outstanding-question coverage review ---
 
 Public-safe summary of the existing canonical research ticket; its ID and open status are preserved. Detailed source records and audit evidence remain private. Experimental Alpha 9 publication does not resolve this investigation. See [coverage review](../../chart-investigation-coverage.md).
+
+--- 2026-11-07 — milestone 42 reference inventory and method checkpoint ---
+
+Fresh explicit inventory covers all 18 locally available imported references;
+four match the assigned 2007/2008 benchmark years. Standard normalization and
+source-PDF hash/page/rectangle bindings pass; all 97 original input hashes are
+unchanged. This is an identity/compatibility check, not a fresh full PDF import,
+historical-fit result or completed candidate comparison. The four matching
+references use placeholder ratings, and the 2008 research baseline is distinct
+from the published 2007 profile.
+
+The [benchmark method](../../reference-benchmark-method.md) fixes complete table
+coverage, matched four-way offense/defense interactions, physical denominators,
+terminal residuals, common source eligibility and transfer selection before
+candidate execution. References already inspected during development are labeled
+retrospective diagnostics. They are never fitting targets, and generic historical
+deep-pass prose is not designed-call depth authority. Detailed reference evidence
+stays private. Candidate/source/model/runtime/observer identities are still
+required before numerical comparisons. Ticket remains open.
