@@ -54,3 +54,27 @@ The prototype is awaiting the required LSU/Ohio State owner visual review.
 All-cohort, shape-sensitivity, final execution/source identities and full
 benchmark/observer/regression requirements remain outstanding. No historical
 conditional-fit approval or ticket resolution is claimed.
+
+--- 2026-11-07 — identity and canonical-allocation review ---
+
+Two synthetic failures exposed effective-strength and export identities retaining
+the strength-four hash during another execution. The correction binds the actual
+execution contract and requires the matching export identity. A separate tied
+mixed-weight counterexample exposed a lost canonical witness; a two-pass allocator
+and stricter exhaustive gate now verify the complete objective and row ordering.
+All changed expectations are documented in the policy note. The paired
+strength-four ordinary files remain byte-identical after these fixes.
+
+The final accepted 1.0.0 handoff must include fresh Ohio State offense/defense
+screenshots from that actual candidate, with corrected Screen depths visible and
+CSV/API/cell identity evidence. Exploratory preview images do not satisfy this
+deliverable. The owner will handle any external posting.
+
+The actual legacy post-calibration ordinary export reproduced a synthetic Screen
+INT outside its declared conditional support (meaningful RED). The maintained
+finalizer now applies conditional depths after that completed calibration, then
+requires independent target-weight/finite-encoding checks before export and after
+ordinary reload. The regression passes through the finalizer; parent incidence
+and all nondepth facts remain checked. This implements the final data-producing
+boundary; paired conditioned-source files, owner review, the approved full cohort
+and final release acceptance are still required. Ticket remains OPEN.

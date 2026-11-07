@@ -9,11 +9,12 @@ from __future__ import annotations
 import hashlib
 import json
 from collections import Counter
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
+from copy import deepcopy
 from dataclasses import dataclass, replace
 from fractions import Fraction
 from itertools import product
-from typing import Any, Protocol
+from typing import Any, Protocol, TypeVar
 
 from bowl_bound.dice import (
     BLACK_FACES,
@@ -22,7 +23,7 @@ from bowl_bound.dice import (
     WHITE_ONE_FACES,
     WHITE_TWO_FACES,
 )
-from bowl_bound.models import ResultKind, TeamChart
+from bowl_bound.models import DefensiveCell, OffensiveCell, ResultKind, TeamChart
 
 # Sprint Out and Bootleg have the same prior: movement alone establishes no depth.
 PRIORS = {
@@ -47,13 +48,26 @@ POLICY_SHA256 = hashlib.sha256(
 
 
 class DepthEvent(Protocol):
-    kind: str
-    called_family: int | None
-    family_confidence: str
-    interception_yards: int | None
-    air_yards: int | None
-    no_play: bool
-    family_evidence: tuple[str, ...]
+    @property
+    def kind(self) -> str: ...
+
+    @property
+    def called_family(self) -> int | None: ...
+
+    @property
+    def family_confidence(self) -> str: ...
+
+    @property
+    def interception_yards(self) -> int | None: ...
+
+    @property
+    def air_yards(self) -> int | None: ...
+
+    @property
+    def no_play(self) -> bool: ...
+
+    @property
+    def family_evidence(self) -> tuple[str, ...]: ...
 
 
 @dataclass(frozen=True)
@@ -62,6 +76,23 @@ class DepthDistribution:
 
     support: tuple[tuple[int, Fraction], ...]
     evidence: dict[str, Any]
+
+
+def execution_identity(prior_strength: int = 4) -> dict[str, Any]:
+    """Bind every executed numerical assumption, including prior strength."""
+    if type(prior_strength) is not int or prior_strength <= 0:
+        raise ValueError("prior strength must be a positive integer")
+    contract = deepcopy(CONTRACT)
+    contract["prior_equivalent_observations"] = prior_strength
+    digest = hashlib.sha256(
+        json.dumps(contract, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    return {
+        "origin": contract["origin"],
+        "sha256": digest,
+        "authored_experimental": True,
+        "contract": contract,
+    }
 
 
 def location_distribution(
@@ -115,7 +146,7 @@ def location_distribution(
             "known_unmatched_call_samples": unmatched,
             "prior_equivalent_observations": prior_strength,
             "source_conditional_truth": "UNKNOWN" if not known else "SPARSE-observed-support",
-            "policy_sha256": POLICY_SHA256,
+            "policy_sha256": execution_identity(prior_strength)["sha256"],
             "modeled_support": tuple((x, str(w)) for x, w in support),
         },
     )
@@ -146,32 +177,52 @@ def encode_depths(
     limits = tuple(weights.count(w) for w in classes)
     total = sum(weights)
     source_total = sum(w for _, w in support)
-    states = {(0,) * len(classes): (Fraction(), Fraction(), ())}
-    source_cdf = Fraction()
-    for index, (x, mass) in enumerate(support):
-        source_cdf += mass / source_total
-        next_states = {}
-        for used, (distance, worst, witness) in states.items():
-            remaining = tuple(n - u for n, u in zip(limits, used, strict=True))
-            choices = (
-                (remaining,)
-                if index == len(support) - 1
-                else product(*(range(n + 1) for n in remaining))
-            )
-            for chosen in choices:
-                after = tuple(u + c for u, c in zip(used, chosen, strict=True))
-                cdf = Fraction(sum(w * n for w, n in zip(classes, after, strict=True)), total)
-                error = abs(cdf - source_cdf)
-                interval = support[index + 1][0] - x if index + 1 < len(support) else 0
-                candidate = (
-                    distance + error * interval,
-                    max(worst, error),
-                    witness + (tuple(chosen),),
+
+    def solve(
+        cdf_limit: Fraction | None,
+    ) -> tuple[Fraction, Fraction, tuple[tuple[int, ...], ...]]:
+        states = {(0,) * len(classes): (Fraction(), Fraction(), ())}
+        source_cdf = Fraction()
+        for index, (x, mass) in enumerate(support):
+            source_cdf += mass / source_total
+            next_states = {}
+            for used, (distance, worst, witness) in states.items():
+                remaining = tuple(n - u for n, u in zip(limits, used, strict=True))
+                choices = (
+                    (remaining,)
+                    if index == len(support) - 1
+                    else product(*(range(n + 1) for n in remaining))
                 )
-                if after not in next_states or candidate < next_states[after]:
-                    next_states[after] = candidate
-        states = next_states
-    distance, worst, witness = states[limits]
+                for chosen in choices:
+                    after = tuple(u + c for u, c in zip(used, chosen, strict=True))
+                    cdf = Fraction(sum(w * n for w, n in zip(classes, after, strict=True)), total)
+                    error = abs(cdf - source_cdf)
+                    if cdf_limit is not None and error > cdf_limit:
+                        continue
+                    interval = support[index + 1][0] - x if index + 1 < len(support) else 0
+                    candidate = (
+                        distance + error * interval,
+                        max(worst, error),
+                        witness + (tuple(chosen),),
+                    )
+                    previous = next_states.get(after)
+                    if previous is None or (
+                        candidate < previous
+                        if cdf_limit is None
+                        else (candidate[0], candidate[2]) < (previous[0], previous[2])
+                    ):
+                        next_states[after] = candidate
+            states = next_states
+        return states[limits]
+
+    # The first pass finds optimal W1 and worst CDF. With that global CDF
+    # bound fixed, a second pass minimizes W1 and the complete count witness.
+    # A prefix's smaller worst error cannot discard a smaller witness which
+    # would tie after a later error equalizes the final maxima.
+    optimum_distance, optimum_worst, _ = solve(None)
+    distance, worst, witness = solve(optimum_worst)
+    if (distance, worst) != (optimum_distance, optimum_worst):
+        raise RuntimeError("canonical depth allocation changed the optimal numerical objective")
     by_weight = {w: [] for w in classes}
     for (x, _), counts in zip(support, witness, strict=True):
         for w, count in zip(classes, counts, strict=True):
@@ -193,6 +244,9 @@ def encode_depths(
     }
 
 
+_Row = TypeVar("_Row", OffensiveCell, DefensiveCell)
+
+
 def apply_depth_policy(
     chart: TeamChart,
     offense_events: Sequence[DepthEvent],
@@ -201,17 +255,20 @@ def apply_depth_policy(
     prior_strength: int = 4,
 ) -> tuple[TeamChart, dict[str, Any]]:
     """Replace fixed INT catch depths after allocation without moving any slots."""
-    offense = list(chart.offense)
-    defense = list(chart.defense)
+    identity = execution_identity(prior_strength)
     reports: dict[str, Any] = {}
     offense_weights = Counter(
         10 * b + w1 + w2 for b, w1, w2 in product(BLACK_FACES, WHITE_ONE_FACES, WHITE_TWO_FACES)
     )
     defense_weights = Counter(r + g for r, g in product(RED_FACES, GREEN_FACES))
-    for side, rows, events, physical in (
-        ("offense", offense, offense_events, offense_weights),
-        ("defense", defense, defense_events, defense_weights),
-    ):
+
+    def encode_rows(
+        original: tuple[_Row, ...],
+        side: str,
+        events: Sequence[DepthEvent],
+        physical: Mapping[int, int],
+    ) -> tuple[_Row, ...]:
+        rows = list(original)
         reports[side] = {}
         for play in PRIORS:
             distribution = location_distribution(events, play, prior_strength=prior_strength)
@@ -223,7 +280,11 @@ def apply_depth_policy(
                     for i, row in enumerate(rows)
                     if row.play.value == play
                     and row.cell.kind is ResultKind.INTERCEPTION
-                    and (side == "offense" or row.defense.value == group)
+                    and (
+                        side == "offense"
+                        or isinstance(row, DefensiveCell)
+                        and row.defense.value == group
+                    )
                 ]
                 if any(rows[i].cell.variable is not None for i in indexes):
                     raise ValueError("variable INT catch-depth encoding requires explicit policy")
@@ -242,13 +303,12 @@ def apply_depth_policy(
                         rows[i], cell=replace(cell, yards=value, provenance=provenance)
                     )
             reports[side][str(play)] = report
-    return replace(chart, offense=tuple(offense), defense=tuple(defense)), {
-        "model_identity": {
-            "origin": CONTRACT["origin"],
-            "sha256": POLICY_SHA256,
-            "authored_experimental": True,
-            "contract": CONTRACT,
-        },
+        return tuple(rows)
+
+    offense = encode_rows(chart.offense, "offense", offense_events, offense_weights)
+    defense = encode_rows(chart.defense, "defense", defense_events, defense_weights)
+    return replace(chart, offense=offense, defense=defense), {
+        "model_identity": identity,
         "prior_strength": prior_strength,
         "columns": reports,
         "source_fit": "UNVERIFIED;unknown-calls-not-observed-conditional-support",

@@ -17,7 +17,7 @@ from bowl_bound.team_csv import (
     team_to_files,
 )
 
-from .chart_depth_policy import POLICY_SHA256
+from .chart_depth_policy import execution_identity
 
 TABLES = ("offense", "supplemental", "defense", "special_teams", "pat_outcomes")
 
@@ -49,8 +49,23 @@ def encode_depth_candidate(
     *,
     source_sha256: str,
     baseline_sha256: str,
+    model_identity: dict[str, Any],
 ) -> tuple[dict[str, str], dict[str, Any]]:
     """Rebase all 840 cells to a new synthetic source container and reload them."""
+    try:
+        expected_identity = execution_identity(
+            model_identity["contract"]["prior_equivalent_observations"]
+        )
+        valid_identity = (
+            model_identity["sha256"] == expected_identity["sha256"]
+            and model_identity["origin"] == expected_identity["origin"]
+            and model_identity["authored_experimental"] is True
+            and _digest(model_identity["contract"]) == expected_identity["sha256"]
+        )
+    except (KeyError, TypeError, ValueError) as error:
+        raise ValueError("export requires a valid effective model identity") from error
+    if not valid_identity:
+        raise ValueError("export requires a valid effective model identity")
     for value in (source_sha256, baseline_sha256):
         if len(value) != 64 or any(c not in "0123456789abcdef" for c in value):
             raise ValueError("export requires frozen source and baseline SHA256 identities")
@@ -63,7 +78,7 @@ def encode_depth_candidate(
     descriptor = {
         "schema_version": 1,
         "kind": "authored-logical-chart-cells",
-        "model_sha256": POLICY_SHA256,
+        "model_sha256": expected_identity["sha256"],
         "source_sha256": source_sha256,
         "baseline_sha256": baseline_sha256,
         "football_facts_sha256": _digest(chart_facts(chart)),
@@ -143,6 +158,7 @@ def encode_depth_candidate(
         raise ValueError("ordinary CSV roundtrip changed gameplay metadata")
     files["provenance.csv"] = provenance_csv
     return files, {
+        "model_identity": expected_identity,
         "virtual_source_descriptor": descriptor,
         "virtual_source_sha256": virtual_sha,
         "football_facts_sha256": _digest(chart_facts(loaded)),

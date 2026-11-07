@@ -56,10 +56,16 @@ def audit_slot_encoding(
             "budget": enumeration_budget,
         }
     total = sum(weights)
-    normalization = sum(p for _, p in target)
-    source_cdf = tuple(sum(p for x, p in target if x <= point) / normalization for point in atoms)
+    normalization = sum((p for _, p in target), Fraction())
+    source_cdf = tuple(
+        sum((p for x, p in target if x <= point), Fraction()) / normalization for point in atoms
+    )
 
-    def cost(assignment: tuple[int, ...]) -> tuple[Fraction, Fraction]:
+    classes = tuple(sorted(set(weights)))
+
+    def cost(
+        assignment: tuple[int, ...],
+    ) -> tuple[Fraction, Fraction, tuple[tuple[int, ...], ...]]:
         errors = tuple(
             abs(
                 Fraction(
@@ -70,8 +76,17 @@ def audit_slot_encoding(
             for point, expected in zip(atoms, source_cdf, strict=True)
         )
         return (
-            sum((atoms[i + 1] - atoms[i]) * errors[i] for i in range(len(atoms) - 1)),
+            sum(((atoms[i + 1] - atoms[i]) * errors[i] for i in range(len(atoms) - 1)), Fraction()),
             max(errors),
+            tuple(
+                tuple(
+                    sum(
+                        x == point and w == weight for x, w in zip(assignment, weights, strict=True)
+                    )
+                    for weight in classes
+                )
+                for point in atoms
+            ),
         )
 
     observed = cost(values)
@@ -80,6 +95,10 @@ def audit_slot_encoding(
         raise DepthAuditError(
             f"finite encoding is suboptimal: actual={observed}, exhaustive={optimum}"
         )
+    for weight in classes:
+        ordered = tuple(x for x, w in zip(values, weights, strict=True) if w == weight)
+        if ordered != tuple(sorted(ordered)):
+            raise DepthAuditError("finite encoding equal-weight rows are not canonical")
     histogram: Counter[int] = Counter()
     for x, w in zip(values, weights, strict=True):
         histogram[x] += w

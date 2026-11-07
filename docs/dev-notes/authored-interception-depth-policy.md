@@ -1,4 +1,4 @@
-# Authored interception catch-depth prototype
+# Authored interception catch-depth correction
 
 Milestone 42 / DATA-064, 2026-11-07. Target release: **1.0.0**.
 Status: paired prototype, owner review and cohort acceptance pending.
@@ -50,8 +50,10 @@ produce identical distributions when qualifying observations are absent.
 They are distinct execution assumptions and must not be exported under the
 strength-four identity. Shape sensitivity now compares separately identified
 short/central/long authored alternatives without exporting them. These are model
-stress cases, not confidence intervals or historical fitting. Effective execution
-identities remain required before final cohort qualification.
+stress cases, not confidence intervals or historical fitting. Every effective
+execution now binds its actual prior strength in a detached contract/hash.
+Ordinary export requires that matching identity and rejects a stale or forged
+contract. The strength-four model and paired ordinary files remain unchanged.
 
 ## Allocation and independent checks
 
@@ -62,7 +64,13 @@ require a separately declared policy and currently fail clearly.
 
 Allocate indivisible physical slot weights to modeled support by minimizing
 exact one-dimensional Wasserstein distance, then maximum CDF error, with a
-deterministic tie break. A scarce one-slot chart may omit modeled tails; record
+deterministic tie break. Canonical counts are ordered by depth atom, then physical
+weight class; equal-weight rows receive ascending depths in input order. The
+allocator first solves W1 and worst CDF. It then fixes that global CDF bound and
+solves W1 plus the complete canonical count witness. Under the fixed bound,
+feasible prefixes at the same count state have identical possible continuations,
+so the smaller distance/witness prefix dominates without losing a later tie.
+A scarce one-slot chart may omit modeled tails; record
 that residual rather than forcing a tail or adding an INT. A zero-INT column is
 dormant, not an observed zero-depth population.
 
@@ -106,10 +114,23 @@ clock/statistical ownership and full-game decisions are not qualified by this
 panel. Detailed historical charts, screenshots, source identities and receipts
 remain private.
 
-The maintained research generator's edited source attestation must be renewed
-after independent review; stale attestation refusals are preserved failures.
-Its legacy post-generation calibration also needs the explicit final
-conditional-depth stage so that it cannot reintroduce pooled locations.
+Independent review identified an omitted consumed-helper attestation. Three
+synthetic failures demonstrate the omission and undetected constant/import-binding
+mutations. The required module inventory now includes all five consumed depth
+modules. Old-identity refusals remain correct RED evidence; source-contract renewal
+records intentional reviewed changes without bypassing the guard.
+
+The maintained finalizer consumes the completed parent calibration's exact five
+ordinary files, applies conditional depths last, and independently qualifies the
+source-derived target weights and exhaustive finite allocation before export.
+It reloads the emitted ordinary files and repeats those independent checks. A
+budget refusal prevents export. The finalizer binds the parent model, original
+file hashes, effective depth contract and source population; it does not rerun or
+replace the parent's incidence calibration. A synthetic regression on the actual
+legacy post-calibration export first reproduced unsupported Screen depth, then
+passed through this final stage. Public controls additionally check both chart
+sides, source-conditioned weights, dormant columns and unqualified export refusal.
+The old calibration driver must not be rerun without this final stage.
 
 A read-only preflight of all 116 approved existing teams finds at most three INT
 slots per passing column and no variable/missing INT depths; the exhaustive

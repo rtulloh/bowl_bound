@@ -62,3 +62,17 @@ def test_exhaustive_tails_dormancy_and_budget_remain_explicit() -> None:
     assert limited["status"] == "UNVERIFIED-enumeration-budget"
     with pytest.raises(DepthAuditError, match="target inventory"):
         audit_chart_encoding(team_chart("Synthetic"), {})
+
+
+def test_exhaustive_gate_rejects_the_wrong_complete_tie_witness() -> None:
+    support = tuple((x, Fraction(w, 12)) for x, w in enumerate((2, 3, 2, 2, 3)))
+    with pytest.raises(DepthAuditError, match="finite encoding"):
+        audit_slot_encoding((1, 3, 3), (0, 1, 4), support)
+    assert audit_slot_encoding((1, 3, 3), (2, 1, 4), support)["status"] == "PASS-exhaustive"
+
+
+def test_equal_weight_row_permutation_is_not_canonical() -> None:
+    support = ((-3, Fraction(1, 2)), (3, Fraction(1, 2)))
+    with pytest.raises(DepthAuditError, match="finite encoding"):
+        audit_slot_encoding((1, 1), (3, -3), support)
+    assert audit_slot_encoding((1, 1), (-3, 3), support)["status"] == "PASS-exhaustive"

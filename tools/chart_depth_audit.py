@@ -103,6 +103,9 @@ def audit_depth_change(
                 "observed_conditional_samples": observed,
                 "unknown_locations": missing,
                 "known_unmatched_calls": unmatched,
+                "modeled_target": tuple(
+                    (x, str(w / sum(counts.values()))) for x, w in sorted(counts.items())
+                ),
                 "physical_INT_mass": {},
             }
         for a, b in zip(left, right, strict=True):
