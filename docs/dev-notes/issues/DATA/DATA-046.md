@@ -50,3 +50,22 @@ retrospective diagnostics. They are never fitting targets, and generic historica
 deep-pass prose is not designed-call depth authority. Detailed reference evidence
 stays private. Candidate/source/model/runtime/observer identities are still
 required before numerical comparisons. Ticket remains open.
+
+--- 2026-11-07 — first frozen prototype measurement, exploratory only ---
+
+The first two-team prototype, its Alpha 9 baseline and the corresponding
+references were compared through exact typed-chart and symbolic primary layers:
+six chart instances, 5,040 records, 540 call/formation contexts and 81,000
+address-pair checks against the separately transcribed Priority observer. Every
+context retains its full 7,776 physical mass. All nondepth primary mechanisms
+remain unchanged between the baseline and prototype. Detailed distributions and
+reference differences stay private; no reference-match tolerance is an accuracy
+criterion.
+
+This exploratory result does not accept terminal, source-fit, full-game or final
+candidate behavior. Conditional mechanisms, unresolved variables and turnover
+choices remain pending; a primary interception location is not a committed
+turnover. The common conditioned source populations were independently rebound
+before 2008 research preparation. Generic deep-pass narratives remain excluded
+from designed-call support. Complete four-pair and transfer comparisons still
+await their frozen candidate identities and corrected observer coverage.
