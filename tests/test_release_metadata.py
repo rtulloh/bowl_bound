@@ -13,9 +13,9 @@ from bowl_bound.save_game import ENGINE_PROFILE
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_alpha_version_agrees_across_package_api_and_frontend(tmp_path: Path) -> None:
-    python_version = "0.1.0a9"
-    display_version = "0.1.0-alpha.9"
+def test_release_version_agrees_across_package_api_and_frontend(tmp_path: Path) -> None:
+    python_version = "1.0.0"
+    display_version = "1.0.0"
     assert bowl_bound.__version__ == python_version
     metadata = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert re.search(r'^version = "([^"]+)"$', metadata, re.MULTILINE)[1] == python_version

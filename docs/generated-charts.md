@@ -32,18 +32,24 @@ distributions into Bowl Bound dice/chart cells. Proprietary benchmark chart valu
 do not construct or select this cohort. The charts are modified statistical
 estimates, not official Bowl Bound charts or reproductions of source narratives.
 
-Alpha 9 uses the experimental `authored-bb-budget-aware-v1` policy. It redistributes
-pass-defense responses within exact existing per-call INC/INT/QT and per-formation
-INT budgets. These are defensive chart budgets; full plays also consult offense
-and Priority. Zero modeled mechanisms stay dormant, and source unknowns remain
-unknown. Small budgets use attainable tactical
-contrasts with explicit residuals; an equal contrast is not reported as a strict
-success. Known interception locations supply a pooled depth distribution; the
-short/long and formation roles are authored assumptions, not observed historical
-formation effects. The balancing stage preserves its incoming physical weight/depth
-inventory after source-based depth transport.
-Offense, run/Option defense, supplemental, special-teams, PAT, recovery and gameplay
-metadata retain their accepted semantics, including the corrected OOB facts.
+Version 1.0.0 retains the experimental `authored-bb-budget-aware-v1` defensive
+policy and its existing per-call INC/INT/QT and per-formation INT budgets.
+Full plays consult both offense and Priority; zero modeled mechanisms remain
+dormant. Tactical formation roles remain authored assumptions.
+
+After calibration, `authored-bb-call-depth-v1` assigns passing interception
+catch depths separately for Screen, Sprint Out, Boot-leg and Drop Back, on both
+offense and defense. This corrects assigning a pooled unidentified long-pass
+interception to Screen solely because its depth appears in the source.
+All 116 teams lack qualifying observations that identify both the designed
+passing call and its catch depth. Their conditional shapes therefore use
+declared authored priors, rather than claimed historical call-specific evidence.
+Missing locations and unidentified calls stay unknown.
+
+The update changes 789 INT catch-depth values while preserving the INT slots
+and frequencies, priorities, flags and other football facts. Supplemental,
+special-teams, PAT and recovery semantics are unchanged. The independent gate
+checks exact finite depth allocation as well as the preserved event budgets.
 
 The release pins exactly 464 chart files and 116 virtual-cell provenance CSVs in
 [the exact release manifest](../release/manifest.json). Each generated team has one
@@ -51,8 +57,10 @@ derived virtual source describing its emitted cell tokens, colors and coordinate
 This is generated evidence, not original PDF geometry or raw play-by-play. Detailed
 source ancestry remains private. The supplied source snapshot SHA-256 remains
 `1f8e553002c0299a2993eb533231053d6cf406dbe0e9d41ecc400267484bb1ba`.
-The exporter is `bb-chartgen-budget-alpha-v1`; model SHA-256 is
+The parent budget exporter is `bb-chartgen-budget-alpha-v1`; its model SHA-256 is
 `a46aaf838a718e012a2ce90a4438e6de475a0d810f18ab7e92d87148603a9e5f`.
+The added conditional-depth policy SHA-256 is
+`f44fbd9822fa844155a94905aca30ff5c30a2ace52b62e4c2086178cacb224a1`.
 Alpha 8's numeric formation prior remains part of this experimental lineage.
 The [OOB evidence correction](dev-notes/college-chart-oob-evidence-audit.md) fixes
 a positive-only denominator that had marked nearly every ordinary numeric cell.
@@ -69,7 +77,7 @@ Generated 2007 Ohio State and Miami charts are distinct from privately imported
 
 ## Testing limits and feedback
 
-This is a community-testing alpha, not a claim of historical calibration.
+The generated charts remain community-testing estimates, not a claim of historical calibration.
 Provider-to-normalized event checks do not independently reconcile official
 season box-score totals or establish complete historical coverage. Ambiguous
 provider records remain tracked source limitations; unknown kick distances are
@@ -80,7 +88,7 @@ or completing a season does not establish every team's balance. Sparse families,
 unobserved formations, finite chart cells, uncertain tails and missing source
 fixtures remain limitations. The retained Alpha 8 diagnostic below found material
 rushing, sack, interception and fumble gaps. Those historical results are not fresh
-measurements of Alpha 9. A bounded current-engine game check establishes mechanical
+measurements of 1.0.0. Bounded current-engine game checks establish mechanical
 consistency and supplies descriptive results; it does not certify historical fit
 or prove improvement. The metadata power rating is a uniform placeholder, not a
 historical ranking. Recent seasons are separate future work.

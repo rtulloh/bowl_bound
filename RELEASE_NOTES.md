@@ -1,5 +1,26 @@
 # Bowl Bound release notes
 
+## 1.0.0 — Passing-chart corrections and simultaneous play
+
+- Corrects interception catch depths across the 116 generated 2007 teams using
+  separate models for Screen, Sprint Out, Boot-leg and Drop Back.
+- Preserves interception frequencies, other chart outcomes and the original
+  fictional sample teams. The visual viewer displays the corrected chart data.
+- Moves Bowl Bound's default web address to **http://127.0.0.1:8001**, allowing
+  it to run alongside Paydirt on port 8000. Explicit port overrides still work.
+- Strengthens automated chart checks and game/save/replay validation.
+
+Generated charts remain statistical estimates for community feedback. When the
+source does not identify the designed passing play, catch-depth distributions
+are explicitly modeled assumptions. This release does not certify historical
+team balance or complete independent causal/clock accounting. See
+[generation and testing limits](docs/generated-charts.md).
+
+Football rules and save schema are unchanged. Generated charts have new content
+identities: older generated-team saves may require their original chart catalog.
+Keep backups and retain the earlier version for those games. Standalone builds
+remain unsigned; follow the [installation guide](docs/installation.md).
+
 ## 0.1.0-alpha.9 — Revised generated pass defenses
 
 - Reworks generated pass-defense responses with explicit tactical opportunities

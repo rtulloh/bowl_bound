@@ -145,6 +145,7 @@ Full-cohort generation is held at the required owner paired-review checkpoint.
 DATA-064, DATA-055 and DATA-046 remain open. The independent observer and reference
 inventory/comparison work proceed in isolated research lanes. No release version,
 tag or immutable Alpha 9 artifact has changed.
+
 ## Whole-cohort passing-cell audit
 
 Owner explicitly requested this acceptance step on 2026-11-07: after the INT fix

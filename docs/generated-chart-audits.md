@@ -135,3 +135,23 @@ micro-reconciliation remain follow-ups, not automatic alpha rejection. This does
 not waive actual identity/denominator, probability, legal codec, engine state,
 privacy/packaging or build failures, and it does not claim historical accuracy.
 The release owner runs the established full gate and approves publication.
+
+## Conditional-depth schema 3
+
+Schema 3 composes the accepted budget-aware checks with
+`authored-bb-call-depth-v1`. Passing INT catch depths may change; every slot's
+kind, priority and flags, event budgets and all nondepth football facts remain
+protected. Reports explicitly identify preservation except for passing INT
+depths rather than claiming those whole cells are unchanged.
+
+The gate independently enumerates the finite conditional allocation for all
+28 offensive/defensive passing columns per team. It requires declared support,
+weights and canonical ordering, rejects missing/unknown policies and retains
+zero-budget columns. Generated provenance and metadata are refreshed and pinned
+to the actual ordinary files. Native staging repeats this same schema-three
+audit before freezing.
+
+Qualifying designed-call/catch-depth observations are absent in this cohort,
+so these conditional shapes are authored assumptions. Neither a passing
+schema-three report nor successful game/replay checks establish historical
+conditional fit or complete causal/clock coverage.
