@@ -126,3 +126,25 @@ not measured historical conditional depth. No source-fit, terminal, whole-game o
 full benchmark acceptance follows. This candidate can now be bound into the
 separate selected-INT and matched-game plans; execution still needs its applicable
 runtime/observer/capture freeze. DATA-046 remains open.
+
+--- 2026-11-07 — selected fixed-INT component and matched-game binding ---
+
+The [selected-INT checkpoint](../../reference-benchmark-method.md#selected-fixed-int-component-checkpoint)
+adds 168,417 actual grouped subjects across the frozen four-way comparisons and
+2,592 controlled field contexts. All supported subjects pass independent literal
+pending-zero, draw/trace, landing/INT_MIN, fixed-return, full-box, score and label
+checks. Every context retains its full 1,679,616 denominator; 129,600 initial
+address pairs use the independent Priority transcription. Thirty-four synthetic
+method controls pass, and compressed retained subjects reconcile read-only.
+
+Unsupported catch/end-zone, variable, marked and complex-return branches remain
+unknown. Neither known-only contributions nor uniform call/formation exposure is
+historical fit or full strength. Clock, decline policy, conversions, addressed
+saves and whole games remain separate; source unknowns are unchanged.
+
+The existing 32 matched development games now have a frozen runtime and exposure
+plan, with exactly four reusable generated-team smoke overlaps in the separate
+corrected-cohort sanity panel. Metadata isolation and placeholder ratings are
+explicit. No matched-game completion is claimed by this binding, and no second
+lane duplicates those exposures. Detailed evidence stays private. DATA-046 stays
+open pending the remaining bounded comparison and discrepancy review.

@@ -150,3 +150,38 @@ DATA-046 completion. The resolver diagnostic in the policy checker is an engine
 subject, not the separately transcribed Priority oracle. The broad passing-cell
 census, selected-INT landing/return layer and matched-game evidence remain
 separate. Detailed per-team records and all receipts remain private.
+
+## Selected fixed-INT component checkpoint
+
+The frozen final 2007 candidate, research-only 2008 inputs and four retrospective
+references now have a separate selected-INT comparison. All 168,417 grouped
+analysis-session subjects pass across the same 2,592 controlled field contexts.
+Each context retains its full 1,679,616 physical denominator. The independent
+Priority transcription checks 129,600 initial address pairs; every retained
+subject and multiplicity reconciles read-only to the frozen plan.
+
+The supported population checks the initial interceptor choice and zero premature
+field, box and score effects, followed by exactly three fresh supplied/consumed
+draws and three frozen trace rows. Literal arithmetic checks selected depth,
+INT_MIN, fixed numeric/no-change/TD return field and credit, full boxes, score,
+scoring ledger and called/resolved labels. Thirty-four fictional method controls
+and a separate 71-class smoke pass. Those controls are not historical games.
+
+Catch/end-zone boundaries, marked or variable locations, complex returns and
+other unsupported continuations remain unknown. Non-INT primary mass remains
+outside this component. The authored simple-return exposure does not measure a
+decline policy. Unequal supported fractions prevent treating known-only results
+as whole-event advantages; direct and INT components are not two complete
+denominators to add. Elapsed clock, conversions, addressed saves, whole games and
+historical fit remain separate. Source unknowns and absent designed-call depth
+support are unchanged. This checkpoint does not resolve DATA-046.
+
+The existing 32-game development matrix is now bound to the integrated observer,
+capture and runner source freeze. Four exact generated 2007 smoke exposures are
+shared with the separate corrected-cohort sanity panel; their raw, typed and
+addressed-save evidence must be reused. The other 28 exposures remain distinct.
+All eight input metadata records have placeholder ratings. The runner does not
+consume those power ratings; the chart-isolation comparison passes copied empty
+defensive marker lists, preserving original metadata identities separately.
+Native marker sensitivity and historical strength are not implied. Plan binding
+is not game completion, and only the designated validation lane executes games.
