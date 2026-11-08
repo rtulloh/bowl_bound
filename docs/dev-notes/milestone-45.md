@@ -63,7 +63,7 @@ games to claim a complete historical season.
 4. Prioritize reproduced mechanics defects, then supported coaching deficiencies,
    then material chart/source limitations. Initial screening candidates are
    [AI-032](issues/AI/AI-032.md), [AI-031](issues/AI/AI-031.md),
-   [DATA-049](issues/DATA/DATA-049.md) and
+   [AI-040](issues/AI/AI-040.md), [DATA-049](issues/DATA/DATA-049.md) and
    [DATA-060](issues/DATA/DATA-060.md). These are candidates, not a finding that
    every ticket requires implementation or a silent milestone reassignment.
    Existing season-runner and fixture-qualification work must be verified before
