@@ -108,3 +108,21 @@ formation benefit or historical fit. The selected-INT landing/return extension,
 other conditional mechanisms, clock, pending-save and games remain separate.
 No chart/model change, new season publication or full DATA-046 acceptance follows.
 Ticket stays open.
+
+--- 2026-11-07 — final 2007 cohort depth-input qualification ---
+
+Following the owner's paired visual acceptance, the frozen 116-team final-depth
+output passed independent ordinary-load, preserved-fact, source-binding and
+exhaustive finite-encoding checks. All 650 inputs and 594 outputs remain unchanged;
+the 789 addressed depth changes reconcile exactly. All 3,248 passing columns are
+accounted for as 564 active exhaustive checks and 2,684 dormant columns. The
+previously accepted pair and original fictional sample files are byte-identical.
+The [method checkpoint](../../reference-benchmark-method.md#final-2007-cohort-depth-input-checkpoint)
+records coverage and limits; detailed evidence stays private.
+
+The conditioned event/game population is unchanged. Zero eligible designed-call
+catch-depth samples means this is verification of an authored experimental policy,
+not measured historical conditional depth. No source-fit, terminal, whole-game or
+full benchmark acceptance follows. This candidate can now be bound into the
+separate selected-INT and matched-game plans; execution still needs its applicable
+runtime/observer/capture freeze. DATA-046 remains open.

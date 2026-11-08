@@ -123,3 +123,30 @@ module failure is a new-feature scaffold, not a claimed pre-existing engine bug.
 DATA-046 remains open: candidate comparison, transfer and discrepancy review are
 pending. DATA-055 observer completion and DATA-064 policy acceptance are separate
 milestone verdicts, not implied by this inventory checkpoint.
+
+## Final 2007 cohort depth-input checkpoint
+
+After the owner accepted the paired final pipeline, independent read-only checks
+qualified its frozen 116-team output as an input to further comparisons. All 650
+captured source/code/parent inputs and 594 output files rehash unchanged. Ordinary
+loading covers every team and all 97,440 historical chart records. Gameplay
+metadata, nondepth facts, INT slots and incidence are preserved; the 789 depth
+payload changes reconcile exactly with the producer's addressed change list.
+The 24 previously accepted paired files and 14 original fictional sample files
+remain byte-identical.
+
+The source population remains 129,078 events from the same 682 games, separately
+bound to 131,479 raw events and 2,401 exclusions. Independently constructed
+targets and exhaustive finite checks cover all 3,248 passing columns: 564 active
+encodings and 2,684 dormant columns. The active checks enumerate 7,404 assignments
+in total, at most 125 for one column, and verify the complete count witness and
+canonical equal-weight row ordering. There are no qualifying designed-call
+catch-depth samples in this population; the targets remain authored experimental
+priors, with missing and unmatched source observations retained separately.
+
+This accepts the frozen ordinary-loaded depth input and declared finite policy,
+not historical fit, full passing plausibility, terminal consequences, games or
+DATA-046 completion. The resolver diagnostic in the policy checker is an engine
+subject, not the separately transcribed Priority oracle. The broad passing-cell
+census, selected-INT landing/return layer and matched-game evidence remain
+separate. Detailed per-team records and all receipts remain private.
