@@ -40,6 +40,21 @@ For documentation, metadata, scaffolding, or initial file creation, run applicab
 
 If a meaningful regression cannot be written, explain the limitation and obtain approval before changing production behavior.
 
+### Commit message prefixes
+
+Every Git commit subject must start with the release or milestone identifier
+followed by `: ` and a concise description:
+
+- For work assigned to a release, use its exact target tag, for example
+  `v1.0.0: validate release artifacts`.
+- For work without an assigned release tag, use its canonical milestone
+  identifier, for example `milestone 45: measure short-yardage coaching impact`
+  or `milestone 34a: validate generated chart outcomes`.
+
+When both are known, prefer the release tag and record the milestone in the
+commit body. Apply this convention to every commit, including intermediate
+changes, fixes, documentation, merges and reverts.
+
 ### Milestone commits
 
 Each project-plan milestone must end with:
@@ -48,7 +63,7 @@ Each project-plan milestone must end with:
 - a focused test run,
 - applicable cumulative checks,
 - documentation updates, and
-- a dedicated commit using `milestone X: <description>` as the subject, replacing X with the completed milestone number (for example, `milestone 2: define initial rules profile`).
+- a dedicated commit using the release or milestone prefix required above.
 
 Do not mix unrelated work into a milestone commit. Do not start the next milestone until the current milestone is reviewed and committed.
 
