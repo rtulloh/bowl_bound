@@ -317,3 +317,24 @@ output inside its source tree before writing; the successful run uses a separate
 ignored destination. Package selection remains the exact approved allowlist.
 All 38 tracker/player-documentation checks and `pip check` pass; generated files
 contain no absolute developer paths or private source/report paths.
+
+## Fresh-game observer boundary followup
+
+A matched reference game exposed a false observer refusal at a tied fourth-quarter
+punt decision: the correct fair-catch report was followed by fresh overtime toss
+rolls, while the observer asserted zero total decision draws before its near-period
+exclusion. Eight meaningful unchanged-source failures cover fair catches, numeric
+returns, mirrored sides and tied toss sequences. The correction independently
+matches the recorded overtime requests/faces under strict normal tied-quarter
+prerequisites before checking the intrinsic zero/one return draw. Report, complete
+boxes, score, fresh IDs, chart lookups and ordinary unexpected-extra-draw controls
+remain strict. Overtime continuation, clock and continuity stay UNVERIFIED; matching
+the toss tail is not general overtime qualification.
+
+Author verification passes 168 related tests; independent review passes 37 new
+controls plus the ordinary extra-draw refusal. The separate integration checkout
+passes the same 37 controls, lint and formatting. The retained 190-report capture
+now receives an explicit partial result with its overtime continuation unknown;
+no engine game was rerun to replace the refusal. Active game captures retain their
+original source pins. Final coverage must run on the completed reviewed integration,
+not the earlier intentionally interrupted 1,033-pass pre-fix run.

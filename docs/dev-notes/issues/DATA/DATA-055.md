@@ -106,3 +106,16 @@ checks remain distinct. The same 34-wrapper audit adds 178 live returns; 921
 reports lack bounded terminal authority and old mandatory-save addresses remain
 absent. See [contract](../../independent-pbp-punt-return-contract.md). Candidate
 addressed capture, matched games and complete acceptance remain required.
+
+--- 2026-11-07 — actual overtime punt-tail observer refusal corrected ---
+
+A fresh matched-game fair catch correctly consumes overtime toss rolls after its
+intrinsic decision. Eight maintained synthetic failures reproduce the observer's
+premature exact-zero assertion. The reviewed correction binds that exact recorded
+tail under tied fourth-quarter prerequisites, preserves intrinsic fair-catch/return
+exposure and all report/box/score/fresh-ID checks, and retains overtime clock/live
+continuation as UNVERIFIED. Author 168 related checks, independent 37 new controls
+and the ordinary extra-draw refusal pass; separate integration repeats all 37.
+The original refusal and capture remain retained; the same 190 reports now audit
+partial without a replacement engine run. Final panel dispositions and full
+regression remain pending. Ticket stays OPEN; no full causal/clock claim is made.

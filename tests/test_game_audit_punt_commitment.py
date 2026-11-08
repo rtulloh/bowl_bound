@@ -31,6 +31,7 @@ def punt_subject(
     return_gain=3,
     return_kind="yards",
     return_roll=None,
+    extra_rolls=(),
 ):
     teams = tuple(
         replace(
@@ -62,6 +63,7 @@ def punt_subject(
         OffensiveRoll(3, 4, 5) if return_roll is None else return_roll,
         OffensiveRoll(2, 0, 0),
     ]
+    rolls.extend(extra_rolls)
     if clock is not None:
         rolls = [OffensiveRoll(3, 4, 5), OffensiveRoll(1, 0, 0), OffensiveRoll(2, 0, 0)] + rolls
     game = SavedGame.new(

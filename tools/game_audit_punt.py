@@ -194,6 +194,68 @@ def _origin(command: dict[str, Any], capture: dict[str, Any]) -> dict[str, Any]:
     )
 
 
+def _exposure(
+    command: dict[str, Any],
+    rows: list[dict[str, Any]],
+    typed: dict[str, Any],
+    count: int,
+) -> None:
+    """Check intrinsic punt draws, retaining a positively bound timing tail.
+
+    Matching recorded toss facts identify an unsupported continuation; they do
+    not certify overtime policy, elapsed timing, a chooser or a live endpoint.
+    """
+    start, end = command["draw_range"]
+    before, after = (command[key]["view"] for key in ("before", "after"))
+    clock, final_clock = before.get("clock"), after.get("clock")
+    score = before.get("score")
+    tail = typed["draws"][start + count : end]
+    begin, finish = command["draw_request_range"]
+    requests = typed["draw_requests"][begin:finish]
+    timing_tail = (
+        end - start > count
+        and command["before"]["configuration"].get("mode") == "regulation"
+        and type(clock) is dict
+        and type(clock.get("quarter")) is int
+        and clock["quarter"] == 4
+        and type(clock.get("remaining")) is int
+        and 0 < clock["remaining"] <= 10
+        and type(score) is dict
+        and score.keys() == {"home", "away"}
+        and all(type(n) is int and n >= 0 for n in score.values())
+        and score["home"] == score["away"]
+        and before.get("overtime_toss_rolls") == []
+        and after.get("phase") == "overtime_choice"
+        and type(final_clock) is dict
+        and type(final_clock.get("quarter")) is int
+        and final_clock["quarter"] == 4
+        and type(final_clock.get("remaining")) is int
+        and final_clock["remaining"] == 0
+        and 2 <= len(tail) <= 200
+        and len(tail) % 2 == 0
+        and all(draw["kind"] == "offensive" for draw in tail)
+        and commitment._canonical(after.get("overtime_toss_rolls"))
+        == commitment._canonical([draw["faces"] for draw in tail])
+        and len(requests) == end - start
+        and all(
+            request["completed"] is True
+            and request["expected_type"] == "OffensiveRoll"
+            and request["draw_number"] == start + index + 1
+            for index, request in enumerate(requests)
+        )
+        and _context(command, before) is None
+    )
+    if timing_tail:
+        # Only a detached view of the intrinsic ranges is shortened. Original
+        # evidence keeps every draw; _clock still defers this period boundary.
+        command = dict(
+            command,
+            draw_range=[start, start + count],
+            draw_request_range=[begin, begin + count],
+        )
+    kickoff._exposure(command, rows, typed, count)
+
+
 def _return_field(
     command: dict[str, Any], capture: dict[str, Any], origin: dict[str, Any]
 ) -> tuple[dict[str, Any] | None, str | None]:
@@ -237,7 +299,7 @@ def _return_field(
         return None, "return_landing_authority"
     # A nonnumeric F/penalty path may legitimately consume additional rolls.
     # Only this independently eligible fixed population has exactly one draw.
-    kickoff._exposure(command, rows, capture["typed_capture"], 1)
+    _exposure(command, rows, capture["typed_capture"], 1)
     return dict(
         possession=origin["receiver"], yards_to_goal=goal, down=1, yards_to_go=min(10, goal)
     ), None
@@ -381,7 +443,7 @@ def audit_punt_commitments(
                     if is_return:
                         final, reason = _return_field(command, capture, origin)
                     else:
-                        kickoff._exposure(command, _rows(capture, command), typed, 0)
+                        _exposure(command, _rows(capture, command), typed, 0)
                     if reason is None:
                         assert final is not None
                         _require(origin["number"] not in ids, "fresh observed report identity")

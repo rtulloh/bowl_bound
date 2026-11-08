@@ -102,3 +102,48 @@ decisions still need addressed save evidence. The legacy machine component name
 separate `return_checked` and `return_report_checked` counters. No engine, chart,
 capture producer or runner changes occur in this slice. Source truth, complex
 returns, remaining period/clock and complete DATA-055 acceptance remain open.
+
+
+## Recorded overtime-toss continuation after a punt
+
+A fresh representative capture exposed a false observer refusal: a tied Q4 punt
+fair catch at ten seconds commits its excluded-stat report and then consumes
+fresh offensive toss draws for overtime. The previous exact-zero decision draw
+assertion counted those later draws as punt exposure. The same boundary applies
+to an otherwise eligible fixed numeric punt return.
+
+The bounded correction recognizes only normal regulation, a tied positive Q4
+clock of at most ten seconds, and newly populated recorded overtime toss faces
+that exactly bind the additional ordered offensive requests and draws. Repeated
+toss pairs remain explicit. Only a detached intrinsic exposure range is checked
+as fair catch zero / numeric return one; every original draw remains retained.
+Extra chart rows, priority work, a phase label alone, a nonboundary clock or an
+unmatched face sequence cannot justify this distinction. Report field/category,
+excluded credit, both boxes, score and fresh observed/charged identities remain
+strict before the existing near-period continuation becomes `UNVERIFIED`.
+No live/clock/continuity GO or taint reset follows, and overtime choice/policy is
+not qualified by this check. No engine or capture behavior changes.
+
+Eight actual synthetic fair-catch/return, mirrored-side and repeated-toss cases
+reproduce the unchanged observer refusal before the correction. Negative controls
+retain malformed-boundary, wrong report/credit/box/score, extra-row, return-row
+frontier and report-identity refusals. The original captured refusal remains
+immutable; corrected observer results are separately identified from its passed
+engine, strict replay and addressed-save results.
+
+Paydirt consultation for this follow-up reviewed `tests/test_punt_roll_metadata.py`
+and `tests/test_overtime.py`: separating intrinsic kick/return rolls and retaining
+original observations is useful; its NFL overtime policies, mocked outcomes,
+prose parsing and data are deliberately not reused. Bowl Bound authority remains
+the documented college timing/overtime profile and the existing fixed punt
+contract; the following overtime continuation remains unverified.
+
+The final focused cumulative passes 168 related tests in 68.01 seconds and 36
+documentation checks in 0.89 seconds. The changed production module passes static
+checking without ignores. Independent review passes the 37 new controls and the
+existing ordinary numeric extra-draw refusal. These overlapping runs are not
+added into a larger exposure count. Read-only re-audit of the original 190-report
+capture now returns `partial_pass`, retaining the particular punt continuation as
+`UNVERIFIED` for live/period authority. Original engine/replay/addressed-save
+evidence and the original observer refusal remain immutable. No game, replay or
+save operation is repeated for this re-audit; complete DATA-055 remains open.
