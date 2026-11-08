@@ -19,6 +19,10 @@ from tempfile import TemporaryDirectory
 from typing import Any
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
+RELEASE_VERSION_PATTERN = (
+    r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?:-alpha\.(?:0|[1-9][0-9]*))?"
+)
+
 SAMPLES = frozenset(
     ["seasons/SAMPLE-LICENSE.md"]
     + [
@@ -202,8 +206,8 @@ def _version(root: Path) -> str:
     text = _read(root, "bowl_bound/__init__.py").decode("utf-8")
     display = re.search(r'^DISPLAY_VERSION = "([^"]+)"$', text, re.MULTILINE)
     python = re.search(r'^__version__ = "([^"]+)"$', text, re.MULTILINE)
-    if not display or not python or not re.fullmatch(r"\d+\.\d+\.\d+-alpha\.\d+", display[1]):
-        raise ReleaseError("Missing or invalid alpha version metadata")
+    if not display or not python or not re.fullmatch(RELEASE_VERSION_PATTERN, display[1]):
+        raise ReleaseError("Missing or invalid release version metadata")
     if python[1] != display[1].replace("-alpha.", "a"):
         raise ReleaseError("Python and public version mismatch")
     package = _json(root, "frontend/package.json")
@@ -359,7 +363,7 @@ def archive_runtime(runtime: Path, destination: Path) -> None:
     version, hashes = manifest.get("version"), manifest.get("files")
     if (
         not isinstance(version, str)
-        or not re.fullmatch(r"\d+\.\d+\.\d+-alpha\.\d+", version)
+        or not re.fullmatch(RELEASE_VERSION_PATTERN, version)
         or not isinstance(hashes, dict)
     ):
         raise ReleaseError("Invalid runtime manifest")

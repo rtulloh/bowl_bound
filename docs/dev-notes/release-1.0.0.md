@@ -76,3 +76,20 @@ changed. Player guidance describes the actual conditional-depth model and new
 version integration. Exact-version full regression, packaged/native port checks,
 fresh OSU screenshots and all-platform artifact inspection remain before
 publication; no final build or release success is claimed at this checkpoint.
+
+## Stable-version packaging correction
+
+The actual 1.0.0 staging attempt exposed alpha-only guards; tracked as
+[DEV-081](issues/DEV/DEV-081.md). Synthetic regressions first reproduced the
+failure (8 failed/10 passed after correcting a missing test-fixture notice
+directory). One shared stable/alpha version pattern now governs source staging,
+runtime archives and Windows installers. Exact component agreement, path safety
+and archive inventories remain enforced. The focused packaging/native/launcher/
+metadata/issue/player-doc suite passes 186 tests and fresh actual source staging
+succeeds. Native Windows compilation remains a runner gate.
+
+The initial exact-version full regression was deliberately interrupted after one
+test when this blocker was discovered; it is not counted as passing. A new frozen
+full run follows the packaging correction. Earlier frontend tests/build and the
+116-team chart audit remain separate evidence; none substitutes for final native
+port 8001 coexistence acceptance.

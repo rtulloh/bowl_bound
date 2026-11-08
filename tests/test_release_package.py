@@ -558,3 +558,78 @@ def test_real_manifest_selects_exactly_the_two_original_rosters_and_sources() ->
             hashlib.sha256((root / name).read_bytes()).hexdigest()
             == manifest["sample_sha256"][name]
         )
+
+
+def set_release_version(source: Path, version: str) -> None:
+    """Set coordinated synthetic public and Python release identities."""
+    put(
+        source,
+        "bowl_bound/__init__.py",
+        f'__version__ = "{version.replace("-alpha.", "a")}"\nDISPLAY_VERSION = "{version}"\n',
+    )
+    put(source, "frontend/package.json", json.dumps({"version": version}))
+    put(
+        source,
+        "frontend/package-lock.json",
+        json.dumps({"version": version, "packages": {"": {"version": version}}}),
+    )
+
+
+@pytest.mark.parametrize("version", ["1.0.0", "2.12.3", "0.1.0-alpha.3"])
+def test_release_identity_survives_stage_runtime_and_archive(
+    source: Path, tmp_path: Path, version: str
+) -> None:
+    from zipfile import ZipFile
+
+    from scripts.release_package import archive_runtime
+
+    set_release_version(source, version)
+    stage, runtime = tmp_path / "version stage", tmp_path / "version runtime"
+    stage_sources(source, stage)
+    fake_frontend(stage)
+    assemble_runtime(stage, runtime)
+    archive = tmp_path / "release.zip"
+    archive_runtime(runtime, archive)
+    assert json.loads((runtime / "MANIFEST.json").read_text())["version"] == version
+    with ZipFile(archive) as package:
+        prefix = f"Bowl-Bound-{version}/"
+        assert (
+            package.read(prefix + "bowl_bound/__init__.py")
+            == (source / "bowl_bound/__init__.py").read_bytes()
+        )
+        assert all(name.startswith(prefix) for name in package.namelist())
+
+
+@pytest.mark.parametrize(
+    "version", ["1.0", "v1.0.0", "1.0.0-rc.1", "../1.0.0", "1.0.0\n", "01.0.0"]
+)
+def test_invalid_release_identity_is_rejected_before_staging(
+    source: Path, tmp_path: Path, version: str
+) -> None:
+    set_release_version(source, version)
+    output = tmp_path / "invalid version stage"
+    with pytest.raises(ReleaseError):
+        stage_sources(source, output)
+    assert not output.exists()
+
+
+@pytest.mark.parametrize("component", ["python", "frontend/package.json", "lock", "lock-root"])
+def test_stable_release_rejects_disagreeing_component_versions(
+    source: Path, tmp_path: Path, component: str
+) -> None:
+    set_release_version(source, "1.0.0")
+    if component == "python":
+        put(source, "bowl_bound/__init__.py", '__version__ = "1.0.1"\nDISPLAY_VERSION = "1.0.0"\n')
+    elif component == "frontend/package.json":
+        put(source, component, '{"version":"1.0.1"}')
+    else:
+        lock = {"version": "1.0.0", "packages": {"": {"version": "1.0.0"}}}
+        if component == "lock":
+            lock["version"] = "1.0.1"
+        else:
+            lock["packages"][""]["version"] = "1.0.1"
+        put(source, "frontend/package-lock.json", json.dumps(lock))
+    output = tmp_path / "mismatched version stage"
+    with pytest.raises(ReleaseError, match="mismatch"):
+        stage_sources(source, output)
+    assert not output.exists()

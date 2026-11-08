@@ -88,3 +88,53 @@ def test_output_name_is_one_quoted_nsis_option(tmp_path: Path, name: str) -> Non
     escaped_name = name.replace("/", "\\").replace("$", "$$")
     assert f'Delete "$INSTDIR\\{escaped_name}"' in uninstall.splitlines()
     assert "*" not in uninstall and "RMDir /r" not in uninstall
+
+
+@pytest.mark.parametrize("version", ["1.0.0", "2.12.3", "0.1.0-alpha.3", "../1.0.0", "1.0"])
+def test_installer_build_accepts_only_supported_release_identities(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, version: str
+) -> None:
+    from types import SimpleNamespace
+
+    directory = tmp_path / "artifacts"
+    put(directory, "synthetic.zip", "extraction is stubbed")
+    makensis = tmp_path / "NSIS" / "makensis.exe"
+    put(tmp_path, "NSIS/COPYING", "Synthetic compiler license")
+    compiled = []
+
+    def extract(archive: Path, work: Path) -> dict[str, object]:
+        manifest = {
+            "target": "windows-x64",
+            "version": version,
+            "files": {"BowlBound.exe": "a" * 64},
+        }
+        put(work, "BowlBound/BowlBound.exe", "Synthetic executable")
+        put(work, "BowlBound/THIRD_PARTY/existing.txt", "Synthetic runtime notice")
+        manifest["files"]["THIRD_PARTY/existing.txt"] = "b" * 64
+        put(work, "BowlBound/ARTIFACT-MANIFEST.json", json.dumps(manifest))
+        return manifest
+
+    def compile_installer(command: list[str], **kwargs: object) -> None:
+        compiled.append(command)
+        output = next(
+            value.removeprefix("/DOUTPUT_FILE=")
+            for value in command
+            if value.startswith("/DOUTPUT_FILE=")
+        )
+        Path(output).write_bytes(b"Synthetic compiled installer")
+
+    monkeypatch.setattr(installer, "os", SimpleNamespace(name="nt"))
+    monkeypatch.setattr(installer, "extract_verified", extract)
+    monkeypatch.setattr(installer.subprocess, "check_output", lambda *args, **kwargs: "v3.11")
+    monkeypatch.setattr(installer.subprocess, "run", compile_installer)
+    if version in {"../1.0.0", "1.0"}:
+        with pytest.raises(ReleaseError, match="version"):
+            installer.build(directory, makensis, tmp_path, smoke=False)
+        assert not compiled
+        assert not list(directory.glob("*.exe"))
+    else:
+        installer.build(directory, makensis, tmp_path, smoke=False)
+        name = f"BowlBoundSetup-{version}-windows-x64.exe"
+        assert (directory / name).read_bytes() == b"Synthetic compiled installer"
+        assert (directory / (name + ".sha256")).is_file()
+        assert f"/DDISPLAY_VERSION={version}" in compiled[0]

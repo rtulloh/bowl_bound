@@ -11,7 +11,7 @@ import subprocess
 from pathlib import Path, PurePosixPath
 from tempfile import TemporaryDirectory
 
-from .release_package import ReleaseError
+from .release_package import RELEASE_VERSION_PATTERN, ReleaseError
 from .smoke_standalone import extract_verified, smoke_executable, validate_relative_path
 
 UNINSTALL_KEY = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\BowlBound"
@@ -107,7 +107,7 @@ def build(directory: Path, makensis: Path, source: Path, *, smoke: bool) -> None
         if manifest["target"] != "windows-x64":
             raise ReleaseError("Installer input is not the Windows x64 bundle")
         version = manifest["version"]
-        if not re.fullmatch(r"\d+\.\d+\.\d+-alpha\.\d+", version):
+        if not isinstance(version, str) or not re.fullmatch(RELEASE_VERSION_PATTERN, version):
             raise ReleaseError("Invalid installer version")
         bundle = work / "BowlBound"
         nsis_license = next(

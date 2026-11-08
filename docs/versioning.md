@@ -16,3 +16,10 @@ Application version numbers are not save compatibility profiles. The release ret
 content identities; older saves may require the original chart catalog. Keep
 copies of saves and the earlier version before upgrading. Version 1.0.0 does not
 certify historical chart accuracy. Never delete/reuse an already published tag.
+
+Release packaging accepts stable `MAJOR.MINOR.PATCH` identifiers and the existing
+`MAJOR.MINOR.PATCH-alpha.N` public form (Python uses `MAJOR.MINOR.PATCHaN`).
+Numeric components do not contain leading zeroes. Staging, runtime archives and
+Windows installers use the same validation; Python and frontend versions must
+agree before staging creates an output. Other prerelease forms require explicit
+packaging support before use.
