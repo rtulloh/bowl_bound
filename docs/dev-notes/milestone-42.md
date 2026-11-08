@@ -350,3 +350,17 @@ row/priority checks remain intact. Author 93 related checks, independent six con
 and the retained 202-report read-only re-audit pass at that scope. No engine, chart,
 coaching, source threshold or event credit rule changes. The original refusal is
 retained, and only unexecuted matched exposures resume under the old capture pins.
+
+## Completed integrated regression and representative checkpoint
+
+The [integrated validation checkpoint](milestone-42-final-validation.md) records
+the actual corrected release data, full broad passing census/dispositions,
+5,525 passing Python tests (92.25% combined/87.73% branch coverage; no skips or
+warnings), unchanged frontend/browser evidence and independently reviewed 34-game
+core/strict/addressed results. Both complete raw repeats pass. Independent causal
+and clock results remain partial, with exact unqualified populations retained.
+The complete matched inventory is executed/reused, sealed and independently
+reviewed at its declared finite scope. All three assigned tickets remain open through
+final acceptance. No software version, native build, push, tag or publication is
+claimed. Final coordinated 1.0.0/native/default8001/screenshot acceptance stays
+separate from authored-model and bounded audit qualification.

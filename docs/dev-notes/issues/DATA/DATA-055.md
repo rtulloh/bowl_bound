@@ -9,7 +9,7 @@ resolved-at: null
 closed-at: null
 tags: [chart-generator, validation, planning]
 links: [DATA-045, DATA-053]
-commits: [52c80b9]
+commits: ["52c80b9", "6d27bd2", "396a577", "ab4f467", "5d28eed", "ca04750"]
 ---
 
 ## Description
@@ -131,3 +131,25 @@ and independent global row/priority checks. Author 93 related checks and indepen
 six controls pass; the same retained 202 reports re-audit partial without rerunning
 the engine game. No general prepared-penalty, causal, clock or ticket acceptance is
 inferred. Original refusal and subsequent pending-only selection remain explicit.
+
+--- 2026-11-07 — final representative and cumulative checkpoint ---
+
+The integrated source at `ca04750` passes the full 5,525-test branch-coverage gate
+with no skips or warnings. Independent retained-data review accepts all 34 planned
+corrected-candidate core/strict/addressed checks and two complete raw repeats.
+The panel includes 6,429 reports, 12,591 legal choices, zero illegal choices and
+six legal AI-034 fallbacks. All 4,760 pending boundaries are accounted for through
+4,738 continuations and 22 handoffs; 34 native resumes remain separately counted.
+
+This closes the fresh addressed-save evidence gap for those encountered boundaries,
+not all independent causal football/clock scope. All 34 causal audits remain
+partial: 5,526 terminal subjects have existing independent authority and 903
+remain unqualified with exact addresses and first-taint/component dispositions.
+The older embedded pending flag and older missing addresses are not relabeled.
+See the [integrated checkpoint](../../milestone-42-final-validation.md). The matched
+32-game packet also passes core/strict/addressed checks with independent retained
+review, reusing four representative exposures. Its current audits remain partial:
+5,175 supported terminal subjects and 1,188 unqualified subjects. Original observer
+refusals remain immutable; separately pinned corrected audits preserve unknowns.
+Overall release acceptance remains required; ticket stays open and aggregate
+reconciliation is not called independent causal proof.

@@ -185,3 +185,52 @@ consume those power ratings; the chart-isolation comparison passes copied empty
 defensive marker lists, preserving original metadata identities separately.
 Native marker sensitivity and historical strength are not implied. Plan binding
 is not game completion, and only the designated validation lane executes games.
+
+## Finite development comparison checkpoint
+
+The frozen 32-game matrix is complete: four exact smoke reuses, seven prior
+executions and 21 additional executions. All 32 pass engine accounting, strict
+replay and the separate addressed-save checks under matched engine, rules,
+coaching and copied empty defensive-marker privileges. The generated/reference
+comparison has 16 matched exposure pairs and eight games per team and chart set.
+The separate 34-game representative panel shares those four smoke exposures;
+the two panels must not be added as independent samples.
+
+Three original observer refusals remain unchanged. Maintained synthetic
+regressions identified narrow scope errors at a punt decision followed by an
+overtime toss and at prepared Option penalty continuations. Separately pinned
+corrected audits retain those unsupported branches as unknown. Earlier completed
+games have exact changed-component comparisons with unchanged remaining observer
+bytes; the last 21 games use the corrected observer in a separate process after
+capture archival. No game or football behavior was changed or rerun to obtain
+those corrected classifications.
+
+All 32 current independent audits remain partial. Their 6,363 reports contain
+5,175 qualified terminal subjects and 1,188 unqualified subjects; these are
+heterogeneous component counts, not accuracy percentages. The addressed helper
+checks 4,482 boundaries and 4,459 continuations, with 23 pending-boundary handoffs
+and 32 native save resumes. It does not clear the legacy pending-save component
+or independent clock, period and continuity taint. Every recorded call is legal;
+nine known AI-034 two-point-try fallbacks remain disclosed.
+
+The private disposition retains whole-game scores, boxes, recorded coaching roles,
+actual called/resolved plays and comparable down/distance populations. Both chart
+sets use the same frozen eligible source observations, with original numerators,
+denominators and unknowns. Sack-inclusive and pure-rushing measures are separate.
+Material reference differences remain visible, and neither chart set is declared
+a historical-fit winner. Matching seeds does not align later dice after chart
+branches diverge; these whole-chart comparisons do not isolate interception-depth
+effects. Uniform field/call/formation components and their full residual mass
+remain separate from the game outcomes.
+
+The finite checkpoint has no unexplained new software failure. The integrated
+source gate passes 5,525 tests with no skips or warnings and coverage above the
+configured floor. That software evidence does not establish historical source
+completeness, observed conditional depths, exact formations, strength calibration
+or complete causal coverage. Authored priors, B incidence and other retained
+model/reference patterns remain open findings. Procedure checks cover all 116
+generated 2007 teams without reference inputs; the inspected references and these
+development games are not held-out validation. The 2008 preparation stays private
+research. DATA-046 remains open, and root retains final version, native build,
+packaging, privacy and release acceptance. Detailed tables and receipts remain
+private; no additional game campaign or fit threshold is introduced here.

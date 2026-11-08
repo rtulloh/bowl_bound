@@ -9,7 +9,7 @@ resolved-at: null
 closed-at: null
 tags: [chart-generator, source-conditioning, reproduced, validation]
 links: [DATA-045, DATA-060]
-commits: []
+commits: ["d981383", "9961384", "893601e", "b4fd051", "ca04750"]
 ---
 
 ## Description
@@ -133,3 +133,17 @@ release gate, with authored assumptions explicit. It does not certify historical
 call fit. Fresh full-game/save/reference evidence, final regression, release
 integration and fresh accepted-candidate screenshots remain pending; ticket stays
 OPEN.
+
+--- 2026-11-07 — integrated full regression and representative evidence ---
+
+The actual corrected ordinary release data and compound gate are tested at
+`b4fd051`, with the reviewed observer integration at `ca04750`. The complete
+Python branch-coverage run passes 5,525 tests, with 92.25% combined/87.73% branch
+coverage and no skips or warnings. All frozen source inputs remain unchanged.
+The independently reviewed 34-game panel passes core, strict replay and addressed
+saves, with both exact repeats preserved. Its causal/clock audit remains partial.
+See the [integrated checkpoint](../../milestone-42-final-validation.md) for exact
+counts, broad-census dispositions and release limits. The finite matched review
+is complete. Coordinated version/native acceptance and fresh actual-1.0.0
+screenshots remain required. Ticket stays open; no historical conditional-fit
+certification follows.

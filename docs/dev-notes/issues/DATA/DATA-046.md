@@ -9,7 +9,7 @@ resolved-at: null
 closed-at: null
 tags: [chart-generator, validation, planning]
 links: [DATA-045, DATA-063]
-commits: []
+commits: ["c1427d3", "93bfdb1", "af4676d", "bbb8fb0", "ca04750"]
 ---
 
 ## Description
@@ -148,3 +148,32 @@ corrected-cohort sanity panel. Metadata isolation and placeholder ratings are
 explicit. No matched-game completion is claimed by this binding, and no second
 lane duplicates those exposures. Detailed evidence stays private. DATA-046 stays
 open pending the remaining bounded comparison and discrepancy review.
+
+--- 2026-11-07 — finite matched-game and discrepancy checkpoint ---
+
+The [finite comparison](../../reference-benchmark-method.md#finite-development-comparison-checkpoint)
+is complete at its declared development scope. All 32 matched exposures pass core
+accounting, strict replay and addressed-save verification: four exact smoke reuses,
+seven prior executions and 21 additional executions. Their 16 generated/reference
+pairs retain identical prescribed conditions. The separate 34-game representative
+panel shares four exposures and is not another independent benchmark sample.
+
+The three original observer refusals remain immutable. Synthetic regressions and
+controls support narrow OT-tail and prepared-Option scope corrections; separately
+identified current audits retain unsupported continuations as unknown. No football
+behavior or game execution was changed to obtain those classifications. All 32
+current independent audits remain partial, with 5,175 qualified and 1,188
+unqualified terminal subjects. Addressed replay does not clear independent
+clock/state chains or the legacy pending-save component. All 12,589 recorded calls
+are legal; nine known AI-034 try fallbacks are disclosed.
+
+Private tables reconcile scores, box statistics, call distributions, formation
+components, selected-INT consequences and common eligible source observations.
+Material differences remain open; no reference-cell target, universal fit bound
+or historical accuracy winner is declared. Missing designed-call evidence,
+authored priors, B incidence, source uncertainty and remaining causal coverage
+retain their separate dispositions. The integrated source gate passes 5,525 tests
+without skips or warnings; that is software evidence, not historical validation.
+Detailed evidence stays private. No additional campaign is required for this
+finite checkpoint. DATA-046 remains open pending root's actual release acceptance
+and the continuing research dispositions; no 2008 publication follows.
