@@ -179,3 +179,35 @@ wrappers. Common unqualified populations include punt/fair-catch/return, field
 goals, recovery advances, complex penalties and previously tainted chains. Their
 counts and detailed evidence remain private. Lost pre-reboot raw receipts remain
 NOTRUN; no historical/source qualification is inferred. DATA-055 stays open.
+
+## Observed Option within a penalty reroll
+
+A newly retained reference-card game exposes a false observer refusal: a fixed
+penalty reroll selects Option's SOP/BLP, cancels the original defensive operand,
+then selects another penalty and an incomplete pass. The fixed ordinary oracle
+compared that legitimate blank defensive operand with the original number before
+excluding its unsupported prepared Option path. The documented penalty procedure
+requires normal supplemental handling on rerolls; this is an observer boundary,
+not an engine correction.
+
+The narrow correction recognizes an independently bound typed SOP/BLP row before
+ordinary retained-defense closure and leaves the entire accepted commitment
+UNVERIFIED with `prepared_option_authority`. Global typed row, physical draw,
+priority and history checks still apply; ordinary retained-defense corruption
+and a changed Option row against its pinned inventory still refuse. No Option
+penalty terminal, clock or generic-chain authority is added.
+
+Four mirrored actual SOP/BLP synthetic controls reproduce the unchanged-source
+refusal; two corruption controls already pass. Initial fixture placement, display
+label and diagnostic-count corrections are retained as test setup/expectation
+corrections, not engine defects or additional meaningful REDs. Final related
+penalty/CLI regressions pass 93 checks in 11.28 seconds. Read-only re-audit of the
+retained 202-report game returns partial_pass while its particular accepted
+Option penalty stays UNVERIFIED; original core/replay/addressed-save results and
+observer refusal remain immutable. No game/replay/save run is repeated.
+
+Paydirt consultation reviewed `tests/test_penalty_procedure.py` for explicit
+reroll observations and separation of prepared branches. Its NFL enforcement,
+mocked/prose expectations, private data and runtime dependencies are not reused.
+Bowl Bound `docs/penalties.md` and the prior ordinary-only contract remain the
+authority. Complete DATA-055 remains open.

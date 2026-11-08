@@ -70,6 +70,11 @@ def _origin(command: dict[str, Any], capture: dict[str, Any]) -> dict[str, Any]:
         for r in rows
     ):
         return dict(reason="unbound_origin_rows")
+    # An Option reroll cancels the effective defense. This oracle closes only
+    # the ordinary retained-defense path; its stricter closure must not reject
+    # an observed, independently bound Option continuation as corrupt.
+    if any(r["facts"]["kind"] in {"SOP", "BLP"} for r in rows):
+        return dict(reason="prepared_option_authority")
     fouls = []
     expected = first
     for event in events:

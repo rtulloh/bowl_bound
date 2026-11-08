@@ -338,3 +338,15 @@ now receives an explicit partial result with its overtime continuation unknown;
 no engine game was rerun to replace the refusal. Active game captures retain their
 original source pins. Final coverage must run on the completed reviewed integration,
 not the earlier intentionally interrupted 1,033-pass pre-fix run.
+
+The next retained benchmark refusal was also an observer scope error: an Option
+penalty path resolves through Bootleg, a second penalty and an incomplete pass;
+the original numeric defense is correctly cancelled. The fixed ordinary-penalty
+observer checked retained defense before excluding that prepared Option path.
+Four meaningful synthetic failures precede the minimal eligibility correction.
+The selected typed Option marker/path must be bound before the whole commitment
+is left UNKNOWN; ordinary retained-defense corruption still refuses, and global
+row/priority checks remain intact. Author 93 related checks, independent six controls
+and the retained 202-report read-only re-audit pass at that scope. No engine, chart,
+coaching, source threshold or event credit rule changes. The original refusal is
+retained, and only unexecuted matched exposures resume under the old capture pins.

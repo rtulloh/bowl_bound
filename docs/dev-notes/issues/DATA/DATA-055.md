@@ -119,3 +119,15 @@ and the ordinary extra-draw refusal pass; separate integration repeats all 37.
 The original refusal and capture remain retained; the same 190 reports now audit
 partial without a replacement engine run. Final panel dispositions and full
 regression remain pending. Ticket stays OPEN; no full causal/clock claim is made.
+
+--- 2026-11-07 — prepared Option penalty scope guard corrected ---
+
+The reference benchmark exercised Option/PEN to Bootleg/PEN to incomplete, with
+the original defense correctly cancelled. Four meaningful synthetic failures show
+the ordinary-only observer asserting retained defense before excluding this prepared
+path. The reviewed fix binds the selected typed Option marker/path and leaves its
+whole penalty commitment UNKNOWN; it preserves ordinary retained-defense refusals
+and independent global row/priority checks. Author 93 related checks and independent
+six controls pass; the same retained 202 reports re-audit partial without rerunning
+the engine game. No general prepared-penalty, causal, clock or ticket acceptance is
+inferred. Original refusal and subsequent pending-only selection remain explicit.
