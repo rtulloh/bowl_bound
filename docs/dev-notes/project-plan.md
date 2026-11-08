@@ -1007,3 +1007,32 @@ Tracked work: [UI-070](issues/UI/UI-070.md). See [Milestone 44](milestone-44.md)
 This is outside the active Milestone 42 and 1.0.0 correction release scope.
 
 **Commit:** `milestone 44: expose cross-year web matchups with home-season rules`
+
+### 45. Measure simulation improvements one outcome ticket at a time
+
+Owner-scheduled on 2026-11-07 for the release after 1.0.0. Execution is deferred
+until 1.0.0 publication/acceptance AND an explicit owner instruction to start.
+This is the next planned effort after Milestone 42; existing Milestone 43/44
+feature identities and scope are unchanged.
+
+**Deliver:** reconcile the outcome-related backlog against actual HEAD; freeze
+a finite prioritized queue, charts/runtime/actual-season fixtures/coaching/seeds
+and a reproducible baseline. Evaluate one ticket at a time with test-first
+corrections, gameplay confirmation and before/after measurements. Support
+no-defect, already-fixed, inconclusive and little-impact conclusions; distinguish
+measurement fixes from changes to simulated football.
+
+**Validate:** compare immediate mechanics, efficiency/scoring/team performance
+and repeated-season outcomes using the selected year's college rules and an
+explicit postseason selection model. Use developer references only where
+available, historical evidence elsewhere, and preserve held-out checks and
+unknowns. Review and commit each ticket before proceeding; complete applicable
+full regressions and a cumulative evidence report before release handoff.
+Historical champions or qualifiers are not targets to force.
+
+Tracked work: [DEV-080](issues/DEV/DEV-080.md).
+See the ready-to-start [Milestone 45 goal](milestone-45.md) for the activation
+condition, initial screening candidates, workflow and completion criteria.
+This goal is inactive and does not expand 1.0.0 acceptance.
+
+**Commit:** `milestone 45: measure ticket-specific simulation improvements`
