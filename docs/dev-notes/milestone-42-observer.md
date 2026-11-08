@@ -214,3 +214,29 @@ The exact integrated delta passes 131 focused observer/CLI checks in 33.59
 seconds. Twenty production observer/producer/runner/pending-capture files pass
 Pyright without errors or warnings, and Ruff passes. This checkpoint preserves
 its pre-followup cumulative and final related scopes separately.
+
+## Fixed numeric punt-return checkpoint
+
+The reviewed `19cbd86a` delta extends fixed in-field punt authority to numeric
+receiver returns: actual menu/choice and return row/draw, independent mirrored
+field arithmetic, report/charged IDs, excluded boxes, score and local ten-second
+timing. Fumble, marked, complex, end-zone, period and unsupported prior chains
+remain unknown. Six malformed AFTER-context REDs precede the strict clock guard.
+
+The pre-context cumulative passes 2,260 checks; final related scope passes 117,
+with separate 49-case and 15-case independent reviews. The same 34-wrapper audit
+adds 178 live returns and 179 report facts. Punt totals are 370 live/local-clock
+subjects, 373 report facts and 394 pending creators, with three clock-unknowns.
+All 6,419 reports and prior other fields remain retained. The terminal census
+links 5,498 reports and leaves 921 without authority; it is not accuracy. The old
+1,042 mandatory decisions still lack addressed saves. See the
+[bounded return contract](independent-pbp-punt-return-contract.md).
+
+Integration copies exactly seven safe paths, retaining the pending collector
+and runner callback. Fresh corrected-candidate addressed capture and matched
+games remain separate acceptance evidence. Full DATA-055 remains open.
+
+The integrated return delta passes 162 focused observer/CLI checks in 60.59
+seconds. Production Pyright reports zero errors/warnings, and Ruff passes.
+The pending helper and optional resume callback retain their accepted byte pins;
+independent review also verifies the specialist's committed source and artifacts.

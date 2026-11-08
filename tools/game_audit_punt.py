@@ -1,4 +1,4 @@
-"""Independent fixed unmarked punt / fair-catch commitments, engine-free."""
+"""Independent fixed unmarked punts and in-field receptions, engine-free."""
 
 from collections import Counter
 from typing import Any, cast
@@ -70,6 +70,7 @@ def _report(
     *,
     pending: bool,
     number: int | None = None,
+    outcome: str = "punt_fair_catch",
 ) -> int:
     report = command["returned_report"]
     _require(type(report) is dict, "returned report")
@@ -86,7 +87,7 @@ def _report(
     )
     _equal(report["defense"], "No formation", "defense format")
     _equal(report["yards"], None, "symbolic yards")
-    _equal(report["outcome"], "special_teams_pending" if pending else "punt_fair_catch", "outcome")
+    _equal(report["outcome"], "special_teams_pending" if pending else outcome, "outcome")
     _equal(commitment._state(report["state_before"]), original, "report original field")
     _equal(commitment._state(report["state_after"]), final, "report final field")
     _equal(
@@ -193,6 +194,55 @@ def _origin(command: dict[str, Any], capture: dict[str, Any]) -> dict[str, Any]:
     )
 
 
+def _return_field(
+    command: dict[str, Any], capture: dict[str, Any], origin: dict[str, Any]
+) -> tuple[dict[str, Any] | None, str | None]:
+    """Derive only fixed in-field return eligibility before closing its exposure."""
+    rows = _rows(capture, command)
+    if not rows or any(
+        row["chart_binding"] != "BOUND"
+        or row["record_binding"] != "BOUND"
+        or row["draw_binding"]["status"] != "BOUND"
+        for row in rows
+    ):
+        return None, "return_row_binding_authority"
+    row = rows[0]
+    _equal(
+        row["address"]["team_id"],
+        command["before"]["teams"][origin["receiver"]]["id"],
+        "return row owner",
+    )
+    _require(
+        row["address"]["table"] == "special_teams" and row["address"]["column"] == "punt_return",
+        "return row role",
+    )
+    facts = row["facts"]
+    if (
+        facts["kind"] not in {"yards", "no_change"}
+        or facts["priority"] != "normal"
+        or facts["out_of_bounds"]
+        or facts["variable"] is not None
+        or facts["penalty"] is not None
+    ):
+        return None, "return_terminal_authority"
+    _require(facts["variable_multiplier"] is None, "fixed return multiplier")
+    if facts["kind"] == "no_change":
+        _require(facts["yards"] is None, "no-change return fixed yards")
+        gain = 0
+    else:
+        _require(type(facts["yards"]) is int, "fixed return gain domain")
+        gain = facts["yards"]
+    goal = origin["final"]["yards_to_goal"] - gain
+    if not 1 <= goal <= 99:
+        return None, "return_landing_authority"
+    # A nonnumeric F/penalty path may legitimately consume additional rolls.
+    # Only this independently eligible fixed population has exactly one draw.
+    kickoff._exposure(command, rows, capture["typed_capture"], 1)
+    return dict(
+        possession=origin["receiver"], yards_to_goal=goal, down=1, yards_to_go=min(10, goal)
+    ), None
+
+
 def _clock(command: dict[str, Any], origin: dict[str, Any]) -> bool:
     if command["before"]["configuration"].get("mode") != "regulation":
         return False
@@ -240,6 +290,7 @@ def _clock(command: dict[str, Any], origin: dict[str, Any]) -> bool:
     # may be compared against the original timeout budgets.
     if remaining <= 10:
         return False
+    _require(_context(command, after) is None, "nonperiod after context")
     for index, key in enumerate(("home_timeouts", "away_timeouts")):
         _require(type(after.get(key)) is int and after[key] == budgets[index], "timeout mirror")
     _equal(
@@ -319,46 +370,54 @@ def audit_punt_commitments(
                 dispositions[origin["disposition_index"]].update(
                     status="EXCLUDED", reason="pending_creation_checked"
                 )
-                if command["arguments"] == ["kick:return"]:
-                    reason = "return_terminal_authority"
-                elif command["exception_type"] is not None:
+                if command["exception_type"] is not None:
                     reason = "failed_command"
                 else:
                     before, after = (command[key]["view"] for key in ("before", "after"))
                     _equal(before, origin["command"]["after"]["view"], "retained pending snapshot")
                     kickoff._offered(before, origin["receiver"], {"kick:fair_catch", "kick:return"})
-                    kickoff._exposure(command, _rows(capture, command), typed, 0)
-                    _require(origin["number"] not in ids, "fresh observed report identity")
-                    _report(
-                        command,
-                        origin["original"],
-                        origin["final"],
-                        pending=False,
-                        number=origin["number"],
-                    )
-                    kickoff._effects(command)
-                    counts["report_checked"] += 1
-                    local_clock = _clock(command, origin)
-                    counts["clock_checked" if local_clock else "clock_unknown"] += 1
-                    normal_live = (
-                        command["before"]["configuration"]["mode"] == "drive" or local_clock
-                    )
-                    if local_clock:
-                        _equal(after.get("phase"), "scrimmage", "nonperiod live phase")
-                    if normal_live and after.get("phase") == "scrimmage":
-                        _require("state" in after, "missing live state")
-                        _equal(
-                            commitment._state(after["state"]),
-                            origin["final"],
-                            "live receiving field",
-                        )
-                        _require(after.get("pending") is None, "finished reception decision")
-                        core = True
-                        status = "GO"
-                        reason = None
-                        counts["checked"] += 1
+                    is_return = command["arguments"] == ["kick:return"]
+                    final = origin["final"]
+                    if is_return:
+                        final, reason = _return_field(command, capture, origin)
                     else:
-                        reason = "live_continuation_authority"
+                        kickoff._exposure(command, _rows(capture, command), typed, 0)
+                    if reason is None:
+                        assert final is not None
+                        _require(origin["number"] not in ids, "fresh observed report identity")
+                        _report(
+                            command,
+                            origin["original"],
+                            final,
+                            pending=False,
+                            number=origin["number"],
+                            outcome="punt_return" if is_return else "punt_fair_catch",
+                        )
+                        kickoff._effects(command)
+                        counts["report_checked"] += 1
+                        counts["return_report_checked"] += int(is_return)
+                        local_clock = _clock(command, origin)
+                        counts["clock_checked" if local_clock else "clock_unknown"] += 1
+                        normal_live = (
+                            command["before"]["configuration"]["mode"] == "drive" or local_clock
+                        )
+                        if local_clock:
+                            _equal(after.get("phase"), "scrimmage", "nonperiod live phase")
+                        if normal_live and after.get("phase") == "scrimmage":
+                            _require("state" in after, "missing live state")
+                            _equal(
+                                commitment._state(after["state"]),
+                                final,
+                                "live receiving field",
+                            )
+                            _require(after.get("pending") is None, "finished reception decision")
+                            core = True
+                            status = "GO"
+                            reason = None
+                            counts["checked"] += 1
+                            counts["return_checked"] += int(is_return)
+                        else:
+                            reason = "live_continuation_authority"
         else:
             pending.pop(game, None)
         dispositions.append(
@@ -379,6 +438,8 @@ def audit_punt_commitments(
         commands_observed=len(typed["commands"]),
         checked=counts["checked"],
         report_checked=counts["report_checked"],
+        return_checked=counts["return_checked"],
+        return_report_checked=counts["return_report_checked"],
         pending_checked=counts["pending_checked"],
         clock_checked=counts["clock_checked"],
         clock_unknown=counts["clock_unknown"],

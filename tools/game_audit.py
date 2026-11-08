@@ -46,7 +46,7 @@ SCORE_POINTS = {
     "conversion_return": 2,
 }
 CREDIT_KINDS = {"excluded", "rush", "completion", "incomplete", "interception", "sack"}
-OBSERVER_VERSION = "20"
+OBSERVER_VERSION = "21"
 INVENTORY_VERSION = "1"
 
 

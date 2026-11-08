@@ -95,3 +95,14 @@ checks after two reproduced period guard failures. Integration passes 131
 focused observer/CLI checks and twenty production files pass Pyright and Ruff.
 See the [bounded contract](../../independent-pbp-punt-contract.md). This is not
 fresh corrected-candidate game evidence or complete DATA-055 acceptance.
+
+--- 2026-11-07 — bounded numeric punt-return integration ---
+
+Reviewed `19cbd86a` adds independent fixed in-field numeric punt returns, actual
+receiver/row/draw ownership, mirrored field/report/box/score checks and separate
+local clock evidence. Seven exact safe paths preserve the pending-save collector
+and runner callback. The pre-followup 2,260-check cumulative and final 117 related
+checks remain distinct. The same 34-wrapper audit adds 178 live returns; 921
+reports lack bounded terminal authority and old mandatory-save addresses remain
+absent. See [contract](../../independent-pbp-punt-return-contract.md). Candidate
+addressed capture, matched games and complete acceptance remain required.

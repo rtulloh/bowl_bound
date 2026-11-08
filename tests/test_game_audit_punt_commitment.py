@@ -7,6 +7,7 @@ import pytest
 
 from bowl_bound.dice import OffensiveRoll, ScriptedDice
 from bowl_bound.game_state import FieldState, Possession
+from bowl_bound.models import ResultKind
 from bowl_bound.save_game import SavedGame
 from bowl_bound.timing import Clock
 from tests.test_game_audit_ordinary_commitment import log_digest
@@ -27,6 +28,9 @@ def punt_subject(
     choice="kick:fair_catch",
     pending_only=False,
     roll=None,
+    return_gain=3,
+    return_kind="yards",
+    return_roll=None,
 ):
     teams = tuple(
         replace(
@@ -36,7 +40,12 @@ def punt_subject(
                     record,
                     cell=replace(
                         record.cell,
-                        yards=flight
+                        kind=ResultKind(return_kind)
+                        if record.column.value == "punt_return"
+                        else record.cell.kind,
+                        yards=(None if return_kind == "no_change" else return_gain)
+                        if record.column.value == "punt_return"
+                        else flight
                         if record.column.value == "punt"
                         else 65
                         if record.column.value == "kickoff"
@@ -48,7 +57,11 @@ def punt_subject(
         )
         for team in subject_teams()
     )
-    rolls = [OffensiveRoll(2, 0, 1) if roll is None else roll, OffensiveRoll(3, 4, 5)]
+    rolls = [
+        OffensiveRoll(2, 0, 1) if roll is None else roll,
+        OffensiveRoll(3, 4, 5) if return_roll is None else return_roll,
+        OffensiveRoll(2, 0, 0),
+    ]
     if clock is not None:
         rolls = [OffensiveRoll(3, 4, 5), OffensiveRoll(1, 0, 0), OffensiveRoll(2, 0, 0)] + rolls
     game = SavedGame.new(
@@ -94,8 +107,12 @@ def punt_subject(
     inventory = frozen_inventory()
     for record in inventory["cells"]:
         if record["address"]["table"] == "special_teams":
+            if record["address"]["column"] == "punt_return":
+                record["facts"]["kind"] = return_kind
             record["facts"]["yards"] = (
-                flight
+                (None if return_kind == "no_change" else return_gain)
+                if record["address"]["column"] == "punt_return"
+                else flight
                 if record["address"]["column"] == "punt"
                 else 65
                 if record["address"]["column"] == "kickoff"
@@ -236,12 +253,12 @@ def test_normal_regulation_faircatch_local_clock_and_pending_no_premature_credit
     assert commands[0]["before"]["view"]["statistics"] == commands[0]["after"]["view"]["statistics"]
 
 
-def test_numeric_return_is_explicitly_unknown_not_faircatch():
+def test_numeric_return_graduates_only_its_new_fixed_population():
     row, inventory = punt_subject(choice="kick:return")
     result = audit_receipt(row, lookup_inventory=inventory)
-    assert result["components"]["punt_fair_catch_commitment"] == "UNVERIFIED"
-    assert result["punt_commitment_counts"]["checked"] == 0
-    assert result["punt_commitment_counts"]["unknown_reasons"]["return_terminal_authority"] == 1
+    assert result["components"]["punt_fair_catch_commitment"] == "GO"
+    assert result["punt_commitment_counts"]["checked"] == 1
+    assert result["punt_commitment_counts"]["return_checked"] == 1
 
 
 @pytest.mark.parametrize("key", ["hurried", "conditional_timeout", "untimed_down"])
