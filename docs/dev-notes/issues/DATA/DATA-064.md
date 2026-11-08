@@ -104,3 +104,18 @@ storage prerequisite is met. Bind this approval to the final-pipeline-v2 pair
 This is visual acceptance only. Full-cohort passing-cell/source/engine audits,
 independent event/reference validation and final release gates remain required;
 the ticket is not resolved by the screenshot or approval.
+
+--- 2026-11-07 — corrected full cohort and broad passing census ---
+
+The owner-accepted final pipeline now produces all 116 approved historical
+teams and the unchanged fictional samples. Independent ordinary-file review
+verifies all 97,440 historical records, all nondepth facts/incidence/metadata,
+789 corrected locations and every conditional encoding column. The complete
+[passing census](../../passing-cell-audit-method.md#frozen-full-cohort-checkpoint)
+adds 45,240 scoped cells, 73,080 all-family cluster cells and 1,044,000 independent
+Priority checks. All 31 diagnostic source-envelope exceptions receive private
+per-address dispositions and weighted outcomes; negative defensive contributions
+are not automatically constrained by whole-play source minima. Repeated-column
+groups and unsupported historical/terminal components stay explicit. No cap,
+shuffle, full source-fit claim or ticket resolution is introduced. Final observer,
+matched games, regression and release acceptance remain required.

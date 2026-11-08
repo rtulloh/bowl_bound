@@ -74,3 +74,50 @@ gate remain pending. No full-cohort computation is authorized by this note.
 Paydirt DATA-040/041 informed separation of geometry, physical exposure,
 conditional mechanisms and repeated templates. No NFL weights, thresholds,
 private charts or runtime dependency were reused.
+
+## Frozen full-cohort checkpoint
+
+After explicit paired visual acceptance and restored storage, the final pipeline
+produces all 116 approved 2007 teams plus the unchanged two fictional samples.
+Independent review checks 97,440 historical chart records, preserves nondepth
+facts, INT incidence and metadata, and verifies all 3,248 conditional columns.
+The 789 changed locations are 688 offense and 101 defense cells. Every accepted
+paired file remains identical. There are zero qualified designed-call known
+locations in this conditioned cohort; the conditional shape remains authored.
+
+The read-only broad census covers 45,240 scoped cells and 73,080 all-family
+cluster cells. Its frozen pair selection is each sorted catalog key against
+itself and its cyclic successor: 232 pairings, 6,960 contexts and 1,044,000
+independent Priority address checks. Every context retains denominator 7,776.
+All 647 consumed input identities remain unchanged. This is not an all-matchup
+or full-game census.
+
+The scoped results retain 815 declared-support INT cells, 5,042 incomplete
+tokens, 3,228 unqualified conditional-terminal cells and 36,124 fixed gains
+within pooled unidentified-call source envelopes. Another 31 cells require
+source-envelope review. All are negative defensive additive contributions;
+the diagnostic compares them with whole completed-pass source gains. Each
+private disposition retains its exact address, source envelope and conditional
+Priority outcomes under both frozen pairings. Those full-play minima cannot
+establish chart-contribution caps. Retain these modifiers, with historical
+call fit unknown; no generation change or numerical clipping follows from
+that comparison alone.
+
+All 1,347 within-team and 396 cross-team identical-column groups are retained.
+They reflect deterministic weighted templates; repetition alone establishes no
+rule or encoding violation and does not justify cosmetic shuffling. Exact
+weighted tactical effects and reference discrepancies remain separate evidence.
+
+Representative minima/maxima across all five called plays are checked at three
+literal field anchors. Twenty-five actual direct terminal subjects pass field,
+full-box, score and strict two-draw/two-trace checks. Five own-end subjects stay
+unknown under that bounded oracle. Conditional chains, clock and designed-call
+historical fit are not promoted. Detailed numeric tails, all per-team/call/flag
+counts and every exception remain in ignored evidence; the public synopsis does
+not certify complete historical accuracy or full milestone acceptance.
+
+The fourteen maintained synthetic guards pass before computation. A private
+census-driver import typo failed before chart access and is retained separately
+as setup failure. It is not a generator or football regression. Independent
+census/disposition review and the final candidate/game/release gates remain
+required.
