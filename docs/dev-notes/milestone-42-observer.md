@@ -181,3 +181,36 @@ penalty/CLI/runner checks and 36 documentation/tracker checks. Ruff and the
 warnings were corrected by using the established explicit project interpreter
 and Node 24 paths. Those setup failures are not engine regressions. The pending
 save recorder and its runner callback are excluded from this observer checkpoint.
+
+## Fixed punt / fair-catch checkpoint
+
+The reviewed `0e10dc50` delta adds a bounded causal handler for unmarked fixed
+numeric punts landing in the field and the actual receiver's fair-catch choice.
+It independently binds the original kick row/draw, mirrored landing arithmetic,
+actual-object pending menu, zero pending credit, final field/report/boxes/score
+and strict zero decision draw/row exposure. A separate local ten-second timing
+proof does not clear an earlier unknown chain. Supported pending endpoints feed
+conditional same-object continuity; return, marked, complex, end-zone and period
+residuals retain their documented unknown status. See the
+[contract](independent-pbp-punt-contract.md).
+
+The source retains 23 meaningful ignored-corruption REDs and eight capability
+scaffolds. The pre-period-followup cumulative passes 2,216 checks; two later
+period-boundary failures precede a narrow ordering correction and 177 final
+related checks. Independent review rehashes the committed source and artifacts.
+Read-only re-audit preserves all 34 wrappers and 6,419 reports, checking 394
+pending creators, 194 terminal report facts, 192 live fair catches and 192 local
+clock charges. Two period continuations remain clock-unknown. The diagnostic
+terminal-handler census is 5,320 linked and 1,099 without authority, not an
+accuracy percentage. The old 1,042 mandatory decisions still lack addressed saves.
+
+Integration copies only the ten reviewed safe delta paths, preserving the local
+resume callback and richer ticket. Two documentation phrases are clarified:
+this slice creates no new historical games; old aggregate replay flags are not
+1,042 individual addressed save receipts. No engine, chart or capture producer
+changes are introduced.
+
+The exact integrated delta passes 131 focused observer/CLI checks in 33.59
+seconds. Twenty production observer/producer/runner/pending-capture files pass
+Pyright without errors or warnings, and Ruff passes. This checkpoint preserves
+its pre-followup cumulative and final related scopes separately.

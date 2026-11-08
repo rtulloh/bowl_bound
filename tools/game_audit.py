@@ -19,6 +19,7 @@ from .game_audit_lookup import LookupEvidenceError, LookupInventory, audit_looku
 from .game_audit_pat import PatEvidenceError, audit_pat_reports
 from .game_audit_penalty import PenaltyEvidenceError, audit_penalty_commitments
 from .game_audit_priority import PriorityEvidenceError, audit_priority
+from .game_audit_punt import PuntEvidenceError, audit_punt_commitments
 from .game_audit_row_links import RowLinkEvidenceError, audit_row_links
 from .game_audit_supplemental import SupplementalEvidenceError, audit_supplemental_commitments
 
@@ -45,7 +46,7 @@ SCORE_POINTS = {
     "conversion_return": 2,
 }
 CREDIT_KINDS = {"excluded", "rush", "completion", "incomplete", "interception", "sack"}
-OBSERVER_VERSION = "19"
+OBSERVER_VERSION = "20"
 INVENTORY_VERSION = "1"
 
 
@@ -437,6 +438,14 @@ def audit_receipt(
             )
         except (PenaltyEvidenceError, CommitmentEvidenceError) as error:
             raise ReceiptAuditError(str(error)) from error
+    punt_counts = None
+    if "typed_capture" in capture:
+        try:
+            punt_counts = audit_punt_commitments(
+                capture, typed_inventory_available=frozen is not None
+            )
+        except (PuntEvidenceError, KickoffEvidenceError, CommitmentEvidenceError) as error:
+            raise ReceiptAuditError(str(error)) from error
     kickoff_counts = None
     if "typed_capture" in capture:
         try:
@@ -469,6 +478,7 @@ def audit_receipt(
                 capture,
                 ordinary=commitment_counts,
                 clock=clock_counts,
+                punt=punt_counts,
                 kickoff=kickoff_counts,
                 supplemental=supplemental_counts,
                 typed_inventory_available=frozen is not None,
@@ -626,6 +636,11 @@ def audit_receipt(
     owned = report_count - counts["excluded"]
     awards = len(row["final"]["scoring"])
     coverage = {
+        "punt_fair_catch_commitment": dict(
+            checked=punt_counts["checked"] if punt_counts else 0,
+            excluded=punt_counts["excluded"] if punt_counts else 0,
+            unknown=punt_counts["unknown"] if punt_counts else report_count,
+        ),
         "accepted_previous_penalty_commitment": dict(
             checked=penalty_counts["checked"] if penalty_counts else 0,
             excluded=penalty_counts["excluded"] if penalty_counts else 0,
@@ -746,6 +761,13 @@ def audit_receipt(
         "reports_checked": len(reports),
         "event_counts": dict(sorted(counts.items())),
         "components": {
+            "punt_fair_catch_commitment": (
+                "UNVERIFIED"
+                if punt_counts is None or punt_counts["unknown"]
+                else "GO"
+                if punt_counts["checked"]
+                else "NOTRUN"
+            ),
             "accepted_previous_penalty_commitment": (
                 "UNVERIFIED"
                 if penalty_counts is None or penalty_counts["unknown"]
@@ -855,6 +877,7 @@ def audit_receipt(
         "lookup_counts": lookup_counts,
         "captured_row_counts": row_counts,
         "penalty_commitment_counts": penalty_counts,
+        "punt_commitment_counts": punt_counts,
         "ordinary_commitment_counts": commitment_counts,
         "supplemental_commitment_counts": supplemental_counts,
         "standard_clock_counts": clock_counts,

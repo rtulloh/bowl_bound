@@ -77,3 +77,21 @@ boundaries through 153 continuations and one handoff. The 184 related capture
 and runner checks pass. See [method and limits](../../pending-choice-capture.md).
 No fresh historical panel is claimed; the old missing addresses, independent
 causal football populations and full milestone acceptance remain outstanding.
+
+--- 2026-11-07 — bounded punt / fair-catch integration ---
+
+The reviewed `0e10dc50` safe delta adds independent fixed numeric punt landing,
+actual receiver pending-menu and fair-catch terminal checks, with full excluded
+credit, boxes, score, report freshness and separate local ten-second timing.
+Period, marked, complex, return and unsupported prior chains remain unknown.
+The retained 34-wrapper re-audit checks 394 pending creators, 194 report facts,
+192 live fair catches and 192 local clock charges; two period continuations are
+clock-unknown. All 6,419 reports remain retained. The terminal-handler census
+links 5,320 reports and leaves 1,099 without authority; this is coverage, not an
+accuracy percentage. The old 1,042 mandatory decisions still lack addressed saves.
+
+The pre-period-followup cumulative passes 2,216 checks, with 177 final related
+checks after two reproduced period guard failures. Integration passes 131
+focused observer/CLI checks and twenty production files pass Pyright and Ruff.
+See the [bounded contract](../../independent-pbp-punt-contract.md). This is not
+fresh corrected-candidate game evidence or complete DATA-055 acceptance.

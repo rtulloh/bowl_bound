@@ -23,6 +23,7 @@ from tools import (
     game_audit_pat,
     game_audit_penalty,
     game_audit_priority,
+    game_audit_punt,
     game_audit_row_links,
     game_audit_supplemental,
 )
@@ -44,6 +45,7 @@ def _verify_observer_bindings(
     kickoff_observer: Path,
     supplemental_observer: Path,
     penalty_observer: Path,
+    punt_observer: Path,
 ) -> None:
     """Check declared origins/bindings; this alone cannot attest loaded code bytes."""
     for module, expected, label in (
@@ -60,6 +62,7 @@ def _verify_observer_bindings(
         (game_audit_kickoff, kickoff_observer, "kickoff observer"),
         (game_audit_supplemental, supplemental_observer, "supplemental observer"),
         (game_audit_penalty, penalty_observer, "fixed penalty observer"),
+        (game_audit_punt, punt_observer, "punt observer"),
     ):
         origin = getattr(module, "__file__", None)
         specification_origin = getattr(getattr(module, "__spec__", None), "origin", None)
@@ -139,6 +142,13 @@ def _verify_observer_bindings(
     if game_audit_penalty.priority is not game_audit_priority:
         raise ValueError("unexpected fixed penalty priority module binding")
 
+    if game_audit.audit_punt_commitments is not game_audit_punt.audit_punt_commitments:
+        raise ValueError("unexpected punt observer binding")
+    if game_audit_punt.commitment is not game_audit_commitment:
+        raise ValueError("unexpected punt commitment module binding")
+    if game_audit_punt.kickoff is not game_audit_kickoff:
+        raise ValueError("unexpected punt kickoff helper module binding")
+
     if game_audit.audit_final_row_binding is not game_audit_final_binding.audit_final_row_binding:
         raise ValueError("unexpected final row observer binding")
     if game_audit_final_binding.commitment is not game_audit_commitment:
@@ -169,6 +179,7 @@ def main(argv: list[str] | None = None) -> int:
     kickoff_observer = observer.with_name("game_audit_kickoff.py")
     supplemental_observer = observer.with_name("game_audit_supplemental.py")
     penalty_observer = observer.with_name("game_audit_penalty.py")
+    punt_observer = observer.with_name("game_audit_punt.py")
     frozen_inventory = None
     inventory_info = None
     try:
@@ -188,6 +199,7 @@ def main(argv: list[str] | None = None) -> int:
             kickoff_observer,
             supplemental_observer,
             penalty_observer,
+            punt_observer,
         )
         if (args.lookup_inventory is None) != (args.lookup_inventory_sha256 is None):
             raise ValueError("lookup inventory requires both a file and explicit expected SHA256")
@@ -241,6 +253,7 @@ def main(argv: list[str] | None = None) -> int:
                 kickoff_observer,
                 supplemental_observer,
                 penalty_observer,
+                punt_observer,
             )
         }
         output.mkdir(mode=0o700, parents=True, exist_ok=False)
@@ -296,6 +309,7 @@ def main(argv: list[str] | None = None) -> int:
             kickoff_observer,
             supplemental_observer,
             penalty_observer,
+            punt_observer,
         )
     except ValueError as error:
         identity_error = str(error)
@@ -324,6 +338,7 @@ def main(argv: list[str] | None = None) -> int:
                     "ordinary_kickoff_commitment",
                     "supplemental_commitment",
                     "accepted_previous_penalty_commitment",
+                    "punt_fair_catch_commitment",
                 }
             )
             for name in affected:
@@ -343,6 +358,8 @@ def main(argv: list[str] | None = None) -> int:
                 current.pop("pat_report_counts", None)
             if "ordinary_kickoff_commitment" in affected:
                 current.pop("kickoff_counts", None)
+            if "punt_fair_catch_commitment" in affected:
+                current.pop("punt_commitment_counts", None)
             if "accepted_previous_penalty_commitment" in affected:
                 current.pop("penalty_commitment_counts", None)
             if "supplemental_commitment" in affected:

@@ -35,7 +35,7 @@ def test_completed_receipt_cannot_retain_uncommitted_reports(field: str, value: 
 
 def test_legacy_missing_count_is_unverified_and_versions_are_explicit() -> None:
     result = audit_receipt(receipt())
-    assert result["observer_version"] == "19"
+    assert result["observer_version"] == "20"
     inventory = result["evidence_inventory"]
     assert inventory["version"] == "1"
     assert inventory["input_format"] == "unversioned_retained_game"

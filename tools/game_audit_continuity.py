@@ -59,6 +59,7 @@ def audit_ordinary_continuity(
     typed_inventory_available: bool,
     kickoff: dict[str, Any] | None = None,
     supplemental: dict[str, Any] | None = None,
+    punt: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Link checked endpoints; report distinct comparison/unknown unit counts."""
     typed = capture["typed_capture"]
@@ -70,6 +71,7 @@ def audit_ordinary_continuity(
     supplemental_by_number = {
         row["command_number"]: row for row in (supplemental or {}).get("dispositions", [])
     }
+    punt_by_number = {row["command_number"]: row for row in (punt or {}).get("dispositions", [])}
     known: dict[int, dict[str, Any] | None] = {}
     counts: Counter[str] = Counter()
     reasons: Counter[str] = Counter()
@@ -115,6 +117,18 @@ def audit_ordinary_continuity(
             # authority remains conditional; an unknown prior never reaches here.
             expected = _endpoint(after, _view_field(after))
             counts["qualified_kickoff_endpoints"] += 1
+        elif (
+            (punt_row := punt_by_number.get(number)) is not None
+            and punt_row["game_number"] == game
+            and (
+                punt_row["status"] == "GO"
+                or punt_row["status"] == "EXCLUDED"
+                and punt_row["reason"] == "pending_creation_checked"
+            )
+            and punt_row["core_checked"] is True
+        ):
+            expected = _endpoint(after, _view_field(after))
+            counts["qualified_punt_endpoints"] += 1
         elif ordinary_by_number[number]["status"] == "GO" or (
             supplemental_by_number.get(number, {}).get("game_number") == game
             and supplemental_by_number[number]["status"] == "GO"
@@ -161,6 +175,7 @@ def audit_ordinary_continuity(
         runoff_fields=counts["runoff_fields"],
         qualified_ordinary_endpoints=counts["qualified_ordinary_endpoints"],
         qualified_kickoff_endpoints=counts["qualified_kickoff_endpoints"],
+        qualified_punt_endpoints=counts["qualified_punt_endpoints"],
         checked=counts["boundary_links"] + counts["runoff_fields"],
         unknown_links=counts["unknown_links"],
         unknown_endpoints=counts["unknown_endpoints"],

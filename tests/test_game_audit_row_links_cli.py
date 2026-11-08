@@ -118,8 +118,9 @@ def test_row_consumer_fresh_cli_has_no_engine_import_and_pins_exact_observers(tm
         "game_audit_kickoff.py",
         "game_audit_supplemental.py",
         "game_audit_penalty.py",
+        "game_audit_punt.py",
     }
-    assert len(report["source_sha256"]) == 14
+    assert len(report["source_sha256"]) == 15
 
 
 @pytest.mark.parametrize("helper", ["fact", "equality", "physical"])

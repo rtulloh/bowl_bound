@@ -75,7 +75,7 @@ def test_cli_versions_and_aggregates_available_coverage_without_hiding_failure(t
     output = tmp_path / "private-data/audit"
     assert main([str(source), "--output", str(output)]) == 1
     result = json.loads((output / "audit.json").read_text())
-    assert result["observer_version"] == "19"
+    assert result["observer_version"] == "20"
     assert result["games_failed"] == 1
     assert result["results"][1]["status"] == "failed"
     assert "final report count" in result["results"][1]["error"]
