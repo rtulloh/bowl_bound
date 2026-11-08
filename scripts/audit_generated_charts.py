@@ -35,6 +35,7 @@ from bowl_bound.models import (
 from bowl_bound.normalization import CELL_LEGEND
 from bowl_bound.resolution import resolve_cells
 from bowl_bound.team_csv import TeamFileMetadata, load_team
+from tools import chart_depth_release_audit as depth_release
 
 POLICY_SHA256 = "bbb35953b3812769bde39d5c567fc21dece00b0899cb037feaad0db7aa88280c"
 BUDGET_MODEL_SHA256 = "a46aaf838a718e012a2ce90a4438e6de475a0d810f18ab7e92d87148603a9e5f"
@@ -122,6 +123,12 @@ def _json(path: Path, inputs: _FrozenInputs | None = None) -> dict[str, Any]:
 def _execution_inputs(inputs: _FrozenInputs) -> str:
     source = Path(__file__).resolve().parents[1]
     inputs.read(Path(__file__).resolve())
+    for name in ("chart_depth_release_audit", "chart_depth_encoding_audit", "chart_depth_audit"):
+        module = sys.modules[f"tools.{name}"]
+        path = source / "tools" / f"{name}.py"
+        if module.__file__ is None or Path(module.__file__).resolve() != path.resolve():
+            raise ChartAuditError("Foreign imported conditional depth auditor")
+        inputs.read(path)
     for name in _runtime_core(source, inputs):
         inputs.read(source / name)
     return _engine_identity(source)
@@ -253,12 +260,22 @@ def _audit_candidate(root: Path) -> dict[str, Any]:
     version = expected.get("schema_version")
     if (
         type(version) is not int
-        or version not in {1, 2}
+        or version not in {1, 2, 3}
         or not isinstance(expected.get("teams"), dict)
     ):
         raise ChartAuditError("Missing generated chart audit schema/team expectations")
     if set(expected["teams"]) != teams:
         raise ChartAuditError("Generated audit team inventory differs from shipped catalog")
+    if version != 3 and "conditional_depth" in expected:
+        raise ChartAuditError("Declared conditional depth policy requires schema three")
+    try:
+        depth_targets = (
+            depth_release.validate_qualification(expected.get("conditional_depth"), teams)
+            if version == 3
+            else None
+        )
+    except (ValueError, KeyError, TypeError) as error:
+        raise ChartAuditError(f"Invalid conditional depth qualification: {error}") from error
     identity = expected.get("model_identity", {})
     _validate_identity(identity, version)
     review = expected.get("source_review", {})
@@ -275,7 +292,7 @@ def _audit_candidate(root: Path) -> dict[str, Any]:
         raise ChartAuditError("Private source qualification is stale for this candidate catalog")
     if review.get("baseline_expectations_sha256") != _digest(expected["teams"]):
         raise ChartAuditError("Private source qualification is stale for baseline expectations")
-    if version == 2 and not _is_sha(review.get("baseline_catalog_sha256")):
+    if version >= 2 and not _is_sha(review.get("baseline_catalog_sha256")):
         raise ChartAuditError("Missing reviewed baseline catalog identity")
     engine_sha = _engine_identity(root)
     reports = {}
@@ -295,8 +312,19 @@ def _audit_candidate(root: Path) -> dict[str, Any]:
             chart, metadata = load_team(root / "seasons" / season, slug)
         except ValueError as error:
             raise ChartAuditError(f"Invalid strict chart/provenance codec: {key}") from error
-        if version == 2:
-            reports[key] = _audit_budget(chart, metadata, baseline, key)
+        if version >= 2:
+            try:
+                reports[key] = _audit_budget(
+                    chart, metadata, baseline, key, ignore_int_depths=version == 3
+                )
+                if depth_targets is not None:
+                    reports[key]["conditional_depth"] = depth_release.audit_encoding(
+                        chart, depth_targets
+                    )
+            except (ValueError, KeyError, TypeError) as error:
+                raise ChartAuditError(
+                    f"Invalid budget/conditional depth facts: {key}: {error}"
+                ) from error
             continue
         if metadata.source_sha256 != identity["source_sha256"]:
             raise ChartAuditError(f"Chart source identity disagrees with qualified model: {key}")
@@ -497,8 +525,12 @@ def _family_mass(chart: TeamChart) -> dict[tuple[int, Defense], dict[str, int]]:
     return mass
 
 
-def _budget_record(chart: TeamChart, metadata: TeamFileMetadata) -> dict[str, Any]:
+def _budget_record(
+    chart: TeamChart, metadata: TeamFileMetadata, *, ignore_int_depths: bool = False
+) -> dict[str, Any]:
     """Compact baseline facts independent of replaced virtual provenance."""
+    if ignore_int_depths:
+        chart = depth_release.mask_depths(chart)
     metadata_facts = {
         k: v for k, v in asdict(metadata).items() if k not in {"source_sha256", "evidence"}
     }
@@ -542,9 +574,14 @@ def _budget_record(chart: TeamChart, metadata: TeamFileMetadata) -> dict[str, An
 
 
 def _audit_budget(
-    chart: TeamChart, metadata: TeamFileMetadata, expected: dict[str, Any], key: str
+    chart: TeamChart,
+    metadata: TeamFileMetadata,
+    expected: dict[str, Any],
+    key: str,
+    *,
+    ignore_int_depths: bool = False,
 ) -> dict[str, Any]:
-    actual = _budget_record(chart, metadata)
+    actual = _budget_record(chart, metadata, ignore_int_depths=ignore_int_depths)
     if set(expected) != set(actual):
         raise ChartAuditError(f"Invalid budget baseline fields: {key}")
     # JSON canonical equality distinguishes integer mass from bool/float values.
@@ -650,8 +687,17 @@ def _audit_budget(
                 stripes.append({"play": p, "roll": roll, "kind": next(iter(kinds)).value})
     return {
         "family_budgets_preserved": True,
-        "fixed_whole_facts_preserved": True,
-        "nondefensive_gameplay_preserved": True,
+        **(
+            {
+                "fixed_facts_except_passing_int_depths_preserved": True,
+                "nondefensive_gameplay_except_passing_int_depths_preserved": True,
+            }
+            if ignore_int_depths
+            else {
+                "fixed_whole_facts_preserved": True,
+                "nondefensive_gameplay_preserved": True,
+            }
+        ),
         "roles": roles,
         "primary_physical_mass": 216 * 36,
         "primary_class_sha256": primary,
@@ -730,15 +776,30 @@ def _build_expectations(root: Path, baseline_root: Path, source: dict[str, Any])
     baseline_pins, baseline_keys = _catalog(baseline_root)
     if baseline_keys != keys:
         raise ChartAuditError("Baseline and candidate generated team inventories differ")
-    if set(source) != SOURCE_FIELDS | {"model_identity"}:
+    if set(source) not in (
+        SOURCE_FIELDS | {"model_identity"},
+        SOURCE_FIELDS | {"model_identity", "conditional_depth"},
+    ):
         raise ChartAuditError(
             "Unsupported qualification fields; export only approved SHA identities"
         )
+    depth_declared = "conditional_depth" in source
+    depth_spec = source.pop("conditional_depth", None)
+    if depth_declared:
+        try:
+            depth_release.validate_qualification(depth_spec, keys)
+        except (ValueError, KeyError, TypeError) as error:
+            raise ChartAuditError(f"Invalid conditional depth qualification: {error}") from error
     identity = source.pop("model_identity", None)
     version = (
-        2
-        if isinstance(identity, dict) and identity.get("origin") == "authored-bb-budget-aware-v1"
-        else 1
+        3
+        if depth_declared
+        else (
+            2
+            if isinstance(identity, dict)
+            and identity.get("origin") == "authored-bb-budget-aware-v1"
+            else 1
+        )
     )
     _validate_identity(identity, version)
     teams = {}
@@ -747,18 +808,23 @@ def _build_expectations(root: Path, baseline_root: Path, source: dict[str, Any])
             teams[key] = baseline_record(baseline_root, key)
         else:
             season, slug = key.split("/")
-            teams[key] = _budget_record(*load_team(baseline_root / "seasons" / season, slug))
+            teams[key] = _budget_record(
+                *load_team(baseline_root / "seasons" / season, slug), ignore_int_depths=version == 3
+            )
     if any(not _is_sha(value) for value in source.values()):
         raise ChartAuditError("Source qualification fields must be SHA-256 identities")
     source["candidate_sha256"] = _digest(pins)
     source["baseline_catalog_sha256"] = _digest(baseline_pins)
     source["baseline_expectations_sha256"] = _digest(teams)
-    return {
+    result = {
         "schema_version": version,
         "model_identity": identity,
         "source_review": source,
         "teams": teams,
     }
+    if version == 3:
+        result["conditional_depth"] = depth_spec
+    return result
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -800,7 +866,10 @@ def main(argv: list[str] | None = None) -> int:
             }
             with suppress(ChartAuditError, OSError):
                 expected = _json(args.root / EXPECTATIONS)
-                if type(expected.get("schema_version")) is int and expected["schema_version"] == 2:
+                if type(expected.get("schema_version")) is int and expected["schema_version"] in {
+                    2,
+                    3,
+                }:
                     rejected["schema_version"] = 2
                     rejected["policy_sha256"] = BUDGET_MODEL_SHA256
             # Preserve identities that remain readable after the original error;

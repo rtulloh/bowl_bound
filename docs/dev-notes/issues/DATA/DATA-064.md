@@ -9,7 +9,7 @@ resolved-at: null
 closed-at: null
 tags: [chart-generator, source-conditioning, reproduced, validation]
 links: [DATA-045, DATA-060]
-commits: []
+commits: ["d981383", "9961384", "893601e", "b4fd051", "ca04750"]
 ---
 
 ## Description
@@ -40,6 +40,60 @@ Read-only checks confirm the released CSV equals the immutable Alpha 9 tag. The 
 
 Consulted Paydirt DATA-040's source-conditional and physical-mass review requirements. Adapt that separation of observed support from authored allocation; do not import its NFL model, weights, source data or runtime dependencies. Private source identities and the detailed trace are retained locally.
 
+--- 2026-11-07 — paired authored prototype implemented; acceptance pending ---
+
+The [numerical policy and independent gate](../../authored-interception-depth-policy.md)
+now distinguish explicit designed-call observations from unidentified/generic-deep
+passes, retain missing locations as unknown, and encode call-specific authored
+priors without moving any INT slots. Synthetic shared-pool failures preceded the
+generator repair; independent encoding mutations reject a supported but collapsed
+distribution. Ordinary paired CSVs reload with all nondepth football facts intact
+and agree with API/browser cells. Both possession sides and bounded field/return
+consequences have separate private evidence.
+
+The prototype is awaiting the required LSU/Ohio State owner visual review.
+All-cohort, shape-sensitivity, final execution/source identities and full
+benchmark/observer/regression requirements remain outstanding. No historical
+conditional-fit approval or ticket resolution is claimed.
+
+--- 2026-11-07 — identity and canonical-allocation review ---
+
+Two synthetic failures exposed effective-strength and export identities retaining
+the strength-four hash during another execution. The correction binds the actual
+execution contract and requires the matching export identity. A separate tied
+mixed-weight counterexample exposed a lost canonical witness; a two-pass allocator
+and stricter exhaustive gate now verify the complete objective and row ordering.
+All changed expectations are documented in the policy note. The paired
+strength-four ordinary files remain byte-identical after these fixes.
+
+The final accepted 1.0.0 handoff must include fresh Ohio State offense/defense
+screenshots from that actual candidate, with corrected Screen depths visible and
+CSV/API/cell identity evidence. Exploratory preview images do not satisfy this
+deliverable. The owner will handle any external posting.
+
+The actual legacy post-calibration ordinary export reproduced a synthetic Screen
+INT outside its declared conditional support (meaningful RED). The maintained
+finalizer now applies conditional depths after that completed calibration, then
+requires independent target-weight/finite-encoding checks before export and after
+ordinary reload. The regression passes through the finalizer; parent incidence
+and all nondepth facts remain checked. This implements the final data-producing
+boundary; paired conditioned-source files, owner review, the approved full cohort
+and final release acceptance are still required. Ticket remains OPEN.
+
+--- 2026-11-07 — actual paired broad passing-cell census ---
+
+The [census contract](../../passing-cell-audit-method.md) now covers the four
+passing calls, Option and B/QR/QT dependencies, plus all-family repeated
+token/flag/color patterns. One meaningful synthetic RED shows why the older
+depth-only gate cannot qualify extreme pass gains; fourteen controls and 87
+related checks pass. The actual final-pipeline pair has 780 scoped cells,
+1,260 cluster cells and 120 primary contexts with 18,000 independent Priority
+address checks. No fixed gain falls outside the declared conditioned source
+diagnostic envelopes. Numeric unidentified-call support, conditional terminal
+paths and repeated-column dispositions remain explicit unresolved components;
+this is not historical or full passing-plausibility approval. All 76 consumed
+identities stayed unchanged. Full-cohort generation/audit remains held for owner
+paired review; DATA-064 remains OPEN.
 --- 2026-11-07 — owner accepts corrected paired visual review ---
 
 Owner explicitly confirmed the corrected LSU/Ohio State charts looked good and
@@ -50,3 +104,46 @@ storage prerequisite is met. Bind this approval to the final-pipeline-v2 pair
 This is visual acceptance only. Full-cohort passing-cell/source/engine audits,
 independent event/reference validation and final release gates remain required;
 the ticket is not resolved by the screenshot or approval.
+
+--- 2026-11-07 — corrected full cohort and broad passing census ---
+
+The owner-accepted final pipeline now produces all 116 approved historical
+teams and the unchanged fictional samples. Independent ordinary-file review
+verifies all 97,440 historical records, all nondepth facts/incidence/metadata,
+789 corrected locations and every conditional encoding column. The complete
+[passing census](../../passing-cell-audit-method.md#frozen-full-cohort-checkpoint)
+adds 45,240 scoped cells, 73,080 all-family cluster cells and 1,044,000 independent
+Priority checks. All 31 diagnostic source-envelope exceptions receive private
+per-address dispositions and weighted outcomes; negative defensive contributions
+are not automatically constrained by whole-play source minima. Repeated-column
+groups and unsupported historical/terminal components stay explicit. No cap,
+shuffle, full source-fit claim or ticket resolution is introduced. Final observer,
+matched games, regression and release acceptance remain required.
+
+--- 2026-11-07 — corrected data integrated; final acceptance pending ---
+
+All approved corrected ordinary files now occupy the actual release input paths,
+with refreshed manifest hashes and schema-three expectations. The public gate
+preserves original incidence/nondepth budget checks and independently requires
+canonical conditional-depth encoding across all 28 passing columns per team.
+Seventeen new synthetic controls and 70 existing audit controls pass, including
+unknown/declaration/import-binding refusals; independent source review and a fresh
+actual-file audit pass all 116 teams. This is the data correction and maintained
+release gate, with authored assumptions explicit. It does not certify historical
+call fit. Fresh full-game/save/reference evidence, final regression, release
+integration and fresh accepted-candidate screenshots remain pending; ticket stays
+OPEN.
+
+--- 2026-11-07 — integrated full regression and representative evidence ---
+
+The actual corrected ordinary release data and compound gate are tested at
+`b4fd051`, with the reviewed observer integration at `ca04750`. The complete
+Python branch-coverage run passes 5,525 tests, with 92.25% combined/87.73% branch
+coverage and no skips or warnings. All frozen source inputs remain unchanged.
+The independently reviewed 34-game panel passes core, strict replay and addressed
+saves, with both exact repeats preserved. Its causal/clock audit remains partial.
+See the [integrated checkpoint](../../milestone-42-final-validation.md) for exact
+counts, broad-census dispositions and release limits. The finite matched review
+is complete. Coordinated version/native acceptance and fresh actual-1.0.0
+screenshots remain required. Ticket stays open; no historical conditional-fit
+certification follows.

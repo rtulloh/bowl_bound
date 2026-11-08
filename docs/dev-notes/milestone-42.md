@@ -130,6 +130,21 @@ Scheduling checks: issue index regenerated; 38 existing issue/documentation chec
 pass; 20 local links resolve; whitespace checks pass. This validates the plan's
 tracking only, not implementation or chart accuracy.
 
+## Implementation checkpoint — paired review pending
+
+The [authored catch-depth prototype](authored-interception-depth-policy.md)
+records the provisional numerical contract, explicit observation qualification,
+finite physical-mass objective, independent checks and remaining limitations.
+The research generator reproduced the shared-pool fault with synthetic controls;
+the paired ordinary CSV/API/browser preview is now available privately for
+owner review. All 56 paired offense/formation encodings pass a separate
+exhaustive allocation check. A bounded downstream panel checks both possession
+sides at eight field anchors, retaining pending/unsupported components.
+
+Full-cohort generation is held at the required owner paired-review checkpoint.
+DATA-064, DATA-055 and DATA-046 remain open. The independent observer and reference
+inventory/comparison work proceed in isolated research lanes. No release version,
+tag or immutable Alpha 9 artifact has changed.
 ## Whole-cohort passing-cell audit
 
 Owner explicitly requested this acceptance step on 2026-11-07: after the INT fix
@@ -249,3 +264,103 @@ Regenerated the index with `.venv/bin/python scripts/build_issue_index.py`;
 passed all 22 checks, and `git diff --check` passed. Verified retired directories
 are absent from both the filesystem and registered worktree inventory. This is
 local maintenance acceptance, not completion of the 1.0.0 chart/release gates.
+
+## Corrected ordinary release inputs and compound gate
+
+The owner-approved full cohort is now integrated into the actual ordinary release
+inputs: 580 generated files for exactly 116 approved 2007 teams, plus 14 unchanged
+fictional team files and the unchanged sample license. All candidate file hashes
+match the independently reviewed export. The update changes 789 catch-depth cells
+(688 offense, 101 defense); kinds, flags, incidence and other football facts remain
+unchanged. Generated provenance and metadata record the authored depth policy.
+The release manifest binds these exact bytes.
+
+Reconsulted local Paydirt DATA-040 before integrating the release gate. Adapt its
+separation of source observations, conditional assumptions and physical mass;
+do not copy NFL weights, rules, private data or runtime code. The schema-three
+expectations retain the original Alpha 9 budget baseline while independently
+qualifying the new conditional component. Parent comparison masks only fixed
+passing INT yardage; kinds, priorities, flags, colors, all other facts, family
+budgets, formation budgets and QT anchors remain checked. A separate exhaustive
+checker verifies every one of the 28 offense/defense passing columns per team
+against the declared depth contract. Missing, variable, unsupported, noncanonical
+or budget-unknown encodings refuse the gate. Explicit reviewed zero eligible
+samples is required here; absent/unknown counts are never converted to zero.
+
+Test first: the old gate accepted a declared unsupported depth; null declarations
+and foreign checker imports also produced meaningful failures before their guards.
+Seventeen new controls and 70 existing audit controls now pass. Isolated subprocess
+fixtures were extended to copy the complete checker dependency closure; assertions
+were retained. Ruff lint/format and focused Pyright pass. Independent source review
+accepts this bounded gate. The fresh public auditor passes all 116 actual integrated
+teams with exact 216/36 physical distributions. This is authored-model qualification,
+not historical conditional truth. The original baseline remains frozen privately.
+
+The full Python coverage gate is running; the current frontend has 158 passing
+unit tests, a successful production build and 64 passing real-engine browser tests.
+Browser tooling reports its existing color-environment warning. Fresh representative
+and matched reference games, addressed decision saves and final release acceptance
+remain separate requirements. No version, tag, native asset or published release
+has changed at this checkpoint.
+
+Independent review caught report labels that overstated whole-fact preservation
+for schema three. A meaningful synthetic failure now guards precise
+`except_passing_int_depths_preserved` fields; schemas one/two retain their original
+labels. All 88 related tests pass after this correction, and focused Pyright has
+zero errors/warnings. The full coverage run was stopped before this report-source
+edit and restarted on the final bytes; the interrupted run is not a pass.
+
+The real packaging path also passes `stage_sources` followed by a fresh
+`audit_staged_charts` over all 116 staged teams; temporary audit expectations are
+removed afterward as required. The first staging invocation correctly refused an
+output inside its source tree before writing; the successful run uses a separate
+ignored destination. Package selection remains the exact approved allowlist.
+All 38 tracker/player-documentation checks and `pip check` pass; generated files
+contain no absolute developer paths or private source/report paths.
+
+## Fresh-game observer boundary followup
+
+A matched reference game exposed a false observer refusal at a tied fourth-quarter
+punt decision: the correct fair-catch report was followed by fresh overtime toss
+rolls, while the observer asserted zero total decision draws before its near-period
+exclusion. Eight meaningful unchanged-source failures cover fair catches, numeric
+returns, mirrored sides and tied toss sequences. The correction independently
+matches the recorded overtime requests/faces under strict normal tied-quarter
+prerequisites before checking the intrinsic zero/one return draw. Report, complete
+boxes, score, fresh IDs, chart lookups and ordinary unexpected-extra-draw controls
+remain strict. Overtime continuation, clock and continuity stay UNVERIFIED; matching
+the toss tail is not general overtime qualification.
+
+Author verification passes 168 related tests; independent review passes 37 new
+controls plus the ordinary extra-draw refusal. The separate integration checkout
+passes the same 37 controls, lint and formatting. The retained 190-report capture
+now receives an explicit partial result with its overtime continuation unknown;
+no engine game was rerun to replace the refusal. Active game captures retain their
+original source pins. Final coverage must run on the completed reviewed integration,
+not the earlier intentionally interrupted 1,033-pass pre-fix run.
+
+The next retained benchmark refusal was also an observer scope error: an Option
+penalty path resolves through Bootleg, a second penalty and an incomplete pass;
+the original numeric defense is correctly cancelled. The fixed ordinary-penalty
+observer checked retained defense before excluding that prepared Option path.
+Four meaningful synthetic failures precede the minimal eligibility correction.
+The selected typed Option marker/path must be bound before the whole commitment
+is left UNKNOWN; ordinary retained-defense corruption still refuses, and global
+row/priority checks remain intact. Author 93 related checks, independent six controls
+and the retained 202-report read-only re-audit pass at that scope. No engine, chart,
+coaching, source threshold or event credit rule changes. The original refusal is
+retained, and only unexecuted matched exposures resume under the old capture pins.
+
+## Completed integrated regression and representative checkpoint
+
+The [integrated validation checkpoint](milestone-42-final-validation.md) records
+the actual corrected release data, full broad passing census/dispositions,
+5,525 passing Python tests (92.25% combined/87.73% branch coverage; no skips or
+warnings), unchanged frontend/browser evidence and independently reviewed 34-game
+core/strict/addressed results. Both complete raw repeats pass. Independent causal
+and clock results remain partial, with exact unqualified populations retained.
+The complete matched inventory is executed/reused, sealed and independently
+reviewed at its declared finite scope. All three assigned tickets remain open through
+final acceptance. No software version, native build, push, tag or publication is
+claimed. Final coordinated 1.0.0/native/default8001/screenshot acceptance stays
+separate from authored-model and bounded audit qualification.

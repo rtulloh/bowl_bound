@@ -1,8 +1,8 @@
 #,Line Plunge,Counter,End Reverse,Draw,Option,Screen,Sprint Out,Boot-leg,Drop Back,B,QT,Fumble,QR
-10,OFF 5,-2,5,56,2,27,INT -2,OFF 5,OFF 5,21,-12,R,1
-11,,21,F - 4,1,1,QT,INT 31,QT,12,18,-2,R,15
+10,OFF 5,-2,5,56,2,27,INT 15,OFF 5,OFF 5,21,-12,R,1
+11,,21,F - 4,1,1,QT,INT 5,QT,12,18,-2,R,15
 12,1,4,F - 1,6,3,QT,F + 9,F + 9,5,20*,-2,R,15
-13,13,-1,6,2,7*,INT 14,4,INT 14,INT 14,20,-10,R,3
+13,13,-1,6,2,7*,INT 0,4,INT 10,INT 20,20,-10,R,3
 14,4,44,-4,21,1,17,BLACK,BLACK,-1,21,-7,R,1
 15,1,1,21,5,9,22,8,BLACK,BLACK,21,-7,R,1*
 16,,13*,3,5,5,F + 9,QT,10*,11*,21,-23,R,1*

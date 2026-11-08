@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from bowl_bound.models import Defense, NormalizedCell, Play, ResultKind
+from bowl_bound.models import Defense, NormalizedCell, Play, ResultKind, TeamChart
 from scripts.audit_generated_charts import (
     POLICY_SHA256,
     POLICY_YARDS,
@@ -31,7 +31,7 @@ def digest(value: object) -> str:
     ).hexdigest()
 
 
-def fixture(tmp_path: Path) -> tuple[Path, dict, object]:
+def fixture(tmp_path: Path) -> tuple[Path, dict, TeamChart]:
     root = tmp_path / "candidate"
     baseline = team_chart("Synthetic Generated", season=2007, defense=0)
     key = write_team(root / "seasons", baseline)

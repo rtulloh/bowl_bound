@@ -1,4 +1,1265 @@
 {
+  "conditional_depth": {
+    "identity": {
+      "authored_experimental": true,
+      "contract": {
+        "allocation": "exact-W1-then-CDF;whole-fixed-INT-slots;canonical;no-forced-tail",
+        "authority": "authored-experimental;not-historical-conditional-fit",
+        "observed": "same-side-team;explicit-designed-call-marker;known-catch-depth",
+        "origin": "authored-bb-call-depth-v1",
+        "preserve": "every-slot-kind-priority-flag;all-nondepth-facts;incidence-budgets",
+        "prior_equivalent_observations": 4,
+        "priors": {
+          "6": [
+            [
+              -3,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              3,
+              1
+            ]
+          ],
+          "7": [
+            [
+              0,
+              1
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              10,
+              2
+            ],
+            [
+              15,
+              1
+            ],
+            [
+              20,
+              1
+            ]
+          ],
+          "8": [
+            [
+              0,
+              1
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              10,
+              2
+            ],
+            [
+              15,
+              1
+            ],
+            [
+              20,
+              1
+            ]
+          ],
+          "9": [
+            [
+              0,
+              1
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              20,
+              2
+            ],
+            [
+              30,
+              1
+            ],
+            [
+              45,
+              1
+            ]
+          ]
+        },
+        "unknown": "unidentified/missing-location counts retained;never conditional support"
+      },
+      "origin": "authored-bb-call-depth-v1",
+      "sha256": "f44fbd9822fa844155a94905aca30ff5c30a2ace52b62e4c2086178cacb224a1"
+    },
+    "known_designed_call_depth_samples": {
+      "2007/air-force": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/akron": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/alabama": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/arizona": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/arizona-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/arkansas": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/arkansas-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/army": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/auburn": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/ball-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/baylor": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/boise-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/boston-college": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/bowling-green": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/byu": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/california": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/central-michigan": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/cincinnati": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/clemson": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/colorado": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/colorado-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/duke": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/east-carolina": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/eastern-michigan": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/florida": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/florida-atlantic": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/florida-international": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/florida-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/fresno-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/georgia": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/georgia-tech": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/hawai-i": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/houston": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/idaho": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/illinois": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/indiana": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/iowa": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/iowa-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/kansas": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/kansas-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/kent-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/kentucky": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/louisiana": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/louisiana-tech": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/louisville": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/lsu": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/marshall": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/maryland": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/memphis": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/miami": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/miami-oh": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/michigan": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/michigan-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/middle-tennessee": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/minnesota": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/mississippi-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/missouri": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/navy": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/nc-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/nebraska": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/nevada": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/new-mexico": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/new-mexico-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/north-carolina": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/north-texas": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/northern-illinois": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/northwestern": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/notre-dame": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/ohio": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/ohio-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/oklahoma": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/oklahoma-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/ole-miss": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/oregon": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/oregon-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/penn-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/pittsburgh": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/purdue": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/rice": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/rutgers": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/san-diego-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/san-jose-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/smu": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/south-carolina": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/south-florida": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/southern-miss": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/stanford": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/syracuse": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/tcu": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/temple": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/tennessee": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/texas": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/texas-a-m": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/texas-tech": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/toledo": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/troy": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/tulane": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/tulsa": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/ucf": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/ucla": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/uconn": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/ul-monroe": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/unlv": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/usc": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/utah": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/utah-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/vanderbilt": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/virginia": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/virginia-tech": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/wake-forest": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/washington": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/washington-state": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/west-virginia": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/western-michigan": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/wisconsin": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      },
+      "2007/wyoming": {
+        "defense/6": 0,
+        "defense/7": 0,
+        "defense/8": 0,
+        "defense/9": 0,
+        "offense/6": 0,
+        "offense/7": 0,
+        "offense/8": 0,
+        "offense/9": 0
+      }
+    },
+    "source_qualification_sha256": "d2c286144763109ce8386770cfa36fdb17580048aaeebf48747ede2509753423"
+  },
   "model_identity": {
     "authored_experimental": true,
     "origin": "authored-bb-budget-aware-v1",
@@ -6,14 +1267,14 @@
     "source_sha256": "1f8e553002c0299a2993eb533231053d6cf406dbe0e9d41ecc400267484bb1ba",
     "tool_version": "bb-chartgen-budget-alpha-v1"
   },
-  "schema_version": 2,
+  "schema_version": 3,
   "source_review": {
-    "baseline_catalog_sha256": "6f796e7fae11d38c41c56da7a587606d093f2a11bbd92a852a88704073b538a1",
-    "baseline_expectations_sha256": "613799e9c2fb144c03ad0a797fc27d050af3b8d10bb64c7991220ddd8214e47c",
-    "candidate_sha256": "f8ded2d86f3c9128d7e7ff3d0b5e4791ee3e0a7684beaffa1a82e7cde985141c",
+    "baseline_catalog_sha256": "f8ded2d86f3c9128d7e7ff3d0b5e4791ee3e0a7684beaffa1a82e7cde985141c",
+    "baseline_expectations_sha256": "006a0b7e8a757ba7b0c2fb8f182e3f3118b5f4e69b2274d41f8ba9f9dcd483dc",
+    "candidate_sha256": "910d16750a5f2baf2d42d44b95829bce35ee0ef4a05a57d555281525af6b7061",
     "normalized_source_sha256": "516f698222dd82bbfb3048ceeb40a9978acfc74e03276153ede34af630e3bc98",
     "oob_review_sha256": "43506b946ecbdb6dd00e69a88d78f172ecbf4434a99e166c8e4979a63edce09f",
-    "source_review_sha256": "a7404c0d674e1985e73a6ff586f68f921a4e0116e42e7d684fc2b8bd15977f8e"
+    "source_review_sha256": "d2c286144763109ce8386770cfa36fdb17580048aaeebf48747ede2509753423"
   },
   "teams": {
     "2007/air-force": {
@@ -64,7 +1325,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "79f32a1b9a65a1e485d29c187d289cc7ade93321e98914b3a2c43bc3d6c2d5ae",
+      "nondefensive_semantics_sha256": "9d2c2198a459c1dcc16bae4f3febc3d3c8ba8bd88fd80a38c33325fe87829eac",
       "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/akron": {
@@ -115,7 +1376,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "394187ab7b83192461d2df5be713a5d5cb871c1535f8be455478c94151204d42",
+      "nondefensive_semantics_sha256": "d1c0bf8b8fc75d107d6e877ece21398960e2fa02e4ffd84121326fc0cc62618e",
       "run_semantics_sha256": "c1477e289972490fd8c45af2e06663c51de8499b9f6251541b3ea0999269ec6c"
     },
     "2007/alabama": {
@@ -166,7 +1427,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "b217570b8c9408927fb2026201d5d16a29a9cf31366302ab2dd3b2c156e974b0",
+      "nondefensive_semantics_sha256": "46e036ae12896a94f1768afeb1c80303ce1a791b700ace34e0483102c2cce6c2",
       "run_semantics_sha256": "44c801df710e4b57eb6d331ab7ce8bb14f440b746289d5a9b2afeb3331688c29"
     },
     "2007/arizona": {
@@ -217,7 +1478,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "868d8ce7e662cb8058f9a4b3d60d03696978513269c9aa1c0d953145318ba793",
+      "nondefensive_semantics_sha256": "8d91581f8f344d3868bc7d669678adce236b47617c256e542a766fb7242b56c4",
       "run_semantics_sha256": "e08c1c2cee626c6cea27b3f45e7ff07ba10dca18a0098fef5b13560a391700e1"
     },
     "2007/arizona-state": {
@@ -268,7 +1529,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "fd878fe1c920e4689d569e5c93880f2d845fe451f4a82739405dbcbbdb1e01a7",
+      "nondefensive_semantics_sha256": "3242eabede13a990f537d844be77537fc36e1edfd23395a02fded6dbd42209ba",
       "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/arkansas": {
@@ -319,7 +1580,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "a0efc089fffa025e71b2076e80bf77df38ad22f812d4ee7ff83fea2f4b5b0577",
+      "nondefensive_semantics_sha256": "ad5536a2a001cc95452663448d8d9195494177f107e8bd16ac9673f59a583c36",
       "run_semantics_sha256": "704bdc98bbba2015b473b539a6ea6c5a4244a29fdec1cf5646db14e50d8e9f67"
     },
     "2007/arkansas-state": {
@@ -370,7 +1631,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "2748d4ad7aaec190f4aeec1cff9703235e953e5bd2749d86fdd3c8bfd43a817f",
+      "nondefensive_semantics_sha256": "2ed37a3ad495e09d5197482ed517386ac1f12b8c3b0a02791bbcb81907dfa678",
       "run_semantics_sha256": "704bdc98bbba2015b473b539a6ea6c5a4244a29fdec1cf5646db14e50d8e9f67"
     },
     "2007/army": {
@@ -421,7 +1682,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "336a82cda0ff1bccf3c7f895d2c9c4db6e9a716151a44af85aeeb357acf3ff36",
+      "nondefensive_semantics_sha256": "15fdb30ff30557ce453d3d8496d30d1c85ece11bac250515802af615b78db587",
       "run_semantics_sha256": "48051bd6b0a6c8a56b0d1bc385dfcf4beecc8266fccb784eab38f9b394f3c7e1"
     },
     "2007/auburn": {
@@ -472,7 +1733,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "1ffea64b1a063ad0457a8d27d2fa63a08a228789a9becbac8d62330329b81190",
+      "nondefensive_semantics_sha256": "7beb9d5fb924b171c40dd4d3be00c9ea67c5af230f27f358b8f3c975b8dad59d",
       "run_semantics_sha256": "a0ba3657ee9c9dfb4f3356ab721de7654a8369643c89ccd8530d3cf793603523"
     },
     "2007/ball-state": {
@@ -523,7 +1784,7 @@
         "E": 4,
         "F": 4
       },
-      "nondefensive_semantics_sha256": "94d7a0d9d4dd872687d3afb9ff970432110d1d2717f03b54dae01630bc3cdc3c",
+      "nondefensive_semantics_sha256": "2e10f33b8d6248677aa57c23c710a104e76240e79ab2c0e5b27e270454e72786",
       "run_semantics_sha256": "82ad37014e82d8f029b9cc38c9854b45d551bed115d703d2ebd56791232f86ec"
     },
     "2007/baylor": {
@@ -574,7 +1835,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "4fcfecc575625b7335781aa35fb8bbbad315f73470abe53a615164ea90f5bee4",
+      "nondefensive_semantics_sha256": "1df8883cf62c1278e0cd6f029dce4a7600767963c6eeeb3b8cd56f15f8177b81",
       "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/boise-state": {
@@ -625,7 +1886,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "80a0a4942601319d38e64c2b503b6640852e564fae8b55dad119782539f4be1d",
+      "nondefensive_semantics_sha256": "413a7d1465a6beeaf6c7f62c7eca5011899ca032c12b7063861dfd64474746a3",
       "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/boston-college": {
@@ -676,7 +1937,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "c0acff2c22852ae858d82aa231d6062d785f60246032e857ee5dc9a1d32087f2",
+      "nondefensive_semantics_sha256": "3ccc52e4465e2bee5121be7429e5dd03ad9727eca110c2f7de485606b45763a8",
       "run_semantics_sha256": "8ed407dbbbaac191f1cd4ae47745e0678a0108a9e40ac6ef5bc07d727011f50e"
     },
     "2007/bowling-green": {
@@ -727,7 +1988,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "462072efc35435953ea3b782efbfaa36b3d3adc504ff7ccd12ca45fab9a38ea2",
+      "nondefensive_semantics_sha256": "4a1b56d09b8de5a81b2260bc7d8759c017c318aea245bdadb3c2a8bace3b51c1",
       "run_semantics_sha256": "6ae3a3c23ae01837f3fee208389e7319dd77e599b6fd5ff0f68373880b170058"
     },
     "2007/byu": {
@@ -778,7 +2039,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "e3bce6b18b5af5ec88e7a0f619d7895b09ad7cff18f46a3a50fca39d5d059fb5",
+      "nondefensive_semantics_sha256": "c9f46b5d2d669f31ef69a6c44f64ae4f538c0cfeff02c9de4c5379d122b47e18",
       "run_semantics_sha256": "a0ba3657ee9c9dfb4f3356ab721de7654a8369643c89ccd8530d3cf793603523"
     },
     "2007/california": {
@@ -829,7 +2090,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "cd6d4c25bf1b840d6444b45ad9ba9537abe90d6147c241505f19bcc4cdde83bc",
+      "nondefensive_semantics_sha256": "c191e1c9feb84a1cc9a4bd6cb060806af4a2f502616f3459fbb2ef9514a10be9",
       "run_semantics_sha256": "e08c1c2cee626c6cea27b3f45e7ff07ba10dca18a0098fef5b13560a391700e1"
     },
     "2007/central-michigan": {
@@ -880,7 +2141,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "0d7a6a12a21f80e7398ad8655474749c87d0bd0454c0b5749ad982feece2f84b",
+      "nondefensive_semantics_sha256": "a85fbd38caafc3abea3291c8bfc82b9affead041fe7c5483ea47d1317fb16948",
       "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/cincinnati": {
@@ -931,7 +2192,7 @@
         "E": 4,
         "F": 4
       },
-      "nondefensive_semantics_sha256": "d1c7d63b44702ea673d7af011dd4129e76e6520b7657f979eddb1431bcc0beb6",
+      "nondefensive_semantics_sha256": "c5e2036dee93d8e3955fc0c5f632f56d14564724a9718af6224d319491994e5d",
       "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/clemson": {
@@ -982,7 +2243,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "ae4184010c7b2aa6501f8f639af3b3a129b85b24bd33166ff8067fac049a9aec",
+      "nondefensive_semantics_sha256": "568f17055c5480b1c44b4b83bc762ac52053de013460950bbdeb0b3fba70e1fb",
       "run_semantics_sha256": "e08c1c2cee626c6cea27b3f45e7ff07ba10dca18a0098fef5b13560a391700e1"
     },
     "2007/colorado": {
@@ -1033,7 +2294,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "b6d5b7d0284c1d7a769c6e49971006526b185a5878e2e3eaae58c89a8e6465d9",
+      "nondefensive_semantics_sha256": "caa7d4c0b76674df9f165efa05efcb87863f69d9085acd983a9ccdd49a20d21d",
       "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/colorado-state": {
@@ -1084,7 +2345,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "9f5e88202cc7a4a857479a1895637b01482790fd585bc276e5daa9c5b33c1f0c",
+      "nondefensive_semantics_sha256": "80fbd52788b51ffa1ffbd9c1c699681e4d49a19d88fa6d0804ffa6e296b437ea",
       "run_semantics_sha256": "82ad37014e82d8f029b9cc38c9854b45d551bed115d703d2ebd56791232f86ec"
     },
     "2007/duke": {
@@ -1135,7 +2396,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "1977e106f5aedc6c44dcfd00e786ef2c5f9fbf1c81c78ec546f5b54fb026b5fa",
+      "nondefensive_semantics_sha256": "81d634d76ee43fbb8acd72319221cf15f84b323db8e7180fe1dfacf226563e28",
       "run_semantics_sha256": "b5ab5e3129ded1f7a5aba44a8e11f01a051ce0ee3116f0e520f5a28094033263"
     },
     "2007/east-carolina": {
@@ -1186,7 +2447,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "ae9a999a457f0115ea42d67c26ace41b5e02452ba32d572ac0e0801a582fc6b9",
+      "nondefensive_semantics_sha256": "8df08f3f4a7d1b6cd78d0e993614f79e2baa8bd21ff3413906c929d06999798c",
       "run_semantics_sha256": "d3addc09a7bbefd0bb009516d00c89be238cbfb3c9ac63cd149061b4ce8edd70"
     },
     "2007/eastern-michigan": {
@@ -1237,7 +2498,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "bd39bf43e1a3cd55731881f1c2a7f33ee8f9faa22afb301b1c7599d84bf7878e",
+      "nondefensive_semantics_sha256": "5baa46a8e39e03ed2ef8026f62d2af81ac69e94fa77d0271e84e70d97a75bbc0",
       "run_semantics_sha256": "04e8f785b74a3c2fa7231d282c680f6aba6d13cc3c4400e4d8de11f66287fe00"
     },
     "2007/florida": {
@@ -1288,7 +2549,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "75134101bdde3aa2f8e020b8dd6dea6f4f26f5769b9af9964456bc9f45759d5e",
+      "nondefensive_semantics_sha256": "744031d732cd937e71bc303185fc297ebb29a538203be33cae2843362648ac5e",
       "run_semantics_sha256": "afd88fd25668a879b93e013c81df92dfc0291e5dd22a3f17b0c7c267fb3ad470"
     },
     "2007/florida-atlantic": {
@@ -1339,7 +2600,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "45cfd5adab1f538967c9addf36442999fc8541eaf2d6770616585828f3446554",
+      "nondefensive_semantics_sha256": "1e3686942af3e0a82fe6a5cb2baacc955521f09b85014ce3d3725613d7524062",
       "run_semantics_sha256": "2b65c2b3351ede12708f75ad2592a5d4bc14f810645e7077f888415a06a48e4f"
     },
     "2007/florida-international": {
@@ -1390,7 +2651,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "ba0b771bddaa2248b9daa7ef3e973b6698a8f199755b5ce26e5e108c5c2a4c3e",
+      "nondefensive_semantics_sha256": "a79ec7ab34dbfdd678cbb862af45f75b206f24fa56f64ae3b70c86ef11e497df",
       "run_semantics_sha256": "64dabe315643b7ff778779de8950b1f2e23863a8bc96bca502ade2f136070653"
     },
     "2007/florida-state": {
@@ -1441,7 +2702,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "f2c0ec5558cd5b6964a1b9147089493b268239196fa1b254a98fe13f3ea767da",
+      "nondefensive_semantics_sha256": "3a49f1a3e5460fcde721aed4d3d389ebeea2863ab1faf19fcb1c8ce91b131ef7",
       "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/fresno-state": {
@@ -1492,7 +2753,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "e9c92554b2f2ebcbcfd17ef58e84d0d3791a28bfc9cc33bcdce099caf636de32",
+      "nondefensive_semantics_sha256": "ba2bcb6b3a540640e3dcfc33cfaf92c573ec4dad35bed4d792c826403a569817",
       "run_semantics_sha256": "3a14f0fe8e82ff3cbfedf1bd5a6b040ce19617d9cddc8981b589893ac58073a6"
     },
     "2007/georgia": {
@@ -1543,7 +2804,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "bbd559cc59343f52902f1850f8e15f2a5204e7dcb208f36d3039006c6fbef5f6",
+      "nondefensive_semantics_sha256": "18c7a3e22e5aaf29f6225f7f29d72be26a375bfc4aae3fafd85c325c0a5e9363",
       "run_semantics_sha256": "8ed9811ad1e2ecd2d1c644f5dc26c8904444726243b71e2aa68c371ddc8355ad"
     },
     "2007/georgia-tech": {
@@ -1594,7 +2855,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "a52c503c8cec170ecc323e6f5d11c10482532057f8af512ddc46ff4d10d5b2e3",
+      "nondefensive_semantics_sha256": "e9ffbfe9d01462c331134824c28feb9945b85fd37cb52d25bed33f17bc3c3380",
       "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/hawai-i": {
@@ -1645,7 +2906,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "b1ac9407394e6538b926d5e7aa5711ad602077c365c820a1372a876fd3a4e303",
+      "nondefensive_semantics_sha256": "99e7c516cd36ece5f06ec292c7368a9393982f161934b3f1a3294852fe135a67",
       "run_semantics_sha256": "841e829618539070a2429a62ccc379db232701b8f8b69074ffe16cfab503a394"
     },
     "2007/houston": {
@@ -1696,7 +2957,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "624530b45a58f33c9e8c32b37abbf6fb5cb6362ff4b87088bef6c7b16c1bd699",
+      "nondefensive_semantics_sha256": "79e2681eab43da78dc8cec366a068f5eb54d5f321fd968ea87fd959e3eae2490",
       "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/idaho": {
@@ -1747,7 +3008,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "9d2d626f4a9c89d0ea5d0a308737242e423d80aa73570dc1d6d07c870a7c8e5c",
+      "nondefensive_semantics_sha256": "3d5cf5afa05527fddeb8523f1707c85a7871ff7f45672e594a8a07836a6d4826",
       "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/illinois": {
@@ -1798,7 +3059,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "de6ede803e95929be33e624a476f13dbd7a292b421001051701d30b5e6fb1090",
+      "nondefensive_semantics_sha256": "6b70aca29cbbb43619f7d9c1e357a2dc7400a02138d65886566e01122d33ec4c",
       "run_semantics_sha256": "704bdc98bbba2015b473b539a6ea6c5a4244a29fdec1cf5646db14e50d8e9f67"
     },
     "2007/indiana": {
@@ -1849,7 +3110,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "0b044dd4fa81ced163776e33cb0ae1e55e26a46d447df75688068cfe83fd9c58",
+      "nondefensive_semantics_sha256": "fdd47361074c0cc29a9d62ff8fa40606cd290182e42665fac8a32f92d45be86b",
       "run_semantics_sha256": "d3addc09a7bbefd0bb009516d00c89be238cbfb3c9ac63cd149061b4ce8edd70"
     },
     "2007/iowa": {
@@ -1900,7 +3161,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "6302023a4d887c40593305fc084ee422a99dd661af842a55411b2dff44292f92",
+      "nondefensive_semantics_sha256": "77734bccfb7567d095918735b9477612c623ec52ccdb94e2b166689daccde6f4",
       "run_semantics_sha256": "afd88fd25668a879b93e013c81df92dfc0291e5dd22a3f17b0c7c267fb3ad470"
     },
     "2007/iowa-state": {
@@ -1951,7 +3212,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "83c03b3a602453c076b8ac98c947b70d23aaa964faf64f3dabb32207ef53c90b",
+      "nondefensive_semantics_sha256": "273e552e95b58ef09cc54100643ab82d9738c6be13fbd64fa3d8075929b5a2eb",
       "run_semantics_sha256": "e08c1c2cee626c6cea27b3f45e7ff07ba10dca18a0098fef5b13560a391700e1"
     },
     "2007/kansas": {
@@ -2002,7 +3263,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "4806ca74cd212f7848feb3d3b285188b45e9628a83777ee6b3e9648db3d17a52",
+      "nondefensive_semantics_sha256": "6a697fe3a5509aae86ad941822bd060c442f32d89691ba621d967c45a0889cac",
       "run_semantics_sha256": "cd67d6aa0b1abaa217e080cfa6ed60862c3dad735580cee5a7366b681f1b79c9"
     },
     "2007/kansas-state": {
@@ -2053,7 +3314,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "9f2686a5c22a057a347aea33da5820572ef7a253b210048b62a333462c04ab57",
+      "nondefensive_semantics_sha256": "bd3dcf3a108b520ebb369e2cb38f5814370f971a6f9de9f77b7fda5300583188",
       "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/kent-state": {
@@ -2104,7 +3365,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "b33d2b66648a3cb06dee443d8e7e976172e6f54837bb1afd7185c7c202d3db83",
+      "nondefensive_semantics_sha256": "7c81bd7f741f870e672a30e8caa151ad015d4aba5a9b6bc328bc13a102ec4eb5",
       "run_semantics_sha256": "2b65c2b3351ede12708f75ad2592a5d4bc14f810645e7077f888415a06a48e4f"
     },
     "2007/kentucky": {
@@ -2155,7 +3416,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "2b83578855b82116bca83ffe7e0fcd03437745489af529cf366b1ea86218b2c7",
+      "nondefensive_semantics_sha256": "6072fdc507af61e819b10d3b7dcd04f67fbff4839ac0979baa36c957c999bad5",
       "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/louisiana": {
@@ -2206,7 +3467,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "b7e9e5495689f3aaacb05d6d961ed61da70ef42158bf82685101463b985935d3",
+      "nondefensive_semantics_sha256": "41ca4c80e715e47f1ddb9252a1c79c6fe380437cb936916cf30829f7c129af56",
       "run_semantics_sha256": "b5ab5e3129ded1f7a5aba44a8e11f01a051ce0ee3116f0e520f5a28094033263"
     },
     "2007/louisiana-tech": {
@@ -2257,7 +3518,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "5bb64d2431f5d99914147964988bdcaf35674e7edfd267e841215a4612d87a6e",
+      "nondefensive_semantics_sha256": "cdcf9428b47320be49289e4a1c91216a908dc3b2e6ea4a2bf7da4793c98d82db",
       "run_semantics_sha256": "c1477e289972490fd8c45af2e06663c51de8499b9f6251541b3ea0999269ec6c"
     },
     "2007/louisville": {
@@ -2308,7 +3569,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "a2840bb9503b571bfb396e0a0c6e18b77984f37de14a5b9595f5b4f328a2d8e5",
+      "nondefensive_semantics_sha256": "72e255924cfb1b12150aa6ceb1a05d7f67349066b74765cdcab02614750f5b7f",
       "run_semantics_sha256": "48051bd6b0a6c8a56b0d1bc385dfcf4beecc8266fccb784eab38f9b394f3c7e1"
     },
     "2007/lsu": {
@@ -2359,7 +3620,7 @@
         "E": 4,
         "F": 4
       },
-      "nondefensive_semantics_sha256": "48e16c3a95df24655e6c0e041d32ad6beda5e7b6e181e94e486b16c70a988413",
+      "nondefensive_semantics_sha256": "15017160b623ca514177220a7621f34816a673a52fe5985962cc31298a4c3bbc",
       "run_semantics_sha256": "a0ba3657ee9c9dfb4f3356ab721de7654a8369643c89ccd8530d3cf793603523"
     },
     "2007/marshall": {
@@ -2410,7 +3671,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "4d76848dc164d0e6a22f88227e18d1b7559c4161c0c7fa01d620d1c94f6985db",
+      "nondefensive_semantics_sha256": "3ccf092b07586ec201b0223a10439568e5048507c1a89f65d2d317af65783a1a",
       "run_semantics_sha256": "82ad37014e82d8f029b9cc38c9854b45d551bed115d703d2ebd56791232f86ec"
     },
     "2007/maryland": {
@@ -2461,7 +3722,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "49dcee8586da183dcfbca0d8312291cb396a17203fab50fd4ba93eeabc5ef1a6",
+      "nondefensive_semantics_sha256": "b84dcf03fd08043f593feda4b2eca65699aede534943e134cfc0c593bbacc3b3",
       "run_semantics_sha256": "1128ac26dac09e25684d70aacd420979c641fcca7616ed2e61618c6bcc92ff6f"
     },
     "2007/memphis": {
@@ -2512,7 +3773,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "030ae3d9711bbfa6b9c978e3cfde1f2df60c3d720290b1a50f7ed6375174f01d",
+      "nondefensive_semantics_sha256": "d8a49b4f4ffe488cb0cdbcc75a7aa95fad5812309fe5ce7fdea90a253f7df246",
       "run_semantics_sha256": "bec6dd0196748618714398e211ebbf1578e5d0132d87b8cd3ed91795cbdf79c9"
     },
     "2007/miami": {
@@ -2563,7 +3824,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "5edf4ed4e136e95451215cedc75c359a24855e45763b90646ac8b5a0704191b5",
+      "nondefensive_semantics_sha256": "80f4082d44ebfe8e88c2d6ef9937968755324819586cd5264d8b28fbbcccb84c",
       "run_semantics_sha256": "8ed9811ad1e2ecd2d1c644f5dc26c8904444726243b71e2aa68c371ddc8355ad"
     },
     "2007/miami-oh": {
@@ -2614,7 +3875,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "472003f4fe556956c124d5de8f9e6beaea4055de7229b728c8595fcb302296b8",
+      "nondefensive_semantics_sha256": "7b54cf497881e232400d4de72e15de95c8c0a9d57d6679731c489a6802febb2b",
       "run_semantics_sha256": "c95f6f201c35484bef0533f0b313b936a34261c6105a07eeed863fde181db8e0"
     },
     "2007/michigan": {
@@ -2665,7 +3926,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "ab57bb9da75ce01726117d6ae3a4a833bf54a0ed85687b2b5ee174a8e0f95478",
+      "nondefensive_semantics_sha256": "1b3018d4214bb380eca8f5199aaff6e65c0d2eb9fbf0b16628c3b662112439ad",
       "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/michigan-state": {
@@ -2716,7 +3977,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "b6690efa169c32d3607e409e68669de29c3bf292a9d792131db2106ef8eac3a7",
+      "nondefensive_semantics_sha256": "957080be486628643cc8879bcfccdf5342a52cecf6616c4dcae60994024f7e26",
       "run_semantics_sha256": "1128ac26dac09e25684d70aacd420979c641fcca7616ed2e61618c6bcc92ff6f"
     },
     "2007/middle-tennessee": {
@@ -2767,7 +4028,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "b84c17cb9afeaad27e1ef9ee858974da60602ccd991f13e6eebf29dc57a55f90",
+      "nondefensive_semantics_sha256": "072a22931a276901f22e50c68be3a225738448f98286131d5c7f372cad3f810d",
       "run_semantics_sha256": "2323e90fd44f43971a4f70a364d82b4b2a1e7ac014df26213f955a4163541b91"
     },
     "2007/minnesota": {
@@ -2818,7 +4079,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "3d985c68011ab964b9f07b0a4b4163d1df6c1b07d1b255da69bb8d3658c45b1e",
+      "nondefensive_semantics_sha256": "6aaeac7873b3fc1b9bb25b1c7bf461fe88fdc0e02036271d53adeb8de1453e5e",
       "run_semantics_sha256": "cce192adc9b6b5fb7e4898ba6c185593b9940fc5239531bf82068cc5ae3cabb2"
     },
     "2007/mississippi-state": {
@@ -2869,7 +4130,7 @@
         "E": 4,
         "F": 4
       },
-      "nondefensive_semantics_sha256": "28ad054669f88df816362c7ba55457df3f0de279fdb098adf3f430626881a856",
+      "nondefensive_semantics_sha256": "bf6b7f998192d379ff8668d0aa4b3daf53c72386332691b839352708100c25e3",
       "run_semantics_sha256": "e08c1c2cee626c6cea27b3f45e7ff07ba10dca18a0098fef5b13560a391700e1"
     },
     "2007/missouri": {
@@ -2920,7 +4181,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "7b0d424bbb8ab064d10739966bcb46df6bf0da47c569f2e76653642b274d7e1d",
+      "nondefensive_semantics_sha256": "72235aeebbb4907e6a64871362723c097073f8b6b1f601f78c60ca2732e7417a",
       "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/navy": {
@@ -2971,7 +4232,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "5b841603eb23c401878d0a7d967d41b69217cba4210baef4dd8e9c632be193c7",
+      "nondefensive_semantics_sha256": "42d05bc958dfa3c6b33418adbea870e68cc84376457e7a9416bffd282893b8d3",
       "run_semantics_sha256": "2b65c2b3351ede12708f75ad2592a5d4bc14f810645e7077f888415a06a48e4f"
     },
     "2007/nc-state": {
@@ -3022,7 +4283,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "a1153f24914e8b98d71f21413c6e86ceba4ca67a27a319fb5d708e01fd1f3f35",
+      "nondefensive_semantics_sha256": "f8fa4b0fd2b4ec5cb81818bf9761d5220b8e1e7b5c0cb83d3174b77a5426296f",
       "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/nebraska": {
@@ -3073,7 +4334,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "5100039266bb3332d33af061534bdf6e1b12bd634aef5edbd6f45c7268956f21",
+      "nondefensive_semantics_sha256": "1c48fbe6ed392bfdf16625147bc448254c75f8bbb20a58bb848fe63d67a1ab3a",
       "run_semantics_sha256": "64dabe315643b7ff778779de8950b1f2e23863a8bc96bca502ade2f136070653"
     },
     "2007/nevada": {
@@ -3124,7 +4385,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "b031c94a74a527bf034caa838fd285c9f0e1e8adb662cf886a228b595f1c7241",
+      "nondefensive_semantics_sha256": "c1fac38965fbc5aee68a1d4221a0460ee8f7700081573fe6c359563e9756d581",
       "run_semantics_sha256": "bec6dd0196748618714398e211ebbf1578e5d0132d87b8cd3ed91795cbdf79c9"
     },
     "2007/new-mexico": {
@@ -3175,7 +4436,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "6f83a516845dc42be0de81dd651e4277980043bf28269e9b7155de9f8d249f74",
+      "nondefensive_semantics_sha256": "ab17e7066b6c302b8a668173b74dc314210e63eaf97857c50dd99355f5dc62ff",
       "run_semantics_sha256": "cd67d6aa0b1abaa217e080cfa6ed60862c3dad735580cee5a7366b681f1b79c9"
     },
     "2007/new-mexico-state": {
@@ -3226,7 +4487,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "71baed864491fb167dc2b920e8a4701b1648110cd051c72e0f8d2d0aa303c72f",
+      "nondefensive_semantics_sha256": "6d4bfb409e33655c726a4c9067f65657cc90d21a34c804c7900a09c869328233",
       "run_semantics_sha256": "64dabe315643b7ff778779de8950b1f2e23863a8bc96bca502ade2f136070653"
     },
     "2007/north-carolina": {
@@ -3277,7 +4538,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "05a91732ea41f587b7bd886b6878b53a32735b591b209f754db859899d46a3bd",
+      "nondefensive_semantics_sha256": "b6b7660671c44604246a6dcb8641d5c6faff730ad02af9dd19f93a227c369868",
       "run_semantics_sha256": "0956404573328343cb85cbe55d66d8af9815e2f28fe6f0474aa8581953ae3464"
     },
     "2007/north-texas": {
@@ -3328,7 +4589,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "5e367b410678bb32609a0a8111a2808ae0af78907d477b8073a453bc38a3cccc",
+      "nondefensive_semantics_sha256": "1105c22ad06cc7fc7851e310f3ca15438e523a3aee485f033b23657f0f30be0e",
       "run_semantics_sha256": "8165503083cdb9fdae6f7803ca3d5ce13426e5fea82a887eab424087e85719d0"
     },
     "2007/northern-illinois": {
@@ -3379,7 +4640,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "4fc9888f5fde43f0889371969147ae8cf383b90a31d02823be9d63fce9b17f0a",
+      "nondefensive_semantics_sha256": "4ab572c8051a4df5a9bb990e4c952a04989a9e3db75e23a72205096f7f78b8d5",
       "run_semantics_sha256": "6ae3a3c23ae01837f3fee208389e7319dd77e599b6fd5ff0f68373880b170058"
     },
     "2007/northwestern": {
@@ -3430,7 +4691,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "c1538d2d82ff1078a96078df500ca1ca0804276d058eb7ba64e87cf7599e4edb",
+      "nondefensive_semantics_sha256": "dc18d840005bb10ad0cb6729f23a793c2b34a45eda3b8748f6fefa83da54c321",
       "run_semantics_sha256": "1128ac26dac09e25684d70aacd420979c641fcca7616ed2e61618c6bcc92ff6f"
     },
     "2007/notre-dame": {
@@ -3481,7 +4742,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "77ee71f3e92b0f914cc83ac692bf7020a9b280c803e57111309767411292fa9a",
+      "nondefensive_semantics_sha256": "5631da4eed909b4df38898ac468e890371358ef0884f0b3e3cbeed8fbb170326",
       "run_semantics_sha256": "d3addc09a7bbefd0bb009516d00c89be238cbfb3c9ac63cd149061b4ce8edd70"
     },
     "2007/ohio": {
@@ -3532,7 +4793,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "2f4b39331392bf0c9d8e2faed887a24ca351c5b6f873eea991fb4a94c5959c2b",
+      "nondefensive_semantics_sha256": "6cf07ad73d8b2d8256bccc779d0509a6473dc25f169f3be78a0d9e560f76b4a9",
       "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/ohio-state": {
@@ -3583,7 +4844,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "99b4e5c5cbbe03cbc1504ea66a908d65c192aeef12ac5ad88b181484d0d7663b",
+      "nondefensive_semantics_sha256": "4a33998a29373ef64b8015e3926c1d77c1353b0a38b5033845fb1c803012a6f4",
       "run_semantics_sha256": "8d0de5a5d2f276b6cc7a2dd5bb22b0898d266027ce6dbdb664ad02b04c16ba5d"
     },
     "2007/oklahoma": {
@@ -3634,7 +4895,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "79206b5a82710c80f19906a33fba7cd0e408c3a581289ff5e6945ce03f4f087c",
+      "nondefensive_semantics_sha256": "470efee19f34602fc6ea623d2a4289f41bfecd69f2739b2d92b57ca2935176c4",
       "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/oklahoma-state": {
@@ -3685,7 +4946,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "bed793e7d7b8ee75b5572fa5f516bc567e499847de6fe44022881fa448785d71",
+      "nondefensive_semantics_sha256": "c89ab3539cbfa5660156a7ebb9a770bce81e1a0f507be4112a9f0eed19d3307d",
       "run_semantics_sha256": "704bdc98bbba2015b473b539a6ea6c5a4244a29fdec1cf5646db14e50d8e9f67"
     },
     "2007/ole-miss": {
@@ -3736,7 +4997,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "8680c39379d5cc6f743aed9329473f27d237ecac60f5c551108a8a28cbe52373",
+      "nondefensive_semantics_sha256": "6f112e314ca8e1291bf0465c6150aeb3d7ad2eea88cf58e697fa8926efd49404",
       "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/oregon": {
@@ -3787,7 +5048,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "60a83e16c5306f303723722af90b6c160ae575af6cd23022f60fe5732e7f2f4b",
+      "nondefensive_semantics_sha256": "7e3f6b9816a641b8ba26194d3b97bdd703ec3c3ad1232279545df2d4cbade433",
       "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/oregon-state": {
@@ -3838,7 +5099,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "75eec64daa01c862792ff109fa70ebf4a1a5dbe11a4549845c3ae7da00fef6f0",
+      "nondefensive_semantics_sha256": "17613cb82e889488eb335795a0a0bf8a52be5542c50e7016c0a33bc5f0752009",
       "run_semantics_sha256": "2b1f888c135143ffd7074b9d05d0af9c35c8e41dac79c09f53180ec4e1b7aaef"
     },
     "2007/penn-state": {
@@ -3889,7 +5150,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "5fb416c0de57fb6f1fbf2b44a9cfd00bc705163f867ff1b8c2a1dfe76810fccd",
+      "nondefensive_semantics_sha256": "85e9c683154710737033cbdd31f01053cdd005556f33a9c3035231ee7ccbfb67",
       "run_semantics_sha256": "065b59fa1e49b245a36e206c6aafdfd5976b0e2e35271177c25d42ca6b5912f8"
     },
     "2007/pittsburgh": {
@@ -3940,7 +5201,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "cabbd50b002ea87b24a35f61d1168a0600e45c4ecf97d1dc713f956030795406",
+      "nondefensive_semantics_sha256": "33b30724e8a1fd6a06067ee8f3e25ef712c303824ea8886c6aa0870a8f007dc8",
       "run_semantics_sha256": "3d077845c99c27508cd1c8dd1fa2b063f708854e1ec2956efe8e325bd20414c2"
     },
     "2007/purdue": {
@@ -3991,7 +5252,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "e3ce0075c88181b2fec98a8f1f90731b100f67c97c5fb38187bca18ee3c2457a",
+      "nondefensive_semantics_sha256": "d2e605381471c5ec49d64109ef4e69c5407abe179a3438007ea372fced244ab2",
       "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/rice": {
@@ -4042,7 +5303,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "a283deba4c0faf945e271ec0163fd3bad04671a02df2d4ae80aa4b94e85de3e8",
+      "nondefensive_semantics_sha256": "304d0432633391e1ab4034e67c77f5b7d991cdc41ccff3a67e0e1b5df3502786",
       "run_semantics_sha256": "2323e90fd44f43971a4f70a364d82b4b2a1e7ac014df26213f955a4163541b91"
     },
     "2007/rutgers": {
@@ -4093,7 +5354,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "8e5bc6ad45998f657e16399eed481a011b186074e2f5ccbcaa1fb535aa83442b",
+      "nondefensive_semantics_sha256": "923a0e0433149307e755c1cfc6c1133fc0480cca9dd3a6135583424c6f0b8b91",
       "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/san-diego-state": {
@@ -4144,7 +5405,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "56c388eaf33c3ee9ac05e5b12469d9306010dc8540d2faf255852d2a21e3df3f",
+      "nondefensive_semantics_sha256": "13a5c39cf6f8ecf3e2eb720c0454ec3c424e5338e02171e7d14e25175a87af10",
       "run_semantics_sha256": "04e8f785b74a3c2fa7231d282c680f6aba6d13cc3c4400e4d8de11f66287fe00"
     },
     "2007/san-jose-state": {
@@ -4195,7 +5456,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "957854ee5c55be4709280085ef44f965086edd299f9208c096b05086f5be4355",
+      "nondefensive_semantics_sha256": "071e96abda7d6f015d2584d61296133b22b4df11ad9f29dac0f6ace3ac5b06a2",
       "run_semantics_sha256": "48051bd6b0a6c8a56b0d1bc385dfcf4beecc8266fccb784eab38f9b394f3c7e1"
     },
     "2007/smu": {
@@ -4246,7 +5507,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "b9d57345df86342ad726e5cbf75bba1ac241022687e9051aa4f046d76c40d6a7",
+      "nondefensive_semantics_sha256": "74e0058078849479b0791e4a3232a3422c93a80bc7181ce0d717969cd1bfb298",
       "run_semantics_sha256": "82ad37014e82d8f029b9cc38c9854b45d551bed115d703d2ebd56791232f86ec"
     },
     "2007/south-carolina": {
@@ -4297,7 +5558,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "9caca7a83b04a67bcd9047fc5a5ec0193dceca33e3552943e293f0da78745bfd",
+      "nondefensive_semantics_sha256": "071797f7809708f89a874b4123abd775b4aa6897bd7ddfbd83fa3fc16272365d",
       "run_semantics_sha256": "c95f6f201c35484bef0533f0b313b936a34261c6105a07eeed863fde181db8e0"
     },
     "2007/south-florida": {
@@ -4348,7 +5609,7 @@
         "E": 4,
         "F": 4
       },
-      "nondefensive_semantics_sha256": "fa3a71a7205c7ae2681c35d0742db902b780011591c4b8b012bae4e181d737df",
+      "nondefensive_semantics_sha256": "9ffd43cfebc72b012d98a753cd7e4240e3aa6964a7b54260b87165ad4f710561",
       "run_semantics_sha256": "8ed9811ad1e2ecd2d1c644f5dc26c8904444726243b71e2aa68c371ddc8355ad"
     },
     "2007/southern-miss": {
@@ -4399,7 +5660,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "c2ce300859f953a8c7adb44b084368909433a3330f550c88192a0f2217f87bf4",
+      "nondefensive_semantics_sha256": "762fbaa9473aa2b5be795e607d56988e9ded07660f52adc9a55fa1dacafaf3ab",
       "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/stanford": {
@@ -4450,7 +5711,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "d5942c797d13de7c6a1ebba7afb3b64581f785b8e99eb4920da96e7e7af33201",
+      "nondefensive_semantics_sha256": "2a81885bccb2d45f3e644896aabf648c6c26b413b6d2e10b4c08cd903351a497",
       "run_semantics_sha256": "c1477e289972490fd8c45af2e06663c51de8499b9f6251541b3ea0999269ec6c"
     },
     "2007/syracuse": {
@@ -4501,7 +5762,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "51619990f9884c9dc896f57c8a4d954226fd4a2f8b118e4fb72cace5bb321133",
+      "nondefensive_semantics_sha256": "df009974ba806e5affc0ce8c0aa650d34d349f1f165ca03041499b0da6ad13e1",
       "run_semantics_sha256": "ab442d9acabfa797241ca6203d1eeb7a9c1b14fa7ed7627afe7beb6312a123b7"
     },
     "2007/tcu": {
@@ -4552,7 +5813,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "e600eec11fc00725d3f008750fa37bb4012d9cd961b90266b0d659e27ca05d9c",
+      "nondefensive_semantics_sha256": "aff657cd0005d512d06971b6cb7c4482256edd5fe550bef90bfa1c04c3411820",
       "run_semantics_sha256": "afd88fd25668a879b93e013c81df92dfc0291e5dd22a3f17b0c7c267fb3ad470"
     },
     "2007/temple": {
@@ -4603,7 +5864,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "a476516469763a90f03aab981224728484b807b860645d2c2b148464efd5b4fd",
+      "nondefensive_semantics_sha256": "f6c4c94766e0b6b2b3ea298b61b3219edf0d6969981ab4b08bdc7565718577fd",
       "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/tennessee": {
@@ -4654,7 +5915,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "56da64a5ca945a541a70865233a931b62f2e3c2fefbe07597ae3d889fd7466f2",
+      "nondefensive_semantics_sha256": "b0057f56c9d3c38a0d537b88fb913cbcfadced7a3b50da98f761436246c87943",
       "run_semantics_sha256": "c9b659fd7df147ecb651e4aca4efe8fc55f8f07b2578ac743ec6eaa044de7afb"
     },
     "2007/texas": {
@@ -4705,7 +5966,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "d728337230e34096bb666a3429d1e1b3aeef1b7f186a9d843ccfe714c2b3e021",
+      "nondefensive_semantics_sha256": "fc5abadaba56dd4d362eef6c895d0ee4d6a223a1a802174e87065d468de2f1ee",
       "run_semantics_sha256": "cd67d6aa0b1abaa217e080cfa6ed60862c3dad735580cee5a7366b681f1b79c9"
     },
     "2007/texas-a-m": {
@@ -4756,7 +6017,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "7607687fc7db9c825f75ca739d92994b67f4742dd511a12e1ab35cef0ff4c7fb",
+      "nondefensive_semantics_sha256": "999e2c74e009cf718e38f68864689cc387ab46ee2a29b82aa3557154d9ca716c",
       "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/texas-tech": {
@@ -4807,7 +6068,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "5bcf31a3c7b7430463568cd3fab9643c34b5ab2ee10dcc551df9f738e1eebab5",
+      "nondefensive_semantics_sha256": "3012fd6dfd07f1f6bae37632d54b24eaaec631c4f9521472608eee3b82a46f29",
       "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/toledo": {
@@ -4858,7 +6119,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "59af19d0ef3018bfd432e07b1bd8e0351b463f7d386551eb082bd45cf3b9a690",
+      "nondefensive_semantics_sha256": "eba516235374f0c8be8f95f9852de77b439528ea8c13b46238e6c910d8c099d8",
       "run_semantics_sha256": "64dabe315643b7ff778779de8950b1f2e23863a8bc96bca502ade2f136070653"
     },
     "2007/troy": {
@@ -4909,7 +6170,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "0b432e14622792c08a38aa633d0f8ccf57b98851abdb0d16f826effa1ec6fa4b",
+      "nondefensive_semantics_sha256": "c8c1514d4b53dacaa2c092af41c603c1b8ddab0def3a1c62177d5217d9bce2a4",
       "run_semantics_sha256": "8d0e31ab6c7e846964e6479aab5e4954299c11db0b0f76a7c895e7f674c91d69"
     },
     "2007/tulane": {
@@ -4960,7 +6221,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "165b687df63638e48abe3e4dd41edcabb5c0870941ede4c6c93458e66c7cf8c1",
+      "nondefensive_semantics_sha256": "22e193a5135e9a0174e37dc2773bd20670be5553e63ab677e9afaa30cceab50a",
       "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/tulsa": {
@@ -5011,7 +6272,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "6f1c4de24d18661a2870de8d88afe69280bcf93cacca1548019d572e5e382274",
+      "nondefensive_semantics_sha256": "0cdd17c51876aac26deb4ac8d0b484e6498a4f97b37b536741f7e952e666e259",
       "run_semantics_sha256": "8d0e31ab6c7e846964e6479aab5e4954299c11db0b0f76a7c895e7f674c91d69"
     },
     "2007/ucf": {
@@ -5062,7 +6323,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "4bfac7e8c0a5db56c3f18bad29694a9c5d23f2b00e6658999de255f3aac1a4d4",
+      "nondefensive_semantics_sha256": "81945b4c1f516a2dab1df63bb940b2bb717fe2679271d2a8f484a0e1b3614b70",
       "run_semantics_sha256": "6326e030babb36e53e29adc0861191da48ba3b758b0e86ff33d440a72ffa8f3d"
     },
     "2007/ucla": {
@@ -5113,7 +6374,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "a6afe77e1be34c10abaaac30aef42553ad4ba8d20ad985e670ac48476f4c6144",
+      "nondefensive_semantics_sha256": "306e3c8024f60108245b5a7242f9805cc1c865bcdc96079f02c025f9a5e1cc5d",
       "run_semantics_sha256": "cd67d6aa0b1abaa217e080cfa6ed60862c3dad735580cee5a7366b681f1b79c9"
     },
     "2007/uconn": {
@@ -5164,7 +6425,7 @@
         "E": 4,
         "F": 4
       },
-      "nondefensive_semantics_sha256": "f961f7e9ad279dcd95fdc2ff9c747e212edb001bc20d58d93f8ce5898f1c5495",
+      "nondefensive_semantics_sha256": "93365d75581f9ae60a2545cda49405bc89fba102d34715580acaa8466b64a329",
       "run_semantics_sha256": "dfe115fbda67a9dd816cb9b836331514f721fb4be3227c74d3dbce8dc764cbde"
     },
     "2007/ul-monroe": {
@@ -5215,7 +6476,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "c64f1489749fe6fe79aa929b88f7de299e350236c623af959d522489bf5a8dbd",
+      "nondefensive_semantics_sha256": "7753f92b6340dfdac53fa93bac1f8fa388b50b8aae7062ef0484cbf6f3356bbb",
       "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/unlv": {
@@ -5266,7 +6527,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "9416a4f17c78bcf172513a361020e03e28585cf179db329ff47fd3b6a020eed0",
+      "nondefensive_semantics_sha256": "852c1d904559f9ff30294da3455d5dc7342692f2c9d3e1338a17916d4470d27a",
       "run_semantics_sha256": "64dabe315643b7ff778779de8950b1f2e23863a8bc96bca502ade2f136070653"
     },
     "2007/usc": {
@@ -5317,7 +6578,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "5155b2c640d3c122c50cd8c173bb55d65d9e18d3e4214b692c3bb2e1548e254b",
+      "nondefensive_semantics_sha256": "77868332ae02622178681c80e2476fc9fbde6b9cf07dea0efe3f9aa561097275",
       "run_semantics_sha256": "97fdfbba4ec0a72513921862c49090291b92db56385c68793a21cf9680f922a0"
     },
     "2007/utah": {
@@ -5368,7 +6629,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "e59521bb8f21db19e2ab7779ae3699e7fd23d291ccb25c5f8ca2366dcf974fbd",
+      "nondefensive_semantics_sha256": "255d1501745308be6171b3187a06ba511da80f5b2b140785733e21f4384f0585",
       "run_semantics_sha256": "15398c94a0d9dd85830676b0f7b1411c28e99e70e1a3650545fb71db94b09ead"
     },
     "2007/utah-state": {
@@ -5419,7 +6680,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "50a24a631dc1926d73e5cf403c38b7160f7442bdb17c84fdd621d001f0214719",
+      "nondefensive_semantics_sha256": "00065ea93abd96b4c6c3d31f25970ab6bbc33206b6fbd471d75404ea184a1f78",
       "run_semantics_sha256": "8d0e31ab6c7e846964e6479aab5e4954299c11db0b0f76a7c895e7f674c91d69"
     },
     "2007/vanderbilt": {
@@ -5470,7 +6731,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "a9610629acd1e72a2f96c040733a89d88c44ca813fc0b81a6dc04c412ce9ba67",
+      "nondefensive_semantics_sha256": "d4627a945eb3e38713b09633176dd49c2aaaabc85003ecfbfeb0354595939e01",
       "run_semantics_sha256": "ab442d9acabfa797241ca6203d1eeb7a9c1b14fa7ed7627afe7beb6312a123b7"
     },
     "2007/virginia": {
@@ -5521,7 +6782,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "c426b44dfef85feb4a23d52cef3242bd46002d426b1ed7374685214fd98b3e78",
+      "nondefensive_semantics_sha256": "4fb8e8eef19e2b3ec9d1845ca0670e1c777198bb0e110fba705d6c1474fe835f",
       "run_semantics_sha256": "8ed9811ad1e2ecd2d1c644f5dc26c8904444726243b71e2aa68c371ddc8355ad"
     },
     "2007/virginia-tech": {
@@ -5572,7 +6833,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "10a602830693f8ca5cd1b0ca656376bb40cd7b4712f768d2b07e290f3b26993a",
+      "nondefensive_semantics_sha256": "583f695c79fa704e56bdfe1b1cc9396459a8c3285833a53f0da7e89292a0bb88",
       "run_semantics_sha256": "5c381826506c5552e5290b69550128064a5c29655807b3ee208e28f30d3dba1f"
     },
     "2007/wake-forest": {
@@ -5623,7 +6884,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "eafe9cf741e221b85bbb350b8885196a0f7a58ae99a4ef85dd88ec1fb43da586",
+      "nondefensive_semantics_sha256": "dc88659f42523717c0afe155566698ce28f9f17a00d9b8e7b1ec130bf41cf4bb",
       "run_semantics_sha256": "065b59fa1e49b245a36e206c6aafdfd5976b0e2e35271177c25d42ca6b5912f8"
     },
     "2007/washington": {
@@ -5674,7 +6935,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "f6225c9bf7f232db15db3e580fb9022e3fdbacb4412ebc2e8b5e6307dbd0dec4",
+      "nondefensive_semantics_sha256": "3c9a580aebb6edd53abc4b5f5a0d83ce4afc20c2c57f6373ed6ab9b7b2c11b03",
       "run_semantics_sha256": "04e8f785b74a3c2fa7231d282c680f6aba6d13cc3c4400e4d8de11f66287fe00"
     },
     "2007/washington-state": {
@@ -5725,7 +6986,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "beec07758f647bec9ac8c414ad7218a31cb68519c405d973ac2bac3185cb12c7",
+      "nondefensive_semantics_sha256": "aca25535cfb702e62bce508bd5ab4e0bdc3b122b0f01f5ad03f09ba2058f04f7",
       "run_semantics_sha256": "f1c1367cda2626851e022548993323824617cd4e17ff8243451245bb3a911aee"
     },
     "2007/west-virginia": {
@@ -5776,7 +7037,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "6cad68a846aad41c930c30cab27e83277eb9d9df8e5061019b9f1862ec42ee89",
+      "nondefensive_semantics_sha256": "4c78447eee23f9ea003fa1ebfb419b9112d878d6b39ef4405dcf4e3eabc2c61b",
       "run_semantics_sha256": "66c3309585eb7e447d8363b01d85553a6de46353109c4e8549b6a7c59ca3aec4"
     },
     "2007/western-michigan": {
@@ -5827,7 +7088,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "fa42715733592946e0f72416c1e125b8f55d41f94273e6cabf992b4be331cae0",
+      "nondefensive_semantics_sha256": "a6bf4a3bc9c195bc155dbd174115ad33045805dcb198aa8f78ab83b82c8326c0",
       "run_semantics_sha256": "c1477e289972490fd8c45af2e06663c51de8499b9f6251541b3ea0999269ec6c"
     },
     "2007/wisconsin": {
@@ -5878,7 +7139,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "32cf60046a897d5e63e81dc7eb0dc94a821e3d3ef4be3996f9a01c60693597cc",
+      "nondefensive_semantics_sha256": "b93250aaefc83d7a4ae4cf9211b30931f88d5e7dbaf42b596141768a635879f7",
       "run_semantics_sha256": "281f9d04e30d689d45713072f3d0570d9fe55895df0467d38d8924c457b5c637"
     },
     "2007/wyoming": {
@@ -5929,7 +7190,7 @@
         "E": 0,
         "F": 0
       },
-      "nondefensive_semantics_sha256": "94b9332a4d58a1ff8da8401107cf384b8569d053776fff10599ffff88e1a8dd6",
+      "nondefensive_semantics_sha256": "df8157be5173c3950e5cfbda0d504b5f1dc4a22e2fa356deac208e61c23b0f8f",
       "run_semantics_sha256": "afd88fd25668a879b93e013c81df92dfc0291e5dd22a3f17b0c7c267fb3ad470"
     }
   }
