@@ -26,8 +26,9 @@ def test_three_native_builds_are_test_gated_and_do_not_publish_releases() -> Non
     source = yaml.load(source_text, Loader=yaml.BaseLoader)
     assert jobs["test"]["uses"] == "./.github/workflows/tests.yml"
     assert source["permissions"] == {"contents": "read"}
+    assert int(jobs["build"]["timeout-minutes"]) == 45
+    assert int(source["jobs"]["test"]["timeout-minutes"]) == 120
     for job in (jobs["build"], *source["jobs"].values()):
-        assert int(job["timeout-minutes"]) <= 45
         for step in job["steps"]:
             if "uses" in step:
                 assert re.fullmatch(r"actions/[a-z-]+@[a-f0-9]{40}", step["uses"])

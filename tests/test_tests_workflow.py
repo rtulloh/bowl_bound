@@ -33,7 +33,7 @@ def test_automatic_gate_retains_the_whole_established_regression() -> None:
     assert set(data["jobs"]) == {"test"}
     job = data["jobs"]["test"]
     assert job["runs-on"] == "ubuntu-24.04"
-    assert int(job["timeout-minutes"]) == 45
+    assert int(job["timeout-minutes"]) == 120
     commands = "\n".join(step.get("run", "") for step in job["steps"])
     for required in (
         "python -m venv .venv",

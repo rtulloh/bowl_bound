@@ -26,7 +26,9 @@ env:
 jobs:
   test:
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    # The 5,543-test coverage suite alone took 43 minutes locally; leave room
+    # for hosted-runner variance, frontend, chart audit and real-engine browser checks.
+    timeout-minutes: 120
     steps:
       - name: Validate requested source commit
         env:
