@@ -1,5 +1,5 @@
 #,Line Plunge,Counter,End Reverse,Draw,Option,Screen,Sprint Out,Boot-leg,Drop Back,B,QT,Fumble,QR
-10,OFF 5,OFF 5,6,44,2,INT 7,INT 7,INT 7,INT 7,17*,-13,R,1
+10,OFF 5,OFF 5,6,44,2,INT 0,INT 10,INT 10,INT 20,17*,-13,R,1
 11,1,-1*,7,2,2,23,QT,BLACK,21,14,-1,R,15
 12,F,F,-2*,5,3,18,10,14,7,16*,0,R,15
 13,2,19,17,OFF 5,7*,QT,OFF 5,OFF 5,OFF 5,16,-8,R,3

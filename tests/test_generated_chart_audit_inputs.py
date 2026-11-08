@@ -16,7 +16,7 @@ from tests.test_generated_chart_audit import fixture, repin
 
 
 @contextmanager
-def on_return(function: Callable[..., Any], action: Callable[[], None]) -> Iterator[None]:
+def on_return(function: Callable[..., Any], action: Callable[[], object]) -> Iterator[None]:
     """Simulate a concurrent writer without replacing any audited function."""
     assert sys.getprofile() is None
     changed = False
@@ -33,6 +33,23 @@ def on_return(function: Callable[..., Any], action: Callable[[], None]) -> Itera
     finally:
         sys.setprofile(None)
     assert changed, "synthetic mutation must actually execute"
+
+
+def copy_auditor_source(root: Path) -> None:
+    """Copy the complete maintained auditor dependency closure into a subprocess."""
+    source = Path(audit.__file__).resolve().parents[1]
+    (root / "scripts").mkdir(exist_ok=True)
+    (root / "scripts/__init__.py").write_text("")
+    for name in (
+        "scripts/audit_generated_charts.py",
+        "tools/__init__.py",
+        "tools/chart_depth_release_audit.py",
+        "tools/chart_depth_encoding_audit.py",
+        "tools/chart_depth_audit.py",
+    ):
+        target = root / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((source / name).read_bytes())
 
 
 @pytest.mark.parametrize(
@@ -179,9 +196,7 @@ def test_native_boundary_rejects_late_staged_input_change(tmp_path: Path) -> Non
 def test_executing_source_change_invalidates_qualification(tmp_path: Path, subject: str) -> None:
     """Modify only a detached public synthetic subprocess, never working source."""
     root, _, _ = fixture(tmp_path)
-    (root / "scripts").mkdir()
-    (root / "scripts/__init__.py").write_text("")
-    (root / "scripts/audit_generated_charts.py").write_bytes(Path(audit.__file__).read_bytes())
+    copy_auditor_source(root)
     program = """
 import json
 import sys
@@ -226,9 +241,7 @@ assert changed
 def test_auditor_report_identifies_its_frozen_source(tmp_path: Path) -> None:
     """Transient file changes cannot replace the successful evidence identity."""
     root, _, _ = fixture(tmp_path)
-    (root / "scripts").mkdir()
-    (root / "scripts/__init__.py").write_text("")
-    (root / "scripts/audit_generated_charts.py").write_bytes(Path(audit.__file__).read_bytes())
+    copy_auditor_source(root)
     program = """
 import hashlib
 import sys
@@ -271,9 +284,7 @@ if result is not None:
 def test_missing_auditor_source_retains_rejected_cli_evidence(tmp_path: Path) -> None:
     """A missing source identity stays absent, without destroying failure JSON."""
     root, _, _ = fixture(tmp_path)
-    (root / "scripts").mkdir()
-    (root / "scripts/__init__.py").write_text("")
-    (root / "scripts/audit_generated_charts.py").write_bytes(Path(audit.__file__).read_bytes())
+    copy_auditor_source(root)
     program = """
 import json
 import sys

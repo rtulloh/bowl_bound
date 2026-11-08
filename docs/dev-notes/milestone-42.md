@@ -264,3 +264,56 @@ Regenerated the index with `.venv/bin/python scripts/build_issue_index.py`;
 passed all 22 checks, and `git diff --check` passed. Verified retired directories
 are absent from both the filesystem and registered worktree inventory. This is
 local maintenance acceptance, not completion of the 1.0.0 chart/release gates.
+
+## Corrected ordinary release inputs and compound gate
+
+The owner-approved full cohort is now integrated into the actual ordinary release
+inputs: 580 generated files for exactly 116 approved 2007 teams, plus 14 unchanged
+fictional team files and the unchanged sample license. All candidate file hashes
+match the independently reviewed export. The update changes 789 catch-depth cells
+(688 offense, 101 defense); kinds, flags, incidence and other football facts remain
+unchanged. Generated provenance and metadata record the authored depth policy.
+The release manifest binds these exact bytes.
+
+Reconsulted local Paydirt DATA-040 before integrating the release gate. Adapt its
+separation of source observations, conditional assumptions and physical mass;
+do not copy NFL weights, rules, private data or runtime code. The schema-three
+expectations retain the original Alpha 9 budget baseline while independently
+qualifying the new conditional component. Parent comparison masks only fixed
+passing INT yardage; kinds, priorities, flags, colors, all other facts, family
+budgets, formation budgets and QT anchors remain checked. A separate exhaustive
+checker verifies every one of the 28 offense/defense passing columns per team
+against the declared depth contract. Missing, variable, unsupported, noncanonical
+or budget-unknown encodings refuse the gate. Explicit reviewed zero eligible
+samples is required here; absent/unknown counts are never converted to zero.
+
+Test first: the old gate accepted a declared unsupported depth; null declarations
+and foreign checker imports also produced meaningful failures before their guards.
+Seventeen new controls and 70 existing audit controls now pass. Isolated subprocess
+fixtures were extended to copy the complete checker dependency closure; assertions
+were retained. Ruff lint/format and focused Pyright pass. Independent source review
+accepts this bounded gate. The fresh public auditor passes all 116 actual integrated
+teams with exact 216/36 physical distributions. This is authored-model qualification,
+not historical conditional truth. The original baseline remains frozen privately.
+
+The full Python coverage gate is running; the current frontend has 158 passing
+unit tests, a successful production build and 64 passing real-engine browser tests.
+Browser tooling reports its existing color-environment warning. Fresh representative
+and matched reference games, addressed decision saves and final release acceptance
+remain separate requirements. No version, tag, native asset or published release
+has changed at this checkpoint.
+
+Independent review caught report labels that overstated whole-fact preservation
+for schema three. A meaningful synthetic failure now guards precise
+`except_passing_int_depths_preserved` fields; schemas one/two retain their original
+labels. All 88 related tests pass after this correction, and focused Pyright has
+zero errors/warnings. The full coverage run was stopped before this report-source
+edit and restarted on the final bytes; the interrupted run is not a pass.
+
+The real packaging path also passes `stage_sources` followed by a fresh
+`audit_staged_charts` over all 116 staged teams; temporary audit expectations are
+removed afterward as required. The first staging invocation correctly refused an
+output inside its source tree before writing; the successful run uses a separate
+ignored destination. Package selection remains the exact approved allowlist.
+All 38 tracker/player-documentation checks and `pip check` pass; generated files
+contain no absolute developer paths or private source/report paths.

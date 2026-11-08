@@ -119,3 +119,17 @@ are not automatically constrained by whole-play source minima. Repeated-column
 groups and unsupported historical/terminal components stay explicit. No cap,
 shuffle, full source-fit claim or ticket resolution is introduced. Final observer,
 matched games, regression and release acceptance remain required.
+
+--- 2026-11-07 — corrected data integrated; final acceptance pending ---
+
+All approved corrected ordinary files now occupy the actual release input paths,
+with refreshed manifest hashes and schema-three expectations. The public gate
+preserves original incidence/nondepth budget checks and independently requires
+canonical conditional-depth encoding across all 28 passing columns per team.
+Seventeen new synthetic controls and 70 existing audit controls pass, including
+unknown/declaration/import-binding refusals; independent source review and a fresh
+actual-file audit pass all 116 teams. This is the data correction and maintained
+release gate, with authored assumptions explicit. It does not certify historical
+call fit. Fresh full-game/save/reference evidence, final regression, release
+integration and fresh accepted-candidate screenshots remain pending; ticket stays
+OPEN.

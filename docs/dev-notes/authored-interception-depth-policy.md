@@ -1,7 +1,8 @@
 # Authored interception catch-depth correction
 
 Milestone 42 / DATA-064, 2026-11-07. Target release: **1.0.0**.
-Status: paired prototype, owner review and cohort acceptance pending.
+Status: owner-accepted pair and all 116 corrected teams integrated; final game,
+regression and release acceptance pending.
 This policy is a declared modeling assumption. It does not certify historical
 conditional accuracy.
 
