@@ -182,3 +182,19 @@ When changing documentation links or structure, update references and verify exa
 - Review tracked files and history for private charts, PDFs, reports, and saves before publication.
 - Preserve release tags as immutable history; increment rather than delete/reuse a tag.
 - Use synthetic demonstration teams if historical team-chart distribution rights remain unresolved.
+
+### Verify published install artifacts
+
+After publishing a release, download its actual assets and run
+`.github/workflows/post-release-smoke.yml` on every supported native target.
+Require matching published asset digests, the released source manifest's exact
+team catalog in both API and rendered UI, game startup, real engine/save checks,
+error-free logs and normal shutdown. Windows portable and installer checks are
+separate. Build success or asset presence alone does not certify a release.
+
+Keep success/failure receipts, logs and browser evidence. Record unavailable
+targets as gaps. Separately exercise normal first-launch/default-browser behavior
+on a freshly browser-downloaded artifact and disclose signing, notarization and
+quarantine/SmartScreen limitations. Never silently waive a failed check, rebuild
+instead of testing published bytes, or delete/reuse a release tag to repair it.
+See [release validation guidance](docs/dev-notes/release-builds.md).

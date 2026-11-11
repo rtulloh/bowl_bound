@@ -8,6 +8,7 @@ import json
 import os
 import re
 import subprocess
+from collections.abc import Callable
 from pathlib import Path, PurePosixPath
 from tempfile import TemporaryDirectory
 
@@ -56,7 +57,14 @@ def write_file_lists(bundle: Path, work: Path) -> None:
     (work / "uninstall-files.nsh").write_text("\n".join(uninstall) + "\n", encoding="utf-8")
 
 
-def smoke_installer(installer: Path, version: str) -> None:
+def smoke_installer(
+    installer: Path,
+    version: str,
+    *,
+    expected_catalog: frozenset[str] | None = None,
+    check_ui: Callable[[str], None] | None = None,
+    log_path: Path | None = None,
+) -> None:
     """Test installed UI/save and uninstall while keeping an unrelated user file."""
     import winreg
 
@@ -73,7 +81,14 @@ def smoke_installer(installer: Path, version: str) -> None:
             with winreg.OpenKey(winreg.HKEY_CURRENT_USER, UNINSTALL_KEY) as key:
                 assert winreg.QueryValueEx(key, "DisplayVersion")[0] == version
                 assert Path(winreg.QueryValueEx(key, "InstallLocation")[0]) == installed
-            smoke_executable(installed / "BowlBound.exe", version, work)
+            smoke_executable(
+                installed / "BowlBound.exe",
+                version,
+                work,
+                expected_catalog=expected_catalog,
+                check_ui=check_ui,
+                log_path=log_path,
+            )
             (installed / "keep-personal.txt").write_text("keep", encoding="utf-8")
         finally:
             subprocess.run(

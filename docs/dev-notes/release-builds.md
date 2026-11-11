@@ -233,3 +233,27 @@ graph, or its gaps as silently waived. Complete target-applicability/static
 linkage review and Windows runtime redistribution authority remain open in
 DEV-041/DEV-037. A verification build may exercise these guards, but must not
 be published until the outstanding audit and fresh-machine gates are met.
+
+## Published-download validation (DEV-084)
+
+After publication, dispatch **Validate Published Install Artifacts** with the
+existing immutable release tag. The workflow downloads release metadata, ZIPs
+and the Windows installer with their checksums; it never rebuilds those assets.
+Its four native jobs cover Apple Silicon, Intel Mac, Windows ZIP and Windows
+installer. The harness uses the reviewed source manifest from the released tag
+to check the complete catalog, independent of the observed API.
+
+Require verified published size/digest and checksum before execution, matching
+platform/version, exact API and rendered selectors, sample/generated game
+startup, every-team snap/save/load, frontend assets, logs and graceful shutdown.
+The Windows installer check also verifies install registration and uninstall.
+Use fresh output paths so receipts/logs/screenshots cannot overwrite evidence.
+Preserve CI artifacts before their retention period expires.
+
+Automated runs use an isolated port and `--no-browser`. Separately record normal
+entry-point automatic-browser behavior on a fresh machine after downloading
+through a browser. Signing/notarization, quarantine and SmartScreen acceptance
+remain distinct from functional native-runner checks. A failed published asset
+is a release defect; repair only through a new unused version/tag.
+
+See [1.0.1 release evidence](release-1.0.1.md) for the source/gate/run references.

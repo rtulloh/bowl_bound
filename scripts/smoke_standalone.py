@@ -11,6 +11,7 @@ import signal
 import socket
 import subprocess
 import time
+from collections.abc import Callable
 from pathlib import Path, PurePosixPath
 from tempfile import TemporaryDirectory
 from urllib.error import URLError
@@ -135,22 +136,43 @@ def exercise(base: str, version: str, expected_teams: frozenset[str]) -> None:
         assert loaded["view"] == played["view"] and loaded["game_id"] != game["game_id"]
 
 
-def smoke_executable(executable: Path, version: str, work: Path) -> None:
+def clean_environment() -> dict[str, str]:
+    """Prevent source checkout overrides from satisfying packaged imports."""
+    env = os.environ.copy()
+    for key in ("PYTHONPATH", "PYTHONHOME", "VIRTUAL_ENV"):
+        env.pop(key, None)
+    env["PYTHONNOUSERSITE"] = "1"
+    return env
+
+
+def smoke_executable(
+    executable: Path,
+    version: str,
+    work: Path,
+    *,
+    expected_catalog: frozenset[str] | None = None,
+    check_ui: Callable[[str], None] | None = None,
+    log_path: Path | None = None,
+) -> None:
     """Exercise an extracted or installed binary and require graceful shutdown."""
     inventory = json.loads((executable.parent / "ARTIFACT-MANIFEST.json").read_text("utf-8"))
     expected_teams = catalog_from_inventory(inventory["files"])
+    if expected_catalog is not None and expected_teams != expected_catalog:
+        raise ValueError("Installed artifact catalog differs from approved release catalog")
+    env = clean_environment()
     actual = subprocess.check_output(
-        [str(executable), "--version"], cwd=work, text=True, timeout=30
+        [str(executable), "--version"], cwd=work, text=True, timeout=30, env=env
     )
     assert actual.strip() == "Bowl Bound " + version
     with socket.socket() as listener:
         listener.bind(("127.0.0.1", 0))
         port = listener.getsockname()[1]
     flags = subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
-    with (work / "server.log").open("w+", encoding="utf-8") as log:
+    with (log_path or work / "server.log").open("w+", encoding="utf-8") as log:
         process = subprocess.Popen(
             [str(executable), "--no-browser", "--port", str(port)],
             cwd=work,
+            env=env,
             stdout=log,
             stderr=subprocess.STDOUT,
             creationflags=flags,
@@ -170,6 +192,8 @@ def smoke_executable(executable: Path, version: str, work: Path) -> None:
                     raise TimeoutError("Standalone server did not become ready")
                 time.sleep(0.2)
             exercise(base, version, expected_teams)
+            if check_ui is not None:
+                check_ui(base)
             process.send_signal(signal.CTRL_BREAK_EVENT if os.name == "nt" else signal.SIGINT)
             if process.wait(timeout=20) != 0:
                 raise RuntimeError("Standalone shutdown returned failure")

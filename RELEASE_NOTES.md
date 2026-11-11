@@ -1,5 +1,17 @@
 # Bowl Bound release notes
 
+## 1.0.1 — Published-install validation
+
+Adds native validation of the actual release downloads on GitHub runners:
+checksums and release identity, the complete 118-team catalog, rendered team
+selection and game startup, game/save behavior and clean shutdown. The Windows
+installer is checked separately from the portable ZIP.
+
+This maintenance release keeps the 1.0.0 charts, football rules, save schema and
+default port 8001. Applications remain unsigned; fresh-machine security prompts
+are separate from automated functional checks. See the
+[installation guide](docs/installation.md).
+
 ## 1.0.0 — Passing-chart corrections and simultaneous play
 
 - Corrects interception catch depths across the 116 generated 2007 teams using

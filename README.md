@@ -6,7 +6,7 @@ local web game. Dice, chart results, clock, scoring and statistics are resolved
 by the game engine. No account or Internet connection is needed for local play
 after installation.
 
-**Bowl Bound 1.0.0.** [Download the latest release](https://github.com/rtulloh/bowl_bound/releases/latest)
+**Bowl Bound 1.0.1.** [Download the latest release](https://github.com/rtulloh/bowl_bound/releases/latest)
 for Windows, Apple Silicon or Intel Mac. Play 116 generated 2007 college teams
 plus the original fictional Cedar Valley and Harbor Tech samples. See the
 [generation notes and testing limits](docs/generated-charts.md).
