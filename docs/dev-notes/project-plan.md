@@ -1039,3 +1039,36 @@ condition, initial screening candidates, workflow and completion criteria.
 This goal is inactive and does not expand 1.0.0 acceptance.
 
 **Commit:** `milestone 45: measure ticket-specific simulation improvements`
+
+### 46. Evaluate a browser-only distribution with Pyodide or PyScript
+
+Owner-requested exploration, added 2026-11-15, to be investigated for both Bowl
+Bound and Paydirt. Evaluate whether the existing Python engine, rules and chart
+loading can run client-side in a browser through Pyodide or PyScript, removing
+the local Python backend requirement for a browser-only distribution.
+
+**Deliver:** a time-boxed feasibility spike that loads the real engine in an
+isolated browser context with public sample teams, plus an inventory of runtime
+assumptions (Python version, standard library, filesystem/path access, threading,
+environment/process use, optional packages, chart/season asset layout, save/load
+and persistence). Compare a static PyScript prototype with a Pyodide runtime in a
+Web Worker behind the existing frontend or a lightweight Vite bundle. Measure
+first-load runtime size and caching, startup and simulation performance, memory,
+UI responsiveness, browser compatibility, offline behavior, debugging and
+automated-testing impact. Define how public charts, rules, rosters, saves and
+standings would be packaged or persisted (for example IndexedDB or the browser
+filesystem) while keeping private chart/source material out of any static
+publication. Produce a recommendation, effort estimate and follow-up tickets, or
+record why the approach is not worth pursuing.
+
+**Validate:** record measured startup, package size and a basic play-path result;
+document what a browser-only build would preserve or lose versus the current CLI,
+Python-backed web app, desktop packaging and the full regression/release gate. Do
+not assume zero rewrites or a short delivery until the spike proves it. No
+version metadata, packaging, publication or runtime dependency changes are made
+by this exploration.
+
+Tracked work: [FLOW-007](issues/FLOW/FLOW-007.md). This is exploratory backlog
+outside the active 1.1.0 cross-season scope.
+
+**Commit:** `milestone 46: evaluate browser-only Pyodide distribution`
