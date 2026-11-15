@@ -1,7 +1,9 @@
 # Milestone 44 — Explicit cross-year web matchups
 
-Status: backlog, planning only, 2026-11-07.
-Ticket: [UI-070](issues/UI/UI-070.md), Medium priority.
+Status: backlog, planning only, 2026-11-07. Target release: **1.1.0**
+(owner-selected 2026-11-15; see [1.1.0 preparation](release-1.1.0.md)).
+Tickets: [UI-070](issues/UI/UI-070.md) (behavior/rules acceptance) and
+[UI-071](issues/UI/UI-071.md) (setup UI design), Medium priority.
 
 Let web players independently choose teams from installed eligible years and
 clearly see that the designated home team's season governs the game's rules.
@@ -27,6 +29,18 @@ rules_season = home_team.season. Build on these foundations. UI-009 separately
 tracks season-qualified in-game labels; this ticket concerns explicit selection,
 rules visibility and complete integration verification.
 
+## Setup UI design
+
+[UI-071](issues/UI/UI-071.md) documents the scalable setup design in
+[cross-season team selection design](cross-season-team-selection-design.md): a
+two-card matchup builder with independent year/team selection, a searchable
+season-scoped picker, a backend-provided home-season rules banner, catalog
+problem reporting, accessibility and a four-phase test-first path. It keeps
+same-year play as the default path and leaves room for more seasons, favorites
+and future matchup modes. An owner-reviewed static preview is at
+[mockups/cross-season-setup.html](mockups/cross-season-setup.html). The design is not implementation; UI-070 remains the
+behavior and rules acceptance ticket.
+
 ## Acceptance and validation
 
 Follow UI-070's criteria with test-first synthetic behavior regressions and
@@ -37,6 +51,8 @@ boundary. Preserve save identities and validate a real-engine browser session.
 
 This is future feature scope, outside Milestone 42 / 1.0.0. Adding this plan does
 not extend supported seasons, publish new charts or implement a new rules profile.
+The owner selected 1.1.0 as the next release target on 2026-11-15; that records
+intended scope only and does not change version metadata or claim acceptance.
 
 Tracking validation: ran `.venv/bin/python scripts/build_issue_index.py` and
 `.venv/bin/python -m pytest tests/test_issue_tracker.py tests/test_create_issue.py tests/test_priority_docs.py tests/test_release_player_docs.py -q`;

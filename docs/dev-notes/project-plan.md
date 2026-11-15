@@ -1003,8 +1003,11 @@ same-school/different-year, human/manual modes, unsupported profiles and save/lo
 Assert actual engine rules across supported kickoff/touchback/overtime boundaries;
 run relevant API/frontend/session/persistence regressions and a browser play-test.
 
-Tracked work: [UI-070](issues/UI/UI-070.md). See [Milestone 44](milestone-44.md).
-This is outside the active Milestone 42 and 1.0.0 correction release scope.
+Tracked work: [UI-070](issues/UI/UI-070.md) and
+[UI-071](issues/UI/UI-071.md). See [Milestone 44](milestone-44.md). This is
+outside the active Milestone 42 and 1.0.0 correction release scope. Owner selected
+**1.1.0** as the next release target on 2026-11-15; see
+[1.1.0 preparation](release-1.1.0.md).
 
 **Commit:** `milestone 44: expose cross-year web matchups with home-season rules`
 
