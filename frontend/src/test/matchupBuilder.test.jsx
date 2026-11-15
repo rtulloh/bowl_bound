@@ -176,3 +176,38 @@ it('labels teams with the season-qualified identity', async () => {
   const homeOption = within(screen.getByTestId('home-select')).getByRole('option', { name: '2007 Cedar Valley' })
   expect(homeOption).toHaveValue('2007/cedar-valley')
 })
+
+// --- Phase 2: searchable picker integration ---------------------------------
+
+const largeCatalog = [
+  ...catalog,
+  ...Array.from({ length: 20 }, (_, index) => ({
+    id: `2007/filler-${index}`,
+    name: `Filler ${String(index).padStart(2, '0')}`,
+    season: 2007,
+  })),
+]
+
+it('searches within the selected year and picks from the combobox', async () => {
+  api.listTeams.mockResolvedValue({ teams: largeCatalog, problems: [] })
+  await setup()
+  fireEvent.click(screen.getByRole('combobox', { name: 'Home team' }))
+  fireEvent.change(screen.getByRole('combobox', { name: 'Home team' }), { target: { value: 'harbor' } })
+  fireEvent.click(screen.getByRole('option', { name: 'Harbor Tech 2007' }))
+  expect(screen.getByTestId('home-select')).toHaveValue('2007 Harbor Tech')
+  expect(screen.getByTestId('home-season')).toHaveValue('2007')
+})
+
+it('choosing an all-seasons result updates that card year and team together', async () => {
+  api.listTeams.mockResolvedValue({ teams: largeCatalog, problems: [] })
+  await setup()
+  fireEvent.click(screen.getByRole('combobox', { name: 'Home team' }))
+  fireEvent.click(screen.getByRole('button', { name: /search all seasons/i }))
+  fireEvent.change(screen.getByRole('combobox', { name: 'Home team' }), { target: { value: 'lakeside' } })
+  fireEvent.click(screen.getByRole('option', { name: 'Lakeside 2012' }))
+  expect(screen.getByTestId('home-season')).toHaveValue('2012')
+  expect(screen.getByTestId('home-select')).toHaveValue('2012 Lakeside')
+  // The away side keeps its own year and team.
+  expect(screen.getByTestId('away-season')).toHaveValue('2007')
+  expect(screen.getByTestId('away-select')).toHaveValue('2007 Harbor Tech')
+})

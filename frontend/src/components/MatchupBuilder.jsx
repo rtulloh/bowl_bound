@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import TeamPicker from './TeamPicker'
 
 const SAMPLE_HOME = '2007/cedar-valley'
 const SAMPLE_AWAY = '2007/harbor-tech'
@@ -45,29 +46,6 @@ function SeasonSelect({ testId, teams, value, onChange, disabled }) {
         {seasons.map((season) => (
           <option key={season} value={season}>
             {season} ({teamsInSeason(teams, season).length} teams)
-          </option>
-        ))}
-      </select>
-    </label>
-  )
-}
-
-function TeamSelect({ testId, label, teams, season, value, onChange, disabled }) {
-  const options = useMemo(() => teamsInSeason(teams, season), [teams, season])
-  return (
-    <label className="block">
-      {label}
-      <select
-        className="block w-full text-black p-1"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        disabled={disabled}
-        data-testid={testId}
-      >
-        <option value="">Choose a team</option>
-        {options.map((team) => (
-          <option key={team.id} value={team.id}>
-            {team.season} {team.name}
           </option>
         ))}
       </select>
@@ -122,13 +100,13 @@ export default function MatchupBuilder({
           onChange={(season) => changeSeason(name, season)}
           disabled={disabled}
         />
-        <TeamSelect
+        <TeamPicker
           testId={`${name}-select`}
           label={name === 'home' ? 'Home team' : 'Away team'}
           teams={teams}
           season={value.season}
           value={value.teamId}
-          onChange={(teamId) => changeTeam(name, teamId)}
+          onSelect={(team) => changeTeam(name, team ? team.id : '')}
           disabled={disabled}
         />
         {notice?.[name] && (

@@ -22,7 +22,10 @@ You can optionally [import your own authorized charts](importing-teams.md) separ
    you can play across years or pick the same school from two different years.
    Changing one side's season does not clear the other. Swap exchanges both
    selections; **Use <year> for both teams** appears when the years differ.
-   Teams are labeled with their year. Then choose Regular season or
+   Teams are labeled with their year. Once a season has many teams, the team
+   control becomes a search box: typing filters within that season, and
+   **Search all seasons** lets you pick a team from another year in one step.
+   Then choose Regular season or
    Postseason. The designated home team's season selects the supported
    regulation/overtime profile and applies to both sides.
 3. Choose Human home / computer away (default), Human away / computer home,
