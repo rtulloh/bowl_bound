@@ -35,6 +35,46 @@ def test_real_release_inputs_stage_with_all_pinned_public_samples(tmp_path: Path
     }
 
 
+def test_manifest_lists_every_runtime_reachable_local_module() -> None:
+    """Catch a new runtime module that the hand-maintained allowlist omits."""
+    root = Path(__file__).resolve().parents[1]
+    manifest = json.loads((root / "release/manifest.json").read_text(encoding="utf-8"))
+    listed = set(manifest["runtime"])
+    entry_points = ("backend/app.py", "backend/launcher.py", "bowl_bound/cli.py")
+    pending = list(entry_points)
+    seen: set[str] = set()
+    missing: list[str] = []
+    while pending:
+        name = pending.pop()
+        if name in seen or not (root / name).is_file():
+            continue
+        seen.add(name)
+        if name not in listed:
+            missing.append(name)
+        source = (root / name).read_text(encoding="utf-8")
+        for module in re.findall(r"^\s*from\s+(\.+[\w.]*)\s+import", source, re.MULTILINE):
+            pending.append(_resolve_relative(name, module))
+        for module in re.findall(r"^\s*from\s+(bowl_bound[\w.]*)\s+import", source, re.MULTILINE):
+            pending.append(module.replace(".", "/") + ".py")
+        for module in re.findall(r"^\s*import\s+(bowl_bound[\w.]*)", source, re.MULTILINE):
+            pending.append(module.replace(".", "/") + ".py")
+    assert not missing, "Runtime modules absent from release/manifest.json: " + ", ".join(
+        sorted(missing)
+    )
+
+
+def _resolve_relative(source: str, module: str) -> str:
+    """Map a relative import in `source` to its repo-relative module path."""
+    depth = len(module) - len(module.lstrip("."))
+    parts = list(Path(source).parent.parts)
+    if depth > 1:
+        parts = parts[: len(parts) - (depth - 1)]
+    tail = module.lstrip(".")
+    if tail:
+        parts.append(tail.replace(".", "/"))
+    return "/".join(parts) + ".py"
+
+
 def test_real_staged_frontend_contains_every_local_import(tmp_path: Path) -> None:
     """A checkout build cannot prove the exact source allowlist is self-contained."""
     stage = tmp_path / "public stage"

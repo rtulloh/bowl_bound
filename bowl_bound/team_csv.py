@@ -789,3 +789,43 @@ def load_team(season_dir: Path, folder_name: str) -> tuple[TeamChart, TeamFileMe
     if result[0].season != season or team_folder_name(result[0].name) != folder_name:
         raise TeamFormatError("team metadata row 0: folder mismatch")
     return result
+
+
+def load_team_metadata(season_dir: Path, folder_name: str) -> tuple[str, int]:
+    """Read only the identity fields needed to list a team in the catalog.
+
+    Full chart validation still happens when a team is selected for a game.
+    """
+    if not isinstance(folder_name, str) or team_folder_name(folder_name) != folder_name:
+        raise TeamFormatError("team folder: not a canonical folder name")
+    name = season_dir.name
+    if not (name.isascii() and name.isdecimal()) or str(int(name)) != name or int(name) < 1:
+        raise TeamFormatError("season directory: invalid name")
+    season = int(name)
+    if season_dir.is_symlink():
+        raise TeamFormatError("season directory: symlinked")
+    folder = season_dir / folder_name
+    paths = [folder / x for x in TEAM_FILES] + [season_dir / PROVENANCE_DIR / f"{folder_name}.csv"]
+    if any(p.is_symlink() or not p.is_file() or p.parent.is_symlink() for p in paths):
+        raise TeamFormatError("team files row 0: missing or symlinked file")
+    try:
+        text = (folder / "team.yaml").read_text(encoding="utf-8")
+        data = _yaml(text)
+        rows = {
+            name: _rows((folder / name).read_text(encoding="utf-8"), name)
+            for name in ("offense.csv", "defense.csv", "special.csv")
+        }
+    except (OSError, UnicodeError) as error:
+        raise TeamFormatError("team files row 0: unreadable") from error
+    if (
+        len(rows["offense.csv"]) != 30
+        or any(len(row) != 14 for row in rows["offense.csv"])
+        or len(rows["defense.csv"]) != 30
+        or any(len(row) != 12 for row in rows["defense.csv"])
+        or len(rows["special.csv"]) != 30
+        or any(len(row) != 8 for row in rows["special.csv"])
+    ):
+        raise TeamFormatError("files row 0: incorrect row shape")
+    if data["season"] != season or team_folder_name(data["team_name"]) != folder_name:
+        raise TeamFormatError("team metadata row 0: folder mismatch")
+    return data["team_name"], data["season"]

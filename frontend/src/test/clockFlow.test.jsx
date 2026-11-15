@@ -5,12 +5,13 @@ import * as api from '../api'
 import { report, view } from './fixtures'
 
 vi.mock('../api', () => ({
-  listTeams: vi.fn(), newGame: vi.fn(), decide: vi.fn(), snap: vi.fn(), kick: vi.fn(), gameAction: vi.fn(), coachStep: vi.fn(),
+  listTeams: vi.fn(), getRules: vi.fn(), newGame: vi.fn(), decide: vi.fn(), snap: vi.fn(), kick: vi.fn(), gameAction: vi.fn(), coachStep: vi.fn(),
 }))
 
 beforeEach(() => {
   vi.resetAllMocks()
   api.listTeams.mockResolvedValue({ teams: [{ id: 'a', name: 'Alpha', season: 2002 }, { id: 'b', name: 'Beta', season: 2002 }] })
+  api.getRules.mockResolvedValue({ season: 2002, game_type: 'regular', supported: true, summary: '2002 home-season rules govern this game.', details: [] })
 })
 
 it('keeps timeout selection serialized with defense and displays prior and selected-play timing from the engine', async () => {

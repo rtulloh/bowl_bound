@@ -18,8 +18,13 @@ You can optionally [import your own authorized charts](importing-teams.md) separ
 ## Start a web game
 
 1. [Launch the local game](startup.md); leave its terminal window open.
-2. Select home/away teams and Regular season or Postseason. The home season
-   selects the supported regulation/overtime profile.
+2. Pick a **Season** and **Team** for each side. The sides are independent, so
+   you can play across years or pick the same school from two different years.
+   Changing one side's season does not clear the other. Swap exchanges both
+   selections; **Use <year> for both teams** appears when the years differ.
+   Teams are labeled with their year. Then choose Regular season or
+   Postseason. The designated home team's season selects the supported
+   regulation/overtime profile and applies to both sides.
 3. Choose Human home / computer away (default), Human away / computer home,
    or Two-sided manual play. Manual mode is local control of both sides,
    not network multiplayer or a concealed-call competitive service.

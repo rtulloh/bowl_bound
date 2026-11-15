@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { selectTeams } from './teamSetup.js'
 
 async function expectReadable(locator) {
   const contrast = await locator.evaluate((element) => {
@@ -28,8 +29,7 @@ async function start(page) {
   })
   await page.goto('/')
   await page.getByLabel('Control mode').selectOption('manual')
-  await page.getByTestId('home-select').selectOption('2002/alpha-tech')
-  await page.getByTestId('away-select').selectOption('2002/beta-state')
+  await selectTeams(page, '2002/alpha-tech', '2002/beta-state')
   await page.getByTestId('start-game').click()
   await expect(page.getByTestId('opening-screen')).toBeVisible()
   await expect(page.getByTestId('scoreboard')).toHaveCount(0)

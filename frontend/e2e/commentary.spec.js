@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { selectTeams } from './teamSetup.js'
 
 for (const arrangement of ['named', 'reversed', 'missing']) {
   test('engine roster narration, mobile wrapping and save/load: ' + arrangement, async ({ page }) => {
@@ -10,8 +11,7 @@ for (const arrangement of ['named', 'reversed', 'missing']) {
     await page.getByLabel('Control mode').selectOption('manual')
     const home = arrangement === 'missing' ? 'alpha-tech' : arrangement === 'named' ? 'roster-home' : 'roster-away'
     const away = arrangement === 'missing' ? 'beta-state' : arrangement === 'named' ? 'roster-away' : 'roster-home'
-    await page.getByTestId('home-select').selectOption('2002/' + home)
-    await page.getByTestId('away-select').selectOption('2002/' + away)
+    await selectTeams(page, '2002/' + home, '2002/' + away)
     await page.getByTestId('start-game').click()
     await page.getByTestId('penalty-choice-toss:kick').click()
     await page.getByTestId('special-play-kickoff').click()

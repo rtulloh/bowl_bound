@@ -1,18 +1,18 @@
 {
   "schema": 1,
-  "python": "3.13.17",
+  "python": "3.12.16",
   "notices": {
     "openssl-license.txt": {
-      "source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/LICENSE.txt",
+      "source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.0.16/LICENSE.txt",
       "sha256": "7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a"
     },
     "openssl-authors.txt": {
-      "source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/AUTHORS.md",
-      "sha256": "b9f638dfc06b59c2d3b808186c3b30f713805a5db390f5b77b1703ac58acb83e"
+      "source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.0.16/AUTHORS.md",
+      "sha256": "5076ca441daef7fb35e904c2ac070880c7b3d58300a5a6aecac41e8f525f4412"
     },
     "cpython-history-and-license.txt": {
-      "source": "https://raw.githubusercontent.com/python/cpython/v3.13.17/Doc/license.rst",
-      "sha256": "952ac05720d7f1dcb63589b35eb0931b1442eb250230a4ad31198eddf0ad6abc"
+      "source": "https://raw.githubusercontent.com/python/cpython/v3.12.16/Doc/license.rst",
+      "sha256": "341832873fd316a37927e79385093fbbfd40a467428480835fe435a80cadf4e5"
     },
     "libffi.txt": {
       "source": "https://raw.githubusercontent.com/libffi/libffi/v3.4.4/LICENSE",
@@ -38,10 +38,6 @@
       "source": "https://raw.githubusercontent.com/madler/zlib/v1.3.1/LICENSE",
       "sha256": "845efc77857d485d91fb3e0b884aaa929368c717ae8186b66fe1ed2495753243"
     },
-    "mpdecimal-4.0.0.txt": {
-      "source": "https://raw.githubusercontent.com/python/cpython-source-deps/mpdecimal-4.0.0/COPYRIGHT.txt",
-      "sha256": "2713324211652ce4a60e6e21e54f9dc3004299e591b0933a352f1a89c5fb53c2"
-    },
     "pyinstaller.txt": {
       "source": "https://raw.githubusercontent.com/pyinstaller/pyinstaller/v6.22.3/COPYING.txt",
       "sha256": "0598064c7d2718e38d7914a7d08343b2fa008e3bea9ebba2aa7a6ffa5900dd64"
@@ -58,17 +54,13 @@
       "source": "https://ftp.gnu.org/gnu/ncurses/ncurses-6.5.tar.gz",
       "sha256": "b2feb54f39529abe226f709a292584fde48a2e5721559fee417d2cdd51cb7cc1"
     },
-    "mpdecimal-4.0.1.txt": {
-      "source": "https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-4.0.1.tar.gz",
-      "sha256": "dba079e24a0286052f9f36a5e0b4f6cc95bc83ada657eb26bef8c0b6473f6512"
-    },
     "openssl-copyright.txt": {
-      "source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.5.9/include/openssl/opensslv.h.in",
-      "sha256": "ec368a39fe8d31b6ed740075969a6ab7dd5128f4ab876e682352128f7551c6e2"
+      "source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.0.16/include/openssl/opensslv.h.in",
+      "sha256": "2185f9c2d2114f71f4a1c743cf8c0cc1ba2f3796a2a7ef07940de0c4acf67a9c"
     },
     "expat.txt": {
-      "source": "https://raw.githubusercontent.com/python/cpython/v3.13.17/Modules/expat/expat.h",
-      "sha256": "35883851640b9a48c95e8bdaa9895081e4d1dc16526099d55886e6803b31580f"
+      "source": "https://raw.githubusercontent.com/python/cpython/v3.12.16/Modules/expat/expat.h",
+      "sha256": "805f17ae5f597eeb9f058f60428a1a62268de242a096af17cbcc2e17af111bad"
     },
     "rust-dependencies.txt": {
       "sha256": "5390fd0b1a9bafa14d161587d36353c53725e8949b26c21213c8874b9a614af0",
@@ -81,21 +73,21 @@
   },
   "components": {
     "cpython": {
-      "version": "3.13.17",
+      "version": "3.12.16",
       "notices": [
         "cpython-history-and-license.txt"
       ],
       "provenance": "Official CPython installer; Doc/license.rst includes embedded stdlib notices, not all external libraries."
     },
     "openssl": {
-      "version": "3.5.9",
-      "binary_marker": "OpenSSL 3.5.9",
+      "version": "3.0.16",
+      "binary_marker": "OpenSSL 3.0.16",
       "notices": [
         "openssl-license.txt",
         "openssl-authors.txt",
         "openssl-copyright.txt"
       ],
-      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat"
+      "provenance": "CPython v3.12.16 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat"
     },
     "ncurses": {
       "version": "6.5",
@@ -103,14 +95,14 @@
       "notices": [
         "ncurses.txt"
       ],
-      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat; COPYING from archive SHA256 136d91bc269a9a5785e5f9e980bc76ab57428f604ce3e5a5a90cebc767971cc6"
+      "provenance": "CPython v3.12.16 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat; COPYING from archive SHA256 136d91bc269a9a5785e5f9e980bc76ab57428f604ce3e5a5a90cebc767971cc6"
     },
     "libffi": {
       "version": "3.4.4 (Windows); Apple system library (macOS, not redistributed)",
       "notices": [
         "libffi.txt"
       ],
-      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat"
+      "provenance": "CPython v3.12.16 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat"
     },
     "libyaml": {
       "version": "0.2.5",
@@ -148,7 +140,7 @@
       "notices": [
         "bzip2.txt"
       ],
-      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat"
+      "provenance": "CPython v3.12.16 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat"
     },
     "xz": {
       "version": "5.2.3 (macOS); 5.2.5 (Windows)",
@@ -156,29 +148,28 @@
         "xz-5.2.3.txt",
         "xz-5.2.5.txt"
       ],
-      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat; liblzma public-domain library, not GPL xz command-line tools."
+      "provenance": "CPython v3.12.16 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat; liblzma public-domain library, not GPL xz command-line tools."
     },
     "mpdecimal": {
-      "version": "4.0.1 (macOS); 4.0.0 (Windows)",
+      "version": "2.5.1 (vendored in CPython v3.12.16)",
       "notices": [
-        "mpdecimal-4.0.1.txt",
-        "mpdecimal-4.0.0.txt"
+        "cpython-history-and-license.txt"
       ],
-      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat; 4.0.1 COPYRIGHT.txt from archive SHA256 96d33abb4bb0070c7be0fed4246cd38416188325f820468214471938545b1ac8"
+      "provenance": "Libmpdec is vendored in CPython v3.12.16 Modules/_decimal/libmpdec; its notice is the libmpdec section of CPython v3.12.16 Doc/license.rst (copyright 2008-2020 Stefan Krah)."
     },
     "expat": {
-      "version": "vendored in CPython v3.13.17",
+      "version": "vendored in CPython v3.12.16",
       "notices": [
         "expat.txt"
       ],
-      "provenance": "CPython v3.13.17 Modules/expat/expat.h leading copyright/license comment."
+      "provenance": "CPython v3.12.16 Modules/expat/expat.h leading copyright/license comment."
     },
     "zlib": {
       "version": "1.3.1 (Windows); Apple system library (macOS, not redistributed)",
       "notices": [
         "zlib.txt"
       ],
-      "provenance": "CPython v3.13.17 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat"
+      "provenance": "CPython v3.12.16 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat"
     }
   }
 }

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { selectTeams } from './teamSetup.js'
 
 for (const width of [1280, 390]) {
   test(`game menu overlays without moving the play controls, width=${width}`, async ({ page }) => {
@@ -9,8 +10,7 @@ for (const width of [1280, 390]) {
     await page.goto('/')
     await expect(page.getByLabel('Control mode')).toHaveValue('home')
     await page.getByLabel('Control mode').selectOption('manual')
-    await page.getByTestId('home-select').selectOption('2002/alpha-tech')
-    await page.getByTestId('away-select').selectOption('2002/beta-state')
+    await selectTeams(page, '2002/alpha-tech', '2002/beta-state')
     await page.getByTestId('start-game').click()
     await page.getByTestId('penalty-choice-toss:kick').click()
     const kickoffResponse = page.waitForResponse((response) => response.url().endsWith('/kick') && response.request().method() === 'POST')

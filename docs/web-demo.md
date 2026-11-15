@@ -39,9 +39,15 @@ its file contents are never echoed.
 
 ## What it shows
 
-Pick a home and away team (the public Cedar Valley/Harbor Tech samples are the
-default when present), choose **Regular season** or **Postseason** and your
-**Control mode** on setup, then **Start game**. **Human home / computer away**
+Each side has its own **Season** and **Team** selector, so home and away teams
+can come from different installed years, including the same school from two
+years. The public Cedar Valley/Harbor Tech samples are the default when present;
+otherwise both sides open in the newest installed season with different teams.
+Changing one side's season never clears or restricts the other side. Use the
+swap button to exchange both complete selections, or **Use <year> for both
+teams** when the years differ. Teams are labeled with their season. Then choose
+**Regular season** or **Postseason** and your **Control mode**, and select
+**Start game**. **Human home / computer away**
 is selected by default; **Two-sided manual play** remains the last menu option.
 The supported home season (1940–2023) selects the regulation and overtime rules. Resolve
 the toss choice on its own **Opening toss** screen before entering the playing

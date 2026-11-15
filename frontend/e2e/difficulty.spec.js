@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test'
+import { selectTeams } from './teamSetup.js'
 
 for (const difficulty of ['easy', 'medium', 'hard']) {
   test('difficulty ' + difficulty + ' reaches the real engine and survives save/load', async ({ page, request }) => {
     await page.goto('/')
     await expect(page.getByLabel('Difficulty')).toHaveValue('medium')
     await page.getByLabel('Difficulty').selectOption(difficulty)
-    await page.getByTestId('home-select').selectOption('2002/alpha-tech')
-    await page.getByTestId('away-select').selectOption('2002/beta-state')
+    await selectTeams(page, '2002/alpha-tech', '2002/beta-state')
     const created = page.waitForResponse((response) => response.url().includes('/api/games?') && response.request().method() === 'POST')
     await page.getByTestId('start-game').click()
     const response = await created
@@ -37,8 +37,7 @@ for (const difficulty of ['easy', 'medium', 'hard']) {
     await page.goto('/')
     await page.getByLabel('Control mode').selectOption('home')
     await page.getByLabel('Difficulty').selectOption(difficulty)
-    await page.getByTestId('home-select').selectOption('2002/guidance-home')
-    await page.getByTestId('away-select').selectOption('2002/guidance-away')
+    await selectTeams(page, '2002/guidance-home', '2002/guidance-away')
     const created = page.waitForResponse((response) => response.url().includes('/api/games?') && response.request().method() === 'POST')
     await page.getByTestId('start-game').click()
     const createdResponse = await created

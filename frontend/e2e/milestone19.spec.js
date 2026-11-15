@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { selectTeams } from './teamSetup.js'
 
 async function select(page, home = '2002/alpha-tech', away = '2002/beta-state') {
   await page.route('**/api/games', async (route) => {
@@ -6,8 +7,7 @@ async function select(page, home = '2002/alpha-tech', away = '2002/beta-state') 
   })
   await page.goto('/')
   await page.getByLabel('Control mode').selectOption('manual')
-  await page.getByTestId('home-select').selectOption(home)
-  await page.getByTestId('away-select').selectOption(away)
+  await selectTeams(page, home, away)
   const created = page.waitForResponse((r) => r.url().endsWith('/api/games') && r.request().method() === 'POST')
   await page.getByTestId('start-game').click()
   return '/api/games/' + (await (await created).json()).game_id

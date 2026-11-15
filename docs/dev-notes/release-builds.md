@@ -4,6 +4,36 @@ This is maintainer guidance, not player release notes. No command below creates
 a GitHub remote, tag or public release. The current target is standalone apps;
 the ZIP below is a verified native-builder input, **not** a finished player app.
 
+## Running the full regression locally
+
+Create the project environment once, then run the gate from the repository root:
+
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -e '.[dev,web,pdf]'
+.venv/bin/python scripts/run_full_regression.py
+# Alternative module invocation:
+.venv/bin/python -m scripts.run_full_regression
+```
+
+The runner mirrors `.github/workflows/tests.yml` in order: Python tests/lint/
+format/dependency checks, frontend install/tests/build/audit, generated chart
+audit, and real-engine Playwright tests. It prints each command, elapsed time,
+and a final pass/fail/skipped table. It stops at the first failure by default;
+use `--keep-going` to collect all failures. `--report PATH` writes a JSON
+summary, and `--skip-frontend`, `--skip-e2e`, `--skip-chart-audit`,
+`--skip-python` and `--no-install` provide intentional partial runs.
+
+Local Python tests run without coverage for speed. Run `pytest --cov` as part
+of individual changes; the upstream CI gate enforces the 75% `fail_under`
+threshold.
+
+`--python PATH` selects the project interpreter (default `.venv/bin/python`).
+`npm ci` and `npx playwright install --with-deps chromium` need network access
+on a cold machine; the remaining checks run against local dependencies. The
+generated chart audit and browser fixtures are written under temporary
+directories and are removed when the run ends.
+
 ## Stage, build and inspect
 
 Use Python3.10+ and the project web dependencies. Select Node24.22.1/npm11.19.1
@@ -139,7 +169,7 @@ arm64, Windows Server 2025 x64 and macOS 26 Intel x86_64. These runner labels
 were checked against actions/runner-images; availability is still exercised
 by the first actual run. Linux is a test host, not an artifact target.
 
-The workflow uses Python **3.13.17** and Node **24.22.1**. Each native job
+The workflow uses Python **3.12.16** and Node **24.22.1**. Each native job
 creates a separate environment, installs only the exact graph in
 `release/requirements-native.txt` with `--only-binary=:all: --no-deps`, and runs
 `pip check`. Do not install Bowl Bound into that environment, including
@@ -223,6 +253,15 @@ a wildcard exception. Read the native manifest alongside dependency versions
 and source recipes whenever upgrading Python, wheels or PyInstaller. Binary
 hashes and markers are engineering consistency checks, not legal clearance or
 a cryptographic attestation of static dependency provenance.
+
+The catalog tracks the reviewed Python runtime: 2026-11-15 moved from CPython
+3.13.17 to 3.12.16 to match Paydirt and the tested local baseline. That update
+re-pinned the CPython license text, the bundled OpenSSL notices (now 3.0.16),
+the vendored expat header, and the vendored libmpdec 2.5.1 notice, which is now
+retained through the CPython license file rather than a separate mpdecimal file.
+Native filename guards match `cpython-312`/`python3.12`. When changing the
+Python runtime again, re-acquire and review these bytes rather than only editing
+version strings.
 
 The Rust collection records a conservative superset from the checksum-verified
 pydantic-core 2.50.1 sdist Cargo.lock and the observed compiler commit

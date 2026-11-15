@@ -18,7 +18,7 @@ def source(tmp_path: Path) -> Path:
     put(root, "release/native-notices/openssl.txt", text)
     catalog = {
         "schema": 1,
-        "python": "3.13.17",
+        "python": "3.12.16",
         "notices": {
             "openssl.txt": {
                 "sha256": hashlib.sha256(text.encode()).hexdigest(),
@@ -27,7 +27,7 @@ def source(tmp_path: Path) -> Path:
         },
         "components": {
             "openssl": {
-                "version": "3.5.9",
+                "version": "3.0.16",
                 "notices": ["openssl.txt"],
                 "provenance": "Synthetic pinned build recipe",
             }
@@ -47,9 +47,9 @@ def bundle(tmp_path: Path) -> Path:
 def test_inventory_copies_pinned_notices_and_records_exact_native_hashes(
     source: Path, bundle: Path
 ) -> None:
-    notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.13.17")
+    notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.12.16")
     report = json.loads((bundle / "THIRD_PARTY/NATIVE-LIBRARIES.json").read_text())
-    assert report["python"] == "3.13.17"
+    assert report["python"] == "3.12.16"
     assert report["target"] == "macos-arm64"
     assert report["binaries"]["_internal/libssl.3.dylib"]["components"] == ["openssl"]
     assert (
@@ -83,7 +83,7 @@ def test_missing_changed_or_unsafe_source_notice_is_refused(
         data["notices"]["../escape.txt"] = data["notices"].pop("openssl.txt")
         catalog.write_text(json.dumps(data))
     with pytest.raises(ReleaseError, match="notice"):
-        notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.13.17")
+        notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.12.16")
     assert not (bundle / "THIRD_PARTY/NATIVE-LIBRARIES.json").exists()
 
 
@@ -104,7 +104,7 @@ def test_unknown_native_library_including_disguised_macho_fails_closed(
     if name.endswith(".dat"):
         (bundle / name).write_bytes(b"\xcf\xfa\xed\xfe" + b"synthetic")
     with pytest.raises(ReleaseError, match="Unreviewed native"):
-        notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.13.17")
+        notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.12.16")
 
 
 @pytest.mark.parametrize(
@@ -113,7 +113,7 @@ def test_unknown_native_library_including_disguised_macho_fails_closed(
 def test_post_collection_notice_or_binary_mutation_is_rejected(
     source: Path, bundle: Path, mutation: str
 ) -> None:
-    notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.13.17")
+    notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.12.16")
     if mutation == "notice":
         (bundle / "THIRD_PARTY/NATIVE/openssl.txt").unlink()
     elif mutation == "internal-notice":
@@ -139,17 +139,17 @@ def test_post_collection_notice_or_binary_mutation_is_rejected(
         ("windows-x64", "_internal/libcrypto-3.dll", ["openssl"]),
         ("windows-x64", "_internal/libffi-8.dll", ["libffi"]),
         ("windows-x64", "_internal/VCRUNTIME140_1.dll", ["cpython"]),
-        ("macos-arm64", "_internal/Python.framework/Versions/3.13/Python", ["cpython"]),
-        ("windows-x64", "_internal/yaml/_yaml.cp313-win_amd64.pyd", ["pyyaml", "libyaml"]),
+        ("macos-arm64", "_internal/Python.framework/Versions/3.12/Python", ["cpython"]),
+        ("windows-x64", "_internal/yaml/_yaml.cp312-win_amd64.pyd", ["pyyaml", "libyaml"]),
         (
             "macos-arm64",
-            "_internal/pydantic_core/_pydantic_core.cpython-313-darwin.so",
+            "_internal/pydantic_core/_pydantic_core.cpython-312-darwin.so",
             ["pydantic-core"],
         ),
         ("windows-x64", "_internal/_lzma.pyd", ["cpython", "xz"]),
         (
             "macos-x86_64",
-            "_internal/python3.13/lib-dynload/_decimal.cpython-313-darwin.so",
+            "_internal/python3.12/lib-dynload/_decimal.cpython-312-darwin.so",
             ["cpython", "mpdecimal"],
         ),
     ],
@@ -183,17 +183,17 @@ def test_bad_catalog_fails_before_notices_are_written(
         "{" if mutation == "bad-json" else json.dumps([] if mutation == "not-object" else data)
     )
     with pytest.raises(ReleaseError, match="notice"):
-        notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.13.17")
+        notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.12.16")
     assert not (bundle / "THIRD_PARTY").exists()
 
 
 @pytest.mark.parametrize(
     ("name", "component", "good_marker"),
     [
-        ("_internal/libcrypto.3.dylib", "openssl", b"OpenSSL 3.5.9"),
+        ("_internal/libcrypto.3.dylib", "openssl", b"OpenSSL 3.0.16"),
         ("_internal/libncurses.6.dylib", "ncurses", b"ncurses 6.5.20240427"),
         (
-            "_internal/pydantic_core/_pydantic_core.cpython-313-darwin.so",
+            "_internal/pydantic_core/_pydantic_core.cpython-312-darwin.so",
             "pydantic-core",
             b"/rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/",
         ),
@@ -213,7 +213,7 @@ def test_changed_native_version_or_compiler_does_not_inherit_notice_provenance(
     catalog.write_text(json.dumps(data))
     put(bundle, name, "Synthetic binary with unreviewed or absent version marker")
     with pytest.raises(ReleaseError, match="provenance"):
-        notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.13.17")
+        notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.12.16")
     (bundle / name).write_bytes(b"synthetic\0" + good_marker + b"\0end")
-    notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.13.17")
+    notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.12.16")
     notices.verify_native_notices(bundle, "macos-arm64")

@@ -4,10 +4,11 @@ import App from '../App'
 import * as api from '../api'
 import { view, report } from './fixtures'
 
-vi.mock('../api', () => ({ listTeams: vi.fn(), newGame: vi.fn(), snap: vi.fn(), decide: vi.fn(), kick: vi.fn(), gameAction: vi.fn(), coachStep: vi.fn(), getGame: vi.fn(), loadGame: vi.fn(), saveGame: vi.fn() }))
+vi.mock('../api', () => ({ listTeams: vi.fn(), getRules: vi.fn(), newGame: vi.fn(), snap: vi.fn(), decide: vi.fn(), kick: vi.fn(), gameAction: vi.fn(), coachStep: vi.fn(), getGame: vi.fn(), loadGame: vi.fn(), saveGame: vi.fn() }))
 beforeEach(() => {
   vi.resetAllMocks()
   api.listTeams.mockResolvedValue({ teams: [{ id: 'a', name: 'Alpha', season: 2007 }, { id: 'b', name: 'Beta', season: 2007 }] })
+  api.getRules.mockResolvedValue({ season: 2007, game_type: 'regular', supported: true, summary: '2007 home-season rules govern this game.', details: [] })
   api.newGame.mockResolvedValue({ game_id: 'game', seed: 7, view: view() })
   api.snap.mockResolvedValue({ view: view(), report: report() })
 })

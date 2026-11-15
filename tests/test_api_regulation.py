@@ -76,6 +76,17 @@ def test_unsupported_regulation_season_is_actionable_not_a_server_error(tmp_path
     assert response.status_code == 422 and "season" in response.json()["detail"]
 
 
+def test_rules_summary_endpoint_uses_engine_boundaries(tmp_path: Path) -> None:
+    client = TestClient(create_app(tmp_path))
+    supported = client.get("/api/rules", params={"season": 2002, "game_type": "regular"})
+    assert supported.status_code == 200
+    assert supported.json()["supported"] is True
+    assert "Kickoffs from the 35" in supported.json()["details"]
+    unsupported = client.get("/api/rules", params={"season": 2024})
+    assert unsupported.status_code == 200
+    assert unsupported.json()["supported"] is False
+
+
 def test_bounds_declaration_api_uses_engine_actions_and_one_play_timing(tmp_path: Path) -> None:
     for chart in default_teams():
         kicks = special_chart(chart.name, kickoff=yards(70))

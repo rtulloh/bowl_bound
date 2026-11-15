@@ -5,7 +5,13 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .models import TeamChart
-from .team_csv import TeamFileMetadata, TeamFormatError, load_team, team_folder_name
+from .team_csv import (
+    TeamFileMetadata,
+    TeamFormatError,
+    load_team,
+    load_team_metadata,
+    team_folder_name,
+)
 
 TEAM_ID_MAX_LENGTH = 120
 TEAM_ID_RE = re.compile(r"^[1-9][0-9]{0,5}/[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -84,11 +90,11 @@ class TeamCatalog:
             if not TEAM_ID_RE.fullmatch(key):
                 continue
             try:
-                chart = self.load(key)
-            except TeamCatalogError:
+                name, season = load_team_metadata(season_directory, folder.name)
+            except (TeamFormatError, OSError):
                 problems.append(f"{key}: could not be read")
             else:
-                entries.append(TeamEntry(key, chart.name, chart.season))
+                entries.append(TeamEntry(key, name, season))
 
         self.problems = tuple(problems)
         return tuple(entries)

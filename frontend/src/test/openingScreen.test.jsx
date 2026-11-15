@@ -4,7 +4,7 @@ import App from '../App'
 import * as api from '../api'
 import { view } from './fixtures'
 
-vi.mock('../api', () => ({ listTeams: vi.fn(), newGame: vi.fn(), snap: vi.fn(), decide: vi.fn(), kick: vi.fn(), gameAction: vi.fn(), coachStep: vi.fn(), getGame: vi.fn(), loadGame: vi.fn(), saveGame: vi.fn() }))
+vi.mock('../api', () => ({ listTeams: vi.fn(), getRules: vi.fn(), newGame: vi.fn(), snap: vi.fn(), decide: vi.fn(), kick: vi.fn(), gameAction: vi.fn(), coachStep: vi.fn(), getGame: vi.fn(), loadGame: vi.fn(), saveGame: vi.fn() }))
 const pending = { chooser: 'Alpha Tech', choices: [
   { id: 'toss:kick', label: 'Kick', enabled: true },
   { id: 'toss:receive', label: 'Receive', enabled: true },
@@ -19,6 +19,7 @@ beforeEach(() => {
   vi.resetAllMocks()
   vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true })))
   api.listTeams.mockResolvedValue({ teams: [{ id: 'a', name: 'Alpha', season: 2007 }, { id: 'b', name: 'Beta', season: 2007 }] })
+  api.getRules.mockResolvedValue({ season: 2007, game_type: 'regular', supported: true, summary: '2007 home-season rules govern this game.', details: [] })
 })
 afterEach(() => vi.unstubAllGlobals())
 async function start(mode = 'home', role = 'decision') {

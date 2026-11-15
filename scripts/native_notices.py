@@ -106,24 +106,24 @@ def _components(name: str, target: str) -> list[str]:
     if windows and name == "_internal/libffi-8.dll":
         return ["libffi"]
     if windows and re.fullmatch(
-        r"_internal/(?:python313|VCRUNTIME140(?:_1)?|ucrtbase|api-ms-win-[a-z0-9-]+)\.dll", name
+        r"_internal/(?:python312|VCRUNTIME140(?:_1)?|ucrtbase|api-ms-win-[a-z0-9-]+)\.dll", name
     ):
         return ["cpython"]
     if not windows and re.fullmatch(
-        r"_internal/(?:Python|Python\.framework/(?:Python|Versions/(?:3\.13|Current)/Python))", name
+        r"_internal/(?:Python|Python\.framework/(?:Python|Versions/(?:3\.12|Current)/Python))", name
     ):
         return ["cpython"]
-    tag = r"cp313-win_amd64\.pyd" if windows else r"cpython-313-darwin\.so"
+    tag = r"cp312-win_amd64\.pyd" if windows else r"cpython-312-darwin\.so"
     if re.fullmatch(r"_internal/yaml/_yaml\." + tag, name):
         return ["pyyaml", "libyaml"]
     if re.fullmatch(r"_internal/pydantic_core/_pydantic_core\." + tag, name):
         return ["pydantic-core"]
     module = filename.split(".")[0]
-    stdpath = "_internal/" + filename if windows else "_internal/python3.13/lib-dynload/" + filename
+    stdpath = "_internal/" + filename if windows else "_internal/python3.12/lib-dynload/" + filename
     if (
         name == stdpath
         and module in STDLIB_EXTENSIONS
-        and (filename.endswith(".pyd") if windows else filename.endswith(".cpython-313-darwin.so"))
+        and (filename.endswith(".pyd") if windows else filename.endswith(".cpython-312-darwin.so"))
     ):
         extras = {
             "_bz2": ["bzip2"],

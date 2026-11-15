@@ -5,7 +5,7 @@ import DiceRoll from '../components/DiceRoll'
 import * as api from '../api'
 import { view, report } from './fixtures'
 
-vi.mock('../api', () => ({ listTeams: vi.fn(), newGame: vi.fn(), snap: vi.fn(), decide: vi.fn(), kick: vi.fn(), gameAction: vi.fn(), coachStep: vi.fn(), getGame: vi.fn(), loadGame: vi.fn(), saveGame: vi.fn() }))
+vi.mock('../api', () => ({ listTeams: vi.fn(), getRules: vi.fn(), newGame: vi.fn(), snap: vi.fn(), decide: vi.fn(), kick: vi.fn(), gameAction: vi.fn(), coachStep: vi.fn(), getGame: vi.fn(), loadGame: vi.fn(), saveGame: vi.fn() }))
 const turn = (role, overrides = {}) => ({
   human_side: 'home', human_role: role, automatic: role === 'computer', status: 'Your private controls',
   actions: { offense: role === 'offense' ? view().actions.offense : [], defense: role === 'defense' ? view().actions.defense : [], special: [] },
@@ -14,6 +14,7 @@ const turn = (role, overrides = {}) => ({
 beforeEach(() => {
   vi.resetAllMocks()
   api.listTeams.mockResolvedValue({ teams: [{ id: 'a', name: 'Alpha', season: 2007 }, { id: 'b', name: 'Beta', season: 2007 }] })
+  api.getRules.mockResolvedValue({ season: 2007, game_type: 'regular', supported: true, summary: '2007 home-season rules govern this game.', details: [] })
 })
 async function start(role, mode = 'home') {
   api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, revision: 0, view: view(), turn: turn(role) })

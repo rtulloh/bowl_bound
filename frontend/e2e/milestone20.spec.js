@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { selectTeams } from './teamSetup.js'
 
 for (const human of ['home', 'away']) {
   for (const reverse of [false, true]) {
@@ -10,8 +11,7 @@ for (const human of ['home', 'away']) {
         await route.continue({ postData: JSON.stringify({ ...route.request().postDataJSON(), seed: 39 }) })
       })
       await page.goto('/')
-      await page.getByTestId('home-select').selectOption(ids[0])
-      await page.getByTestId('away-select').selectOption(ids[1])
+      await selectTeams(page, ids[0], ids[1])
       await expect(page.getByLabel('Control mode')).toHaveValue('home')
       if (human !== 'home') await page.getByLabel('Control mode').selectOption(human)
       const created = page.waitForResponse((r) => r.url().includes('/api/games?') && r.request().method() === 'POST')

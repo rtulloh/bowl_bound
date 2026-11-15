@@ -6,10 +6,11 @@ import PlaySelector from '../components/PlaySelector'
 import { report, stateView, view } from './fixtures'
 import * as api from '../api'
 
-vi.mock('../api', () => ({ listTeams: vi.fn(), newGame: vi.fn(), snap: vi.fn(), decide: vi.fn(), kick: vi.fn(), gameAction: vi.fn() }))
+vi.mock('../api', () => ({ listTeams: vi.fn(), getRules: vi.fn(), newGame: vi.fn(), snap: vi.fn(), decide: vi.fn(), kick: vi.fn(), gameAction: vi.fn() }))
 beforeEach(() => {
   vi.resetAllMocks()
   api.listTeams.mockResolvedValue({ teams: [{ id: 'a', name: 'Alpha', season: 2007 }, { id: 'b', name: 'Beta', season: 2007 }] })
+  api.getRules.mockResolvedValue({ season: 2007, game_type: 'regular', supported: true, summary: '2007 home-season rules govern this game.', details: [] })
 })
 
 it('names the chooser and focuses the first enabled decision, not a disabled choice', () => {

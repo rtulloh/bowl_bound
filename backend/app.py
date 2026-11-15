@@ -24,6 +24,7 @@ from bowl_bound.models import TeamChart
 from bowl_bound.regulation import RegulationView
 from bowl_bound.resolution import ChartResolutionError
 from bowl_bound.roster import RosterFormatError
+from bowl_bound.rules_summary import rules_summary
 from bowl_bound.save_game import (
     GameRevisionConflict,
     SavedGame,
@@ -274,6 +275,11 @@ def create_app(seasons_root: Path, static_dir: Path | None = None) -> FastAPI:
             for problem in catalog.problems
         ]
         return {"teams": found, "problems": problems}
+
+    @app.get("/api/rules")
+    def rules(season: int, game_type: str = "regular") -> dict[str, object]:
+        """Summarize the engine's home-season rules without exposing chart data."""
+        return asdict(rules_summary(season, game_type))
 
     @app.get("/api/games/{game_id}/charts")
     def game_charts(game_id: str, side: HumanSide) -> dict[str, object]:

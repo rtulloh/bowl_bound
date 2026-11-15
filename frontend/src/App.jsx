@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { coachStep, decide, gameAction, kick, listTeams, newGame, snap } from './api'
+import { coachStep, decide, gameAction, getRules, kick, listTeams, newGame, snap } from './api'
 import FootballField from './components/FootballField'
 import PlayLog from './components/PlayLog'
 import PlaySelector from './components/PlaySelector'
@@ -14,12 +14,15 @@ import CoinToss from './components/CoinToss'
 import DiceRoll from './components/DiceRoll'
 import HalftimeReview from './components/HalftimeReview'
 import ChartViewer from './components/ChartViewer'
+import MatchupBuilder, { initialSides } from './components/MatchupBuilder'
 
 export default function App() {
   const [teams, setTeams] = useState(null)
-  const [home, setHome] = useState('')
-  const [away, setAway] = useState('')
+  const [home, setHome] = useState({ season: '', teamId: '' })
+  const [away, setAway] = useState({ season: '', teamId: '' })
+
   const [gameType, setGameType] = useState('regular')
+  const [rules, setRules] = useState(null)
   const [difficulty, setDifficulty] = useState('medium')
   const [game, setGame] = useState(null)
   const [offense, setOffense] = useState('')
@@ -52,14 +55,23 @@ export default function App() {
       .then((data) => {
         setTeams(data.teams)
         if (data.teams.length) {
-          const sampleHome = data.teams.find((t) => t.id === "2007/cedar-valley")
-          const sampleAway = data.teams.find((t) => t.id === "2007/harbor-tech")
-          setHome((sampleHome || data.teams[0]).id)
-          setAway((sampleAway || data.teams[data.teams.length > 1 ? 1 : 0]).id)
+          const sides = initialSides(data.teams)
+          setHome(sides.home)
+          setAway(sides.away)
         }
       })
       .catch(() => setError('The Bowl Bound server is not reachable.'))
   }, [])
+
+  useEffect(() => {
+    if (!home.season) { setRules(null); return }
+    setRules(null)
+    let current = true
+    getRules(home.season, gameType)
+      .then((data) => { if (current) setRules(data) })
+      .catch(() => { if (current) setRules(null) })
+    return () => { current = false }
+  }, [home.season, gameType])
 
   const apply = (result) => {
     setOffense('')
@@ -91,7 +103,7 @@ export default function App() {
   }
   const manualOrControlled = (fn, ...args) => control === 'manual' ? fn(...args) : fn(...args, control)
   const start = () => run(async () => {
-    const payload = { home, away, mode: 'regulation', game_type: gameType, difficulty }
+    const payload = { home: home.teamId, away: away.teamId, mode: 'regulation', game_type: gameType, difficulty }
     const created = await (control === 'manual' ? newGame(payload) : newGame(payload, control))
     setRevealedToss(null)
     setGame(created)
@@ -180,16 +192,21 @@ export default function App() {
         {teams && teams.length === 0 && <div role="status">No teams were found in the seasons folder.</div>}
         {teams && teams.length > 0 && (
           <div className="space-y-3">
-            <label className="block">Home
-              <select className="block w-full text-black p-1" value={home} onChange={(e) => setHome(e.target.value)} data-testid="home-select">
-                {teams.map((t) => <option key={t.id} value={t.id}>{t.name} ({t.season})</option>)}
-              </select>
-            </label>
-            <label className="block">Away
-              <select className="block w-full text-black p-1" value={away} onChange={(e) => setAway(e.target.value)} data-testid="away-select">
-                {teams.map((t) => <option key={t.id} value={t.id}>{t.name} ({t.season})</option>)}
-              </select>
-            </label>
+            <MatchupBuilder
+              teams={teams}
+              home={home}
+              away={away}
+              onHomeChange={setHome}
+              onAwayChange={setAway}
+              onSwap={() => { setHome(away); setAway(home) }}
+              onUseSameSeason={() => {
+                const options = teams.filter((t) => String(t.season) === home.season)
+                const carried = options.find((t) => t.id.split('/')[1] === away.teamId.split('/')[1])
+                setAway({ season: home.season, teamId: carried ? carried.id : '' })
+              }}
+              disabled={busy}
+              rules={rules && String(rules.season) === home.season && rules.game_type === gameType ? rules : null}
+            >
             <label className="block">Game type
               <select className="block w-full text-black p-1" value={gameType} onChange={(e) => setGameType(e.target.value)}>
                 <option value="regular">Regular season</option>
@@ -204,7 +221,8 @@ export default function App() {
               </select>
             </label>
             <p className="text-sm">Difficulty changes coaching decisions, never dice odds.</p>
-            <button type="button" className="play-button text-black" disabled={busy} onClick={start} data-testid="start-game">Start game</button>
+            <button type="button" className="play-button text-black" disabled={busy || !home.teamId || !away.teamId} onClick={start} data-testid="start-game">Start game</button>
+            </MatchupBuilder>
           </div>
         )}
         {saves}

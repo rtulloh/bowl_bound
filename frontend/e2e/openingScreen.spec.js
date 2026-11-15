@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { selectTeams } from './teamSetup.js'
 
 for (const [width, height, decision] of [[1280, 720, 'kick'], [390, 700, 'receive']]) {
   test('opening toss precedes play with visible choices and kickoff, width=' + width, async ({ page }) => {
@@ -8,8 +9,7 @@ for (const [width, height, decision] of [[1280, 720, 'kick'], [390, 700, 'receiv
     })
     await page.goto('/')
     await page.getByLabel('Control mode').selectOption('manual')
-    await page.getByTestId('home-select').selectOption('2002/alpha-tech')
-    await page.getByTestId('away-select').selectOption('2002/beta-state')
+    await selectTeams(page, '2002/alpha-tech', '2002/beta-state')
     const created = page.waitForResponse((r) => r.url().endsWith('/api/games') && r.request().method() === 'POST')
     await page.getByTestId('start-game').click()
     const original = await (await created).json()

@@ -1,6 +1,12 @@
+import { realpathSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { defineConfig } from '@playwright/test'
 
-const SEASONS = process.env.BB_E2E_SEASONS || '/tmp/bowl-bound-e2e-seasons'
+// Resolve the real temp directory: on macOS /tmp and $TMPDIR are symlinks, and
+// the sample installer refuses symlinked destinations.
+const SEASONS = process.env.BB_E2E_SEASONS
+  || join(realpathSync(tmpdir()), 'bowl-bound-e2e-seasons')
 const PORT = 8123
 // Optional: BB_E2E_CHANNEL=chrome uses an installed Google Chrome instead of Playwright's Chromium.
 const CHANNEL = process.env.BB_E2E_CHANNEL || undefined

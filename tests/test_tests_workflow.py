@@ -85,7 +85,7 @@ def test_manual_native_workflow_reuses_tests_for_the_same_requested_commit() -> 
 def test_both_workflows_retain_exact_pins_and_propagate_failures_without_publication() -> None:
     for name in ("tests.yml", "build.yml"):
         data = workflow(name)
-        assert data["env"]["PYTHON_VERSION"] == "3.13.17"
+        assert data["env"]["PYTHON_VERSION"] == "3.12.16"
         assert data["env"]["NODE_VERSION"] == "24.22.1"
         text = (ROOT / ".github/workflows" / name).read_text()
         assert "continue-on-error" not in text

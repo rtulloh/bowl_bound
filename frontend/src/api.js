@@ -11,6 +11,7 @@ const post = (path, payload) =>
   request(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
 
 export const listTeams = () => request('/api/teams')
+export const getRules = (season, gameType) => request(`/api/rules?season=${season}&game_type=${gameType}`)
 const controlled = (path, humanSide) => humanSide && humanSide !== 'manual' ? `${path}?human_side=${humanSide}` : path
 export const newGame = (payload, humanSide) => post(controlled('/api/games', humanSide), payload)
 export const getGame = (gameId, humanSide) => request(controlled(`/api/games/${gameId}`, humanSide))
