@@ -19,6 +19,13 @@ that any Milestone 44 acceptance criterion is complete.
   [mockups/cross-season-setup.html](mockups/cross-season-setup.html).
 - [UI-009](issues/UI/UI-009.md): season-qualified in-game team labels, which
   cross-season matchups make necessary for same-school/different-year games.
+- [DATA-066](issues/DATA/DATA-066.md): add the 52 generated 2002 teams so
+  cross-season play has a second full cohort. **Blocked:** the existing 2002
+  bundles came from the older `college-chartgen-v1` pipeline and fail the
+  release audit (0/52 pass tactical contrast; two teams have fully blank
+  defensive charts). They must be regenerated with the approved
+  `bb-chartgen-budget-alpha-v1` exporter before they can be pinned. Only
+  generated charts are in scope; the PDF-imported 2002 teams stay private.
 
 The engine already accepts independent season-qualified team IDs and derives
 rules from the designated home team's season; see UI-070's verification comment.
@@ -30,8 +37,8 @@ extension and is not part of 1.1.0 unless separately approved.
 
 - Milestone 43 persistent played-season statistics ([DATA-065](issues/DATA/DATA-065.md)).
 - Milestone 45 simulation-improvement measurement ([DEV-080](issues/DEV/DEV-080.md)).
-- New seasons, new chart generation, chart-rights changes or private-data
-  distribution.
+- New seasons beyond the 2002 generated cohort tracked by DATA-066, other new
+  chart generation, chart-rights changes or private-data distribution.
 - Version metadata changes, native builds, tags or publication. Those happen in
   a later release-preparation phase after Milestone 44 acceptance.
 
