@@ -30,7 +30,9 @@ You can optionally [import your own authorized charts](importing-teams.md) separ
    regulation/overtime profile and applies to both sides. A banner above
    **Start game** summarizes the rules that will apply. If the home season is
    outside the supported range, the banner names the range and Start stays
-   disabled until you choose a supported season.
+   disabled until you choose a supported season. If the rules summary cannot be
+   loaded, Start stays disabled and a **Retry rules** button re-requests it
+   without changing your selections.
    If some team folders could not be read, an **Unavailable teams** note lists
    them by season; they are excluded from selection rather than hidden.
 3. Choose Human home / computer away (default), Human away / computer home,

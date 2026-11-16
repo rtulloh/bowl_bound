@@ -1,6 +1,6 @@
 # Cross-season team selection — web UI design
 
-Status: design proposal, 2026-11-15.
+Status: implemented through phase 4, 2026-11-16.
 Tickets: [UI-071](issues/UI/UI-071.md) (this design), [UI-070](issues/UI/UI-070.md)
 (cross-year matchup behavior and home-season rules), [UI-009](issues/UI/UI-009.md)
 (season-qualified in-game identities).
@@ -274,6 +274,13 @@ Milestone 44. Behavior changes follow the project's test-first rule.
    different-year, swapped home/away, human/manual modes, chart identity and
    save/load. Assert actual engine behavior across a supported rules boundary,
    not only rendered text. Update setup/player documentation.
+
+   Implemented in `frontend/e2e/crossSeason.spec.js` (8 cases). The rules-boundary
+   case starts a 2007-home/2002-away game, drives the real opening kickoff and
+   asserts the engine reports the receiving spot at `own 30` from the 2007
+   kickoff rule rather than the away team's 2002 rule. Save/load round-trips both
+   season-qualified identities. `docs/playing.md` documents the picker, rules
+   banner and Retry rules recovery.
 
 ## Non-goals
 
