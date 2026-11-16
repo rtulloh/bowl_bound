@@ -3,6 +3,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import App from '../App'
 import * as api from '../api'
 import { view } from './fixtures'
+import { waitForStartReady } from './startGame'
 
 vi.mock('../api', () => ({ listTeams: vi.fn(), getRules: vi.fn(), newGame: vi.fn(), snap: vi.fn(), decide: vi.fn(), kick: vi.fn(), gameAction: vi.fn(), coachStep: vi.fn(), getGame: vi.fn(), loadGame: vi.fn(), saveGame: vi.fn() }))
 const pending = { chooser: 'Alpha Tech', choices: [
@@ -25,7 +26,7 @@ afterEach(() => vi.unstubAllGlobals())
 async function start(mode = 'home', role = 'decision') {
   api.newGame.mockResolvedValue({ game_id: 'game', seed: 7, revision: 0, view: opening(), turn: turn(role) })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: mode } })
   fireEvent.click(screen.getByTestId('start-game'))
   await screen.findByTestId('opening-screen')
@@ -77,7 +78,7 @@ it('keeps a failed toss decision on its screen with retry and game management av
   fireEvent.click(screen.getByText('Game', { selector: 'summary' }))
   expect(screen.getByRole('button', { name: 'Save game' })).toBeEnabled()
   fireEvent.click(screen.getByTestId('new-drive'))
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
 })
 it('advances a computer-owned toss without exposing its decision controls', async () => {
   let finish
@@ -95,7 +96,7 @@ it('advances a computer-owned toss without exposing its decision controls', asyn
 it('loads an unresolved opening toss back into the separate screen without deciding it', async () => {
   api.loadGame.mockResolvedValue({ game_id: 'loaded', seed: 7, revision: 0, view: opening(), turn: turn('decision') })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Load saved game'), { target: { files: [{ size: 20, text: async () => '{opaque}' }] } })
   await screen.findByTestId('opening-screen')
   expectOnlyOpening()

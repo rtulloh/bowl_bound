@@ -3,7 +3,12 @@
 from dataclasses import dataclass
 
 from .overtime import GameType, overtime_profile
-from .special_teams import free_kick_touchback_spot, kickoff_spot
+from .special_teams import (
+    MAX_SUPPORTED_SEASON,
+    MIN_SUPPORTED_SEASON,
+    free_kick_touchback_spot,
+    kickoff_spot,
+)
 
 
 @dataclass(frozen=True)
@@ -25,11 +30,20 @@ def rules_summary(season: int, game_type: str) -> RulesSummary:
         spot = kickoff_spot(season)
         touchback = free_kick_touchback_spot(season)
     except ValueError:
+        if game_type not in {member.value for member in GameType}:
+            message = f"{game_type!r} is not a supported game type."
+        elif not MIN_SUPPORTED_SEASON <= season <= MAX_SUPPORTED_SEASON:
+            message = (
+                f"{season} home-season rules are not supported; "
+                f"choose a season between {MIN_SUPPORTED_SEASON} and {MAX_SUPPORTED_SEASON}."
+            )
+        else:
+            message = "These home-season rules are not supported."
         return RulesSummary(
             season,
             game_type,
             False,
-            "These home-season rules are not supported.",
+            message,
             (),
         )
     if not profile.enabled:

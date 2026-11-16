@@ -63,6 +63,8 @@ export default function MatchupBuilder({
   onUseSameSeason,
   disabled,
   rules,
+  rulesError,
+  onRetryRules,
   children,
 }) {
   const [notice, setNotice] = useState({ home: '', away: '' })
@@ -139,14 +141,29 @@ export default function MatchupBuilder({
           Use {home.season} for both teams
         </button>
       )}
+      {rulesError && (
+        <div className="rounded border border-red-700 bg-red-950/40 p-3 text-sm" role="alert" data-testid="rules-error">
+          <p>{rulesError}</p>
+          {onRetryRules && (
+            <button type="button" className="mt-2 underline" onClick={onRetryRules} data-testid="retry-rules">
+              Retry rules
+            </button>
+          )}
+        </div>
+      )}
       {rules && (
         <section
           className={`rounded border p-3 text-sm ${rules.supported ? 'border-green-700 bg-green-950/40' : 'border-red-700 bg-red-950/40'}`}
+          role={rules.supported ? undefined : 'alert'}
           aria-live="polite"
           data-testid="rules-banner"
         >
           <p className="font-bold">{rules.summary}</p>
-          <p className="mt-1">Kickoff placement, touchbacks, timing and overtime follow the home season. Both teams keep their own charts and rosters.</p>
+          {rules.supported ? (
+            <p className="mt-1">Kickoff placement, touchbacks, timing and overtime follow the home season. Both teams keep their own charts and rosters.</p>
+          ) : (
+            <p className="mt-1">Choose a different home season to start a game.</p>
+          )}
           {rules.details?.length > 0 && (
             <ul className="mt-2 flex flex-wrap gap-2">
               {rules.details.map((detail) => (

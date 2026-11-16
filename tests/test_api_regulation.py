@@ -85,6 +85,9 @@ def test_rules_summary_endpoint_uses_engine_boundaries(tmp_path: Path) -> None:
     unsupported = client.get("/api/rules", params={"season": 2024})
     assert unsupported.status_code == 200
     assert unsupported.json()["supported"] is False
+    # The API must pass through the engine's actionable message unchanged.
+    assert "2024" in unsupported.json()["summary"]
+    assert "1940" in unsupported.json()["summary"]
 
 
 def test_bounds_declaration_api_uses_engine_actions_and_one_play_timing(tmp_path: Path) -> None:

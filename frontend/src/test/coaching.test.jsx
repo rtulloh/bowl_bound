@@ -4,6 +4,7 @@ import App from '../App'
 import DiceRoll from '../components/DiceRoll'
 import * as api from '../api'
 import { view, report } from './fixtures'
+import { waitForStartReady } from './startGame'
 
 vi.mock('../api', () => ({ listTeams: vi.fn(), getRules: vi.fn(), newGame: vi.fn(), snap: vi.fn(), decide: vi.fn(), kick: vi.fn(), gameAction: vi.fn(), coachStep: vi.fn(), getGame: vi.fn(), loadGame: vi.fn(), saveGame: vi.fn() }))
 const turn = (role, overrides = {}) => ({
@@ -19,7 +20,7 @@ beforeEach(() => {
 async function start(role, mode = 'home') {
   api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, revision: 0, view: view(), turn: turn(role) })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: mode } })
   fireEvent.click(screen.getByTestId('start-game'))
 }
@@ -42,7 +43,7 @@ it('preserves a collapsed play history when the human turn changes from offense 
   api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, revision: 0, view: view({ log: [report()] }), turn: turn('offense') })
   api.coachStep.mockResolvedValue({ revision: 1, view: view({ log: [report(), report({ number: 2, description: 'second play' })] }), turn: turn('defense') })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'home' } })
   fireEvent.click(screen.getByTestId('start-game'))
   const history = await screen.findByTestId('play-history')
@@ -85,7 +86,7 @@ it('stops automatic requests on error and offers retry only while an error is sh
 it('does not auto-play a final game', async () => {
   api.newGame.mockResolvedValue({ game_id: 'cpu', view: view({ finished: true }), turn: turn('computer') })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'home' } })
   fireEvent.click(screen.getByTestId('start-game'))
   await screen.findByTestId('session-status')
@@ -114,7 +115,7 @@ it('never shows the opposing timeout control in optional clock modifiers', async
     turn: turn('offense', { pending: { chooser: 'Alpha Tech', choices: own } }),
   })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'home' } })
   fireEvent.click(screen.getByTestId('start-game'))
   expect(await screen.findByRole('radio', { name: 'Home timeout' })).toBeInTheDocument()
@@ -136,7 +137,7 @@ it('uses the explicitly selected coach mode on load without an in-game mode sele
 it('loads in manual mode when explicitly selected at setup', async () => {
   api.loadGame.mockResolvedValue({ game_id: 'loaded', seed: 7, revision: 0, view: view() })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
   fireEvent.change(screen.getByLabelText('Load saved game'), { target: { files: [{ size: 20, text: async () => '{opaque}' }] } })
   await screen.findByTestId('defense-play-a')
@@ -190,7 +191,7 @@ it('does not silently retry a failed computer turn when saving the stopped game'
 it('starts human home/computer away without changing the default selection', async () => {
   api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, revision: 0, view: view(), turn: turn('offense') })
   render(<App />)
-  fireEvent.click(await screen.findByTestId('start-game'))
+  fireEvent.click(await waitForStartReady())
   await screen.findByTestId('offense-play-1')
   expect(api.newGame).toHaveBeenCalledWith({ home: 'a', away: 'b', mode: 'regulation', game_type: 'regular', difficulty: 'medium' }, 'home')
   expect(screen.queryByTestId('defense-plays')).toBeNull()
@@ -199,7 +200,7 @@ it('starts human home/computer away without changing the default selection', asy
 it('loads with human home controls by default without changing the selection', async () => {
   api.loadGame.mockResolvedValue({ game_id: 'loaded', seed: 7, revision: 1, view: view(), turn: turn('defense') })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Load saved game'), { target: { files: [{ size: 20, text: async () => '{opaque}' }] } })
   await screen.findByTestId('defense-play-a')
   expect(api.loadGame).toHaveBeenCalledWith('{opaque}', 'home')
@@ -212,7 +213,7 @@ it.each([['scrimmage', 'offense'], ['scrimmage', 'defense'], ['clock_choice', 'o
     view: view({ phase, clock_optional: phase === 'clock_choice' }), turn: turn(role),
   })
   render(<App />)
-  fireEvent.click(await screen.findByTestId('start-game'))
+  fireEvent.click(await waitForStartReady())
   expect(await screen.findByTestId('session-status')).toHaveClass('sr-only')
   expect(screen.getByText('Choose your play to resolve it. Computer calls stay hidden until resolution.')).toBeVisible()
 })
@@ -222,7 +223,7 @@ it.each([['kickoff', 'offense', false], ['conversion_choice', 'decision', false]
     view: view({ phase, finished }), turn: turn(role, { status: 'Engine context' }),
   })
   render(<App />)
-  fireEvent.click(await screen.findByTestId('start-game'))
+  fireEvent.click(await waitForStartReady())
   const status = await screen.findByTestId('session-status')
   expect(status).not.toHaveClass('sr-only')
   expect(status).toHaveTextContent('Engine context')
@@ -231,7 +232,7 @@ it.each([['kickoff', 'offense', false], ['conversion_choice', 'decision', false]
 it.each(['easy', 'medium', 'hard'])('submits %s difficulty without adding a browser helper', async (difficulty) => {
   api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, view: view(), turn: turn('offense') })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   const select = screen.getByLabelText('Difficulty')
   expect(select).toHaveValue('medium')
   expect(Array.from(select.options, (option) => option.textContent)).toEqual(['Easy (0.3)', 'Medium (0.5)', 'Hard (0.7)'])
@@ -246,7 +247,7 @@ it('displays and clears fourth-down guidance supplied by the engine without deri
   api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, revision: 0, view: view({ fourth_down_guidance: guidance }), turn: turn('offense') })
   api.coachStep.mockResolvedValue({ revision: 1, view: view({ fourth_down_guidance: null }), turn: turn('offense') })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'home' } })
   fireEvent.click(screen.getByTestId('start-game'))
   expect(await screen.findByText(guidance.label)).toBeVisible()
@@ -268,7 +269,7 @@ it('keeps the engine conversion review visible until Continue before an automati
   api.coachStep.mockResolvedValue({ report: report({ number: 3, commentary: 'Beta State kickoff; Alpha Tech returns.' }),
     view: view(), turn: turn('defense') })
   render(<App />)
-  fireEvent.click(await screen.findByTestId('start-game'))
+  fireEvent.click(await waitForStartReady())
   const panel = await screen.findByRole('region', { name: 'Two-point result' })
   expect(panel).toHaveTextContent(result.commentary)
   await act(async () => { await new Promise((resolve) => setTimeout(resolve, 350)) })
@@ -287,7 +288,7 @@ it('renders the shared halftime recap verbatim and holds computer kickoff until 
   api.gameAction.mockResolvedValue({ revision: 21, view: view({ phase: 'kickoff', review: null }), turn: turn('computer') })
   api.coachStep.mockResolvedValue({ view: view(), turn: turn('defense') })
   render(<App />)
-  fireEvent.click(await screen.findByTestId('start-game'))
+  fireEvent.click(await waitForStartReady())
   const recap = await screen.findByRole('region', { name: 'HALFTIME' })
   for (const line of review.lines) expect(recap).toHaveTextContent(line)
   await act(async () => { await new Promise((resolve) => setTimeout(resolve, 350)) })

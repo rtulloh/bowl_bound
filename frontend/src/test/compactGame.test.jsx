@@ -3,6 +3,7 @@ import { beforeEach, expect, it, vi } from 'vitest'
 import App from '../App'
 import * as api from '../api'
 import { view, report } from './fixtures'
+import { waitForStartReady } from './startGame'
 
 vi.mock('../api', () => ({ listTeams: vi.fn(), getRules: vi.fn(), newGame: vi.fn(), snap: vi.fn(), decide: vi.fn(), kick: vi.fn(), gameAction: vi.fn(), coachStep: vi.fn(), getGame: vi.fn(), loadGame: vi.fn(), saveGame: vi.fn() }))
 beforeEach(() => {
@@ -14,7 +15,7 @@ beforeEach(() => {
 })
 async function start() {
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
   fireEvent.click(screen.getByTestId('start-game'))
   await screen.findByTestId('offense-play-1')
@@ -117,7 +118,7 @@ it('keeps game management in a collapsed header menu, supports keyboard dismissa
   expect(menu).toHaveFocus()
   fireEvent.click(menu)
   fireEvent.click(screen.getByTestId('new-drive'))
-  expect(await screen.findByTestId('start-game')).toBeInTheDocument()
+  expect(await waitForStartReady()).toBeInTheDocument()
   expect(screen.getByLabelText('Control mode')).toBeInTheDocument()
 })
 
@@ -168,7 +169,7 @@ it('executes an offered elected safety from the play panel', async () => {
 
 it('defaults to human home/computer away while keeping two-sided manual play last', async () => {
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   const modes = screen.getByLabelText('Control mode')
   expect(Array.from(modes.options, (option) => option.value)).toEqual(['home', 'away', 'manual'])
   expect(modes).toHaveValue('home')

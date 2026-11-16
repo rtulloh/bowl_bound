@@ -3,6 +3,7 @@ import { beforeEach, expect, it, vi } from 'vitest'
 import App from '../App'
 import * as api from '../api'
 import { report, view } from './fixtures'
+import { waitForStartReady } from './startGame'
 
 vi.mock('../api', () => ({
   listTeams: vi.fn(), getRules: vi.fn(), newGame: vi.fn(), decide: vi.fn(), snap: vi.fn(), kick: vi.fn(), gameAction: vi.fn(), coachStep: vi.fn(),
@@ -11,7 +12,13 @@ vi.mock('../api', () => ({
 beforeEach(() => {
   vi.resetAllMocks()
   api.listTeams.mockResolvedValue({ teams: [{ id: 'a', name: 'Alpha', season: 2002 }, { id: 'b', name: 'Beta', season: 2002 }] })
-  api.getRules.mockResolvedValue({ season: 2002, game_type: 'regular', supported: true, summary: '2002 home-season rules govern this game.', details: [] })
+  api.getRules.mockImplementation((season, gameType) => Promise.resolve({
+    season: Number(season),
+    game_type: gameType,
+    supported: true,
+    summary: `${season} home-season rules govern this game.`,
+    details: [],
+  }))
 })
 
 it('keeps timeout selection serialized with defense and displays prior and selected-play timing from the engine', async () => {
@@ -33,7 +40,7 @@ it('keeps timeout selection serialized with defense and displays prior and selec
     turn: { ...human, pending: null },
   })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'away' } })
   fireEvent.click(screen.getByTestId('start-game'))
   expect(await screen.findByText(priorTiming)).toBeVisible()
@@ -69,7 +76,7 @@ it('allows the next snap without a separate clock request', async () => {
   }) })
   api.snap.mockResolvedValue({ report: report(), view: view({ pending: null }) })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
   fireEvent.click(screen.getByTestId('start-game'))
   expect(await screen.findByTestId('clock-controls')).toBeInTheDocument()
@@ -89,7 +96,7 @@ it('keeps genuine football decisions blocking', async () => {
     phase: 'scrimmage', pending: { choices: [{ id: 'accept:0:previous', label: 'Accept foul', enabled: true }] },
   }) })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
   fireEvent.click(screen.getByTestId('start-game'))
   expect(await screen.findByTestId('penalty-choices')).toBeInTheDocument()
@@ -101,9 +108,11 @@ it('keeps genuine football decisions blocking', async () => {
 it('sends the selected game type without choosing an overtime era in the UI', async () => {
   api.newGame.mockResolvedValue({ game_id: 'synthetic', seed: 1, view: view() })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
   fireEvent.change(screen.getByLabelText('Game type'), { target: { value: 'postseason' } })
+  // Start stays disabled until the postseason rules summary arrives.
+  await waitFor(() => expect(screen.getByTestId('start-game')).toBeEnabled())
   fireEvent.click(screen.getByTestId('start-game'))
   await waitFor(() => expect(api.newGame).toHaveBeenCalledWith({ home: 'a', away: 'b', mode: 'regulation', game_type: 'postseason', difficulty: 'medium' }))
 })
@@ -118,7 +127,7 @@ it('shows engine-offered next-play timeout actions beside existing post-play cho
   api.newGame.mockResolvedValue({ game_id: 'synthetic', seed: 1, view: before })
   api.gameAction.mockResolvedValue({ report: null, view: { ...before, armed_timeout: 'home', armed_timeout_label: 'Home timeout selected for the next play; that play takes 10 seconds.', game_actions: [{ key: 'timeout:home', label: 'Cancel Home timeout' }] } })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
   fireEvent.click(screen.getByTestId('start-game'))
   expect(await screen.findByRole('radio', { name: 'Prior play timeout' })).not.toBeChecked()

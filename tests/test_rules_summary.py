@@ -30,7 +30,13 @@ def test_unsupported_season_is_explicit() -> None:
     summary = rules_summary(2024, "regular")
     assert not summary.supported
     assert summary.details == ()
+    # The message must name the season and the supported range so the player
+    # knows why Start is unavailable.
+    assert "2024" in summary.summary
+    assert "1940" in summary.summary and "2023" in summary.summary
 
 
 def test_unknown_game_type_is_unsupported() -> None:
-    assert not rules_summary(2007, "exhibition").supported
+    summary = rules_summary(2007, "exhibition")
+    assert not summary.supported
+    assert "exhibition" in summary.summary

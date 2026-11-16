@@ -5,6 +5,7 @@ import PenaltyChoices from '../components/PenaltyChoices'
 import PlaySelector from '../components/PlaySelector'
 import { report, stateView, view } from './fixtures'
 import * as api from '../api'
+import { waitForStartReady } from './startGame'
 
 vi.mock('../api', () => ({ listTeams: vi.fn(), getRules: vi.fn(), newGame: vi.fn(), snap: vi.fn(), decide: vi.fn(), kick: vi.fn(), gameAction: vi.fn() }))
 beforeEach(() => {
@@ -32,7 +33,7 @@ it('clears both selections after possession changes and names the selecting team
     state: stateView({ possession: 'away', possession_name: 'Beta State' }),
   }) })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
   fireEvent.click(screen.getByTestId('start-game'))
   fireEvent.click(await screen.findByTestId('offense-play-1'))
@@ -52,7 +53,7 @@ it('keeps hurry mode enabled, using only offered legal hurry choices', async () 
   api.decide.mockResolvedValue({ report: null, view: view() })
   api.snap.mockResolvedValue({ report: report(), view: view() })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
   fireEvent.click(screen.getByTestId('start-game'))
   fireEvent.click(await screen.findByRole('checkbox', { name: 'Enable/Disable Hurry-Up' }))
@@ -72,7 +73,7 @@ it('uses the engine toss winner in the coin presentation without generating a wi
     pending: { chooser: 'Beta State', choices: [{ id: 'toss:receive', label: 'Receive', enabled: true }] } }) })
   api.decide.mockResolvedValue({ report: null, view: view() })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
   fireEvent.click(screen.getByTestId('start-game'))
   const receive = await screen.findByRole('button', { name: 'Receive' }, { timeout: 2000 })
@@ -89,7 +90,7 @@ it('retains hurry mode through pending decisions and possession changes, but sta
   } }) })
   api.decide.mockResolvedValue({ report: report(), view: view({ state: stateView({ possession: 'away', possession_name: 'Beta State' }) }) })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'manual' } })
   fireEvent.click(screen.getByTestId('start-game'))
   fireEvent.click(await screen.findByRole('checkbox', { name: 'Enable/Disable Hurry-Up' }))
@@ -103,7 +104,7 @@ it('retains hurry mode through pending decisions and possession changes, but sta
   expect(screen.getByRole('checkbox', { name: 'Enable/Disable Hurry-Up' })).toBeChecked()
   fireEvent.click(screen.getByText('Game', { selector: 'summary' }))
   fireEvent.click(screen.getByTestId('new-drive'))
-  fireEvent.click(await screen.findByTestId('start-game'))
+  fireEvent.click(await waitForStartReady())
   expect(await screen.findByRole('checkbox', { name: 'Enable/Disable Hurry-Up' })).not.toBeChecked()
   expect(screen.queryByTestId('snap')).toBeNull()
   expect(screen.getByTestId('offense-play-1')).toHaveAttribute('aria-pressed', 'false')
@@ -120,7 +121,7 @@ it('defaults to public fictional teams when they share a catalog with historical
     { id: '2007/harbor-tech', name: 'Harbor Tech', season: 2007 },
   ] })
   render(<App />)
-  await screen.findByTestId('start-game')
+  await waitForStartReady()
   expect(screen.getByTestId('home-select')).toHaveValue('2007/cedar-valley')
   expect(screen.getByTestId('away-select')).toHaveValue('2007/harbor-tech')
 })

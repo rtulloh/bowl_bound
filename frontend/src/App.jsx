@@ -15,14 +15,18 @@ import DiceRoll from './components/DiceRoll'
 import HalftimeReview from './components/HalftimeReview'
 import ChartViewer from './components/ChartViewer'
 import MatchupBuilder, { initialSides } from './components/MatchupBuilder'
+import CatalogProblems from './components/CatalogProblems'
 
 export default function App() {
   const [teams, setTeams] = useState(null)
+  const [catalogProblems, setCatalogProblems] = useState([])
   const [home, setHome] = useState({ season: '', teamId: '' })
   const [away, setAway] = useState({ season: '', teamId: '' })
 
   const [gameType, setGameType] = useState('regular')
   const [rules, setRules] = useState(null)
+  const [rulesError, setRulesError] = useState('')
+  const [rulesAttempt, setRulesAttempt] = useState(0)
   const [difficulty, setDifficulty] = useState('medium')
   const [game, setGame] = useState(null)
   const [offense, setOffense] = useState('')
@@ -54,6 +58,7 @@ export default function App() {
     listTeams()
       .then((data) => {
         setTeams(data.teams)
+        setCatalogProblems(data.problems || [])
         if (data.teams.length) {
           const sides = initialSides(data.teams)
           setHome(sides.home)
@@ -64,14 +69,19 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    if (!home.season) { setRules(null); return }
+    if (!home.season) { setRules(null); setRulesError(''); return }
     setRules(null)
+    setRulesError('')
     let current = true
     getRules(home.season, gameType)
       .then((data) => { if (current) setRules(data) })
-      .catch(() => { if (current) setRules(null) })
+      .catch((error) => {
+        if (!current) return
+        setRules(null)
+        setRulesError(error?.message || 'The rules summary could not be loaded.')
+      })
     return () => { current = false }
-  }, [home.season, gameType])
+  }, [home.season, gameType, rulesAttempt])
 
   const apply = (result) => {
     setOffense('')
@@ -102,6 +112,11 @@ export default function App() {
     }
   }
   const manualOrControlled = (fn, ...args) => control === 'manual' ? fn(...args) : fn(...args, control)
+  // Start requires a rules response that matches the current selection and
+  // reports support, so an unsupported matchup cannot be launched while the
+  // summary is still loading or after it failed.
+  const currentRules = rules && String(rules.season) === home.season && rules.game_type === gameType ? rules : null
+  const rulesReady = Boolean(currentRules?.supported)
   const start = () => run(async () => {
     const payload = { home: home.teamId, away: away.teamId, mode: 'regulation', game_type: gameType, difficulty }
     const created = await (control === 'manual' ? newGame(payload) : newGame(payload, control))
@@ -190,6 +205,7 @@ export default function App() {
         {controls}
         {error && <div className="text-red-300 mb-3" role="alert">{error}</div>}
         {teams && teams.length === 0 && <div role="status">No teams were found in the seasons folder.</div>}
+        <CatalogProblems problems={catalogProblems} />
         {teams && teams.length > 0 && (
           <div className="space-y-3">
             <MatchupBuilder
@@ -205,7 +221,9 @@ export default function App() {
                 setAway({ season: home.season, teamId: carried ? carried.id : '' })
               }}
               disabled={busy}
-              rules={rules && String(rules.season) === home.season && rules.game_type === gameType ? rules : null}
+              rules={currentRules}
+              rulesError={rulesError}
+              onRetryRules={() => setRulesAttempt((attempt) => attempt + 1)}
             >
             <label className="block">Game type
               <select className="block w-full text-black p-1" value={gameType} onChange={(e) => setGameType(e.target.value)}>
@@ -221,7 +239,7 @@ export default function App() {
               </select>
             </label>
             <p className="text-sm">Difficulty changes coaching decisions, never dice odds.</p>
-            <button type="button" className="play-button text-black" disabled={busy || !home.teamId || !away.teamId} onClick={start} data-testid="start-game">Start game</button>
+            <button type="button" className="play-button text-black" disabled={busy || !home.teamId || !away.teamId || !rulesReady} onClick={start} data-testid="start-game">Start game</button>
             </MatchupBuilder>
           </div>
         )}

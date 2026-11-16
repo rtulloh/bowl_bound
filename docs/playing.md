@@ -27,7 +27,12 @@ You can optionally [import your own authorized charts](importing-teams.md) separ
    **Search all seasons** lets you pick a team from another year in one step.
    Then choose Regular season or
    Postseason. The designated home team's season selects the supported
-   regulation/overtime profile and applies to both sides.
+   regulation/overtime profile and applies to both sides. A banner above
+   **Start game** summarizes the rules that will apply. If the home season is
+   outside the supported range, the banner names the range and Start stays
+   disabled until you choose a supported season.
+   If some team folders could not be read, an **Unavailable teams** note lists
+   them by season; they are excluded from selection rather than hidden.
 3. Choose Human home / computer away (default), Human away / computer home,
    or Two-sided manual play. Manual mode is local control of both sides,
    not network multiplayer or a concealed-call competitive service.
