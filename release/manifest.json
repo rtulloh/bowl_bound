@@ -684,7 +684,9 @@
     "frontend/src/components/SaveControls.jsx",
     "frontend/src/components/Scoreboard.jsx",
     "frontend/src/components/ScoringLedger.jsx",
-    "frontend/src/components/TeamStatistics.jsx"
+    "frontend/src/components/TeamStatistics.jsx",
+    "frontend/src/components/CatalogProblems.jsx",
+    "frontend/src/components/TeamPicker.jsx"
   ],
   "sample_sha256": {
     "seasons/SAMPLE-LICENSE.md": "75cb4838502ef53322cd77f97c45e202b6322b24e7f7524c2384ce923894d87a",
