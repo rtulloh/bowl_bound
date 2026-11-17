@@ -155,3 +155,25 @@ Qualifying designed-call/catch-depth observations are absent in this cohort,
 so these conditional shapes are authored assumptions. Neither a passing
 schema-three report nor successful game/replay checks establish historical
 conditional fit or complete causal/clock coverage.
+
+## Multiple independently reviewed cohorts: schema 4
+
+A release containing independently qualified seasons can wrap their complete
+existing expectation objects under `cohorts`, keyed by four-digit season, with
+outer `schema_version: 4`. These are the only two outer fields. Every generated
+season in the manifest must appear exactly once; each nested object remains a
+complete schema 1, 2 or 3 qualification with its original model identity, source
+review, baseline expectations and any conditional-depth policy. Nested envelopes
+and unknown schemas are rejected.
+
+The auditor partitions the actual generated file pins and loaded team inventory
+by season, then runs the unchanged qualification checks against each partition.
+A missing, overlapping, stale or changed cohort cannot borrow another cohort's
+success or source grant. The combined report retains separate cohort reports and
+digests alongside the complete candidate/engine identities. Source truth remains
+unverified by public CI. The exporter still produces one cohort's qualification;
+compose the reviewed objects without rewriting earlier review metadata.
+
+Native staging repeats this same combined audit against its actual selected
+bytes before freezing. This envelope adds no historical team, roster or source
+permission by itself and does not expand the runtime manifest.

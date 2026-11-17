@@ -21,7 +21,6 @@ from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 from .native_notices import add_native_notices, verify_native_notices
 from .release_package import (
     PUBLIC_FILES,
-    SAMPLES,
     ReleaseError,
     _destination,
     _plain,
@@ -155,13 +154,16 @@ def archive_bundle(
         resource = name.removeprefix("_internal/")
         approved_roster = (
             name.startswith("_internal/")
-            and name.endswith("/roster.json")
-            and resource in SAMPLES
+            and re.fullmatch(
+                r"seasons/\d{4}/[a-z0-9][a-z0-9-]*/(?:roster[.]json|roster-sources[.]md)",
+                resource,
+            )
             and resource in hashes
         )
         if (
             re.search(
-                r"(^|/)(private-data|dev-notes|opencode.json|roster.json|node_modules)(/|$)|[.]pdf$",
+                r"(^|/)(private-data|dev-notes|opencode.json|"
+                r"roster.json|roster-sources[.]md|node_modules)(/|$)|[.]pdf$",
                 name,
                 re.I,
             )

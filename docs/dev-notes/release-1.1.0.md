@@ -65,3 +65,16 @@ Follow the established release gate when this target is actually prepared:
 Documentation-only change. Ran
 `python3 -m pytest tests/test_issue_tracker.py tests/test_create_issue.py tests/test_priority_docs.py tests/test_release_player_docs.py -q`
 and `git diff --check`. These validate the backlog record, not release readiness.
+
+
+## DATA-066 candidate update, 2026-11-16
+
+The generator recovery now has a separately identified 55-team 2002 candidate,
+including reviewed season-specific commentary rosters for all 55 teams. This
+supersedes the old 52-team attempt as the candidate under review, rather than
+claiming reproduction of its missing snapshot. Existing 2007 chart pins remain
+unchanged. The [concise candidate review](data066-release-review.md) records exact
+package identity, successful mechanical/browser evidence, the failed rushing-fit
+assessment and the remaining regression/integration/distribution decisions.
+The season is not yet pinned in the public manifest; the source gate is still
+running. No native v1.1.0 artifact or release has been built or published.

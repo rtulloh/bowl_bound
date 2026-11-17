@@ -27,7 +27,7 @@ def test_three_native_builds_are_test_gated_and_do_not_publish_releases() -> Non
     assert jobs["test"]["uses"] == "./.github/workflows/tests.yml"
     assert source["permissions"] == {"contents": "read"}
     assert int(jobs["build"]["timeout-minutes"]) == 45
-    assert int(source["jobs"]["test"]["timeout-minutes"]) == 120
+    assert int(source["jobs"]["test"]["timeout-minutes"]) == 240
     for job in (jobs["build"], *source["jobs"].values()):
         for step in job["steps"]:
             if "uses" in step:

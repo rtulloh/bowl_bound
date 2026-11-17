@@ -124,7 +124,7 @@ def _sha(data: bytes) -> str:
 def _manifest(root: Path) -> dict[str, Any]:
     data = _json(root, "release/manifest.json")
     required = {"runtime", "frontend", "sample_sha256"}
-    if not required <= set(data) <= required | {"generated_sha256"}:
+    if not required <= set(data) <= required | {"generated_sha256", "roster_sha256"}:
         raise ReleaseError("Unknown or missing manifest fields")
     generated = data.get("generated_sha256", {})
     if not isinstance(generated, dict):
@@ -151,6 +151,24 @@ def _manifest(root: Path) -> dict[str, Any]:
         for files in bundles.values()
     ):
         raise ReleaseError("Every generated team must select its complete charts and provenance")
+    rosters = data.get("roster_sha256", {})
+    if not isinstance(rosters, dict):
+        raise ReleaseError("Reviewed roster hashes must be an exact file map")
+    roster_bundles: dict[str, set[str]] = {}
+    for name in rosters:
+        match = (
+            re.fullmatch(
+                r"(seasons/\d{4}/[a-z0-9][a-z0-9-]*)/(roster\.json|roster-sources\.md)",
+                name,
+            )
+            if isinstance(name, str)
+            else None
+        )
+        if match is None or name in SAMPLES or match[1] not in bundles:
+            raise ReleaseError("Roster must belong to an exactly selected generated team")
+        roster_bundles.setdefault(match[1], set()).add(match[2])
+    if any(files != {"roster.json", "roster-sources.md"} for files in roster_bundles.values()):
+        raise ReleaseError("Every reviewed roster requires its complete provenance pair")
     seen: set[str] = set()
     for group in ("runtime", "frontend"):
         if not isinstance(data[group], list) or not data[group]:
@@ -168,6 +186,7 @@ def _manifest(root: Path) -> dict[str, Any]:
                     name in PUBLIC_FILES
                     or name in SAMPLES
                     or name in generated
+                    or name in rosters
                     or (
                         len(path.parts) == 2
                         and path.parts[0] in {"bowl_bound", "backend"}
@@ -199,6 +218,24 @@ def _manifest(root: Path) -> dict[str, Any]:
             raise ReleaseError("Invalid generated team hash")
         if _sha(_read(root, name)) != digest:
             raise ReleaseError(f"Generated team hash mismatch: {name}")
+    if not set(rosters) <= set(data["runtime"]):
+        raise ReleaseError("Every pinned reviewed roster file must be selected")
+    for name, digest in rosters.items():
+        if not isinstance(digest, str) or not re.fullmatch(r"[a-f0-9]{64}", digest):
+            raise ReleaseError("Invalid reviewed roster hash")
+        if _sha(_read(root, name)) != digest:
+            raise ReleaseError(f"Reviewed roster hash mismatch: {name}")
+    if roster_bundles:
+        from bowl_bound.roster import RosterFormatError, load_roster
+
+        for team in roster_bundles:
+            _, season, slug = team.split("/")
+            try:
+                roster = load_roster(root / "seasons" / season, slug)
+            except RosterFormatError as error:
+                raise ReleaseError(f"Invalid reviewed roster: {team}") from error
+            if roster is None or not any(roster.players.values()):
+                raise ReleaseError(f"Reviewed roster contains no players: {team}")
     return data
 
 

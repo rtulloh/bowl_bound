@@ -40,6 +40,8 @@ from tools import chart_depth_release_audit as depth_release
 POLICY_SHA256 = "bbb35953b3812769bde39d5c567fc21dece00b0899cb037feaad0db7aa88280c"
 BUDGET_MODEL_SHA256 = "a46aaf838a718e012a2ce90a4438e6de475a0d810f18ab7e92d87148603a9e5f"
 BUDGET_TOOL_VERSION = "bb-chartgen-budget-alpha-v1"
+COHORT_MODEL_SHA256 = "73fe046d460fe946ece2ea7ccf766320f0119fa5e61ece50e427ce6b84622e55"
+COHORT_TOOL_VERSION = "bb-chartgen-cohort-v1"
 POLICY_YARDS = (
     (0, -2, 0, 1, 2, -1),
     (0, -2, -1, 1, 2, 0),
@@ -257,6 +259,15 @@ def _audit_candidate(root: Path) -> dict[str, Any]:
     if not pins:
         return {"passed": True, "generated_teams": 0, "scope": "no generated charts"}
     expected = _json(root / EXPECTATIONS)
+    if expected.get("schema_version") == 4:
+        return _audit_cohorts(root, pins, teams, expected)
+    return _audit_expected(root, pins, teams, expected)
+
+
+def _audit_expected(
+    root: Path, pins: dict[str, str], teams: set[str], expected: dict[str, Any]
+) -> dict[str, Any]:
+    """Apply one unchanged qualification contract to its exact catalog partition."""
     version = expected.get("schema_version")
     if (
         type(version) is not int
@@ -356,22 +367,76 @@ def _audit_candidate(root: Path) -> dict[str, Any]:
     }
 
 
+def _audit_cohorts(
+    root: Path, pins: dict[str, str], teams: set[str], expected: dict[str, Any]
+) -> dict[str, Any]:
+    """Require a separate complete qualification for every shipped season."""
+    cohorts = expected.get("cohorts")
+    seasons = {key.split("/")[0] for key in teams}
+    if (
+        set(expected) != {"schema_version", "cohorts"}
+        or type(expected.get("schema_version")) is not int
+        or not isinstance(cohorts, dict)
+        or set(cohorts) != seasons
+    ):
+        raise ChartAuditError("Cohort qualification inventory differs from shipped seasons")
+    reports = {}
+    combined = {}
+    for season in sorted(seasons):
+        record = cohorts[season]
+        if (
+            not isinstance(record, dict)
+            or type(record.get("schema_version")) is not int
+            or record["schema_version"] not in {1, 2, 3}
+        ):
+            raise ChartAuditError(f"Unsupported nested cohort qualification: {season}")
+        cohort_teams = {key for key in teams if key.startswith(f"{season}/")}
+        cohort_pins = {
+            name: digest for name, digest in pins.items() if name.startswith(f"seasons/{season}/")
+        }
+        reports[season] = _audit_expected(root, cohort_pins, cohort_teams, record)
+        reports[season]["cohort_expectations_sha256"] = _digest(record)
+        combined.update(reports[season]["teams"])
+    return {
+        "schema_version": 4,
+        "passed": True,
+        "generated_teams": len(teams),
+        "physical_defensive_mass": sum(WEIGHTS.values()),
+        "candidate_sha256": _digest(pins),
+        "expectations_sha256": _sha((root / EXPECTATIONS).read_bytes()),
+        "engine_sha256": _engine_identity(root),
+        "source_truth_revalidated": False,
+        "scope": "Exact season partitions with independently reviewed model/source contracts",
+        "limits": "PBP/OOB truth and full supplemental/game/AI qualification are separate gates.",
+        "cohorts": reports,
+        "teams": combined,
+    }
+
+
 def _is_sha(value: Any) -> bool:
     return isinstance(value, str) and re.fullmatch(r"[a-f0-9]{64}", value) is not None
 
 
 def _validate_identity(identity: Any, version: int = 1) -> None:
     fields = {"origin", "sha256", "authored_experimental", "tool_version", "source_sha256"}
+    supported = (
+        {("authored-bb-yardage-v1", POLICY_SHA256, "college-chartgen-v6")}
+        if version == 1
+        else {
+            ("authored-bb-budget-aware-v1", BUDGET_MODEL_SHA256, BUDGET_TOOL_VERSION),
+        }
+    )
+    if version == 3:
+        supported.add(("authored-bb-cohort-v1", COHORT_MODEL_SHA256, COHORT_TOOL_VERSION))
     if (
         not isinstance(identity, dict)
         or set(identity) != fields
         or _policy_identity() != POLICY_SHA256
-        or identity.get("origin")
-        != ("authored-bb-yardage-v1" if version == 1 else "authored-bb-budget-aware-v1")
-        or identity.get("sha256") != (POLICY_SHA256 if version == 1 else BUDGET_MODEL_SHA256)
+        or not any(
+            (identity.get("origin"), identity.get("sha256"), identity.get("tool_version")) == item
+            for item in supported
+        )
         or identity.get("authored_experimental") is not True
-        or identity.get("tool_version")
-        != ("college-chartgen-v6" if version == 1 else BUDGET_TOOL_VERSION)
         or not _is_sha(identity.get("source_sha256"))
     ):
         raise ChartAuditError("Missing or unsupported approved generated chart model identity")
@@ -797,7 +862,7 @@ def _build_expectations(root: Path, baseline_root: Path, source: dict[str, Any])
         else (
             2
             if isinstance(identity, dict)
-            and identity.get("origin") == "authored-bb-budget-aware-v1"
+            and identity.get("origin") in ("authored-bb-budget-aware-v1", "authored-bb-cohort-v1")
             else 1
         )
     )
@@ -872,6 +937,11 @@ def main(argv: list[str] | None = None) -> int:
                 }:
                     rejected["schema_version"] = 2
                     rejected["policy_sha256"] = BUDGET_MODEL_SHA256
+                elif (
+                    type(expected.get("schema_version")) is int and expected["schema_version"] == 4
+                ):
+                    rejected["schema_version"] = 4
+                    rejected.pop("policy_sha256")
             # Preserve identities that remain readable after the original error;
             # missing/broken inputs stay absent, never invented as zero hashes.
             with suppress(ChartAuditError, OSError):

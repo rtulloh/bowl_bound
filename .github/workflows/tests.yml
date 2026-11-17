@@ -26,9 +26,9 @@ env:
 jobs:
   test:
     runs-on: ubuntu-24.04
-    # The 5,543-test coverage suite alone took 43 minutes locally; leave room
-    # for hosted-runner variance, frontend, chart audit and real-engine browser checks.
-    timeout-minutes: 120
+    # Recovered generator refinement pushes the 6,850-test local coverage run beyond two hours.
+    # Leave bounded room for hosted variance, frontend, chart audit and browser checks.
+    timeout-minutes: 240
     steps:
       - name: Validate requested source commit
         env:
@@ -53,6 +53,7 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install -e ".[dev,web,pdf]"
+          .venv/bin/python -m pip install -e ".[generator]"
       - name: Python tests, lint and formatting
         run: |
           .venv/bin/python -m pytest --cov --cov-report=term-missing -q

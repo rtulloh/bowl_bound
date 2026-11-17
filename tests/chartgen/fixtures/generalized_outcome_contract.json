@@ -1,0 +1,442 @@
+{
+  "families": [
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "yards",
+      "procedure_admissibility": "ordinary primary coordinates exist; protection, branch and terminal closure remain context-specific",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "no_change",
+      "procedure_admissibility": "ordinary primary coordinates exist; protection, branch and terminal closure remain context-specific",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "incomplete",
+      "procedure_admissibility": "ordinary primary coordinates exist; protection, branch and terminal closure remain context-specific",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "touchdown",
+      "procedure_admissibility": "ordinary primary coordinates exist; protection, branch and terminal closure remain context-specific",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "variable_ds",
+      "procedure_admissibility": "context-specific engine verification required",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "variable_x",
+      "procedure_admissibility": "context-specific engine verification required",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "variable_t1",
+      "procedure_admissibility": "context-specific engine verification required",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "variable_t2",
+      "procedure_admissibility": "context-specific engine verification required",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "variable_t3",
+      "procedure_admissibility": "context-specific engine verification required",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "B",
+      "procedure_admissibility": "offense normal B and defensive parenthesized B admitted; no blanket supplemental/special admission",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "QR",
+      "procedure_admissibility": "ordinary primary coordinates exist; protection, branch and terminal closure remain context-specific",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "QT",
+      "procedure_admissibility": "ordinary primary coordinates exist; protection, branch and terminal closure remain context-specific",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "SOP",
+      "procedure_admissibility": "offensive play5 only; called and resolved families required",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "BLP",
+      "procedure_admissibility": "offensive play5 only; called and resolved families required",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "penalty",
+      "procedure_admissibility": "offense penalty preparation admitted; ordinary defensive Priority Chart coordinate rejected",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "fumble",
+      "procedure_admissibility": "ordinary primary coordinates exist; protection, branch and terminal closure remain context-specific",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "interception",
+      "procedure_admissibility": "ordinary primary coordinates exist; protection, branch and terminal closure remain context-specific",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "blocked_kick",
+      "procedure_admissibility": "context-specific engine verification required",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "punt_reference",
+      "procedure_admissibility": "context-specific engine verification required",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "field_goal_reference",
+      "procedure_admissibility": "punt-column redirects only",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "kickoff_reference",
+      "procedure_admissibility": "punt-column redirects only",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    },
+    {
+      "candidate_disposition": "review required before changing this family",
+      "kind": "NG",
+      "procedure_admissibility": "field-goal column only",
+      "role_budget": null,
+      "source_status": "UNKNOWN; requires qualified eligible population",
+      "source_target": null
+    }
+  ],
+  "historical_source_fit_approved": false,
+  "legal_states": [
+    {
+      "down": 1,
+      "location": "own2",
+      "side": "home",
+      "yards_to_go": 1,
+      "yards_to_goal": 98
+    },
+    {
+      "down": 1,
+      "location": "own2",
+      "side": "home",
+      "yards_to_go": 10,
+      "yards_to_goal": 98
+    },
+    {
+      "down": 4,
+      "location": "own2",
+      "side": "home",
+      "yards_to_go": 1,
+      "yards_to_goal": 98
+    },
+    {
+      "down": 4,
+      "location": "own2",
+      "side": "home",
+      "yards_to_go": 10,
+      "yards_to_goal": 98
+    },
+    {
+      "down": 1,
+      "location": "midfield",
+      "side": "home",
+      "yards_to_go": 1,
+      "yards_to_goal": 50
+    },
+    {
+      "down": 1,
+      "location": "midfield",
+      "side": "home",
+      "yards_to_go": 10,
+      "yards_to_goal": 50
+    },
+    {
+      "down": 4,
+      "location": "midfield",
+      "side": "home",
+      "yards_to_go": 1,
+      "yards_to_goal": 50
+    },
+    {
+      "down": 4,
+      "location": "midfield",
+      "side": "home",
+      "yards_to_go": 10,
+      "yards_to_goal": 50
+    },
+    {
+      "down": 1,
+      "location": "opponent5",
+      "side": "home",
+      "yards_to_go": 1,
+      "yards_to_goal": 5
+    },
+    {
+      "down": 1,
+      "location": "opponent5",
+      "side": "home",
+      "yards_to_go": 5,
+      "yards_to_goal": 5
+    },
+    {
+      "down": 4,
+      "location": "opponent5",
+      "side": "home",
+      "yards_to_go": 1,
+      "yards_to_goal": 5
+    },
+    {
+      "down": 4,
+      "location": "opponent5",
+      "side": "home",
+      "yards_to_go": 5,
+      "yards_to_goal": 5
+    },
+    {
+      "down": 1,
+      "location": "own2",
+      "side": "away",
+      "yards_to_go": 1,
+      "yards_to_goal": 98
+    },
+    {
+      "down": 1,
+      "location": "own2",
+      "side": "away",
+      "yards_to_go": 10,
+      "yards_to_goal": 98
+    },
+    {
+      "down": 4,
+      "location": "own2",
+      "side": "away",
+      "yards_to_go": 1,
+      "yards_to_goal": 98
+    },
+    {
+      "down": 4,
+      "location": "own2",
+      "side": "away",
+      "yards_to_go": 10,
+      "yards_to_goal": 98
+    },
+    {
+      "down": 1,
+      "location": "midfield",
+      "side": "away",
+      "yards_to_go": 1,
+      "yards_to_goal": 50
+    },
+    {
+      "down": 1,
+      "location": "midfield",
+      "side": "away",
+      "yards_to_go": 10,
+      "yards_to_goal": 50
+    },
+    {
+      "down": 4,
+      "location": "midfield",
+      "side": "away",
+      "yards_to_go": 1,
+      "yards_to_goal": 50
+    },
+    {
+      "down": 4,
+      "location": "midfield",
+      "side": "away",
+      "yards_to_go": 10,
+      "yards_to_goal": 50
+    },
+    {
+      "down": 1,
+      "location": "opponent5",
+      "side": "away",
+      "yards_to_go": 1,
+      "yards_to_goal": 5
+    },
+    {
+      "down": 1,
+      "location": "opponent5",
+      "side": "away",
+      "yards_to_go": 5,
+      "yards_to_goal": 5
+    },
+    {
+      "down": 4,
+      "location": "opponent5",
+      "side": "away",
+      "yards_to_go": 1,
+      "yards_to_goal": 5
+    },
+    {
+      "down": 4,
+      "location": "opponent5",
+      "side": "away",
+      "yards_to_go": 5,
+      "yards_to_goal": 5
+    }
+  ],
+  "pat": {
+    "domain": "boolean",
+    "source_status": "UNKNOWN until separately qualified PAT population",
+    "source_target": null
+  },
+  "production_solver_approved": false,
+  "reference_exposure": {
+    "context_weights": "uniform1/54 authored diagnostic only; never historical coaching",
+    "formations": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F"
+    ],
+    "plays": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ]
+  },
+  "roles": {
+    "A": "balanced reference",
+    "B": "run gaps; preserve separately measured countercosts",
+    "C": "run wide; preserve separately measured countercosts",
+    "D": "protect6/7; concede8/9",
+    "E": "protect8/9; concede6/7",
+    "F": "pressure7/9; Screen6/Draw4/Bootleg8 counterplay; no automatic INT bonus"
+  },
+  "schema_version": 1,
+  "scope_limits": [
+    "No family is required to occur just for diversity.",
+    "Source/role/placement/depth are separate authorities.",
+    "No unknown request is encoded as zero.",
+    "All numeric historical bounds and materiality floors still require review.",
+    "Success/pending/error masses stay explicit; NOTRUN is not a pass.",
+    "RZDZ is downstream compatibility only, never chart content."
+  ],
+  "status": "PROPOSED_REVIEW_ONLY; no generalized production model approved",
+  "synthetic_joint_cases": [
+    {
+      "class_order": [
+        "INT",
+        "QT",
+        "INC"
+      ],
+      "denominator": 36,
+      "joint_exact_feasible": false,
+      "minimum_l1_error": 1,
+      "name": "individual_feasibility_is_not_joint",
+      "requested": [
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "class_order": [
+        "INT",
+        "QT",
+        "INC"
+      ],
+      "denominator": 36,
+      "joint_exact_feasible": false,
+      "legacy_actual_l1_error": 4,
+      "legacy_actual_represented": [
+        1,
+        3,
+        0
+      ],
+      "minimum_l1_error": 2,
+      "name": "greedy_steals_later_class_mass",
+      "nearest_witness": [
+        1,
+        0,
+        3
+      ],
+      "requested": [
+        1,
+        2,
+        3
+      ]
+    }
+  ]
+}

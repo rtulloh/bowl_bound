@@ -449,3 +449,97 @@ def test_native_selected_roster_still_requires_unchanged_bytes(
     with pytest.raises(ReleaseError, match="Native resource missing or changed"):
         native.archive_bundle(bundle, roster_runtime, output, target)
     assert not list(output.iterdir())
+
+
+@pytest.fixture
+def generated_roster_runtime(source: Path, tmp_path: Path) -> Path:
+    """Assemble an invented generated team through the reviewed roster selector."""
+    from tests.test_release_package import add_generated_roster
+
+    add_generated_roster(source)
+    stage = tmp_path / "generated-roster-stage"
+    stage_sources(source, stage)
+    fake_frontend(stage)
+    destination = tmp_path / "generated-roster-runtime"
+    assemble_runtime(stage, destination)
+    return destination
+
+
+@pytest.mark.parametrize("target", list(native.TARGETS))
+def test_generated_roster_survives_native_archive_and_installer(
+    generated_roster_runtime: Path, tmp_path: Path, target: str
+) -> None:
+    from scripts.smoke_standalone import extract_verified
+    from scripts.windows_installer import write_file_lists
+
+    bundle = fake_bundle(generated_roster_runtime, tmp_path / "bundle")
+    executable = native.TARGETS[target][2]
+    if executable != "Bowl-Bound":
+        (bundle / "Bowl-Bound").rename(bundle / executable)
+    output = tmp_path / "output"
+    output.mkdir()
+    archive = native.archive_bundle(bundle, generated_roster_runtime, output, target)
+    destination = tmp_path / "extracted"
+    report = extract_verified(archive, destination)
+    expected = {
+        "_internal/seasons/2002/synthetic-generated/" + name
+        for name in ("roster.json", "roster-sources.md")
+    }
+    assert {name for name in report["files"] if "roster" in name} == expected
+    for name in expected:
+        original = generated_roster_runtime / name.removeprefix("_internal/")
+        assert (destination / "BowlBound" / name).read_bytes() == original.read_bytes()
+        assert report["files"][name] == hashlib.sha256(original.read_bytes()).hexdigest()
+    if target == "windows-x64":
+        work = tmp_path / "installer"
+        work.mkdir()
+        write_file_lists(destination / "BowlBound", work)
+        install = (work / "install-files.nsh").read_text()
+        uninstall = (work / "uninstall-files.nsh").read_text()
+        assert install.count('File "/oname=roster.json"') == 1
+        assert install.count('File "/oname=roster-sources.md"') == 1
+        for name in expected:
+            assert name.replace("/", "\\") in uninstall
+
+
+@pytest.mark.parametrize(
+    "mutation", ["other-team", "other-year", "outside", "changed-roster", "changed-sources"]
+)
+def test_generated_native_rosters_require_exact_assembled_paths_and_bytes(
+    generated_roster_runtime: Path, tmp_path: Path, mutation: str
+) -> None:
+    bundle = fake_bundle(generated_roster_runtime, tmp_path / "bundle")
+    name = {
+        "other-team": "_internal/seasons/2002/unselected/roster.json",
+        "other-year": "_internal/seasons/2003/synthetic-generated/roster.json",
+        "outside": "roster.json",
+        "changed-roster": "_internal/seasons/2002/synthetic-generated/roster.json",
+        "changed-sources": "_internal/seasons/2002/synthetic-generated/roster-sources.md",
+    }[mutation]
+    put(bundle, name, "Unreviewed bytes")
+    output = tmp_path / "output"
+    output.mkdir()
+    with pytest.raises(ReleaseError):
+        native.archive_bundle(bundle, generated_roster_runtime, output, "macos-arm64")
+    assert not list(output.iterdir())
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "roster-sources.md",
+        "seasons/2002/synthetic-generated/roster-sources.md",
+        "_internal/elsewhere/roster-sources.md",
+        "_internal/elsewhere/ROSTER-SOURCES.MD",
+    ],
+)
+def test_native_roster_source_notes_cannot_escape_exact_resource_selection(
+    generated_roster_runtime: Path, tmp_path: Path, name: str
+) -> None:
+    bundle = fake_bundle(generated_roster_runtime, tmp_path / "bundle")
+    put(bundle, name, "Unselected private roster evidence")
+    output = tmp_path / "output"
+    output.mkdir()
+    with pytest.raises(ReleaseError, match="Forbidden"):
+        native.archive_bundle(bundle, generated_roster_runtime, output, "macos-arm64")
+    assert not list(output.iterdir())

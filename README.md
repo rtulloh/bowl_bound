@@ -16,6 +16,7 @@ plus the original fictional Cedar Valley and Harbor Tech samples. See the
 - [Install and launch](docs/installation.md): standalone and source instructions.
 - [How to play](docs/playing.md): setup, controls, difficulty, saving and limits.
 - [Optional: import your own team charts](docs/importing-teams.md) (advanced).
+- [Chart generator source and workflow](https://github.com/rtulloh/bowl_bound/blob/main/docs/chart-generation.md) (development).
 - [Troubleshooting](docs/troubleshooting.md) and [report a bug](docs/reporting-bugs.md).
 - [Release notes](RELEASE_NOTES.md) and [all player documentation](docs/README.md).
 

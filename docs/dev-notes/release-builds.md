@@ -53,16 +53,24 @@ python scripts/release_package.py archive "$RUNTIME" "$ARCHIVE"
 filter. Only its exact runtime and frontend input files are copied to a new
 transactional stage. Every selected fictional chart/roster/provenance/license
 file has a pinned SHA256; changing samples requires deliberate manifest review.
-Exactly the two original 2007 sample rosters and their CC0 source notes are
-selected with owner approval (DEV-042); every other roster remains excluded.
+The current public selection includes exactly the two original 2007 sample
+rosters and their CC0 source notes with owner approval (DEV-042). An optional
+`roster_sha256` map can separately select reviewed historical roster/source-note
+pairs for exactly selected generated teams; the capability does not grant
+publication approval or expand the sample allowlist. Each selected pair needs
+its own exact hashes, ordinary nonempty roster validation and matching runtime
+entries. The native archive reuses that assembled inventory, requiring the exact
+season/team roster path and unchanged bytes; the extractor and Windows installer
+retain both files. Unselected historical rosters remain excluded.
 Unknown file categories, traversal, duplicate entries, missing inputs and
 symlinked files/ancestors fail before output creation.
 
 Alpha 6 also selects the owner-approved generated statistical cohort through an
 exact `generated_sha256` map: each complete four-file chart bundle and matching
 generated virtual-cell provenance CSV is hash-pinned. The two original fictional
-samples retain their original hashes and rosters; historical rosters and private
-imported benchmarks remain excluded. See [generated-content scope](../generated-charts.md).
+samples retain their original hashes and rosters. Historical roster pairs require
+the separate exact selection above; private imported benchmarks remain excluded.
+See [generated-content scope](../generated-charts.md).
 
 Native smoke allows 30 seconds for complete catalog discovery because listing
 validates every chart and provenance bundle. It records elapsed discovery time,

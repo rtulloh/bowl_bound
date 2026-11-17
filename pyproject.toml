@@ -32,6 +32,10 @@ dev = [
 
 pdf = ["pdfplumber>=0.11,<0.12"]
 web = ["fastapi>=0.110", "uvicorn>=0.29"]
+generator = ["duckdb>=1.4,<3"]
+
+[tool.setuptools.package-data]
+"tools.chartgen" = ["research-runtime-contract.json"]
 
 [project.scripts]
 bowl-bound-import = "tools.pdf_import.cli:main"

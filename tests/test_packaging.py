@@ -54,7 +54,10 @@ def test_team_codec_is_packaged(wheel_names: list[str]) -> None:
 def test_roster_loader_is_packaged_but_no_roster_data_is(wheel_names: list[str]) -> None:
     assert "bowl_bound/roster.py" in wheel_names
     assert [n for n in wheel_names if n.endswith(("roster.json", "roster-sources.md"))] == []
-    assert [n for n in wheel_names if n.endswith(".json")] == []
+    # Public source attestations are software metadata, not roster/team data.
+    assert [n for n in wheel_names if n.endswith(".json")] == [
+        "tools/chartgen/research-runtime-contract.json"
+    ]
 
 
 def test_console_script_points_at_the_importer() -> None:

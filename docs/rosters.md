@@ -8,12 +8,17 @@ seasons/<season>/<team-slug>/roster.json
 seasons/<season>/<team-slug>/roster-sources.md     # where the names came from
 ```
 
-Historical rosters gathered by hand are **private**: historical roster files
-under `seasons/` remain ignored and never packaged. Public tests use invented
+Historical rosters gathered by hand are **private by default**: historical roster files
+under `seasons/` remain ignored unless separately reviewed for release. Public tests use invented
 names only. On 2026-10-29 the owner approved exactly the existing fictional
 Cedar Valley and Harbor Tech (2007) `roster.json` files and their
 `roster-sources.md` provenance for public tracking and alpha distribution.
-Those CC0 samples are the only roster exceptions; do not add wildcard rules.
+Those CC0 samples remain the published roster allowlist. On 2026-11-16 the owner
+also authorized reviewed historical commentary rosters for the release cohort
+(DATA-067), initially the selected 55 teams from 2002. Acquisition candidates
+remain ignored until season/source validation and exact release pins are ready.
+This does not authorize unrelated rosters, raw pages/PDFs, biographies or images;
+do not add wildcard rules.
 
 ## Format
 
@@ -88,7 +93,34 @@ slug)`, and `player_name(roster, position, index=0)`.
    ```
 
    This prints only `ok` or `no roster`, never a name.
-5. Historical rosters, including Ohio State and Miami (Florida) 2002, remain local only; never commit them.
+5. Keep acquisition candidates local until the approved cohort's source review and
+   exact release allowlist are ready. Other historical rosters remain private.
+
+### Acquire official HTML tables
+
+Use Python 3.12 and a reviewed source plan with a `season` integer and a `teams`
+object mapping source IDs to objects containing `name` and `url`:
+
+```sh
+.venv/bin/python -m scripts.acquire_rosters \
+  --sources private-data/roster-sources.json \
+  --output private-data/roster-candidate --workers 4
+```
+
+The output directory must be new. The command retains raw HTML and source hashes,
+writes ordinary positional `roster.json` files with provenance, and records gaps
+in `acquisition.json`. It verifies the page's own season-specific football roster
+title or heading; a year in its URL is insufficient. Only explicit positions are
+mapped. Unsupported/ambiguous positions remain listed in the report, starters
+are not inferred, and fewer than 20 recognized players is treated as a partial
+source requiring review. Successful acquisition is not release qualification.
+PDFs, image scans and JavaScript-only player lists need separate source review.
+
+To reparse previously retained `<source-id>.html` responses without making new
+network requests, add `--cache-dir private-data/previous-candidate/raw` and use a
+new output directory. Preserve the original acquisition receipt alongside the
+new one, including original retrieval date and redirect information. Never use
+an unrelated response as a team's cache entry.
 
 ## Scope
 
@@ -96,7 +128,8 @@ The importer does not produce rosters. Milestone 9b delivered the loader and
 format; [Milestone 21a](dev-notes/project-plan.md#21a-add-roster-backed-player-commentary)
 adds engine-generated illustrative labels in CLI/API/browser live reports and logs.
 The two original fictional sample rosters are included in alpha bundles
-under the exact sample allowlist (DEV-042). Other local rosters remain private.
+under the exact sample allowlist (DEV-042). Historical release acquisition is
+tracked separately in DATA-067; other local rosters remain private.
 Release artifact verification and milestone acceptance remain separate from implementation verification.
 
 ## Engine narration foundation (21a)
@@ -151,7 +184,8 @@ checkout's `seasons/` folder. Preserve an existing same-season `roster.json` and
 its `roster-sources.md` when assembling a private play-test bundle. After adding
 them during play, use `save /tmp/my-roster-refresh.json` followed by
 `load /tmp/my-roster-refresh.json` to refresh names; choose a new save filename
-if that file already exists. Historical roster files remain private.
+if that file already exists. Historical candidates remain private until their
+approved exact release allowlist is ready.
 
 Replay compatibility is regression-checked against a pre-commentary semantic
 digest and future Hard command/choice/dice/RNG streams. Named commentary is never

@@ -673,3 +673,99 @@ def test_stable_release_rejects_disagreeing_component_versions(
     with pytest.raises(ReleaseError, match="mismatch"):
         stage_sources(source, output)
     assert not output.exists()
+
+
+def add_generated_roster(source: Path) -> dict:
+    """Select one synthetic generated bundle and its reviewed roster pair."""
+    manifest_path = source / "release/manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    pins = {}
+    for name in ("team.yaml", "offense.csv", "defense.csv", "special.csv"):
+        path = f"seasons/2002/synthetic-generated/{name}"
+        put(source, path, "Synthetic chart")
+        pins[path] = hashlib.sha256((source / path).read_bytes()).hexdigest()
+    path = "seasons/2002/provenance/synthetic-generated.csv"
+    put(source, path, "Synthetic provenance")
+    pins[path] = hashlib.sha256((source / path).read_bytes()).hexdigest()
+    roster = {
+        "seasons/2002/synthetic-generated/roster.json": '{"qb":["Avery Test"]}',
+        "seasons/2002/synthetic-generated/roster-sources.md": "# Synthetic 2002 roster\n",
+    }
+    for name, text in roster.items():
+        put(source, name, text)
+    manifest["generated_sha256"] = pins
+    manifest["roster_sha256"] = {
+        name: hashlib.sha256((source / name).read_bytes()).hexdigest() for name in roster
+    }
+    manifest["runtime"].extend([*pins, *roster])
+    manifest_path.write_text(json.dumps(manifest))
+    return manifest
+
+
+def test_reviewed_generated_roster_pair_survives_exact_stage_and_runtime(
+    source: Path, tmp_path: Path
+) -> None:
+    manifest = add_generated_roster(source)
+    put(source, "seasons/2002/unreviewed/roster.json", '{"qb":["Do Not Ship"]}')
+    stage = tmp_path / "roster stage"
+    stage_sources(source, stage)
+    fake_frontend(stage)
+    runtime = tmp_path / "roster runtime"
+    assemble_runtime(stage, runtime)
+    for name, digest in manifest["roster_sha256"].items():
+        assert hashlib.sha256((runtime / name).read_bytes()).hexdigest() == digest
+    assert not (runtime / "seasons/2002/unreviewed").exists()
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "missing-provenance",
+        "unselected-roster",
+        "other-team",
+        "other-year",
+        "extra-source",
+        "changed-bytes",
+        "malformed",
+        "empty",
+        "non-map",
+        "unpinned",
+    ],
+)
+def test_generated_rosters_fail_closed_before_staging(
+    source: Path, tmp_path: Path, mutation: str
+) -> None:
+    manifest = add_generated_roster(source)
+    roster = "seasons/2002/synthetic-generated/roster.json"
+    provenance = "seasons/2002/synthetic-generated/roster-sources.md"
+    if mutation == "missing-provenance":
+        del manifest["roster_sha256"][provenance]
+        manifest["runtime"].remove(provenance)
+    elif mutation == "unselected-roster":
+        manifest["runtime"].remove(roster)
+    elif mutation in {"other-team", "other-year", "extra-source"}:
+        new = {
+            "other-team": "seasons/2002/unreviewed/roster.json",
+            "other-year": "seasons/2003/synthetic-generated/roster.json",
+            "extra-source": "seasons/2002/synthetic-generated/source.html",
+        }[mutation]
+        put(source, new, (source / roster).read_text())
+        manifest["roster_sha256"][new] = manifest["roster_sha256"].pop(roster)
+        manifest["runtime"].remove(roster)
+        manifest["runtime"].append(new)
+    elif mutation == "changed-bytes":
+        put(source, roster, '{"qb":["Unreviewed Change"]}')
+    elif mutation in {"malformed", "empty"}:
+        put(source, roster, '{"qb":42}' if mutation == "malformed" else "{}")
+        manifest["roster_sha256"][roster] = hashlib.sha256(
+            (source / roster).read_bytes()
+        ).hexdigest()
+    elif mutation == "non-map":
+        manifest["roster_sha256"] = []
+    elif mutation == "unpinned":
+        del manifest["roster_sha256"]
+    (source / "release/manifest.json").write_text(json.dumps(manifest))
+    output = tmp_path / "rejected roster stage"
+    with pytest.raises(ReleaseError):
+        stage_sources(source, output)
+    assert not output.exists()
