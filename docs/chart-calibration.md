@@ -533,7 +533,7 @@ Before changing the release selection:
   --report private-data/chart-calibration-2002/maintained-chart-audit.json
 .venv/bin/python scripts/run_full_regression.py \
   --report private-data/chart-calibration-2002/full-regression.json
-.venv/bin/python -m pytest --cov --cov-report=term-missing -n 4 --dist=loadfile --durations=25 -q
+.venv/bin/python -m pytest --cov --cov-report=term-missing -n 4 --dist=loadgroup --durations=25 -q
 ```
 
 For earlier feedback while working, the existing synthetic checks include:

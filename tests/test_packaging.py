@@ -10,6 +10,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.xdist_group("checkout_wheel")
+
 ROOT = Path(__file__).resolve().parents[1]
 PRIVATE_PREFIXES = ("seasons/", "private-data/", "docs/reference/")
 TEAM_DATA_SUFFIXES = (".pdf", ".csv")
@@ -27,7 +29,7 @@ def wheel_package(tmp_path_factory: pytest.TempPathFactory) -> tuple[list[str], 
         check=False,
         timeout=300,
     )
-    assert result.returncode == 0, "pip could not build a wheel from the checkout"
+    assert result.returncode == 0, result.stdout + result.stderr
     wheels = list(out.glob("bowl_bound-*.whl"))
     assert len(wheels) == 1
     with zipfile.ZipFile(wheels[0]) as archive:

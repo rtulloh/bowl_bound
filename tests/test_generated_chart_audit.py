@@ -390,7 +390,7 @@ def test_qualification_export_rejects_unapproved_private_fields(
         build_expectations(root, root, qualification)
 
 
-def test_native_workflow_requires_fresh_generated_chart_gate() -> None:
+def test_native_workflow_requires_exact_commit_generated_chart_gate() -> None:
     import yaml
 
     root = Path(__file__).resolve().parents[1]
@@ -401,7 +401,11 @@ def test_native_workflow_requires_fresh_generated_chart_gate() -> None:
     assert not audits[0].get("continue-on-error", False)
     assert "if" not in audits[0]
     build = yaml.safe_load((root / ".github/workflows/build.yml").read_text())
-    assert build["jobs"]["test"]["uses"] == "./.github/workflows/tests.yml"
+    gate = build["jobs"]["test"]
+    assert any("scripts.verify_source_gate" in step.get("run", "") for step in gate["steps"])
+    assert (
+        build["jobs"]["build"]["steps"][0]["with"]["ref"] == "${{ needs.test.outputs.source_ref }}"
+    )
     assert build["jobs"]["build"]["needs"] == "test"
 
 

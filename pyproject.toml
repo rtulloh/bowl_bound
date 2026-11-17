@@ -21,7 +21,7 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.0",
+    "pytest==9.1.1",
     "ruff>=0.5",
     "pytest-cov>=4.0",
     "pytest-xdist==3.8.0",
@@ -50,6 +50,7 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 addopts = "-ra --strict-markers --tb=short"
+markers = ["xdist_group(name): keep tests sharing mutable build state on one worker"]
 
 [tool.ruff]
 line-length = 100

@@ -30,7 +30,7 @@ def test_tests_runs_for_branch_pushes_pull_requests_and_native_gate_calls() -> N
 
 def test_automatic_gate_retains_the_whole_established_regression() -> None:
     data = workflow("tests.yml")
-    assert set(data["jobs"]) == {"test"}
+    assert set(data["jobs"]) == {"test", "dependency-audit"}
     job = data["jobs"]["test"]
     assert job["runs-on"] == "ubuntu-24.04"
     assert int(job["timeout-minutes"]) == 240
@@ -39,14 +39,13 @@ def test_automatic_gate_retains_the_whole_established_regression() -> None:
         "python -m venv .venv",
         ".[dev,web,pdf]",
         ".venv/bin/python -m pytest --cov --cov-report=term-missing "
-        "-n 4 --dist=loadfile --durations=25 -q",
+        "-n 4 --dist=loadgroup --durations=25 -q",
         ".venv/bin/python -m ruff check .",
         ".venv/bin/python -m ruff format --check .",
         ".venv/bin/python -m pip check",
         "npm ci --ignore-scripts",
         "npm test",
         "npm run build",
-        "npm audit",
         "npx playwright install --with-deps chromium",
         "npm run test:e2e",
     ):
@@ -65,7 +64,8 @@ def test_manual_native_workflow_reuses_tests_for_the_same_requested_commit() -> 
     assert native["on"]["workflow_dispatch"]["inputs"]["source_ref"]["type"] == "string"
     assert native["permissions"] == {"contents": "read"}
     gate = native["jobs"]["test"]
-    assert gate["uses"] == "./.github/workflows/tests.yml"
+    assert gate["permissions"] == {"contents": "read", "actions": "read"}
+    assert any("scripts.verify_source_gate" in step.get("run", "") for step in gate["steps"])
     assert native["jobs"]["build"]["needs"] == "test"
     checkout = native["jobs"]["build"]["steps"][0]
     test_checkout = next(
@@ -74,12 +74,11 @@ def test_manual_native_workflow_reuses_tests_for_the_same_requested_commit() -> 
         if step.get("uses", "").startswith("actions/checkout@")
     )
     expected = "${{ inputs.source_ref || github.sha }}"
-    assert (
-        checkout["with"]["ref"]
-        == gate["with"]["source_ref"]
-        == test_checkout["with"]["ref"]
-        == expected
+    assert checkout["with"]["ref"] == "${{ needs.test.outputs.source_ref }}"
+    verifier = next(
+        step for step in gate["steps"] if "scripts.verify_source_gate" in step.get("run", "")
     )
+    assert verifier["env"]["SOURCE_REF"] == test_checkout["with"]["ref"] == expected
     assert native["env"] == source["env"]
 
 
@@ -144,3 +143,19 @@ def test_source_commit_guard_rejects_mutable_or_malformed_refs(
     assert result.returncode == expected
     if expected:
         assert "source_ref must be a full 40-character commit SHA" in result.stdout
+
+
+def test_dependency_audit_is_required_and_independent_of_python() -> None:
+    jobs = workflow("tests.yml")["jobs"]
+    audit = jobs["dependency-audit"]
+    assert audit["runs-on"] == "ubuntu-24.04"
+    assert int(audit["timeout-minutes"]) == 10
+    assert "needs" not in audit and "needs" not in jobs["test"]
+    steps = audit["steps"]
+    checkout = next(step for step in steps if step.get("uses", "").startswith("actions/checkout@"))
+    assert checkout["with"]["ref"] == "${{ inputs.source_ref || github.sha }}"
+    assert checkout["with"]["persist-credentials"] == "false"
+    commands = "\n".join(step.get("run", "") for step in steps)
+    assert "npm ci --ignore-scripts" in commands
+    assert "npm audit" in commands
+    assert "npm audit" not in "\n".join(step.get("run", "") for step in jobs["test"]["steps"])

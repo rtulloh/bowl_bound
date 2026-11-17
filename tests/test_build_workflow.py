@@ -24,7 +24,9 @@ def test_three_native_builds_are_test_gated_and_do_not_publish_releases() -> Non
     }
     source_text = (ROOT / ".github/workflows/tests.yml").read_text()
     source = yaml.load(source_text, Loader=yaml.BaseLoader)
-    assert jobs["test"]["uses"] == "./.github/workflows/tests.yml"
+    assert any(
+        "scripts.verify_source_gate" in step.get("run", "") for step in jobs["test"]["steps"]
+    )
     assert source["permissions"] == {"contents": "read"}
     assert int(jobs["build"]["timeout-minutes"]) == 45
     assert int(source["jobs"]["test"]["timeout-minutes"]) == 240
@@ -67,7 +69,14 @@ def test_browser_job_provides_the_interpreter_expected_by_the_harness() -> None:
     assert "python -m venv .venv" in commands
     assert '.venv/bin/python -m pip install -e ".[dev,web,pdf]"' in commands
     assert ".venv/bin/python -m pytest --cov" in commands
-    assert "-n 4 --dist=loadfile --durations=25" in commands
+    assert "-n 4 --dist=loadgroup --durations=25" in commands
     pyproject = (ROOT / "pyproject.toml").read_text()
     dev = re.search(r"^dev = \[(.*?)^\]", pyproject, re.MULTILINE | re.DOTALL)
     assert dev is not None and '"pytest-xdist==3.8.0"' in dev.group(1)
+
+
+def test_parallel_wheel_tests_share_only_the_checkout_build_group() -> None:
+    assert '"pytest==9.1.1"' in (ROOT / "pyproject.toml").read_text()
+    packaging = (ROOT / "tests/test_packaging.py").read_text()
+    assert 'pytestmark = pytest.mark.xdist_group("checkout_wheel")' in packaging
+    assert "xdist_group" not in (ROOT / "tests/chartgen/test_generation.py").read_text()

@@ -16,7 +16,7 @@ python3 -m venv .venv
 .venv/bin/python -m scripts.run_full_regression
 ```
 
-The runner mirrors `.github/workflows/tests.yml` in order: Python tests/lint/
+The runner performs the same checks as `.github/workflows/tests.yml`: Python tests/lint/
 format/dependency checks, frontend install/tests/build/audit, generated chart
 audit, and real-engine Playwright tests. It prints each command, elapsed time,
 and a final pass/fail/skipped table. It stops at the first failure by default;
@@ -24,21 +24,26 @@ use `--keep-going` to collect all failures. `--report PATH` writes a JSON
 summary, and `--skip-frontend`, `--skip-e2e`, `--skip-chart-audit`,
 `--skip-python` and `--no-install` provide intentional partial runs.
 
+Hosted CI runs frontend dependency auditing in an independent required job for
+prompt failure feedback while the full regression shows progress. Either job
+failing prevents source qualification. The local runner retains Python-first
+order for diagnostics.
 Local Python tests run without coverage for speed. Run `pytest --cov` as part
 of individual changes; the upstream CI gate enforces the 75% `fail_under`
 threshold.
 
 The hosted Python command uses four `pytest-xdist==3.8.0` workers with
-`--dist=loadfile` and retains combined branch coverage and the same 75% floor.
-All tests in a file stay in one worker, including the wheel-building tests
-that share checkout build state. This development dependency is installed by
-the `dev` extra; native requirements remain separate. The shared source job
-still has a 240-minute bound and prints its 25 slowest tests. DEV-083 records
-the earlier four-hour serial cancellation; a local parallel pass is not a
-guarantee about hosted duration. For an equivalent coverage invocation:
+`--dist=loadgroup` and retains combined branch coverage and the same 75% floor.
+Only the wheel-building tests share the `checkout_wheel` group, because they
+write shared checkout build state. Independent generator cases run across workers.
+The development pins are pytest 9.1.1 and xdist 3.8.0: pytest 9.2.0 currently
+breaks group scheduling ([upstream report](https://github.com/pytest-dev/pytest-xdist/issues/1407)).
+Native requirements remain separate. The source job retains its 240-minute bound
+and prints its 25 slowest tests; that bound is not a performance acceptance target.
+Run the same Python coverage command locally:
 
 ```sh
-.venv/bin/python -m pytest --cov --cov-report=term-missing -n 4 --dist=loadfile --durations=25 -q
+.venv/bin/python -m pytest --cov --cov-report=term-missing -n 4 --dist=loadgroup --durations=25 -q
 ```
 
 The local runner above keeps its serial, no-coverage default. To diagnose slow
@@ -168,8 +173,9 @@ visibility flags. DEV-068 records the Alpha 5 correction and actual browser chec
 
 `.github/workflows/tests.yml` is named **Tests** and runs automatically on
 branch pushes (including main and isolated workstreams) and pull requests. Its
-run is associated with the pushed/PR commit. The Ubuntu gate runs coverage,
-lint/format, pip check, frontend unit/build/audit and real-engine Chromium tests.
+run is associated with the pushed/PR commit. The Ubuntu regression job runs coverage,
+lint/format, pip check, frontend unit/build and real-engine Chromium tests. A
+separate required dependency-audit job runs concurrently with that regression.
 It neither builds native executables nor publishes releases.
 
 `.github/workflows/build.yml` is manually dispatched from GitHub Actions →
@@ -179,11 +185,19 @@ its existing controls remain artifact-only. It creates no tags or GitHub
 releases and has no automatic tag/build/publication trigger. `contents: read`,
 exact action SHAs and disabled checkout credentials remain required.
 
-The manual workflow calls the same **Tests** gate before native builds. Optional
-`source_ref` must be a full 40-character lowercase commit SHA for an approved main
-snapshot; a floating branch/tag is rejected before checkout. Leaving it blank
-uses the dispatch commit SHA. Both test and native jobs check out that same
-immutable source. For example, after review and workflow publication:
+The manual workflow requires a successful **Tests** main-push run for the exact
+requested commit; it does not rerun full coverage. Its small verification job has
+only repository/actions read permissions. Missing, pending, failed, canceled,
+foreign-repository or mismatched workflow evidence fails closed, and a newer
+failed run cannot reuse an older success. Finish the push gate before dispatching.
+The three native targets share this prerequisite and retain their own platform
+build/smoke checks.
+
+Optional `source_ref` must be a full 40-character lowercase commit SHA; leaving it
+blank uses the dispatch commit SHA. The verifier runs from the dispatch checkout,
+and native jobs check out only its verified output. No branch, tag, cached build
+result or unrelated green run substitutes for exact-commit evidence. For example,
+after successful source validation and workflow publication:
 
 ```sh
 gh workflow run build.yml --ref main -f source_ref=<reviewed-full-main-commit-SHA>
