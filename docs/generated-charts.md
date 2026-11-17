@@ -1,4 +1,11 @@
-# Generated 2007 teams
+# Generated teams
+
+The upcoming v1.1.0 catalog adds [55 generated 2002 teams](#generated-2002-cohort)
+and their reviewed commentary rosters, for **173 playable teams** across the two
+seasons and original fictional samples. The published 2007 chart files are
+unchanged.
+
+## Published 2007 cohort
 
 Alpha 6 adds **116 generated 2007 college teams** alongside the original fictional
 Cedar Valley and Harbor Tech samples, for **118 playable teams**. Three source
@@ -12,7 +19,7 @@ example:
 python -m bowl_bound --play -d hard --away 2007/ohio-state --home 2007/lsu --compact --trace 2>&1 | tee /tmp/bb.log
 ```
 
-The generated teams have no historical player rosters; commentary uses generic
+The generated 2007 teams have no historical player rosters; commentary uses generic
 player roles. The two fictional samples retain their original fictional names.
 Save/resume requires the same team-chart content; keep copies of saves before
 upgrading or replacing a chart.
@@ -70,8 +77,8 @@ lower-bound narrative-incidence estimates, not fully observed historical OOB rat
 Some columns have no positive evidence and remain explicitly unidentified; an
 unmarked cell does not establish that the source play was observed in bounds.
 
-No raw play-by-play, source narratives, private imported benchmark charts,
-historical rosters, logos, saves or detailed audit reports are distributed.
+The 2007 selection distributes no raw play-by-play, source narratives, private
+imported benchmark charts, historical rosters, logos, saves or detailed audits.
 Generated 2007 Ohio State and Miami charts are distinct from privately imported
 2002 charts, which remain excluded.
 
@@ -158,3 +165,54 @@ does not explain the full remaining source-fit gap. Fixed plays, supplements,
 fumbles, chart quantization and AI/schedule mixtures remain model limitations
 for further work. No new rule, observer or selector defect was reproduced by
 this bounded review, and no source or coefficient was changed to clear it.
+
+## Generated 2002 cohort
+
+The owner approves the selected 55-team statistical cohort and reviewed
+commentary rosters for tracking and upstream publication on 2026-11-17.
+The exact release manifest adds 275 generated chart/provenance files and 110
+roster/source-note files. The combined catalog has 171 generated teams plus
+the two original fictional samples. This is a selected cohort, not the whole
+2002 college schedule. A fresh checkout discovers both seasons normally.
+
+For example, from a source checkout:
+
+```sh
+python -m bowl_bound --play -d hard --away 2002/ohio-state --home 2002/miami --compact --trace
+```
+
+The 2002 inputs are a separately retained ESPN core API snapshot, supplemented
+by 99 reviewed official-gamebook factual corrections. Credit ESPN and the
+identified official statistical sources; each roster's source notes identify
+its own sources. These inputs are separate from the 2007 SportsDataverse data
+release. The [scoped output notice](../seasons/GENERATED-LICENSE.md) covers only
+the project's original contributions; it asserts no upstream license grant or
+clearance of source-access terms. No source expression, downloaded pages/PDFs,
+private imported charts, logos, photos, saves or detailed audits are included.
+
+Generation uses the authored `bb-chartgen-cohort-v1` model, the existing
+conditional interception-depth policy and a shared offensive
+`run_yards_scale=1.15`. All other offensive fields and all defensive profiles
+remain neutral. This parameter conditions the generated chart before finite
+quantization; it does not multiply engine outcomes. Engine rules, coaching,
+source observations and statistical targets remain unchanged.
+
+The first eligible setting was frozen before comparison on unused simulation
+seeds. Both the original and selected panels cover the same 251 fixtures.
+Against source non-sack rushing 4.502 yards/attempt, the selected panel reaches
+4.238 versus 3.498 for neutral charts. All 12 existing pooled reference checks
+pass. Average absolute team rushing error improves from 0.936 to 0.293;
+47/55 teams are within half a yard. The paired improvement is 0.740
+yards/attempt, with approximate 95% interval [0.616, 0.864]. These intervals
+describe simulation variation, not source uncertainty. Numerical tuning stops
+at this first validated setting.
+
+Historical fit remains UNVERIFIED. Eight individual teams remain outside the
+half-yard reference, and unused simulation seeds are not held-out historical
+data. Fumble denominators include disclosed modeled absence assumptions;
+260 recovery associations remain unresolved under the clock fallback.
+Gross-kick and blocked-punt locations are sparse, OOB observations are unknown,
+and designed calls/formation interactions use authored priors. The roster lists
+can be partial, spring, depth or bowl selections; missing positions retain
+generic commentary. Names do not affect game outcomes or gameplay randomness.
+Report these experimental teams through the ordinary feedback process above.

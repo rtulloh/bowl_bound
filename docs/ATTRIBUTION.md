@@ -100,8 +100,9 @@ for the privacy policy.
 
 ### Historical charts and rosters
 
-Only the original fictional samples below are approved for public tracking and
-distribution. A historical PDF filename containing "free" is not a license.
+The original fictional samples and the separately approved generated selections
+below define the public tracking and distribution scope. A historical PDF
+filename containing "free" is not a license.
 Historical PDFs, converted charts, provenance, verification expectations and
 rosters remain private unless distribution rights and explicit current approval
 are separately established. The code license grants no rights to that material.
@@ -154,3 +155,35 @@ and no provider, school or publisher endorsement is implied. Generated 2007
 Ohio State/Miami outputs are distinct from the private 2002 imported charts; those
 originals remain excluded. Do not broaden the exact catalog or copy local source,
 reference, cache, save or audit directories.
+
+### Generated 2002 statistical outputs and roster selection (2026-11-17)
+
+The owner explicitly requests adding the selected generated teams to `seasons/`,
+committing them and pushing all pending changes upstream. This supplies current
+approval for exactly the 55-team calibrated 2002 cohort, not unrelated imports.
+`release/manifest.json` individually pins its 275 generated chart/provenance
+files and the 110 reviewed roster/source-note files previously approved under
+DATA-067. All 580 published 2007 generated-file pins remain unchanged.
+
+The distribution basis is independently authored statistical transformations
+of factual event observations and factual roster names/positions, with original
+encoding and source notes licensed only to the extent the project owns those
+contributions. This is not a claim to redistribute ESPN expression or source
+gamebook pages, and the 2007 SportsDataverse grant does not cover these fresh
+2002 inputs. Preserve ESPN/official-source credit and each roster's source notes;
+see the [scoped generated-content notice](../seasons/GENERATED-LICENSE.md).
+
+The [U.S. Copyright Office](https://www.copyright.gov/help/faq/faq-protect.html)
+distinguishes facts from protected expression. Source-access terms are a separate
+question: [Disney's U.S. terms](https://disneytermsofuse.com/english/) cover
+ESPN-branded products and contain extraction restrictions. These primary sources
+were rechecked on 2026-11-17. This recorded project distribution decision does
+not assert a provider license grant or legal clearance of acquisition terms.
+
+Only the selected generated numerical/semantic outputs, virtual-cell provenance,
+factual commentary lists and original source notes are included. Raw narratives,
+downloaded pages/PDFs, private benchmark/imported charts, logos, biographies,
+photos, caches, saves and detailed audits stay excluded. The generated 2002
+Ohio State and Miami bundles are independent of the old PDF-imported versions.
+Model and source limitations remain disclosed in the
+[2002 guide](generated-charts.md#generated-2002-cohort).

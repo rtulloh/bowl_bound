@@ -5,6 +5,8 @@ private-data/
 # Historical imports stay private. Exact original fictional exceptions are below.
 # Alpha 6's reviewed generated outputs are tracked explicitly and hash-pinned in
 # release/manifest.json; no directory wildcard makes future local data public.
+# The owner-approved 2002 generated cohort and reviewed roster pairs are also
+# tracked by exact manifest selection; neighboring local files stay ignored.
 /seasons/*
 !/seasons/README.md
 !/seasons/SAMPLE-LICENSE.md

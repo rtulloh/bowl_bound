@@ -648,3 +648,57 @@ Composite receipt: `private-data/data066-rush-calibration-20261117-v1/publicatio
 DATA-066 remains open for maintained selected-candidate release acceptance;
 historical fit remains UNVERIFIED and exact new-chart distribution remains a
 separate approval scope. No further numerical tuning is performed.
+
+--- 2026-11-17 — owner authorizes maintained generated season and upstream push ---
+
+The owner explicitly requests adding the generated teams to `seasons/`,
+committing them and pushing pending changes. The maintained manifest now
+selects exactly the calibrated 55-team 2002 cohort: 275 generated files plus
+the 110 already reviewed roster/source-note files. All selected files match
+their retained hashes, and all 580 existing 2007 generated-file pins remain
+unchanged. PDF-imported charts and source evidence are excluded.
+
+The current distribution direction and separate factual-input/original-output
+basis are recorded in attribution and the generated-content notice. Source
+access limitations remain disclosed; no upstream license grant is inferred.
+The schema-four audit retains the original 2007 qualification and separately
+binds the selected 2002 baseline and validated profile. No source fact, engine
+rule, coaching policy or calibration setting changes. Historical fit remains
+UNVERIFIED. Integration checks and the full push gate are underway; this
+ticket stays open until tested maintained acceptance is committed.
+
+--- 2026-11-17 12:19 ---
+
+The fresh maintained-selection full Python run passes all 6,888 cases in
+1,731.35 seconds with six file-scheduled workers and no skips/warnings.
+Selected-runtime assembly, independent 171-generated-team audit, all 55 packaged
+roster/API/CLI checks, 197 frontend tests and 72 Linux browser cases pass.
+The actual assembled UI separately passes all 55 teams' selection, narration
+and save/download/load with exact 173-team catalog and normal shutdown.
+Four additional actual API pairings cover 2002/2007 Ohio State and a second
+mixed-season matchup, both home orientations, preserving canonical IDs and
+saved engine state. Native downloads have not yet been built or certified.
+
+Calibration is now required by AGENTS and the generator guide. The new public
+human-run recipe documents the complete measured workflow, expected experimental
+bounds, uncertainty/team misses, adjustment advice and tests. Its exact snippets
+pass eight fictional complete games and independent generation/replay checks;
+this small sample verifies instructions, not historical accuracy.
+
+The current full gate is not all green: npm audit reports 13 high findings from
+unpatched picomatch (DEV-087), separately from the four-hour hosted timeout
+(DEV-083). The proposed bounded file-scheduled CI passes all 163 focused cases;
+hosted timing remains unverified. Original warnings/failures and the separate
+coverage evidence remain in the recovery record. Do not infer native release
+acceptance from successful source/data validation. Historical fit remains
+UNVERIFIED, with eight individual rushing misses and other disclosed limits.
+
+--- 2026-11-17 12:38 ---
+
+Final coverage evidence: 90.77% branch-enabled coverage; the original covered
+run has 6,887 passes and one obsolete 118-team catalog assertion failure.
+The corrected 40-case module and fresh full 6,888-case run pass with identical
+production sources. The original failure is retained, not represented as a
+clean covered run. Current npm audit still fails with 13 high findings;
+release/native acceptance remains pending. Complete evidence is in the
+[final source validation](../../data066-generator-recovery.md#final-selected-season-source-validation-2026-11-17).

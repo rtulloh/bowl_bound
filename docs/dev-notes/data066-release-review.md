@@ -1,8 +1,77 @@
-# DATA-066: 2002 season candidate for v1.1.0
+# DATA-066: selected 2002 season for v1.1.0
 
-Status: both full regression gates pass and the reviewed generator/packaging
-changes are integrated. New-chart distribution review and maintained season
-acceptance remain open. This is not a release or historical-fit certification.
+On 2026-11-17 the owner directs committing the selected generated teams and
+pushing pending changes. The maintained exact manifest now selects the
+validated **55-team 2002 cohort** and its 55 reviewed commentary rosters.
+The new selection contains 275 generated chart/provenance files and 110
+roster/source-note files. All 580 existing generated 2007 pins are unchanged;
+the combined catalog has **173 playable teams**. The fresh full Python run
+passes all 6,888 tests in 1,731.35 seconds, and the selected runtime, roster and
+Linux browser checks pass. The current dependency audit fails as detailed below;
+no native release has been published.
+
+The selected shared profile is `run_yards_scale=1.15`, with other offensive
+fields and all defensive profiles neutral. On paired unused-seed 251-fixture
+panels, rushing improves from 3.498 to 4.238 yards/attempt against source 4.502.
+All 12 pooled references pass; team MAE improves from 0.936 to 0.293, with 47/55
+teams within half a yard. The setting is frozen before validation and no further
+tuning is performed. Historical fit remains UNVERIFIED; all source/model limits
+in the [recovery record](data066-generator-recovery.md) remain disclosed.
+
+Generation receipt SHA-256:
+`bd2d86b428e4b00a28b1aa1bf6f03f7f64183dea050b6dfeab28a3d3d9e6c535`.
+Current integration receipts are under
+`private-data/data066-season-integration-20261117-v1/`.
+The owner's current distribution direction, factual-input/original-output
+basis and source-access limitations are recorded in
+[attribution](../ATTRIBUTION.md#generated-2002-statistical-outputs-and-roster-selection-2026-11-17).
+The exact new selection excludes imported PDF charts, raw narratives,
+source pages/PDFs, logos, acquisition caches, saves and detailed audits.
+Version preparation, native builds and published-install verification remain
+subsequent release phases.
+
+## Current integration checks and remaining gates
+
+The current maintained selection passes independent generated-chart auditing,
+exact staging and runtime assembly. All 55 teams pass packaged API/CLI commentary,
+fallback, RNG and save/load checks, and actual rendered selection/narration/UI
+save/download/load checks. The separate 72-case real-engine Linux browser suite
+passes. Four additional actual-runtime API pairings include 2002 versus 2007
+Ohio State in both home orientations, preserving canonical IDs and save/replay
+state. These are source/runtime checks, not native executable certification.
+
+The complete 6,888-case Python run uses a frozen selection and six file-scheduled
+workers. The later CI scheduling change is checked separately by 163 four-worker
+packaging/workflow/generator cases and 52 documentation/workflow checks; no
+production engine/generator modules change after that full run's snapshot.
+The separate covered run reaches 90.77% branch-enabled coverage with 6,887
+passes and the obsolete 118-team assertion failure; its corrected 40-case module
+and the fresh complete run pass with identical production sources. The original
+failure is retained in the recovery record, not described as a clean covered run.
+
+Current `npm audit` fails with 13 high findings rooted in unpatched picomatch
+GHSA-fc5q-39xc-vjpf ([DEV-087](issues/DEV/DEV-087.md)). Earlier zero-finding audit
+responses are not current acceptance. This prevents an all-green gate and blocks
+the existing test-gated native builds. DEV-083 separately tracks the confirmed
+four-hour hosted serial timeout and bounded four-worker replacement; hosted
+timing still requires a replacement run. Existing React warnings and the new
+ChartGrid duplicate-key follow-up DEV-088 are disclosed in the
+[integration record](data066-generator-recovery.md#selected-package-and-cross-season-integration-checks-2026-11-17).
+Other open source/season tickets retain their own acceptance requirements.
+
+Calibration is now mandatory in `AGENTS.md` and the generator guide. The
+[human-run recipe](../chart-calibration.md) includes copyable commands,
+interpretation of tolerances and uncertainty, adjustment advice and test commands.
+Its snippets pass an eight-game fictional execution/reproduction check; that
+small documentation check is not season qualification. Native builds and
+verification of actual downloadable bytes remain outstanding.
+
+## Retained neutral proposal — superseded by the selection above
+
+The remaining evidence describes the earlier neutral review artifact, including
+its old failed rushing assessment and private archive pins. Those values do not
+describe the selected calibrated charts. Its pending-approval statements record
+the earlier state; the current owner instruction above supersedes that state.
 
 The recovered public generator produces **55 selected 2002 teams**, replacing the
 older 52-team attempt with a separately identified source snapshot. The combined

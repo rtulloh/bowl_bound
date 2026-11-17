@@ -29,3 +29,13 @@ profile with disclosed experimental yardage tradeoffs while preserving source,
 nondefensive and OOB facts. Read [generation and limitations](../docs/generated-charts.md).
 Private imported charts, other seasons, historical/other rosters, source PDFs,
 saves and detailed game records remain private and ignored. See [the sample guide](../docs/sample-teams.md) for tests and outcome coverage.
+
+The upcoming v1.1.0 catalog also includes the owner's separately approved
+**55 generated 2002 teams**, each with a reviewed commentary roster and source
+notes. Together with the unchanged 2007 catalog, there are **173 playable teams**.
+The exact manifest pins 275 new generated files and 110 roster/source-note files.
+These are statistical reconstructions using the validated shared rushing scale
+1.15, not charts imported from PDFs or a complete 2002 schedule. See
+[generation and limits](../docs/generated-charts.md#generated-2002-cohort).
+Only those exact new files are public; other local historical resources stay
+ignored. The new Ohio State and Miami files are generated statistical outputs.

@@ -40,6 +40,41 @@ For documentation, metadata, scaffolding, or initial file creation, run applicab
 
 If a meaningful regression cannot be written, explain the limitation and obtain approval before changing production behavior.
 
+### Calibrate chart generation as part of the work
+
+Calibration and measured precision validation are required parts of chart-generation
+work. Include them when adding or regenerating a cohort, or changing its source
+normalization, fitting, allocation, profiles or simulation context. Do not treat
+successful generation, loadability or the structural chart audit as completion,
+or defer calibration until the owner requests it.
+
+- Measure the neutral/current baseline against source statistics. Declare the
+  metrics, tolerances, sample size and bounded experiment before tuning; inspect
+  both pooled and individual-team rushing, passing and other affected outcomes.
+- Diagnose residuals, change only justified model parameters, and preserve prior
+  candidates and failed measurements. A neutral setting can qualify; calibration
+  does not require changing a coefficient. Never change football rules, source
+  facts, targets or tolerances merely to improve fit.
+- Freeze the selected setting, then compare baseline and candidate on matched
+  fixtures with unused simulation seeds and the same engine/coaching context.
+  Validate the complete selected cohort, source/event accounting, scoring, clock,
+  statistics, traces, replay and legal coaching. A passing screening pilot alone
+  does not qualify the cohort.
+- Independently reproduce the selected chart hashes and run the applicable full
+  regression gate. Record profiles, source/code identities, commands, samples,
+  uncertainty, team-level misses and limitations in the ticket and milestone
+  notes; keep detailed historical evidence private.
+- Report failed bounds and unverified historical fit explicitly. Unused simulation
+  seeds are not held-out historical data, and previous release exceptions do not
+  qualify a new cohort. If no setting qualifies, report that result rather than
+  calling the charts release-ready. Revalidate affected evidence after changes.
+
+Follow the [mandatory calibration workflow](docs/chart-generation.md#mandatory-calibration-and-acceptance).
+The [human-run recipe](docs/chart-calibration.md) supplies copyable commands and
+examples using the public tools, without private agent scripts or AI assistance.
+Documentation-only changes require the applicable documentation checks, without
+regenerating charts or claiming fresh calibration.
+
 ### Commit message prefixes
 
 Every Git commit subject must start with the release or milestone identifier
@@ -104,6 +139,18 @@ the private 2002 imported charts excluded above. Do not copy the seasons tree or
 broaden the exact manifest without separate review and approval.
 
 The PDF importer is a development tool, not a runtime engine dependency. Initially support only documented digitally generated layouts; fail clearly on unsupported scans or layouts.
+
+On 2026-11-17 the owner explicitly directs committing and pushing the selected
+55-team generated 2002 cohort and its reviewed commentary rosters. This narrow
+exception covers exactly the 275 generated chart/provenance files and 110
+roster/source-note files individually pinned in `release/manifest.json`.
+Use the validated shared `run_yards_scale=1.15` outputs; the published 2007
+cohort stays unchanged. The 2002 inputs have a separate factual-statistics
+lineage, not the 2007 SportsDataverse grant; retain the scoped attribution and
+limits in `docs/ATTRIBUTION.md` and `seasons/GENERATED-LICENSE.md`.
+Original PDF-imported charts, source narratives, PDFs, logos, acquisition
+caches, saves and detailed audits remain excluded. This approval grants no
+wildcard exception for other seasons, rosters or files.
 
 ## Architecture principles
 

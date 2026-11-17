@@ -29,3 +29,25 @@ source narratives, private benchmark charts, rosters, logos or trademarks are
 asserted or granted. Team names identify the statistical subjects only.
 
 See [generation and limitations](../docs/generated-charts.md).
+
+## Generated 2002 cohort and reviewed commentary rosters
+
+The owner separately approved the exact 55-team 2002 selection on 2026-11-17.
+Its 275 generated chart/provenance files and 110 roster/source-note files are
+individually listed in `release/manifest.json`. These independently generated
+statistical estimates use factual ESPN core API events and reviewed official
+gamebook corrections. Roster files contain factual names and explicit positions;
+each pair identifies its season-specific sources and coverage limits.
+
+Copyright 2026 rtulloh for original chart encoding, model transformations and
+original source notes, to the extent copyright applies. Those original
+contributions are offered under CC BY 4.0 with the attribution above and the
+per-team source notes retained. This grants only rights in contributions owned
+by the project. It does not assert an ESPN or school license grant, apply the
+2007 SportsDataverse grant to fresh 2002 inputs, or license source expression.
+Source-access terms remain separate from rights in generated outputs.
+
+No raw narratives, source pages/PDFs, biographies, logos, photos, private
+PDF-imported charts or detailed audits are included. No endorsement by ESPN,
+schools or the game publisher is implied. These are experimental statistical
+reconstructions, not official charts or a certification of historical accuracy.

@@ -232,6 +232,57 @@ historical fit unverified and publication unauthorized. Follow the
 [generated-chart audit workflow](generated-chart-audits.md) before changing any
 release chart pins. Private PDF-imported Ohio State/Miami charts remain excluded.
 
+## Mandatory calibration and acceptance
+
+For copyable setup, generation, paired-panel, frozen-selection and reproduction
+commands, follow the [human-run calibration recipe](chart-calibration.md).
+
+Calibration is part of chart-generation work, including a new or regenerated
+cohort and changes to normalization, fitting, allocation, profiles or the
+simulation context used to qualify it. Plan and perform it in the same work;
+do not wait for a separate owner request. A successful exporter, ordinary load
+or structural audit does not establish statistical precision.
+
+1. Freeze the source and its coverage/unknown-value policies, generator and engine
+   identities, coaching configuration, cohort, fixture panel and seed families.
+   Declare the metrics, denominators, tolerances, sample size, finite experiment
+   and timebox before tuning. Keep independent historical observations separate
+   from authored priors and model assumptions.
+2. Measure the neutral/current baseline. Review pooled and individual-team
+   non-sack rushing yards/attempt, passing efficiency, completions, sacks,
+   turnovers, special teams and other affected metrics. Reconcile accounting,
+   scoring, pace and play selection before attributing residuals to coefficients.
+3. Make one justified change at a time and regenerate the complete selected
+   cohort into a new private directory. Preserve every candidate, failed result
+   and exact profile. Do not tune away an engine/coaching defect, change source
+   facts or acceptance bounds, select favorable teams/seeds, or transfer an old
+   cohort's exception. A neutral profile can be the valid selected setting.
+4. Freeze the selected profile before evaluating unused simulation seeds. Compare
+   baseline and candidate on matched fixtures under the same runtime and coaching
+   policy; report exposure, variation, team-level errors and regressions outside
+   the tuned metric. Stop when the declared acceptance is met. If the bounded
+   experiment does not qualify a setting, retain the failed bounds and report
+   the cohort as unqualified rather than silently extending the search.
+5. Independently reproduce the exact selected files. Complete the source and
+   chart audits, real-engine game-panel reconciliation, scoring/clock/statistics,
+   structured traces, replay and legal-coaching checks, plus the applicable full
+   regression and packaging checks. A pilot or favorable pooled average cannot
+   replace these checks or conceal individual-team misses.
+6. Record the exact commands, source/code/chart hashes, full profiles, sample and
+   seed policy, baseline/candidate measurements, uncertainty and all remaining
+   limits in the ticket and milestone notes, with a public-safe summary. Keep raw
+   historical sources, per-play evidence and detailed audits private. Calibration
+   does not grant source rights or distribution permission. Unused simulation
+   seeds are not held-out historical data; historical fit stays UNVERIFIED unless
+   its separate evidence establishes otherwise. Changed source, profiles or
+   runtime context invalidate the affected prior qualification.
+
+For the selected 2002 example, see the
+[measured results and limitations](generated-charts.md#generated-2002-cohort).
+Its shared 1.15 rushing setting is cohort-specific evidence, not a default for
+future seasons. Documentation-only edits do not require a fresh numerical run
+and must not claim one.
+
 ## Validation and research tools
 
 ```sh

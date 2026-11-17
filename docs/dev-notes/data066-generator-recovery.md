@@ -1842,3 +1842,173 @@ under `frontend/`; the Linux real-engine browser command is `npm run test:e2e`.
 The retained logs and receipts distinguish execution environments and earlier
 failed attempts. Final documentation checks and source-push receipts are
 recorded alongside this composite receipt.
+
+### Maintained selected season integration — 2026-11-17
+
+The owner now explicitly requests adding the generated teams to `seasons/`,
+committing them and including all pending changes in the upstream push. This
+provides current approval for the exact selected 55-team 2002 cohort. The
+previously authorized 55 reviewed roster/source-note pairs accompany it.
+Only the 275 final generated files and 110 reviewed roster files are copied,
+each verified against its retained pin before and after installation. No
+directory wildcard is added. The 580 existing 2007 generated-file pins stay
+unchanged; imported PDF charts and private evidence are outside the selection.
+
+Consulted Paydirt `scripts/run_full_regression.py:279-334` for exact source
+export and ignored-file exclusion, plus FLOW-033 for the separately pending
+browser-runtime plan. Adapt explicit inventory verification and independent
+planning commits; deliberately do not reuse whole-season copying, NFL data,
+rules or a Paydirt runtime dependency. FLOW-007 is reviewed and committed
+separately as milestone 46; its spike remains unexecuted and outside v1.1.0.
+
+The maintained manifest combines 855 generated-file pins, 110 reviewed roster
+pins and the unchanged fictional samples. The schema-four chart audit keeps
+the complete original 2007 qualification and separately binds the selected
+2002 baseline expectations to the frozen 1.15 generation receipt and paired
+validation. Known designed-call sample counts, source/OOB limitations and
+conditional-depth policy are unchanged; historical fit remains UNVERIFIED.
+The scoped source and original-output attribution now records the owner's
+current distribution direction without inventing an upstream license grant.
+
+This phase changes selected data, metadata and documentation only. Existing
+synthetic packaging, audit, roster, catalog and release checks apply; no new
+behavior or artificial behavioral test is introduced. Exact receipts and logs
+are retained in `private-data/data066-season-integration-20261117-v1/`.
+
+The first focused packaging run reports 181 passes and one failure: the real
+manifest assertion still requires only the two fictional rosters. Its updated
+expectation keeps those original pins and requires exactly both roster files
+for each of the 55 selected 2002 generated teams (110 historical files), checks
+all hashes and rejects extra selections. This is the owner's explicit catalog
+expansion, not a relaxation of unselected-file guards. Synthetic controls for
+unapproved roster files remain unchanged. The first full run is interrupted
+before acceptance and retained; the corrected selection receives a fresh gate.
+
+### Required calibration and human-run recipe — 2026-11-17
+
+At the owner's direction, `AGENTS.md` now makes baseline measurement,
+calibration/precision review, a frozen selection, unused-seed validation and
+independent reproduction part of chart-generation work. A neutral setting may
+qualify; changing a coefficient is not mandatory. Documentation-only changes
+do not require numerical tuning. The selected 1.15 profile is unchanged.
+
+The public [calibration recipe](../chart-calibration.md) uses only the restored
+public generator and current research runner. It covers tool/source setup,
+neutral and trial generation, paired engine panels, immutable selection,
+validation, exact reproduction and release selection. It explains denominators,
+current experimental tolerances, sample insufficiency, game clustering, pooled
+versus individual-team results, bounded parameter choices and relevant synthetic,
+packaging, cross-season browser and full regression commands. It distinguishes
+simulation variation from independent historical validation and preserves
+failures rather than treating structural success as precision evidence.
+
+Consulted Paydirt `AGENTS.md` and `docs/chart-calibration.md:74-102` for baseline,
+bounded experiments and release evidence. Adapt those process ideas only;
+deliberately do not reuse NFL samples, coefficients, release exceptions or a
+runtime dependency. Bowl Bound's engine, exact dice and current contracts remain
+authoritative.
+
+The copyable generator/panel/selection snippets execute successfully with two
+fictional teams: four matched panels, eight complete games, checkpoint/final
+replay, validation-before-selection rejection and independent reproduction of
+all selected pins. Only the isolated working-directory path changes. The tiny
+sample is documentation execution evidence, not calibration qualification.
+Final Ruff snippet formatting is AST-identical to those executed snippets.
+Receipts are under `recipe-check/` and `recipe-current-document.json` in this
+phase's private evidence directory. No new historical fit or tuning is claimed.
+
+### Selected package and cross-season integration checks — 2026-11-17
+
+The maintained selected files stage and assemble into a runtime with 173 teams
+and all 55 reviewed 2002 roster pairs. All 55 pass the normal packaged API/CLI
+commentary paths, generic fallback, save/load, replay and named/generic outcome
+and RNG equivalence. The actual package separately passes rendered catalog,
+selection, named narration and UI save/download/load for all 55 new teams;
+browser errors are empty and the server exits normally. The unchanged 72-case
+real-engine browser suite passes in Linux, including its cross-season controls.
+
+An additional assembled-runtime API check starts 2002 Ohio State versus 2007
+Ohio State, and 2002 Miami versus 2007 Florida, in both home/away orientations.
+All four preserve both canonical season/team IDs through a snap and save/load,
+with equal state, rolls, commands and RNG. This API check is distinct from the
+rendered UI checks and does not certify a native download.
+
+The actual runtime manifest SHA-256 is
+`218a1a46dfa313a13f028c0be1d79f047f1563d0256d4e17cafde7a705f20aab`.
+Private receipts: `package-and-other-completion.json`, `packaged-rosters/receipt.json`,
+`browser-work/selected-season-browser/receipt.json` and `cross-season-api.json`.
+The package remains a source/runtime validation artifact, not a published app.
+
+The current frontend dependency audit fails with 13 high findings rooted in
+picomatch GHSA-fc5q-39xc-vjpf. Both host and Linux reproduce it on unchanged
+lockfile bytes; the earlier zero-finding response is retained as earlier evidence,
+not current acceptance. [DEV-087](issues/DEV/DEV-087.md) records the unpatched
+upstream advisory and required remediation. No exclusion or forced downgrade
+is introduced. This failure blocks an all-green release gate and the existing
+test-gated native workflow.
+
+Frontend 197-test success retains 91 React `act` warnings and two duplicate-key
+warnings: PlayLog's existing DEV-064 warning and ChartGrid's separately tracked
+[DEV-088](issues/DEV/DEV-088.md) follow-up. The existing `act` warning is DEV-044.
+The deprecated `whatwg-encoding` notice and disabled unwritable host pip cache
+are also retained. Linux setup emits optional manpage/combined-certificate rehash
+notices; browser downloads still verify TLS using the explicit CA bundle.
+No warning is suppressed. Disposable staging/browser dependencies and this
+phase's container are removed after evidence verification, preserving source,
+charts, rosters, receipts and the validated runtime.
+
+### Final selected-season source validation — 2026-11-17
+
+The fresh full Python 3.12.16 run passes **6,888 cases in 1,731.35 seconds**
+with no skips/warnings. All original node IDs execute exactly once, all 1,988
+frozen source/data pins verify and measured module imports stay inside the
+frozen tree. All seven wheel tests share one worker. This run uses six workers,
+file scheduling and the local gate's no-coverage mode.
+
+The separate covered run completes in **4,925.87 seconds**, with **90.77%
+branch-enabled coverage**, 6,887 passes and one failure: the obsolete real
+catalog assertion expects 118 teams where the approved selection has 173.
+Its precisely corrected 40-case module passes, followed by the fresh clean full
+run above. No production source differs between the covered and clean runs.
+This is not a clean covered run; the failed original log remains intact.
+The updated expectation requires the two fictional samples, exactly 55 selected
+2002 teams and 116 generated 2007 teams, with no other season.
+
+Post-snapshot changes are documentation and the bounded CI execution policy:
+four workers, file scheduling, slow-test diagnostics and development-only xdist.
+The workflow contracts first fail in the two expected places, then 30 focused
+checks pass. The actual four-worker packaging/workflow/generator API command
+passes 163 cases in 14.69 seconds. All 52 documentation/workflow checks pass;
+lint, formatting and dependency consistency pass, with the recorded disabled
+pip-cache warning. No engine/generator behavior or chart profile changes.
+Hosted completion remains unverified until the pushed workflow runs.
+
+The full source/data regression is **not all green**: the final npm audit still
+reports 13 high findings (DEV-087), and existing frontend/setup warnings remain
+as recorded above. The receipt therefore records
+`DATA_AND_FUNCTIONAL_CHECKS_PASS_AUDIT_FAILED`, `full_regression_all_green: false`
+and `release_qualified: false`. Native builds and actual downloadable-artifact
+verification remain separate gates. No release tag or GitHub release is created.
+
+Private receipt: `private-data/data066-season-integration-20261117-v1/completion.json`;
+SHA-256 `2b479ef9fb72494461f4bdcc3b5dc9f8c1f21b59ac72944a7c764012c9ca5af2`.
+Exact full-run commands are in `run-full-gate-v2.py` / `run-full-gate-v3.py`
+and their `process.json` receipts: the project Python invokes
+`-m pytest -p bb_validation -n 6 --dist=loadfile`, followed respectively by
+`--cov --cov-report=term-missing -q` or `--no-cov -q`, from each retained frozen
+copy. The private audit plugin verifies inputs, imports and inventory without
+changing production code. Other checks run from the checkout:
+
+```sh
+.venv/bin/python -m pytest tests/test_validate_install_artifact.py -q
+.venv/bin/python -m pytest tests/test_packaging.py tests/test_tests_workflow.py tests/test_build_workflow.py tests/test_run_full_regression.py tests/test_release_package.py tests/test_validate_install_artifact.py tests/chartgen/test_release_pipeline.py --no-cov -n 4 --dist=loadfile --durations=25 -q
+.venv/bin/python -m pytest tests/test_issue_tracker.py tests/test_release_player_docs.py tests/test_priority_docs.py tests/test_tests_workflow.py tests/test_build_workflow.py tests/test_run_full_regression.py -q
+.venv/bin/python -m ruff check .
+.venv/bin/python -m ruff format --check .
+.venv/bin/python -m pip check
+```
+
+Frontend commands are `npm test`, `npm run build` and `npm audit`; real-engine
+browser regression is `npm run test:e2e` in the retained Linux environment.
+Staging/auditing, assembled API/CLI/browser checks and recipe execution retain
+separate exact command, source and output receipts in this phase's directory.

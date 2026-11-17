@@ -585,19 +585,30 @@ def test_sample_rosters_require_matching_pinned_bytes(
     assert not (tmp_path / "output").exists()
 
 
-def test_real_manifest_selects_exactly_the_two_original_rosters_and_sources() -> None:
+def test_real_manifest_selects_exact_pinned_sample_and_reviewed_roster_pairs() -> None:
     root = Path(__file__).resolve().parents[1]
     manifest = json.loads((root / "release/manifest.json").read_text())
     selected = {
         name for name in manifest["runtime"] if name.startswith("seasons/") and "roster" in name
     }
-    assert selected == set(APPROVED_ROSTERS)
-    assert selected <= manifest["sample_sha256"].keys()
+    samples = set(APPROVED_ROSTERS)
+    reviewed = manifest["roster_sha256"]
+    teams = {
+        name.removeprefix("seasons/").removesuffix("/team.yaml")
+        for name in manifest["generated_sha256"]
+        if name.startswith("seasons/2002/") and name.endswith("/team.yaml")
+    }
+    assert len(teams) == 55
+    assert set(reviewed) == {
+        f"seasons/{team}/{name}" for team in teams for name in ("roster.json", "roster-sources.md")
+    }
+    assert len(reviewed) == 110
+    assert selected == samples | set(reviewed)
+    assert samples <= manifest["sample_sha256"].keys()
+    assert not samples & set(reviewed)
+    pins = {**manifest["sample_sha256"], **reviewed}
     for name in selected:
-        assert (
-            hashlib.sha256((root / name).read_bytes()).hexdigest()
-            == manifest["sample_sha256"][name]
-        )
+        assert hashlib.sha256((root / name).read_bytes()).hexdigest() == pins[name]
 
 
 def set_release_version(source: Path, version: str) -> None:

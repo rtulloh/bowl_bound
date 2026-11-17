@@ -236,3 +236,47 @@ The separate unchanged 72-test browser suite also passes locally in Linux.
 Native build/platform launch certification, maintained packaging integration and
 final Python coverage remain separate; roster inclusion authorization already
 recorded on this ticket is unchanged.
+
+--- 2026-11-17 — maintained exact roster selection ---
+
+The owner requests committing the selected generated season and pushing all
+pending changes. All 55 reviewed roster/source-note pairs from inventory v6
+are now installed alongside the generated 2002 teams and individually pinned
+in `release/manifest.json` (110 files). Ordinary roster loading succeeds for
+all 55. The earlier source/role review and coverage limitations remain intact;
+no new name, position, starter or returner membership is inferred.
+The 2007 acquisition candidates do not broaden this exact selection.
+Current maintained packaging/commentary checks and the full push gate are
+underway. Keep the ticket open until tested integration is committed.
+
+The focused packaging run exposes the old real-manifest assertion that only
+fictional rosters may be selected (181 passes, one failure). Its expectation
+is updated for the expressly approved 55 historical pairs: exact team membership,
+both file categories, all 110 hashes, preserved original samples and no extras.
+Synthetic unselected/tampered roster rejection controls remain unchanged.
+
+--- 2026-11-17 12:19 ---
+
+The exact maintained 110-file roster selection passes current assembled API/CLI
+checks for all 55 teams: season-correct named commentary, generic missing-role
+fallback, outcome/RNG equivalence and save/load/replay. The assembled browser
+also passes all 55 selection/narration/save/download/load checks, with the exact
+173-team rendered/API catalog, no browser errors and normal server shutdown.
+The full Python inventory passes 6,888 cases; 197 frontend and 72 separate Linux
+browser cases pass. No source name, role or partial-roster limitation changes.
+
+Actual native builds/platform verification remain outstanding. DEV-087 records
+the current failed dependency audit; source/runtime success does not waive it.
+The 2007 candidates and their 49 acquisition gaps remain outside this exact
+55-team release selection. Keep the ticket open pending committed maintained
+acceptance and applicable release verification.
+
+--- 2026-11-17 12:38 ---
+
+Final coverage evidence: 90.77% branch-enabled coverage; the original covered
+run has 6,887 passes and one obsolete 118-team catalog assertion failure.
+The corrected 40-case module and fresh full 6,888-case run pass with identical
+production sources. The original failure is retained, not represented as a
+clean covered run. Current npm audit still fails with 13 high findings;
+release/native acceptance remains pending. Complete evidence is in the
+[final source validation](../../data066-generator-recovery.md#final-selected-season-source-validation-2026-11-17).

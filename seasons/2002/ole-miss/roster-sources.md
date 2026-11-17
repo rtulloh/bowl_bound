@@ -1,0 +1,14 @@
+# 2002 Ole Miss roster sources
+
+This is a partial, season-specific commentary roster: 54 distinct names and 57 explicit role memberships. It is not a complete season roster, starter list or game-availability claim.
+
+School-produced 2002 MainStay Independence Bowl notes: https://www.huskermax.com/wp-content/uploads/2021/02/2002-Ole-Miss-football-pregame-notes-vs.-Nebraska.pdf
+Source SHA-256: `5eb2b3e8abd77b8d78b6646ff312354d0cb5a085a3e97f40d1adb91dd2bcb2ca`; reviewed page 12, Ole Miss column only. The cover identifies Ole Miss Athletic Media Relations and the December 27, 2002 fixture. The original school article dated December 17, 2002 links its game notes at https://olemisssports.com/news/2002/12/17/football_game_notes; retained HTML SHA-256 `f90514014b72d1a0f747e06e96574bc16303553b678ebec22e51fda320414345`. The linked legacy school PDF currently returns a non-PDF response; this PDF is retained from the contemporary-document mirror and is not represented as a current official-host download.
+
+Explicit group mappings: offense SE/FL/W to WR; LT/LG/C/RG/RT to OL; TE/QB/RB/FB as printed. Defense LE/LT/N/RE to DL, MLB/SLB to LB, and LCB/SS/FS/WS/RCB to DB. Context distinguishes the defense's LT from offensive LT. Only immediately associated backups in the same printed group inherit that group's explicit label. PK maps to K, P to P, and explicitly printed KR/PR to KR. The returner memberships are Chris Collins, Mike Espy and Bill Flowers. HOLD/SNAP rows provide no new positions.
+
+Robert Williams is independently listed as a senior running back in the school's October 21, 2002 game notes: https://olemisssports.com/news/2002/10/21/Football_Game_Notes; HTML SHA-256 `1cfe6c582866d795bb03b2cf3213d61ef009cc1a1d426007541225a0d69bc854`. His absence from the bowl depth chart is preserved by this coverage statement; no bowl availability is inferred.
+
+Germain Landrum's spelling and defensive-end role follow the school's November 24 senior notes: https://olemisssports.com/news/2002/11/24/football_game_notes; HTML SHA-256 `4a3a574aa1759060840fcaa695ea416dedf6a18f4ddce04dbbf4d04cde715041`. The bowl PDF prints Germaine Landrum; that variant is retained as a source disagreement, not a second player. Its anomalous second TE row names Justin Sawyer with offensive-line measurements/another number; no TE role is inferred from that conflicting row. His unambiguous LG/C backup rows support OL only.
+
+The earlier 137-name preseason mirror candidate remains preserved privately; this selection uses the bounded school-produced depth chart plus the two explicit school notes above. No names or positions are inferred from statistics. Source layouts, biographies and narratives remain private. Ordinary roster loading passes. Paydirt DATA-049 informs explicit season/role evidence only; no NFL data or runtime dependency is reused.

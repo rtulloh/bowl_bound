@@ -13,10 +13,14 @@ under `seasons/` remain ignored unless separately reviewed for release. Public t
 names only. On 2026-10-29 the owner approved exactly the existing fictional
 Cedar Valley and Harbor Tech (2007) `roster.json` files and their
 `roster-sources.md` provenance for public tracking and alpha distribution.
-Those CC0 samples remain the published roster allowlist. On 2026-11-16 the owner
+Those CC0 samples retain their separate original roster allowlist. On 2026-11-16 the owner
 also authorized reviewed historical commentary rosters for the release cohort
 (DATA-067), initially the selected 55 teams from 2002. Acquisition candidates
 remain ignored until season/source validation and exact release pins are ready.
+On 2026-11-17 the owner directs committing the selected season: all 55 reviewed
+2002 roster/source-note pairs are now individually pinned in
+`release/manifest.json`. Some are partial game lineups, spring, depth or bowl
+lists. Missing positions retain generic commentary; names do not change results.
 This does not authorize unrelated rosters, raw pages/PDFs, biographies or images;
 do not add wildcard rules.
 

@@ -1,0 +1,121 @@
+{
+  "rb": [
+    "Chet Ackerman",
+    "Tatum Bell",
+    "Tim Burrough",
+    "Mike Denard",
+    "Greg Gold",
+    "Greg Jones",
+    "Vernand Morency",
+    "Seymore Shaw"
+  ],
+  "qb": [
+    "Will Ahrberg",
+    "Jamie Beeghley",
+    "Michael Cox",
+    "Josh Fields",
+    "Aso Pogi",
+    "Matt Warren"
+  ],
+  "ol": [
+    "Chris Akin",
+    "Doug Bond",
+    "Ben Buie",
+    "Jonathan Cruz",
+    "Corey Curtis",
+    "Kellen Davis",
+    "Jacob Dressen",
+    "Kyle Eaton",
+    "Bob Hafler",
+    "Sam Hall",
+    "Jon Hayhurst",
+    "Doug Koenig",
+    "Bryon Machado",
+    "Sam Mayes",
+    "Caleb Noble",
+    "Jason Russell",
+    "Kurt Seifried",
+    "Eric Tibbits",
+    "Dustin Vanderhoof",
+    "Matt Wakefield"
+  ],
+  "db": [
+    "Kobina Amoo",
+    "Fath' Carter",
+    "Elbert Craig",
+    "Austin Eudaly",
+    "Vernon Grant",
+    "Chase Holland",
+    "Ricklan Holmes-Miller",
+    "Andre Johnson",
+    "Josh Letourneau",
+    "Chris Massey",
+    "Daniel McLemore",
+    "Kirk Milligan",
+    "Chay Nease",
+    "Emeka Ogbonna",
+    "Jamar Ransom",
+    "Freddie Sinclair",
+    "Bryan Vardeman",
+    "Charlie Ward",
+    "Darrent Williams",
+    "Thomas Wright"
+  ],
+  "te": [
+    "Billy Bajema",
+    "Matt Hardison",
+    "Jesse Jackson",
+    "Charlie Johnson"
+  ],
+  "dl": [
+    "Kyle Beck",
+    "Jerry Don Bray",
+    "LaWaylon Brown",
+    "Trumain Carroll",
+    "Lance Carson",
+    "Clay Coe",
+    "Marcus Craig",
+    "Kyle Hix",
+    "Mike Mason",
+    "Greg Richmond",
+    "Antonio Smith",
+    "Khreem Smith",
+    "Kevin Williams",
+    "Mike Williams",
+    "Shawn Willis"
+  ],
+  "wr": [
+    "Adonis Brewer",
+    "Terrance Davis-Bryant",
+    "John Lewis",
+    "Gabe Lindsay",
+    "Errick McCown",
+    "Mitch Robinson",
+    "Kenneth Williams",
+    "John Wohlgemuth",
+    "D'Juan Woods",
+    "Rashaun Woods",
+    "Chris Wright",
+    "Willie Young"
+  ],
+  "lb": [
+    "Justin Deason",
+    "Paul Duren",
+    "Glenn Jackson",
+    "Jared McCoy",
+    "Pagitte McGee",
+    "Preston McIntyre",
+    "Lawrence Pinson",
+    "Terrence Robinson",
+    "Darnell Smith",
+    "Josh Wheeler"
+  ],
+  "k": [
+    "Cole Farden",
+    "Luke Phillips"
+  ],
+  "p": [
+    "Sky Rylant",
+    "Ryan Wimberly"
+  ]
+}
