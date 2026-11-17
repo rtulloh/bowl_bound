@@ -67,3 +67,7 @@ def test_browser_job_provides_the_interpreter_expected_by_the_harness() -> None:
     assert "python -m venv .venv" in commands
     assert '.venv/bin/python -m pip install -e ".[dev,web,pdf]"' in commands
     assert ".venv/bin/python -m pytest --cov" in commands
+    assert "-n 4 --dist=loadfile --durations=25" in commands
+    pyproject = (ROOT / "pyproject.toml").read_text()
+    dev = re.search(r"^dev = \[(.*?)^\]", pyproject, re.MULTILINE | re.DOTALL)
+    assert dev is not None and '"pytest-xdist==3.8.0"' in dev.group(1)

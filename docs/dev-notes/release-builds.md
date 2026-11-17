@@ -28,6 +28,26 @@ Local Python tests run without coverage for speed. Run `pytest --cov` as part
 of individual changes; the upstream CI gate enforces the 75% `fail_under`
 threshold.
 
+The hosted Python command uses four `pytest-xdist==3.8.0` workers with
+`--dist=loadfile` and retains combined branch coverage and the same 75% floor.
+All tests in a file stay in one worker, including the wheel-building tests
+that share checkout build state. This development dependency is installed by
+the `dev` extra; native requirements remain separate. The shared source job
+still has a 240-minute bound and prints its 25 slowest tests. DEV-083 records
+the earlier four-hour serial cancellation; a local parallel pass is not a
+guarantee about hosted duration. For an equivalent coverage invocation:
+
+```sh
+.venv/bin/python -m pytest --cov --cov-report=term-missing -n 4 --dist=loadfile --durations=25 -q
+```
+
+The local runner above keeps its serial, no-coverage default. To diagnose slow
+Python cases without rerunning other groups, use the explicit command above;
+that diagnostic alone does not replace the complete regression gate. See the
+[xdist scheduler](https://pytest-xdist.readthedocs.io/en/stable/distribution.html)
+and [combined coverage](https://pytest-cov.readthedocs.io/en/latest/xdist.html)
+documentation for the upstream execution model.
+
 `--python PATH` selects the project interpreter (default `.venv/bin/python`).
 `npm ci` and `npx playwright install --with-deps chromium` need network access
 on a cold machine; the remaining checks run against local dependencies. The

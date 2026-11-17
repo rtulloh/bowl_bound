@@ -26,8 +26,8 @@ env:
 jobs:
   test:
     runs-on: ubuntu-24.04
-    # Recovered generator refinement pushes the 6,850-test local coverage run beyond two hours.
-    # Leave bounded room for hosted variance, frontend, chart audit and browser checks.
+    # Serial coverage exceeded this bound on the hosted runner (DEV-083).
+    # Use bounded file-scheduled workers below; keep room for the remaining checks.
     timeout-minutes: 240
     steps:
       - name: Validate requested source commit
@@ -56,7 +56,7 @@ jobs:
           .venv/bin/python -m pip install -e ".[generator]"
       - name: Python tests, lint and formatting
         run: |
-          .venv/bin/python -m pytest --cov --cov-report=term-missing -q
+          .venv/bin/python -m pytest --cov --cov-report=term-missing -n 4 --dist=loadfile --durations=25 -q
           .venv/bin/python -m ruff check .
           .venv/bin/python -m ruff format --check .
           .venv/bin/python -m pip check

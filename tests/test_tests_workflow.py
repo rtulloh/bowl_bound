@@ -38,7 +38,8 @@ def test_automatic_gate_retains_the_whole_established_regression() -> None:
     for required in (
         "python -m venv .venv",
         ".[dev,web,pdf]",
-        ".venv/bin/python -m pytest --cov --cov-report=term-missing -q",
+        ".venv/bin/python -m pytest --cov --cov-report=term-missing "
+        "-n 4 --dist=loadfile --durations=25 -q",
         ".venv/bin/python -m ruff check .",
         ".venv/bin/python -m ruff format --check .",
         ".venv/bin/python -m pip check",
