@@ -581,3 +581,70 @@ pass. The [candidate review](../../data066-release-review.md) records exact
 55-team scope, package hashes and the failed experimental rushing reference.
 Generator source publication is authorized; exact new-chart distribution and
 maintained data acceptance are still pending. Keep this ticket open.
+
+--- 2026-11-17 06:54 ---
+
+The owner authorizes a two-hour rushing-calibration timebox and an earlier
+stop after a valid setting. The first eligible setting,
+`CalibrationProfile(run_yards_scale=1.15)` shared across all 55 teams with
+every other field and defensive profile neutral, is frozen before opening
+unused-seed validation metrics. Source facts/targets, rules and reference
+coaching are fixed. A second predeclared training trial is retained without
+changing that selection; no third setting or additional tuning is needed.
+
+All 12 existing pooled references pass on the 251-fixture fresh-seed panel.
+Against source 4.5020132767, non-sack rushing improves from 3.4982233895
+(19,419 attempts) to 4.2383582090 (20,100 attempts), reducing absolute pooled
+error by 73.734%. Average absolute team rushing error improves from
+0.9359369477 to 0.2931111067; 47/55 teams are within half a yard, versus 10/55.
+The paired improvement's approximate 95% interval is [0.6162990219, 0.8639706171]
+yards/attempt. Both 251-game validation panels pass state/trace, period-score,
+checkpoint/final replay and legal-choice review, with no coaching fallbacks.
+
+The generator's release API now exposes its existing bounded calibration
+profiles; synthetic tests verify neutral byte identity, profile receipts,
+increased rushing gains and independent passing targets/event rates. The shared
+breakaway response can legitimately change passing-cell representation.
+The original 2007 manifest's 580 generated-file pins still match. Full details:
+[bounded calibration](../../data066-generator-recovery.md#bounded-rushing-calibration-2026-11-17).
+
+Selected private files/profile/paired audit:
+`private-data/data066-rush-calibration-20261117-v1/scale-1.15/candidate/`,
+`selected-profile.json`, and `validation-review.json`.
+Generation-receipt SHA-256:
+`bd2d86b428e4b00a28b1aa1bf6f03f7f64183dea050b6dfeab28a3d3d9e6c535`.
+Numerical search stops after this validation as requested.
+
+DATA-066 remains open for maintained release acceptance using the selected
+candidate's exact pins. The prior package/full-gate data pins describe the
+neutral charts. Historical fit stays UNVERIFIED: eight individual teams remain
+outside the half-yard reference, source/model limitations persist, and unused
+simulation seeds are not held-out historical observations. Exact chart
+distribution approval remains separate; generator/source and DATA-067 roster
+approvals are already established.
+
+--- 2026-11-17 10:13 ---
+
+Source publication regression is complete with the runtime interruption
+disclosed: the full 6,888-case inventory passes 6,886 cases and encounters
+two `FileNotFoundError` failures after Homebrew replaces the original Python
+3.12.8 standard-library path. Both exact cases then pass on Python 3.12.16
+with unchanged code and assertions. Combined branch-enabled coverage is
+90.77%, with all original arcs preserved and no skips/warnings.
+This is a composite result, not one clean full run. All 1,602 frozen source
+pins, original test execution and import roots verify independently.
+
+The 14 release-pipeline cases also pass on the current Python 3.12 runtime.
+Frontend 197/197, production build, audit (zero vulnerabilities), Linux
+real-engine browser 72/72, lint, formatting, dependency consistency and the
+published-chart audit pass. Final API regeneration reproduces all 55 selected
+teams' 275 final and 275 baseline pins. Source publication includes the API,
+synthetic tests and documentation; candidate charts remain private and the
+published 2007 manifest stays unchanged. Details and exact commands:
+[source regression](../../data066-generator-recovery.md#completed-source-regression-after-runtime-retests).
+
+Composite receipt: `private-data/data066-rush-calibration-20261117-v1/publication-gate/completion.json`
+(SHA-256 `46c6c476dd719f77e365c63d38606a30278608a27500ad7cbeb872ab24b7c6d9`). Earlier failed attempts are retained.
+DATA-066 remains open for maintained selected-candidate release acceptance;
+historical fit remains UNVERIFIED and exact new-chart distribution remains a
+separate approval scope. No further numerical tuning is performed.

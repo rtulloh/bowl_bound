@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from bowl_bound.models import Defense, Play, ResultKind
+from bowl_bound.models import Defense, Play, ResultKind, TeamChart
 from bowl_bound.team_csv import load_team
 from scripts import audit_generated_charts as audit
 from tests.chartgen.test_generation import events as events
@@ -140,3 +140,86 @@ def test_cli_reports_missing_source_without_traceback(
     )
     assert result == 2
     assert "source" in capsys.readouterr().err.lower()
+
+
+def test_explicit_neutral_calibration_preserves_generated_chart_bytes(
+    tmp_path: Path, events: list[Event]
+) -> None:
+    from tools.chartgen.generate import CalibrationProfile, DefensiveProfile
+
+    original = pipeline.generate_release_cohort(
+        events, {"1": "Cedar Valley"}, 2007, tmp_path / "private-data" / "original", seed=19
+    )
+    explicit = pipeline.generate_release_cohort(
+        events,
+        {"1": "Cedar Valley"},
+        2007,
+        tmp_path / "private-data" / "explicit",
+        seed=19,
+        profile=CalibrationProfile(),
+        defensive_profile=DefensiveProfile(),
+    )
+    assert explicit["output_pins"] == original["output_pins"]
+    assert explicit["baseline_pins"] == original["baseline_pins"]
+
+
+def test_calibrated_cohort_records_profiles_and_preserves_pass_targets(
+    tmp_path: Path, events: list[Event]
+) -> None:
+    from tools.chartgen.generate import CalibrationProfile, DefensiveProfile, offensive_weights
+
+    original_path = tmp_path / "private-data" / "original"
+    calibrated_path = tmp_path / "private-data" / "calibrated"
+    original = pipeline.generate_release_cohort(
+        events, {"1": "Cedar Valley"}, 2007, original_path, seed=19
+    )
+    calibrated = pipeline.generate_release_cohort(
+        events,
+        {"1": "Cedar Valley"},
+        2007,
+        calibrated_path,
+        seed=19,
+        profile=CalibrationProfile(run_yards_scale=1.25),
+        defensive_profile=DefensiveProfile(run_yards_offset=0.25),
+    )
+    assert calibrated["source_sha256"] == original["source_sha256"]
+    assert calibrated["historical_fit"] == "UNVERIFIED"
+    assert calibrated["publication_authorized"] is False
+    generation = calibrated["teams"]["2007/cedar-valley"]["baseline"]["generation"]
+    assert generation["profile"]["run_yards_scale"] == 1.25
+    assert generation["defensive_profile"]["run_yards_offset"] == 0.25
+    old, _ = load_team(original_path / "seasons/2007", "cedar-valley")
+    new, _ = load_team(calibrated_path / "seasons/2007", "cedar-valley")
+    rushing = {Play.ONE, Play.TWO, Play.THREE, Play.FOUR}
+    weights = offensive_weights()
+
+    def rushing_mass(chart: TeamChart) -> int:
+        return sum(
+            weights[row.roll] * (row.cell.yards or 0)
+            for row in chart.offense
+            if row.play in rushing and row.cell.kind in {ResultKind.YARDS, ResultKind.NO_CHANGE}
+        )
+
+    # B is shared with rushing: a changed rush tail can legitimately switch a
+    # passing gain between direct yards and B. Compare the unchanged fitted
+    # passing evidence and event rates, rather than requiring the same layout.
+    previous = original["teams"]["2007/cedar-valley"]["baseline"]["generation"]
+    for column in ("6", "7", "8", "9"):
+        before, after = (
+            next(
+                row
+                for row in report["source_distribution_audits"]
+                if row["section"] == "offense" and row["column"] == column
+            )
+            for report in (previous, generation)
+        )
+        assert after["source_numeric_masses"] == before["source_numeric_masses"]
+        for kind in ("fumble", "interception", "QT", "QR", "incomplete"):
+            assert after["kind_probabilities"][kind] == before["kind_probabilities"][kind]
+        for kind in ("fumble", "interception"):
+            assert (
+                after["location_distributions"][kind]["source_masses"]
+                == before["location_distributions"][kind]["source_masses"]
+            )
+    assert rushing_mass(new) > rushing_mass(old)
+    assert calibrated["output_pins"] != original["output_pins"]

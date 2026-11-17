@@ -18,7 +18,7 @@ from ..chart_depth_pipeline import finalize_depth_files
 from .alpha_export import encode_standard_cohort
 from .cohort_model import SUPPORTED_SEASONS, TOOL_VERSION, apply_cohort_model, model_identity
 from .evidence import Event
-from .generate import EvidenceModel, generate_team
+from .generate import CalibrationProfile, DefensiveProfile, EvidenceModel, generate_team
 from .private_io import private_destination
 from .research_inputs import semantic_sha256
 from .tactics import APPROVED_YARDAGE_POLICY_SHA256, TacticalProfile
@@ -55,6 +55,8 @@ def generate_release_cohort(
     output: Path,
     *,
     seed: int = 1,
+    profile: CalibrationProfile | None = None,
+    defensive_profile: DefensiveProfile | None = None,
 ) -> dict[str, Any]:
     """Generate a new candidate and verify it without granting release approval.
 
@@ -115,6 +117,8 @@ def generate_release_cohort(
                 season,
                 seed=seed,
                 model=model,
+                profile=profile,
+                defensive_profile=defensive_profile,
                 tactics=TacticalProfile.for_corrected_release(APPROVED_YARDAGE_POLICY_SHA256),
             )
             baseline_files = _baseline_files(baseline, metadata)

@@ -1661,3 +1661,184 @@ The exact new 275 generated and 110 previously approved roster/source-note files
 remain private pending the recorded new-chart scope/distribution decision.
 Historical fit is still UNVERIFIED and the retained rushing reference FAILED.
 Version preparation and actual native/published-asset acceptance are later phases.
+
+## Bounded rushing calibration, 2026-11-17
+
+The owner requests up to two hours of calibration, with an earlier stop once a
+valid setting is found. The preserved 55-team baseline uses
+`run_yards_scale=1.0` and `run_yards_offset=0.0` throughout; its previously
+reviewed 251-game panel is training evidence, not independent validation.
+
+Consulted Paydirt's `docs/chart-calibration.md:74-102` and
+`docs/dev-notes/1977-calibration-release-goal.md:19-37,49-75`. Adapt the frozen
+recipe, common simulation seeds, one-control search, finite trial count and
+unused validation seeds. Do not copy NFL coefficients, gameplay, team data or
+Paydirt's statistical release waiver.
+
+The predeclared private plan tests shared offensive rushing scales 1.15 and
+1.30, with at most one further bracket/interpolation trial if needed. All
+defensive parameters, source facts, source targets, engine rules and coaching
+stay fixed. Canonical generation receives the existing bounded profile through
+new optional Python API arguments and records it in each team's baseline
+receipt. Neutral defaults preserve identical baseline and final file pins.
+The shared breakaway response can change the representation of passing gains;
+unchanged fitted passing targets/rates and actual game results are checked.
+
+Training reuses the same 251 actual matchups and original seeds. Selection must
+be frozen before examining validation metrics. Validation pairs the original
+and selected charts on all 251 fixtures using master seed 2026111704. These
+are unused simulation seeds, not held-out historical observations. Compare
+pooled rushing against the existing 0.5-yard reference, all other existing
+pooled references, per-team errors, exposure, uncertainty, scoring/pace,
+structured reports, legal decisions and checkpoint/final replays. Preserve
+all attempts and stop searching once independently validated. The private
+plan and artifacts live in
+`private-data/data066-rush-calibration-20261117-v1/`.
+
+### Frozen setting and independent validation result
+
+The first completed eligible training setting, shared `run_yards_scale=1.15`,
+passes all 12 existing pooled references. Training rushing rises from
+3.5644597512 to 4.2585946924 versus source 4.5020132767; average absolute
+team error falls from 0.8926366377 to 0.3413068961, with 43/55 teams inside the
+half-yard reference. The choice is frozen before opening validation metrics.
+At selection time the predeclared 1.30 training run was already running. It
+also completes and is retained, without influencing the frozen choice. No third
+setting is needed.
+
+Fresh-seed validation confirms all 12 pooled references, including rushing:
+
+| Metric | Original neutral charts | Selected 1.15 charts |
+| --- | ---: | ---: |
+| Non-sack rushing yards/attempt | 3.4982233895 | 4.2383582090 |
+| Source target | 4.5020132767 | 4.5020132767 |
+| Absolute pooled rushing error | 1.0037898873 | 0.2636550678 |
+| Rushing attempts | 19,419 | 20,100 |
+| Average absolute team rushing error | 0.9359369477 | 0.2931111067 |
+| Team rushing error RMSE | 1.0144350319 | 0.3586238736 |
+| Teams within half a yard/attempt | 10/55 | 47/55 |
+| Points per team/game | 29.8545816733 | 31.3266932271 |
+| Offensive plays per team/game | 79.4163346614 | 79.4800796813 |
+
+Each panel contains the same 251 fixtures with paired unused seeds. The
+rushing gain is 0.7401348195 yards/attempt, with paired game-cluster standard
+error 0.0631815294 and approximate 95% interval [0.6162990219, 0.8639706171].
+Absolute pooled rushing error falls 73.734%. The candidate's rushing standard
+error is 0.0572879558. These simulation intervals do not quantify source-target
+uncertainty.
+
+Both panels finish every game, verify checkpoint/final replays, reconcile
+period scores, retain supported completed reports/traces and make only legal
+choices, with zero coaching fallbacks. The selected panel retains 47,097 engine
+reports and 47,046 timing entries, including three overtime games. Comparable
+state repetition remains a descriptive review, with 1,231 repeated buckets and
+a largest single-choice share of 7/9; no new threshold is invented.
+
+Numerical search stops on this validated setting as requested. All other
+offensive fields and all defensive profiles remain neutral. Engine, coaching,
+source facts and source targets stay fixed. The exact private profile is
+`selected-profile.json`; selected 55-team outputs and 275 final file pins are
+in `scale-1.15/candidate/` under the calibration folder. Frozen generation
+receipt SHA-256:
+`bd2d86b428e4b00a28b1aa1bf6f03f7f64183dea050b6dfeab28a3d3d9e6c535`.
+The paired audit is `validation-review.json`.
+
+This closes the failed pooled rushing comparison for the selected candidate.
+Historical fit remains UNVERIFIED: eight teams remain outside the individual
+half-yard reference, no historical source holdout is claimed, and source/model
+limitations remain disclosed. Earlier package and full-gate pins describe the
+neutral cohort; maintained acceptance needs the selected candidate's exact
+pins and applicable validation. New-chart distribution approval remains
+separate from the established generator/source and roster approvals.
+
+### Source validation and publication follow-up
+
+The owner requests the complete regression, a source commit and an upstream
+push. Consulted Paydirt's `scripts/run_full_regression.py:279-334` for its
+explicit candidate export and ignored-file exclusion. Adapt that isolation
+approach; do not reuse its football behavior or add a runtime dependency.
+Paydirt's `docs/dev-notes/release-builds.md` was unavailable, so the relevant
+implementation was inspected directly.
+
+The two new synthetic regressions first failed with an unexpected `profile`
+argument against the unchanged release API. With the additive API implemented,
+all 14 release-pipeline tests pass. The separate generation, rushing-conditioning,
+cohort-refinement and coordinate-refinement regressions pass all 112 cases.
+The final API uses `None` defaults and delegates neutral-profile normalization
+to the existing generator. Regenerating all 55 selected teams with that final
+API reproduces all 275 final and 275 baseline pins, plus the entire original
+generation receipt, byte for byte. Evidence:
+`private-data/data066-rush-calibration-20261117-v1/final-generator-reproduction/receipt.json`.
+
+Frontend validation passes all 197 tests in 21 files, production build and
+dependency audit with zero reported vulnerabilities. The Linux Chromium
+real-engine suite passes all 72 cases in 6.4 minutes, on Python 3.12.3 and
+Node 24.22.1/npm 11.19.1. All 1,602 frozen source pins match before and after
+that browser run. No host browser is launched. An earlier Linux frontend
+attempt lacked declared `httpx2`, and its isolated dependency repair failed
+DNS resolution. Those attempts remain recorded; the complete frontend suite
+subsequently passes in the host's declared development environment, separately
+from the successful Linux browser run.
+
+The first full Python attempt encounters 15 real storage-capacity failures
+and is interrupted after 5,920 passes. It is not acceptance evidence. The
+owner requests cleanup; disposable caches, stale test workspaces, duplicate
+staging trees and clean obsolete worktrees are removed while preserving
+source downloads, charts, rosters, selected outputs and detailed receipts.
+A fresh full coverage run uses the same frozen source and all 6,888 collected
+tests, with six workers grouped by file and independently recorded source,
+import-root and execution receipts. The earlier failed attempt remains retained.
+
+The fresh full inventory finishes with 6,886 passes and two failures in
+3,349.59 measured seconds, with 90.61% branch-enabled coverage and no
+skips/warnings. Both failures are `FileNotFoundError` while runtime attestation
+reads the original Homebrew Python 3.12.8 `dataclasses.py`: the installed
+interpreter has advanced to 3.12.16 and the old standard-library path is gone.
+The unchanged source is retained, together with the original complete worker
+receipts and coverage database. The healthy Python 3.12.16 runtime passes all
+14 release-pipeline cases in 16.99 seconds. The two exact environment failures
+are rerun on that runtime with appended coverage; their results are recorded
+separately rather than representing the first full run as clean.
+
+### Completed source regression after runtime retests
+
+Both exact runtime-failure retests pass on Python 3.12.16 without changing
+production code, fixtures or assertions. The composite result covers all
+6,888 original cases: 6,886 passes in the full run plus these two separately
+successful retests. Combined branch-enabled coverage is 90.77%; all
+original coverage arcs are preserved. This is not a single clean full run.
+The complete original inventory executes once, all 1,602 frozen inputs and
+measured import roots verify, and there are zero skips/warnings. An additional
+14 release-pipeline cases, lint, formatting and dependency consistency pass
+on Python 3.12.16. The earlier frontend 197/197, build, audit, Linux browser
+72/72 and current published-chart audit remain applicable to unchanged code.
+
+Receipt: `private-data/data066-rush-calibration-20261117-v1/publication-gate/completion.json`,
+SHA-256 `46c6c476dd719f77e365c63d38606a30278608a27500ad7cbeb872ab24b7c6d9`. The receipt explicitly records
+`PASS_AFTER_ENVIRONMENT_RETEST` and `single_clean_full_run: false`, preserves
+the two original failures and independently verifies the exact retest set.
+All historical candidate files stay private; the selected calibration and
+publication limitations above remain in force. Existing published file pins
+remain unchanged. FLOW-007 is unrelated work and is excluded from this commit.
+
+The full suite runs from the frozen `publication-gate/tree`, using the
+checkout's absolute `.venv/bin/python` with arguments
+`-m pytest -p bb_validation -n 6 --dist=loadfile --cov --cov-report=term-missing -q`.
+The private validation plugin is supplied through `PYTHONPATH` and is not
+added as a project dependency. Other commands run from the checkout:
+
+```bash
+.venv/bin/python private-data/data066-rush-calibration-20261117-v1/run-runtime-retest.py
+.venv/bin/python private-data/data066-rush-calibration-20261117-v1/record-composite-validation.py
+.venv/bin/python -m pytest tests/chartgen/test_release_pipeline.py -q
+.venv/bin/python -m ruff check .
+.venv/bin/python -m ruff format --check .
+.venv/bin/python -m pip check
+.venv/bin/python -m scripts.audit_generated_charts --report private-data/data066-rush-calibration-20261117-v1/publication-gate/published-chart-audit.json
+```
+
+Frontend commands are `npm test -- --run`, `npm run build` and `npm audit`
+under `frontend/`; the Linux real-engine browser command is `npm run test:e2e`.
+The retained logs and receipts distinguish execution environments and earlier
+failed attempts. Final documentation checks and source-push receipts are
+recorded alongside this composite receipt.

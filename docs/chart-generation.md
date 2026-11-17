@@ -198,6 +198,24 @@ ordinary loader. Baselines, exact file pins and detailed receipts are retained.
 An allocation or evidence failure returns a nonzero exit code and a failure
 receipt; a partial cohort cannot be reported complete.
 
+The Python API `tools.chartgen.release_pipeline.generate_release_cohort` accepts
+optional keyword arguments `profile=CalibrationProfile(...)` and
+`defensive_profile=DefensiveProfile(...)` from `tools.chartgen.generate`.
+Both default to neutral settings and are recorded in every team's baseline
+generation receipt. For a controlled cohort experiment, set one bounded field
+(such as `run_yards_scale`) for all selected teams, preserve the original output,
+and regenerate into a new private directory. Passing source targets and event
+rates remain independently fitted; the shared breakaway column can change how
+passing gains are encoded when its rushing tail changes. Check actual passing
+results as well as rushing in paired game panels.
+
+Choose settings on fixed training fixtures/seeds, freeze that choice, then
+compare the original and selected charts on unused simulation seeds with the
+same engine, coaching policy and source targets. Report exposure, uncertainty,
+per-team errors and other metrics. Unused simulation seeds do not constitute
+held-out historical source data. A fitted profile does not grant source
+qualification, historical-fit certification or publication approval.
+
 The original 2007 model identity remains immutable:
 `authored-bb-budget-aware-v1` / `bb-chartgen-budget-alpha-v1`, SHA-256
 `a46aaf838a718e012a2ce90a4438e6de475a0d810f18ab7e92d87148603a9e5f`.
