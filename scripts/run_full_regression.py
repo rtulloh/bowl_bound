@@ -254,7 +254,6 @@ def _steps(executable: Path, temporary: Path, options: RegressionOptions) -> lis
         Step("Frontend install", ("npm", "ci", "--ignore-scripts"), cwd="frontend"),
         Step("Frontend tests", ("npm", "test"), cwd="frontend"),
         Step("Frontend build", ("npm", "run", "build"), cwd="frontend"),
-        Step("Frontend audit", ("npm", "audit"), cwd="frontend"),
     ]
     audit_step = Step(
         "Generated chart audit",
@@ -393,9 +392,7 @@ def _parse(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--python", default=".venv/bin/python", help="project Python interpreter")
     parser.add_argument("--report", type=Path, help="write a JSON summary to this path")
     parser.add_argument("--keep-going", action="store_true", help="continue after failures")
-    parser.add_argument(
-        "--skip-frontend", action="store_true", help="skip frontend unit/build/audit"
-    )
+    parser.add_argument("--skip-frontend", action="store_true", help="skip frontend unit/build")
     parser.add_argument("--skip-e2e", action="store_true", help="skip browser install/tests")
     parser.add_argument(
         "--skip-chart-audit", action="store_true", help="skip generated chart audit"

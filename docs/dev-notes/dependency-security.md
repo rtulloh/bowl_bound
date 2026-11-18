@@ -47,3 +47,32 @@ Other platforms still require their own clean native build/smoke evidence.
 The older node24-upgrade.md describes the pre-remediation graph and warnings.
 Keep that historical evidence; use this note for the subsequent dependency change.
 A zero audit count is not a comprehensive code or bundled-artifact security audit.
+
+## November 17 policy — advisory audit, required application regression
+
+The owner directs that npm audit should not block the native build. Keep the
+full audit in the separate **Dependency audit (advisory)** workflow and retain
+its failing status and logs when vulnerabilities are found. The **Tests**
+workflow and local full-regression runner exclude this command. The exact-commit
+native verifier continues to require successful Tests, including Python coverage,
+frontend unit/build, generated-chart audit and real-engine browser regression.
+Run `npm audit --prefix frontend` independently for a fresh report.
+
+DEV-087 remains open for unpatched picomatch GHSA-fc5q-39xc-vjpf. The current
+13/14 high package findings propagate that advisory; they have not been fixed.
+`npm explain picomatch` identifies development paths through Vite, Vitest and
+Tailwind/Chokidar/globbing dependencies. The application imports React and its
+own components; the exact native runtime selection serves compiled static
+assets and excludes node_modules and the Node development server/toolchain.
+This narrows the observed exposure to build/test tooling; it is not a claim
+that development dependencies are harmless or that every future advisory is
+acceptable. Retain clean locked installs with scripts disabled, review new
+findings, and apply a compatible maintained fix when available. No dependency
+version, lockfile, audit severity filter or audit return code is changed.
+
+Consulted Paydirt .github/workflows/test.yml for this phase: its frontend
+unit/build/browser checks do not include an npm-audit release gate. Adapt the
+separation of application regression from advisory reporting, not its NFL
+behavior, runtime dependencies or data packaging. Official references:
+[npm audit](https://docs.npmjs.com/cli/v11/commands/npm-audit/) and
+[Vite static production output](https://vite.dev/guide/build.html).

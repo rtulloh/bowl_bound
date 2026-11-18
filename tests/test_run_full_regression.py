@@ -61,18 +61,18 @@ def test_runs_every_ci_command_in_order(repo: Path) -> None:
     assert commands[4] == ("npm", "ci", "--ignore-scripts")
     assert commands[5] == ("npm", "test")
     assert commands[6] == ("npm", "run", "build")
-    assert commands[7] == ("npm", "audit")
-    assert commands[8][1:4] == ("-m", "scripts.audit_generated_charts", "--report")
-    assert not Path(commands[8][4]).is_relative_to(repo)
-    assert Path(commands[8][4]).name == "generated-chart-audit.json"
-    assert commands[9] == ("npx", "playwright", "install", "--with-deps", "chromium")
-    assert commands[10] == ("npm", "run", "test:e2e")
-    assert all(call[1] == repo / "frontend" for call in runner.calls[4:8])
+    assert ("npm", "audit") not in commands
+    assert commands[7][1:4] == ("-m", "scripts.audit_generated_charts", "--report")
+    assert not Path(commands[7][4]).is_relative_to(repo)
+    assert Path(commands[7][4]).name == "generated-chart-audit.json"
+    assert commands[8] == ("npx", "playwright", "install", "--with-deps", "chromium")
+    assert commands[9] == ("npm", "run", "test:e2e")
+    assert all(call[1] == repo / "frontend" for call in runner.calls[4:7])
     assert runner.calls[-1][1] == repo / "frontend"
-    assert runner.calls[10][2]["BB_E2E_SEASONS"]
+    assert runner.calls[9][2]["BB_E2E_SEASONS"]
     assert all(call[2]["PYTHONNOUSERSITE"] == "1" for call in runner.calls)
     assert report.exit_code == 0
-    assert [step.status for step in report.steps] == ["passed"] * 11
+    assert [step.status for step in report.steps] == ["passed"] * 10
 
 
 def test_stops_on_first_failure_by_default(repo: Path) -> None:
@@ -89,7 +89,7 @@ def test_keep_going_collects_all_failures(repo: Path) -> None:
     runner = FakeRunner({"pytest", "npm test", "audit_generated_charts"})
     report = regression.run_regression(repo, options(keep_going=True), runner)
 
-    assert len(runner.calls) == 11
+    assert len(runner.calls) == 10
     assert [step.name for step in report.steps if step.status == "failed"] == [
         "Python tests",
         "Frontend tests",
@@ -119,7 +119,7 @@ def test_skip_python_keeps_chart_audit_and_e2e(repo: Path) -> None:
     assert not any(
         command[1] == "-m" and command[2] in {"pytest", "ruff", "pip"} for command in commands
     )
-    assert commands[4][1:4] == ("-m", "scripts.audit_generated_charts", "--report")
+    assert commands[3][1:4] == ("-m", "scripts.audit_generated_charts", "--report")
     assert commands[-1] == ("npm", "run", "test:e2e")
 
 
@@ -159,7 +159,7 @@ def test_report_json_has_stable_shape(
     assert data["schema_version"] == 1
     assert data["passed"] is True
     assert data["exit_code"] == 0
-    assert data["totals"] == {"passed": 0, "failed": 0, "skipped": 11}
+    assert data["totals"] == {"passed": 0, "failed": 0, "skipped": 10}
     assert set(data["steps"][0]) >= {
         "name",
         "status",

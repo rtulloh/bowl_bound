@@ -84,29 +84,3 @@ jobs:
         run: |
           npx playwright install --with-deps chromium
           npm run test:e2e
-
-  dependency-audit:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    steps:
-      - name: Validate requested source commit
-        env:
-          SOURCE_REF: ${{ inputs.source_ref || github.sha }}
-        run: |
-          if [[ ! "$SOURCE_REF" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "::error::source_ref must be a full 40-character commit SHA"
-            exit 1
-          fi
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          ref: ${{ inputs.source_ref || github.sha }}
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          package-manager-cache: false
-      - name: Audit frontend dependencies
-        working-directory: frontend
-        run: |
-          npm ci --ignore-scripts
-          npm audit

@@ -30,7 +30,7 @@ def test_tests_runs_for_branch_pushes_pull_requests_and_native_gate_calls() -> N
 
 def test_automatic_gate_retains_the_whole_established_regression() -> None:
     data = workflow("tests.yml")
-    assert set(data["jobs"]) == {"test", "dependency-audit"}
+    assert set(data["jobs"]) == {"test"}
     job = data["jobs"]["test"]
     assert job["runs-on"] == "ubuntu-24.04"
     assert int(job["timeout-minutes"]) == 240
@@ -145,17 +145,29 @@ def test_source_commit_guard_rejects_mutable_or_malformed_refs(
         assert "source_ref must be a full 40-character commit SHA" in result.stdout
 
 
-def test_dependency_audit_is_required_and_independent_of_python() -> None:
-    jobs = workflow("tests.yml")["jobs"]
-    audit = jobs["dependency-audit"]
+def test_dependency_audit_is_visible_in_a_separate_workflow() -> None:
+    source = workflow("tests.yml")
+    data = workflow("dependency-audit.yml")
+    assert data["name"] == "Dependency audit (advisory)"
+    assert set(data["on"]) == {"push", "pull_request", "workflow_dispatch"}
+    assert data["permissions"] == {"contents": "read"}
+    assert data["env"]["NODE_VERSION"] == source["env"]["NODE_VERSION"]
+    assert "workflow_call" not in data["on"]
+    audit = data["jobs"]["dependency-audit"]
     assert audit["runs-on"] == "ubuntu-24.04"
     assert int(audit["timeout-minutes"]) == 10
-    assert "needs" not in audit and "needs" not in jobs["test"]
+    assert "needs" not in audit
     steps = audit["steps"]
     checkout = next(step for step in steps if step.get("uses", "").startswith("actions/checkout@"))
-    assert checkout["with"]["ref"] == "${{ inputs.source_ref || github.sha }}"
     assert checkout["with"]["persist-credentials"] == "false"
     commands = "\n".join(step.get("run", "") for step in steps)
     assert "npm ci --ignore-scripts" in commands
     assert "npm audit" in commands
-    assert "npm audit" not in "\n".join(step.get("run", "") for step in jobs["test"]["steps"])
+    assert "npm audit" not in "\n".join(
+        step.get("run", "") for step in source["jobs"]["test"]["steps"]
+    )
+    for step in steps:
+        assert "continue-on-error" not in step
+        assert "|| true" not in step.get("run", "")
+        if "uses" in step:
+            assert re.fullmatch(r"actions/[a-z-]+@[a-f0-9]{40}", step["uses"])
