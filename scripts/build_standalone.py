@@ -130,6 +130,30 @@ def _sha(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _public_audit_summary(report: dict[str, Any]) -> dict[str, Any]:
+    """Select public aggregate fields; new report fields stay private by default."""
+    fields = {
+        "schema_version",
+        "passed",
+        "scope",
+        "limits",
+        "generated_teams",
+        "physical_defensive_mass",
+        "source_truth_revalidated",
+        "candidate_sha256",
+        "engine_sha256",
+        "auditor_sha256",
+        "expectations_sha256",
+        "cohort_expectations_sha256",
+        "policy_sha256",
+    }
+    return {
+        key: value
+        for key, value in report.items()
+        if key in fields and isinstance(value, (str, bool, int))
+    }
+
+
 def archive_bundle(
     bundle: Path,
     runtime: Path,
@@ -181,9 +205,14 @@ def archive_bundle(
     inventory = {"version": version, "target": target, "files": actual}
     if chart_audit is not None:
         encoded = json.dumps(chart_audit, sort_keys=True, separators=(",", ":")).encode()
-        inventory["chart_audit"] = {
-            key: value for key, value in chart_audit.items() if key != "teams"
-        } | {"report_sha256": hashlib.sha256(encoded).hexdigest()}
+        summary = _public_audit_summary(chart_audit)
+        if "cohorts" in chart_audit:
+            summary["cohorts"] = {
+                year: _public_audit_summary(report)
+                for year, report in chart_audit["cohorts"].items()
+                if re.fullmatch(r"[0-9]{4}", year) and isinstance(report, dict)
+            }
+        inventory["chart_audit"] = summary | {"report_sha256": hashlib.sha256(encoded).hexdigest()}
     _write_json(bundle, "ARTIFACT-MANIFEST.json", inventory)
     with ZipFile(archive, "x", compression=ZIP_DEFLATED) as zipped:
         for path in sorted(bundle.rglob("*")):

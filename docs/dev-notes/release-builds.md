@@ -259,8 +259,13 @@ Set `BUILD_PYTHON` to the new environment executable (`bin/python` on macOS;
 other native targets; cross-builds are refused. The output must be absent
 and outside the source checkout, under an existing nonsymlink parent. ZIPs
 include an exact `ARTIFACT-MANIFEST.json`, an external matching manifest and a
-SHA256 sidecar. Extracted executables must serve the UI/assets, list only the
-two fictional teams, play a snap, round-trip a save and shut down gracefully.
+SHA256 sidecar. Chart-audit metadata uses an explicit list of public aggregate
+fields for the overall report and each season, plus the full private report
+digest. Per-team audit details and unknown future fields are excluded at both
+levels (DEV-091); retain detailed reports separately under ignored evidence paths.
+Extracted executables must serve the UI/assets, match the exact reviewed release
+catalog (173 teams for 1.1.0), play a snap, round-trip a save and shut down
+gracefully.
 The local macOS prototype may use the installed interpreter for engineering
 validation; it is not a substitute for the workflow-pinned shipped runtime.
 

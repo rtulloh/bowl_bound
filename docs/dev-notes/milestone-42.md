@@ -399,3 +399,40 @@ without broadening packaged files. Ruff check and 905-file formatting, pip check
 whitespace and exact selected-content hashes pass. Full coverage, generator
 integration and browser regression run on GitHub per owner instruction. No
 fresh calibration, native-build success or release publication is claimed yet.
+
+
+--- 2026-11-18 — native artifact audit publication boundary ---
+
+Candidate 6cc8cba passes full hosted source qualification 44241307954:
+6,936 Python tests, 90.77% coverage, 197 frontend tests/build, 171-team audit
+and 72 real-engine browser tests. Four Python fork deprecation warnings and
+existing frontend act/duplicate-key test warnings remain visible in retained
+logs. Native run 44253738137 passes all three targets, including extracted-app
+smoke tests and Windows installer/install/uninstall checks. These are candidate
+checks, not published-download acceptance.
+
+Artifact review catches DEV-091 before any v1.1.0 tag/publication: the old
+single-cohort filter removes only top-level teams, retaining nested cohort team
+details and unknown future fields. Use explicitly selected public scalar audit
+fields at both levels, retain the original full-report digest without mutating
+its input, and keep full details private. This changes packaging metadata only;
+chart bytes, calibration, source normalization and engine behavior are unchanged.
+No new calibration is claimed.
+
+Consulted local Paydirt .github/workflows/release.yml: adapt separate detailed
+chart-validation evidence and exact-source build qualification. Its broader
+public-audit policy, hotfix qualification, NFL behavior and runtime code are not
+reused; Bowl Bound's narrower publication rules remain authoritative.
+
+Synthetic partitioned audit fails first (1 fail / 1 pass in 0.21s). The fix
+preserves all existing exact-inventory/digest assertions and verifies unknown
+fields and nested details are absent from both matching manifests, aggregate
+counts remain and the original report/digest is unchanged. Focused native
+packaging, extraction and Windows installer tests pass 87 cases in 8.48s.
+Full hosted source regression, fresh native builds, immutable tag/publication
+and actual published-download validation remain required for the new commit.
+
+Additional verification: 70 install-artifact, release-documentation, metadata,
+issue/index and workflow tests pass in 1.32s. Ruff, pip check, whitespace
+and all 980 selected team-content pins pass. Full regression is delegated
+to GitHub under the owner’s explicit hosted-testing instruction.

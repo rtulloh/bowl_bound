@@ -92,8 +92,9 @@ def fake_bundle(runtime: Path, path: Path) -> Path:
     return path
 
 
+@pytest.mark.parametrize("partitioned", [False, True])
 def test_archive_checksums_exact_manifest_and_safe_extraction(
-    runtime: Path, tmp_path: Path
+    runtime: Path, tmp_path: Path, partitioned: bool
 ) -> None:
     bundle = fake_bundle(runtime, tmp_path / "bundle")
     output = tmp_path / "output"
@@ -104,6 +105,17 @@ def test_archive_checksums_exact_manifest_and_safe_extraction(
         "engine_sha256": "b" * 64,
         "teams": {"synthetic": {}},
     }
+    if partitioned:
+        chart_audit["future_private_detail"] = "DO NOT SHIP"
+        chart_audit["cohorts"] = {
+            "1900": {
+                "passed": True,
+                "generated_teams": 1,
+                "teams": {"invented": {"detail": "DO NOT SHIP"}},
+                "future_private_detail": {"detail": "DO NOT SHIP"},
+            }
+        }
+    original = json.dumps(chart_audit, sort_keys=True)
     archive = native.archive_bundle(bundle, runtime, output, "macos-arm64", chart_audit=chart_audit)
     assert archive.name == "BowlBound-0.1.0-alpha.3-macos-arm64.zip"
     checksum = archive.with_suffix(".zip.sha256").read_text().strip().split()
@@ -116,6 +128,13 @@ def test_archive_checksums_exact_manifest_and_safe_extraction(
         assert manifest["chart_audit"]["candidate_sha256"] == "a" * 64
         assert manifest["chart_audit"]["engine_sha256"] == "b" * 64
         assert "teams" not in manifest["chart_audit"]
+        assert "DO NOT SHIP" not in json.dumps(manifest)
+        if partitioned:
+            assert manifest["chart_audit"]["cohorts"] == {
+                "1900": {"passed": True, "generated_teams": 1}
+            }
+        assert json.loads(archive.with_suffix(".manifest.json").read_text()) == manifest
+        assert json.dumps(chart_audit, sort_keys=True) == original
         assert (
             manifest["chart_audit"]["report_sha256"]
             == hashlib.sha256(
