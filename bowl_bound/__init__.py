@@ -4,7 +4,7 @@ The engine in this package is the authoritative source for all football decision
 Front ends display engine-provided state and outcomes; they never reimplement rules.
 """
 
-__version__ = "1.0.1"
-DISPLAY_VERSION = "1.0.1"
+__version__ = "1.1.0"
+DISPLAY_VERSION = "1.1.0"
 
 __all__ = ["__version__"]

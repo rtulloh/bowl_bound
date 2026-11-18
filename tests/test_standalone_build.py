@@ -311,7 +311,7 @@ def test_native_archive_and_installer_include_exact_notice_bytes(
     put(source, "release/native-notices/bootloader.txt", notice)
     catalog = {
         "schema": 1,
-        "python": "3.12.16",
+        "python": "3.12.10",
         "notices": {
             "bootloader.txt": {
                 "sha256": hashlib.sha256(notice.encode()).hexdigest(),
@@ -327,7 +327,7 @@ def test_native_archive_and_installer_include_exact_notice_bytes(
         },
     }
     put(source, "release/native-notices/manifest.json", json.dumps(catalog))
-    add_native_notices(source, bundle, target, python_version="3.12.16")
+    add_native_notices(source, bundle, target, python_version="3.12.10")
     output = tmp_path / "output"
     output.mkdir()
     archive = native.archive_bundle(bundle, runtime, output, target)

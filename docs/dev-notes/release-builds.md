@@ -216,7 +216,12 @@ arm64, Windows Server 2025 x64 and macOS 26 Intel x86_64. These runner labels
 were checked against actions/runner-images; availability is still exercised
 by the first actual run. Linux is a test host, not an artifact target.
 
-The workflow uses Python **3.12.16** and Node **24.22.1**. Each native job
+Linux source qualification uses Python **3.12.16**. Native builds and published-
+artifact harnesses use **3.12.10**, the latest Python 3.12 binary published for
+all selected macOS/Windows targets in the actions/python-versions manifest.
+Later 3.12 security releases are source-only upstream and lack those setup-python
+artifacts; this pin does not claim the security fixes from 3.12.16. The native
+notice catalog is pinned to the actual 3.12.10 distribution. Node is **24.22.1**. Each native job
 creates a separate environment, installs only the exact graph in
 `release/requirements-native.txt` with `--only-binary=:all: --no-deps`, and runs
 `pip check`. Do not install Bowl Bound into that environment, including

@@ -80,3 +80,22 @@ def test_parallel_wheel_tests_share_only_the_checkout_build_group() -> None:
     packaging = (ROOT / "tests/test_packaging.py").read_text()
     assert 'pytestmark = pytest.mark.xdist_group("checkout_wheel")' in packaging
     assert "xdist_group" not in (ROOT / "tests/chartgen/test_generation.py").read_text()
+
+
+def test_native_python_pin_matches_the_reviewed_binary_catalog() -> None:
+    build = yaml.load((ROOT / ".github/workflows/build.yml").read_text(), Loader=yaml.BaseLoader)
+    validation = yaml.load(
+        (ROOT / ".github/workflows/post-release-smoke.yml").read_text(), Loader=yaml.BaseLoader
+    )
+    assert build["jobs"]["build"]["env"]["PYTHON_VERSION"] == "3.12.10"
+    assert (
+        json.loads((ROOT / "release/native-notices/manifest.json").read_text())["python"]
+        == "3.12.10"
+    )
+    setup = next(
+        step
+        for step in validation["jobs"]["native"]["steps"]
+        if step.get("uses", "").startswith("actions/setup-python@")
+    )
+    assert setup["with"]["python-version"] == "3.12.10"
+    assert build["env"]["PYTHON_VERSION"] == "3.12.16"

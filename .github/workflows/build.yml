@@ -47,6 +47,8 @@ jobs:
         run: python -m scripts.verify_source_gate
 
   build:
+    env:
+      PYTHON_VERSION: '3.12.10'
     needs: test
     strategy:
       fail-fast: false

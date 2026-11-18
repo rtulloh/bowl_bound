@@ -6,7 +6,7 @@
     "source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.0.16/AUTHORS.md"
   },
   "cpython-history-and-license.txt": {
-    "source": "https://raw.githubusercontent.com/python/cpython/v3.12.16/Doc/license.rst"
+    "source": "https://raw.githubusercontent.com/python/cpython/v3.12.10/Doc/license.rst"
   },
   "libffi.txt": {
     "source": "https://raw.githubusercontent.com/libffi/libffi/v3.4.4/LICENSE"
@@ -42,6 +42,6 @@
     "source": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.0.16/include/openssl/opensslv.h.in"
   },
   "expat.txt": {
-    "source": "https://raw.githubusercontent.com/python/cpython/v3.12.16/Modules/expat/expat.h"
+    "source": "https://raw.githubusercontent.com/python/cpython/v3.12.10/Modules/expat/expat.h"
   }
 }

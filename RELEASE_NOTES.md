@@ -1,5 +1,23 @@
 # Bowl Bound release notes
 
+## 1.1.0 — Calibrated 2002 teams and cross-season play
+
+- Adds 55 generated 2002 teams with reviewed commentary rosters, alongside the
+  existing 116 generated 2007 teams and two fictional samples.
+- Adds explicit cross-season team selection using the home team's season rules.
+- Publishes the Python 3.12 chart generator and a human-run calibration recipe.
+  The selected 2002 charts use the validated shared rushing scale of 1.15.
+- Retains exact catalog packaging, save/replay checks and native install validation.
+
+Generated charts remain statistical estimates with documented source and model
+limits; calibration does not certify historical accuracy. Existing 2007 charts
+are unchanged. Keep earlier versions and saves when upgrading: saves depend on
+their chart identities. Applications remain unsigned. The known picomatch
+build-tool vulnerability is tracked by a separate advisory audit, not represented
+as fixed. See [generated chart scope](docs/generated-charts.md),
+[calibration guidance](https://github.com/rtulloh/bowl_bound/blob/main/docs/chart-calibration.md) and
+[installation instructions](docs/installation.md).
+
 ## 1.0.1 — Published-install validation
 
 Adds native validation of the actual release downloads on GitHub runners:
