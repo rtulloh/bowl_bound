@@ -54,6 +54,8 @@ jobs:
           python -m venv .venv
           .venv/bin/python -m pip install -e ".[dev,web,pdf]"
           .venv/bin/python -m pip install -e ".[generator]"
+      - name: Verify reviewed generator runtime before regression
+        run: '.venv/bin/python -c "from tools.chartgen.refine import engine_identity; engine_identity()"'
       - name: Python tests, lint and formatting
         run: |
           .venv/bin/python -m pytest --cov --cov-report=term-missing -n 4 --dist=loadgroup --durations=25 -q

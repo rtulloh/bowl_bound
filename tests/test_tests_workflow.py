@@ -177,3 +177,23 @@ def test_dependency_audit_is_visible_in_a_separate_workflow() -> None:
         assert "|| true" not in step.get("run", "")
         if "uses" in step:
             assert re.fullmatch(r"actions/[a-z-]+@[a-f0-9]{40}", step["uses"])
+
+
+def test_reviewed_generator_runtime_is_checked_before_expensive_regression() -> None:
+    steps = workflow("tests.yml")["jobs"]["test"]["steps"]
+    preflight = next(
+        step
+        for step in steps
+        if step.get("name") == "Verify reviewed generator runtime before regression"
+    )
+    install = next(step for step in steps if step.get("name") == "Install source test dependencies")
+    regression = next(
+        step for step in steps if step.get("name") == "Python tests, lint and formatting"
+    )
+    assert steps.index(install) < steps.index(preflight) < steps.index(regression)
+    assert (
+        preflight["run"]
+        == '.venv/bin/python -c "from tools.chartgen.refine import engine_identity; '
+        'engine_identity()"'
+    )
+    assert "if" not in preflight and "continue-on-error" not in preflight

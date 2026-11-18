@@ -16,6 +16,12 @@ python3 -m venv .venv
 .venv/bin/python -m scripts.run_full_regression
 ```
 
+Before the expensive hosted Python regression, CI verifies the reviewed generator
+runtime identity. Version bumps also change a pinned engine metadata file;
+review and update its immutable source contract explicitly, following
+[runtime identity guidance](#reviewed-chart-generator-identity).
+Failure is not waived or treated as successful qualification.
+
 The runner performs the same checks as `.github/workflows/tests.yml`: Python tests/lint/
 format/dependency checks, frontend install/tests/build, generated chart
 audit, and real-engine Playwright tests. It prints each command, elapsed time,
@@ -349,3 +355,26 @@ remain distinct from functional native-runner checks. A failed published asset
 is a release defect; repair only through a new unused version/tag.
 
 See [1.0.1 release evidence](release-1.0.1.md) for the source/gate/run references.
+
+## Reviewed chart-generator identity
+
+The generator pins exact reviewed engine source bytes, including
+`bowl_bound/__init__.py`. A release version bump therefore needs an explicit
+review of `tools/chartgen/research-runtime-contract.json` and its authority pins
+in `tools/chartgen/current_runtime.py`. Compare every pinned engine and runtime
+file with the immutable reviewed commit; do not automatically accept new hashes
+or remove metadata files from verification to make a build pass. Record the
+source diff and new contract digest in the release ticket. Preserve earlier
+receipts under their original source identity.
+
+Before a long calibration or release regression, run this quick integrity check:
+
+```sh
+.venv/bin/python -c "from tools.chartgen.refine import engine_identity; engine_identity()"
+```
+
+A version-only update does not establish fresh calibration or authorize reuse of
+receipts under another identity. Any actual engine, simulation, source or fitting
+change needs the affected validation described in the
+[calibration workflow](../chart-calibration.md). GitHub checks the reviewed identity
+before starting the expensive regression and still runs the complete suite.

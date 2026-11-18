@@ -365,3 +365,37 @@ reviewed at its declared finite scope. All three assigned tickets remain open th
 final acceptance. No software version, native build, push, tag or publication is
 claimed. Final coordinated 1.0.0/native/default8001/screenshot acceptance stays
 separate from authored-model and bounded audit qualification.
+
+## 1.1.0 release follow-up — DEV-090, 2026-11-17
+
+Source run 44235372245 at 453cb17 fails 65 generator cases (6,870 pass) because
+the release version bump changed the two version literals in
+bowl_bound/__init__.py while the independent runtime contract retained 1.0.1.
+The original 1.0.0 milestone evidence above remains historical. No chart, fitting,
+coaching, rules or simulation behavior changes in this follow-up.
+
+Reviewed every engine/runtime contract file against immutable commit
+2dd6b92594397377a3e0c5c9b7ac9daae3e5aef1. Exactly one engine digest differs
+from the prior contract: the two version strings. All other engine/runtime
+bytes match. Bind that source commit and exact metadata digest in a new contract;
+retain complete inventories, loaded-source verification and tamper rejection.
+Contract canonical SHA256 becomes
+1b55fad60c509c29800895c33f885b8b763ab134396ea24f0cf967630bd07a34.
+Old calibration evidence remains bound to its original identity; this metadata
+review neither reruns calibration nor changes the selected chart hashes.
+
+Reconsulted Paydirt .github/workflows/release.yml: adapt early identity
+qualification and immutable source binding, not its hotfix exception, NFL
+behavior or automatic publication. Add a quick reviewed-runtime check before
+full hosted pytest, preserving the full regression unchanged. Existing runtime
+identity and new workflow-order tests fail first against the stale contract and
+missing preflight. Focused/cumulative hosted/native results remain pending.
+
+Focused verification passes 71 runtime/current-policy/workflow tests in 87.42s
+and 43 workflow, issue/index, release metadata and player-document checks in
+1.17s. The first documentation check caught a developer recipe link added to a
+packaged player document; move the recipe into development release guidance
+without broadening packaged files. Ruff check and 905-file formatting, pip check,
+whitespace and exact selected-content hashes pass. Full coverage, generator
+integration and browser regression run on GitHub per owner instruction. No
+fresh calibration, native-build success or release publication is claimed yet.
