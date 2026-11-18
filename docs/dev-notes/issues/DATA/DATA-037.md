@@ -10,7 +10,7 @@ closed-at: null
 tags:
 - planning
 - recent-seasons
-links: [DATA-045, DATA-054]
+links: [DATA-045, DATA-054, DATA-069]
 commits: []
 ---
 
@@ -38,3 +38,11 @@ Planning only: assigned to new M34b so the existing M34a historical cohort and
 Alpha 6 publication remain distinct. The requested default order is 2025, 2024,
 2023 and backward. No new-year generation or release acceptance is claimed.
 Paydirt consultation and validation boundaries are recorded in milestone-34b.md.
+
+--- 2026-11-17 — dedicated legacy-method research ---
+
+DATA-069 tracks the owner's Nicely/All-Star Replay/Wayback leads as a bounded
+research investigation relevant to seasons before 2002. It will distinguish
+verified methods and source/rights evidence from unconfirmed formula-lineage
+claims. This supplements the earliest-supportable-years assessment above;
+no new historical season or publication scope is accepted by this linkage.
