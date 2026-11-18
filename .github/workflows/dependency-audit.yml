@@ -1,4 +1,4 @@
-name: Dependency audit (advisory)
+name: Dependency audit
 
 on:
   push:
@@ -16,7 +16,7 @@ concurrency:
 env:
   NODE_VERSION: '24.22.1'
 
-# Findings remain visible as failures here, independently of source qualification.
+# Audit errors and all findings outside the exact, expiring DEV-087 waiver fail.
 # DEV-087 records the owner's decision and the outstanding toolchain advisory.
 jobs:
   dependency-audit:
@@ -30,8 +30,19 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           package-manager-cache: false
-      - name: Audit frontend dependencies
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v6
+        with:
+          python-version: '3.12.16'
+      - name: Install locked frontend dependencies
         working-directory: frontend
-        run: |
-          npm ci --ignore-scripts
-          npm audit
+        run: npm ci --ignore-scripts
+      - name: Evaluate complete audit with exact temporary waiver
+        run: python -m scripts.check_frontend_audit --report "$RUNNER_TEMP/npm-audit.json"
+      - name: Retain unmodified audit evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: frontend-dependency-audit
+          path: ${{ runner.temp }}/npm-audit.json
+          retention-days: 14
+          if-no-files-found: warn

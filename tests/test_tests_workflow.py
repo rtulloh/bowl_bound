@@ -148,7 +148,7 @@ def test_source_commit_guard_rejects_mutable_or_malformed_refs(
 def test_dependency_audit_is_visible_in_a_separate_workflow() -> None:
     source = workflow("tests.yml")
     data = workflow("dependency-audit.yml")
-    assert data["name"] == "Dependency audit (advisory)"
+    assert data["name"] == "Dependency audit"
     assert set(data["on"]) == {"push", "pull_request", "workflow_dispatch"}
     assert data["permissions"] == {"contents": "read"}
     assert data["env"]["NODE_VERSION"] == source["env"]["NODE_VERSION"]
@@ -162,7 +162,13 @@ def test_dependency_audit_is_visible_in_a_separate_workflow() -> None:
     assert checkout["with"]["persist-credentials"] == "false"
     commands = "\n".join(step.get("run", "") for step in steps)
     assert "npm ci --ignore-scripts" in commands
-    assert "npm audit" in commands
+    assert "python -m scripts.check_frontend_audit" in commands
+    assert '--report "$RUNNER_TEMP/npm-audit.json"' in commands
+    assert any(
+        step.get("if") == "always()"
+        and step.get("with", {}).get("path") == "${{ runner.temp }}/npm-audit.json"
+        for step in steps
+    )
     assert "npm audit" not in "\n".join(
         step.get("run", "") for step in source["jobs"]["test"]["steps"]
     )

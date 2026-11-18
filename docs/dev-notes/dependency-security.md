@@ -76,3 +76,36 @@ separation of application regression from advisory reporting, not its NFL
 behavior, runtime dependencies or data packaging. Official references:
 [npm audit](https://docs.npmjs.com/cli/v11/commands/npm-audit/) and
 [Vite static production output](https://vite.dev/guide/build.html).
+
+## November 17 follow-up — exact, expiring accepted risk
+
+The owner's proposed targeted waiver now supersedes the broad advisory-only
+policy above. **Dependency audit** remains a separate workflow, but fails for
+all findings outside GHSA-fc5q-39xc-vjpf and for incomplete, malformed, cyclic,
+failed or inconsistent audit responses. `scripts/check_frontend_audit.py` uses
+Python's standard library, saves the complete unchanged npm JSON, and follows
+indirect package findings to every root advisory. The workflow retains that
+report as a 14-day artifact even when evaluation fails.
+
+Acceptance requires the exact GitHub advisory URL, picomatch package/dependency,
+high severity and affected range `<=4.0.7`. Critical package entries cannot be
+accepted. Mixed findings block; low and moderate unrelated findings also block.
+The waiver expires after **2026-12-17 UTC**, including indirect findings. This
+is an explicitly accepted toolchain risk, not remediation or a clean audit.
+Recheck upstream and remove the waiver after a maintained compatible fix and
+frontend unit/build/browser validation; do not extend it automatically.
+
+Copyable check from the repository root (Python 3.12 and pinned Node installed):
+
+```sh
+.venv/bin/python -m scripts.check_frontend_audit --report /tmp/bowl-bound-npm-audit.json
+```
+
+Exit 0 means the report meets this policy, 1 means unaccepted findings, and 2
+means audit evidence could not be established. The application regression and
+exact-commit native qualification remain unchanged. Before publishing this
+release, require this separate policy check to pass on the selected commit too.
+Paydirt's `.github/workflows/test.yml` was reviewed again: retain separate
+frontend validation, but it supplies no applicable advisory-waiver implementation.
+No Paydirt runtime, NFL rules or private data are reused. Fresh evaluation accepts
+13 package entries rooted only in the known advisory; dependency bytes are unchanged.

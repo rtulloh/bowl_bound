@@ -25,14 +25,15 @@ summary, and `--skip-frontend`, `--skip-e2e`, `--skip-chart-audit`,
 `--skip-python` and `--no-install` provide intentional partial runs.
 
 Dependency vulnerability auditing runs separately in
-`.github/workflows/dependency-audit.yml` (**Dependency audit (advisory)**).
-It runs on pushes, pull requests and manual dispatch, preserves the full
-`npm audit` output and fails visibly on findings. Per the owner's November 17
-policy decision (DEV-087), it is advisory and is outside source/native build
-qualification. The local full-regression runner likewise excludes `npm audit`;
-run `npm audit --prefix frontend` separately to inspect current findings.
-A successful regression is not a clean security audit. Track new findings and
-assess their actual exposure; the known development-tool advisory remains open.
+`.github/workflows/dependency-audit.yml` (**Dependency audit**). It retains the
+complete npm JSON for 14 days and uses `scripts.check_frontend_audit.py` to apply
+the exact DEV-087 picomatch waiver through December 17, 2026 UTC. All unrelated
+findings, critical package entries, expired waivers and audit errors fail.
+The local full-regression runner excludes this separate check; run
+`.venv/bin/python -m scripts.check_frontend_audit --report /tmp/bowl-bound-npm-audit.json`
+independently. Require its successful exact-commit hosted result before publishing
+this release. Policy acceptance does not mean the vulnerability is fixed; see
+[dependency security](dependency-security.md) for scope and removal conditions.
 Local Python tests run without coverage for speed. Run `pytest --cov` as part
 of individual changes; the upstream CI gate enforces the 75% `fail_under`
 threshold.
@@ -180,7 +181,7 @@ visibility flags. DEV-068 records the Alpha 5 correction and actual browser chec
 branch pushes (including main and isolated workstreams) and pull requests. Its
 run is associated with the pushed/PR commit. The Ubuntu regression job runs coverage,
 lint/format, pip check, frontend unit/build and real-engine Chromium tests.
-Dependency auditing runs in the separate advisory workflow described above.
+Dependency auditing runs in the separate policy workflow described above.
 It neither builds native executables nor publishes releases.
 
 `.github/workflows/build.yml` is manually dispatched from GitHub Actions →

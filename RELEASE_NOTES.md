@@ -13,8 +13,8 @@ Generated charts remain statistical estimates with documented source and model
 limits; calibration does not certify historical accuracy. Existing 2007 charts
 are unchanged. Keep earlier versions and saves when upgrading: saves depend on
 their chart identities. Applications remain unsigned. The known picomatch
-build-tool vulnerability is tracked by a separate advisory audit, not represented
-as fixed. See [generated chart scope](docs/generated-charts.md),
+build-tool vulnerability has a specific temporary audit waiver through December
+17, 2026; it remains unfixed. See [generated chart scope](docs/generated-charts.md),
 [calibration guidance](https://github.com/rtulloh/bowl_bound/blob/main/docs/chart-calibration.md) and
 [installation instructions](docs/installation.md).
 
