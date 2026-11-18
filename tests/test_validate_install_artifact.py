@@ -282,8 +282,17 @@ def test_browser_verifies_rendered_samples_and_game_or_rejects_errors(
     selected = dict(zip(("home", "away"), validator.SAMPLES, strict=True))
     current_season = {"home": "2007", "away": "2007"}
     opened = "home"
+    ready = False
     starts: list[tuple[str, str]] = []
     page = Mock()
+
+    def navigate(_: str) -> None:
+        nonlocal ready
+        ready = False
+        current_season.update(home="2007", away="2007")
+        selected.update(zip(("home", "away"), validator.SAMPLES, strict=True))
+
+    page.goto.side_effect = navigate
 
     def entries(side: str) -> list[str]:
         values = sorted(
@@ -349,7 +358,7 @@ def test_browser_verifies_rendered_samples_and_game_or_rejects_errors(
         control = Mock()
         side = identifier.split("-")[0]
         if identifier.endswith("-season"):
-            control.count.return_value = 0 if picker_kind == "legacy" else 1
+            control.count.side_effect = lambda: 0 if picker_kind == "legacy" or not ready else 1
             control.locator.return_value.evaluate_all.return_value = (
                 seasons + ["2099"] if failure == "extra-season" else seasons
             )
@@ -357,9 +366,21 @@ def test_browser_verifies_rendered_samples_and_game_or_rejects_errors(
                 side, season
             )
         elif identifier.endswith("-select"):
-            control.evaluate.return_value = "INPUT" if picker_kind == "combobox" else "SELECT"
+
+            def picker_ready(*_: object) -> str:
+                nonlocal ready
+                ready = True
+                return "INPUT" if picker_kind == "combobox" else "SELECT"
+
+            control.wait_for.side_effect = picker_ready
+            control.evaluate.side_effect = picker_ready
             control.locator.return_value.evaluate_all.side_effect = lambda _: ["", *entries(side)]
-            control.select_option.side_effect = lambda team: choose(side, team)
+
+            def select_native(team: str) -> None:
+                assert team in entries(side), "Cannot select a team outside the rendered season"
+                choose(side, team)
+
+            control.select_option.side_effect = select_native
             control.get_attribute.side_effect = lambda _: selected[side]
 
             def open_picker() -> None:

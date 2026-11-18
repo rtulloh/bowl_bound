@@ -472,3 +472,24 @@ Focused/cumulative correction checks pass 209 cases in 9.85s, with Ruff lint,
 runs on GitHub under the owner's explicit instruction; no tests or coverage
 threshold are removed, and no local browser is launched. Published application
 bytes and all chart/calibration identities remain unchanged.
+
+--- 2026-11-18 — wait for loaded picker after navigation ---
+
+The corrected four-target run 44280576772 reaches generated-game selection
+after catalog enumeration, then exposes a harness timing race: season-control
+count is read immediately after page navigation, before the asynchronous team
+catalog renders. The harness consequently leaves the default season active
+and times out searching for a team in another season. This is not a passing
+validation result; preserve this run independently from the original failure.
+
+Model the actual load order in the synthetic DOM: controls are absent until
+the picker wait completes, navigation restores the default season, and a
+native select cannot choose an option outside its rendered season. This gives
+two expected failures (scoped select and combobox), with legacy control still
+passing, in 0.21s. Wait explicitly for the picker before inspecting season
+controls; no arbitrary sleep or application change is introduced.
+
+After the explicit readiness wait, all 120 validator/workflow/issue/player-doc
+checks pass in 1.58s. Ruff lint, 907-file formatting and whitespace checks pass.
+The full gate remains delegated to GitHub by explicit owner instruction;
+published application bytes and the immutable release tag remain unchanged.

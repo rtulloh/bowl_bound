@@ -103,10 +103,11 @@ def rendered_catalog(page: Page, side: str, expected: frozenset[str]) -> dict[st
 
 def choose_team(page: Page, side: str, team: str, labels: dict[str, str]) -> None:
     """Use the actual controls to choose a previously verified rendered team."""
+    picker = page.get_by_test_id(side + "-select")
+    picker.wait_for()
     season_control = page.get_by_test_id(side + "-season")
     if season_control.count() == 1:
         season_control.select_option(team.split("/")[0])
-    picker = page.get_by_test_id(side + "-select")
     if picker.evaluate("(element) => element.tagName") == "SELECT":
         picker.select_option(team)
     else:
