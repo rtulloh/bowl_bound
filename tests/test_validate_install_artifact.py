@@ -109,6 +109,7 @@ def test_verified_download_launches_extracted_app_with_browser_and_persistent_lo
         "exact_catalog_selectors": True,
         "new_game": True,
         "generated_game": False,
+        "cross_season_game": False,
     }
     browser_check.assert_called_once()
 
@@ -242,12 +243,32 @@ def test_child_process_environment_removes_source_overrides(
 
 
 @pytest.mark.parametrize(
-    "failure", [None, "empty", "wrong", "pageerror", "http-error", "game-start", "browser-error"]
+    "failure",
+    [
+        None,
+        "empty",
+        "missing",
+        "extra",
+        "wrong-season",
+        "wrong",
+        "duplicate",
+        "extra-season",
+        "pageerror",
+        "http-error",
+        "game-start",
+        "browser-error",
+    ],
 )
 @pytest.mark.parametrize("generated", [False, True])
+@pytest.mark.parametrize("picker_kind", ["legacy", "select", "combobox"])
 def test_browser_verifies_rendered_samples_and_game_or_rejects_errors(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str | None, generated: bool
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    failure: str | None,
+    generated: bool,
+    picker_kind: str,
 ) -> None:
+    """Exercise season-scoped DOM controls without launching a local browser."""
     import sys
     from types import ModuleType
 
@@ -257,17 +278,114 @@ def test_browser_verifies_rendered_samples_and_game_or_rejects_errors(
     expected_catalog = frozenset(validator.SAMPLES) | (
         {"2011/alpha", "2011/beta"} if generated else set()
     )
-    module = ModuleType("playwright.sync_api")
+    seasons = sorted({team.split("/")[0] for team in expected_catalog})
+    selected = dict(zip(("home", "away"), validator.SAMPLES, strict=True))
+    current_season = {"home": "2007", "away": "2007"}
+    opened = "home"
+    starts: list[tuple[str, str]] = []
     page = Mock()
-    selector = Mock()
-    selector.locator.return_value.evaluate_all.return_value = (
-        [] if failure == "empty" else sorted(expected_catalog)
-    )
-    if failure == "wrong":
-        selector.locator.return_value.evaluate_all.return_value = ["unexpected/team"]
-    page.get_by_test_id.return_value = selector
-    if failure == "game-start":
-        selector.click.side_effect = BrowserError("start game failed")
+
+    def entries(side: str) -> list[str]:
+        values = sorted(
+            team
+            for team in expected_catalog
+            if picker_kind == "legacy" or team.startswith(current_season[side] + "/")
+        )
+        if failure == "empty":
+            return []
+        if failure == "missing":
+            return values[:-1]
+        if failure == "extra":
+            return [*values, "2099/unexpected"]
+        if failure == "wrong-season":
+            foreign = next(
+                (
+                    team
+                    for team in sorted(expected_catalog)
+                    if not team.startswith(current_season[side] + "/")
+                ),
+                "2099/wrong-season",
+            )
+            return [foreign, *values[1:]]
+        if failure == "wrong":
+            return ["unexpected/team", *values[1:]]
+        if failure == "duplicate":
+            return [values[0]] * len(values)
+        return values
+
+    def choose(side: str, team: str) -> None:
+        selected[side] = team
+        if "/" in team:
+            current_season[side] = team.split("/")[0]
+
+    def option(side: str, team: str) -> Mock:
+        control = Mock()
+        control.inner_text.return_value = "Team " + team
+        control.click.side_effect = lambda: choose(side, team)
+        return control
+
+    def options(side: str) -> Mock:
+        control = Mock()
+        control.count.side_effect = lambda: len(entries(side))
+        control.nth.side_effect = lambda index: option(side, entries(side)[index])
+        return control
+
+    def listbox(side: str) -> Mock:
+        control = Mock()
+
+        def by_role(role: str, **kwargs: object) -> Mock:
+            assert role == "option"
+            if "name" in kwargs:
+                name = str(kwargs["name"])
+                team = next(team for team in entries(side) if "Team " + team == name)
+                return option(side, team)
+            return options(side)
+
+        control.get_by_role.side_effect = by_role
+        return control
+
+    def by_id(identifier: str) -> Mock:
+        nonlocal opened
+        control = Mock()
+        side = identifier.split("-")[0]
+        if identifier.endswith("-season"):
+            control.count.return_value = 0 if picker_kind == "legacy" else 1
+            control.locator.return_value.evaluate_all.return_value = (
+                seasons + ["2099"] if failure == "extra-season" else seasons
+            )
+            control.select_option.side_effect = lambda season: current_season.__setitem__(
+                side, season
+            )
+        elif identifier.endswith("-select"):
+            control.evaluate.return_value = "INPUT" if picker_kind == "combobox" else "SELECT"
+            control.locator.return_value.evaluate_all.side_effect = lambda _: ["", *entries(side)]
+            control.select_option.side_effect = lambda team: choose(side, team)
+            control.get_attribute.side_effect = lambda _: selected[side]
+
+            def open_picker() -> None:
+                nonlocal opened
+                opened = side
+
+            control.click.side_effect = open_picker
+        elif identifier == "start-game":
+
+            def start() -> None:
+                if failure == "game-start":
+                    raise BrowserError("start game failed")
+                assert selected["home"] != selected["away"]
+                starts.append((selected["home"], selected["away"]))
+
+            control.click.side_effect = start
+        return control
+
+    def by_role(role: str, **kwargs: object) -> Mock:
+        assert role == "listbox"
+        side = "home" if str(kwargs["name"]).startswith("Home") else "away"
+        assert side == opened
+        return listbox(side)
+
+    page.get_by_test_id.side_effect = by_id
+    page.get_by_role.side_effect = by_role
     if failure == "http-error":
         page.on.side_effect = lambda event, callback: (
             callback(Mock(status=500, url="http://localhost/api/teams"))
@@ -287,25 +405,23 @@ def test_browser_verifies_rendered_samples_and_game_or_rejects_errors(
     manager = Mock()
     manager.__enter__ = Mock(return_value=context)
     manager.__exit__ = Mock(return_value=False)
+    module = ModuleType("playwright.sync_api")
     module.sync_playwright = Mock(return_value=manager)
     module.Error = BrowserError
     monkeypatch.setitem(sys.modules, "playwright.sync_api", module)
-    if failure:
+    # Legacy flat selects have no season control to expose an extra season.
+    rejected = failure is not None and not (failure == "extra-season" and picker_kind == "legacy")
+    if rejected:
         with pytest.raises((ValueError, RuntimeError)):
             validator.check_browser("http://localhost", tmp_path, expected_catalog)
     else:
         validator.check_browser("http://localhost", tmp_path, expected_catalog)
-        assert any(call.args == ("start-game",) for call in page.get_by_test_id.call_args_list)
-        assert any(call.args == ("opening-screen",) for call in page.get_by_test_id.call_args_list)
-        assert page.get_by_label.call_count == (2 if generated else 1)
-        assert selector.click.call_count == (2 if generated else 1)
+        assert starts[0] == tuple(validator.SAMPLES)
         if generated:
-            assert any(
-                call.args == ("2011/alpha",) for call in selector.select_option.call_args_list
-            )
-            assert any(
-                call.args == ("2011/beta",) for call in selector.select_option.call_args_list
-            )
+            assert ("2011/alpha", "2011/beta") in starts
+            assert any(home.split("/")[0] != away.split("/")[0] for home, away in starts)
+        else:
+            assert len(starts) == 1
     browser.close.assert_called_once()
     page.screenshot.assert_called_once()
 

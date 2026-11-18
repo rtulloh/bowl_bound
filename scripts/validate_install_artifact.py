@@ -10,11 +10,15 @@ import re
 import subprocess
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import TYPE_CHECKING
 from zipfile import BadZipFile
 
 from .build_standalone import TARGETS, check_target
 from .smoke_standalone import catalog_from_inventory, extract_verified, smoke_executable
 from .windows_installer import smoke_installer
+
+if TYPE_CHECKING:
+    from playwright.sync_api import Page
 
 SAMPLES = ["2007/cedar-valley", "2007/harbor-tech"]
 DEFAULT_CATALOG_MANIFEST = Path(__file__).resolve().parents[1] / "release/manifest.json"
@@ -35,6 +39,83 @@ def check_browser(base: str, output: Path, expected_catalog: frozenset[str]) -> 
         _check_browser(base, output, expected_catalog)
     except BrowserError as error:
         raise RuntimeError(f"Packaged browser verification failed: {error}") from error
+
+
+def rendered_catalog(page: Page, side: str, expected: frozenset[str]) -> dict[str, str]:
+    """Verify every rendered choice, including season-scoped searchable pickers."""
+    picker = page.get_by_test_id(side + "-select")
+    picker.wait_for()
+    native = picker.evaluate("(element) => element.tagName") == "SELECT"
+    season_control = page.get_by_test_id(side + "-season")
+    seasons = sorted({team.split("/")[0] for team in expected})
+    scoped = season_control.count() == 1
+    if scoped:
+        observed = season_control.locator("option").evaluate_all(
+            "(items) => items.map(item => item.value)"
+        )
+        if sorted(observed) != seasons:
+            raise ValueError(f"Packaged {side} seasons differ from the approved release catalog")
+    elif not native:
+        raise ValueError(f"Packaged {side} searchable picker has no season control")
+
+    labels: dict[str, str] = {}
+    for season in seasons if scoped else [None]:
+        if season is not None:
+            season_control.select_option(season)
+        required = {team for team in expected if season is None or team.startswith(season + "/")}
+        if native:
+            values = picker.locator("option").evaluate_all(
+                "(items) => items.map(item => item.value)"
+            )
+            # Empty placeholders are not team entries.
+            values = [value for value in values if value]
+            if sorted(values) != sorted(required):
+                raise ValueError(
+                    f"Packaged {side} selector differs from the approved release catalog"
+                )
+            labels.update({team: team for team in values})
+            continue
+
+        picker.click()
+        listbox = page.get_by_role("listbox", name=side.title() + " team options", exact=True)
+        listbox.wait_for()
+        options = listbox.get_by_role("option")
+        count = options.count()
+        if count != len(required):
+            raise ValueError(
+                f"Packaged {side} picker count differs from the approved release catalog"
+            )
+        for index in range(count):
+            option = options.nth(index)
+            label = option.inner_text()
+            option.click()
+            team = picker.get_attribute("data-team-id")
+            if team not in required or team in labels:
+                raise ValueError(f"Packaged {side} picker has an unexpected or duplicate team")
+            labels[team] = label
+            if index + 1 < count:
+                picker.click()
+                listbox.wait_for()
+    if set(labels) != expected:
+        raise ValueError(f"Packaged {side} picker differs from the approved release catalog")
+    return labels
+
+
+def choose_team(page: Page, side: str, team: str, labels: dict[str, str]) -> None:
+    """Use the actual controls to choose a previously verified rendered team."""
+    season_control = page.get_by_test_id(side + "-season")
+    if season_control.count() == 1:
+        season_control.select_option(team.split("/")[0])
+    picker = page.get_by_test_id(side + "-select")
+    if picker.evaluate("(element) => element.tagName") == "SELECT":
+        picker.select_option(team)
+    else:
+        picker.click()
+        page.get_by_role("listbox", name=side.title() + " team options", exact=True).get_by_role(
+            "option", name=labels[team], exact=True
+        ).click()
+        if picker.get_attribute("data-team-id") != team:
+            raise ValueError(f"Packaged {side} picker selected the wrong team")
 
 
 def _check_browser(base: str, output: Path, expected_catalog: frozenset[str]) -> None:
@@ -59,17 +140,11 @@ def _check_browser(base: str, output: Path, expected_catalog: frozenset[str]) ->
                 ),
             )
             page.goto(base)
+            labels = {
+                side: rendered_catalog(page, side, expected_catalog) for side in ("home", "away")
+            }
             for side in ("home", "away"):
-                selector = page.get_by_test_id(side + "-select")
-                selector.wait_for()
-                options = selector.locator("option").evaluate_all(
-                    "(items) => items.map(item => item.value)"
-                )
-                if sorted(options) != sorted(expected_catalog):
-                    raise ValueError(
-                        f"Packaged {side} selector differs from the approved release catalog"
-                    )
-                selector.select_option(SAMPLES[0 if side == "home" else 1])
+                choose_team(page, side, SAMPLES[0 if side == "home" else 1], labels[side])
             page.get_by_label("Control mode").select_option("manual")
             page.get_by_test_id("start-game").click()
             page.get_by_test_id("opening-screen").wait_for()
@@ -79,10 +154,25 @@ def _check_browser(base: str, output: Path, expected_catalog: frozenset[str]) ->
                     raise ValueError("Generated browser validation requires two distinct teams")
                 page.goto(base)
                 page.get_by_label("Control mode").select_option("manual")
-                page.get_by_test_id("home-select").select_option(generated[0])
-                page.get_by_test_id("away-select").select_option(generated[1])
+                choose_team(page, "home", generated[0], labels["home"])
+                choose_team(page, "away", generated[1], labels["away"])
                 page.get_by_test_id("start-game").click()
                 page.get_by_test_id("opening-screen").wait_for()
+                other_season = next(
+                    (
+                        team
+                        for team in sorted(expected_catalog)
+                        if team.split("/")[0] != generated[0].split("/")[0]
+                    ),
+                    None,
+                )
+                if other_season is not None:
+                    page.goto(base)
+                    page.get_by_label("Control mode").select_option("manual")
+                    choose_team(page, "home", generated[0], labels["home"])
+                    choose_team(page, "away", other_season, labels["away"])
+                    page.get_by_test_id("start-game").click()
+                    page.get_by_test_id("opening-screen").wait_for()
             if errors:
                 raise RuntimeError(f"Packaged UI errors: {errors}")
         finally:
@@ -162,6 +252,8 @@ def validate(
                 "exact_catalog_selectors": True,
                 "new_game": True,
                 "generated_game": bool(expected_catalog - set(SAMPLES)),
+                "cross_season_game": bool(expected_catalog - set(SAMPLES))
+                and len({team.split("/")[0] for team in expected_catalog}) > 1,
             }
 
         options = {

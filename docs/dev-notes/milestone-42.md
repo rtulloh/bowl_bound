@@ -436,3 +436,39 @@ Additional verification: 70 install-artifact, release-documentation, metadata,
 issue/index and workflow tests pass in 1.32s. Ruff, pip check, whitespace
 and all 980 selected team-content pins pass. Full regression is delegated
 to GitHub under the owner’s explicit hosted-testing instruction.
+
+
+--- 2026-11-18 — v1.1.0 publication and stale browser harness (DEV-092) ---
+
+At d1c5015, source run 44254645232 passes 6,937 Python tests at 90.77%
+coverage, 197 frontend tests/build, all 171 generated-team chart audits and
+72 real-engine browser cases. Four Python fork warnings and existing React
+test act/duplicate-key warnings remain. Python takes 9,584.38 seconds; CI
+performance acceptance is not established and DEV-083 remains open.
+Dependency audit 44254645202 passes under the documented temporary DEV-087
+waiver, not remediation of picomatch. Native run 44278193199 passes all three
+targets, including Windows install/uninstall. Windows PyInstaller emits an
+optional tzdata hidden-import warning; executable checks pass.
+
+Independent downloaded-artifact review verifies all file digests, matching
+embedded/external manifests, exactly 173 teams, all 980 approved content pins
+and absence of nested private team-audit details. The owner-authorized immutable
+v1.1.0 tag and 11 reviewed assets are published; GitHub asset sizes/digests match
+the reviewed bytes. Published-download run 44279259786 then fails on all four
+targets: the old harness expects flat HTML selects, while the shipped searchable
+picker is season-scoped. This does not constitute install acceptance. Preserve
+failed receipts/screenshots/logs and correct the development harness as DEV-092.
+
+Consulted Paydirt .github/workflows/post-release-smoke.yml: adapt independently
+verified published bytes and explicit browser failure evidence. Deliberately do
+not reuse its NFL UI, runtime code or broader publication rules. Synthetic valid
+scoped select and combobox cases reproduce four failures before implementation.
+The correction retains full catalog verification and adds actual cross-season
+game startup without rebuilding or replacing the published application. Focused
+checks, documentation/index checks and four native revalidations remain required.
+
+Focused/cumulative correction checks pass 209 cases in 9.85s, with Ruff lint,
+907-file format checks, index and whitespace checks passing. Full regression
+runs on GitHub under the owner's explicit instruction; no tests or coverage
+threshold are removed, and no local browser is launched. Published application
+bytes and all chart/calibration identities remain unchanged.

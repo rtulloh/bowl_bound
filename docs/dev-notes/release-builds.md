@@ -349,6 +349,12 @@ to check the complete catalog, independent of the observed API.
 Require verified published size/digest and checksum before execution, matching
 platform/version, exact API and rendered selectors, sample/generated game
 startup, every-team snap/save/load, frontend assets, logs and graceful shutdown.
+For season-aware pickers, verify the exact season choices and enumerate every
+rendered team on both sides across those seasons. Searchable controls must be
+opened and their actual selected team IDs checked; querying HTML option tags
+on a combobox does not verify its catalog. Retain legacy flat-select coverage,
+reject missing/extra/duplicate choices, and start a cross-season game when the
+approved catalog spans seasons.
 The Windows installer check also verifies install registration and uninstall.
 Use fresh output paths so receipts/logs/screenshots cannot overwrite evidence.
 Preserve CI artifacts before their retention period expires.
@@ -357,7 +363,12 @@ Automated runs use an isolated port and `--no-browser`. Separately record normal
 entry-point automatic-browser behavior on a fresh machine after downloading
 through a browser. Signing/notarization, quarantine and SmartScreen acceptance
 remain distinct from functional native-runner checks. A failed published asset
-is a release defect; repair only through a new unused version/tag.
+is a release defect; repair only through a new unused version/tag. If evidence
+identifies a validation-harness defect instead, reproduce it with synthetic
+controls, commit the corrected harness, and dispatch from that corrected ref
+against the existing release tag. Never replace assets or move the tag to repair
+a harness failure; retain both failed and passing receipts and record the
+harness commit separately from the application commit.
 
 See [1.0.1 release evidence](release-1.0.1.md) for the source/gate/run references.
 
