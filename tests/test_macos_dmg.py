@@ -116,3 +116,27 @@ def test_failed_image_creation_leaves_final_path_free_for_retry(tmp_path: Path) 
             assert not archive.with_suffix(".dmg").exists()
             assert not archive.with_suffix(".dmg.sha256").exists()
         assert run.call_count == 2
+
+
+def test_finder_listener_identity_accepts_canonical_alias_paths(tmp_path: Path) -> None:
+    real = tmp_path / "physical"
+    real.mkdir()
+    alias = tmp_path / "alias"
+    alias.symlink_to(real, target_is_directory=True)
+    app = alias / "Bowl Bound.app"
+    executable = app / "Contents/MacOS/BowlBound/Bowl-Bound"
+    executable.parent.mkdir(parents=True)
+    executable.write_text("synthetic executable")
+    with (
+        patch.object(macos_dmg.socket, "socket"),
+        patch.object(macos_dmg.subprocess, "run", return_value=Mock(stdout="123\n")),
+        patch.object(
+            macos_dmg.subprocess, "check_output", return_value="n" + str(executable.resolve())
+        ),
+        patch.object(
+            macos_dmg, "request", side_effect=[{"status": "healthy"}, {"version": "1.1.1"}]
+        ),
+        patch.object(macos_dmg.os, "kill", side_effect=[None, ProcessLookupError]) as kill,
+    ):
+        macos_dmg.smoke_finder_app(app, "1.1.1")
+    assert kill.call_args_list[0].args == (123, macos_dmg.signal.SIGINT)

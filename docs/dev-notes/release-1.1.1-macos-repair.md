@@ -90,3 +90,8 @@ published native checks with `include_dmg=true`, then separately verify a fresh
 browser-downloaded DMG's normal first launch and browser behavior. Preserve
 failed receipts and disclose unavailable platforms. No push or publication has
 been performed for this candidate.
+
+Parent review follow-up: listener ownership resolves filesystem aliases on both
+sides before comparison, covering macOS /var → /private/var temporary paths.
+The synthetic alias regression fails first; unrelated-listener rejection remains
+required. This is a smoke harness correction, not fresh native qualification.

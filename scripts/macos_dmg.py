@@ -88,7 +88,10 @@ def smoke_finder_app(app: Path, version: str) -> None:
                     text=True,
                     timeout=10,
                 ).splitlines()
-                if "n" + str(executable) not in mapped_files:
+                mapped_paths = {
+                    Path(name[1:]).resolve() for name in mapped_files if name.startswith("n/")
+                }
+                if executable.resolve() not in mapped_paths:
                     raise ReleaseError("Finder smoke port belongs to another executable")
                 pid = owner
                 if request("http://127.0.0.1:8001", "/api/health")["status"] != "healthy":
