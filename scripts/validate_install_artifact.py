@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING
 from zipfile import BadZipFile
 
 from .build_standalone import TARGETS, check_target
+from .macos_dmg import smoke_dmg
 from .smoke_standalone import catalog_from_inventory, extract_verified, smoke_executable
 from .windows_installer import smoke_installer
 
@@ -242,10 +243,13 @@ def validate(
         receipt["catalog_manifest_sha256"] = hashlib.sha256(
             catalog_manifest.read_bytes()
         ).hexdigest()
-        if artifact.suffix.lower() not in {".zip", ".exe"}:
-            raise ValueError("Expected a standalone ZIP or Windows installer EXE")
+        if artifact.suffix.lower() not in {".zip", ".exe", ".dmg"}:
+            raise ValueError("Expected a standalone ZIP, macOS DMG or Windows installer EXE")
         if artifact.suffix.lower() == ".exe" and target != "windows-x64":
             raise ValueError("Installer EXE requires the Windows native target")
+
+        if artifact.suffix.lower() == ".dmg" and not target.startswith("macos-"):
+            raise ValueError("DMG requires a macOS native target")
 
         def browser_check(base: str) -> None:
             check_browser(base, report.parent, expected_catalog)
@@ -262,7 +266,12 @@ def validate(
             "log_path": report.parent / "server.log",
             "expected_catalog": expected_catalog,
         }
-        if artifact.suffix.lower() == ".exe":
+        if artifact.suffix.lower() == ".dmg":
+            smoke_dmg(artifact.resolve(), version, target, **options)
+            receipt["launch_method"] = (
+                "Mounted copied macOS app; Finder/Terminal and payload verified"
+            )
+        elif artifact.suffix.lower() == ".exe":
             smoke_installer(artifact.resolve(), version, **options)
             receipt["launch_method"] = "Installed Windows application; uninstall verified"
         else:

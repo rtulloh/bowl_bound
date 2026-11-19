@@ -100,6 +100,12 @@ jobs:
           "$BUILD_PYTHON" -m scripts.build_standalone --target "$BUILD_TARGET" --output "$RUNNER_TEMP/bowl-bound-artifacts"
       - name: Smoke verified extracted executable
         run: '"$BUILD_PYTHON" -m scripts.smoke_standalone "$RUNNER_TEMP/bowl-bound-artifacts"'
+      - name: Build and smoke macOS disk image
+        if: startsWith(matrix.target, 'macos-')
+        run: |
+          for archive in "$RUNNER_TEMP/bowl-bound-artifacts/"*.zip; do
+            "$BUILD_PYTHON" -m scripts.macos_dmg "$archive" --smoke
+          done
       - name: Install pinned Windows installer compiler
         if: matrix.target == 'windows-x64'
         shell: pwsh
@@ -121,5 +127,7 @@ jobs:
             ${{ runner.temp }}/bowl-bound-artifacts/*.sha256
             ${{ runner.temp }}/bowl-bound-artifacts/*.manifest.json
             ${{ runner.temp }}/bowl-bound-artifacts/*.exe
+            ${{ runner.temp }}/bowl-bound-artifacts/*.dmg
+            ${{ runner.temp }}/bowl-bound-artifacts/*.receipt.json
           if-no-files-found: error
           retention-days: 14

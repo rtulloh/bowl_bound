@@ -7,8 +7,8 @@
 Select a standalone release from the project release page. Choose your
 operating system and processor, and do not confuse a GitHub source ZIP with a
 standalone app.
-Standalone archives include Python, the built web interface, 116 generated 2007
-teams and two fictional samples; players do not need Python or Node.js installed.
+Standalone archives include Python, the built web interface, 171 generated teams
+across 2002 and 2007 and two fictional samples; players do not need Python or Node.js installed.
 An Internet connection is needed to download, not for ordinary local play.
 
 For Windows, the **installer** is
@@ -20,8 +20,13 @@ Settings → Apps → Installed apps → Bowl Bound. Close the game first; unins
 before installing a replacement version. The installer requires an empty
 destination. Personal saves and external team libraries are not removed.
 
-The **portable ZIP** is an alternative on Windows and the distribution format
-on macOS. Extract the **entire** archive into a user-writable folder. Do not run
+When available, the macOS **DMG** contains `Bowl Bound.app`. Mount it and drag
+the app to Applications or a user-writable folder, then double-click the app.
+It opens Terminal and your browser; keep Terminal open and press Ctrl+C there
+to stop. The wrapper is unsigned and not notarized, so Gatekeeper may require
+the verified-download steps below. A DMG does not remove those security checks.
+
+The **portable ZIP** is an alternative on Windows and macOS. Extract the **entire** archive into a user-writable folder. Do not run
 from inside the ZIP or move only the executable away from its supporting files.
 Open a terminal in the extracted `BowlBound` folder:
 
@@ -74,10 +79,11 @@ launch. Available choices vary with macOS version and managed-device policy.
 
 If quarantine still prevents a verified extracted portable build from running,
 this narrowly removes the quarantine attribute from **that extracted game
-folder only** (replace the example path with the real folder):
+folder only** (the ZIP extracts as `BowlBound`; use the actual folder containing
+`Bowl-Bound`, `start.sh`, and `_internal`, not the ZIP filename):
 
 ```sh
-xattr -dr com.apple.quarantine "$HOME/Downloads/BowlBound-1.1.0-macos-arm64"
+xattr -dr com.apple.quarantine "$HOME/Downloads/BowlBound"
 ```
 
 This changes the download security marker; it is not a repair or a signature.

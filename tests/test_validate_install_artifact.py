@@ -559,3 +559,28 @@ def test_incomplete_archive_catalog_is_rejected_against_approved_catalog(
     assert validator.validate(archive, metadata, TAG, "macos-arm64", report) == 1
     assert "catalog" in json.loads(report.read_text())["error"].lower()
     launch.assert_not_called()
+
+
+def test_published_dmg_uses_mounted_app_validation(
+    artifact: tuple[Path, Path, Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    archive, metadata, report = artifact
+    dmg = archive.with_suffix(".dmg")
+    archive.rename(dmg)
+    archive.with_suffix(".zip.sha256").unlink()
+    digest = hashlib.sha256(dmg.read_bytes()).hexdigest()
+    dmg.with_suffix(".dmg.sha256").write_text(digest + "  " + dmg.name)
+    data = json.loads(metadata.read_text())
+    data["assets"][0]["name"] = dmg.name
+    metadata.write_text(json.dumps(data))
+
+    def smoke(*args: object, **kwargs: object) -> None:
+        (report.parent / "server.log").write_text("clean shutdown")
+        kwargs["check_ui"]("http://127.0.0.1:8001")
+
+    probe = Mock(side_effect=smoke)
+    monkeypatch.setattr(validator, "smoke_dmg", probe, raising=False)
+    monkeypatch.setattr(validator, "check_browser", Mock())
+    assert validator.validate(dmg, metadata, TAG, "macos-arm64", report) == 0
+    probe.assert_called_once()
+    assert "mounted" in json.loads(report.read_text())["launch_method"].lower()

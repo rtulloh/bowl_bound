@@ -21,6 +21,8 @@ def test_post_release_smoke_downloads_without_building_or_publishing() -> None:
         ("macos-x86_64", "portable"),
         ("windows-x64", "portable"),
         ("windows-x64", "installer"),
+        ("macos-arm64", "dmg"),
+        ("macos-x86_64", "dmg"),
     }
     assert int(job["timeout-minutes"]) <= 30
     for step in job["steps"]:
@@ -38,7 +40,8 @@ def test_post_release_smoke_downloads_without_building_or_publishing() -> None:
     uploads = [
         step for step in job["steps"] if step.get("uses", "").startswith("actions/upload-artifact@")
     ]
-    assert len(uploads) == 1 and uploads[0]["if"] == "always()"
+    assert len(uploads) == 1
+    assert uploads[0]["if"] == "always() && (matrix.kind != 'dmg' || inputs.include_dmg)"
     assert "receipt.json" in uploads[0]["with"]["path"]
     assert "server.log" in uploads[0]["with"]["path"]
     assert "browser.png" in uploads[0]["with"]["path"]
@@ -57,3 +60,12 @@ def test_release_catalog_uses_exact_tag_checkout_independent_of_downloaded_app()
     )
     commands = "\n".join(step.get("run", "") for step in steps)
     assert "--catalog-manifest release-source/release/manifest.json" in commands
+
+
+def test_dmg_checks_are_explicit_and_preserve_older_zip_only_releases() -> None:
+    text = (ROOT / ".github/workflows/post-release-smoke.yml").read_text()
+    workflow = yaml.load(text, Loader=yaml.BaseLoader)
+    assert workflow["on"]["workflow_dispatch"]["inputs"]["include_dmg"]["default"] == "false"
+    steps = workflow["jobs"]["native"]["steps"]
+    assert all("inputs.include_dmg" in step["if"] for step in steps)
+    assert 'ASSET_NAME="BowlBound-$ARTIFACT_VERSION-$TARGET.dmg"' in text

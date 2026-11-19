@@ -7,6 +7,10 @@ on:
         description: Existing immutable Bowl Bound release tag to download and validate
         required: true
         type: string
+      include_dmg:
+        description: Also require macOS DMG checks (v1.1.1 and later)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -34,6 +38,14 @@ jobs:
             arch: x64
             target: windows-x64
             kind: installer
+          - os: macos-26
+            arch: arm64
+            target: macos-arm64
+            kind: dmg
+          - os: macos-26-intel
+            arch: x64
+            target: macos-x86_64
+            kind: dmg
     runs-on: ${{ matrix.os }}
     env:
       RELEASE_TAG: ${{ inputs.release_tag }}
@@ -46,23 +58,28 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: matrix.kind != 'dmg' || inputs.include_dmg
         with:
           persist-credentials: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        if: matrix.kind != 'dmg' || inputs.include_dmg
         with:
           python-version: '3.12.10'
           architecture: ${{ matrix.arch }}
       - name: Check out immutable release source catalog
+        if: matrix.kind != 'dmg' || inputs.include_dmg
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           ref: refs/tags/${{ inputs.release_tag }}
           path: release-source
       - name: Install browser harness only (no source application)
+        if: matrix.kind != 'dmg' || inputs.include_dmg
         run: |
           python -m pip install playwright==1.56.0
           python -m playwright install chromium
       - name: Download published artifact and its release identity
+        if: matrix.kind != 'dmg' || inputs.include_dmg
         run: |
           set -euo pipefail
           [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-alpha\.[0-9]+)?$ ]]
@@ -70,6 +87,8 @@ jobs:
           ARTIFACT_VERSION="${RELEASE_TAG#v}"
           if [[ "$KIND" == installer ]]; then
             ASSET_NAME="BowlBoundSetup-$ARTIFACT_VERSION-$TARGET.exe"
+          elif [[ "$KIND" == dmg ]]; then
+            ASSET_NAME="BowlBound-$ARTIFACT_VERSION-$TARGET.dmg"
           else
             ASSET_NAME="BowlBound-$ARTIFACT_VERSION-$TARGET.zip"
           fi
@@ -77,10 +96,11 @@ jobs:
           gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --pattern "$ASSET_NAME" --pattern "$ASSET_NAME.sha256" --dir "$RUNNER_TEMP/published-download"
           echo "ASSET_NAME=$ASSET_NAME" >> "$GITHUB_ENV"
       - name: Validate downloaded application with API and rendered browser checks
+        if: matrix.kind != 'dmg' || inputs.include_dmg
         run: |
           python -m scripts.validate_install_artifact --artifact "$RUNNER_TEMP/published-download/$ASSET_NAME" --release-json "$RUNNER_TEMP/published-download/release.json" --tag "$RELEASE_TAG" --target "$TARGET" --report "$RUNNER_TEMP/install-validation/receipt.json" --catalog-manifest release-source/release/manifest.json
       - name: Retain success and failure evidence
-        if: always()
+        if: always() && (matrix.kind != 'dmg' || inputs.include_dmg)
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: install-validation-${{ matrix.target }}-${{ matrix.kind }}-${{ github.run_id }}

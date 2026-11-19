@@ -394,3 +394,22 @@ receipts under another identity. Any actual engine, simulation, source or fittin
 change needs the affected validation described in the
 [calibration workflow](../chart-calibration.md). GitHub checks the reviewed identity
 before starting the expensive regression and still runs the complete suite.
+
+## macOS disk images (DEV-093)
+
+The native builder also composes architecture-specific DMGs from the verified
+portable ZIPs. `python -m scripts.macos_dmg FILE.zip --smoke` validates the input
+inventory, creates a read-only image using system hdiutil, mounts it, copies its
+app, exercises Finder → Terminal → bundled start.command startup, checks owned
+listener health/version and bounded shutdown, then runs the complete payload
+smoke. Any failure prevents artifact upload. The receipt distinguishes those
+checks from browser-downloaded first launch, which remains separate. No security
+attributes are removed by the app or installer. Wrappers are unsigned and not
+notarized. Run on both supported native Mac architectures.
+
+After publishing a release with DMGs, dispatch post-release-smoke.yml with
+`include_dmg=true` to require both DMG checks as well as the existing ZIP and
+Windows installer checks. The default remains false solely for immutable older
+ZIP-only releases such as v1.1.0. A v1.1.1 release cannot qualify without the DMG
+checks and fresh browser-download launch evidence. Never replace the v1.1.0 tag
+or add rebuilt bytes under its existing asset identity.
