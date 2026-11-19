@@ -138,7 +138,10 @@ def test_post_collection_notice_or_binary_mutation_is_rejected(
         ("macos-x86_64", "_internal/libncurses.6.dylib", ["ncurses"]),
         ("windows-x64", "_internal/libcrypto-3.dll", ["openssl"]),
         ("windows-x64", "_internal/libffi-8.dll", ["libffi"]),
-        ("windows-x64", "_internal/VCRUNTIME140_1.dll", ["cpython"]),
+        ("windows-x64", "_internal/VCRUNTIME140_1.dll", ["microsoft-runtime"]),
+        ("windows-x64", "_internal/python312.dll", ["cpython", "microsoft-runtime"]),
+        ("windows-x64", "_internal/ucrtbase.dll", ["microsoft-runtime"]),
+        ("windows-x64", "_internal/api-ms-win-crt-runtime-l1-1-0.dll", ["microsoft-runtime"]),
         ("macos-arm64", "_internal/Python.framework/Versions/3.12/Python", ["cpython"]),
         ("windows-x64", "_internal/yaml/_yaml.cp312-win_amd64.pyd", ["pyyaml", "libyaml"]),
         (
@@ -146,7 +149,7 @@ def test_post_collection_notice_or_binary_mutation_is_rejected(
             "_internal/pydantic_core/_pydantic_core.cpython-312-darwin.so",
             ["pydantic-core"],
         ),
-        ("windows-x64", "_internal/_lzma.pyd", ["cpython", "xz"]),
+        ("windows-x64", "_internal/_lzma.pyd", ["cpython", "microsoft-runtime", "xz"]),
         (
             "macos-x86_64",
             "_internal/python3.12/lib-dynload/_decimal.cpython-312-darwin.so",
@@ -217,3 +220,43 @@ def test_changed_native_version_or_compiler_does_not_inherit_notice_provenance(
     (bundle / name).write_bytes(b"synthetic\0" + good_marker + b"\0end")
     notices.add_native_notices(source, bundle, "macos-arm64", python_version="3.12.10")
     notices.verify_native_notices(bundle, "macos-arm64")
+
+
+def test_windows_runtime_requires_additional_windows_binary_notice(
+    source: Path, tmp_path: Path
+) -> None:
+    catalog = source / "release/native-notices/manifest.json"
+    data = json.loads(catalog.read_text())
+    data["components"]["cpython"] = {
+        "version": "3.12.10",
+        "notices": ["openssl.txt"],
+        "provenance": "Synthetic general Python license only",
+    }
+    catalog.write_text(json.dumps(data))
+    bundle = tmp_path / "windows"
+    put(bundle, "_internal/VCRUNTIME140.dll", "Synthetic Microsoft runtime")
+    with pytest.raises(ReleaseError, match="Missing native notice component"):
+        notices.add_native_notices(source, bundle, "windows-x64", python_version="3.12.10")
+    assert not (bundle / "THIRD_PARTY").exists()
+
+    text = "Synthetic additional Windows binary distribution conditions\n"
+    put(source, "release/native-notices/cpython-windows-binary.txt", text)
+    data["notices"]["cpython-windows-binary.txt"] = {
+        "sha256": hashlib.sha256(text.encode()).hexdigest(),
+        "source": "https://example.org/cpython/PC/crtlicense.txt",
+    }
+    data["components"]["microsoft-runtime"] = {
+        "version": "Synthetic Windows build",
+        "notices": ["cpython-windows-binary.txt"],
+        "provenance": "Synthetic Windows binary distribution conditions",
+    }
+    catalog.write_text(json.dumps(data))
+    notices.add_native_notices(source, bundle, "windows-x64", python_version="3.12.10")
+    report = json.loads((bundle / "THIRD_PARTY/NATIVE-LIBRARIES.json").read_text())
+    assert report["binaries"]["_internal/VCRUNTIME140.dll"]["components"] == ["microsoft-runtime"]
+    for prefix in notices.ROOTS:
+        assert (bundle / prefix / "NATIVE/cpython-windows-binary.txt").read_text() == text
+    notices.verify_native_notices(bundle, "windows-x64")
+    (bundle / "_internal/THIRD_PARTY/NATIVE/cpython-windows-binary.txt").unlink()
+    with pytest.raises(ReleaseError, match="native|notice|inventory"):
+        notices.verify_native_notices(bundle, "windows-x64")

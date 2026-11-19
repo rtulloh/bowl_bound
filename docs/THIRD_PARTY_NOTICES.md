@@ -51,3 +51,18 @@ records known audit limitations. Notices do not themselves grant distribution
 rights or prove which static dependencies were compiled into a wheel. Complete
 transitive/native licensing and Windows runtime redistribution review, corrected
 three-platform builds and fresh-machine acceptance remain publication gates.
+
+### Windows binary conditions
+
+The Windows payload also retains CPython 3.12.10's
+[additional Windows binary conditions](https://github.com/python/cpython/blob/v3.12.10/PC/crtlicense.txt)
+as `THIRD_PARTY/NATIVE/cpython-windows-binary.txt` and its internal duplicate.
+The inventory identifies Microsoft runtime DLLs separately from the general
+Python license; CPython's Windows DLL and standard-library PYDs reference both.
+These conditions describe redistribution of the Windows Python binary and
+require downstream distributors and external end users to agree to protective
+terms. Retaining the notice does not establish that those agreement requirements
+have been satisfied, or authorize Microsoft runtime files obtained through a
+different source. Microsoft's
+[Visual Studio redistribution list](https://learn.microsoft.com/en-us/visualstudio/releases/2022/redistribution)
+separately conditions redistribution on the applicable license terms.

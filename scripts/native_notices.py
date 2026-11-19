@@ -106,9 +106,11 @@ def _components(name: str, target: str) -> list[str]:
     if windows and name == "_internal/libffi-8.dll":
         return ["libffi"]
     if windows and re.fullmatch(
-        r"_internal/(?:python312|VCRUNTIME140(?:_1)?|ucrtbase|api-ms-win-[a-z0-9-]+)\.dll", name
+        r"_internal/(?:VCRUNTIME140(?:_1)?|ucrtbase|api-ms-win-[a-z0-9-]+)\.dll", name
     ):
-        return ["cpython"]
+        return ["microsoft-runtime"]
+    if windows and name == "_internal/python312.dll":
+        return ["cpython", "microsoft-runtime"]
     if not windows and re.fullmatch(
         r"_internal/(?:Python|Python\.framework/(?:Python|Versions/(?:3\.12|Current)/Python))", name
     ):
@@ -133,7 +135,7 @@ def _components(name: str, target: str) -> list[str]:
             "zlib": ["zlib"],
             "binascii": ["zlib"],
         }
-        return ["cpython", *extras.get(module, [])]
+        return ["cpython", *(["microsoft-runtime"] if windows else []), *extras.get(module, [])]
     raise ReleaseError(f"Unreviewed native library: {name}")
 
 

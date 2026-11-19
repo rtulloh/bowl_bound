@@ -69,6 +69,10 @@
     "rust-crates.json": {
       "sha256": "77db01b612cce930d8419c7a01b342be32e9870b17a765b9cbf8b70a25e40067",
       "source": "https://raw.githubusercontent.com/rust-lang/rust/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/Cargo.lock"
+    },
+    "cpython-windows-binary.txt": {
+      "source": "https://raw.githubusercontent.com/python/cpython/v3.12.10/PC/crtlicense.txt",
+      "sha256": "3c71b3ae243121f6f227374cd1ef7c59ed07b1969b330d0e947f91a3a1b3fd73"
     }
   },
   "components": {
@@ -170,6 +174,13 @@
         "zlib.txt"
       ],
       "provenance": "CPython v3.12.10 Mac/BuildScript/build-installer.py and PCbuild/get_externals.bat"
+    },
+    "microsoft-runtime": {
+      "version": "Microsoft Distributable Code in the CPython 3.12.10 Windows binary distribution",
+      "notices": [
+        "cpython-windows-binary.txt"
+      ],
+      "provenance": "Official CPython v3.12.10 PC/crtlicense.txt supplies additional Windows binary redistribution conditions; PCbuild/pyproject.props FindVCRuntime locates vcruntime DLLs from Microsoft VC Redist. This notice is not a substitute for compliance with downstream protective-term requirements or proof of separately sourced runtime rights."
     }
   }
 }
