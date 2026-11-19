@@ -11,10 +11,12 @@ import shutil
 import signal
 import socket
 import subprocess
+import sys
 import time
+import traceback
 from collections.abc import Callable
 from pathlib import Path
-from tempfile import TemporaryDirectory
+from tempfile import TemporaryDirectory, mkdtemp
 
 from .release_package import ReleaseError
 from .smoke_standalone import extract_verified, request, smoke_executable
@@ -183,8 +185,9 @@ def smoke_dmg(
     log_path: Path | None = None,
 ) -> None:
     """Mount exact image bytes and exercise a copied app through Finder and its API."""
-    with TemporaryDirectory(prefix="bb-dmg-smoke-") as directory:
-        work = Path(directory)
+    work = Path(mkdtemp(prefix="bb-dmg-smoke-"))
+    succeeded = False
+    try:
         mounted = work / "mounted"
         mounted.mkdir()
         subprocess.run(
@@ -218,6 +221,24 @@ def smoke_dmg(
             )
         finally:
             subprocess.run(["hdiutil", "detach", str(mounted)], check=True)
+        succeeded = True
+    finally:
+        if succeeded:
+            shutil.rmtree(work)
+        else:
+            app = work / "installed/Bowl Bound.app"
+            failure = {
+                "passed": False,
+                "image": str(image),
+                "image_sha256": (
+                    hashlib.sha256(image.read_bytes()).hexdigest() if image.is_file() else None
+                ),
+                "retained_app": str(app),
+                "error": traceback.format_exc(),
+                "instruction": "Stop any Terminal server before removing retained resources.",
+            }
+            (work / "failure.json").write_text(json.dumps(failure, indent=2) + "\n")
+            print(f"Failed native smoke retained app and evidence: {app}", file=sys.stderr)
 
 
 def main() -> None:

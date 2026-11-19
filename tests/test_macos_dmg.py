@@ -1,5 +1,6 @@
 """Mac installer composition uses synthetic portable bundles."""
 
+import json
 import plistlib
 import subprocess
 from pathlib import Path
@@ -140,3 +141,36 @@ def test_finder_listener_identity_accepts_canonical_alias_paths(tmp_path: Path) 
     ):
         macos_dmg.smoke_finder_app(app, "1.1.1")
     assert kill.call_args_list[0].args == (123, macos_dmg.signal.SIGINT)
+
+
+def test_failed_finder_smoke_preserves_app_for_potentially_running_server(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    copied_apps: list[Path] = []
+
+    def mount(command: list[str], **_kwargs: object) -> None:
+        if command[1] == "attach":
+            mounted = Path(command[command.index("-mountpoint") + 1])
+            payload = mounted / "Bowl Bound.app/Contents/MacOS/BowlBound"
+            payload.mkdir(parents=True)
+            (payload / "ARTIFACT-MANIFEST.json").write_text(
+                json.dumps({"version": "1.1.1", "target": "macos-arm64"})
+            )
+            (payload / "Bowl-Bound").write_text("synthetic executable")
+
+    def fail(app: Path, _version: str) -> None:
+        copied_apps.append(app)
+        raise ReleaseError("ownership was not established")
+
+    with (
+        patch.object(macos_dmg.subprocess, "run", side_effect=mount),
+        patch.object(macos_dmg, "smoke_finder_app", side_effect=fail),
+        pytest.raises(ReleaseError, match="ownership"),
+    ):
+        macos_dmg.smoke_dmg(tmp_path / "synthetic.dmg", "1.1.1", "macos-arm64")
+    assert len(copied_apps) == 1
+    assert (copied_apps[0] / "Contents/MacOS/BowlBound/Bowl-Bound").is_file()
+    assert str(copied_apps[0]) in capsys.readouterr().err
+    import shutil
+
+    shutil.rmtree(copied_apps[0].parents[1])

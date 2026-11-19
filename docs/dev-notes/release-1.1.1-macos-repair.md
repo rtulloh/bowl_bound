@@ -95,3 +95,12 @@ Parent review follow-up: listener ownership resolves filesystem aliases on both
 sides before comparison, covering macOS /var → /private/var temporary paths.
 The synthetic alias regression fails first; unrelated-listener rejection remains
 required. This is a smoke harness correction, not fresh native qualification.
+
+DEV-094 follow-up: an ownership-check failure left the native process running
+while automatic temporary-directory cleanup removed its resources, causing
+unavailable folders and then an empty catalog. The failed smoke now retains the
+copy with failure.json and prints its location. A synthetic regression first
+reproduces disappearance; cleanup occurs only after successful bounded shutdown.
+Stop an old failed helper Terminal before rerunning. The user reports image
+creation/mount and Terminal/browser launch succeeded; ownership validation failed,
+so this remains a partial native result, not smoke acceptance.
