@@ -1,10 +1,12 @@
 """Start the real Bowl Bound API for browser tests on a synthetic season folder.
 
 Usage: python e2e/serve_backend.py <seasons-dir> <port>
+Alternatively set BB_E2E_SEASONS and BB_E2E_PORT without positional arguments.
 The folder is filled with two invented teams, so no historical data is involved.
 """
 
 import json
+import os
 import sys
 from dataclasses import replace
 from pathlib import Path
@@ -23,8 +25,8 @@ from tests.test_special_teams import special_chart, yards  # noqa: E402
 
 
 def main() -> None:
-    seasons = Path(sys.argv[1])
-    port = int(sys.argv[2])
+    seasons = Path(sys.argv[1] if len(sys.argv) > 1 else os.environ["BB_E2E_SEASONS"])
+    port = int(sys.argv[2] if len(sys.argv) > 2 else os.environ["BB_E2E_PORT"])
     for chart in default_teams():
         chart = with_pat_result(chart, True)
         chart = replace(
