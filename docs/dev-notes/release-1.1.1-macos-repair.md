@@ -110,3 +110,23 @@ mount/copy-app/manual recursive xattr workflow. ZIPs remain secondary portable
 outputs and exact native-builder inputs. Player installation and next-patch
 release notes now lead with DMG architecture selection and manual unquarantine
 of the copied app. No notarization request or signing claim is introduced.
+
+## Native Apple Silicon rerun
+
+The owner reran the helper in a desktop Terminal after alias and retention fixes.
+The persistent local DMG receipt records mounted_payload_smoke and
+finder_terminal_launch_smoke true. Its digest and 29,597,428-byte size match
+independent inspection. Image creation/verification, mount/copy, actual Finder
+startup, exact 173-team catalog with no problems, every-team snap/save/load and
+graceful shutdown pass. Later browser connection refusal is expected because
+smoke stops its server. The image remains available for normal app installation.
+
+This supersedes the agent-environment inability to perform those native steps
+on Apple Silicon, preserving the original failures. Intel execution, browser
+download first launch, headless browser regression and complete source gate are
+still pending. The image wraps existing v1.1.0 published bytes and is unpublished.
+
+Owner explicitly directs the upstream default Mac distribution to DMGs for both
+architectures, with Applications copy and manual app quarantine removal. Upstream
+branch/PR publication is authorized after the required gates. Actual patch
+release publication remains coordinated separately; never overwrite v1.1.0.
