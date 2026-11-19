@@ -183,3 +183,20 @@ those failures without weakening guards or installing into system directories.
 Hosted browser and native checks, published-byte checks on all supported targets,
 and fresh browser-download first launch remain release qualification gaps.
 DEV-093, DEV-094 and DEV-095 remain open; v1.1.1 is unpublished.
+
+
+## Upstream qualification phase
+
+Reconsult Paydirt packaging/macos/create_app.sh before upstream progression. Its
+Finder app, DMG and Applications-link approach remains relevant; retain Bowl
+Bound's exact manifest, verified portable input and native ownership smoke. Do
+not reuse Paydirt's whole-payload copy, installer dependency installation or NFL
+resources. The packaged release-note entry now describes the prepared feature;
+this developer checkpoint continues to record unqualified targets explicitly.
+
+The owner authorizes the scoped branch push and draft PR after the disclosed
+local full-gate attempt, to obtain exact-commit hosted browser validation. No
+local browser retry is planned. Preserve the existing native source gate: native
+compilation requires successful Tests on the exact main push commit, so branch
+validation precedes review/merge, then main validation and native dispatch. Do
+not weaken that guard or claim branch success qualifies a native release.
