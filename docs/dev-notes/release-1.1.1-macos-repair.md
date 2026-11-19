@@ -130,3 +130,15 @@ Owner explicitly directs the upstream default Mac distribution to DMGs for both
 architectures, with Applications copy and manual app quarantine removal. Upstream
 branch/PR publication is authorized after the required gates. Actual patch
 release publication remains coordinated separately; never overwrite v1.1.0.
+
+## Frozen patch identity preparation
+
+Owner directs version1.1.1 metadata before final qualification. Two metadata
+checks fail first against1.1.0. Update package/API/display/frontend versions
+and release installation names; keep dependency versions, save/engine profile,
+all historical chart/roster selections and payload hashes unchanged. The engine
+package init diff contains only the two version strings. Review every other
+pinned engine/runtime byte against the earlier immutable source contract before
+issuing its new explicit metadata-only authority pin. Earlier v1.1.0 payload
+native receipts remain under their original identity and do not qualify the
+rebuilt v1.1.1 app.

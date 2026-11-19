@@ -12,7 +12,7 @@ across 2002 and 2007 and two fictional samples; players do not need Python or No
 An Internet connection is needed to download, not for ordinary local play.
 
 For Windows, the **installer** is
-`BowlBoundSetup-1.1.0-windows-x64.exe`. Verify its checksum first, then
+`BowlBoundSetup-1.1.1-windows-x64.exe`. Verify its checksum first, then
 run it and follow the setup wizard. It installs `BowlBound.exe` for the current
 user under `%LOCALAPPDATA%\Programs\BowlBound`, without administrator access,
 and creates Start menu and desktop shortcuts. Uninstall through Windows
@@ -66,9 +66,9 @@ organization security policy.
 
 ```powershell
 # Windows PowerShell: replace the filename with your download.
-Get-FileHash .\BowlBoundSetup-1.1.0-windows-x64.exe -Algorithm SHA256
+Get-FileHash .\BowlBoundSetup-1.1.1-windows-x64.exe -Algorithm SHA256
 # Or check the portable ZIP instead.
-Get-FileHash .\BowlBound-1.1.0-windows-x64.zip -Algorithm SHA256
+Get-FileHash .\BowlBound-1.1.1-windows-x64.zip -Algorithm SHA256
 ```
 
 On macOS use `shasum -a 256 FILE.dmg` for the primary download, or

@@ -1,6 +1,6 @@
 # Bowl Bound release notes
 
-## Next patch candidate — macOS app disk images
+## 1.1.1 — macOS app disk images (release candidate)
 
 The primary Mac download will be a DMG for Apple Silicon or Intel. Mount it,
 copy `Bowl Bound.app`, then apply the documented manual quarantine command to
