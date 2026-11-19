@@ -20,11 +20,25 @@ Settings → Apps → Installed apps → Bowl Bound. Close the game first; unins
 before installing a replacement version. The installer requires an empty
 destination. Personal saves and external team libraries are not removed.
 
-When available, the macOS **DMG** contains `Bowl Bound.app`. Mount it and drag
-the app to Applications or a user-writable folder, then double-click the app.
-It opens Terminal and your browser; keep Terminal open and press Ctrl+C there
-to stop. The wrapper is unsigned and not notarized, so Gatekeeper may require
-the verified-download steps below. A DMG does not remove those security checks.
+The **DMG is the primary macOS download**. Choose the disk image for your Mac:
+
+| Mac processor | Primary download |
+| --- | --- |
+| Apple Silicon (M1 or later) | `BowlBound-VERSION-macos-arm64.dmg` |
+| Intel (64-bit x86_64) | `BowlBound-VERSION-macos-x86_64.dmg` |
+
+Verify its checksum, mount the DMG, and drag `Bowl Bound.app` into Applications
+or a user-writable folder. Unmount the disk image after copying. For these
+unsigned builds, remove quarantine from **the copied app only** using the
+[manual command below](#macos-gatekeeper-and-quarantine), then double-click it.
+The app opens Terminal and your browser; keep Terminal open and press Ctrl+C
+there to stop. No Python or Node installation is required.
+
+The ZIP remains a secondary portable alternative and native-builder input.
+Older v1.1.0 downloads have ZIPs only; DMGs belong to the next patch release.
+They do not bypass Gatekeeper and are not Developer ID signed or notarized.
+
+### Portable ZIP alternative
 
 The **portable ZIP** is an alternative on Windows and macOS. Extract the **entire** archive into a user-writable folder. Do not run
 from inside the ZIP or move only the executable away from its supporting files.
@@ -57,7 +71,8 @@ Get-FileHash .\BowlBoundSetup-1.1.0-windows-x64.exe -Algorithm SHA256
 Get-FileHash .\BowlBound-1.1.0-windows-x64.zip -Algorithm SHA256
 ```
 
-On macOS use `shasum -a 256 FILE.zip`.
+On macOS use `shasum -a 256 FILE.dmg` for the primary download, or
+`shasum -a 256 FILE.zip` for the portable alternative.
 
 ### Windows: downloaded-file blocking and SmartScreen
 
@@ -73,9 +88,20 @@ is not a Windows unblocking command. Do not install extra utilities for this.
 
 ### macOS: Gatekeeper and quarantine
 
-For a verified build, first try right-click → **Open**, or the app-specific
-**Open Anyway** option in System Settings → Privacy & Security after an attempted
-launch. Available choices vary with macOS version and managed-device policy.
+After verifying the DMG and copying the app, remove quarantine recursively from
+**that copied app**, including its bundled Python library, then launch it.
+For an app copied to Applications:
+
+```sh
+xattr -dr com.apple.quarantine "/Applications/Bowl Bound.app"
+open "/Applications/Bowl Bound.app"
+```
+
+If you copied to another folder, replace both paths with that app's actual path.
+Do not apply the command only to the launcher executable: nested libraries can
+retain quarantine and fail to load. Do not apply it to the mounted disk image.
+Right-click → **Open**, or System Settings → Privacy & Security → **Open Anyway**,
+may also be available depending on macOS and managed-device policy.
 
 If quarantine still prevents a verified extracted portable build from running,
 this narrowly removes the quarantine attribute from **that extracted game

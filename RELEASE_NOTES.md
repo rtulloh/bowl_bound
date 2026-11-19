@@ -1,5 +1,14 @@
 # Bowl Bound release notes
 
+## Next patch candidate — macOS app disk images
+
+The primary Mac download will be a DMG for Apple Silicon or Intel. Mount it,
+copy `Bowl Bound.app`, then apply the documented manual quarantine command to
+the copied app before opening it. ZIPs remain secondary portable downloads.
+The app opens Terminal and the local browser game; Ctrl+C stops the server.
+These builds remain unsigned and not notarized. Native qualification is pending;
+this entry does not announce a published patch. See [installation](docs/installation.md).
+
 ## 1.1.0 — Calibrated 2002 teams and cross-season play
 
 - Adds 55 generated 2002 teams with reviewed commentary rosters, alongside the

@@ -104,3 +104,9 @@ reproduces disappearance; cleanup occurs only after successful bounded shutdown.
 Stop an old failed helper Terminal before rerunning. The user reports image
 creation/mount and Terminal/browser launch succeeded; ownership validation failed,
 so this remains a partial native result, not smoke acceptance.
+
+Owner steering: the DMG is the primary Mac player download, matching the desired
+mount/copy-app/manual recursive xattr workflow. ZIPs remain secondary portable
+outputs and exact native-builder inputs. Player installation and next-patch
+release notes now lead with DMG architecture selection and manual unquarantine
+of the copied app. No notarization request or signing claim is introduced.
