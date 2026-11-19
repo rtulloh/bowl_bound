@@ -413,3 +413,54 @@ Windows installer checks. The default remains false solely for immutable older
 ZIP-only releases such as v1.1.0. A v1.1.1 release cannot qualify without the DMG
 checks and fresh browser-download launch evidence. Never replace the v1.1.0 tag
 or add rebuilt bytes under its existing asset identity.
+
+## Publish the reviewed macOS-first patch
+
+The standalone workflow remains an artifact builder with read-only repository
+permissions. Publication is a separate explicit maintainer action. For v1.1.1,
+use the reviewed [release body](release-1.1.1-notes.md), which leads with both
+architecture-specific DMGs and the mount/copy/manual-app-xattr installation path.
+README and installation links lead to this DMG-first selection. ZIPs remain
+secondary portable assets and verified native-builder inputs.
+
+Before publication, require the frozen release commit's complete source gate,
+exact-commit hosted Tests/dependency-audit results, both native build jobs and
+Windows installer checks, both mounted-DMG Finder/payload receipts, privacy
+review and owner release coordination. Update the package version and reviewed
+generator runtime identity for the new patch before its final build. The local
+v1.1.0-payload test DMG is diagnostic evidence and must never be uploaded as
+v1.1.1 or added to immutable v1.1.0. Verify the existing v1.1.1 tag resolves to
+the exact approved build source SHA; create no release from an unverified tag.
+
+Download only that successful build run with `gh run download BUILD_RUN --dir
+ARTIFACT_ROOT`, check every checksum sidecar within its artifact directory, and
+compare each version/target manifest with the new patch. Check each DMG receipt
+against its image and source ZIP hash; require both smoke booleans true.
+Select these exact versioned assets for the release, never the artifact folder
+or an unrestricted recursive glob:
+
+- Both `BowlBound-1.1.1-macos-ARCH.dmg` files and their `.dmg.sha256` sidecars,
+  with ARCH exactly arm64 and x86_64.
+- `BowlBoundSetup-1.1.1-windows-x64.exe` and its `.exe.sha256` sidecar.
+- The three `BowlBound-1.1.1-TARGET.zip` files, their `.zip.sha256` sidecars and
+  `.manifest.json` inventories, with TARGET exactly macos-arm64, macos-x86_64
+  and windows-x64.
+
+Use those explicit absolute paths as positional arguments to:
+
+```sh
+gh release create v1.1.1 --repo rtulloh/bowl_bound --verify-tag \
+  --title 'Bowl Bound 1.1.1' \
+  --notes-file docs/dev-notes/release-1.1.1-notes.md \
+  EXACT_REVIEWED_ASSET_PATHS
+```
+
+The command is a publication action, not a validation command. Do not execute
+it until the gates and owner release coordination above are satisfied. Its
+release body promotes DMGs; inspect the rendered GitHub release page afterward
+and confirm the DMG links resolve to its actual assets. Then run the published
+asset workflow with `release_tag=v1.1.1` and `include_dmg=true`, downloading
+actual release bytes on both Macs and Windows portable/installer jobs. Require
+success and retain failed receipts. Separately exercise a fresh browser-downloaded
+DMG through ordinary copy/manual-xattr/Finder launch. Disclose signing and any
+remaining unavailable target instead of treating artifact upload as acceptance.
