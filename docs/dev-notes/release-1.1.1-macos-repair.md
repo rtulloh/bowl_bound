@@ -150,3 +150,36 @@ engine/runtime files are byte-identical. New immutable metadata source commit:
 59a9975f4ee59930f27f477aede13c66d7353ade. New canonical contract SHA256:
 446ca83bd98ac251c9deb3c0395bd64abdcd92fb4f660dc63df8726adb8609e6. Update both explicit current-runtime authority constants. This
 metadata-only reanchor establishes no fresh calibration or new historical fit.
+
+
+## Source qualification checkpoint
+
+The covered full Python invocation started at 27c9b63 and finished while the
+checkout was at 33b5203: 7,006 tests pass in 3,378.46 seconds, with 90.77% branch
+coverage against the 75% requirement. Every tracked regular file under
+bowl_bound/, backend/, tools/, scripts/, tests/, release/ and pyproject.toml
+(478 files) is byte-identical between those commits. The later change is the
+synthetic browser-fixture root repair and its frontend regression, documented
+in DEV-095. Preserve the exact invocation identity; this is not a claim that a
+single frozen-33b5203 full gate ran.
+
+At 33b5203, frontend dependency installation, all 200 frontend tests in 22 files,
+the production build and structural audit of 171 generated teams pass. Ruff,
+format checking (914 files) and pip check also pass. The chart audit establishes
+packaging structure, not fresh historical calibration.
+
+The automatic full runner advanced from Python through its remaining source
+checks and reached browser tests between monitoring polls. It was interrupted
+with exit 130 after 61 unsuccessful browser attempts; no completed browser
+result or complete gate pass is claimed. Earlier evidence records the macOS
+agent browser launch restriction. No further local browser probes are planned.
+Exact logs, phase receipts, coverage and byte-identity evidence stay private.
+
+Actual v1.1.1 native artifacts remain pending hosted pinned builders. Local
+Homebrew Python 3.12.16 and standalone 3.12.10 builds fail the existing reviewed
+native-notice/layout guards; a privately expanded official Python 3.12.10 cannot
+supply its absolute framework path to PyInstaller hook subprocesses. Preserve
+those failures without weakening guards or installing into system directories.
+Hosted browser and native checks, published-byte checks on all supported targets,
+and fresh browser-download first launch remain release qualification gaps.
+DEV-093, DEV-094 and DEV-095 remain open; v1.1.1 is unpublished.
