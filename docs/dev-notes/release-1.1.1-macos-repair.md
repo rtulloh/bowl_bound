@@ -142,3 +142,11 @@ pinned engine/runtime byte against the earlier immutable source contract before
 issuing its new explicit metadata-only authority pin. Earlier v1.1.0 payload
 native receipts remain under their original identity and do not qualify the
 rebuilt v1.1.1 app.
+
+Metadata authority review: compared every engine_files and runtime_files pin
+with immutable 2dd6b92594397377a3e0c5c9b7ac9daae3e5aef1. All earlier hashes match that source. The only candidate
+change is bowl_bound/__init__.py's two1.1.0→1.1.1 strings; all other pinned
+engine/runtime files are byte-identical. New immutable metadata source commit:
+59a9975f4ee59930f27f477aede13c66d7353ade. New canonical contract SHA256:
+446ca83bd98ac251c9deb3c0395bd64abdcd92fb4f660dc63df8726adb8609e6. Update both explicit current-runtime authority constants. This
+metadata-only reanchor establishes no fresh calibration or new historical fit.
