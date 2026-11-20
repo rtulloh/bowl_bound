@@ -70,3 +70,11 @@ runtime guard rejects changed attested source. Full gate remains blocked, no
 attestation renewal/cohort qualification. Separate dependency audit44787187065
 and Windows source-dialog checks pass. Draft PR token lacks createPullRequest;
 source-only branch fix/data072-scramble-precedence remains unmerged.
+
+--- 2026-11-20 prospective renewal ---
+Owner authorizes routine source attestation renewal and bounded full-cohort
+repair/calibration. Only evidence.py differs among existing contract pins;
+all engine/other runtime pins and reference configuration remain unchanged.
+Prospective contract daafca957d2293b6d2c7c4ec8fefb1b213c1014115f7ec76702cbba0f7a74000
+identifies changed normalization with no prior fit carryforward. Prior failed
+gates/closed experiment identities remain preserved; no guard is weakened.

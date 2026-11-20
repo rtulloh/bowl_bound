@@ -94,7 +94,7 @@ profile fields, source facts and prior failed/selected receipts. See
 The classifier fix changes neither released bytes nor previously normalized
 event caches in either season. It affects future raw rows only when explicit
 scramble evidence overlaps generic pass flags. Cohort-specific incidence and
-unknown counts require a separately approved, pinned raw-to-normalized audit;
+unknown counts require a pinned raw-to-normalized audit;
 absence of QR in 2002 does not prove this bug caused every omission.
 
 ## Narrow corrective candidate
@@ -150,7 +150,7 @@ pyright tools/chartgen/evidence.py tests/chartgen/test_evidence.py tests/chartge
 
 The focused/cumulative selection and established full upstream gate must be
 reviewed before execution; `test_generation.py` contains existing synthetic
-game/refinement cases. No historical research games are authorized by this note.
+game/refinement cases. No historical research games ran in this narrow checkpoint.
 Issue-index generation is metadata maintenance, not a test result.
 
 ## Full vocabulary and cohort replacement remain open
@@ -186,9 +186,10 @@ independently compare every old/new attested source pin, identify changed
 normalization explicitly, and obtain review of a new prospective contract.
 Retain the old contract/failed preflight and its closed experiment receipts.
 Then run synthetic source/engine/statistical/replay checks upstream with the new
-contract. Only afterward may a separately approved bounded source-incidence
-audit and all-team baseline/candidate calibration begin. Contract renewal proves
-source identity, not cohort fit. No automatic hash rewrite is authorized here.
+contract. The owner authorizes the necessary bounded source-incidence audit and
+all-team baseline/candidate calibration as part of the repair; declare their
+panels and precision contract before execution. Contract renewal proves source
+identity, not cohort fit.
 
 The first focused corrective execution, run `44786879453`, passed all six
 classifier/protection cases but the generator fixture correctly rejected its
@@ -206,6 +207,19 @@ dependency audit pass. The full Python/static/frontend/browser gate did not
 execute and is not qualified. Draft PR creation was unavailable because the
 configured token lacks `createPullRequest` permission; the public source branch
 is available for review without a merge.
+
+The owner subsequently authorized routine prospective attestation renewal after
+independent pin review. The engine stays anchored to `801bf6a`, with all engine
+and other runtime pins unchanged. Only `tools/chartgen/evidence.py` changes from
+`2d8603278e78159f893bd94368e87007201b27388d4834c5cc027fd9c37f1453` to
+`bccc684c5089c2cf8858449fcdea0614717e0b9385f4bbad4b87cf180ece1e90`.
+The prospective contract explicitly excludes prior calibration/fit carryforward;
+its canonical digest is
+`daafca957d2293b6d2c7c4ec8fefb1b213c1014115f7ec76702cbba0f7a74000`.
+The old contract digest
+`1d3d5f40e46ad2f75c9ce97025bc0ef72b9b581e6e6afa0f10dc2ffa5bff5ec5`,
+closed experiment identities and failed preflight logs remain preserved.
+No guard logic, reference coaching, source facts or chart bytes change.
 
 ## Paydirt design input
 
