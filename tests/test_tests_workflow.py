@@ -251,3 +251,9 @@ def test_failed_macos_launch_captures_workflow_bound_tools_without_changing_payl
     assert steps.index(capture) > next(
         i for i, step in enumerate(steps) if step.get("name") == "Build and smoke macOS disk image"
     )
+
+
+def test_source_format_and_dependency_checks_precede_expensive_regression() -> None:
+    text = Path(".github/workflows/tests.yml").read_text()
+    for command in ("ruff check .", "ruff format --check .", "pip check"):
+        assert text.index(command) < text.index("-m pytest --cov")

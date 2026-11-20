@@ -606,3 +606,10 @@ canonical contract SHA256
 `1d3d5f40e46ad2f75c9ce97025bc0ef72b9b581e6e6afa0f10dc2ffa5bff5ec5`.
 The runtime guard remains enforced. This establishes no new chart calibration,
 historical fit or native first-launch pass. No local tests are executed.
+
+Upstream `44759886640` completed 7,113 tests successfully but failed the stale
+launcher-version expectation (1.1.1 versus 1.1.2); 90.53% coverage, four warnings.
+Correct that exact expectation. Existing lint/format/dependency commands now run
+before the unchanged expensive full Python suite, preserving every gate while
+reporting those failures early. A synthetic workflow-order assertion is written
+first but runs upstream only. No local regression/checks or native pass claimed.
