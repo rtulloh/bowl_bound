@@ -62,10 +62,10 @@ def test_release_catalog_uses_exact_tag_checkout_independent_of_downloaded_app()
     assert "--catalog-manifest release-source/release/manifest.json" in commands
 
 
-def test_dmg_checks_are_explicit_and_preserve_older_zip_only_releases() -> None:
+def test_dmg_checks_default_on_and_preserve_explicit_legacy_opt_out() -> None:
     text = (ROOT / ".github/workflows/post-release-smoke.yml").read_text()
     workflow = yaml.load(text, Loader=yaml.BaseLoader)
-    assert workflow["on"]["workflow_dispatch"]["inputs"]["include_dmg"]["default"] == "false"
+    assert workflow["on"]["workflow_dispatch"]["inputs"]["include_dmg"]["default"] == "true"
     steps = workflow["jobs"]["native"]["steps"]
     assert all("inputs.include_dmg" in step["if"] for step in steps)
     assert 'ASSET_NAME="BowlBound-$ARTIFACT_VERSION-$TARGET.dmg"' in text

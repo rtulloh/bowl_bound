@@ -489,3 +489,7 @@ app/resources and records their path, avoiding deletion beneath a potentially
 running process. Use fresh artifact/evidence paths for a retry. Existing release
 assets/tags remain immutable. Fresh browser-download/default-browser acceptance
 and the broader native license/provenance audit retain their explicit scope.
+
+Post-release smoke dispatch defaults `include_dmg=true` so both primary Mac DMGs
+are verified. Only legacy ZIP-only tags should explicitly set it false; v1.1.1
+and later require all six native target/artifact checks.

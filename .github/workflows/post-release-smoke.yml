@@ -10,7 +10,7 @@ on:
       include_dmg:
         description: Also require macOS DMG checks (v1.1.1 and later)
         type: boolean
-        default: false
+        default: true
 
 permissions:
   contents: read

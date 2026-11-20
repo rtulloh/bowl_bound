@@ -309,3 +309,10 @@ WM_GETTEXT and documents the line/position messages used by the probe:
 [GetWindowTextW](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw),
 [EM_POSFROMCHAR](https://learn.microsoft.com/en-us/windows/win32/controls/em-posfromchar),
 [EM_LINESCROLL](https://learn.microsoft.com/en-us/windows/win32/controls/em-linescroll).
+
+Publication workflow default correction: post-release verification now defaults
+`include_dmg=true`, so normal dispatch checks the primary Mac downloads.
+Legacy ZIP-only releases such as v1.1.0 can explicitly opt out; v1.1.1 requires
+all six native checks. Regression first failed against false, then passed.
+This adapts Paydirt published-artifact evidence separation reviewed above; no
+legacy release exception is reused.
