@@ -22,8 +22,11 @@ from .release_package import ReleaseError
 from .smoke_standalone import extract_verified, request, smoke_executable
 
 
-def assemble_app(payload: Path, destination: Path, version: str) -> Path:
+def assemble_app(payload: Path, destination: Path, version: str, *, target: str) -> Path:
     """Wrap exact portable resources with an explicit Terminal lifecycle launcher."""
+    architectures = {"macos-arm64": "arm64", "macos-x86_64": "x86_64"}
+    if target not in architectures:
+        raise ReleaseError("App requires a supported macOS target")
     if destination.exists() or destination.is_symlink():
         raise ReleaseError("App destination already exists")
     if payload.is_symlink() or any(path.is_symlink() for path in payload.rglob("*")):
@@ -42,6 +45,7 @@ def assemble_app(payload: Path, destination: Path, version: str) -> Path:
         "CFBundleVersion": version,
         "CFBundleShortVersionString": version,
         "LSUIElement": True,
+        "LSArchitecturePriority": [architectures[target]],
     }
     (destination / "Contents/Info.plist").write_bytes(plistlib.dumps(info))
     launch = macos / "launch"
@@ -135,7 +139,12 @@ def build_dmg(archive: Path, *, smoke: bool = False) -> Path:
         candidate = work / output.name
         image = work / "image"
         image.mkdir()
-        assemble_app(work / "extracted/BowlBound", image / "Bowl Bound.app", manifest["version"])
+        assemble_app(
+            work / "extracted/BowlBound",
+            image / "Bowl Bound.app",
+            manifest["version"],
+            target=manifest["target"],
+        )
         (image / "Applications").symlink_to("/Applications")
         subprocess.run(
             [

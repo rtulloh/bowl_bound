@@ -1,5 +1,12 @@
 # Bowl Bound release notes
 
+## 1.1.2 — native Mac launcher architecture (candidate)
+
+The app bundle declares the architecture matching its packaged payload, avoiding
+Launch Services defaulting the shell launcher to Rosetta on Apple Silicon.
+The launcher and manual quarantine instructions stay the same. This candidate
+requires upstream source and native validation before publication.
+
 ## 1.1.1 — macOS app disk images
 
 The primary Mac download is a DMG for Apple Silicon or Intel. Mount it,

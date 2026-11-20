@@ -17,7 +17,9 @@ def test_app_preserves_payload_and_finder_opens_terminal(tmp_path: Path) -> None
     payload.mkdir()
     (payload / "Bowl-Bound").write_text("synthetic executable")
     (payload / "start.sh").write_text("synthetic launcher")
-    app = macos_dmg.assemble_app(payload, tmp_path / "Bowl Bound.app", "1.1.1")
+    app = macos_dmg.assemble_app(
+        payload, tmp_path / "Bowl Bound.app", "1.1.1", target="macos-arm64"
+    )
     info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
     assert info["CFBundleShortVersionString"] == "1.1.1"
     assert info["CFBundleExecutable"] == "launch"
@@ -34,18 +36,45 @@ def test_app_preserves_payload_and_finder_opens_terminal(tmp_path: Path) -> None
     assert "xattr" not in launch.read_text() + command.read_text()
 
 
+@pytest.mark.parametrize(
+    ("target", "architecture"), [("macos-arm64", "arm64"), ("macos-x86_64", "x86_64")]
+)
+def test_script_app_selects_its_payload_architecture(
+    tmp_path: Path, target: str, architecture: str
+) -> None:
+    payload = tmp_path / "portable"
+    payload.mkdir()
+    app = macos_dmg.assemble_app(
+        payload, tmp_path / "Bowl Bound.app", "1.1.2", target=target
+    )
+    info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
+    assert info["LSArchitecturePriority"] == [architecture]
+    assert "LSRequiresNativeExecution" not in info
+
+
+def test_script_app_rejects_unsupported_target_before_copy(tmp_path: Path) -> None:
+    payload = tmp_path / "portable"
+    payload.mkdir()
+    app = tmp_path / "Bowl Bound.app"
+    with pytest.raises(ReleaseError, match="macOS target"):
+        macos_dmg.assemble_app(payload, app, "1.1.2", target="windows-x64")
+    assert not app.exists()
+
+
 def test_app_rejects_symlink_payload_and_existing_destination(tmp_path: Path) -> None:
     payload = tmp_path / "portable"
     payload.mkdir()
     (payload / "escape").symlink_to(tmp_path)
     with pytest.raises(ReleaseError, match="symlink"):
-        macos_dmg.assemble_app(payload, tmp_path / "Bowl Bound.app", "1.1.1")
+        macos_dmg.assemble_app(
+            payload, tmp_path / "Bowl Bound.app", "1.1.1", target="macos-arm64"
+        )
     assert not (tmp_path / "Bowl Bound.app").exists()
     (payload / "escape").unlink()
     destination = tmp_path / "exists.app"
     destination.mkdir()
     with pytest.raises(ReleaseError, match="exist"):
-        macos_dmg.assemble_app(payload, destination, "1.1.1")
+        macos_dmg.assemble_app(payload, destination, "1.1.1", target="macos-arm64")
 
 
 def test_workflow_builds_smokes_and_uploads_both_mac_images() -> None:

@@ -194,3 +194,8 @@ The per-user receipt is
 If the terms or receipt cannot be read or saved, the application exits with an
 error. Re-extract missing or changed app resources; keep acceptance records in
 your own account's writable application-data folder.
+
+For shell-based Mac app launchers, the bundle architecture preference must match
+the selected download (Apple Silicon or Intel). Version 1.1.1 has a reported
+Apple Silicon first-launch failure under investigation; 1.1.2 is the prospective
+repair and requires its own published-artifact validation.

@@ -508,3 +508,48 @@ directed upstream fast-tracking and no further local regression/checks; this
 closeout changes documentation only. Earlier local checks retain their original
 commit identities, including the 72-browser-test pass recorded for `7ce9de6`.
 No new local tests, launches, builds or calibration are claimed here.
+
+
+### 2026-11-20 — owner first launch fails after publication
+
+The owner's actual copied `/Applications/Bowl Bound.app` 1.1.1 launch silently
+failed to open Terminal/browser or listen on port 8001. Recursive quarantine
+attributes are absent; the installed launcher, command and start script are
+executable. Process 27217 remains `/bin/bash .../Contents/MacOS/launch`, with no
+child process, before the wrapper's `exec /usr/bin/open` Terminal hop. A bounded
+read-only sample contains only Rosetta Runtime frames and a 204 KB footprint;
+this does not prove a particular architecture/policy root cause. Installed bytes
+are preserved and no GUI, installed-app modification or local test was performed
+by this investigation. Direct command launch is awaiting owner evidence.
+
+This is an actual failed owner first-launch check, superseding the earlier
+"pending" designation. Preserve all six hosted published-download passes and
+the independent 15-asset byte audit: they do not qualify this failed first launch.
+DEV-093 remains open. No production fix or next patch is selected yet.
+
+Consulted Paydirt `packaging/macos/create_app.sh`: its CFBundleExecutable is the
+native frozen binary and its completed bundle is ad-hoc sealed, unlike this
+Terminal shell wrapper. These are relevant design differences, not evidence of
+the cause. Do not copy its one-file assumptions or change Bowl Bound packaging
+until the actual failure mechanism is established. Owner-directed upstream-only
+validation remains in effect; no local regression or launches are run.
+
+
+### Prospective v1.1.2 — explicit shell-app architecture
+
+Apple's [universal macOS binary guidance](https://developer.apple.com/documentation/apple-silicon/building-a-universal-macos-binary)
+explains that script-only app launchers may default to Rosetta and recommends
+`LSArchitecturePriority`. The installed app has no architecture preference and
+its stalled interpreter sample is entirely Rosetta frames. This supports the
+smallest packaging repair: set `LSArchitecturePriority` to exactly `arm64` for
+the ARM payload or `x86_64` for Intel. Reject unsupported targets before copying.
+Do not add `LSRequiresNativeExecution`, alter launcher/Terminal flow, sign the
+wrapper, modify payload files or change the startup bound in this repair.
+
+Synthetic architecture-priority and unsupported-target regressions were written
+before implementation. Per the owner's explicit direction, they are not run
+locally: upstream CI must establish their result, along with the full source
+gate and all native/published checks. No red/green local result is claimed.
+The new patch version is 1.1.2; immutable v1.1.1 tag/assets are not replaced.
+Paydirt's native-binary entrypoint noted above avoids the script-only ambiguity;
+reuse the explicit target-identity principle, not its one-file/runtime design.
