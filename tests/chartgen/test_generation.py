@@ -1034,6 +1034,8 @@ def test_classified_overlapping_scrambles_supply_pass_qr_support(events: list[Ev
                 "rush": True,
                 "pass": True,
                 "qb_scramble": True,
+                "fumble_vec": False,
+                "fumble_or_muff": False,
                 "yds_rushed": 7,
                 "statYardage": 7,
             }

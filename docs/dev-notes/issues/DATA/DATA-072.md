@@ -1,6 +1,6 @@
 ---
 id: DATA-072
-title: PBP-generated charts omit required reachable native outcome categories
+title: Generated 2002 and 2007 charts omit required reachable native outcome categories
 status: open
 priority: Medium
 milestone: 34b
@@ -15,7 +15,7 @@ commits: [88da3ae]
 
 ## Description
 
-The owner reports missing native mechanisms in existing generated 2007 charts. Audit normalized source classification, requested and encoded physical mass, and actual priority-selected support for gains/losses/no gain, F, INT, incomplete, QR, QT, Option-to-BLP/SOP, offensive and defensive penalties, and B. Preserve published charts and immutable releases; observed zeros and authored support assumptions must remain separate.
+The owner reports missing native mechanisms in existing generated 2002 and 2007 charts. Audit each cohort separately: normalized source classification, requested and encoded physical mass, and actual priority-selected support for gains/losses/no gain, F, INT, incomplete, QR, QT, Option-to-BLP/SOP, offensive and defensive penalties, and B. Preserve published charts and immutable releases; observed zeros and authored support assumptions must remain separate. Preserve the 2002 source lineage and selected run_yards_scale=1.15 baseline.
 
 ## Resolution / verification
 
@@ -56,3 +56,10 @@ the unchanged research runtime guard rejected changed attested source bytes.
 Preserve that failure; no contract pin was changed. Move focused tests ahead
 of the still-mandatory guard for diagnostic evidence only. A prospective source
 attestation decision remains required for the full gate.
+
+--- 2026-11-20 17:49 UTC ---
+Focused run44786879453: six classifier/protection cases pass; QR generator case
+rejects omitted synthetic fumble annotations. Fixture explicitly supplies both
+false fumble flags; production unknown handling and all assertions unchanged.
+Scope expanded to both selected cohorts with separate pinned inventories;
+2002 source lineage and selected run_yards_scale=1.15 remain unchanged.

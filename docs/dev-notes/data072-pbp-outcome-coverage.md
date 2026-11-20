@@ -1,4 +1,4 @@
-# DATA-072: PBP outcome coverage and scramble classification
+# DATA-072: 2002/2007 outcome coverage and scramble classification
 
 Milestone 34b; linked to DATA-069. This is an isolated, untested candidate, not a
 replacement cohort. The reviewed research candidate was transplanted onto
@@ -62,6 +62,40 @@ There are distinct causes, requiring distinct remedies:
   physical weights. Requested, encoded and priority-selected mass must remain
   separate; a silent presence flag is insufficient.
 - A concrete source classifier bug can also erase genuine scramble support.
+
+## Separate 2002 census and lineage
+
+The expanded owner request also covers the selected 55-team 2002 cohort. A
+separate read-only census verified all 275 chart/provenance manifest pins and
+2,970 self offense/defense contexts using the same initial-priority method.
+Private rows are retained separately under `private-data/data072-2002-outcomes-v1/`.
+
+| Category | Encoded primary OFF: teams present / 55 | Encoded DEF: teams present / 55 |
+| --- | ---: | ---: |
+| Numeric gain / loss | 55 / 55 | 55 / 55 |
+| No gain | 54 | 55 |
+| F | 55 | 0 |
+| INT | 55 | 6 |
+| Incomplete | 55 | 29 |
+| QT | 55 | 10 |
+| QR / B / SOP / BLP | 0 / 0 / 0 / 0 | 0 / 0 / 0 / 0 |
+| Offensive / defensive penalty | 0 / 0 | 0 / 0 |
+
+Initial priority selects F in 2,754 contexts and INT/incomplete/QT in 1,320
+each; no QR/B/SOP/BLP or either penalty instruction is selected. No-gain
+instructions occur in 2,390 contexts, including the team without a primary OFF
+zero. These counts establish presence only, not completed procedures or rates.
+
+2002 uses a separately retained ESPN core API snapshot plus 99 reviewed factual
+gamebook corrections; it does not inherit the 2007 SportsDataverse lineage or
+grant. Preserve its selected shared `run_yards_scale=1.15`, all neutral remaining
+profile fields, source facts and prior failed/selected receipts. See
+[the source and calibration scope](../generated-charts.md#generated-2002-cohort).
+The classifier fix changes neither released bytes nor previously normalized
+event caches in either season. It affects future raw rows only when explicit
+scramble evidence overlaps generic pass flags. Cohort-specific incidence and
+unknown counts require a separately approved, pinned raw-to-normalized audit;
+absence of QR in 2002 does not prove this bug caused every omission.
 
 ## Narrow corrective candidate
 
@@ -144,6 +178,24 @@ scoring, clock, traces and replay. Preserve failed settings. Require independent
 regeneration/hash reproduction and the applicable upstream full gate. No new
 support prior, historical rate, changed tolerance, chart replacement or release
 publication is selected or authorized here.
+
+For the expanded scope, run separate 2002 and 2007 acceptance panels and pooled
+reports; do not combine their factual denominators or transfer calibration.
+Before any runtime attestation renewal: freeze this reviewed classifier commit,
+independently compare every old/new attested source pin, identify changed
+normalization explicitly, and obtain review of a new prospective contract.
+Retain the old contract/failed preflight and its closed experiment receipts.
+Then run synthetic source/engine/statistical/replay checks upstream with the new
+contract. Only afterward may a separately approved bounded source-incidence
+audit and all-team baseline/candidate calibration begin. Contract renewal proves
+source identity, not cohort fit. No automatic hash rewrite is authorized here.
+
+The first focused corrective execution, run `44786879453`, passed all six
+classifier/protection cases but the generator fixture correctly rejected its
+omitted fumble annotations (`all positive rush primary fumble support is unknown`).
+The synthetic scramble rows now explicitly declare both fumble flags false;
+this repairs fixture completeness without changing production handling of
+unknown fumbles or weakening assertions. Preserve that failed run.
 
 ## Paydirt design input
 
