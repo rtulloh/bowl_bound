@@ -49,3 +49,10 @@ Upstream tests-only run 44786384688 at 88da3ae demonstrated expected red:
 3 failed, 4 passed, 124 deselected in 0.33s. Both overlapping pass flags lost
 rushing classification; the QR integration fixture failed on that same loss.
 Corrective candidate gate pending. No local tests executed.
+
+--- 2026-11-20 17:48 UTC ---
+Corrective checkpoint 33b7c00 run44786642123 stopped before focused tests because
+the unchanged research runtime guard rejected changed attested source bytes.
+Preserve that failure; no contract pin was changed. Move focused tests ahead
+of the still-mandatory guard for diagnostic evidence only. A prospective source
+attestation decision remains required for the full gate.

@@ -91,7 +91,13 @@ tests-only run [44786384688](https://github.com/rtulloh/bowl_bound/actions/runs/
 at `88da3ae` demonstrated the expected red: 3 failed, 4 passed, 124 deselected
 in 0.33 seconds. Both overlapping pass flags produced `incomplete`/null yards;
 the classification-to-QR case failed on the same lost rush evidence. Protection
-cases passed. The corrected candidate's upstream gate remains pending.
+cases passed. Corrected checkpoint `33b7c00` stopped before the focused step in
+[44786642123](https://github.com/rtulloh/bowl_bound/actions/runs/44786642123):
+the mandatory research runtime guard rejected changed attested source bytes.
+The focused step was moved before that unchanged mandatory guard to obtain
+diagnostic test evidence. Full-gate acceptance requires a separately reviewed
+prospective source-attestation decision; prior normalization/calibration receipts
+are not renewed by this fix.
 
 ## Required upstream verification
 
