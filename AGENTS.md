@@ -109,7 +109,9 @@ it is fixed immediately during the same work session. Do not leave quick fixes
 untracked.
 
 Track all new and existing work in [GitHub Issues](https://github.com/rtulloh/bowl_bound/issues),
-following [issue tracking guidance](docs/issue-tracking.md). Do not create local
+following [issue tracking guidance](docs/issue-tracking.md). Use the
+[BowlBound planning project](https://github.com/users/rtulloh/projects/2) for
+release planning and prioritization; Project 1 belongs to Paydirt. Do not create local
 tickets under docs/dev-notes/issues or regenerate a local index. Assign exactly
 one priority label (priority:high, priority:medium or priority:low) and a canonical
 project-plan milestone. Keep evidence synthetic/public-safe. Review assigned

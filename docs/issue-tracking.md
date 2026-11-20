@@ -1,5 +1,11 @@
 # GitHub issue tracking
 
+[BowlBound planning project](https://github.com/users/rtulloh/projects/2) is the
+release-planning and ticket-prioritization board. It is separate from Paydirt’s
+Project 1. Issues remain the authoritative problem and acceptance record; project
+fields organize scheduling and release views. Keep project priority consistent
+with repository priority labels when both are used.
+
 [GitHub Issues](https://github.com/rtulloh/bowl_bound/issues) is the source of truth
 for bugs, improvements and planned work. Create or update an issue when a problem
 is reported, including quick fixes. Search existing issues before creating duplicates.
