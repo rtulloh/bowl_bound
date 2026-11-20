@@ -54,10 +54,10 @@ def test_app_preserves_payload_and_finder_opens_terminal(tmp_path: Path) -> None
     assert launch.stat().st_mode & 0o111
     assert command.stat().st_mode & 0o111
     assert launch.read_bytes() == b"synthetic native launcher"
-    assert 'exec "$APP_DIR/../MacOS/BowlBound/start.sh" "$@"' in command.read_text()
+    assert 'exec "$APP_DIR/BowlBound/start.sh" "$@"' in command.read_text()
     for script in (command,):
         subprocess.run(["/bin/bash", "-n", str(script)], check=True)
-    assert (app / "Contents/MacOS/BowlBound/Bowl-Bound").read_text() == "synthetic executable"
+    assert (app / "Contents/Resources/BowlBound/Bowl-Bound").read_text() == "synthetic executable"
     assert "xattr" not in command.read_text()
 
 
@@ -109,7 +109,7 @@ def test_workflow_builds_smokes_and_uploads_both_mac_images() -> None:
 
 def test_finder_smoke_launches_app_checks_owner_and_sends_ctrl_c(tmp_path: Path) -> None:
     app = tmp_path / "Bowl Bound.app"
-    executable = app / "Contents/MacOS/BowlBound/Bowl-Bound"
+    executable = app / "Contents/Resources/BowlBound/Bowl-Bound"
     with (
         patch.object(macos_dmg.socket, "socket"),
         patch.object(macos_dmg.subprocess, "run", return_value=Mock(stdout="123\n")) as run,
@@ -176,7 +176,7 @@ def test_finder_listener_identity_accepts_canonical_alias_paths(tmp_path: Path) 
     alias = tmp_path / "alias"
     alias.symlink_to(real, target_is_directory=True)
     app = alias / "Bowl Bound.app"
-    executable = app / "Contents/MacOS/BowlBound/Bowl-Bound"
+    executable = app / "Contents/Resources/BowlBound/Bowl-Bound"
     executable.parent.mkdir(parents=True)
     executable.write_text("synthetic executable")
     with (
@@ -202,7 +202,7 @@ def test_failed_finder_smoke_preserves_app_for_potentially_running_server(
     def mount(command: list[str], **_kwargs: object) -> None:
         if command[1] == "attach":
             mounted = Path(command[command.index("-mountpoint") + 1])
-            payload = mounted / "Bowl Bound.app/Contents/MacOS/BowlBound"
+            payload = mounted / "Bowl Bound.app/Contents/Resources/BowlBound"
             payload.mkdir(parents=True)
             (payload / "ARTIFACT-MANIFEST.json").write_text(
                 json.dumps({"version": "1.1.1", "target": "macos-arm64"})
@@ -220,7 +220,7 @@ def test_failed_finder_smoke_preserves_app_for_potentially_running_server(
     ):
         macos_dmg.smoke_dmg(tmp_path / "synthetic.dmg", "1.1.1", "macos-arm64")
     assert len(copied_apps) == 1
-    assert (copied_apps[0] / "Contents/MacOS/BowlBound/Bowl-Bound").is_file()
+    assert (copied_apps[0] / "Contents/Resources/BowlBound/Bowl-Bound").is_file()
     assert str(copied_apps[0]) in capsys.readouterr().err
     import shutil
 
@@ -245,3 +245,17 @@ def test_completed_app_is_sealed_and_verified_fail_closed(tmp_path: Path) -> Non
         pytest.raises(subprocess.CalledProcessError),
     ):
         macos_dmg.seal_app(app)
+
+
+def test_data_payload_lives_in_resources_for_completed_bundle_signing(tmp_path: Path) -> None:
+    payload = tmp_path / "portable"
+    internal = payload / "_internal"
+    internal.mkdir(parents=True)
+    (internal / "WINDOWS-RUNTIME-TERMS.txt").write_text("synthetic terms")
+    app = macos_dmg.assemble_app(
+        payload, tmp_path / "Bowl Bound.app", "1.1.2", target="macos-arm64"
+    )
+    assert sorted(p.name for p in (app / "Contents/MacOS").iterdir()) == ["launch"]
+    assert (
+        app / "Contents/Resources/BowlBound/_internal/WINDOWS-RUNTIME-TERMS.txt"
+    ).read_text() == "synthetic terms"

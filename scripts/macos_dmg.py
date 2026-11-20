@@ -63,7 +63,7 @@ def assemble_app(payload: Path, destination: Path, version: str, *, target: str)
     resources = destination / "Contents/Resources"
     macos.mkdir(parents=True)
     resources.mkdir()
-    shutil.copytree(payload, macos / "BowlBound")
+    shutil.copytree(payload, resources / "BowlBound")
     info = {
         "CFBundleName": "Bowl Bound",
         "CFBundleDisplayName": "Bowl Bound",
@@ -82,7 +82,7 @@ def assemble_app(payload: Path, destination: Path, version: str, *, target: str)
     command.write_text(
         "#!/bin/bash\nset -euo pipefail\n"
         'APP_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"\n'
-        'exec "$APP_DIR/../MacOS/BowlBound/start.sh" "$@"\n',
+        'exec "$APP_DIR/BowlBound/start.sh" "$@"\n',
         encoding="utf-8",
     )
     launch.chmod(0o755)
@@ -94,7 +94,7 @@ def smoke_finder_app(app: Path, version: str) -> None:
     """Launch through Finder/Terminal, verify listener ownership, then stop only it."""
     with socket.socket() as listener:
         listener.bind(("127.0.0.1", 8001))
-    executable = app / "Contents/MacOS/BowlBound/Bowl-Bound"
+    executable = app / "Contents/Resources/BowlBound/Bowl-Bound"
     subprocess.run(["/usr/bin/open", "-n", str(app)], check=True, timeout=10)
     deadline = time.monotonic() + 60
     pid: int | None = None
@@ -239,7 +239,7 @@ def smoke_dmg(
             app = work / "installed/Bowl Bound.app"
             app.parent.mkdir()
             shutil.copytree(mounted / "Bowl Bound.app", app)
-            payload = app / "Contents/MacOS/BowlBound"
+            payload = app / "Contents/Resources/BowlBound"
             inventory = json.loads((payload / "ARTIFACT-MANIFEST.json").read_text())
             if inventory["version"] != version or inventory["target"] != target:
                 raise ReleaseError("Mounted application version or target mismatch")

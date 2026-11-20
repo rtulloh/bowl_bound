@@ -172,8 +172,8 @@ def capture(
                         "/usr/bin/file",
                         str(app / "Contents/MacOS/launch"),
                         str(app / "Contents/Resources/start.command"),
-                        str(app / "Contents/MacOS/BowlBound/start.sh"),
-                        str(app / "Contents/MacOS/BowlBound/Bowl-Bound"),
+                        str(app / "Contents/Resources/BowlBound/start.sh"),
+                        str(app / "Contents/Resources/BowlBound/Bowl-Bound"),
                     )
                 ),
                 "quarantine_attributes": observed(("/usr/bin/xattr", "-lr", str(app))),

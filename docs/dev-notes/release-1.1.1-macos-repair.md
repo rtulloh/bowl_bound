@@ -613,3 +613,14 @@ Correct that exact expectation. Existing lint/format/dependency commands now run
 before the unchanged expensive full Python suite, preserving every gate while
 reporting those failures early. A synthetic workflow-order assertion is written
 first but runs upstream only. No local regression/checks or native pass claimed.
+
+Focused completed-seal verification found a concrete layout error before any
+new native launch: `codesign` treated `Contents/MacOS/BowlBound/_internal/`
+data as nested executable code and refused the terms text file. A disposable
+private copy with the identical payload under `Contents/Resources/BowlBound`
+passed both completed-app ad-hoc sealing and strict/deep verification. Keep only
+the native entrypoint in MacOS; adapt command, smoke ownership, inventory and
+diagnostic paths to Resources. No payload bytes or framework layout change.
+A synthetic regression failed first on the old MacOS data placement; focused
+verification is authorized by the owner, while full regression remains upstream.
+This static signing result does not establish owner first-launch success.
