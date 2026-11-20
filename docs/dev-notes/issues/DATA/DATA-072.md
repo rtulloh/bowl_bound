@@ -63,3 +63,10 @@ rejects omitted synthetic fumble annotations. Fixture explicitly supplies both
 false fumble flags; production unknown handling and all assertions unchanged.
 Scope expanded to both selected cohorts with separate pinned inventories;
 2002 source lineage and selected run_yards_scale=1.15 remain unchanged.
+
+--- 2026-11-20 17:51 UTC ---
+At 5962d91, upstream44787186959 focused7PASS124deselected0.76s, then unchanged
+runtime guard rejects changed attested source. Full gate remains blocked, no
+attestation renewal/cohort qualification. Separate dependency audit44787187065
+and Windows source-dialog checks pass. Draft PR token lacks createPullRequest;
+source-only branch fix/data072-scramble-precedence remains unmerged.

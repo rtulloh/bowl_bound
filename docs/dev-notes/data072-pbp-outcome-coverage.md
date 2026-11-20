@@ -197,6 +197,16 @@ The synthetic scramble rows now explicitly declare both fumble flags false;
 this repairs fixture completeness without changing production handling of
 unknown fumbles or weakening assertions. Preserve that failed run.
 
+At `5962d91`, upstream run
+[44787186959](https://github.com/rtulloh/bowl_bound/actions/runs/44787186959)
+passes all seven focused cases (124 deselected) in 0.76 seconds. The same run
+then fails the unchanged mandatory runtime guard with `reviewed research
+attested source differs`. Windows source-dialog checks and the separate
+dependency audit pass. The full Python/static/frontend/browser gate did not
+execute and is not qualified. Draft PR creation was unavailable because the
+configured token lacks `createPullRequest` permission; the public source branch
+is available for review without a merge.
+
 ## Paydirt design input
 
 Reviewed local Paydirt `docs/chart-validation.md:478–488`: separate weighted
