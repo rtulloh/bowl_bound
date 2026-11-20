@@ -321,6 +321,38 @@ def test_explicit_scramble_is_retained_without_becoming_a_designed_run() -> None
     assert event.called_family is None
 
 
+@pytest.mark.parametrize("pass_flag", ["pass", "pass_attempt"])
+def test_explicit_rushing_scramble_outranks_overlapping_pass_flag(pass_flag: str) -> None:
+    event = classify_espn(row(**{pass_flag: True, "qb_scramble": True}))
+    assert event is not None
+    assert (event.kind, event.yards, event.quarterback_scramble) == ("rush", 7, True)
+    assert event.called_family is None
+    totals = summarize_events([event], "1")
+    assert (totals["rush_attempts"], totals["rush_yards"], totals["pass_attempts"]) == (1, 7, 0)
+    assert event.classification_policy == "bb-pbp-scramble-precedence-v1"
+    assert Event.from_dict(event.to_dict()) == event
+
+
+@pytest.mark.parametrize("outcome", ["sack", "interception"])
+def test_scramble_annotation_does_not_override_terminal_pass_outcome(outcome: str) -> None:
+    event = classify_espn(
+        row(**{"pass": True, "qb_scramble": True, "sack" if outcome == "sack" else "int": True})
+    )
+    assert event is not None and event.kind == outcome
+
+
+def test_overlapping_pass_flag_without_scramble_evidence_keeps_legacy_classification() -> None:
+    event = classify_espn(row(**{"pass": True}))
+    assert event is not None and (event.kind, event.yards) == ("incomplete", None)
+
+
+def test_scramble_annotation_does_not_override_explicit_completion() -> None:
+    event = classify_espn(
+        row(**{"pass": True, "completion": True, "qb_scramble": True, "yds_receiving": 19})
+    )
+    assert event is not None and (event.kind, event.yards) == ("complete", 19)
+
+
 @pytest.mark.parametrize(
     "field,value",
     [

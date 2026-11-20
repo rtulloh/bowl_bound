@@ -85,6 +85,12 @@ jobs:
           .venv/bin/python -m pip install -e ".[generator]"
       - name: Verify reviewed generator runtime before regression
         run: '.venv/bin/python -c "from tools.chartgen.refine import engine_identity; engine_identity()"'
+      - name: Verify explicit scramble classification and QR source support
+        run: >-
+          .venv/bin/python -m pytest --no-cov
+          tests/chartgen/test_evidence.py tests/chartgen/test_generation.py
+          -k 'explicit_rushing_scramble_outranks_overlapping_pass_flag or scramble_annotation_does_not_override or overlapping_pass_flag_without_scramble_evidence or classified_overlapping_scrambles_supply_pass_qr_support'
+          -q
       - name: Python tests, lint and formatting
         run: |
           .venv/bin/python -m ruff check .

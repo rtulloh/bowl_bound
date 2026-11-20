@@ -1019,6 +1019,41 @@ def test_no_unobserved_option_or_scramble_branches_are_fabricated(events: list[E
     assert not any(record.cell.kind in unsupported for record in chart.offense)
 
 
+def test_classified_overlapping_scrambles_supply_pass_qr_support(events: list[Event]) -> None:
+    from tools.chartgen.evidence import classify_espn
+
+    scrambles = [
+        classify_espn(
+            {
+                "season": 2007,
+                "game_id": "synthetic-scrambles",
+                "id": f"scramble-{i}",
+                "pos_team_id": 1,
+                "def_pos_team_id": 2,
+                "type.text": "Rush",
+                "rush": True,
+                "pass": True,
+                "qb_scramble": True,
+                "yds_rushed": 7,
+                "statYardage": 7,
+            }
+        )
+        for i in range(30)
+    ]
+    assert all(event is not None and event.kind == "rush" for event in scrambles)
+    chart, _, report = generate_team(
+        [*events, *(event for event in scrambles if event is not None)],
+        "1",
+        "Cedar Valley",
+        2007,
+    )
+    assert any(
+        row.play.value >= 6 and row.cell.kind is ResultKind.QUARTERBACK_RUN
+        for row in chart.offense
+    )
+    assert report["family_evidence"]["6"]["source_QR_probability"] > 0
+
+
 def test_completion_only_tail_cannot_enter_run_distribution(events: list[Event]) -> None:
     from dataclasses import replace
 
