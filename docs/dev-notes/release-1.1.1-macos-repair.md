@@ -259,3 +259,15 @@ existing object-typed JSON requests, missing local Playwright stubs and
 platform-specific winreg attributes, so no repository-wide type-clean claim is
 made. Reviewed runtime authority verification passes. No local native GUI or
 browser is launched; exact new-source hosted qualification remains mandatory.
+
+
+The first native Windows source-dialog job at 0526cae failed its combined
+ownership/text/default/readability assertion. Its original failure receipt is
+preserved; it did not identify which fact failed. Add individual Boolean
+diagnostics before selecting a presentation repair; do not weaken readability.
+Review also found that an aggregate report could use the reserved GUI receipt
+filename and that installer failure cleanup still ran the uninstaller. New
+synthetic regressions fail first for both edges. Reserve the GUI filename and
+preserve failed installed resources, registration, logs and failure.json; do not
+uninstall a potentially active failed app automatically. Successful bounded
+smoke still uninstalls normally. Fresh native verification remains pending.

@@ -141,5 +141,8 @@ jobs:
             ${{ runner.temp }}/bowl-bound-artifacts/*.receipt.json
             ${{ runner.temp }}/bowl-bound-artifacts/bb-native-smoke-*/windows-terms-*.log
             ${{ runner.temp }}/bowl-bound-artifacts/bb-native-smoke-*/windows-runtime-terms-gui.json
+            ${{ runner.temp }}/bowl-bound-artifacts/bb-install-smoke-*/failure.json
+            ${{ runner.temp }}/bowl-bound-artifacts/bb-install-smoke-*/windows-terms-*.log
+            ${{ runner.temp }}/bowl-bound-artifacts/bb-install-smoke-*/windows-runtime-terms-gui.json
           if-no-files-found: warn
           retention-days: 14

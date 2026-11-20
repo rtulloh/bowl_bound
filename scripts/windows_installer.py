@@ -7,10 +7,12 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from pathlib import Path, PurePosixPath
-from tempfile import TemporaryDirectory
+from tempfile import TemporaryDirectory, mkdtemp
 
 from .release_package import RELEASE_VERSION_PATTERN, ReleaseError
 from .smoke_standalone import (
@@ -63,6 +65,30 @@ def write_file_lists(bundle: Path, work: Path) -> None:
     (work / "uninstall-files.nsh").write_text("\n".join(uninstall) + "\n", encoding="utf-8")
 
 
+@contextmanager
+def smoke_workspace(root: Path) -> Iterator[Path]:
+    """Keep installed resources and evidence intact whenever native smoke fails."""
+    work = Path(mkdtemp(prefix="bb-install-smoke-", dir=root)).resolve()
+    try:
+        yield work
+    except BaseException as error:
+        with (work / "failure.json").open("x", encoding="utf-8") as stream:
+            json.dump(
+                {
+                    "passed": False,
+                    "error": f"{type(error).__name__}: {error}",
+                    "retained_work": str(work),
+                },
+                stream,
+                indent=2,
+            )
+            stream.write("\n")
+        print(f"Installer smoke failed; installed resources and logs retained at {work}")
+        raise
+    else:
+        shutil.rmtree(work)
+
+
 def smoke_installer(
     installer: Path,
     version: str,
@@ -71,6 +97,7 @@ def smoke_installer(
     check_ui: Callable[[str], None] | None = None,
     log_path: Path | None = None,
     runtime_terms_sha256: str | None = None,
+    evidence_root: Path | None = None,
 ) -> None:
     """Test installed UI/save and uninstall while keeping an unrelated user file."""
     import winreg
@@ -87,8 +114,9 @@ def smoke_installer(
             raise ReleaseError("Installer smoke must not replace an existing user installation")
     except FileNotFoundError:
         pass
-    with TemporaryDirectory(prefix="bb-install-smoke-") as directory:
-        work = Path(directory)
+    with smoke_workspace(
+        evidence_root or (log_path.parent if log_path else installer.parent)
+    ) as work:
         installed = work / "installed"
         if runtime_terms_sha256:
             for supplied in ([], ["/ACCEPTWINDOWSRUNTIMETERMS=" + "0" * 64]):
@@ -103,24 +131,22 @@ def smoke_installer(
         subprocess.run(
             [str(installer), "/S", *agreement, f"/D={installed}"], check=True, timeout=180
         )
-        try:
-            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, UNINSTALL_KEY) as key:
-                assert winreg.QueryValueEx(key, "DisplayVersion")[0] == version
-                assert Path(winreg.QueryValueEx(key, "InstallLocation")[0]) == installed
-            smoke_executable(
-                installed / "BowlBound.exe",
-                version,
-                work,
-                expected_catalog=expected_catalog,
-                check_ui=check_ui,
-                log_path=log_path,
-                expected_terms_sha256=runtime_terms_sha256,
-            )
-            (installed / "keep-personal.txt").write_text("keep", encoding="utf-8")
-        finally:
-            subprocess.run(
-                [str(installed / "Uninstall.exe"), "/S", f"_?={installed}"], check=True, timeout=120
-            )
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, UNINSTALL_KEY) as key:
+            assert winreg.QueryValueEx(key, "DisplayVersion")[0] == version
+            assert Path(winreg.QueryValueEx(key, "InstallLocation")[0]) == installed
+        smoke_executable(
+            installed / "BowlBound.exe",
+            version,
+            work,
+            expected_catalog=expected_catalog,
+            check_ui=check_ui,
+            log_path=log_path,
+            expected_terms_sha256=runtime_terms_sha256,
+        )
+        (installed / "keep-personal.txt").write_text("keep", encoding="utf-8")
+        subprocess.run(
+            [str(installed / "Uninstall.exe"), "/S", f"_?={installed}"], check=True, timeout=120
+        )
         assert not (installed / "BowlBound.exe").exists()
         assert (installed / "keep-personal.txt").read_text() == "keep"
         try:
@@ -193,7 +219,9 @@ def build(directory: Path, makensis: Path, source: Path, *, smoke: bool) -> None
             timeout=180,
         )
         if smoke:
-            smoke_installer(work / name, version, runtime_terms_sha256=terms_digest)
+            smoke_installer(
+                work / name, version, runtime_terms_sha256=terms_digest, evidence_root=directory
+            )
         digest = hashlib.sha256((work / name).read_bytes()).hexdigest()
         with output.open("xb") as stream:
             stream.write((work / name).read_bytes())

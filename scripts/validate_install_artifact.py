@@ -215,7 +215,7 @@ def validate(
     catalog_manifest: Path = DEFAULT_CATALOG_MANIFEST,
 ) -> int:
     """Write success/failure evidence; never launch mismatched or unverified bytes."""
-    if report.name.casefold() in {"server.log", "browser.png"}:
+    if report.name.casefold() in {"server.log", "browser.png", "windows-runtime-terms-gui.json"}:
         raise ValueError("Report filename is reserved for logs or screenshots")
     evidence = (
         report,

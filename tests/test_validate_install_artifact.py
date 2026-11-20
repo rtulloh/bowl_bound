@@ -480,7 +480,9 @@ def test_executable_checks_browser_while_alive_and_isolates_both_child_launches(
     assert "PYTHONPATH" not in spawn.call_args.kwargs["env"]
 
 
-@pytest.mark.parametrize("evidence", ["receipt.json", "server.log", "browser.png"])
+@pytest.mark.parametrize(
+    "evidence", ["receipt.json", "server.log", "browser.png", "windows-runtime-terms-gui.json"]
+)
 def test_existing_evidence_is_preserved(artifact: tuple[Path, Path, Path], evidence: str) -> None:
     archive, metadata, report = artifact
     report.parent.mkdir()
@@ -694,3 +696,20 @@ def test_published_windows_installer_uses_released_source_terms_hash(
     if not gui:
         assert "GUI" in json.loads(report.read_text())["error"]
     assert install.call_args.kwargs["runtime_terms_sha256"] == hashlib.sha256(text).hexdigest()
+
+
+def test_gui_evidence_name_is_reserved_for_aggregate_report(
+    artifact: tuple[Path, Path, Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    archive, metadata, report = artifact
+    launch = Mock()
+    monkeypatch.setattr(validator, "smoke_executable", launch)
+    with pytest.raises(ValueError, match="reserved"):
+        validator.validate(
+            archive,
+            metadata,
+            TAG,
+            "macos-arm64",
+            report.with_name("windows-runtime-terms-gui.json"),
+        )
+    launch.assert_not_called()

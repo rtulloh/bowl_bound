@@ -307,3 +307,8 @@ def test_decline_rejects_crashes_and_missing_clean_refusal(output: str) -> None:
     smoke.validate_decline_output(
         "Windows runtime terms were not accepted; the game has not started.\n"
     )
+
+
+def test_dialog_failure_identifies_failed_readability_facts() -> None:
+    with pytest.raises(RuntimeError, match='"within_work_area": false'):
+        smoke.validate_dialog(dialog(within_work_area=False), {123}, "Synthetic terms")

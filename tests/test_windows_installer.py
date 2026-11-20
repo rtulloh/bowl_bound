@@ -162,3 +162,76 @@ def test_nsis_requires_reviewed_terms_and_explicit_silent_agreement() -> None:
     assert "/ACCEPTWINDOWSRUNTIMETERMS=" in text
     assert 'StrCmp $1 "${WINDOWS_TERMS_SHA256}"' in text
     assert "SetErrorLevel 3" in text
+
+
+@pytest.mark.parametrize("failed", [False, True])
+def test_installer_smoke_workspace_preserves_failed_resources(tmp_path: Path, failed: bool) -> None:
+    work = None
+    if failed:
+        with pytest.raises(RuntimeError, match="synthetic failure"):
+            with installer.smoke_workspace(tmp_path) as work:
+                (work / "active-resource").write_text("keep")
+                raise RuntimeError("synthetic failure")
+    else:
+        with installer.smoke_workspace(tmp_path) as work:
+            (work / "completed").write_text("safe")
+    assert work is not None and work.exists() is failed
+    if failed:
+        assert (work / "active-resource").read_text() == "keep"
+        assert "synthetic failure" in json.loads((work / "failure.json").read_text())["error"]
+
+
+def test_failed_installed_app_smoke_does_not_uninstall_potentially_running_resources(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import sys
+    from types import SimpleNamespace
+    from unittest.mock import Mock
+
+    paths: dict[str, Path] = {}
+    commands: list[list[str]] = []
+    opens = 0
+
+    class Key:
+        def __enter__(self) -> "Key":
+            return self
+
+        def __exit__(self, *_: object) -> bool:
+            return False
+
+    def open_key(*_: object) -> Key:
+        nonlocal opens
+        opens += 1
+        if opens == 1:
+            raise FileNotFoundError
+        return Key()
+
+    def run(command: list[str], **kwargs: object) -> SimpleNamespace:
+        commands.append(command)
+        destination = next((value[3:] for value in command if value.startswith("/D=")), None)
+        if destination and "/ACCEPTWINDOWSRUNTIMETERMS=" + "d" * 64 in command:
+            installed = Path(destination)
+            installed.mkdir()
+            (installed / "BowlBound.exe").write_text("potentially running")
+            (installed / "Uninstall.exe").write_text("synthetic")
+            paths["installed"] = installed
+            return SimpleNamespace(returncode=0)
+        return SimpleNamespace(returncode=3)
+
+    registry = SimpleNamespace(
+        OpenKey=open_key,
+        HKEY_CURRENT_USER=1,
+        QueryValueEx=lambda _, field: (
+            "1.1.1" if field == "DisplayVersion" else str(paths["installed"]),
+            1,
+        ),
+    )
+    monkeypatch.setitem(sys.modules, "winreg", registry)
+    monkeypatch.setattr(installer.subprocess, "run", run)
+    monkeypatch.setattr(
+        installer, "smoke_executable", Mock(side_effect=RuntimeError("synthetic GUI failure"))
+    )
+    with pytest.raises(RuntimeError, match="synthetic GUI failure"):
+        installer.smoke_installer(tmp_path / "setup.exe", "1.1.1", runtime_terms_sha256="d" * 64)
+    assert not any(Path(command[0]).name == "Uninstall.exe" for command in commands)
+    assert (paths["installed"] / "BowlBound.exe").read_text() == "potentially running"

@@ -61,18 +61,18 @@ def contained(inner: tuple[int, ...], outer: tuple[int, ...]) -> bool:
 
 def validate_dialog(dialog: Dialog, owners: set[int], terms: str) -> int:
     """Refuse partial text, offscreen controls, clipping or unsafe default actions."""
-    if (
-        dialog.pid not in owners
-        or not dialog.handle
-        or not dialog.yes
-        or not dialog.no
-        or dialog.default_id != 7
-        or not dialog.within_work_area
-        or not dialog.text_fits
-        or dialog.text.replace("\r\n", "\n") != terms.replace("\r\n", "\n") + PROMPT
-    ):
+    facts = {
+        "owned_pid": dialog.pid in owners,
+        "controls_present": bool(dialog.handle and dialog.yes and dialog.no),
+        "default_no": dialog.default_id == 7,
+        "within_work_area": dialog.within_work_area,
+        "text_fits": dialog.text_fits,
+        "complete_terms": dialog.text.replace("\r\n", "\n") == terms.replace("\r\n", "\n") + PROMPT,
+    }
+    if not all(facts.values()):
         raise RuntimeError(
-            "Windows terms dialog ownership, full text, default or readability failed"
+            "Windows terms dialog ownership/default/readability failed: "
+            + json.dumps(facts, sort_keys=True)
         )
     return dialog.handle
 
