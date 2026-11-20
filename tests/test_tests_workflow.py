@@ -30,7 +30,7 @@ def test_tests_runs_for_branch_pushes_pull_requests_and_native_gate_calls() -> N
 
 def test_automatic_gate_retains_the_whole_established_regression() -> None:
     data = workflow("tests.yml")
-    assert set(data["jobs"]) == {"test"}
+    assert set(data["jobs"]) == {"test", "windows-terms-dialog"}
     job = data["jobs"]["test"]
     assert job["runs-on"] == "ubuntu-24.04"
     assert int(job["timeout-minutes"]) == 240
@@ -197,3 +197,26 @@ def test_reviewed_generator_runtime_is_checked_before_expensive_regression() -> 
         'engine_identity()"'
     )
     assert "if" not in preflight and "continue-on-error" not in preflight
+
+
+def test_windows_dialog_probe_is_mandatory_parallel_pinned_and_retains_evidence() -> None:
+    job = workflow("tests.yml")["jobs"]["windows-terms-dialog"]
+    assert job["runs-on"] == "windows-2025"
+    assert job["env"] == {"PYTHON_VERSION": "3.12.10"}
+    assert int(job["timeout-minutes"]) == 10
+    assert "needs" not in job and "if" not in job and "continue-on-error" not in job
+    steps = job["steps"]
+    checkout = next(step for step in steps if step.get("uses", "").startswith("actions/checkout@"))
+    assert checkout["with"]["ref"] == "${{ inputs.source_ref || github.sha }}"
+    assert checkout["with"]["persist-credentials"] == "false"
+    probe = next(step for step in steps if "scripts.smoke_windows_terms" in step.get("run", ""))
+    assert probe["shell"] == "pwsh"
+    assert "--source-dialog WINDOWS-RUNTIME-TERMS.txt" in probe["run"]
+    assert '--report "$env:RUNNER_TEMP/windows-terms-source.json"' in probe["run"]
+    assert "if" not in probe and "continue-on-error" not in probe
+    evidence = next(
+        step for step in steps if step.get("uses", "").startswith("actions/upload-artifact@")
+    )
+    assert evidence["if"] == "always()"
+    assert evidence["with"]["name"] == "windows-terms-source-${{ github.run_id }}"
+    assert "windows-terms-source.json" in evidence["with"]["path"]
