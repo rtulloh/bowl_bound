@@ -25,6 +25,7 @@ from .optional_flags import (
 )
 
 FAMILY_POLICY = "bb-pbp-family-v2"
+SCRAMBLE_CLASSIFICATION_POLICY = "bb-pbp-scramble-precedence-v1"
 RECOVERY_POLICY = "cfb-physical-recovery-v1"
 BLOCKED_KICK_LOCATION_POLICY = "bb-explicit-blocked-kick-movement-v1"
 _OPTIONAL_FLAG_FIELDS = {
@@ -225,7 +226,11 @@ class Event:
             if number is not None and (type(number) is not int or not 1 <= number <= 9):
                 raise ValueError("family must be a Bowl Bound play 1..9 or null")
         FamilyConfidence(event.family_confidence)
-        if event.classification_policy not in {FAMILY_POLICY, "legacy-v1"}:
+        if event.classification_policy not in {
+            FAMILY_POLICY,
+            SCRAMBLE_CLASSIFICATION_POLICY,
+            "legacy-v1",
+        }:
             raise ValueError("unsupported family classification policy")
         for key in (
             "pass_depth",
@@ -406,7 +411,8 @@ def _family(
 def classify_espn(row: Mapping[str, Any]) -> Event | None:
     """Adapt cfbfastR ESPN-derived fields; never infer missing yards as zero.
 
-    Sacks precede pass/rush flags, which overlap in some snapshots. Scoring-play
+    Sacks precede pass/rush flags, which overlap in some snapshots. An explicitly
+    annotated rushing scramble precedes generic pass flags. Scoring-play
     yardage is retained. A declined penalty does not negate a live-play result.
     Return/kick ownership uses explicit kicking/return fields when available.
     """
@@ -432,6 +438,13 @@ def classify_espn(row: Mapping[str, Any]) -> Event | None:
     )
     sack = _flag(row, "sack") or label == "sack"
     interception = _flag(row, "int") or "interception" in label
+    completed = _flag(row, "completion") or label in {"pass completion", "passing touchdown"}
+    rushing_scramble = (
+        optional["qb_scramble"] is True
+        and (_flag(row, "rush") or "rush" in label)
+        and not completed
+    )
+    scramble_precedence = False
     if is_try:
         kind, yards = ("pat" if is_pat and not defensive_try else "other"), None
     elif sack:
@@ -446,8 +459,10 @@ def classify_espn(row: Mapping[str, Any]) -> Event | None:
         kind, yards = "field_goal", _yards(row, "yds_fg")
     elif interception:
         kind, yards = "interception", None
+    elif rushing_scramble:
+        kind, yards = "rush", _yards(row, "yds_rushed", "statYardage")
+        scramble_precedence = True
     elif _flag(row, "pass") or _flag(row, "pass_attempt") or "pass" in label:
-        completed = _flag(row, "completion") or label in {"pass completion", "passing touchdown"}
         kind = "complete" if completed else "incomplete"
         yards = _yards(row, "yds_receiving", "statYardage") if completed else None
     elif _flag(row, "rush") or "rush" in label:
@@ -581,6 +596,7 @@ def classify_espn(row: Mapping[str, Any]) -> Event | None:
         touchback=_flag(row, "punt_tb") or _flag(row, "kickoff_tb"),
         source_text=text,
         resolved_family=resolved_family,
+        classification_policy=SCRAMBLE_CLASSIFICATION_POLICY if scramble_precedence else FAMILY_POLICY,
         pass_depth=depth,
         pass_direction=_optional_text(row, "pass_direction"),
         rush_direction=_optional_text(row, "rush_direction"),

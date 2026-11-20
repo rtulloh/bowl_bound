@@ -12,7 +12,7 @@ tags:
 - historical-seasons
 - chart-generator
 - archives
-links: [DATA-037]
+links: [DATA-037, DATA-072]
 commits: []
 ---
 
