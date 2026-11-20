@@ -596,7 +596,9 @@ def classify_espn(row: Mapping[str, Any]) -> Event | None:
         touchback=_flag(row, "punt_tb") or _flag(row, "kickoff_tb"),
         source_text=text,
         resolved_family=resolved_family,
-        classification_policy=SCRAMBLE_CLASSIFICATION_POLICY if scramble_precedence else FAMILY_POLICY,
+        classification_policy=(
+            SCRAMBLE_CLASSIFICATION_POLICY if scramble_precedence else FAMILY_POLICY
+        ),
         pass_depth=depth,
         pass_direction=_optional_text(row, "pass_direction"),
         rush_direction=_optional_text(row, "rush_direction"),

@@ -221,6 +221,14 @@ The old contract digest
 closed experiment identities and failed preflight logs remain preserved.
 No guard logic, reference coaching, source facts or chart bytes change.
 
+At `4365516`, upstream `44802296168` passes the focused cases and runtime guard,
+then Ruff rejects one 103-character line in `evidence.py`. The expression was
+wrapped without a behavior change. Its final raw source hash is
+`03e8e8db4fe5aab7c18da958a03ed9b9831da6df803b601f7384ac01bbbe76bd`;
+the correspondingly renewed canonical contract is
+`925d94ad87fc1407901f8d90c54c6df387c656af860f9c0a352ca385fe77233f`.
+The failed lint run remains preserved; no local checks were substituted.
+
 ## Paydirt design input
 
 Reviewed local Paydirt `docs/chart-validation.md:478–488`: separate weighted

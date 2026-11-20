@@ -78,3 +78,10 @@ all engine/other runtime pins and reference configuration remain unchanged.
 Prospective contract daafca957d2293b6d2c7c4ec8fefb1b213c1014115f7ec76702cbba0f7a74000
 identifies changed normalization with no prior fit carryforward. Prior failed
 gates/closed experiment identities remain preserved; no guard is weakened.
+
+--- 2026-11-20 upstream formatting correction ---
+Run44802296168 at4365516 passes focused cases/runtime guard, then Ruff rejects
+one 103-character classifier line. Wrapped expression only; final evidence.py
+03e8e8db4fe5aab7c18da958a03ed9b9831da6df803b601f7384ac01bbbe76bd;
+renewed canonical contract925d94ad87fc1407901f8d90c54c6df387c656af860f9c0a352ca385fe77233f.
+No local tests/static checks. Failed run retained.
