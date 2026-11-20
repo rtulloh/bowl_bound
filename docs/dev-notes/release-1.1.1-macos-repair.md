@@ -1,9 +1,10 @@
-# Prospective v1.1.1 macOS packaging repair
+# v1.1.1 macOS packaging repair and publication
 
-Milestone 42 follow-up, tracked as [DEV-093](issues/DEV/DEV-093.md). This is a
-reviewable local candidate, not completed milestone or release acceptance.
-The immutable v1.1.0 tag and published assets remain unchanged. The version is prepared as 1.1.1 for frozen qualification; no new release is
-published. Earlier local test images retain their 1.1.0 payload identity.
+Milestone 42 follow-up, tracked as [DEV-093](issues/DEV/DEV-093.md).
+The release is published; all six hosted published-download checks passed.
+Fresh browser-download first-launch acceptance and Intel macOS 26 validation
+remain gaps. The final publication closeout below supersedes prospective status
+in the chronological candidate notes. The v1.1.0 tag/assets remain unchanged.
 
 Consulted local Paydirt packaging/macos/create_app.sh, release workflow and
 docs/release-testing.md. Adapt app-bundle composition, Applications drop link
@@ -466,3 +467,44 @@ absent there. Prior Paydirt release exceptions are not reused.
 Focused runner/workflow/collector/DMG/docs/issue regression: 67 passed; repository
 Ruff/format (920 files), dependency check and whitespace checks passed. No new
 native result is claimed; freeze and run the fresh full gate before push.
+
+
+### 2026-11-20 — published v1.1.1 verification closeout
+
+[v1.1.1](https://github.com/rtulloh/bowl_bound/releases/tag/v1.1.1) is published
+as the regular latest release. Its immutable tag and compiled source are
+`443d8255f4597f1fb24d5e61235b3bd09335c054`; source Tests `44676127824` and
+Dependency audit `44676127826` passed that exact main-push commit. The build
+workflow definition is `7ce9de69477288f138f4226ecb2446e590f82476`, separately
+from the compiled source. [Native build 44732623182](https://github.com/rtulloh/bowl_bound/actions/runs/44732623182)
+passed ARM macOS 26, Intel macOS 15 and Windows targets. No artifact is relabeled
+as a build of the newer workflow commit. The v1.1.0 tag/assets remain unchanged.
+
+[Published-download run 44735680143](https://github.com/rtulloh/bowl_bound/actions/runs/44735680143)
+passed all six jobs: both Mac DMGs, both Mac ZIPs, Windows portable and Windows
+installer, with no skipped targets. Each checked the published digest, exact
+173-team API/rendered catalog, real-engine game/save behavior, error-free logs
+and normal shutdown. Both Windows routes passed native scrollable terms
+No/close/Yes checks. Both DMGs passed mounted/copied Finder/Terminal launch.
+Independent fresh downloads of all 15 published assets matched the frozen
+publication copies, original native artifacts and GitHub digests; private audit
+SHA256 `d711bc8c8110200796792c084c09078cd5757c83b8e9e36cffa0e9b9ef985b4c`.
+Six-receipt/log/browser-evidence summary SHA256 is
+`91eaeea266266fd0f7e7a9c88c40de931fb7479271400488ff89f7c00df7c6da`.
+Detailed receipts, screenshots, acquisition bytes and logs remain private.
+
+Fresh browser-download first-launch/default-browser/security acceptance remains
+pending. Intel macOS 26 CI-image checks failed and remain an explicit gap; the
+Intel macOS 15 pass does not establish macOS 26 Intel compatibility. These are
+unsigned, unnotarized Mac builds; Windows unknown-publisher/SmartScreen limits
+remain. Keep the associated tickets open pending applicable owner play-test confirmation;
+no signing, legal-clearance or fresh-machine acceptance is claimed.
+
+For this documentation phase, consulted Paydirt
+`docs/dev-notes/release-1.10.3-validation.md`: adapt its separation of earlier
+candidate checks, publication verification and unresolved limits. Do not reuse
+its urgent-release waiver, NFL behavior or private data. The owner explicitly
+directed upstream fast-tracking and no further local regression/checks; this
+closeout changes documentation only. Earlier local checks retain their original
+commit identities, including the 72-browser-test pass recorded for `7ce9de6`.
+No new local tests, launches, builds or calibration are claimed here.
