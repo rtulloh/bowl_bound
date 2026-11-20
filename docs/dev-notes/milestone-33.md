@@ -3,18 +3,18 @@
 ## Scope
 
 The owner prioritized five gameplay and fairness tickets for the next milestone:
-[AI-027](issues/AI/AI-027.md), [RULE-041](issues/RULE/RULE-041.md),
-[RULE-042](issues/RULE/RULE-042.md), [UI-041](issues/UI/UI-041.md), and
-[AI-010](issues/AI/AI-010.md). [DEV-059](issues/DEV/DEV-059.md) is included so
+[AI-027](https://github.com/rtulloh/bowl_bound/issues/29), [RULE-041](https://github.com/rtulloh/bowl_bound/issues/279),
+[RULE-042](https://github.com/rtulloh/bowl_bound/issues/280), [UI-041](https://github.com/rtulloh/bowl_bound/issues/311), and
+[AI-010](https://github.com/rtulloh/bowl_bound/issues/12). [DEV-059](https://github.com/rtulloh/bowl_bound/issues/183) is included so
 routine validation and the slower standalone release build have clear, separate
 GitHub status.
 
-[DEV-060](issues/DEV/DEV-060.md) is a focused packaging repair for the reported
+[DEV-060](https://github.com/rtulloh/bowl_bound/issues/184) is a focused packaging repair for the reported
 standalone-build failure, independent of the pending gameplay and workflow work.
-[DEV-061](issues/DEV/DEV-061.md) tracks missing runtime modules exposed by the
-next native smoke run. [DEV-062](issues/DEV/DEV-062.md) corrects the stale
+[DEV-061](https://github.com/rtulloh/bowl_bound/issues/185) tracks missing runtime modules exposed by the
+next native smoke run. [DEV-062](https://github.com/rtulloh/bowl_bound/issues/186) corrects the stale
 save-guide assertion that normal games enable deferred Advanced II options.
-[DEV-063](issues/DEV/DEV-063.md) corrects the local audit’s rejection of valid,
+[DEV-063](https://github.com/rtulloh/bowl_bound/issues/187) corrects the local audit’s rejection of valid,
 engine-observed overtime series resets discovered during final acceptance.
 
 Milestone 32 remains completed. Imported teams, historical charts, rosters, and
@@ -744,7 +744,7 @@ identical to the fully passing hosted `eed362c`.
 
 After completed engineering acceptance at `f82ad47`, the owner requested clearer
 next-play timeout button wording on the still-unmerged play-test branch. This
-narrow [UI-052](issues/UI/UI-052.md) follow-up belongs to M33 owner review; it does
+narrow [UI-052](https://github.com/rtulloh/bowl_bound/issues/322) follow-up belongs to M33 owner review; it does
 not reopen or replace that snapshot's acceptance record or expand game rules.
 
 Reread local Paydirt `paydirt/interactive_game.py:637`, whose `[T] Call Timeout`
@@ -780,7 +780,7 @@ Validation (copy-only follow-up):
 ## Owner play-test follow-up — AI-033 (2026-11-03)
 
 The owner questioned a defensive Razzle-Dazzle supplemental choice. This is a
-separate [AI-033](issues/AI/AI-033.md) follow-up on the unmerged review branch;
+separate [AI-033](https://github.com/rtulloh/bowl_bound/issues/35) follow-up on the unmerged review branch;
 the completed `f82ad47` engineering acceptance above remains historical.
 No private team names, chart cells, actual game traces or saves are reproduced.
 
@@ -932,7 +932,7 @@ acceptance at `f82ad47` remains historical; this is a bounded owner-review fix.
   **zero fallback**; **5,623** preference vectors are finite, normalized, legal and
   assign positive probability to the selected call.
 - The whole audit has **two flagged initial-try analysis fallbacks**, preserved
-  in [AI-034](issues/AI/AI-034.md), an M23 follow-up. A penalty leaves another
+  in [AI-034](https://github.com/rtulloh/bowl_bound/issues/36), an M23 follow-up. A penalty leaves another
   attempt outside the one-action boundary; the current evaluator refuses to
   pretend it knows a completed zero/two-point outcome. The fictional reproduction
   has 32 explicit failed samples/no mean. No flag or failure assertion is hidden.
@@ -1407,7 +1407,7 @@ the added structured recap and requested button label differing in its full
 view/turn response. Existing semantic hashing already excludes presentation data.
 
 Test-first evidence and changed expectations are recorded in
-[UI-060](issues/UI/UI-060.md), including four initial Python failures, two
+[UI-060](https://github.com/rtulloh/bowl_bound/issues/330), including four initial Python failures, two
 conversion-boundary failures, absent frontend component, and red controls for the
 owner's simpler card. CLI prose checks now assert aligned cells; UI checks open
 the details disclosure before verifying every retained table fact. An inherited
@@ -1956,7 +1956,7 @@ continuation save or a policy-optimality claim. No historical transcript, chart,
 save, local path identifier or detailed report is committed. Local evidence and
 the completed game's final boxes remain under ignored `private-data/`.
 
-One new defect is [CLI-072](issues/CLI/CLI-072.md): a QB Sneak names a running back
+One new defect is [CLI-072](https://github.com/rtulloh/bowl_bound/issues/99): a QB Sneak names a running back
 as the carrier. Verified independently with synthetic charts/roster, without
 changing production commentary. The recorded football result is correct. Last-
 minute third-and-long run selection is a strategy observation for broader
@@ -1968,7 +1968,7 @@ The owner authorizes merge/push/build/release and explicitly selects only the
 existing fictional samples. [Release preparation](release-alpha5.md) records
 the Paydirt consultation, sanitized public lineage, synchronized version update,
 verification and outstanding browser/network/native gates. Generated charts and
-season-validation research remain separate. [DEV-068](issues/DEV/DEV-068.md)
+season-validation research remain separate. [DEV-068](https://github.com/rtulloh/bowl_bound/issues/190)
 tracks completion; no publication or browser acceptance is claimed by preparation.
 
 

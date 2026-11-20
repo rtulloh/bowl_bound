@@ -45,11 +45,12 @@ engine-metadata renderer; Paydirt dice distributions/display code were not copie
 Not copied: Paydirt's store, hooks, routes, play log, dice display and penalty handling.
 The FastAPI adapter (`backend/`) and the engine session are new Bowl Bound code.
 
-The repository-local issue workflow (`docs/dev-notes/issues/README.md` and
-`scripts/build_issue_index.py`) follows Paydirt’s per-ticket front matter, generated
-index, and open/resolved/closed verification model. The Bowl Bound generator is a
-standalone implementation with required canonical-milestone ownership and metadata
-validation. No Paydirt tickets, gameplay rules, or runtime code are imported.
+The original repository-local ticket workflow followed Paydirt’s metadata and
+open/resolved/closed verification model. Following the owner-confirmed migration
+on 2026-11-20, [GitHub Issues](https://github.com/rtulloh/bowl_bound/issues) is
+canonical; local tickets, creation/index scripts and their dedicated tests are
+retired. Milestone ownership and explicit validation/play-test evidence remain
+required. No Paydirt tickets, gameplay rules or runtime code are imported.
 
 Milestone 18 save/resume follows the versioned JSON, local-team reference and browser
 download/load workflow reviewed in `paydirt/save_game.py` and

@@ -310,7 +310,7 @@ terminal captures or historical team data. Use only fictional samples in shared 
    against the computer and reconcile scoring,
    quarter clocks and statistics; exit from a pending choice without auto-saving.
 
-Report problems with synthetic examples via the [issue workflow](dev-notes/issues/README.md).
+Report problems with synthetic examples via the [issue workflow](https://github.com/rtulloh/bowl_bound/issues).
 
 Routine instructions stay out of the terminal play display. Use `?` or `help` to
 review legal controls and timeout suffix guidance; required choices and game status

@@ -9,8 +9,8 @@ was selectively integrated and tested on the current public lineage rather than
 merging the branch wholesale. The draft's rollback, collision, dry-run, diagnostics
 and input-contract defects were fixed before acceptance.
 
-Work is tracked by [IMPORT-001](issues/IMPORT/IMPORT-001.md) through
-[IMPORT-009](issues/IMPORT/IMPORT-009.md). Keep each ticket test-first, commit its
+Work is tracked by [IMPORT-001](https://github.com/rtulloh/bowl_bound/issues/220) through
+[IMPORT-009](https://github.com/rtulloh/bowl_bound/issues/228). Keep each ticket test-first, commit its
 implementation separately, and record tested commit references before resolving
 the issue. Do not close tickets until the required play-test confirmation exists.
 
@@ -63,7 +63,7 @@ added.
 - Focused bundle, PDF import/export, sample and release packaging checks: 161 passed. Ruff,
   format and whitespace checks passed.
 - Implementation commit: `8f6f759`. Resolution evidence is recorded in
-  [IMPORT-001](issues/IMPORT/IMPORT-001.md); it remains resolved pending any required play test.
+  [IMPORT-001](https://github.com/rtulloh/bowl_bound/issues/220); it remains resolved pending any required play test.
 - The wider cumulative model check found and corrected one stale generic RGB fixture
   expectation in `f9a31b9`; all 111 model tests passed.
 
@@ -79,7 +79,7 @@ added.
 - Focused importer/model/codec/issue/release regression slice: 404 passed; updated bundle
   suite: 73 passed; CLI suite: 28 passed. Ruff, format and whitespace checks passed.
 - Implementation and help-test commits: `d8c9d9c`, `03ab1d8`. Resolution evidence is in
-  [IMPORT-002](issues/IMPORT/IMPORT-002.md).
+  [IMPORT-002](https://github.com/rtulloh/bowl_bound/issues/221).
 
 ### 2026-10-30 — IMPORT-003
 
@@ -162,7 +162,7 @@ added.
   Ruff, format, whitespace and packaged-link checks passed.
 - Parked-branch implementation commit: `b0ad58d`; root player-guide and release-boundary
   commit: `b1e4b44`; integrated maintainer documentation: `7da0b51`. Acceptance evidence is
-  recorded in [IMPORT-008](issues/IMPORT/IMPORT-008.md).
+  recorded in [IMPORT-008](https://github.com/rtulloh/bowl_bound/issues/227).
 
 ### 2026-10-30 — IMPORT-009 and milestone acceptance
 
@@ -185,5 +185,5 @@ added.
 - Real-engine browser gate: `BB_E2E_SEASONS=/private/tmp/bb-m25-integration-e2e-seasons
   npm run test:e2e` — 33 passed. It used fictional synthetic teams only.
 - Ticket acceptance and regenerated index are recorded in
-  [IMPORT-009](issues/IMPORT/IMPORT-009.md). All Milestone 25 tickets are resolved;
+  [IMPORT-009](https://github.com/rtulloh/bowl_bound/issues/228). All Milestone 25 tickets are resolved;
   keep them unclosed until the owner completes the play-test.

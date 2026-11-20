@@ -109,7 +109,7 @@ control ideas only. Do not copy NFL thresholds, warning rules, random fractional
 runoff, private fixtures or runtime code. Bowl Bound's timing chart, legal engine
 clock offers and approved shared public fourth-down policy remain authoritative.
 
-See [AI-035](issues/AI/AI-035.md) and the
+See [AI-035](https://github.com/rtulloh/bowl_bound/issues/37) and the
 [Milestone 33 follow-up log](milestone-33.md).
 
 ## Original 7420d41 checkpoint commands and results

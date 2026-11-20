@@ -6,13 +6,13 @@ Status: integrated for final release gates; not built or published. Owner select
 
 ## Required work
 
-- [DATA-064](issues/DATA/DATA-064.md): correct play-specific interception-depth
+- [DATA-064](https://github.com/rtulloh/bowl_bound/issues/117): correct play-specific interception-depth
   generation and enforce independent plausibility checks. After the final fix,
   complete the [whole-cohort passing-cell audit](milestone-42.md#whole-cohort-passing-cell-audit)
   on actual release charts; disclose all flagged values and unresolved exceptions.
-- [DATA-055](issues/DATA/DATA-055.md): complete independent event accounting and
+- [DATA-055](https://github.com/rtulloh/bowl_bound/issues/110): complete independent event accounting and
   close the known kickoff-return recovery observer coverage gap.
-- [DATA-046](issues/DATA/DATA-046.md): compare frozen corrected candidates with the
+- [DATA-046](https://github.com/rtulloh/bowl_bound/issues/105): compare frozen corrected candidates with the
   available compatible private 2007/2008 developer references under matched
   conditions, with explicit source support and explained differences.
 
@@ -41,7 +41,7 @@ the milestone notes and a final acceptance section when actually available.
 
 ## Simultaneous Bowl Bound and Paydirt play
 
-Owner explicitly requested [DEV-078](issues/DEV/DEV-078.md) for 1.0.0: Bowl Bound
+Owner explicitly requested [DEV-078](https://github.com/rtulloh/bowl_bound/issues/199) for 1.0.0: Bowl Bound
 uses local port **8001** by default in standalone/source production launchers and
 `python -m backend`; Paydirt retains **8000**. Include this in release notes and
 native startup acceptance. Frontend development proxy/player URLs use the Bowl
@@ -80,7 +80,7 @@ publication; no final build or release success is claimed at this checkpoint.
 ## Stable-version packaging correction
 
 The actual 1.0.0 staging attempt exposed alpha-only guards; tracked as
-[DEV-081](issues/DEV/DEV-081.md). Synthetic regressions first reproduced the
+[DEV-081](https://github.com/rtulloh/bowl_bound/issues/202). Synthetic regressions first reproduced the
 failure (8 failed/10 passed after correcting a missing test-fixture notice
 directory). One shared stable/alpha version pattern now governs source staging,
 runtime archives and Windows installers. Exact component agreement, path safety

@@ -108,7 +108,7 @@ Implementation committed as `975ea48`; the 190-test focused command was repeated
 against that commit and passed. RULE-002–009 are resolved with that tested commit
 recorded, not closed: owner play-test confirmation is still required.
 
-The separately requested [DEV-011](issues/DEV/DEV-011.md) remains open for two
+The separately requested [DEV-011](https://github.com/rtulloh/bowl_bound/issues/135) remains open for two
 original sample teams in Milestone 19, with a hard gate before GitHub linking or
 publication. Filing that ticket is not implementation of the samples.
 

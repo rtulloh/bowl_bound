@@ -28,7 +28,7 @@ fallback counts and evidence; do not turn failed samples into zero or ignore ill
 calls/aborts. Final cohort checks and tested commit references follow in release
 acceptance; the initial failed audit is retained separately.
 The bounded repeated-try valuation limitation remains tracked separately as
-[AI-034](issues/AI/AI-034.md); this fix does not claim to resolve it.
+[AI-034](https://github.com/rtulloh/bowl_bound/issues/36); this fix does not claim to resolve it.
 
 ## Implementation review and focused acceptance
 

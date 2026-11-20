@@ -12,12 +12,12 @@ All evidence is synthetic/public-safe; no historical charts, saves or private lo
 
 ## Verified High findings
 
-- [AI-003](issues/AI/AI-003.md): Hard's one-action utility makes any possession
+- [AI-003](https://github.com/rtulloh/bowl_bound/issues/5): Hard's one-action utility makes any possession
   change cost a fixed minimum, so Hard almost never punts and scores a made field
   goal negative. Root cause of the "two punts in eight games" audit observation.
-- [AI-004](issues/AI/AI-004.md): two-point tries and overtime series are
+- [AI-004](https://github.com/rtulloh/bowl_bound/issues/6): two-point tries and overtime series are
   evaluated as ordinary scrimmage from the 2 (no phase in the observation).
-- [RULE-011](issues/RULE/RULE-011.md): a returner recovering its own return
+- [RULE-011](https://github.com/rtulloh/bowl_bound/issues/249): a returner recovering its own return
   fumble receives second down and offensive labels instead of a new series.
 
 ## Tickets opened

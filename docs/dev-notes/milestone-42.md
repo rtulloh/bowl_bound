@@ -5,9 +5,9 @@ Owner directs this correction into the next milestone and release after Alpha 9.
 Target: **1.0.0**, tag `v1.0.0`, per owner direction on 2026-11-07.
 This supersedes the earlier Alpha 10 target. Confirm the tag is unused before
 publication and preserve prior alpha tags/assets as immutable history.
-Required high-priority work: [DATA-064](issues/DATA/DATA-064.md) corrects
-play-specific interception depths; [DATA-055](issues/DATA/DATA-055.md) completes
-independent per-event game accounting; [DATA-046](issues/DATA/DATA-046.md)
+Required high-priority work: [DATA-064](https://github.com/rtulloh/bowl_bound/issues/117) corrects
+play-specific interception depths; [DATA-055](https://github.com/rtulloh/bowl_bound/issues/110) completes
+independent per-event game accounting; [DATA-046](https://github.com/rtulloh/bowl_bound/issues/105)
 compares frozen candidates with the available compatible 2007/2008 developer
 references. The owner explicitly added DATA-055/046 and requested a subagent
 with high reasoning on 2026-11-07.
@@ -202,7 +202,7 @@ using `.venv/bin/python -m pytest ... -q`; `git diff --check` passed.
 
 ## Default web port for simultaneous Paydirt play
 
-Owner added [DEV-078](issues/DEV/DEV-078.md) to the next 1.0.0 release on
+Owner added [DEV-078](https://github.com/rtulloh/bowl_bound/issues/199) to the next 1.0.0 release on
 2026-11-07. Both Bowl Bound web startup paths must default to 8001; the frontend
 API proxy and current player documentation follow that default. Paydirt remains
 on 8000. Explicit port overrides and existing local binding/lifecycle remain.
@@ -241,7 +241,7 @@ or publish a Facebook post on the owner's behalf.
 
 ## Local capacity and sibling cleanup
 
-Owner requested the November 7 local cleanup in [DEV-079](issues/DEV/DEV-079.md).
+Owner requested the November 7 local cleanup in [DEV-079](https://github.com/rtulloh/bowl_bound/issues/200).
 Clearing only npm's rebuildable download cache reclaimed 6,416,461,824 bytes;
 the generation agent may proceed under the unchanged real-capacity reserve.
 Paydirt cleanup is separately assigned by the owner. Preserve the original

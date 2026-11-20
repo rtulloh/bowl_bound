@@ -50,7 +50,7 @@ and the fresh complete run pass with identical production sources. The original
 failure is retained in the recovery record, not described as a clean covered run.
 
 Current `npm audit` fails with 13 high findings rooted in unpatched picomatch
-GHSA-fc5q-39xc-vjpf ([DEV-087](issues/DEV/DEV-087.md)). Earlier zero-finding audit
+GHSA-fc5q-39xc-vjpf ([DEV-087](https://github.com/rtulloh/bowl_bound/issues/207)). Earlier zero-finding audit
 responses are not current acceptance. This prevents an all-green gate and blocks
 the existing test-gated native builds. DEV-083 separately tracks the confirmed
 four-hour hosted serial timeout and bounded four-worker replacement; hosted
@@ -112,7 +112,7 @@ Runtime manifest SHA-256:
 `e7c2a783f8e2f6028b307a07dc1ee76aa4a1ec3fb0bb97e0767968323c1c703f`.
 It retains the current 1.0.1 application version and is an unpublished review
 artifact, not a frozen v1.1.0 native release. Historical rosters were already
-authorized for the selected release cohort under [DATA-067](issues/DATA/DATA-067.md).
+authorized for the selected release cohort under [DATA-067](https://github.com/rtulloh/bowl_bound/issues/120).
 
 Remaining work is to record the new-chart distribution basis and explicit
 current approval for this exact experimental cohort, then accept its maintained

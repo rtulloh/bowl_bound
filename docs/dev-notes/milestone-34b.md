@@ -2,7 +2,7 @@
 
 Status: planned. Owner requested a separate ticket on 2026-11-05 to generate
 more recent college seasons, probably working backward from 2025. Track
-[DATA-037](issues/DATA/DATA-037.md); this does not expand the current Alpha 6
+[DATA-037](https://github.com/rtulloh/bowl_bound/issues/100); this does not expand the current Alpha 6
 chart-release cohort or complete M34a calibration.
 
 ## Sequence and acceptance

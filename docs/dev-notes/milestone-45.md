@@ -2,7 +2,7 @@
 
 Status: scheduled and deferred; execution has not started.
 Owner direction: 2026-11-07.
-Tracking ticket: [DEV-080](issues/DEV/DEV-080.md).
+Tracking ticket: [DEV-080](https://github.com/rtulloh/bowl_bound/issues/201).
 Release target: the release after 1.0.0; choose its version during release planning.
 
 ## Goal and activation
@@ -62,9 +62,9 @@ games to claim a complete historical season.
    choose run counts and meaningful-effect criteria before examining outcomes.
 4. Prioritize reproduced mechanics defects, then supported coaching deficiencies,
    then material chart/source limitations. Initial screening candidates are
-   [AI-032](issues/AI/AI-032.md), [AI-031](issues/AI/AI-031.md),
-   [AI-040](issues/AI/AI-040.md), [DATA-049](issues/DATA/DATA-049.md) and
-   [DATA-060](issues/DATA/DATA-060.md). These are candidates, not a finding that
+   [AI-032](https://github.com/rtulloh/bowl_bound/issues/34), [AI-031](https://github.com/rtulloh/bowl_bound/issues/33),
+   [AI-040](https://github.com/rtulloh/bowl_bound/issues/42), [DATA-049](https://github.com/rtulloh/bowl_bound/issues/107) and
+   [DATA-060](https://github.com/rtulloh/bowl_bound/issues/115). These are candidates, not a finding that
    every ticket requires implementation or a silent milestone reassignment.
    Existing season-runner and fixture-qualification work must be verified before
    using the runner to make historical comparison claims.

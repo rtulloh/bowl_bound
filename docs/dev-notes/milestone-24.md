@@ -45,35 +45,35 @@ before green and final scoped diff before commit, as directed for M21a. Commit
 each ticket before starting the next; run focused gates per ticket and the full
 application gate before final milestone commit/publication recommendation.
 
-1. [DEV-033](issues/DEV/DEV-033.md): license and version contract. Keep gameplay
+1. [DEV-033](https://github.com/rtulloh/bowl_bound/issues/157): license and version contract. Keep gameplay
    profile/save schema unchanged; test metadata mapping rather than bump rules.
-2. [DEV-016](issues/DEV/DEV-016.md): separately scoped pre-alpha development-tool
+2. [DEV-016](https://github.com/rtulloh/bowl_bound/issues/140): separately scoped pre-alpha development-tool
    security remediation, retained in its existing milestone assignment. Review
    supported upgrades, clean install/audits, Node24.22.1 unit/build/browser gates.
    Never run blind force fixes or claim production exposure from dev advisories.
-3. [DEV-012](issues/DEV/DEV-012.md): explicit release staging/manifest builder;
+3. [DEV-012](https://github.com/rtulloh/bowl_bound/issues/136): explicit release staging/manifest builder;
    no recursive inclusion of local seasons/, docs/, home directories or worktree
    contents. Fail on unexpected symlinks, missing inputs, unsafe destinations,
    stale assets and mismatched metadata; stage transactionally without destructive
    broad cleanup. Synthetic tests inject forbidden files and inspect archives.
-4. [DEV-034](issues/DEV/DEV-034.md): standalone entry point and source launchers.
+4. [DEV-034](https://github.com/rtulloh/bowl_bound/issues/158): standalone entry point and source launchers.
    Default production web mode uses one local FastAPI/Uvicorn process with built
    assets, no Node on player machines; preserve explicit CLI entry point. Loopback
    only unless explicit remote opt-in. Handle frozen/resource paths independently
    of cwd, missing resources, port conflict, readiness/browser opening and shutdown.
    Do not store player files in transient or read-only bundled resource directories.
-5. [DEV-035](issues/DEV/DEV-035.md): README, player documentation index,
+5. [DEV-035](https://github.com/rtulloh/bowl_bound/issues/159): README, player documentation index,
    installation/play/troubleshooting, public alpha notes and bug-report template.
    Reports request game version, short description/repro steps and optional
    inspected logs/save; never request chart PDFs, raw chart dumps, personal data
    or secrets. Email remains a publication blocker until owner supplies it.
-6. [DEV-036](issues/DEV/DEV-036.md): PyInstaller and draft build workflow using
+6. [DEV-036](https://github.com/rtulloh/bowl_bound/issues/160): PyInstaller and draft build workflow using
    only staged inputs. Target macOS arm64, Windows x64 and macOS Intel x86_64; no
    support claim until native runner smoke passes. Initial portable archives may
    avoid installers/signing complexity; document unsigned/platform caveats honestly.
    Pin reviewed tool/action versions; build from locked dependencies. Produce
    artifact manifest and SHA256 checksums. Prepare builds, not automatic publishing.
-7. [DEV-037](issues/DEV/DEV-037.md): final source/history/privacy and fresh-machine
+7. [DEV-037](https://github.com/rtulloh/bowl_bound/issues/161): final source/history/privacy and fresh-machine
    audits, license inventory, full regression/security gates, player docs verification,
    platform evidence and owner go/no-go. Separate source-repository publication
    audit from distributable inspection: a clean ZIP does not make Git history safe.

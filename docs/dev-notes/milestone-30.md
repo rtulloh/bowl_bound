@@ -57,7 +57,7 @@ All browser fixtures used the fictional sample teams and synthetic charts.
 
 ## Follow-up: onside kickoff — 2026-11-01
 
-Milestone 22 ticket [RULE-025](issues/RULE/RULE-025.md) adds the Basic VI-8
+Milestone 22 ticket [RULE-025](https://github.com/rtulloh/bowl_bound/issues/263) adds the Basic VI-8
 onside kick as an explicit action for the already assigned kicker. It uses one
 offensive roll, a 12-yard dead-ball kick, and the printed 13–20 recovery range.
 This follow-up does not change the reciprocal first/second-half kickoff order

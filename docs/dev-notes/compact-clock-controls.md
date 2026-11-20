@@ -92,7 +92,7 @@ The local Bowl Bound server remains stopped at the user’s request; Paydirt is 
 modified or restarted. Browser checks use only the isolated synthetic test server.
 
 This boundary-control behavior was superseded in Milestone 27 on 2026-10-30;
-see [the milestone note](milestone-27.md) and [RULE-017](issues/RULE/RULE-017.md).
+see [the milestone note](milestone-27.md) and [RULE-017](https://github.com/rtulloh/bowl_bound/issues/255).
 
 Follow-up validation:
 

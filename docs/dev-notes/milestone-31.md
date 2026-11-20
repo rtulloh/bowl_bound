@@ -30,7 +30,7 @@ which matches the fixture metadata.
 - A genuinely mismatched save runtime remains rejected by `loads_game`.
 - Run the complete regression gate on the workflow's Python 3.13.17 runtime.
 
-Tracked work: [DEV-050](issues/DEV/DEV-050.md).
+Tracked work: [DEV-050](https://github.com/rtulloh/bowl_bound/issues/174).
 
 ## Validation
 

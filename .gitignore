@@ -68,3 +68,6 @@ node_modules/
 
 # Local agent tooling configuration is not part of the public repository.
 opencode.json
+
+# Private migration and agent audit receipts
+/.ai-audits/

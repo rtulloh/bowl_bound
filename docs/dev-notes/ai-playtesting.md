@@ -32,4 +32,4 @@ Keep the observation short: commit and game setup, situation, legal menu, select
 call, expected alternative, and the result in a separate field. Keep raw private
 evidence local. If the same decision concern recurs, create or update a ticket
 with a synthetic reproduction. Close a resolved coaching ticket only after the
-owner confirms the behavior in play-testing, following the [ticket conventions](issues/README.md).
+owner confirms the behavior in play-testing, following the [ticket conventions](https://github.com/rtulloh/bowl_bound/issues).

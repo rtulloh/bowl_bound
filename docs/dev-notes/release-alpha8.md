@@ -36,8 +36,8 @@ resolver and exact physical dice remain authoritative. Formation names constrain
 a declared authored model, not measured source estimates.
 
 Root-reviewed [audit](college-chart-defense-formation-audit.md) and
-[DATA-040](issues/DATA/DATA-040.md) prove the all-zero neutral tactics create equal
-A–F outcome distributions. [DEV-076](issues/DEV/DEV-076.md) tracks integration,
+[DATA-040](https://github.com/rtulloh/bowl_bound/issues/102) prove the all-zero neutral tactics create equal
+A–F outcome distributions. [DEV-076](https://github.com/rtulloh/bowl_bound/issues/197) tracks integration,
 independent acceptance and corrected release. Never conceal this with viewer
 formatting or a second engine formation bonus.
 
@@ -332,7 +332,7 @@ previews and in-memory games are preserved.
 
 The rendered repository review also finds a stale Alpha 7 download callout in
 the built README. The actual app/CLI, filenames and release version are Alpha 8.
-[DEV-077](issues/DEV/DEV-077.md) tracks this bounded documentation defect: the
+[DEV-077](https://github.com/rtulloh/bowl_bound/issues/198) tracks this bounded documentation defect: the
 maintained repository README now uses the stable Latest link, and release notes
 disclose the stale bundled callout. Alpha 8 tag/assets remain immutable; the next
 native version will carry the corrected guide. This post-publication README

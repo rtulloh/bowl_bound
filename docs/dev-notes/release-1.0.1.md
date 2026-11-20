@@ -1,7 +1,7 @@
 # Bowl Bound 1.0.1 release preparation
 
 Owner approved publication and the immutable target `v1.0.1` on 2026-11-10.
-Track [DEV-084](issues/DEV/DEV-084.md), assigned to Milestone 23 validation.
+Track [DEV-084](https://github.com/rtulloh/bowl_bound/issues/204), assigned to Milestone 23 validation.
 This is a maintenance release for install validation. Preserve 1.0.0 chart
 bytes, engine/save profiles, approved 116 generated teams, two fictional teams
 and default port 8001. No new season or historical-import distribution is added.

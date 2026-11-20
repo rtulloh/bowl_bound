@@ -108,12 +108,14 @@ Create or update an issue for every reported problem when it is reported, even i
 it is fixed immediately during the same work session. Do not leave quick fixes
 untracked.
 
-Track findings using [ticket conventions](docs/dev-notes/issues/README.md) and the
-[generated issue tracker](docs/dev-notes/issue-tracker.md). Assign each ticket a
-canonical project-plan milestone and keep evidence synthetic/public-safe. Review
-assigned tickets during milestone acceptance; record tested commit references before
-marking resolved, and play-test confirmation before closing. Regenerate the index
-with `python3 scripts/build_issue_index.py` whenever tickets change.
+Track all new and existing work in [GitHub Issues](https://github.com/rtulloh/bowl_bound/issues),
+following [issue tracking guidance](docs/issue-tracking.md). Do not create local
+tickets under docs/dev-notes/issues or regenerate a local index. Assign exactly
+one priority label (priority:high, priority:medium or priority:low) and a canonical
+project-plan milestone. Keep evidence synthetic/public-safe. Review assigned
+issues during milestone acceptance; record tested commits and validation before
+marking implementation complete, and required play-test confirmation before
+closing. Preserve migrated legacy IDs for traceability.
 
 ## Privacy, team data, and source provenance
 

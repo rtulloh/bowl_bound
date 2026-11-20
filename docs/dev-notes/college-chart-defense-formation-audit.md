@@ -3,7 +3,7 @@
 Status: reproduced; correction policy remains unapproved. This pass audits the
 existing neutral generator, not a replacement tactical model. No charts were
 generated or changed, and no engine/viewer behavior or immutable release tag was
-changed. [DATA-040](issues/DATA/DATA-040.md) targets the in-progress M34a generation
+changed. [DATA-040](https://github.com/rtulloh/bowl_bound/issues/102) targets the in-progress M34a generation
 workstream. Earlier complete-game acceptance does not validate tactical contrast.
 
 ## Finding

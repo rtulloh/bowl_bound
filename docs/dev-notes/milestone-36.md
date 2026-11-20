@@ -9,7 +9,7 @@ it by default on Easy and offers a `Z` toggle. The browser already displays the
 separate engine-owned shared fourth-down guidance across normal difficulties.
 This note schedules future investigation and implementation; no helper behavior,
 API or UI is implemented here. Do not expand M33, the chart-generator workstream
-or M35 coffin-corner scope. Track this work in [UI-053](issues/UI/UI-053.md).
+or M35 coffin-corner scope. Track this work in [UI-053](https://github.com/rtulloh/bowl_bound/issues/323).
 
 ## Consultation before planning
 
@@ -40,10 +40,10 @@ mandatory pending decisions do not currently receive this general helper. These
 observations are an initial inventory, not proof of every lifecycle or special
 branch. Inspect the API/frontend and all pending contexts before claiming parity.
 
-[CLI-047](issues/CLI/CLI-047.md) remains open for role-specific presentation and a
+[CLI-047](https://github.com/rtulloh/bowl_bound/issues/74) remains open for role-specific presentation and a
 concrete public-situation defensive recommendation. Reconcile/reuse that pipeline
 rather than creating competing helper policies or treating its planned behavior
-as already implemented. [UI-041](issues/UI/UI-041.md) supplies the existing shared
+as already implemented. [UI-041](https://github.com/rtulloh/bowl_bound/issues/311) supplies the existing shared
 public fourth-down advice; retain its approved policy and visibility.
 
 ## Planned implementation and acceptance

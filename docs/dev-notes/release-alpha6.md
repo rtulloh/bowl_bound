@@ -6,7 +6,7 @@ generated outputs. It does not authorize distributing benchmark PDF charts,
 source PBP/narratives, raw caches, private reference comparisons, logs, saves or
 historical rosters. Recent-season generation and the web chart viewer are separate.
 
-Tracking: [DEV-072](issues/DEV/DEV-072.md), Milestone 34a. Preparation is not release
+Tracking: [DEV-072](https://github.com/rtulloh/bowl_bound/issues/194), Milestone 34a. Preparation is not release
 acceptance or a claim that overall historical calibration is complete.
 
 ## Paydirt consultation
@@ -96,7 +96,7 @@ first-and-goal domain. Synthetic tests first demonstrated 14 expected failures a
 two passing controls. The fix passes 85 focused and 456 cumulative coaching/try/
 overtime tests; malformed inputs and prior two-yard deterministic/replay behavior
 remain covered. No policy version, live scoring rule or gameplay dice changed.
-The independent [bounded valuation follow-up AI-034](issues/AI/AI-034.md) stays open.
+The independent [bounded valuation follow-up AI-034](https://github.com/rtulloh/bowl_bound/issues/36) stays open.
 
 Before the OOB correction, every generated team was the current
 Hard-v15 computer once, against a baseline-v15 opponent in deterministic cycle
@@ -152,7 +152,7 @@ Owner playtesting identified near-universal ordinary numeric OOB flags before an
 Alpha 6 tag or release was created. The native candidate at `9a2897f` passed its
 mechanics/build checks after the bounded catalog-smoke repair, but those checks
 did not establish correct conditioning of source flags. Publication was held; old charts, native artifacts and detailed
-audit evidence are preserved. [DATA-039](issues/DATA/DATA-039.md) tracks the defect.
+audit evidence are preserved. [DATA-039](https://github.com/rtulloh/bowl_bound/issues/101) tracks the defect.
 
 The canonical research generator repair `388546e` retains source True/False/None
 and models weighted positive narrative mentions over all matching ordinary numeric

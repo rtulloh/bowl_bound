@@ -316,8 +316,8 @@ follow-ups, not fixed or closed by this handoff; named commentary is deferred to
 **Validate:** compare against baseline with independent seeds; inspect call variety and repetition as well as scores.
 
 Implementation plan and evidence: [Milestone 21](milestone-21.md), tracked by
-[AI-001](issues/AI/AI-001.md), [AI-002](issues/AI/AI-002.md),
-[CLI-041](issues/CLI/CLI-041.md) and [RULE-011](issues/RULE/RULE-011.md)
+[AI-001](https://github.com/rtulloh/bowl_bound/issues/3), [AI-002](https://github.com/rtulloh/bowl_bound/issues/4),
+[CLI-041](https://github.com/rtulloh/bowl_bound/issues/68) and [RULE-011](https://github.com/rtulloh/bowl_bound/issues/249)
 (post-review engine correctness dependency, added under the owner’s High-to-Low
 remediation request). Other review follow-ups retain their assigned milestones.
 Implemented in the worktree: probability foundation,
@@ -345,7 +345,7 @@ Each is a separate test/review/commit milestone:
 
 1. Wild Card defense and option-specific guesses.
 2. QB Sneak and other situational plays.
-3. Yardage factors were reviewed and deferred: Advanced IX derives them from point spreads and ratings, which remain informational and do not affect gameplay ([RULE-023](issues/RULE/RULE-023.md)).
+3. Yardage factors were reviewed and deferred: Advanced IX derives them from point spreads and ratings, which remain informational and do not affect gameplay ([RULE-023](https://github.com/rtulloh/bowl_bound/issues/261)).
 4. Advanced kicking and block options (RULE-026) and the Advanced III/IV kick/return package (RULE-032) were reviewed and deferred; Basic VI-8 onside kicks are handled separately in RULE-025.
 5. Alternate and hybrid timing were reviewed and deferred (RULE-027); retain standard chart timing and automatic period advancement. Do not restore manual runoff choices.
 6. Weather effects were reviewed and deferred (RULE-030). Razzle-Dazzle (I-1), elected safety (I-5), and intentional delay (I-6(B)) were approved on 2026-11-01 and have individual implementation tickets: RULE-028, RULE-029, and RULE-031.
@@ -371,7 +371,7 @@ Ticket coverage and Paydirt review: [Milestone 22 work log](milestone-22.md).
 **Validate:** fresh checkout builds/runs with the two fictional teams and no private files; inspect built archives/bundles against an exact sample allowlist, explicitly checking that Ohio State/Miami and historical provenance/rosters are absent. Review repository contents and visibility before adding a remote.
 
 **Blocking prerequisite before linking/adding a GitHub remote or publishing:**
-[DEV-011](issues/DEV/DEV-011.md) must be resolved: two original, redistributable
+[DEV-011](https://github.com/rtulloh/bowl_bound/issues/135) must be resolved: two original, redistributable
 synthetic Bowl Bound teams must be created, validated and available in the
 `seasons/` layout as the default reusable test/demo teams. This is required even
 if its planned Milestone 19 assignment moves. The word "free" in a historical
@@ -399,8 +399,8 @@ and the repaired workflow passed the full milestone acceptance gate. See the
 collision, dry-run, rollback, diagnostics, input-contract, dependency and release checks
 recorded in the milestone work log.
 
-Tracked work: [IMPORT-001](issues/IMPORT/IMPORT-001.md) through
-[IMPORT-009](issues/IMPORT/IMPORT-009.md), covering color/provenance integrity,
+Tracked work: [IMPORT-001](https://github.com/rtulloh/bowl_bound/issues/220) through
+[IMPORT-009](https://github.com/rtulloh/bowl_bound/issues/228), covering color/provenance integrity,
 rollback, collision refusal, dry-run parity, safe diagnostics, input contracts,
 the positive batch workflow, documentation/dependency isolation and final
 milestone acceptance. See the [Milestone 25 work log](milestone-25.md).
@@ -433,9 +433,9 @@ evidence. Keep rosters, source URLs/notes, PDFs, converted teams, and detailed r
 ignored/private locations pending a separate rights review. Re-run the full regression gate
 and local real-chart and roster checks before the dedicated milestone commit.
 
-Tracked work: [IMPORT-010](issues/IMPORT/IMPORT-010.md) through
-[IMPORT-019](issues/IMPORT/IMPORT-019.md), plus
-[FLOW-006](issues/FLOW/FLOW-006.md). See the
+Tracked work: [IMPORT-010](https://github.com/rtulloh/bowl_bound/issues/229) through
+[IMPORT-019](https://github.com/rtulloh/bowl_bound/issues/238), plus
+[FLOW-006](https://github.com/rtulloh/bowl_bound/issues/218). See the
 [Milestone 26 work log](milestone-26.md).
 
 **Commit:** `milestone 26: support local MaysFootball chart testing`
@@ -462,8 +462,8 @@ compatibility for existing saved games. Explain timeout syntax only in requested
 help output, update player documentation, and run the full regression gate before
 the dedicated milestone commit.
 
-Tracked work: [CLI-038](issues/CLI/CLI-038.md) and
-[RULE-017](issues/RULE/RULE-017.md). See the
+Tracked work: [CLI-038](https://github.com/rtulloh/bowl_bound/issues/65) and
+[RULE-017](https://github.com/rtulloh/bowl_bound/issues/255). See the
 [Milestone 27 work log](milestone-27.md).
 
 **Commit:** `milestone 27: apply play timing automatically`
@@ -490,7 +490,7 @@ owner-provided local save without changing it. Run focused save/CLI checks and
 the applicable cumulative regression gate. Keep private save files and details
 outside tracked tests and documentation.
 
-Tracked work: [CLI-048](issues/CLI/CLI-048.md). See the
+Tracked work: [CLI-048](https://github.com/rtulloh/bowl_bound/issues/75). See the
 [Milestone 28 work log](milestone-28.md).
 
 **Commit:** `milestone 28: preserve pre-timing save replay`
@@ -509,7 +509,7 @@ visible marker and ordinary chart values retain their current display. Do not us
 historical chart data in tests. Update documentation only if the trace notation
 needs explanation.
 
-Tracked work: [CLI-049](issues/CLI/CLI-049.md). See the
+Tracked work: [CLI-049](https://github.com/rtulloh/bowl_bound/issues/76). See the
 [Milestone 29 work log](milestone-29.md).
 
 **Commit:** `milestone 29: clarify blank chart trace cells`
@@ -525,7 +525,7 @@ receives, instead of a choice of kick type by the team assigned to kick.
 **Deliver:** the team that kicked to open the game receives the second-half
 kickoff, and the opening receiver kicks. Do not prompt either team to choose
 which team kicks. Milestone 30 initially scheduled a normal kick because onside
-was unsupported; Milestone 22 [RULE-025](issues/RULE/RULE-025.md) later added
+was unsupported; Milestone 22 [RULE-025](https://github.com/rtulloh/bowl_bound/issues/263) later added
 the Basic VI-8 kick-type choice for the assigned kicker.
 
 **Validate:** synthetic regulation tests cover both opening elections, verify the
@@ -536,7 +536,7 @@ saved-game replay, including a save at halftime, and retain old-choice
 compatibility only where needed for saved-command replay. Update rules
 documentation and run the full regression gate.
 
-Tracked work: [RULE-018](issues/RULE/RULE-018.md). See the
+Tracked work: [RULE-018](https://github.com/rtulloh/bowl_bound/issues/256). See the
 [Milestone 30 work log](milestone-30.md).
 
 **Commit:** `milestone 30: fix second-half kickoff order`
@@ -558,7 +558,7 @@ legacy digest fixtures load after test-only metadata adaptation and confirm
 mismatched runtime saves remain rejected. Run the full regression gate on
 Python 3.13.17.
 
-Tracked work: [DEV-050](issues/DEV/DEV-050.md). See the
+Tracked work: [DEV-050](https://github.com/rtulloh/bowl_bound/issues/174). See the
 [Milestone 31 work log](milestone-31.md).
 
 **Commit:** `milestone 31: make legacy save tests runtime-neutral`
@@ -583,7 +583,7 @@ Run the script only against locally installed team bundles, then inspect the pri
 audit output for each imported season. Ordinary CI must not load historical charts or
 execute the full season.
 
-Tracked work: [DEV-007](issues/DEV/DEV-007.md). See the
+Tracked work: [DEV-007](https://github.com/rtulloh/bowl_bound/issues/131). See the
 [Milestone 32 work log](milestone-32.md).
 
 **Commit:** `milestone 32: add local full-season audit runner`
@@ -609,12 +609,12 @@ Verify the frontend displays only engine-provided guidance and workflow triggers
 and failure propagation are statically tested. Re-run the local season audit after
 gameplay changes, keeping all imported teams and reports private.
 
-Tracked work: [AI-010](issues/AI/AI-010.md), [AI-027](issues/AI/AI-027.md),
-[RULE-041](issues/RULE/RULE-041.md), [RULE-042](issues/RULE/RULE-042.md),
-[UI-041](issues/UI/UI-041.md), [DEV-059](issues/DEV/DEV-059.md),
-[DEV-060](issues/DEV/DEV-060.md), [DEV-061](issues/DEV/DEV-061.md),
-[DEV-062](issues/DEV/DEV-062.md), and
-[DEV-063](issues/DEV/DEV-063.md). See the
+Tracked work: [AI-010](https://github.com/rtulloh/bowl_bound/issues/12), [AI-027](https://github.com/rtulloh/bowl_bound/issues/29),
+[RULE-041](https://github.com/rtulloh/bowl_bound/issues/279), [RULE-042](https://github.com/rtulloh/bowl_bound/issues/280),
+[UI-041](https://github.com/rtulloh/bowl_bound/issues/311), [DEV-059](https://github.com/rtulloh/bowl_bound/issues/183),
+[DEV-060](https://github.com/rtulloh/bowl_bound/issues/184), [DEV-061](https://github.com/rtulloh/bowl_bound/issues/185),
+[DEV-062](https://github.com/rtulloh/bowl_bound/issues/186), and
+[DEV-063](https://github.com/rtulloh/bowl_bound/issues/187). See the
 [Milestone 33 work log](milestone-33.md).
 
 **Engineering acceptance:** all ten tickets resolved against tested commits.
@@ -625,20 +625,20 @@ coaching/replay audit pass; 17/17 deliberate coaching faults are detected.
 Owner play-test confirmation remains required before closing gameplay tickets.
 That engineering checkpoint did not publish a release or implement Milestones 34/35.
 
-Owner play-test follow-up: [UI-052](issues/UI/UI-052.md) replaces timeout button
+Owner play-test follow-up: [UI-052](https://github.com/rtulloh/bowl_bound/issues/322) replaces timeout button
 copy with the owner's approved plain language on the unmerged M33 review branch.
 It preserves the completed `f82ad47` engineering snapshot and changes no rules.
-[AI-033](issues/AI/AI-033.md) separately tracks the subsequent owner-reported
+[AI-033](https://github.com/rtulloh/bowl_bound/issues/35) separately tracks the subsequent owner-reported
 Razzle-Dazzle CPU choice-quality problem on that same review branch; it is
 resolved against tested `aad5312` after 3,454 Python cases and 147 audited
 current RZDZ choices with no pending-choice fallback. Owner RZDZ confirmation
 remains required before closure; the separate initial-try analysis limitation is
-tracked under M23 in [AI-034](issues/AI/AI-034.md).
+tracked under M23 in [AI-034](https://github.com/rtulloh/bowl_bound/issues/36).
 
 **Owner-selected next-release blockers (2026-11-03):** complete
-[AI-035](issues/AI/AI-035.md), [AI-036](issues/AI/AI-036.md),
-[UI-054](issues/UI/UI-054.md), [CLI-058](issues/CLI/CLI-058.md), [UI-058](issues/UI/UI-058.md), and
-[UI-059](issues/UI/UI-059.md) on the M33 owner-review branch before the next
+[AI-035](https://github.com/rtulloh/bowl_bound/issues/37), [AI-036](https://github.com/rtulloh/bowl_bound/issues/38),
+[UI-054](https://github.com/rtulloh/bowl_bound/issues/324), [CLI-058](https://github.com/rtulloh/bowl_bound/issues/85), [UI-058](https://github.com/rtulloh/bowl_bound/issues/328), and
+[UI-059](https://github.com/rtulloh/bowl_bound/issues/329) on the M33 owner-review branch before the next
 release. The owner explicitly pulled the halftime recap and two-point commentary
 work forward from M35. Preserve the earlier engineering acceptance as a frozen
 checkpoint; this follow-up needs its own test-first changes, full regression and
@@ -649,7 +649,7 @@ agent. Integrate its existing tested clock fix with the remaining changes and
 validate the combined branch. Other recommended tickets are not automatically
 added to this release scope.
 
-Owner visual follow-up (2026-11-04): [UI-060](issues/UI/UI-060.md) adapts Paydirt's
+Owner visual follow-up (2026-11-04): [UI-060](https://github.com/rtulloh/bowl_bound/issues/330) adapts Paydirt's
 boxed CLI halftime statistics and the owner's simple web halftime card reference.
 Detailed web tables remain behind a collapsed disclosure; this changes display
 formatting, not the completed engineering checkpoint or football rules. Browser
@@ -738,7 +738,7 @@ source-fitted validation from held-out evidence and approve each season before
 release expansion. Private raw data, comparison charts and detailed audits stay
 private unless separately cleared for distribution.
 
-Tracked work: [DATA-037](issues/DATA/DATA-037.md). See the
+Tracked work: [DATA-037](https://github.com/rtulloh/bowl_bound/issues/100). See the
 [Milestone 34b planning note](milestone-34b.md).
 
 **Commit:** `milestone 34b: generate validated recent-season college charts`
@@ -750,9 +750,9 @@ independent college chart-generator workstream; this follow-up does not expand
 Milestones 33 or 34 or the alpha 4 release.
 
 The halftime presentation was initially scheduled here on 2026-11-03. The
-owner subsequently selected [CLI-058](issues/CLI/CLI-058.md),
-[UI-058](issues/UI/UI-058.md) and two-point presentation
-[UI-059](issues/UI/UI-059.md) as M33 next-release blockers, moving that work
+owner subsequently selected [CLI-058](https://github.com/rtulloh/bowl_bound/issues/85),
+[UI-058](https://github.com/rtulloh/bowl_bound/issues/328) and two-point presentation
+[UI-059](https://github.com/rtulloh/bowl_bound/issues/329) as M33 next-release blockers, moving that work
 forward. Coffin-corner punt support remains in M35.
 
 **Deliver:** an explicitly enabled Bowl Bound coffin-corner punt option, with
@@ -771,8 +771,8 @@ and engine/API/CLI/browser parity. Preserve the approved public-information
 coaching policy unless separately changed through review. Finish focused and
 full regression gates and play-test acceptance before release claims.
 
-Tracked work: [RULE-043](issues/RULE/RULE-043.md) and
-[AI-030](issues/AI/AI-030.md). See the
+Tracked work: [RULE-043](https://github.com/rtulloh/bowl_bound/issues/281) and
+[AI-030](https://github.com/rtulloh/bowl_bound/issues/32). See the
 [Milestone 35 planning note](milestone-35.md).
 
 **Commit:** `milestone 35: add optional coffin-corner punts`
@@ -799,7 +799,7 @@ choose a play automatically, expose private chart/source data, or change the
 approved human/CPU information policy. Update player/API/coaching/save guidance
 as applicable, then run focused and full gates and obtain owner play testing.
 
-Tracked work: [UI-053](issues/UI/UI-053.md). See the
+Tracked work: [UI-053](https://github.com/rtulloh/bowl_bound/issues/323). See the
 [Milestone 36 planning note](milestone-36.md).
 
 **Commit:** `milestone 36: bring the Easy coaching helper to the web UI`
@@ -812,8 +812,8 @@ email-compose link to the documented support address. Preserve kick/PAT/return
 outcomes, pending decisions and timing evidence. Keep export user-initiated and
 previewable; do not bundle team charts, source PDFs or unrelated local files.
 Opening a mail client must not send automatically or pretend to attach a file.
-Tracked work: [UI-056](issues/UI/UI-056.md) and
-[UI-057](issues/UI/UI-057.md). Player-facing audit/report wording uses contextual
+Tracked work: [UI-056](https://github.com/rtulloh/bowl_bound/issues/326) and
+[UI-057](https://github.com/rtulloh/bowl_bound/issues/327). Player-facing audit/report wording uses contextual
 result labels instead of spreadsheet terminology.
 
 **Validate:** synthetic engine/API/frontend/browser tests cover partial and
@@ -894,7 +894,7 @@ a call, advances time, consumes dice or reveals the computer's selected call.
 controls and responsive real-engine browser checks. Include viewer modules in the
 exact release manifest. CLI chart viewing is outside this milestone.
 
-**Notes:** [Milestone 38](milestone-38.md), [UI-061](issues/UI/UI-061.md).
+**Notes:** [Milestone 38](milestone-38.md), [UI-061](https://github.com/rtulloh/bowl_bound/issues/331).
 
 **Commit:** `milestone 38: add read-only web chart viewer`
 
@@ -919,11 +919,11 @@ Keep team charts sourced from their loaded CSV facts. Detached views isolate
 their opener, never create a game or submit commands, preserve independent
 controls, and recover from blocked windows and expired sessions.
 
-**Notes:** [Milestone 41](milestone-41.md), [UI-062](issues/UI/UI-062.md),
-[UI-063](issues/UI/UI-063.md), [UI-064](issues/UI/UI-064.md),
-[UI-065](issues/UI/UI-065.md), [UI-066](issues/UI/UI-066.md),
-[UI-067](issues/UI/UI-067.md), [UI-068](issues/UI/UI-068.md),
-[UI-069](issues/UI/UI-069.md). Independent of the Alpha 6 release.
+**Notes:** [Milestone 41](milestone-41.md), [UI-062](https://github.com/rtulloh/bowl_bound/issues/332),
+[UI-063](https://github.com/rtulloh/bowl_bound/issues/333), [UI-064](https://github.com/rtulloh/bowl_bound/issues/334),
+[UI-065](https://github.com/rtulloh/bowl_bound/issues/335), [UI-066](https://github.com/rtulloh/bowl_bound/issues/336),
+[UI-067](https://github.com/rtulloh/bowl_bound/issues/337), [UI-068](https://github.com/rtulloh/bowl_bound/issues/338),
+[UI-069](https://github.com/rtulloh/bowl_bound/issues/339). Independent of the Alpha 6 release.
 
 **Commit:** `milestone 41: add priority and full-page chart views`
 
@@ -954,12 +954,12 @@ Freeze and audit every final ordinary CSV/API/rendered chart, run relevant
 mechanics and full regression gates, and publish the correction only after the
 defined checks pass. Source-unsupported priors must remain labeled model choices.
 
-Tracked work: [DATA-064](issues/DATA/DATA-064.md),
-[DATA-055](issues/DATA/DATA-055.md), [DATA-046](issues/DATA/DATA-046.md), and
-[DEV-078](issues/DEV/DEV-078.md). Owner added the Bowl Bound default web port 8001
+Tracked work: [DATA-064](https://github.com/rtulloh/bowl_bound/issues/117),
+[DATA-055](https://github.com/rtulloh/bowl_bound/issues/110), [DATA-046](https://github.com/rtulloh/bowl_bound/issues/105), and
+[DEV-078](https://github.com/rtulloh/bowl_bound/issues/199). Owner added the Bowl Bound default web port 8001
 for simultaneous Paydirt play to this release; preserve explicit port overrides.
-Related broader calibration remains with [DATA-045](issues/DATA/DATA-045.md)
-and [DATA-060](issues/DATA/DATA-060.md). Optional defensive (B) refinement and
+Related broader calibration remains with [DATA-045](https://github.com/rtulloh/bowl_bound/issues/104)
+and [DATA-060](https://github.com/rtulloh/bowl_bound/issues/115). Optional defensive (B) refinement and
 new-season publication are separate follow-ups. See [Milestone 42](milestone-42.md).
 
 **Commit:** `milestone 42: correct play-specific interception depths`
@@ -980,7 +980,7 @@ roles, duplicate/retried completion, in-progress versus final games, corrections
 save/resume and exact reconciliation to final engine boxes. Run applicable
 backend/UI/persistence checks and multi-game play testing.
 
-Tracked work: [DATA-065](issues/DATA/DATA-065.md). See
+Tracked work: [DATA-065](https://github.com/rtulloh/bowl_bound/issues/118). See
 [Milestone 43](milestone-43.md). This feature is outside the active Milestone 42
 and 1.0.0 release scope.
 
@@ -1003,8 +1003,8 @@ same-school/different-year, human/manual modes, unsupported profiles and save/lo
 Assert actual engine rules across supported kickoff/touchback/overtime boundaries;
 run relevant API/frontend/session/persistence regressions and a browser play-test.
 
-Tracked work: [UI-070](issues/UI/UI-070.md) and
-[UI-071](issues/UI/UI-071.md). See [Milestone 44](milestone-44.md). This is
+Tracked work: [UI-070](https://github.com/rtulloh/bowl_bound/issues/340) and
+[UI-071](https://github.com/rtulloh/bowl_bound/issues/341). See [Milestone 44](milestone-44.md). This is
 outside the active Milestone 42 and 1.0.0 correction release scope. Owner selected
 **1.1.0** as the next release target on 2026-11-15; see
 [1.1.0 preparation](release-1.1.0.md).
@@ -1033,7 +1033,7 @@ unknowns. Review and commit each ticket before proceeding; complete applicable
 full regressions and a cumulative evidence report before release handoff.
 Historical champions or qualifiers are not targets to force.
 
-Tracked work: [DEV-080](issues/DEV/DEV-080.md).
+Tracked work: [DEV-080](https://github.com/rtulloh/bowl_bound/issues/201).
 See the ready-to-start [Milestone 45 goal](milestone-45.md) for the activation
 condition, initial screening candidates, workflow and completion criteria.
 This goal is inactive and does not expand 1.0.0 acceptance.
@@ -1068,7 +1068,20 @@ not assume zero rewrites or a short delivery until the spike proves it. No
 version metadata, packaging, publication or runtime dependency changes are made
 by this exploration.
 
-Tracked work: [FLOW-007](issues/FLOW/FLOW-007.md). This is exploratory backlog
+Tracked work: [FLOW-007](https://github.com/rtulloh/bowl_bound/issues/219). This is exploratory backlog
 outside the active 1.1.0 cross-season scope.
 
 **Commit:** `milestone 46: evaluate browser-only Pyodide distribution`
+
+### 48. Retire local tickets after GitHub migration
+
+Owner confirmed migration of all 340 local tickets on 2026-11-20. Make GitHub
+Issues authoritative, audit repository priority labels, remove the local ticket
+directory and obsolete ticket tools, and replace active guidance and links.
+Verify every local ticket against the migration report before deletion, preserve
+history and confirmation requirements, and check no active tooling depends on
+the removed records. No gameplay or chart changes.
+
+Tracked work: [GitHub #343](https://github.com/rtulloh/bowl_bound/issues/343).
+
+**Commit:** `milestone 48: use GitHub Issues after ticket migration`

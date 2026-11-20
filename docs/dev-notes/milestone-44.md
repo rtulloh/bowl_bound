@@ -2,8 +2,8 @@
 
 Status: backlog, planning only, 2026-11-07. Target release: **1.1.0**
 (owner-selected 2026-11-15; see [1.1.0 preparation](release-1.1.0.md)).
-Tickets: [UI-070](issues/UI/UI-070.md) (behavior/rules acceptance) and
-[UI-071](issues/UI/UI-071.md) (setup UI design), Medium priority.
+Tickets: [UI-070](https://github.com/rtulloh/bowl_bound/issues/340) (behavior/rules acceptance) and
+[UI-071](https://github.com/rtulloh/bowl_bound/issues/341) (setup UI design), Medium priority.
 
 Let web players independently choose teams from installed eligible years and
 clearly see that the designated home team's season governs the game's rules.
@@ -31,7 +31,7 @@ rules visibility and complete integration verification.
 
 ## Setup UI design
 
-[UI-071](issues/UI/UI-071.md) documents the scalable setup design in
+[UI-071](https://github.com/rtulloh/bowl_bound/issues/341) documents the scalable setup design in
 [cross-season team selection design](cross-season-team-selection-design.md): a
 two-card matchup builder with independent year/team selection, a searchable
 season-scoped picker, a backend-provided home-season rules banner, catalog

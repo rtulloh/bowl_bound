@@ -222,7 +222,7 @@ enabled solely because Paydirt has a similarly named feature.
   Legacy M21 saves keep their six-formation profile. Synthetic tests cover the
   decisions, dice use, traces, conditional doubling, API creation, and save replay.
 - At the time of this review, coaching still selected among the six chart formations;
-  the follow-up is recorded in [AI-021](issues/AI/AI-021.md).
+  the follow-up is recorded in [AI-021](https://github.com/rtulloh/bowl_bound/issues/23).
 
 ### Advanced II coaching review — 2026-11-01
 
@@ -251,7 +251,7 @@ enabled solely because Paydirt has a similarly named feature.
 - The owner stated that power rating is not important to gameplay. Advanced Rule
   VIII's point spread and player-rating system is therefore not part of engine
   eligibility, outcomes, or scoring; imported rating values remain informational.
-- Updated the canonical rules profile and plan; closed [RULE-024](issues/RULE/RULE-024.md)
+- Updated the canonical rules profile and plan; closed [RULE-024](https://github.com/rtulloh/bowl_bound/issues/262)
   as wont-fix for gameplay behavior. This documentation-only decision needs no
   behavioral tests.
 
@@ -259,7 +259,7 @@ enabled solely because Paydirt has a similarly named feature.
 
 - Advanced IX (printed pp. 29–31) ties both yardage-factor methods to point spreads,
   rating-derived team factors, and score margin. The owner deferred both methods
-  because ratings must not change gameplay. [RULE-023](issues/RULE/RULE-023.md) is
+  because ratings must not change gameplay. [RULE-023](https://github.com/rtulloh/bowl_bound/issues/261) is
   closed for this milestone; chart yardage, traces, and save semantics stay unchanged.
 - This is a scope/documentation decision, so verification uses the issue-tracker
   metadata and generated-index checks rather than artificial behavior tests.
@@ -268,7 +268,7 @@ enabled solely because Paydirt has a similarly named feature.
 
 - The owner deferred Advanced V's fake-kick option, all-out kick rush, and free
   block option as a group. They remain unavailable; the separate Basic VI-8
-  onside-kick implementation is unaffected. [RULE-026](issues/RULE/RULE-026.md)
+  onside-kick implementation is unaffected. [RULE-026](https://github.com/rtulloh/bowl_bound/issues/264)
   is closed for this milestone. This documentation-only decision is verified by
   the issue-tracker checks.
 
@@ -276,7 +276,7 @@ enabled solely because Paydirt has a similarly named feature.
 
 - The owner chose to retain standard chart timing and defer both Advanced VII
   alternate and hybrid profiles. Period transitions continue to follow play
-  timing; no manual runoff choice is restored. [RULE-027](issues/RULE/RULE-027.md)
+  timing; no manual runoff choice is restored. [RULE-027](https://github.com/rtulloh/bowl_bound/issues/265)
   is closed for this milestone. No gameplay change was made.
 
 ### Weather scope decision — 2026-11-01
@@ -284,20 +284,20 @@ enabled solely because Paydirt has a similarly named feature.
 - The owner deferred precipitation and wind effects. Advanced VI (printed
   pp. 23–24) introduces weather conditions and modifies run/pass, return, kick,
   and field-goal results. No weather state or randomness is added;
-  [RULE-030](issues/RULE/RULE-030.md) is closed for this milestone.
+  [RULE-030](https://github.com/rtulloh/bowl_bound/issues/268) is closed for this milestone.
 
 ### Advanced special-teams scope decision — 2026-11-01
 
 - The owner deferred the Advanced III/IV package: squib and coordinated
   kick/return choices, short-drop/coffin-corner/quick punts, punt fair-catch and
   roll choices, and alternate kickoff returns. Basic VI-8 onside support remains
-  implemented under [RULE-025](issues/RULE/RULE-025.md). No other special-team
-  behavior is added; [RULE-032](issues/RULE/RULE-032.md) is closed for this
+  implemented under [RULE-025](https://github.com/rtulloh/bowl_bound/issues/263). No other special-team
+  behavior is added; [RULE-032](https://github.com/rtulloh/bowl_bound/issues/270) is closed for this
   milestone.
 
 ### QB Sneak implementation — 2026-11-01
 
-- Completed [RULE-021](issues/RULE/RULE-021.md) in tested commit `d0fa13b`.
+- Completed [RULE-021](https://github.com/rtulloh/bowl_bound/issues/259) in tested commit `d0fa13b`.
 - Followed Advanced Rule I-2 with synthetic test-first coverage. QB Sneak uses
   Play 1 only, handles chart-color outcomes and WCSNEAK/conditional Wild Card
   behavior, and preserves engine state, statistics, and structured traces.
@@ -310,7 +310,7 @@ enabled solely because Paydirt has a similarly named feature.
 - Basic VI-8 (printed p. 10) specifies a 12-yard kickoff. The kicking team
   recovers on offensive totals 13–20 inclusive; otherwise the receiving team
   recovers. The ball is dead at recovery with no return roll.
-- [RULE-025](issues/RULE/RULE-025.md) exposes this kick type to the engine-assigned
+- [RULE-025](https://github.com/rtulloh/bowl_bound/issues/263) exposes this kick type to the engine-assigned
   kicker, including the fixed reciprocal halftime kicker. It does not introduce a
   kick/receive choice. A safety free kick remains ineligible.
 - Paydirt's menu separation was reviewed at milestone start, but its rules, dice
@@ -330,10 +330,10 @@ enabled solely because Paydirt has a similarly named feature.
 ### Situational-play scope decision — 2026-11-01
 
 - The owner approved Razzle-Dazzle (Advanced I-1), elected safety (I-5), and
-  intentional delay (I-6(B)). [RULE-022](issues/RULE/RULE-022.md) records this
-  scope decision; [RULE-028](issues/RULE/RULE-028.md),
-  [RULE-029](issues/RULE/RULE-029.md), and
-  [RULE-031](issues/RULE/RULE-031.md) remain separate implementation tickets.
+  intentional delay (I-6(B)). [RULE-022](https://github.com/rtulloh/bowl_bound/issues/260) records this
+  scope decision; [RULE-028](https://github.com/rtulloh/bowl_bound/issues/266),
+  [RULE-029](https://github.com/rtulloh/bowl_bound/issues/267), and
+  [RULE-031](https://github.com/rtulloh/bowl_bound/issues/269) remain separate implementation tickets.
 - The elected safety and intentional delay implementations are complete and
   remain resolved pending owner play-test confirmation. Razzle-Dazzle is
   implemented under RULE-028 and also awaits owner play-test confirmation.
@@ -344,21 +344,21 @@ enabled solely because Paydirt has a similarly named feature.
 
 | Milestone 22 change or decision | Ticket |
 | --- | --- |
-| Advanced II Wild Card, run/pass, nickel-zone, and red-zone defenses | [RULE-019](issues/RULE/RULE-019.md) |
-| Defensive guesses specific to SOP/BLP option plays | [RULE-020](issues/RULE/RULE-020.md) |
-| QB Sneak, Advanced I-2 | [RULE-021](issues/RULE/RULE-021.md) |
-| Situational-play scope decision (closed; three options adopted) | [RULE-022](issues/RULE/RULE-022.md) |
-| Yardage factors, Advanced IX | [RULE-023](issues/RULE/RULE-023.md) |
-| Power-rating gameplay effects, Advanced VIII | [RULE-024](issues/RULE/RULE-024.md) |
-| Onside kick choice and resolution, Basic VI-8 | [RULE-025](issues/RULE/RULE-025.md) |
-| Fake options, all-out kick rush, and free block, Advanced V | [RULE-026](issues/RULE/RULE-026.md) |
-| Alternate/hybrid timing decision, Advanced VII | [RULE-027](issues/RULE/RULE-027.md) |
-| Razzle-Dazzle, Advanced I-1 | [RULE-028](issues/RULE/RULE-028.md) |
-| Elected safeties, Advanced I-5 | [RULE-029](issues/RULE/RULE-029.md) |
-| Weather effects, Advanced VI | [RULE-030](issues/RULE/RULE-030.md) |
-| Intentional delay, Advanced I-6(B) | [RULE-031](issues/RULE/RULE-031.md) |
-| Advanced kickoff/punt choices and punt/kickoff returns, Advanced III-IV | [RULE-032](issues/RULE/RULE-032.md) |
-| Guaranteed in-bounds/out-of-bounds declarations, already requested | [RULE-010](issues/RULE/RULE-010.md) |
+| Advanced II Wild Card, run/pass, nickel-zone, and red-zone defenses | [RULE-019](https://github.com/rtulloh/bowl_bound/issues/257) |
+| Defensive guesses specific to SOP/BLP option plays | [RULE-020](https://github.com/rtulloh/bowl_bound/issues/258) |
+| QB Sneak, Advanced I-2 | [RULE-021](https://github.com/rtulloh/bowl_bound/issues/259) |
+| Situational-play scope decision (closed; three options adopted) | [RULE-022](https://github.com/rtulloh/bowl_bound/issues/260) |
+| Yardage factors, Advanced IX | [RULE-023](https://github.com/rtulloh/bowl_bound/issues/261) |
+| Power-rating gameplay effects, Advanced VIII | [RULE-024](https://github.com/rtulloh/bowl_bound/issues/262) |
+| Onside kick choice and resolution, Basic VI-8 | [RULE-025](https://github.com/rtulloh/bowl_bound/issues/263) |
+| Fake options, all-out kick rush, and free block, Advanced V | [RULE-026](https://github.com/rtulloh/bowl_bound/issues/264) |
+| Alternate/hybrid timing decision, Advanced VII | [RULE-027](https://github.com/rtulloh/bowl_bound/issues/265) |
+| Razzle-Dazzle, Advanced I-1 | [RULE-028](https://github.com/rtulloh/bowl_bound/issues/266) |
+| Elected safeties, Advanced I-5 | [RULE-029](https://github.com/rtulloh/bowl_bound/issues/267) |
+| Weather effects, Advanced VI | [RULE-030](https://github.com/rtulloh/bowl_bound/issues/268) |
+| Intentional delay, Advanced I-6(B) | [RULE-031](https://github.com/rtulloh/bowl_bound/issues/269) |
+| Advanced kickoff/punt choices and punt/kickoff returns, Advanced III-IV | [RULE-032](https://github.com/rtulloh/bowl_bound/issues/270) |
+| Guaranteed in-bounds/out-of-bounds declarations, already requested | [RULE-010](https://github.com/rtulloh/bowl_bound/issues/248) |
 
 Other Milestone 22 work is mapped ticket by ticket below. These are existing
 coaching, API, CLI, development, flow, rules-correction, and presentation findings,
@@ -366,32 +366,32 @@ rather than additional advanced-option features.
 
 | Tracked change | Ticket |
 | --- | --- |
-| Engine-owned kneel-out safety query | [AI-011](issues/AI/AI-011.md) |
-| Score-, time-, chart-, and aggression-aware fourth-down and conversion coaching | [AI-012](issues/AI/AI-012.md) |
-| Urgency and lead protection in Easy/Medium play selection | [AI-013](issues/AI/AI-013.md) |
-| Situation-bucketed Hard repetition discount | [AI-014](issues/AI/AI-014.md) |
-| Easy/Medium defensive situational guards | [AI-015](issues/AI/AI-015.md) |
-| Baseline decision-policy safety and fallback reporting | [AI-016](issues/AI/AI-016.md) |
-| Preserve disabled choices and engine reasons in coached turns | [AI-017](issues/AI/AI-017.md) |
-| Post-game summary of computer call history | [AI-019](issues/AI/AI-019.md) |
-| Keep Hard coaching safe for engine-adjusted try spots | [AI-020](issues/AI/AI-020.md) |
-| Teach coaching policies to use Advanced II defenses | [AI-021](issues/AI/AI-021.md) |
-| Map coordinator errors to clear client responses | [API-002](issues/API/API-002.md) |
-| Bind games to control mode and make repeated coach posts safe | [API-003](issues/API/API-003.md) |
-| Improve terminal input errors, case handling, and paused-game loading | [CLI-044](issues/CLI/CLI-044.md) |
-| Remove obsolete manual-mode branches | [CLI-045](issues/CLI/CLI-045.md) |
-| Share return and recovery rule logic | [DEV-022](issues/DEV/DEV-022.md) |
-| Deduplicate team discovery and shared constants | [DEV-024](issues/DEV/DEV-024.md) |
-| Document a coaching play-test protocol | [DEV-028](issues/DEV/DEV-028.md) |
-| Remove unused synthetic-team color helper import | [DEV-051](issues/DEV/DEV-051.md) |
-| Preserve M19 save-digest compatibility after added actions | [DEV-052](issues/DEV/DEV-052.md) |
-| Correct kickoff status while receiver choice is pending | [FLOW-002](issues/FLOW/FLOW-002.md) |
-| Correct return-foul midpoint rounding | [RULE-012](issues/RULE/RULE-012.md) |
-| Distinguish end-zone return fumbles from non-advances | [RULE-013](issues/RULE/RULE-013.md) |
-| Correct return-penalty acceptance and end-zone reasoning | [RULE-014](issues/RULE/RULE-014.md) |
-| Correct end-zone trace labels and decline text | [RULE-015](issues/RULE/RULE-015.md) |
-| Deliver engine commentary and highlights to the browser | [UI-036](issues/UI/UI-036.md) |
-| Enable the Spike control and remove dead timeout mappings | [UI-037](issues/UI/UI-037.md) |
+| Engine-owned kneel-out safety query | [AI-011](https://github.com/rtulloh/bowl_bound/issues/13) |
+| Score-, time-, chart-, and aggression-aware fourth-down and conversion coaching | [AI-012](https://github.com/rtulloh/bowl_bound/issues/14) |
+| Urgency and lead protection in Easy/Medium play selection | [AI-013](https://github.com/rtulloh/bowl_bound/issues/15) |
+| Situation-bucketed Hard repetition discount | [AI-014](https://github.com/rtulloh/bowl_bound/issues/16) |
+| Easy/Medium defensive situational guards | [AI-015](https://github.com/rtulloh/bowl_bound/issues/17) |
+| Baseline decision-policy safety and fallback reporting | [AI-016](https://github.com/rtulloh/bowl_bound/issues/18) |
+| Preserve disabled choices and engine reasons in coached turns | [AI-017](https://github.com/rtulloh/bowl_bound/issues/19) |
+| Post-game summary of computer call history | [AI-019](https://github.com/rtulloh/bowl_bound/issues/21) |
+| Keep Hard coaching safe for engine-adjusted try spots | [AI-020](https://github.com/rtulloh/bowl_bound/issues/22) |
+| Teach coaching policies to use Advanced II defenses | [AI-021](https://github.com/rtulloh/bowl_bound/issues/23) |
+| Map coordinator errors to clear client responses | [API-002](https://github.com/rtulloh/bowl_bound/issues/44) |
+| Bind games to control mode and make repeated coach posts safe | [API-003](https://github.com/rtulloh/bowl_bound/issues/45) |
+| Improve terminal input errors, case handling, and paused-game loading | [CLI-044](https://github.com/rtulloh/bowl_bound/issues/71) |
+| Remove obsolete manual-mode branches | [CLI-045](https://github.com/rtulloh/bowl_bound/issues/72) |
+| Share return and recovery rule logic | [DEV-022](https://github.com/rtulloh/bowl_bound/issues/146) |
+| Deduplicate team discovery and shared constants | [DEV-024](https://github.com/rtulloh/bowl_bound/issues/148) |
+| Document a coaching play-test protocol | [DEV-028](https://github.com/rtulloh/bowl_bound/issues/152) |
+| Remove unused synthetic-team color helper import | [DEV-051](https://github.com/rtulloh/bowl_bound/issues/175) |
+| Preserve M19 save-digest compatibility after added actions | [DEV-052](https://github.com/rtulloh/bowl_bound/issues/176) |
+| Correct kickoff status while receiver choice is pending | [FLOW-002](https://github.com/rtulloh/bowl_bound/issues/214) |
+| Correct return-foul midpoint rounding | [RULE-012](https://github.com/rtulloh/bowl_bound/issues/250) |
+| Distinguish end-zone return fumbles from non-advances | [RULE-013](https://github.com/rtulloh/bowl_bound/issues/251) |
+| Correct return-penalty acceptance and end-zone reasoning | [RULE-014](https://github.com/rtulloh/bowl_bound/issues/252) |
+| Correct end-zone trace labels and decline text | [RULE-015](https://github.com/rtulloh/bowl_bound/issues/253) |
+| Deliver engine commentary and highlights to the browser | [UI-036](https://github.com/rtulloh/bowl_bound/issues/306) |
+| Enable the Spike control and remove dead timeout mappings | [UI-037](https://github.com/rtulloh/bowl_bound/issues/307) |
 
 ### Ticket coverage reconciliation — 2026-11-01
 

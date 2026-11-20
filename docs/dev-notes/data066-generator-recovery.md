@@ -1942,14 +1942,14 @@ The package remains a source/runtime validation artifact, not a published app.
 The current frontend dependency audit fails with 13 high findings rooted in
 picomatch GHSA-fc5q-39xc-vjpf. Both host and Linux reproduce it on unchanged
 lockfile bytes; the earlier zero-finding response is retained as earlier evidence,
-not current acceptance. [DEV-087](issues/DEV/DEV-087.md) records the unpatched
+not current acceptance. [DEV-087](https://github.com/rtulloh/bowl_bound/issues/207) records the unpatched
 upstream advisory and required remediation. No exclusion or forced downgrade
 is introduced. This failure blocks an all-green release gate and the existing
 test-gated native workflow.
 
 Frontend 197-test success retains 91 React `act` warnings and two duplicate-key
 warnings: PlayLog's existing DEV-064 warning and ChartGrid's separately tracked
-[DEV-088](issues/DEV/DEV-088.md) follow-up. The existing `act` warning is DEV-044.
+[DEV-088](https://github.com/rtulloh/bowl_bound/issues/208) follow-up. The existing `act` warning is DEV-044.
 The deprecated `whatwg-encoding` notice and disabled unwritable host pip cache
 are also retained. Linux setup emits optional manpage/combined-certificate rehash
 notices; browser downloads still verify TLS using the explicit CA bundle.

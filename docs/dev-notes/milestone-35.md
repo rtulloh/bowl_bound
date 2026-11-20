@@ -19,13 +19,13 @@ options remain outside scope.
 
 On 2026-11-03 the owner requested scheduling the missing halftime announcement
 and summary in the next milestone. Milestone 35 is the next planned gameplay
-milestone after the active M33/M34 workstreams, so [CLI-058](issues/CLI/CLI-058.md)
+milestone after the active M33/M34 workstreams, so [CLI-058](https://github.com/rtulloh/bowl_bound/issues/85)
 moves here from M23. Include a visible one-time first-half recap before the
 scheduled second-half kickoff, including automatic computer-owned kickoff paths.
 This scheduling change implements no behavior and moves no other CLI backlog.
 
 The owner subsequently requested the same transition in the web UI.
-[UI-058](issues/UI/UI-058.md) adds a distinct browser halftime presentation and
+[UI-058](https://github.com/rtulloh/bowl_bound/issues/328) adds a distinct browser halftime presentation and
 reviewable first-half recap to this milestone alongside CLI-058. Ensure a
 computer-owned second-half kickoff cannot immediately replace or bypass it.
 

@@ -1,8 +1,8 @@
 # Milestone 37 — downloadable support reports
 
 Status: planned; owner requested a ticket, not immediate implementation.
-Tracked work: [UI-056](issues/UI/UI-056.md) and
-[UI-057](issues/UI/UI-057.md).
+Tracked work: [UI-056](https://github.com/rtulloh/bowl_bound/issues/326) and
+[UI-057](https://github.com/rtulloh/bowl_bound/issues/327).
 
 Provide a Download support log action and an email-compose link to the existing
 public contact, `bowlboundsupport@gmail.com`. A user should be able to review the

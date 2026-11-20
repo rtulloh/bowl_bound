@@ -10,16 +10,16 @@ that any Milestone 44 acceptance criterion is complete.
 
 ## Scope
 
-- [UI-070](issues/UI/UI-070.md): independent home/away year and team selection,
+- [UI-070](https://github.com/rtulloh/bowl_bound/issues/340): independent home/away year and team selection,
   season-qualified identities, backend-provided home-season rules visibility,
   actionable unsupported-profile errors and save/load preservation.
-- [UI-071](issues/UI/UI-071.md): the setup UI design in
+- [UI-071](https://github.com/rtulloh/bowl_bound/issues/341): the setup UI design in
   [cross-season team selection design](cross-season-team-selection-design.md),
   with the owner-reviewed static preview at
   [mockups/cross-season-setup.html](mockups/cross-season-setup.html).
-- [UI-009](issues/UI/UI-009.md): season-qualified in-game team labels, which
+- [UI-009](https://github.com/rtulloh/bowl_bound/issues/292): season-qualified in-game team labels, which
   cross-season matchups make necessary for same-school/different-year games.
-- [DATA-066](issues/DATA/DATA-066.md): add the 52 generated 2002 teams so
+- [DATA-066](https://github.com/rtulloh/bowl_bound/issues/119): add the 52 generated 2002 teams so
   cross-season play has a second full cohort. **Blocked:** the existing 2002
   bundles came from the older `college-chartgen-v1` pipeline and fail the
   release audit (0/52 pass tactical contrast; two teams have fully blank
@@ -35,8 +35,8 @@ extension and is not part of 1.1.0 unless separately approved.
 
 ## Explicitly out of scope
 
-- Milestone 43 persistent played-season statistics ([DATA-065](issues/DATA/DATA-065.md)).
-- Milestone 45 simulation-improvement measurement ([DEV-080](issues/DEV/DEV-080.md)).
+- Milestone 43 persistent played-season statistics ([DATA-065](https://github.com/rtulloh/bowl_bound/issues/118)).
+- Milestone 45 simulation-improvement measurement ([DEV-080](https://github.com/rtulloh/bowl_bound/issues/201)).
 - New seasons beyond the 2002 generated cohort tracked by DATA-066, other new
   chart generation, chart-rights changes or private-data distribution.
 - Version metadata changes, native builds, tags or publication. Those happen in

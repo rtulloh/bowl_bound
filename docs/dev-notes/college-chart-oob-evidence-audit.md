@@ -1,7 +1,7 @@
 # Generated OOB evidence correction — DATA-039
 
 Owner reported near-universal OOB stars on ordinary generated offensive cells.
-Tracked in [DATA-039](issues/DATA/DATA-039.md), Milestone 34a. Investigation and
+Tracked in [DATA-039](https://github.com/rtulloh/bowl_bound/issues/101), Milestone 34a. Investigation and
 repair are isolated from the owner checkout, release worktrees and canonical
 retained charts. Prior completed-game accounting audits do not establish that
 source OOB distributions were correctly encoded.

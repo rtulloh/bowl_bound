@@ -1,8 +1,8 @@
 # M34a generated-chart publication gate — DATA-041
 
 Owner requires defects such as the neutral all-equal defensive cohort to fail
-before publication. [DATA-041](issues/DATA/DATA-041.md) tracks the durable gate;
-[DATA-040](issues/DATA/DATA-040.md) tracks the model correction itself. This phase
+before publication. [DATA-041](https://github.com/rtulloh/bowl_bound/issues/103) tracks the durable gate;
+[DATA-040](https://github.com/rtulloh/bowl_bound/issues/102) tracks the model correction itself. This phase
 does not change chart coefficients, football rules, historical source material or
 the existing OOB correction. No private generator dependency enters public code.
 

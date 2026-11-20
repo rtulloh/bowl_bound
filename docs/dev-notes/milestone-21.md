@@ -332,8 +332,8 @@ No milestone commit, push, publication or next-milestone work was performed.
 Owner requested a full review of every milestone since the last one (18a, 19,
 20, 20a, 21) with a Paydirt consultation. Record: [full-review-2026-10-27.md](full-review-2026-10-27.md).
 Forty tickets were opened. Two block this milestone's acceptance as High:
-[AI-003](issues/AI/AI-003.md) (Hard utility never punts; root cause of the audit
-observation previously recorded as a limitation) and [AI-004](issues/AI/AI-004.md)
+[AI-003](https://github.com/rtulloh/bowl_bound/issues/5) (Hard utility never punts; root cause of the audit
+observation previously recorded as a limitation) and [AI-004](https://github.com/rtulloh/bowl_bound/issues/6)
 (tries evaluated as scrimmage). Also required before the milestone commit:
 AI-005, AI-006, AI-009, CLI-042, CLI-043, DEV-025 and the commit split in DEV-026.
 The Milestone 21 acceptance claim above is withdrawn until these are resolved and

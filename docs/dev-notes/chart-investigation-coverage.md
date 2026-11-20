@@ -4,20 +4,20 @@ Reviewed 2026-11-07 against the owner's chart-generation, benchmark, season-vali
 
 | Question | Accountable ticket(s) |
 | --- | --- |
-| Can automated qualification carry the load without community feedback, and catch clustering of any outcome family? | [DATA-045](issues/DATA/DATA-045.md) |
-| How do generated charts compare with authorized 2007/2008 developer references, and transfer to seasons without a baseline? | [DATA-046](issues/DATA/DATA-046.md), [DATA-045](issues/DATA/DATA-045.md) |
-| Can missing teams, failed games, pooled averages or weak precision hide a bad result? | [DATA-048](issues/DATA/DATA-048.md) |
-| Are field-goal outcomes accurate for supported distances and attempt populations? | [DATA-049](issues/DATA/DATA-049.md) |
-| Do complete games and repeated actual seasons reflect team strengths, weaknesses and plausible postseason outcomes under baseline and Hard policies? | [DATA-053](issues/DATA/DATA-053.md) |
-| Does the selected year use actual regular fixtures and declared postseason rules, with historical-only assessment when no developer charts exist? | [DATA-054](issues/DATA/DATA-054.md) |
-| Is every event independently accounted for, including QT classification and the known kickoff-return fumble recovery-draw observer gap? | [DATA-055](issues/DATA/DATA-055.md) |
-| Are missing opponents, fixtures, source coverage, codecs and crosswalks qualified before full-season campaigns? | [DATA-056](issues/DATA/DATA-056.md) |
-| Are source phase overrides, loaded runtime identity and versioned coaching menus trustworthy? | [DATA-057](issues/DATA/DATA-057.md), [DATA-058](issues/DATA/DATA-058.md), [DATA-059](issues/DATA/DATA-059.md) |
-| Are formation event budgets, retained INT stripes, conditional depths and authored priors justified beyond visual variety? | [DATA-060](issues/DATA/DATA-060.md) |
-| Does a genuine pooled interception depth support its assignment to Screen or another particular passing play? | [DATA-064](issues/DATA/DATA-064.md), required next-release correction in [Milestone 42](milestone-42.md) |
-| When should rare defensive (B) cells be awarded, and what exact probability/tail effects follow? | [DATA-063](issues/DATA/DATA-063.md) |
-| Which recent and legacy years have enough lawful, reliable source support? | [DATA-037](issues/DATA/DATA-037.md) |
-| How should the AI value a penalty that repeats a two-point try? | [AI-034](issues/AI/AI-034.md) |
+| Can automated qualification carry the load without community feedback, and catch clustering of any outcome family? | [DATA-045](https://github.com/rtulloh/bowl_bound/issues/104) |
+| How do generated charts compare with authorized 2007/2008 developer references, and transfer to seasons without a baseline? | [DATA-046](https://github.com/rtulloh/bowl_bound/issues/105), [DATA-045](https://github.com/rtulloh/bowl_bound/issues/104) |
+| Can missing teams, failed games, pooled averages or weak precision hide a bad result? | [DATA-048](https://github.com/rtulloh/bowl_bound/issues/106) |
+| Are field-goal outcomes accurate for supported distances and attempt populations? | [DATA-049](https://github.com/rtulloh/bowl_bound/issues/107) |
+| Do complete games and repeated actual seasons reflect team strengths, weaknesses and plausible postseason outcomes under baseline and Hard policies? | [DATA-053](https://github.com/rtulloh/bowl_bound/issues/108) |
+| Does the selected year use actual regular fixtures and declared postseason rules, with historical-only assessment when no developer charts exist? | [DATA-054](https://github.com/rtulloh/bowl_bound/issues/109) |
+| Is every event independently accounted for, including QT classification and the known kickoff-return fumble recovery-draw observer gap? | [DATA-055](https://github.com/rtulloh/bowl_bound/issues/110) |
+| Are missing opponents, fixtures, source coverage, codecs and crosswalks qualified before full-season campaigns? | [DATA-056](https://github.com/rtulloh/bowl_bound/issues/111) |
+| Are source phase overrides, loaded runtime identity and versioned coaching menus trustworthy? | [DATA-057](https://github.com/rtulloh/bowl_bound/issues/112), [DATA-058](https://github.com/rtulloh/bowl_bound/issues/113), [DATA-059](https://github.com/rtulloh/bowl_bound/issues/114) |
+| Are formation event budgets, retained INT stripes, conditional depths and authored priors justified beyond visual variety? | [DATA-060](https://github.com/rtulloh/bowl_bound/issues/115) |
+| Does a genuine pooled interception depth support its assignment to Screen or another particular passing play? | [DATA-064](https://github.com/rtulloh/bowl_bound/issues/117), required next-release correction in [Milestone 42](milestone-42.md) |
+| When should rare defensive (B) cells be awarded, and what exact probability/tail effects follow? | [DATA-063](https://github.com/rtulloh/bowl_bound/issues/116) |
+| Which recent and legacy years have enough lawful, reliable source support? | [DATA-037](https://github.com/rtulloh/bowl_bound/issues/100) |
+| How should the AI value a penalty that repeats a two-point try? | [AI-034](https://github.com/rtulloh/bowl_bound/issues/36) |
 
 The rare defensive (B) question is analysis first. No implementation or new regeneration is implied by this inventory. Razzle-Dazzle is an artificial engine action, not a source chart play family. Keep source, chart lookup, Priority, terminal outcome, policy exposure and historical-fit claims distinct.
 

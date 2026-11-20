@@ -1,8 +1,8 @@
 # Cross-season team selection — web UI design
 
 Status: implemented through phase 4, 2026-11-16.
-Tickets: [UI-071](issues/UI/UI-071.md) (this design), [UI-070](issues/UI/UI-070.md)
-(cross-year matchup behavior and home-season rules), [UI-009](issues/UI/UI-009.md)
+Tickets: [UI-071](https://github.com/rtulloh/bowl_bound/issues/341) (this design), [UI-070](https://github.com/rtulloh/bowl_bound/issues/340)
+(cross-year matchup behavior and home-season rules), [UI-009](https://github.com/rtulloh/bowl_bound/issues/292)
 (season-qualified in-game identities).
 Milestone: [44](milestone-44.md).
 

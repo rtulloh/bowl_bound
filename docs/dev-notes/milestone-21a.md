@@ -43,15 +43,15 @@ Retain the owner’s Paydirt reference command for comparative local play-testin
 
 | Order | Ticket | Deliverable | Prerequisites |
 | --- | --- | --- | --- |
-| 1 | [DEV-030](issues/DEV/DEV-030.md) | Reviewed actor/narration, deterministic-index and save/privacy contract | None |
-| 2 | [FLOW-003](issues/FLOW/FLOW-003.md) | Engine-owned run/pass narration and generic fallbacks | DEV-030 |
-| 3 | [FLOW-004](issues/FLOW/FLOW-004.md) | Supported kick/return/turnover narration; truthful pending/chained outcomes | DEV-030, FLOW-003 |
-| 3 | [FLOW-005](issues/FLOW/FLOW-005.md) | Optional team roster context for CLI/API new/load lifecycles | DEV-030, FLOW-003 |
-| 4 | [DEV-031](issues/DEV/DEV-031.md) | Pre-commentary save compatibility and exact gameplay/coaching continuation | FLOW-003, FLOW-004, FLOW-005 |
-| 5 | [API-004](issues/API/API-004.md) | Serialize engine narration consistently in reports and logs | DEV-031 |
-| 5 | [CLI-036](issues/CLI/CLI-036.md) (existing) | Synthetic roster fixtures and terminal named/generic play-test | DEV-031 for terminal integration; fixture checks may precede engine work |
-| 6 | [UI-039](issues/UI/UI-039.md) | Browser live/log display, safe rendering and real-engine tests | API-004 |
-| 7 | [DEV-032](issues/DEV/DEV-032.md) | Paired determinism audit, docs, privacy review and final acceptance evidence | CLI-036, UI-039, all preceding work |
+| 1 | [DEV-030](https://github.com/rtulloh/bowl_bound/issues/154) | Reviewed actor/narration, deterministic-index and save/privacy contract | None |
+| 2 | [FLOW-003](https://github.com/rtulloh/bowl_bound/issues/215) | Engine-owned run/pass narration and generic fallbacks | DEV-030 |
+| 3 | [FLOW-004](https://github.com/rtulloh/bowl_bound/issues/216) | Supported kick/return/turnover narration; truthful pending/chained outcomes | DEV-030, FLOW-003 |
+| 3 | [FLOW-005](https://github.com/rtulloh/bowl_bound/issues/217) | Optional team roster context for CLI/API new/load lifecycles | DEV-030, FLOW-003 |
+| 4 | [DEV-031](https://github.com/rtulloh/bowl_bound/issues/155) | Pre-commentary save compatibility and exact gameplay/coaching continuation | FLOW-003, FLOW-004, FLOW-005 |
+| 5 | [API-004](https://github.com/rtulloh/bowl_bound/issues/46) | Serialize engine narration consistently in reports and logs | DEV-031 |
+| 5 | [CLI-036](https://github.com/rtulloh/bowl_bound/issues/63) (existing) | Synthetic roster fixtures and terminal named/generic play-test | DEV-031 for terminal integration; fixture checks may precede engine work |
+| 6 | [UI-039](https://github.com/rtulloh/bowl_bound/issues/309) | Browser live/log display, safe rendering and real-engine tests | API-004 |
+| 7 | [DEV-032](https://github.com/rtulloh/bowl_bound/issues/156) | Paired determinism audit, docs, privacy review and final acceptance evidence | CLI-036, UI-039, all preceding work |
 
 Metadata links are reciprocal related-ticket references, not a directed graph;
 the prerequisite column and each task’s Execution order define dependencies.

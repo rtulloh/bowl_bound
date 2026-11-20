@@ -56,7 +56,7 @@ play-testing and the milestone commit remain pending.
 ## Owner web play-test feedback before CLI implementation
 
 The owner also requested the immediate web control simplification tracked in
-[UI-019](issues/UI/UI-019.md): remove routine Pause/Resume, in-game control mode
+[UI-019](https://github.com/rtulloh/bowl_bound/issues/302): remove routine Pause/Resume, in-game control mode
 and Snap controls, submit plays on selection, and move new/save/load to a compact
 header menu. This is a focused play-testing follow-up under 20a, not a reopening
 of completed Milestone 20 or a claim that CLI implementation is complete.
@@ -70,7 +70,7 @@ row. OOB and IB are visible but disabled. Their owner-approved interaction is
 mutually exclusive and per-play, resetting afterward; only no-huddle/hurry mode
 persists. Actual declaration rules (Advanced I-4(C), I-6(C)), costs, exceptions,
 timing and save/trace/coaching support remain separate advanced engine work in
-[RULE-010](issues/RULE/RULE-010.md), milestone 22. This UI follow-up does not
+[RULE-010](https://github.com/rtulloh/bowl_bound/issues/248), milestone 22. This UI follow-up does not
 implement or claim acceptance of those rules or the CLI.
 
 Owner feedback also splits the opening toss into its own pre-play screen using
@@ -215,7 +215,7 @@ remains open; no claim that the full frontend dependency audit passes.
 
 ## UI-only event emphasis and issue reconciliation (2026-10-27)
 
-[UI-022](issues/UI/UI-022.md) removes pale compact-dice text and adds high-contrast
+[UI-022](https://github.com/rtulloh/bowl_bound/issues/305) removes pale compact-dice text and adds high-contrast
 textual badges in the latest result and play log, using only existing structured
 outcomes, interception credit and recorded procedure sections. Fumble/touchback
 can be emphasized together; pending interceptions remain decisions, breakaway
@@ -226,9 +226,9 @@ the owner's UI-only correction; the synthetic turnover test verifies unchanged
 behavior and no extra rolls. The original dice contrast regression measured
 1.1299:1 and failed the 4.5 minimum before the fix.
 
-[DEV-017](issues/DEV/DEV-017.md) records owner-approved npm/Playwright permissions
+[DEV-017](https://github.com/rtulloh/bowl_bound/issues/141) records owner-approved npm/Playwright permissions
 and trusted private test-workspace access in project-local OpenCode V2 config.
-[DEV-018](issues/DEV/DEV-018.md) records the always-file-issues requirement and
+[DEV-018](https://github.com/rtulloh/bowl_bound/issues/142) records the always-file-issues requirement and
 recent-fix reconciliation, including stale UI-010/014/017 statuses. Existing
 resolved tickets were reused; partial or unrelated requests remain open.
 

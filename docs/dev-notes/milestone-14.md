@@ -48,10 +48,10 @@ final-try eligibility, or overtime restriction was added; those are Milestones 1
 Carried kickoff penalties are recorded, not yet marked against a scheduled kickoff.
 Advanced blocked-PAT options remain unavailable. Existing ordinary variable-yardage
 and turnover-return limitations are not silently rerolled or treated as zero.
-[RULE-001](issues/RULE/RULE-001.md) records inherited turnover-chain edge cases for
+[RULE-001](https://github.com/rtulloh/bowl_bound/issues/239) records inherited turnover-chain edge cases for
 Milestone 15 hardening; the conversion tests do not claim to cover those rare paths.
 
-[FLOW-001](issues/FLOW/FLOW-001.md) tracks the premature Final wording; the general
+[FLOW-001](https://github.com/rtulloh/bowl_bound/issues/213) tracks the premature Final wording; the general
 usability findings and user-requested labels remain assigned to Milestone 19.
 The running manual-test backend was not restarted because its sessions are in memory.
 

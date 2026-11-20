@@ -5,7 +5,7 @@
 Build a reproducible, local-only 12-game-per-team season audit for imported Bowl Bound
 teams. Keep seasons separate, use the production game and coaching paths, and place
 detailed logs under ignored `private-data/`. The runner must not run in CI or be included
-in app packages. See [DEV-007](issues/DEV/DEV-007.md).
+in app packages. See [DEV-007](https://github.com/rtulloh/bowl_bound/issues/131).
 
 ## Paydirt consultation — 2026-10-31
 

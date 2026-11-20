@@ -1,8 +1,8 @@
 # Web play-test follow-ups — 2026-11-03
 
 Owner review of the M33 candidate identified missing special-team results in play
-history ([UI-054](issues/UI/UI-054.md)) and duplicated timeout counts on buttons
-([UI-055](issues/UI/UI-055.md)). These are independently testable follow-ups;
+history ([UI-054](https://github.com/rtulloh/bowl_bound/issues/324)) and duplicated timeout counts on buttons
+([UI-055](https://github.com/rtulloh/bowl_bound/issues/325)). These are independently testable follow-ups;
 neither is evidence of completed milestone acceptance.
 
 ## Paydirt consultation

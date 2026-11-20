@@ -12,7 +12,7 @@ Release identity: Python `0.1.0a5`, public `0.1.0-alpha.5`. The intended immutab
 tag is `v0.1.0-alpha.5`; it has not been created. Remote tag availability must
 be verified after connectivity is restored. Do not delete or reuse any tag.
 
-Tracking: [DEV-068](issues/DEV/DEV-068.md). This is preparation, not a completed
+Tracking: [DEV-068](https://github.com/rtulloh/bowl_bound/issues/190). This is preparation, not a completed
 release or a replacement for earlier milestone acceptance checkpoints.
 
 At the owner's explicit request, a persistent release goal now tracks this full
@@ -96,7 +96,7 @@ is denied with EPERM. These failures precede launcher behavior and reproduce the
 same environment restriction as the frontend real-API tests; they remain failed
 checks and are not skipped. The changed version assertions pass.
 
-The exact-stage build exposed [DEV-069](issues/DEV/DEV-069.md): the allowlist
+The exact-stage build exposed [DEV-069](https://github.com/rtulloh/bowl_bound/issues/191): the allowlist
 omitted `HalftimeReview.jsx`, although App imports it. A new staged-local-import
 regression fails on precisely that missing component before adding its exact
 manifest entry. All 40 packaging cases then pass. A new metadata, player-doc,

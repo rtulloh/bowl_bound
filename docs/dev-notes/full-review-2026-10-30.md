@@ -43,24 +43,24 @@ No Paydirt code, chart data or runtime dependency was added.
 
 | Ticket | Priority | Finding / suggested change |
 | --- | --- | --- |
-| [IMPORT-003](issues/IMPORT/IMPORT-003.md) | High | Reject every PDF sharing a canonical team key; the current test asserts the first-winner defect. |
-| [IMPORT-004](issues/IMPORT/IMPORT-004.md) | Medium | Share side-effect-free destination preflight between dry-run and export; simplify planning with typed records. |
-| [IMPORT-005](issues/IMPORT/IMPORT-005.md) | High | Use safe owned error types/reason codes instead of printing arbitrary ValueError/OSError messages. |
-| [IMPORT-006](issues/IMPORT/IMPORT-006.md) | Medium | Refuse symlinked input directories and require a file argument for inspection. |
-| [DEV-045](issues/DEV/DEV-045.md) | Medium | Provide one short player quick start; move optional setup and technical importer detail to references. |
-| [DEV-046](issues/DEV/DEV-046.md) | Low | Remove version/profile/tag and coaching-weight internals from player explanations. |
-| [DEV-047](issues/DEV/DEV-047.md) | Medium | Print/open a URL that matches the explicit bound host. |
-| [DEV-048](issues/DEV/DEV-048.md) | Low | Share launcher policy while preserving intentional API-only and production differences. |
-| [DEV-049](issues/DEV/DEV-049.md) | Medium | Reject manifests that omit required sample/runtime components, even when the remaining hashes agree. |
-| [DEV-043](issues/DEV/DEV-043.md) | Medium | Exercise release CLI/refusal paths and enforce separate packaging coverage in cumulative checks. |
-| [DEV-044](issues/DEV/DEV-044.md) | Medium | Await React coaching updates through their visible result; remove act warnings without suppression. |
+| [IMPORT-003](https://github.com/rtulloh/bowl_bound/issues/222) | High | Reject every PDF sharing a canonical team key; the current test asserts the first-winner defect. |
+| [IMPORT-004](https://github.com/rtulloh/bowl_bound/issues/223) | Medium | Share side-effect-free destination preflight between dry-run and export; simplify planning with typed records. |
+| [IMPORT-005](https://github.com/rtulloh/bowl_bound/issues/224) | High | Use safe owned error types/reason codes instead of printing arbitrary ValueError/OSError messages. |
+| [IMPORT-006](https://github.com/rtulloh/bowl_bound/issues/225) | Medium | Refuse symlinked input directories and require a file argument for inspection. |
+| [DEV-045](https://github.com/rtulloh/bowl_bound/issues/169) | Medium | Provide one short player quick start; move optional setup and technical importer detail to references. |
+| [DEV-046](https://github.com/rtulloh/bowl_bound/issues/170) | Low | Remove version/profile/tag and coaching-weight internals from player explanations. |
+| [DEV-047](https://github.com/rtulloh/bowl_bound/issues/171) | Medium | Print/open a URL that matches the explicit bound host. |
+| [DEV-048](https://github.com/rtulloh/bowl_bound/issues/172) | Low | Share launcher policy while preserving intentional API-only and production differences. |
+| [DEV-049](https://github.com/rtulloh/bowl_bound/issues/173) | Medium | Reject manifests that omit required sample/runtime components, even when the remaining hashes agree. |
+| [DEV-043](https://github.com/rtulloh/bowl_bound/issues/167) | Medium | Exercise release CLI/refusal paths and enforce separate packaging coverage in cumulative checks. |
+| [DEV-044](https://github.com/rtulloh/bowl_bound/issues/168) | Medium | Await React coaching updates through their visible result; remove act warnings without suppression. |
 
 All 11 new tickets were created with `scripts/create_issue.py:create_issue`.
 Importer work belongs to milestone 25; alpha fixes/docs to unfinished milestone
 24; general frontend test hygiene to milestone 23. Each ticket has concrete
 acceptance checks. No ticket is marked resolved from an uncommitted review.
 
-Existing [IMPORT-002](issues/IMPORT/IMPORT-002.md) was updated and raised to High:
+Existing [IMPORT-002](https://github.com/rtulloh/bowl_bound/issues/221) was updated and raised to High:
 two reproduced rollback failures leave earlier files replaced after an import
 fails. Reuse that ticket instead of duplicating its existing rollback scope.
 The suggested simplification is a byte-oriented atomic-write helper plus

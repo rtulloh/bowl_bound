@@ -1,7 +1,7 @@
 # Milestone 43 — Persistent player-season team statistics
 
 Status: backlog, planning only, 2026-11-07.
-Ticket: [DATA-065](issues/DATA/DATA-065.md), Medium priority.
+Ticket: [DATA-065](https://github.com/rtulloh/bowl_bound/issues/118), Medium priority.
 
 The owner wants to watch teams' performance accumulate over a season. Deliver a
 persistent played-season record with completed game history, team records,
