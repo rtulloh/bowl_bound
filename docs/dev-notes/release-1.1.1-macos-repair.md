@@ -373,3 +373,51 @@ existing Terminal using AppleScript could start it after a race; all Automation
 requests were removed. Focused diagnostic/workflow/DMG/docs/issue checks: 53
 passed. This checkpoint adds diagnostic tooling only; release payloads, football
 rules, charts, runtime manifest and source guard are unchanged.
+
+
+### 2026-11-20 — bounded diagnostic evidence correction
+
+Instrumented run `44703619086` reproduced the Intel Finder timeout while
+Apple Silicon and Windows passed. Its retained copied payload matches all
+1,228 ZIP files byte for byte; all four startup files are executable and the
+binary is x86_64. No quarantine attribute is present. The console belongs to
+the runner and Terminal has a login-shell descendant, but no payload process is
+observed. These facts do not establish a cause or justify changing the launcher,
+startup timeout, permissions, runner or release platforms.
+
+The first collector truncated the mixed system log to its final 64 KiB,
+discarding the initial startup interval. A bounded collector-only correction
+queries Terminal and LaunchServices separately over five minutes, retains both
+ends within a 1 MiB budget per stream, and records original/omitted lengths and
+retained ranges. Immediately on entry it snapshots Terminal's observed process
+chain, queries arguments only for those at most 64 PIDs, and requests a hosted
+screen capture. Capture times, elapsed deltas and denied/error outcomes remain
+explicit. The screenshot does not request Automation, alter permissions or
+interact with the UI. It may be unavailable and is never a launch pass.
+
+No payload or launcher trace overlay is added. Compiled source remains qualified
+main `443d825`; diagnostic workflow/helper identity is recorded separately. A
+materially improved instrumented investigation requires review and a fresh full
+source regression before push. No new qualification retry or publication occurs
+at this checkpoint. Root and an independent reader reviewed the first native
+facts; the original failed evidence is preserved privately.
+
+Paydirt reconsulted: `scripts/smoke_published_app.py:117-150` and
+`docs/dev-notes/release-1.10.3-validation.md`. Adapt external screenshot/evidence
+retention and separate publication claims, without reusing its prior exception.
+Three new synthetic assertions failed first for separated logs, truncation and
+bounded descendants; two further assertions failed for both-end retention and
+entry-time capture. Focused collector/workflow checks then passed: 29 tests.
+No local screen capture or native launch is exercised by these tests.
+
+
+Root review added two evidence safeguards before freezing: targeted process
+arguments use `ps -ww`, and command timeouts preserve decoded bounded partial
+stdout/stderr with explicit incomplete/timed-out status. Both regressions failed
+first, then passed; a successful mocked screenshot also verifies its saved path
+and SHA-256. Final focused cumulative check: 60 passed; changed-file Ruff/format
+and Pyright pass. The preceding diagnostic identity `2b099a4` independently
+passed all ten full local stages (7,100 Python, 200 frontend, 72 browser tests,
+171-team audit; 90.53% coverage), with npm deprecation and Node color warnings
+preserved. Those results do not qualify this changed collector; run its own
+fresh full gate before push. No local desktop snapshot or native launch.
