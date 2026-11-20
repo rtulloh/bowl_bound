@@ -220,3 +220,51 @@ def test_windows_ctrl_break_is_clean_and_previous_handler_is_restored(
         else:
             assert launcher.main(["--no-browser", "--port", str(port)]) == 0
     assert handlers[sigbreak] == signal.SIG_DFL
+
+
+@pytest.mark.parametrize("args", [[], ["--no-browser"]])
+def test_windows_terms_decline_prevents_all_server_and_browser_startup(
+    resources: Path, args: list[str]
+) -> None:
+    with (
+        patch.object(launcher, "resource_root", return_value=resources),
+        patch("backend.windows_terms.required", return_value=True),
+        patch("backend.windows_terms.ensure_accepted", return_value=False) as consent,
+        patch("socket.create_server") as listener,
+        patch("uvicorn.Server") as server,
+        patch("webbrowser.open") as browser,
+    ):
+        assert launcher.main(args) == 1
+    consent.assert_called_once_with(resources, None)
+    listener.assert_not_called()
+    server.assert_not_called()
+    browser.assert_not_called()
+
+
+def test_windows_explicit_acceptance_hash_reaches_gate_before_start(resources: Path) -> None:
+    with (
+        patch.object(launcher, "resource_root", return_value=resources),
+        patch("backend.windows_terms.required", return_value=True),
+        patch("backend.windows_terms.ensure_accepted", return_value=True) as consent,
+        patch("socket.create_server"),
+        patch("uvicorn.Server"),
+    ):
+        assert launcher.main(["--no-browser", "--accept-windows-runtime-terms", "synthetic"]) == 0
+    consent.assert_called_once_with(resources, "synthetic")
+
+
+def test_show_windows_terms_does_not_start_or_accept(
+    resources: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    with (
+        patch.object(launcher, "resource_root", return_value=resources),
+        patch("backend.windows_terms.reviewed_text", return_value="Synthetic reviewed terms"),
+        patch("backend.windows_terms.ensure_accepted") as consent,
+        patch("socket.create_server") as listener,
+        patch("webbrowser.open") as browser,
+    ):
+        assert launcher.main(["--show-windows-runtime-terms"]) == 0
+    assert "Synthetic reviewed terms" in capsys.readouterr().out
+    consent.assert_not_called()
+    listener.assert_not_called()
+    browser.assert_not_called()

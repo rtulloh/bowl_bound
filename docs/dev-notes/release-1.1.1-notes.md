@@ -26,6 +26,9 @@ Portable ZIPs are secondary alternatives:
 [Apple Silicon](https://github.com/rtulloh/bowl_bound/releases/download/v1.1.1/BowlBound-1.1.1-macos-arm64.zip),
 [Intel Mac](https://github.com/rtulloh/bowl_bound/releases/download/v1.1.1/BowlBound-1.1.1-macos-x86_64.zip).
 
+Windows downloads include a required agreement to the bundled Windows runtime
+conditions before first play; declining stops startup.
+
 This patch retains the existing teams, charts, football rules and saves.
 See [installation](https://github.com/rtulloh/bowl_bound/blob/v1.1.1/docs/installation.md)
 and [release notes](https://github.com/rtulloh/bowl_bound/blob/v1.1.1/RELEASE_NOTES.md).

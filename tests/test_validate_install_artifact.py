@@ -78,10 +78,17 @@ def complete_smoke(
     check_ui: Callable[[str], None],
     log_path: Path,
     expected_catalog: frozenset[str],
+    expected_terms_sha256: str | None = None,
+    runtime_terms_sha256: str | None = None,
 ) -> None:
     """Simulate a native helper that completed its required live browser callback."""
     log_path.write_text("healthy server")
     check_ui("http://localhost")
+    terms = runtime_terms_sha256 or expected_terms_sha256
+    if terms:
+        (log_path.parent / "windows-runtime-terms-gui.json").write_text(
+            json.dumps({"status": "passed", "terms_sha256": terms, "scope": "synthetic native GUI"})
+        )
 
 
 def test_verified_download_launches_extracted_app_with_browser_and_persistent_log(
@@ -584,3 +591,106 @@ def test_published_dmg_uses_mounted_app_validation(
     assert validator.validate(dmg, metadata, TAG, "macos-arm64", report) == 0
     probe.assert_called_once()
     assert "mounted" in json.loads(report.read_text())["launch_method"].lower()
+
+
+@pytest.mark.parametrize("native", [False, True])
+def test_windows_portable_smoke_passes_exact_terms_hash_and_isolates_receipt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, native: bool
+) -> None:
+    terms = b"Synthetic reviewed runtime terms"
+    digest = hashlib.sha256(terms).hexdigest()
+    files = synthetic_inventory()
+    for name in ("WINDOWS-RUNTIME-TERMS.txt", "_internal/WINDOWS-RUNTIME-TERMS.txt"):
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(terms)
+        files[name] = digest
+    (tmp_path / "ARTIFACT-MANIFEST.json").write_text(
+        json.dumps({"files": files, "version": "1.1.1", "target": "windows-x64"})
+    )
+    monkeypatch.setenv("LOCALAPPDATA", "/real-user-profile")
+    import os
+    from types import SimpleNamespace
+
+    from scripts import smoke_windows_terms
+
+    gui = Mock(
+        return_value={"status": "passed", "scope": "synthetic native GUI", "terms_sha256": digest}
+    )
+    monkeypatch.setattr(smoke_windows_terms, "smoke_windows_terms", gui)
+    if native:
+        monkeypatch.setattr(smoke_standalone, "os", SimpleNamespace(name="nt", environ=os.environ))
+        monkeypatch.setattr(
+            smoke_standalone.subprocess, "CREATE_NEW_PROCESS_GROUP", 1, raising=False
+        )
+        monkeypatch.setattr(smoke_standalone.signal, "CTRL_BREAK_EVENT", 1, raising=False)
+    process = Mock()
+    process.poll.side_effect = [None, 0]
+    process.wait.return_value = 0
+    spawn = Mock(return_value=process)
+    monkeypatch.setattr(
+        smoke_standalone.subprocess, "check_output", Mock(return_value="Bowl Bound 1.1.1")
+    )
+    monkeypatch.setattr(smoke_standalone.subprocess, "Popen", spawn)
+    monkeypatch.setattr(smoke_standalone, "request", Mock(return_value={"status": "healthy"}))
+    monkeypatch.setattr(smoke_standalone, "exercise", Mock())
+    smoke_standalone.smoke_executable(tmp_path / "BowlBound.exe", "1.1.1", tmp_path)
+    assert spawn.call_args.args[0][-2:] == ["--accept-windows-runtime-terms", digest]
+    assert spawn.call_args.kwargs["env"]["LOCALAPPDATA"] == str(tmp_path / "isolated-local-appdata")
+    if native:
+        gui.assert_called_once_with(tmp_path / "BowlBound.exe", "1.1.1", tmp_path, digest)
+        assert (
+            json.loads((tmp_path / "windows-runtime-terms-gui.json").read_text())["status"]
+            == "passed"
+        )
+    else:
+        gui.assert_not_called()
+
+
+@pytest.mark.parametrize("gui", [True, False])
+def test_published_windows_installer_uses_released_source_terms_hash(
+    artifact: tuple[Path, Path, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch, gui: bool
+) -> None:
+    _, metadata, report = artifact
+    installer = tmp_path / "installer.exe"
+    installer.write_bytes(b"Synthetic installer")
+    digest = hashlib.sha256(installer.read_bytes()).hexdigest()
+    installer.with_suffix(".exe.sha256").write_text(digest + "  " + installer.name)
+    metadata.write_text(
+        json.dumps(
+            {
+                "tag_name": "v1.1.1",
+                "draft": False,
+                "assets": [
+                    {
+                        "name": installer.name,
+                        "size": installer.stat().st_size,
+                        "digest": "sha256:" + digest,
+                    }
+                ],
+            }
+        )
+    )
+    source = tmp_path / "released-source"
+    (source / "release").mkdir(parents=True)
+    manifest = source / "release/manifest.json"
+    manifest.write_text("{}")
+    text = b"Synthetic independently reviewed Windows terms"
+    (source / "WINDOWS-RUNTIME-TERMS.txt").write_bytes(text)
+    monkeypatch.setattr(validator.platform, "system", lambda: "Windows")
+    monkeypatch.setattr(validator.platform, "machine", lambda: "AMD64")
+    monkeypatch.setattr(validator, "check_browser", Mock())
+
+    def installed_smoke(*args: object, **kwargs: object) -> None:
+        if not gui:
+            kwargs["runtime_terms_sha256"] = None
+        complete_smoke(*args, **kwargs)
+
+    install = Mock(side_effect=installed_smoke)
+    monkeypatch.setattr(validator, "smoke_installer", install)
+    assert validator.validate(
+        installer, metadata, "v1.1.1", "windows-x64", report, catalog_manifest=manifest
+    ) == (0 if gui else 1)
+    if not gui:
+        assert "GUI" in json.loads(report.read_text())["error"]
+    assert install.call_args.kwargs["runtime_terms_sha256"] == hashlib.sha256(text).hexdigest()

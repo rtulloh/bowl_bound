@@ -108,6 +108,8 @@ jobs:
             ${{ runner.temp }}/install-validation/receipt.json
             ${{ runner.temp }}/install-validation/server.log
             ${{ runner.temp }}/install-validation/browser.png
+            ${{ runner.temp }}/install-validation/windows-runtime-terms-gui.json
+            ${{ runner.temp }}/install-validation/windows-terms-*.log
             ${{ runner.temp }}/published-download/release.json
           if-no-files-found: warn
           retention-days: 14

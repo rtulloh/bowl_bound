@@ -7,13 +7,14 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import signal
 import socket
 import subprocess
 import time
 from collections.abc import Callable
 from pathlib import Path, PurePosixPath
-from tempfile import TemporaryDirectory
+from tempfile import mkdtemp
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 from zipfile import ZipFile
@@ -145,6 +146,32 @@ def clean_environment() -> dict[str, str]:
     return env
 
 
+def requires_windows_terms(version: str) -> bool:
+    """New patches require explicit terms; immutable older releases remain testable."""
+    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)(?:-alpha\.\d+)?", version)
+    if match is None:
+        raise ValueError("Invalid Windows runtime terms release version")
+    return tuple(map(int, match.groups())) >= (1, 1, 1)
+
+
+def windows_terms_digest(bundle: Path, manifest: dict) -> str | None:
+    """Verify both approved terms copies before explicit smoke-run agreement."""
+    if manifest.get("target") != "windows-x64" or not requires_windows_terms(manifest["version"]):
+        return None
+    digests = []
+    for name in ("WINDOWS-RUNTIME-TERMS.txt", "_internal/WINDOWS-RUNTIME-TERMS.txt"):
+        path = bundle / name
+        if path.is_symlink() or not path.is_file():
+            raise ValueError("Windows runtime terms are missing or unsafe")
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        if manifest["files"].get(name) != digest:
+            raise ValueError("Windows runtime terms differ from verified inventory")
+        digests.append(digest)
+    if len(set(digests)) != 1:
+        raise ValueError("Windows runtime terms copies differ")
+    return digests[0]
+
+
 def smoke_executable(
     executable: Path,
     version: str,
@@ -153,13 +180,33 @@ def smoke_executable(
     expected_catalog: frozenset[str] | None = None,
     check_ui: Callable[[str], None] | None = None,
     log_path: Path | None = None,
+    expected_terms_sha256: str | None = None,
 ) -> None:
     """Exercise an extracted or installed binary and require graceful shutdown."""
     inventory = json.loads((executable.parent / "ARTIFACT-MANIFEST.json").read_text("utf-8"))
     expected_teams = catalog_from_inventory(inventory["files"])
     if expected_catalog is not None and expected_teams != expected_catalog:
         raise ValueError("Installed artifact catalog differs from approved release catalog")
+    terms_digest = windows_terms_digest(executable.parent, inventory)
+    if expected_terms_sha256 is not None and terms_digest != expected_terms_sha256:
+        raise ValueError("Windows runtime terms differ from approved release source")
+    if terms_digest and os.name == "nt":
+        from .smoke_windows_terms import smoke_windows_terms
+
+        gui_work = log_path.parent if log_path else work
+        gui_path = gui_work / "windows-runtime-terms-gui.json"
+        if gui_path.exists() or gui_path.is_symlink():
+            raise ValueError("Choose fresh Windows runtime terms GUI evidence paths")
+        gui = smoke_windows_terms(executable, version, gui_work, terms_digest)
+        if gui.get("status") != "passed" or gui.get("terms_sha256") != terms_digest:
+            raise RuntimeError("Windows runtime terms GUI smoke did not qualify")
+        with gui_path.open("x", encoding="utf-8") as stream:
+            json.dump(gui, stream, indent=2)
+            stream.write("\n")
+    terms_arguments = ["--accept-windows-runtime-terms", terms_digest] if terms_digest else []
     env = clean_environment()
+    if terms_digest:
+        env["LOCALAPPDATA"] = str(work / "isolated-local-appdata")
     actual = subprocess.check_output(
         [str(executable), "--version"], cwd=work, text=True, timeout=30, env=env
     )
@@ -170,7 +217,7 @@ def smoke_executable(
     flags = subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
     with (log_path or work / "server.log").open("w+", encoding="utf-8") as log:
         process = subprocess.Popen(
-            [str(executable), "--no-browser", "--port", str(port)],
+            [str(executable), "--no-browser", "--port", str(port), *terms_arguments],
             cwd=work,
             env=env,
             stdout=log,
@@ -208,16 +255,52 @@ def smoke_executable(
 
 
 def smoke(archive: Path) -> None:
-    """Start only the extracted executable; source modules cannot satisfy imports."""
-    with TemporaryDirectory(prefix="bb-native-smoke-") as directory:
-        work = Path(directory)
+    """Smoke exact bytes, preserving failure resources and create-only receipts."""
+    report = archive.with_suffix(".zip.receipt.json")
+    if report.exists() or report.is_symlink():
+        raise ValueError("Choose a fresh standalone smoke receipt path")
+    digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+    work = Path(mkdtemp(prefix="bb-native-smoke-", dir=archive.parent)).resolve()
+    receipt: dict[str, object] = {
+        "passed": False,
+        "artifact": archive.name,
+        "sha256": digest,
+    }
+    try:
         manifest = extract_verified(archive, work)
+        receipt["version"], receipt["target"] = manifest["version"], manifest["target"]
         executable = (
             work
             / "BowlBound"
             / ("BowlBound.exe" if manifest["target"] == "windows-x64" else "Bowl-Bound")
         )
         smoke_executable(executable, manifest["version"], work)
+        receipt["passed"] = True
+    except BaseException as error:
+        receipt["error"] = f"{type(error).__name__}: {error}"
+        raise
+    finally:
+        gui = work / "windows-runtime-terms-gui.json"
+        if gui.is_file():
+            try:
+                receipt["windows_runtime_terms_gui"] = json.loads(gui.read_text("utf-8"))
+            except (OSError, ValueError) as error:
+                receipt["passed"] = False
+                receipt["gui_evidence_error"] = str(error)
+        if receipt["passed"]:
+            try:
+                shutil.rmtree(work)
+            except OSError as error:
+                receipt["cleanup_warning"] = str(error)
+                receipt["retained_work"] = str(work)
+        else:
+            receipt["retained_work"] = str(work)
+            print(f"Standalone smoke failed; resources and logs retained at {work}")
+        with report.open("x", encoding="utf-8") as stream:
+            json.dump(receipt, stream, indent=2)
+            stream.write("\n")
+    if not receipt["passed"]:
+        raise RuntimeError("Standalone GUI evidence did not qualify; inspect the retained receipt")
     print(
         "Standalone smoke passed: version, UI/assets, exact catalog, "
         "every-team snap/save/load, shutdown"

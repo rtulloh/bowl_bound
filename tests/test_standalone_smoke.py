@@ -235,3 +235,85 @@ def test_extraction_requires_fresh_destination(tmp_path: Path) -> None:
         extract_verified(archive, destination)
     assert (destination / "keep.txt").read_text() == "keep"
     assert not (destination / "BowlBound").exists()
+
+
+def test_windows_smoke_terms_digest_uses_verified_copies_and_preserves_old_releases(
+    tmp_path: Path,
+) -> None:
+    from scripts import smoke_standalone as smoke
+
+    text = b"Synthetic reviewed Windows runtime terms\n"
+    digest = hashlib.sha256(text).hexdigest()
+    manifest = {"target": "windows-x64", "version": "1.1.1", "files": {}}
+    with pytest.raises(ValueError, match="terms"):
+        smoke.windows_terms_digest(tmp_path, manifest)
+    for name in ("WINDOWS-RUNTIME-TERMS.txt", "_internal/WINDOWS-RUNTIME-TERMS.txt"):
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(text)
+        manifest["files"][name] = digest
+    assert smoke.windows_terms_digest(tmp_path, manifest) == digest
+    (tmp_path / "_internal/WINDOWS-RUNTIME-TERMS.txt").write_text("changed")
+    with pytest.raises(ValueError, match="terms"):
+        smoke.windows_terms_digest(tmp_path, manifest)
+    assert (
+        smoke.windows_terms_digest(
+            tmp_path, {"target": "windows-x64", "version": "1.1.0", "files": {}}
+        )
+        is None
+    )
+    assert (
+        smoke.windows_terms_digest(
+            tmp_path, {"target": "macos-arm64", "version": "1.1.1", "files": {}}
+        )
+        is None
+    )
+
+
+@pytest.mark.parametrize("failed", [False, True])
+def test_standalone_smoke_preserves_failure_resources_and_receipts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failed: bool
+) -> None:
+    import shutil
+    from unittest.mock import Mock
+
+    from scripts import smoke_standalone as smoke
+
+    archive = write_archive(tmp_path, "BowlBound/Bowl-Bound", b"synthetic")
+    launch = Mock(side_effect=RuntimeError("synthetic smoke failure") if failed else None)
+    monkeypatch.setattr(smoke, "smoke_executable", launch)
+    try:
+        if failed:
+            with pytest.raises(RuntimeError, match="synthetic smoke failure"):
+                smoke.smoke(archive)
+        else:
+            smoke.smoke(archive)
+        work = launch.call_args.args[2]
+        assert work.exists() is failed
+        receipt = json.loads(archive.with_suffix(".zip.receipt.json").read_text())
+        assert receipt["passed"] is not failed
+        assert receipt["sha256"] == hashlib.sha256(archive.read_bytes()).hexdigest()
+        if failed:
+            assert receipt["retained_work"] == str(work)
+            assert "synthetic smoke failure" in receipt["error"]
+    finally:
+        if launch.call_args and launch.call_args.args[2].exists():
+            shutil.rmtree(launch.call_args.args[2])
+
+
+def test_standalone_smoke_preserves_existing_receipt_before_launch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from unittest.mock import Mock
+
+    from scripts import smoke_standalone as smoke
+
+    archive = write_archive(tmp_path, "BowlBound/Bowl-Bound", b"synthetic")
+    receipt = archive.with_suffix(".zip.receipt.json")
+    receipt.write_text("previous failure")
+    launch = Mock()
+    monkeypatch.setattr(smoke, "smoke_executable", launch)
+    with pytest.raises(ValueError, match="receipt"):
+        smoke.smoke(archive)
+    assert receipt.read_text() == "previous failure"
+    launch.assert_not_called()

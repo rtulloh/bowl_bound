@@ -464,3 +464,28 @@ actual release bytes on both Macs and Windows portable/installer jobs. Require
 success and retain failed receipts. Separately exercise a fresh browser-downloaded
 DMG through ordinary copy/manual-xattr/Finder launch. Disclose signing and any
 remaining unavailable target instead of treating artifact upload as acceptance.
+
+
+## Windows runtime agreement qualification
+
+Windows 1.1.1+ bundles retain the reviewed combined WINDOWS-RUNTIME-TERMS.txt
+and require explicit hash-bound assent before app startup. The installer license
+page requires its checkbox; silent installation requires
+/ACCEPTWINDOWSRUNTIMETERMS=SHA256 with the exact reviewed terms hash. The app's
+first launch records its own per-user agreement separately. See installation.md
+for the player and command-line flow.
+
+Tests includes a fast parallel Windows source-dialog probe using Python 3.12.10.
+It verifies owned PID/image, full terms, default No and text/control geometry,
+then native No/Yes and receipt behavior. It does not qualify a packaged engine.
+Native portable and installed-app smoke separately exercise that GUI and normal
+shutdown before deliberate headless exact-hash assent and catalog/game/save/UI
+checks. Published validation compares the GUI receipt with terms in the released
+source checkout; command-line assent alone does not qualify the GUI.
+
+Retain ZIP receipt sidecars and Windows dialog logs as CI evidence; these are not
+additional player release assets. A failed portable smoke preserves its extracted
+app/resources and records their path, avoiding deletion beneath a potentially
+running process. Use fresh artifact/evidence paths for a retry. Existing release
+assets/tags remain immutable. Fresh browser-download/default-browser acceptance
+and the broader native license/provenance audit retain their explicit scope.

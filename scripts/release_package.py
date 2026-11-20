@@ -42,6 +42,7 @@ SAMPLES = frozenset(
 PUBLIC_FILES = frozenset(
     {
         "LICENSE",
+        "WINDOWS-RUNTIME-TERMS.txt",
         "README.md",
         "RELEASE_NOTES.md",
         "start.sh",

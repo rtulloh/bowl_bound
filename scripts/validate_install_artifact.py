@@ -15,7 +15,12 @@ from zipfile import BadZipFile
 
 from .build_standalone import TARGETS, check_target
 from .macos_dmg import smoke_dmg
-from .smoke_standalone import catalog_from_inventory, extract_verified, smoke_executable
+from .smoke_standalone import (
+    catalog_from_inventory,
+    extract_verified,
+    requires_windows_terms,
+    smoke_executable,
+)
 from .windows_installer import smoke_installer
 
 if TYPE_CHECKING:
@@ -212,7 +217,12 @@ def validate(
     """Write success/failure evidence; never launch mismatched or unverified bytes."""
     if report.name.casefold() in {"server.log", "browser.png"}:
         raise ValueError("Report filename is reserved for logs or screenshots")
-    evidence = (report, report.parent / "server.log", report.parent / "browser.png")
+    evidence = (
+        report,
+        report.parent / "server.log",
+        report.parent / "browser.png",
+        report.parent / "windows-runtime-terms-gui.json",
+    )
     if any(path.exists() or path.is_symlink() for path in evidence):
         raise ValueError(
             "Choose fresh report, log and screenshot paths; existing evidence is preserved"
@@ -261,6 +271,14 @@ def validate(
                 and len({team.split("/")[0] for team in expected_catalog}) > 1,
             }
 
+        terms_digest = None
+        if target == "windows-x64" and requires_windows_terms(version):
+            terms = catalog_manifest.parent.parent / "WINDOWS-RUNTIME-TERMS.txt"
+            if terms.is_symlink() or not terms.is_file():
+                raise ValueError("Released source Windows runtime terms are missing or unsafe")
+            terms_digest = hashlib.sha256(terms.read_bytes()).hexdigest()
+            receipt["windows_runtime_terms_sha256"] = terms_digest
+
         options = {
             "check_ui": browser_check,
             "log_path": report.parent / "server.log",
@@ -272,7 +290,9 @@ def validate(
                 "Mounted copied macOS app; Finder/Terminal and payload verified"
             )
         elif artifact.suffix.lower() == ".exe":
-            smoke_installer(artifact.resolve(), version, **options)
+            smoke_installer(
+                artifact.resolve(), version, runtime_terms_sha256=terms_digest, **options
+            )
             receipt["launch_method"] = "Installed Windows application; uninstall verified"
         else:
             with TemporaryDirectory(prefix="bb-published-smoke-") as directory:
@@ -284,8 +304,22 @@ def validate(
                     raise ValueError("Archive manifest target differs from requested target")
                 if catalog_from_inventory(manifest["files"]) != expected_catalog:
                     raise ValueError("Archive catalog differs from approved release catalog")
-                smoke_executable(work / "BowlBound" / executable_name, version, work, **options)
+                smoke_executable(
+                    work / "BowlBound" / executable_name,
+                    version,
+                    work,
+                    expected_terms_sha256=terms_digest,
+                    **options,
+                )
             receipt["launch_method"] = "Verified extracted standalone executable"
+        if terms_digest is not None:
+            gui_path = report.parent / "windows-runtime-terms-gui.json"
+            if not gui_path.is_file() or gui_path.is_symlink():
+                raise RuntimeError("Required Windows runtime terms GUI evidence is missing")
+            gui = json.loads(gui_path.read_text("utf-8"))
+            if gui.get("status") != "passed" or gui.get("terms_sha256") != terms_digest:
+                raise RuntimeError("Windows runtime terms GUI evidence did not qualify")
+            receipt["windows_runtime_terms_gui"] = gui
         log_path = report.parent / "server.log"
         if not log_path.is_file():
             raise RuntimeError("Packaged server log is missing")

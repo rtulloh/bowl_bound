@@ -200,3 +200,62 @@ local browser retry is planned. Preserve the existing native source gate: native
 compilation requires successful Tests on the exact main push commit, so branch
 validation precedes review/merge, then main validation and native dispatch. Do
 not weaken that guard or claim branch success qualifies a native release.
+
+
+## Windows agreement phase
+
+Owner directs retaining all supported platforms and adding the necessary Windows
+agreement step. Reconsult Paydirt packaging/windows/installer.nsi: adapt its
+standard NSIS license-page approach, but its MIT-only page does not establish
+the Microsoft conditions needed here. Keep Bowl Bound's per-user install, exact
+file allowlist and preservation of unrelated files; no Paydirt runtime dependency.
+
+The canonical WINDOWS-RUNTIME-TERMS.txt combines the project MIT license and
+verbatim pinned CPython Windows binary conditions. SHA256:
+7fb48ece6c4ef5203b050d60225c83ee7c1d9a10f4fb8519dc05472988b059b2.
+Runtime selection adds exactly this public file and backend/windows_terms.py;
+all sample, generated-chart and roster selections/hashes remain unchanged. No
+football engine or generator source pins change.
+
+Frozen Windows startup requires an explicit native Yes or exact-hash command-line
+agreement before importing the web app, opening a socket or a browser. A per-user
+receipt is atomic and bound to these exact terms. No/default/invalid terms or
+failed receipt persistence stops startup. The installer shows the combined terms
+with an unchecked agreement box; silent install requires the exact hash and
+rejects missing/wrong agreement before installation. First app launch records its
+own receipt; installer agreement is not silently converted into launcher assent.
+
+Meaningful tests fail first for omitted staged terms, missing hash verification,
+missing installer checkbox/silent gate, missing compiler hash transport, missing
+published-source hash, GUI invocation/evidence, overwritten receipts and deleted
+failed-smoke resources. Native GUI helper unit checks cover owned PID/image, full
+text, default No, screen/control/font-fit facts, No/Yes orchestration and cleanup.
+These synthetic checks do not qualify the actual Windows interface.
+
+A parallel Windows source-dialog probe uses Python 3.12.10 to catch layout issues
+early; it makes no packaged-engine claim. Actual packaged Windows smoke must
+exercise native No/Yes, receipt and health/version/shutdown, then the explicit
+headless agreement route and complete catalog/game/save checks. Published tests
+also require that GUI receipt against the released source terms hash. Preserve
+receipts/logs on failure, retain extracted resources when qualification fails,
+and never delete evidence to make a rerun pass. Fresh browser-download/default-
+browser/security acceptance remains separate. None of these engineering checks
+is a statement of legal clearance.
+
+Earlier hosted branch 183f9ad passes Tests run44619660230 and dependency audit
+44619660447: 7,006 Python tests, 90.77% branch coverage, 200 frontend tests,
+72 real-engine browser cases and 171-team structural audit. Four Python
+multithreaded-fork deprecation warnings are retained in the private logs. Those
+results do not qualify this later Windows-flow candidate; require its exact-HEAD
+hosted source gate before advancing main or compiling release artifacts.
+
+
+Windows-flow local checkpoint: 430 focused launcher, agreement, notice,
+packaging, installer, GUI-helper, validator, workflow and issue tests pass in
+16.23 seconds. Repository Ruff and format checks pass (918 Python files).
+Pyright on the new agreement/native helper modules, launcher and new helper
+tests reports zero errors/warnings; a broader optional script scan also reports
+existing object-typed JSON requests, missing local Playwright stubs and
+platform-specific winreg attributes, so no repository-wide type-clean claim is
+made. Reviewed runtime authority verification passes. No local native GUI or
+browser is launched; exact new-source hosted qualification remains mandatory.

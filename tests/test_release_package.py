@@ -780,3 +780,19 @@ def test_generated_rosters_fail_closed_before_staging(
     with pytest.raises(ReleaseError):
         stage_sources(source, output)
     assert not output.exists()
+
+
+def test_reviewed_windows_terms_are_selected_and_assembled(tmp_path: Path) -> None:
+    import hashlib
+
+    from backend.windows_terms import TERMS_FILENAME, TERMS_SHA256
+
+    root = Path(__file__).resolve().parents[1]
+    manifest = json.loads((root / "release/manifest.json").read_text())
+    assert TERMS_FILENAME in manifest["runtime"]
+    assert "backend/windows_terms.py" in manifest["runtime"]
+    stage, runtime = tmp_path / "stage", tmp_path / "runtime"
+    stage_sources(root, stage)
+    fake_frontend(stage)
+    assemble_runtime(stage, runtime)
+    assert hashlib.sha256((runtime / TERMS_FILENAME).read_bytes()).hexdigest() == TERMS_SHA256

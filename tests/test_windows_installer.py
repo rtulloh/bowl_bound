@@ -90,7 +90,9 @@ def test_output_name_is_one_quoted_nsis_option(tmp_path: Path, name: str) -> Non
     assert "*" not in uninstall and "RMDir /r" not in uninstall
 
 
-@pytest.mark.parametrize("version", ["1.0.0", "2.12.3", "0.1.0-alpha.3", "../1.0.0", "1.0"])
+@pytest.mark.parametrize(
+    "version", ["1.0.0", "1.1.1", "2.12.3", "0.1.0-alpha.3", "../1.0.0", "1.0"]
+)
 def test_installer_build_accepts_only_supported_release_identities(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, version: str
 ) -> None:
@@ -111,6 +113,13 @@ def test_installer_build_accepts_only_supported_release_identities(
         put(work, "BowlBound/BowlBound.exe", "Synthetic executable")
         put(work, "BowlBound/THIRD_PARTY/existing.txt", "Synthetic runtime notice")
         manifest["files"]["THIRD_PARTY/existing.txt"] = "b" * 64
+        if version in {"1.1.1", "2.12.3"}:
+            import hashlib
+
+            terms = "Synthetic reviewed runtime terms"
+            for name in ("WINDOWS-RUNTIME-TERMS.txt", "_internal/WINDOWS-RUNTIME-TERMS.txt"):
+                put(work, "BowlBound/" + name, terms)
+                manifest["files"][name] = hashlib.sha256(terms.encode()).hexdigest()
         put(work, "BowlBound/ARTIFACT-MANIFEST.json", json.dumps(manifest))
         return manifest
 
@@ -138,3 +147,18 @@ def test_installer_build_accepts_only_supported_release_identities(
         assert (directory / name).read_bytes() == b"Synthetic compiled installer"
         assert (directory / (name + ".sha256")).is_file()
         assert f"/DDISPLAY_VERSION={version}" in compiled[0]
+        if version in {"1.1.1", "2.12.3"}:
+            import hashlib
+
+            expected = hashlib.sha256(b"Synthetic reviewed runtime terms").hexdigest()
+            assert f"/DWINDOWS_TERMS_SHA256={expected}" in compiled[0]
+
+
+def test_nsis_requires_reviewed_terms_and_explicit_silent_agreement() -> None:
+    text = (Path(__file__).resolve().parents[1] / "release/windows/installer.nsi").read_text()
+    assert "!define MUI_LICENSEPAGE_CHECKBOX" in text
+    assert 'MUI_PAGE_LICENSE "${BUNDLE_DIR}\\WINDOWS-RUNTIME-TERMS.txt"' in text
+    assert "Function .onInit" in text and "IfSilent" in text
+    assert "/ACCEPTWINDOWSRUNTIMETERMS=" in text
+    assert 'StrCmp $1 "${WINDOWS_TERMS_SHA256}"' in text
+    assert "SetErrorLevel 3" in text

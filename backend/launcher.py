@@ -14,6 +14,8 @@ from typing import TYPE_CHECKING
 
 from bowl_bound import DISPLAY_VERSION
 
+from . import windows_terms
+
 if TYPE_CHECKING:
     from uvicorn import Server
 
@@ -52,12 +54,34 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     parser.add_argument("--seasons", type=Path, help="use a separately installed local team folder")
     parser.add_argument("--static", type=Path, help="use a separately built frontend")
+    parser.add_argument(
+        "--accept-windows-runtime-terms",
+        metavar="SHA256",
+        help="explicitly agree to the reviewed Windows binary terms with this exact hash",
+    )
+    parser.add_argument(
+        "--show-windows-runtime-terms",
+        action="store_true",
+        help="print the reviewed Windows binary terms and hash, then exit without accepting",
+    )
     args = parser.parse_args(argv)
     if not 1 <= args.port <= 65535:
         parser.error("port must be between 1 and 65535")
     if args.host not in LOCAL_HOSTS and not args.allow_remote:
         parser.error("nonlocal --host requires --allow-remote; there is no authentication")
     root = resource_root()
+    if args.show_windows_runtime_terms:
+        try:
+            print(windows_terms.reviewed_text(root))
+        except (OSError, ValueError) as error:
+            print(f"Windows runtime terms: {error}", file=sys.stderr)
+            return 1
+        print(f"SHA256: {windows_terms.TERMS_SHA256}")
+        return 0
+    if windows_terms.required() and not windows_terms.ensure_accepted(
+        root, args.accept_windows_runtime_terms
+    ):
+        return 1
     seasons, static = args.seasons or root / "seasons", args.static or root / "frontend/dist"
     if not seasons.is_dir() or not (static / "index.html").is_file():
         print(

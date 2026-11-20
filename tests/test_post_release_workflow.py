@@ -69,3 +69,19 @@ def test_dmg_checks_are_explicit_and_preserve_older_zip_only_releases() -> None:
     steps = workflow["jobs"]["native"]["steps"]
     assert all("inputs.include_dmg" in step["if"] for step in steps)
     assert 'ASSET_NAME="BowlBound-$ARTIFACT_VERSION-$TARGET.dmg"' in text
+
+
+def test_source_checks_run_fast_native_windows_terms_probe_in_parallel() -> None:
+    workflow = yaml.load((ROOT / ".github/workflows/tests.yml").read_text(), Loader=yaml.BaseLoader)
+    job = workflow["jobs"]["windows-terms-dialog"]
+    assert job["runs-on"] == "windows-2025"
+    assert job["env"]["PYTHON_VERSION"] == "3.12.10"
+    assert "needs" not in job and int(job["timeout-minutes"]) <= 10
+    commands = "\n".join(step.get("run", "") for step in job["steps"])
+    assert "scripts.smoke_windows_terms --source-dialog WINDOWS-RUNTIME-TERMS.txt" in commands
+    assert "build_standalone" not in commands and "pip install" not in commands
+    uploads = [
+        step for step in job["steps"] if step.get("uses", "").startswith("actions/upload-artifact@")
+    ]
+    assert len(uploads) == 1 and uploads[0]["if"] == "always()"
+    assert "windows-terms-source.json" in uploads[0]["with"]["path"]

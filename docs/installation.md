@@ -167,3 +167,28 @@ There is no two-sided terminal mode.
 
 See [importing teams](importing-teams.md) for the optional PDF extractor; it is
 a separate source-installed tool, not a bundled standalone feature.
+
+### Windows binary distribution agreement
+
+The Windows installer displays the project license and CPython's additional
+Windows binary conditions. The first launch of either the installed application
+or portable executable also displays those same conditions in a Windows dialog.
+Choose **Yes** to agree and continue, or **No** to quit before the local server
+and browser start. Acceptance is saved for your Windows account and applies only
+to that exact version of the terms; changed terms require a new agreement.
+The installer and first-launch agreement are separate steps.
+
+For unattended Windows use, first inspect the packaged
+`WINDOWS-RUNTIME-TERMS.txt`, or run
+`BowlBound.exe --show-windows-runtime-terms` to print it and its SHA256 without
+starting the game or recording acceptance. After reviewing it, explicitly agree
+using `BowlBound.exe --accept-windows-runtime-terms SHA256`, replacing `SHA256`
+with the displayed complete hash. A missing or mismatched hash does not accept
+the terms. `--no-browser` does not skip the agreement. Silent installation does
+not record first-launch acceptance.
+
+The per-user receipt is
+`%LOCALAPPDATA%\BowlBound\accepted-windows-runtime-terms.json`.
+If the terms or receipt cannot be read or saved, the application exits with an
+error. Re-extract missing or changed app resources; keep acceptance records in
+your own account's writable application-data folder.

@@ -2040,7 +2040,9 @@
     "seasons/2002/wisconsin/roster-sources.md",
     "seasons/2002/wisconsin/roster.json",
     "seasons/2002/wisconsin/special.csv",
-    "seasons/2002/wisconsin/team.yaml"
+    "seasons/2002/wisconsin/team.yaml",
+    "backend/windows_terms.py",
+    "WINDOWS-RUNTIME-TERMS.txt"
   ],
   "sample_sha256": {
     "seasons/2007/cedar-valley/defense.csv": "a203b623f88deb24234bcc3c63e534de873ce03c93fc51eab139d2afb581aa8e",

@@ -1,6 +1,7 @@
 ; Bowl Bound per-user installer. File lists come only from the verified native ZIP.
 Unicode true
 !include "MUI2.nsh"
+!include "FileFunc.nsh"
 Name "Bowl Bound ${DISPLAY_VERSION}"
 OutFile "${OUTPUT_FILE}"
 InstallDir "$LOCALAPPDATA\Programs\BowlBound"
@@ -10,13 +11,34 @@ SetCompressor /SOLID lzma
 !define MUI_ABORTWARNING
 !define MUI_FINISHPAGE_RUN "$INSTDIR\BowlBound.exe"
 !insertmacro MUI_PAGE_WELCOME
+!ifdef WINDOWS_TERMS_SHA256
+!define MUI_LICENSEPAGE_CHECKBOX
+!insertmacro MUI_PAGE_LICENSE "${BUNDLE_DIR}\WINDOWS-RUNTIME-TERMS.txt"
+!else
 !insertmacro MUI_PAGE_LICENSE "${BUNDLE_DIR}\LICENSE"
+!endif
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_LANGUAGE "English"
+
+Function .onInit
+!ifdef WINDOWS_TERMS_SHA256
+  IfSilent 0 terms_done
+  ${GetParameters} $0
+  ClearErrors
+  ${GetOptions} $0 "/ACCEPTWINDOWSRUNTIMETERMS=" $1
+  IfErrors terms_declined
+  StrCmp $1 "${WINDOWS_TERMS_SHA256}" terms_done
+  terms_declined:
+    MessageBox MB_OK|MB_ICONSTOP "Silent installation requires explicit agreement to the reviewed Windows runtime terms using /ACCEPTWINDOWSRUNTIMETERMS=${WINDOWS_TERMS_SHA256}." /SD IDOK
+    SetErrorLevel 3
+    Abort
+  terms_done:
+!endif
+FunctionEnd
 
 Section "Bowl Bound"
   SetShellVarContext current

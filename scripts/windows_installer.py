@@ -13,7 +13,13 @@ from pathlib import Path, PurePosixPath
 from tempfile import TemporaryDirectory
 
 from .release_package import RELEASE_VERSION_PATTERN, ReleaseError
-from .smoke_standalone import extract_verified, smoke_executable, validate_relative_path
+from .smoke_standalone import (
+    extract_verified,
+    requires_windows_terms,
+    smoke_executable,
+    validate_relative_path,
+    windows_terms_digest,
+)
 
 UNINSTALL_KEY = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\BowlBound"
 
@@ -64,10 +70,18 @@ def smoke_installer(
     expected_catalog: frozenset[str] | None = None,
     check_ui: Callable[[str], None] | None = None,
     log_path: Path | None = None,
+    runtime_terms_sha256: str | None = None,
 ) -> None:
     """Test installed UI/save and uninstall while keeping an unrelated user file."""
     import winreg
 
+    if requires_windows_terms(version) and not re.fullmatch(
+        r"[0-9a-f]{64}", runtime_terms_sha256 or ""
+    ):
+        raise ReleaseError("Installer smoke requires the reviewed Windows runtime terms hash")
+    agreement = (
+        [f"/ACCEPTWINDOWSRUNTIMETERMS={runtime_terms_sha256}"] if runtime_terms_sha256 else []
+    )
     try:
         with winreg.OpenKey(winreg.HKEY_CURRENT_USER, UNINSTALL_KEY):
             raise ReleaseError("Installer smoke must not replace an existing user installation")
@@ -76,7 +90,19 @@ def smoke_installer(
     with TemporaryDirectory(prefix="bb-install-smoke-") as directory:
         work = Path(directory)
         installed = work / "installed"
-        subprocess.run([str(installer), "/S", f"/D={installed}"], check=True, timeout=180)
+        if runtime_terms_sha256:
+            for supplied in ([], ["/ACCEPTWINDOWSRUNTIMETERMS=" + "0" * 64]):
+                declined = work / "declined"
+                result = subprocess.run(
+                    [str(installer), "/S", *supplied, f"/D={declined}"], check=False, timeout=60
+                )
+                if result.returncode != 3 or declined.exists():
+                    raise ReleaseError(
+                        "Silent installer did not reject missing or incorrect terms agreement"
+                    )
+        subprocess.run(
+            [str(installer), "/S", *agreement, f"/D={installed}"], check=True, timeout=180
+        )
         try:
             with winreg.OpenKey(winreg.HKEY_CURRENT_USER, UNINSTALL_KEY) as key:
                 assert winreg.QueryValueEx(key, "DisplayVersion")[0] == version
@@ -88,6 +114,7 @@ def smoke_installer(
                 expected_catalog=expected_catalog,
                 check_ui=check_ui,
                 log_path=log_path,
+                expected_terms_sha256=runtime_terms_sha256,
             )
             (installed / "keep-personal.txt").write_text("keep", encoding="utf-8")
         finally:
@@ -125,6 +152,7 @@ def build(directory: Path, makensis: Path, source: Path, *, smoke: bool) -> None
         if not isinstance(version, str) or not re.fullmatch(RELEASE_VERSION_PATTERN, version):
             raise ReleaseError("Invalid installer version")
         bundle = work / "BowlBound"
+        terms_digest = windows_terms_digest(bundle, manifest)
         nsis_license = next(
             (
                 makensis.parent / name
@@ -153,6 +181,8 @@ def build(directory: Path, makensis: Path, source: Path, *, smoke: bool) -> None
             "INSTALL_LIST": str(work / "install-files.nsh"),
             "UNINSTALL_LIST": str(work / "uninstall-files.nsh"),
         }
+        if terms_digest:
+            arguments["WINDOWS_TERMS_SHA256"] = terms_digest
         subprocess.run(
             [
                 str(makensis),
@@ -163,7 +193,7 @@ def build(directory: Path, makensis: Path, source: Path, *, smoke: bool) -> None
             timeout=180,
         )
         if smoke:
-            smoke_installer(work / name, version)
+            smoke_installer(work / name, version, runtime_terms_sha256=terms_digest)
         digest = hashlib.sha256((work / name).read_bytes()).hexdigest()
         with output.open("xb") as stream:
             stream.write((work / name).read_bytes())
