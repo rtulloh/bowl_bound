@@ -69,9 +69,7 @@ def test_script_app_selects_its_payload_architecture(
 ) -> None:
     payload = tmp_path / "portable"
     payload.mkdir()
-    app = macos_dmg.assemble_app(
-        payload, tmp_path / "Bowl Bound.app", "1.1.2", target=target
-    )
+    app = macos_dmg.assemble_app(payload, tmp_path / "Bowl Bound.app", "1.1.2", target=target)
     info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
     assert info["LSArchitecturePriority"] == [architecture]
     assert "LSRequiresNativeExecution" not in info
@@ -91,9 +89,7 @@ def test_app_rejects_symlink_payload_and_existing_destination(tmp_path: Path) ->
     payload.mkdir()
     (payload / "escape").symlink_to(tmp_path)
     with pytest.raises(ReleaseError, match="symlink"):
-        macos_dmg.assemble_app(
-            payload, tmp_path / "Bowl Bound.app", "1.1.1", target="macos-arm64"
-        )
+        macos_dmg.assemble_app(payload, tmp_path / "Bowl Bound.app", "1.1.1", target="macos-arm64")
     assert not (tmp_path / "Bowl Bound.app").exists()
     (payload / "escape").unlink()
     destination = tmp_path / "exists.app"

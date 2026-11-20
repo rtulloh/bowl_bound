@@ -46,9 +46,7 @@ def compile_launcher(destination: Path, target: str) -> None:
 
 def seal_app(app: Path) -> None:
     """Seal the completed bundle and reject any strict nested-code failure."""
-    subprocess.run(
-        ["codesign", "--force", "--sign", "-", "--timestamp=none", str(app)], check=True
-    )
+    subprocess.run(["codesign", "--force", "--sign", "-", "--timestamp=none", str(app)], check=True)
     subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)], check=True)
 
 
