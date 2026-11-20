@@ -271,3 +271,41 @@ synthetic regressions fail first for both edges. Reserve the GUI filename and
 preserve failed installed resources, registration, logs and failure.json; do not
 uninstall a potentially active failed app automatically. Successful bounded
 smoke still uninstalls normally. Fresh native verification remains pending.
+
+
+### Native readability correction (v1.1.1 candidate)
+
+The exact-head Windows source-dialog probe at `f7f2214` failed: ownership,
+full text and default No passed, but both monitor bounds and text fit failed.
+The failed JSON is preserved privately; this is an actual failed native check,
+not an unavailable-target exception. Replace the fixed MessageBox with a bounded
+modal window containing the complete read-only, wrapping, vertically scrollable
+terms. No remains the default; close/Escape declines. The independent helper
+uses bounded cross-process text queries, checks styles and monitor/control bounds,
+scrolls to the last line using its measured font height, then restores the top
+before choosing No/Yes. Receipts distinguish scrolling from simultaneously
+fitting all text. Native proof remains pending at this candidate.
+
+Paydirt references reviewed: `scripts/smoke_published_app.py:117-150` and
+`docs/dev-notes/release-1.10.3-validation.md`: adapt retained external evidence and
+separate candidate/publication claims only. There is no reusable native agreement
+dialog in the examined Paydirt launcher/release paths; no dependency is added.
+Synthetic regression first: helper 2 expected failures (missing style/scroll
+verification), then 82 terms/launcher/helper checks passed; targeted Pyright clean.
+The dialog owner separately recorded 11 template/layout failures and six close/
+action failures before the corresponding fixes. No local browser/native launch.
+
+The probe also explicitly posts owned WM_CLOSE and requires a clean refusal,
+no receipt and (for the packaged app) no server. Direct-close regression first
+failed, then all 83 terms/launcher/helper tests passed. Full relevant packaging
+regressions: 453 passed before the additional close scenario; final run follows.
+
+Final focused cumulative check: 454 passed (native notices, package/archive,
+standalone build/smoke, Windows installer, DMG, published validator, metadata/docs/
+workflows, agreement/launcher and issue tooling). Ruff check and format passed
+(918 files); targeted helper/backend/new-test Pyright: zero errors or warnings.
+Microsoft primary documentation confirms cross-process EDIT text requires
+WM_GETTEXT and documents the line/position messages used by the probe:
+[GetWindowTextW](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw),
+[EM_POSFROMCHAR](https://learn.microsoft.com/en-us/windows/win32/controls/em-posfromchar),
+[EM_LINESCROLL](https://learn.microsoft.com/en-us/windows/win32/controls/em-linescroll).

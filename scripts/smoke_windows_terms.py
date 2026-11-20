@@ -1,7 +1,7 @@
 """Native Windows assent smoke, restricted to windows owned by launched processes.
 
 This checks the agreement dialog with --no-browser. It does not certify browser
-first launch, fresh-machine behavior, or injected MessageBox API failures.
+first launch, fresh-machine behavior, or injected native-dialog API failures.
 """
 
 from __future__ import annotations
@@ -37,6 +37,7 @@ class Dialog:
     default_id: int
     within_work_area: bool
     text_fits: bool
+    scroll_verified: bool = False
 
 
 def is_windows() -> bool:
@@ -59,6 +60,12 @@ def contained(inner: tuple[int, ...], outer: tuple[int, ...]) -> bool:
     )
 
 
+def scrollable_style(style: int) -> bool:
+    """Require a read-only multiline edit with vertical scrolling and wrapping."""
+    required = 0x200000 | 0x800 | 0x4
+    return style & required == required and not style & (0x100000 | 0x80)
+
+
 def validate_dialog(dialog: Dialog, owners: set[int], terms: str) -> int:
     """Refuse partial text, offscreen controls, clipping or unsafe default actions."""
     facts = {
@@ -66,7 +73,7 @@ def validate_dialog(dialog: Dialog, owners: set[int], terms: str) -> int:
         "controls_present": bool(dialog.handle and dialog.yes and dialog.no),
         "default_no": dialog.default_id == 7,
         "within_work_area": dialog.within_work_area,
-        "text_fits": dialog.text_fits,
+        "text_accessible": dialog.text_fits or dialog.scroll_verified,
         "complete_terms": dialog.text.replace("\r\n", "\n") == terms.replace("\r\n", "\n") + PROMPT,
     }
     if not all(facts.values()):
@@ -81,11 +88,14 @@ def click_choice(
     api: Any, dialog: Dialog, owners: set[int], choice: int, expected_image: Path
 ) -> None:
     """Post directly to the verified owned dialog; never send global keystrokes."""
-    if choice not in {6, 7} or api.window_pid(dialog.handle) not in owners:
+    if choice not in {0, 6, 7} or api.window_pid(dialog.handle) not in owners:
         raise RuntimeError("Windows terms dialog ownership changed before action")
     if api.image_matches(dialog.pid, expected_image) is not True:
         raise RuntimeError("Windows terms dialog owner image changed before action")
-    api.post(dialog.handle, 0x111, choice, dialog.yes if choice == 6 else dialog.no)
+    if choice == 0:
+        api.post(dialog.handle, 0x10, 0, 0)
+    else:
+        api.post(dialog.handle, 0x111, choice, dialog.yes if choice == 6 else dialog.no)
 
 
 def validate_decline_output(output: str) -> None:
@@ -126,7 +136,7 @@ class _Windows:
         self.g = native.WinDLL("gdi32", use_last_error=True)
         self.callback = native.WINFUNCTYPE(w.BOOL, w.HWND, w.LPARAM)
         signatures = {
-            "GetWindowTextLengthW": ([w.HWND], ctypes.c_int),
+            "GetClassNameW": ([w.HWND, w.LPWSTR, ctypes.c_int], ctypes.c_int),
             "GetWindowTextW": ([w.HWND, w.LPWSTR, ctypes.c_int], ctypes.c_int),
             "GetWindowThreadProcessId": ([w.HWND, ctypes.POINTER(w.DWORD)], w.DWORD),
             "EnumWindows": ([self.callback, w.LPARAM], w.BOOL),
@@ -138,7 +148,18 @@ class _Windows:
             "MonitorFromWindow": ([w.HWND, w.DWORD], w.HANDLE),
             "GetDC": ([w.HWND], w.HDC),
             "ReleaseDC": ([w.HWND, w.HDC], ctypes.c_int),
-            "SendMessageW": ([w.HWND, w.UINT, w.WPARAM, w.LPARAM], ctypes.c_ssize_t),
+            "SendMessageTimeoutW": (
+                [
+                    w.HWND,
+                    w.UINT,
+                    w.WPARAM,
+                    w.LPARAM,
+                    w.UINT,
+                    w.UINT,
+                    ctypes.POINTER(ctypes.c_size_t),
+                ],
+                ctypes.c_ssize_t,
+            ),
             "PostMessageW": ([w.HWND, w.UINT, w.WPARAM, w.LPARAM], w.BOOL),
             "DrawTextW": (
                 [w.HDC, w.LPCWSTR, ctypes.c_int, ctypes.POINTER(w.RECT), w.UINT],
@@ -153,10 +174,75 @@ class _Windows:
         self.g.GetStockObject.argtypes = [ctypes.c_int]
         self.g.GetStockObject.restype = w.HANDLE
 
+    def message(self, handle: int, kind: int, wp: int = 0, lp: int = 0) -> int:
+        result = ctypes.c_size_t()
+        if not self.u.SendMessageTimeoutW(handle, kind, wp, lp, 3, 1000, ctypes.byref(result)):
+            raise OSError("Windows terms control did not respond within one second")
+        return ctypes.c_ssize_t(result.value).value
+
     def text(self, handle: int) -> str:
-        buffer = ctypes.create_unicode_buffer(self.u.GetWindowTextLengthW(handle) + 1)
-        self.u.GetWindowTextW(handle, buffer, len(buffer))
+        length = self.message(handle, 0xE)
+        if not 0 <= length <= 100000:
+            raise RuntimeError("Invalid Windows terms control text length")
+        buffer = ctypes.create_unicode_buffer(length + 1)
+        self.message(handle, 0xD, len(buffer), ctypes.addressof(buffer))
         return buffer.value
+
+    def font_height(self, handle: int) -> int:
+        dc = self.u.GetDC(handle)
+        if not dc:
+            raise OSError("Could not measure Windows terms font")
+        previous = None
+        try:
+            font = self.message(handle, 0x31) or self.g.GetStockObject(17)
+            previous = self.g.SelectObject(dc, font)
+            measured = self.w.RECT(0, 0, 0, 0)
+            return self.u.DrawTextW(dc, "Mg", 2, ctypes.byref(measured), 0x400)
+        finally:
+            if previous:
+                self.g.SelectObject(dc, previous)
+            self.u.ReleaseDC(handle, dc)
+
+    def control_class(self, handle: int) -> str:
+        buffer = ctypes.create_unicode_buffer(256)
+        if not self.u.GetClassNameW(handle, buffer, len(buffer)):
+            raise OSError("Could not inspect Windows terms control class")
+        return buffer.value
+
+    def scroll_readable(self, handle: int) -> bool:
+        """Prove the wrapped last line can be viewed, then restore the first line."""
+        if self.control_class(handle) != "Edit" or not scrollable_style(
+            self.u.GetWindowLongW(handle, -16)
+        ):
+            return False
+        lines = self.message(handle, 0xBA)
+        if not 1 <= lines <= 100000:
+            return False
+        try:
+            self.message(handle, 0xB6, 0, -lines)
+            if self.message(handle, 0xCE) != 0:
+                return False
+            self.message(handle, 0xB6, 0, lines)
+            first = self.message(handle, 0xCE)
+            index = self.message(handle, 0xBB, lines - 1)
+            if index < 0:
+                return False
+            position = self.message(handle, 0xD6, index)
+            x = ctypes.c_short(position & 0xFFFF).value
+            y = ctypes.c_short((position >> 16) & 0xFFFF).value
+            area = self.rect(handle, client=True)
+            height = self.font_height(handle)
+            return bool(
+                0 <= first < lines
+                and 0 <= x < area[2]
+                and height > 0
+                and 0 <= y
+                and y + height <= area[3]
+            )
+        finally:
+            self.message(handle, 0xB6, 0, -lines)
+            if self.message(handle, 0xCE) != 0:
+                raise RuntimeError("Windows terms scroll position could not be restored")
 
     def window_pid(self, handle: int) -> int:
         pid = self.w.DWORD()
@@ -249,7 +335,7 @@ class _Windows:
             raise OSError("Could not measure Windows terms text")
         previous = None
         try:
-            font = self.u.SendMessageW(handle, 0x31, 0, 0) or self.g.GetStockObject(17)
+            font = self.message(handle, 0x31) or self.g.GetStockObject(17)
             previous = self.g.SelectObject(dc, font)
             measured = self.w.RECT(0, 0, rectangle[2], 0)
             text = self.text(handle)
@@ -284,7 +370,7 @@ class _Windows:
                 if self.text(child).replace("\r\n", "\n").endswith(PROMPT)
             ]
             if len(text_controls) != 1:
-                raise RuntimeError("Full Windows terms static control not found")
+                raise RuntimeError("Full Windows terms text control not found")
             text_control = text_controls[0]
 
             class Monitor(ctypes.Structure):
@@ -320,7 +406,10 @@ class _Windows:
                     no,
                     default,
                     bool(visible),
-                    self.readable(text_control),
+                    self.readable(text_control) if buttons.get(1001) != text_control else False,
+                    self.scroll_readable(text_control)
+                    if buttons.get(1001) == text_control
+                    else False,
                 )
             )
         return result
@@ -339,7 +428,7 @@ def smoke_windows_terms(executable: Path, version: str, work: Path, terms_sha256
     terms = read_terms(executable, terms_sha256)
     api = _Windows()
     outcomes = []
-    for choice, name in ((7, "decline"), (6, "accept")):
+    for choice, name in ((7, "decline"), (0, "close"), (6, "accept")):
         with TemporaryDirectory(prefix=f"terms-{name}-", dir=work) as directory:
             appdata = Path(directory)
             env = clean_environment()
@@ -380,7 +469,7 @@ def smoke_windows_terms(executable: Path, version: str, work: Path, terms_sha256
                         api, dialog, owned_pids(process.pid, api.parents()), choice, executable
                     )
                     receipt = appdata / "BowlBound/accepted-windows-runtime-terms.json"
-                    if choice == 7:
+                    if choice != 6:
                         while process.poll() is None:
                             if _open_port(port):
                                 raise RuntimeError("Declined Windows app started a server")
@@ -391,7 +480,14 @@ def smoke_windows_terms(executable: Path, version: str, work: Path, terms_sha256
                             raise RuntimeError("Decline failed to block startup without a receipt")
                         log.seek(0)
                         validate_decline_output(log.read())
-                        outcomes.append({"choice": name, "exit": 1, "receipt": False})
+                        outcomes.append(
+                            {
+                                "choice": name,
+                                "exit": 1,
+                                "receipt": False,
+                                "scroll_verified": dialog.scroll_verified,
+                            }
+                        )
                     else:
                         base = f"http://127.0.0.1:{port}"
                         deadline = time.monotonic() + 60
@@ -417,7 +513,14 @@ def smoke_windows_terms(executable: Path, version: str, work: Path, terms_sha256
                         process.send_signal(windows_signal.CTRL_BREAK_EVENT)
                         if process.wait(timeout=20) != 0:
                             raise RuntimeError("Accepted Windows app shutdown failed")
-                        outcomes.append({"choice": name, "exit": 0, "receipt": value})
+                        outcomes.append(
+                            {
+                                "choice": name,
+                                "exit": 0,
+                                "receipt": value,
+                                "scroll_verified": dialog.scroll_verified,
+                            }
+                        )
                 finally:
                     if process.poll() is None:
                         # Only our retained Popen handle; never image-name/global kills.
@@ -425,13 +528,16 @@ def smoke_windows_terms(executable: Path, version: str, work: Path, terms_sha256
                         process.wait(timeout=10)
     return {
         "status": "passed",
-        "scope": "owned native dialog, readable full terms, default No, No/Yes; --no-browser",
+        "scope": (
+            "owned native dialog, full terms accessible (scroll verified for EDIT), "
+            "default No, No/close/Yes; --no-browser"
+        ),
         "terms_sha256": terms_sha256,
         "outcomes": outcomes,
         "not_checked": [
             "default-browser first launch",
             "fresh-machine security",
-            "injected MessageBox failure",
+            "injected native-dialog failure",
         ],
     }
 
@@ -453,7 +559,7 @@ def smoke_source_dialog(terms_path: Path) -> dict:
         "from backend.windows_terms import ensure_accepted; "
         "raise SystemExit(0 if ensure_accepted(Path(sys.argv[1]), None) else 1)"
     )
-    for choice, label in ((7, "decline"), (6, "accept")):
+    for choice, label in ((7, "decline"), (0, "close"), (6, "accept")):
         with TemporaryDirectory(prefix=f"bb-source-terms-{label}-") as directory:
             env = clean_environment()
             env["LOCALAPPDATA"] = directory
@@ -489,19 +595,26 @@ def smoke_source_dialog(terms_path: Path) -> dict:
                     Path(sys.executable),
                 )
                 output, _ = process.communicate(timeout=20)
-                expected_exit = 1 if choice == 7 else 0
+                expected_exit = 1 if choice != 6 else 0
                 if process.returncode != expected_exit:
                     raise RuntimeError(
                         "Source probe exit mismatch: " + output.decode("utf-8", errors="replace")
                     )
-                if choice == 7:
+                if choice != 6:
                     validate_decline_output(output.decode("utf-8", errors="replace"))
                 receipt = Path(directory) / "BowlBound/accepted-windows-runtime-terms.json"
                 value = json.loads(receipt.read_text("utf-8")) if receipt.exists() else None
-                expected_receipt = None if choice == 7 else {"schema": 1, "sha256": TERMS_SHA256}
+                expected_receipt = None if choice != 6 else {"schema": 1, "sha256": TERMS_SHA256}
                 if value != expected_receipt:
                     raise RuntimeError("Source probe receipt mismatch")
-                outcomes.append({"choice": label, "exit": expected_exit, "receipt": value})
+                outcomes.append(
+                    {
+                        "choice": label,
+                        "exit": expected_exit,
+                        "receipt": value,
+                        "scroll_verified": dialog.scroll_verified,
+                    }
+                )
             finally:
                 if process.poll() is None:
                     process.kill()
@@ -515,8 +628,8 @@ def smoke_source_dialog(terms_path: Path) -> dict:
             "owned PID/image",
             "complete terms",
             "default No",
-            "monitor and text fit",
-            "No/Yes receipts",
+            "monitor bounds and complete text accessibility (EDIT scroll-to-last-line and restore)",
+            "No/close/Yes receipts",
         ],
     }
 

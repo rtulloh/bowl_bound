@@ -120,7 +120,7 @@ def test_native_smoke_orchestration_is_isolated_and_cleans_only_owned_handles(
 
     def post(handle: int, message: int, choice: int, button: int) -> None:
         current = processes[-1]
-        if choice == 7:
+        if choice != 6:
             current.process.returncode = 1
             current.kwargs["stdout"].write(
                 "Windows runtime terms were not accepted; the game has not started.\n"
@@ -157,8 +157,8 @@ def test_native_smoke_orchestration_is_isolated_and_cleans_only_owned_handles(
     else:
         result = smoke.smoke_windows_terms(tmp_path / "app.exe", "1.1.1", tmp_path, digest)
         assert result["status"] == "passed"
-        assert [entry["choice"] for entry in result["outcomes"]] == ["decline", "accept"]
-        assert len(processes) == 2
+        assert [entry["choice"] for entry in result["outcomes"]] == ["decline", "close", "accept"]
+        assert len(processes) == 3
         assert (
             processes[0].kwargs["env"]["LOCALAPPDATA"] != processes[1].kwargs["env"]["LOCALAPPDATA"]
         )
@@ -166,7 +166,7 @@ def test_native_smoke_orchestration_is_isolated_and_cleans_only_owned_handles(
             assert "--no-browser" in entry.args
             assert "--accept-windows-runtime-terms" not in entry.args
             entry.process.kill.assert_not_called()
-        processes[1].process.send_signal.assert_called_once_with(1)
+        processes[2].process.send_signal.assert_called_once_with(1)
 
 
 def test_changed_owner_image_is_rejected_before_post() -> None:
@@ -242,8 +242,8 @@ def test_source_dialog_orchestration_never_claims_packaged_engine(
 
     def post(handle: int, message: int, choice: int, button: int) -> None:
         current = children[-1]
-        current.process.returncode = 1 if choice == 7 else 0
-        if choice == 7:
+        current.process.returncode = 1 if choice != 6 else 0
+        if choice != 6:
             current.process.communicate.return_value = (
                 b"Windows runtime terms were not accepted; the game has not started.\n",
                 None,
@@ -263,7 +263,7 @@ def test_source_dialog_orchestration_never_claims_packaged_engine(
     result = smoke.smoke_source_dialog(tmp_path / "WINDOWS-RUNTIME-TERMS.txt")
     assert result["status"] == "passed"
     assert "no packaged engine" in result["scope"]
-    assert len(children) == 2
+    assert len(children) == 3
     assert children[0].kwargs["env"]["LOCALAPPDATA"] != children[1].kwargs["env"]["LOCALAPPDATA"]
     for child in children:
         assert child.args[0] == smoke.sys.executable
@@ -312,3 +312,58 @@ def test_decline_rejects_crashes_and_missing_clean_refusal(output: str) -> None:
 def test_dialog_failure_identifies_failed_readability_facts() -> None:
     with pytest.raises(RuntimeError, match='"within_work_area": false'):
         smoke.validate_dialog(dialog(within_work_area=False), {123}, "Synthetic terms")
+
+
+def test_scrollable_terms_require_readonly_wrapping_and_vertical_scroll() -> None:
+    assert smoke.scrollable_style(0x50A10844)
+    for missing in (0x200000, 0x800, 0x4):
+        assert not smoke.scrollable_style(0x50A10844 & ~missing)
+    assert not smoke.scrollable_style(0x50A10844 | 0x80)
+    assert not smoke.scrollable_style(0x50A10844 | 0x100000)
+
+
+def test_scroll_probe_reaches_last_line_and_restores_top() -> None:
+    api = object.__new__(smoke._Windows)
+    api.u = Mock()
+    api.u.GetWindowLongW.return_value = 0x50A10844
+    api.rect = Mock(return_value=(0, 0, 400, 200))
+    api.font_height = Mock(return_value=16)
+    api.control_class = Mock(return_value="Edit")
+    position = [0]
+
+    def message(handle: int, kind: int, wp: int = 0, lp: int = 0) -> int:
+        if kind == 0xBA:
+            return 66
+        if kind == 0xB6:
+            position[0] = 54 if lp > 0 else 0
+        if kind == 0xCE:
+            return position[0]
+        if kind == 0xBB:
+            return 2800
+        if kind == 0xD6:
+            return 176 << 16
+        return 0
+
+    api.message = Mock(side_effect=message)
+    assert api.scroll_readable(10)
+    assert position[0] == 0
+    api.font_height.return_value = 30
+    assert not api.scroll_readable(10)
+    assert position[0] == 0
+
+
+def test_scroll_access_is_distinct_from_simultaneously_fitting_text() -> None:
+    assert (
+        smoke.validate_dialog(
+            dialog(text_fits=False, scroll_verified=True), {123}, "Synthetic terms"
+        )
+        == 10
+    )
+
+
+def test_owned_close_posts_only_to_verified_dialog() -> None:
+    api = Mock()
+    api.window_pid.return_value = 123
+    api.image_matches.return_value = True
+    smoke.click_choice(api, dialog(), {123}, 0, Path("app.exe"))
+    api.post.assert_called_once_with(10, 0x10, 0, 0)

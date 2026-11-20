@@ -110,16 +110,44 @@ def test_only_frozen_windows_requires_assent(
     assert windows_terms.required() is expected
 
 
-@pytest.mark.parametrize(("answer", "expected"), [(6, True), (7, False), (0, False)])
-def test_native_dialog_defaults_to_no_and_requires_explicit_yes(
-    answer: int, expected: bool
-) -> None:
+@pytest.mark.parametrize(("answer", "expected"), [(6, True), (7, False), (2, False), (-1, None)])
+def test_scrollable_dialog_requires_explicit_yes(answer: int, expected: bool | None) -> None:
     show = Mock(return_value=answer)
-    fake = SimpleNamespace(windll=SimpleNamespace(user32=SimpleNamespace(MessageBoxW=show)))
-    with patch.dict("sys.modules", {"ctypes": fake}):
+    with patch.object(windows_terms, "_show_scrollable_dialog", show):
         assert windows_terms._ask("Synthetic terms") is expected
-    assert show.call_args.args[1].startswith("Synthetic terms")
-    assert show.call_args.args[3] == 0x124
+    assert show.call_args.args == (
+        "Synthetic terms\n\nChoose Yes to agree to these conditions and continue. "
+        "Choose No to quit.",
+    )
+
+
+@pytest.mark.parametrize("dpi", [96, 144, 192])
+@pytest.mark.parametrize("work", [(0, 0, 1280, 720), (-1920, 0, 0, 1080)])
+def test_scrollable_layout_stays_within_work_area(
+    work: tuple[int, int, int, int], dpi: int
+) -> None:
+    x, y, width, height = windows_terms._dialog_bounds(work, dpi)
+    assert work[0] <= x < x + width <= work[2]
+    assert work[1] <= y < y + height <= work[3]
+    controls = windows_terms._control_bounds(width - 20, height - 40, dpi)
+    for cx, cy, cw, ch in controls.values():
+        assert 0 <= cx < cx + cw <= width - 20
+        assert 0 <= cy < cy + ch <= height - 40
+    edit = controls[1001]
+    assert edit[1] + edit[3] < controls[7][1]
+    assert controls[6][0] + controls[6][2] < controls[7][0]
+
+
+def test_dialog_template_preserves_text_scrollbar_readonly_and_default_no() -> None:
+    import struct
+
+    text = "Synthetic terms \u2603\nLast line"
+    data = windows_terms._dialog_template(text)
+    assert (text.replace("\n", "\r\n") + "\0").encode("utf-16-le") in data
+    assert ("Bowl Bound Windows terms\0").encode("utf-16-le") in data
+    assert struct.pack("I", 0x50A10844) in data  # readonly multiline scrollable EDIT
+    assert struct.pack("I", 0x50010001) in data  # default No button
+    assert struct.pack("H", 1001) in data
 
 
 def test_failed_receipt_cleanup_does_not_override_fail_closed_result(
@@ -132,3 +160,22 @@ def test_failed_receipt_cleanup_does_not_override_fail_closed_result(
     monkeypatch.setattr(Path, "unlink", Mock(side_effect=OSError("synthetic cleanup failure")))
     assert not windows_terms.ensure_accepted(root, digest)
     assert "synthetic replace failure" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    ("message", "wparam", "expected"),
+    [
+        (0x10, 0, 7),
+        (0x111, 2, 7),
+        (0x111, 7, 7),
+        (0x111, 6, 6),
+        (0x111, 1001, None),
+        (0x100, 6, None),
+    ],
+)
+def test_native_close_cancel_and_unrelated_messages_never_accept(
+    message: int,
+    wparam: int,
+    expected: int | None,
+) -> None:
+    assert windows_terms._dialog_action(message, wparam) == expected

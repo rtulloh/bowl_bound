@@ -172,7 +172,9 @@ a separate source-installed tool, not a bundled standalone feature.
 
 The Windows installer displays the project license and CPython's additional
 Windows binary conditions. The first launch of either the installed application
-or portable executable also displays those same conditions in a Windows dialog.
+or portable executable also displays those same conditions in a scrollable Windows dialog.
+Scroll through the text to review it; **No** is selected by default. Closing the
+dialog also quits without acceptance.
 Choose **Yes** to agree and continue, or **No** to quit before the local server
 and browser start. Acceptance is saved for your Windows account and applies only
 to that exact version of the terms; changed terms require a new agreement.
