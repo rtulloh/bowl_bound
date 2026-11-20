@@ -220,3 +220,34 @@ def test_windows_dialog_probe_is_mandatory_parallel_pinned_and_retains_evidence(
     assert evidence["if"] == "always()"
     assert evidence["with"]["name"] == "windows-terms-source-${{ github.run_id }}"
     assert "windows-terms-source.json" in evidence["with"]["path"]
+
+
+def test_failed_macos_launch_captures_workflow_bound_tools_without_changing_payload_source() -> (
+    None
+):
+    steps = workflow("build.yml")["jobs"]["build"]["steps"]
+    checkout = next(
+        step for step in steps if step.get("name") == "Check out failed-launch diagnostic tools"
+    )
+    assert checkout["if"] == "failure() && startsWith(matrix.target, 'macos-')"
+    assert checkout["with"]["ref"] == "${{ github.sha }}"
+    assert checkout["with"]["path"] == ".native-diagnostics"
+    assert checkout["with"]["persist-credentials"] == "false"
+    capture = next(
+        step for step in steps if step.get("name") == "Capture failed Finder launch evidence"
+    )
+    assert capture["if"] == checkout["if"]
+    assert "--source-ref" in capture["run"]
+    assert "needs.test.outputs.source_ref" in capture["env"]["SOURCE_REF"]
+    assert "--workflow-ref" in capture["run"] and "github.sha" in capture["env"]["WORKFLOW_REF"]
+    assert "macos_finder_diagnostics.py" in capture["run"]
+    evidence = next(
+        step for step in steps if step.get("name") == "Retain unqualified macOS failure resources"
+    )
+    assert evidence["if"] == checkout["if"]
+    assert "finder-diagnostics" in evidence["with"]["path"]
+    assert "*.zip" in evidence["with"]["path"]
+    assert "unqualified" in evidence["with"]["name"]
+    assert steps.index(capture) > next(
+        i for i, step in enumerate(steps) if step.get("name") == "Build and smoke macOS disk image"
+    )

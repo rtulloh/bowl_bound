@@ -106,6 +106,34 @@ jobs:
           for archive in "$RUNNER_TEMP/bowl-bound-artifacts/"*.zip; do
             "$BUILD_PYTHON" -m scripts.macos_dmg "$archive" --smoke
           done
+      - name: Check out failed-launch diagnostic tools
+        if: failure() && startsWith(matrix.target, 'macos-')
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.sha }}
+          path: .native-diagnostics
+      - name: Capture failed Finder launch evidence
+        if: failure() && startsWith(matrix.target, 'macos-')
+        env:
+          SOURCE_REF: ${{ needs.test.outputs.source_ref }}
+          WORKFLOW_REF: ${{ github.sha }}
+        run: |
+          "$BUILD_PYTHON" .native-diagnostics/scripts/macos_finder_diagnostics.py \
+            --output "$RUNNER_TEMP/bowl-bound-artifacts/finder-diagnostics" \
+            --source-ref "$SOURCE_REF" --workflow-ref "$WORKFLOW_REF"
+      - name: Retain unqualified macOS failure resources
+        if: failure() && startsWith(matrix.target, 'macos-')
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: BowlBound-unqualified-${{ matrix.target }}-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/bowl-bound-artifacts/finder-diagnostics/
+            ${{ runner.temp }}/bowl-bound-artifacts/*.zip
+            ${{ runner.temp }}/bowl-bound-artifacts/*.sha256
+            ${{ runner.temp }}/bowl-bound-artifacts/*.manifest.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Install pinned Windows installer compiler
         if: matrix.target == 'windows-x64'
         shell: pwsh

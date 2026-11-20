@@ -335,3 +335,41 @@ and mandatory fresh exact-head hosted full Tests/Audit. No new-head whole-gate
 pass is claimed before that run. Local npm initially used Node18 and failed at
 startup; rerun with reviewed Node24.22.1 passed200 tests/22files and build.
 Ruff check/format passed; pip check found no broken requirements.
+
+
+### 2026-11-20 — Intel Finder failure diagnostic checkpoint
+
+Exact source `443d825` passed branch and main full hosted Tests and Audit,
+including 7,094 Python tests, 200 frontend tests and 72 browser tests. Native
+build runs `44689834726` and `44690919058` both failed Intel Finder-to-Terminal
+startup: the initial ZIP payload passed, and the image verified/mounted/copied,
+but no owned server appeared in 60 seconds. The copied-image payload check was
+not reached. Apple Silicon and Windows native checks passed both attempts;
+this does not qualify Intel or permit publication. Preserve both failed runs.
+
+The failure resource folder was retained on the runner but omitted from the
+upload glob. A diagnostic workflow branch now captures that folder separately,
+including the app inventory, file modes/sizes/architectures, plist, quarantine
+attributes, process/session facts and bounded native logs. Commands do not
+launch applications, request Automation consent, alter permissions or stop
+processes. Every receipt is explicitly unqualified. Each command has a ten-second
+timeout. The failed app copy and original failure receipt remain separate from
+player artifacts. No local GUI or browser probe is run.
+
+The workflow definition and diagnostic helper have their own identity; the
+compiled payload stays pinned to qualified main source `443d825`, with the exact
+main-push source guard unchanged. This is a diagnostic experiment after two
+reproduced failures, not a third unchanged qualification attempt. Root review
+precedes dispatch. No v1.1.1 tag or release exists at this checkpoint.
+
+Paydirt consulted for this phase: `scripts/smoke_published_app.py:117-150` and
+`docs/dev-notes/release-1.10.3-validation.md`. Adapt retained external failure
+evidence and candidate/publication separation only. No runtime dependency,
+private data, launch substitution or old release exception is reused.
+
+Synthetic tests first rejected absent diagnostic steps; the initial helper
+failed on its missing module. A later regression proved that even querying an
+existing Terminal using AppleScript could start it after a race; all Automation
+requests were removed. Focused diagnostic/workflow/DMG/docs/issue checks: 53
+passed. This checkpoint adds diagnostic tooling only; release payloads, football
+rules, charts, runtime manifest and source guard are unchanged.
