@@ -26,7 +26,7 @@ jobs:
             arch: arm64
             target: macos-arm64
             kind: portable
-          - os: macos-26-intel
+          - os: macos-15-intel
             arch: x64
             target: macos-x86_64
             kind: portable
@@ -42,7 +42,7 @@ jobs:
             arch: arm64
             target: macos-arm64
             kind: dmg
-          - os: macos-26-intel
+          - os: macos-15-intel
             arch: x64
             target: macos-x86_64
             kind: dmg

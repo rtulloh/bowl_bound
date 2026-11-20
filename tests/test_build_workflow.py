@@ -19,7 +19,7 @@ def test_three_native_builds_are_test_gated_and_do_not_publish_releases() -> Non
     targets = jobs["build"]["strategy"]["matrix"]["include"]
     assert {(row["target"], row["os"], row["arch"]) for row in targets} == {
         ("macos-arm64", "macos-26", "arm64"),
-        ("macos-x86_64", "macos-26-intel", "x64"),
+        ("macos-x86_64", "macos-15-intel", "x64"),
         ("windows-x64", "windows-2025", "x64"),
     }
     source_text = (ROOT / ".github/workflows/tests.yml").read_text()

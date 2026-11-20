@@ -219,9 +219,18 @@ Run the standalone workflow only when native artifacts are needed; ordinary
 regression status comes from **Tests**. A passing source test run does not replace
 native executable/installer acceptance or authorize publication. Native builds
 run on macOS 26
-arm64, Windows Server 2025 x64 and macOS 26 Intel x86_64. These runner labels
+arm64, Windows Server 2025 x64 and macOS 15 Intel x86_64. These runner labels
 were checked against actions/runner-images; availability is still exercised
 by the first actual run. Linux is a test host, not an artifact target.
+
+Intel macOS 15 is selected after repeated Terminal startup failures on the
+macOS 26 Intel image `20260824.0517.1`, matching the image in
+[the upstream IconServices report](https://github.com/actions/runner-images/issues/14751).
+That report is an environment hypothesis; this project's evidence does not
+include the blocked stack. All architecture and install checks remain required
+on the selected runner. Preserve the failed macOS 26 Intel checks as an explicit
+CI image gap; a macOS 15 pass does not establish macOS 26 Intel qualification.
+No launcher, startup timeout, permissions or system services are changed.
 
 Linux source qualification uses Python **3.12.16**. Native builds and published-
 artifact harnesses use **3.12.10**, the latest Python 3.12 binary published for
@@ -409,10 +418,10 @@ notarized. Run on both supported native Mac architectures.
 
 After publishing a release with DMGs, dispatch post-release-smoke.yml with
 `include_dmg=true` to require both DMG checks as well as the existing ZIP and
-Windows installer checks. The default remains false solely for immutable older
-ZIP-only releases such as v1.1.0. A v1.1.1 release cannot qualify without the DMG
-checks and fresh browser-download launch evidence. Never replace the v1.1.0 tag
-or add rebuilt bytes under its existing asset identity.
+Windows installer checks. The default is true; explicitly set false only for
+immutable older ZIP-only releases such as v1.1.0. A v1.1.1 release cannot qualify
+without the DMG checks and fresh browser-download launch evidence. Never replace
+the v1.1.0 tag or add rebuilt bytes under its existing asset identity.
 
 ## Publish the reviewed macOS-first patch
 

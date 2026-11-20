@@ -85,3 +85,18 @@ def test_source_checks_run_fast_native_windows_terms_probe_in_parallel() -> None
     ]
     assert len(uploads) == 1 and uploads[0]["if"] == "always()"
     assert "windows-terms-source.json" in uploads[0]["with"]["path"]
+
+
+def test_published_native_matrix_uses_supported_intel_image_for_both_mac_assets() -> None:
+    workflow = yaml.load(
+        (ROOT / ".github/workflows/post-release-smoke.yml").read_text(), Loader=yaml.BaseLoader
+    )
+    rows = workflow["jobs"]["native"]["strategy"]["matrix"]["include"]
+    assert {(row["target"], row["kind"]): row["os"] for row in rows} == {
+        ("macos-arm64", "portable"): "macos-26",
+        ("macos-arm64", "dmg"): "macos-26",
+        ("macos-x86_64", "portable"): "macos-15-intel",
+        ("macos-x86_64", "dmg"): "macos-15-intel",
+        ("windows-x64", "portable"): "windows-2025",
+        ("windows-x64", "installer"): "windows-2025",
+    }

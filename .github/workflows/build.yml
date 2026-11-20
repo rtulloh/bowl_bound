@@ -60,7 +60,7 @@ jobs:
           - os: windows-2025
             arch: x64
             target: windows-x64
-          - os: macos-26-intel
+          - os: macos-15-intel
             arch: x64
             target: macos-x86_64
     runs-on: ${{ matrix.os }}

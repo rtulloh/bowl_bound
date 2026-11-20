@@ -421,3 +421,48 @@ passed all ten full local stages (7,100 Python, 200 frontend, 72 browser tests,
 171-team audit; 90.53% coverage), with npm deprecation and Node color warnings
 preserved. Those results do not qualify this changed collector; run its own
 fresh full gate before push. No local desktop snapshot or native launch.
+
+
+### 2026-11-20 — retain Intel validation on a supported runner image
+
+The improved collector run `44717807121` again failed the Intel Finder launch;
+ARM and Windows passed. Its immediate screenshot shows a Finder desktop with
+no Terminal window or permission dialog. Complete, untruncated logs show that
+Terminal checks in but does not finish startup or create a shell descendant
+before the existing bound. The wrapper's `open` process exits normally. No
+payload defect or exact blocked stack is proven by these observations.
+
+The affected runner reports image `20260824.0517.1`, exactly the image described
+in the primary runner reports [14773](https://github.com/actions/runner-images/issues/14773)
+and [14751](https://github.com/actions/runner-images/issues/14751). They document
+an Intel macOS 26 IconServices/Metal failure that blocks AppKit clients; the
+latter report records macOS 15 Intel and macOS 26 ARM controls as unaffected.
+This is a strongly matching environment hypothesis, not a stack/crash receipt
+from this Bowl Bound run. Preserve every failed native check and its evidence.
+
+Use the officially available `macos-15-intel` label for Intel builds and both
+published Intel asset checks. Keep all three native targets, all six published
+checks, Python 3.12.10, exact source guards, launch path, timeout, permissions,
+services and catalog/game/save/browser assertions unchanged. No runtime file,
+manifest, chart or wrapper changes. macOS 26 Intel remains an explicit failed
+CI image gap, not a passing OS-specific qualification; there is no claim that
+physical Intel Macs running that OS are defective or verified. Player guidance
+had no OS-version support promise; maintainer runner documentation is updated.
+The default-DMG prose erratum is corrected with this necessary workflow change.
+
+GitHub's [hosted-runner reference](https://docs.github.com/en/actions/reference/runners/github-hosted-runners)
+currently lists `macos-15-intel` for both public and private repositories.
+Two synthetic workflow assertions failed first (build architecture mapping and
+both published Intel asset runners); the matrix expectations retain every
+existing target and all safety/validation steps. Fresh focused and full source
+checks, review, and actual native qualification remain required before publication.
+
+Paydirt consulted for this phase: `.github/workflows/post-release-smoke.yml:42-63`
+still selects macOS 26 Intel; adapt its architecture-complete published-byte
+matrix/evidence retention, not that unverified runner choice. The examined
+`.github/workflows/build.yml` and `docs/dev-notes/release-testing.md` paths are
+absent there. Prior Paydirt release exceptions are not reused.
+
+Focused runner/workflow/collector/DMG/docs/issue regression: 67 passed; repository
+Ruff/format (920 files), dependency check and whitespace checks passed. No new
+native result is claimed; freeze and run the fresh full gate before push.
