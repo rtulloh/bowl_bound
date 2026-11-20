@@ -85,3 +85,8 @@ one 103-character classifier line. Wrapped expression only; final evidence.py
 03e8e8db4fe5aab7c18da958a03ed9b9831da6df803b601f7384ac01bbbe76bd;
 renewed canonical contract925d94ad87fc1407901f8d90c54c6df387c656af860f9c0a352ca385fe77233f.
 No local tests/static checks. Failed run retained.
+
+--- 2026-11-20 upstream test formatting correction ---
+Run44802720122 at3e53a0d passes focused cases/runtime guard/Ruff lint, then
+format-check requests a single-line generator expression in the synthetic QR
+assertion. Applied upstream suggestion only; no assertion or production change.

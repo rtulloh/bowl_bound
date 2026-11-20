@@ -1050,8 +1050,7 @@ def test_classified_overlapping_scrambles_supply_pass_qr_support(events: list[Ev
         2007,
     )
     assert any(
-        row.play.value >= 6 and row.cell.kind is ResultKind.QUARTERBACK_RUN
-        for row in chart.offense
+        row.play.value >= 6 and row.cell.kind is ResultKind.QUARTERBACK_RUN for row in chart.offense
     )
     assert report["family_evidence"]["6"]["source_QR_probability"] > 0
 

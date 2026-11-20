@@ -229,6 +229,11 @@ the correspondingly renewed canonical contract is
 `925d94ad87fc1407901f8d90c54c6df387c656af860f9c0a352ca385fe77233f`.
 The failed lint run remains preserved; no local checks were substituted.
 
+Follow-up `44802720122` at `3e53a0d` passes focused tests, runtime guard and
+Ruff lint; format-check requests one synthetic assertion generator expression
+on a single line. Applied exactly that upstream formatting suggestion without
+changing assertions, production bytes or attestation. Preserve this run too.
+
 ## Paydirt design input
 
 Reviewed local Paydirt `docs/chart-validation.md:478–488`: separate weighted
