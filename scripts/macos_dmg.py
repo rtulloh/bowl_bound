@@ -22,6 +22,36 @@ from .release_package import ReleaseError
 from .smoke_standalone import extract_verified, request, smoke_executable
 
 
+def compile_launcher(destination: Path, target: str) -> None:
+    """Build the app entrypoint as a target-native executable, never a script."""
+    architecture = {"macos-arm64": "arm64", "macos-x86_64": "x86_64"}[target]
+    subprocess.run(
+        [
+            "clang",
+            "-arch",
+            architecture,
+            "-O2",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            str(Path(__file__).with_name("macos_launcher.c")),
+            "-framework",
+            "CoreFoundation",
+            "-o",
+            str(destination),
+        ],
+        check=True,
+    )
+
+
+def seal_app(app: Path) -> None:
+    """Seal the completed bundle and reject any strict nested-code failure."""
+    subprocess.run(
+        ["codesign", "--force", "--sign", "-", "--timestamp=none", str(app)], check=True
+    )
+    subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)], check=True)
+
+
 def assemble_app(payload: Path, destination: Path, version: str, *, target: str) -> Path:
     """Wrap exact portable resources with an explicit Terminal lifecycle launcher."""
     architectures = {"macos-arm64": "arm64", "macos-x86_64": "x86_64"}
@@ -49,12 +79,7 @@ def assemble_app(payload: Path, destination: Path, version: str, *, target: str)
     }
     (destination / "Contents/Info.plist").write_bytes(plistlib.dumps(info))
     launch = macos / "launch"
-    launch.write_text(
-        "#!/bin/bash\nset -euo pipefail\n"
-        'APP_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"\n'
-        'exec /usr/bin/open -a Terminal "$APP_DIR/../Resources/start.command"\n',
-        encoding="utf-8",
-    )
+    compile_launcher(launch, target)
     command = resources / "start.command"
     command.write_text(
         "#!/bin/bash\nset -euo pipefail\n"
@@ -145,6 +170,7 @@ def build_dmg(archive: Path, *, smoke: bool = False) -> Path:
             manifest["version"],
             target=manifest["target"],
         )
+        seal_app(image / "Bowl Bound.app")
         (image / "Applications").symlink_to("/Applications")
         subprocess.run(
             [
@@ -174,7 +200,7 @@ def build_dmg(archive: Path, *, smoke: bool = False) -> Path:
                 "mounted_payload_smoke": smoke,
                 "finder_terminal_launch_smoke": smoke,
                 "browser_download_first_launch": "pending; local image has no browser quarantine",
-                "signing": "unsigned wrapper; not Developer ID signed or notarized",
+                "signing": "ad-hoc sealed app; not Developer ID signed or notarized",
             },
             indent=2,
         )

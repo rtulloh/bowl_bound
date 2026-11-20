@@ -11,6 +11,32 @@ import pytest
 from scripts import macos_dmg
 from scripts.release_package import ReleaseError
 
+ORIGINAL_COMPILE = macos_dmg.compile_launcher
+
+
+@pytest.fixture(autouse=True)
+def synthetic_native_launcher(monkeypatch: pytest.MonkeyPatch) -> None:
+    def compile_launcher(destination: Path, target: str) -> None:
+        destination.write_bytes(b"synthetic native launcher")
+
+    monkeypatch.setattr(macos_dmg, "compile_launcher", compile_launcher)
+
+
+@pytest.mark.parametrize(
+    ("target", "architecture"), [("macos-arm64", "arm64"), ("macos-x86_64", "x86_64")]
+)
+def test_native_launcher_compiles_for_target_architecture(
+    tmp_path: Path, target: str, architecture: str
+) -> None:
+    # Preserve the real compiler adapter while assembly tests use synthetic bytes.
+    with patch.object(macos_dmg.subprocess, "run") as run:
+        ORIGINAL_COMPILE(tmp_path / "launch", target)
+    command = run.call_args.args[0]
+    assert command[0:3] == ["clang", "-arch", architecture]
+    assert "CoreFoundation" in command
+    assert command[-2:] == ["-o", str(tmp_path / "launch")]
+    assert run.call_args.kwargs["check"] is True
+
 
 def test_app_preserves_payload_and_finder_opens_terminal(tmp_path: Path) -> None:
     payload = tmp_path / "portable"
@@ -27,13 +53,12 @@ def test_app_preserves_payload_and_finder_opens_terminal(tmp_path: Path) -> None
     command = app / "Contents/Resources/start.command"
     assert launch.stat().st_mode & 0o111
     assert command.stat().st_mode & 0o111
-    assert "/usr/bin/open -a Terminal" in launch.read_text()
-    assert "start.command" in launch.read_text()
+    assert launch.read_bytes() == b"synthetic native launcher"
     assert 'exec "$APP_DIR/../MacOS/BowlBound/start.sh" "$@"' in command.read_text()
-    for script in (launch, command):
+    for script in (command,):
         subprocess.run(["/bin/bash", "-n", str(script)], check=True)
     assert (app / "Contents/MacOS/BowlBound/Bowl-Bound").read_text() == "synthetic executable"
-    assert "xattr" not in launch.read_text() + command.read_text()
+    assert "xattr" not in command.read_text()
 
 
 @pytest.mark.parametrize(
@@ -138,6 +163,7 @@ def test_failed_image_creation_leaves_final_path_free_for_retry(tmp_path: Path) 
 
     with (
         patch.object(macos_dmg, "extract_verified", side_effect=extract),
+        patch.object(macos_dmg, "seal_app"),
         patch.object(macos_dmg.subprocess, "run", side_effect=fail) as run,
     ):
         for _ in range(2):
@@ -203,3 +229,23 @@ def test_failed_finder_smoke_preserves_app_for_potentially_running_server(
     import shutil
 
     shutil.rmtree(copied_apps[0].parents[1])
+
+
+def test_completed_app_is_sealed_and_verified_fail_closed(tmp_path: Path) -> None:
+    app = tmp_path / "Bowl Bound.app"
+    with patch.object(macos_dmg.subprocess, "run") as run:
+        macos_dmg.seal_app(app)
+    assert [call.args[0] for call in run.call_args_list] == [
+        ["codesign", "--force", "--sign", "-", "--timestamp=none", str(app)],
+        ["codesign", "--verify", "--deep", "--strict", str(app)],
+    ]
+    assert all(call.kwargs["check"] is True for call in run.call_args_list)
+    with (
+        patch.object(
+            macos_dmg.subprocess,
+            "run",
+            side_effect=[None, subprocess.CalledProcessError(1, "codesign")],
+        ),
+        pytest.raises(subprocess.CalledProcessError),
+    ):
+        macos_dmg.seal_app(app)

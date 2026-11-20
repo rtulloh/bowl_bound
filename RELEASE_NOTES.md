@@ -4,7 +4,9 @@
 
 The app bundle declares the architecture matching its packaged payload, avoiding
 Launch Services defaulting the shell launcher to Rosetta on Apple Silicon.
-The launcher and manual quarantine instructions stay the same. This candidate
+A target-native launcher retains Terminal output and Ctrl+C; the completed app
+is ad-hoc sealed and strictly verified. Manual quarantine instructions remain.
+This candidate
 requires upstream source and native validation before publication.
 
 ## 1.1.1 — macOS app disk images
