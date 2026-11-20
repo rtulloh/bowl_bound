@@ -589,3 +589,9 @@ Paydirt `paydirt/__main__.py:39,183-210` also starts its frozen browser/server
 mode from a native executable and keeps a main thread alive. Do not reuse its
 server-thread lifecycle: Bowl Bound retains its own uvicorn signal/shutdown
 behavior and visible Terminal ownership.
+
+Upstream architecture-only run `44738510895` failed eight version-identity
+checks (7,103 passed): the candidate initially missed the Python runtime/display
+constants when bumping package/frontend metadata. Correct both constants and
+the exact metadata expectations to 1.1.2; preserve the failed receipt. This
+metadata correction changes no gameplay/save profile and claims no test pass.
