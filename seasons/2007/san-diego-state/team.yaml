@@ -5,7 +5,7 @@ season: 2007
 power_rating: 200.0
 power_rating_origin: local-only-placeholder
 defense_chart_markers: []
-source_sha256: cbbd9816346941070a311d7ced8e8bf02f2b2d525026a2e14ad9c3b1e864ccc6
-source_filename: generated-bb-call-depth-v1.json
+source_sha256: 2a024eb9c4cb2407429412a285b096f26f26dc6dfafa70f0a9a2c59eb6f5d9fc
+source_filename: generated-native-support-2a024eb9c4cb2407429412a285b096f26f26dc6dfafa70f0a9a2c59eb6f5d9fc.json
 team_file_version: 5
 status: validated

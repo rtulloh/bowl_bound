@@ -5,7 +5,7 @@ season: 2002
 power_rating: 200.0
 power_rating_origin: local-only-placeholder
 defense_chart_markers: []
-source_sha256: 6a23ea79a6d1b8dbdb951a660c7005bb8011e4acd4293525809035f06322b3b2
-source_filename: generated-bb-call-depth-v1.json
+source_sha256: 7ef22a05b707b8ffa4941b119bddb2f518a8d26d830cb46a35e5072c2567db3c
+source_filename: generated-native-support-7ef22a05b707b8ffa4941b119bddb2f518a8d26d830cb46a35e5072c2567db3c.json
 team_file_version: 5
 status: validated
