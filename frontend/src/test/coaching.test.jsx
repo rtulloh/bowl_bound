@@ -17,8 +17,8 @@ beforeEach(() => {
   api.listTeams.mockResolvedValue({ teams: [{ id: 'a', name: 'Alpha', season: 2007 }, { id: 'b', name: 'Beta', season: 2007 }] })
   api.getRules.mockResolvedValue({ season: 2007, game_type: 'regular', supported: true, summary: '2007 home-season rules govern this game.', details: [] })
 })
-async function start(role, mode = 'home') {
-  api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, revision: 0, view: view(), turn: turn(role) })
+async function start(role, mode = 'home', initialView = view()) {
+  api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, revision: 0, view: initialView, turn: turn(role) })
   render(<App />)
   await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: mode } })
@@ -39,20 +39,25 @@ it('shows the persistent hurry-up preference only to the human offense', async (
   await start('defense', 'home')
   expect(screen.queryByRole('checkbox', { name: 'Enable/Disable Hurry-Up' })).toBeNull()
 })
-it('preserves a collapsed play history when the human turn changes from offense to defense', async () => {
+it.each(['offense', 'defense'])('shows the toss audit only on offense (%s)', async (role) => {
+  await start(role, 'home', view({ toss_dice: [{ faces: [1, 2], total: 3 }] }))
+  await screen.findByTestId('play-area')
+  expect(Boolean(screen.queryByText('Toss dice audit'))).toBe(role === 'offense')
+})
+it('puts the newest play first when the human turn changes from offense to defense', async () => {
   api.newGame.mockResolvedValue({ game_id: 'cpu', seed: 7, revision: 0, view: view({ log: [report()] }), turn: turn('offense') })
   api.coachStep.mockResolvedValue({ revision: 1, view: view({ log: [report(), report({ number: 2, description: 'second play' })] }), turn: turn('defense') })
   render(<App />)
   await waitForStartReady()
   fireEvent.change(screen.getByLabelText('Control mode'), { target: { value: 'home' } })
   fireEvent.click(screen.getByTestId('start-game'))
-  const history = await screen.findByTestId('play-history')
-  fireEvent.click(screen.getByText('Play history'))
-  expect(history.open).toBe(false)
+  const history = await screen.findByTestId('play-log')
+  history.scrollTop = 80
 
   fireEvent.click(screen.getByTestId('offense-play-1'))
   await screen.findByTestId('defense-play-a')
-  expect(screen.getByTestId('play-history').open).toBe(false)
+  expect(screen.getAllByTestId('log-entry')[0]).toHaveTextContent('second play')
+  expect(history.scrollTop).toBe(0)
 })
 it('automatically advances serialized computer actions and stops for the human decision', async () => {
   let finish
@@ -274,7 +279,7 @@ it('keeps the engine conversion review visible until Continue before an automati
   expect(panel).toHaveTextContent(result.commentary)
   await act(async () => { await new Promise((resolve) => setTimeout(resolve, 350)) })
   expect(api.coachStep).not.toHaveBeenCalled()
-  expect(screen.getAllByTestId('log-entry')[0]).toHaveTextContent('Beta State is going for two.')
+  expect(screen.getAllByTestId('log-entry')[1]).toHaveTextContent('Beta State is going for two.')
   fireEvent.click(screen.getByRole('button', { name: 'Continue', exact: true }))
   await waitFor(() => expect(api.gameAction).toHaveBeenCalledWith('cpu', 'review:continue', 'home'))
   await waitFor(() => expect(api.coachStep).toHaveBeenCalledTimes(1))

@@ -37,26 +37,30 @@ it.each(['offense', 'defense'])('submits when the second manual call is selected
   fireEvent.click(defense)
   await waitFor(() => expect(api.snap).toHaveBeenCalledTimes(2))
 })
-it('keeps a fixed-height result above stable play controls after a snap', async () => {
+it('keeps the latest result beside the play controls after a snap', async () => {
   await start()
   const offense = screen.getByTestId('offense-plays')
   const result = screen.getByTestId('result-empty')
   const playArea = screen.getByTestId('play-area')
-  expect(result.compareDocumentPosition(offense) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-  expect(result).toHaveClass('h-[13rem]', 'overflow-y-auto')
-  expect(playArea).toHaveClass('grid', 'lg:grid-cols-[minmax(0,2fr)_minmax(16rem,1fr)]')
+  expect(screen.getByRole('region', { name: 'Latest play' })).toContainElement(result)
+  expect(playArea.children[1]).toBe(screen.getByRole('region', { name: 'Latest play' }))
+  expect(playArea.children[2]).toContainElement(screen.getByTestId('modifier-card'))
+  expect(playArea).toHaveClass('lg:items-stretch')
+  for (const column of playArea.children) expect(column).toHaveClass('border-slate-600')
   expect(playArea).toContainElement(offense)
   expect(playArea).toContainElement(screen.getByRole('region', { name: 'Play modifiers' }))
   expect(offense).not.toHaveClass('max-h-[10rem]', 'overflow-y-auto')
   expect(screen.getByTestId('modifier-card')).toHaveTextContent('GAME CONTROLS')
   expect(screen.getByTestId('modifier-card')).toHaveTextContent('Pace')
-  expect(screen.getByTestId('modifier-card')).toHaveTextContent('Clock')
+  expect(screen.getByTestId('modifier-card')).not.toHaveTextContent('Clock')
 
   fireEvent.click(screen.getByTestId('offense-play-1'))
   fireEvent.click(screen.getByTestId('defense-play-a'))
   const resolvedResult = await screen.findByTestId('result-panel')
-  expect(resolvedResult.compareDocumentPosition(offense) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-  expect(resolvedResult).toHaveClass('h-[13rem]', 'overflow-y-auto')
+  expect(screen.getByRole('region', { name: 'Latest play' })).toContainElement(resolvedResult)
+  expect(screen.getByTestId('play-log')).toContainElement(resolvedResult)
+  expect(screen.getByTestId('play-log')).toHaveClass('resize-y')
+  expect(screen.getByTestId('modifier-card')).toContainElement(screen.getByRole('button', { name: 'Show complete history' }))
 })
 it('offers QB Sneak as an engine play and sends its selected ID to the API', async () => {
   const base = view()
@@ -197,19 +201,13 @@ it('groups an immediate clock decision separately from the persistent pace prefe
   expect(screen.queryByRole('button', { name: 'OOB' })).toBeNull()
   fireEvent.click(screen.getByRole('radio', { name: 'Home timeout' }))
   await waitFor(() => expect(api.decide).toHaveBeenCalledWith('game', 'clock:timeout:home'))
-  expect(screen.getByRole('button', { name: 'Timeout' })).toBeDisabled()
+  expect(screen.queryByRole('button', { name: 'Timeout' })).toBeNull()
   expect(screen.queryByRole('button', { name: 'Spike', exact: true })).toBeNull()
 })
 
 it('hides modifiers that the engine has not offered', async () => {
   await start()
-  const row = screen.getByRole('region', { name: 'Play modifiers' })
-  for (const name of ['Timeout']) {
-    const button = screen.getByRole('button', { name, exact: true })
-    expect(row).toContainElement(button)
-    expect(button).toBeDisabled()
-    fireEvent.click(button)
-  }
+  expect(screen.queryByRole('button', { name: 'Timeout', exact: true })).toBeNull()
   expect(screen.queryByRole('button', { name: 'Spike', exact: true })).toBeNull()
   expect(screen.queryByRole('button', { name: 'OOB', exact: true })).toBeNull()
   expect(screen.queryByRole('button', { name: 'IB', exact: true })).toBeNull()
@@ -283,5 +281,19 @@ it('keeps engine-offered between-play timeouts in the same modifier row, not in 
   expect(screen.queryByRole('button', { name: 'Timeout', exact: true })).toBeNull()
   fireEvent.click(timeout)
   await waitFor(() => expect(api.gameAction).toHaveBeenCalledWith('game', 'timeout:home'))
-  expect(screen.getByRole('button', { name: 'Timeout', exact: true })).toBeDisabled()
+  expect(screen.queryByRole('button', { name: 'Timeout', exact: true })).toBeNull()
+})
+
+it('shows the final score and team statistics when the game ends', async () => {
+  api.newGame.mockResolvedValue({ game_id: 'game', seed: 7, view: view({
+    phase: 'final', finished: true, score: { home: 13, away: 40 },
+    statistics: { rows: [{ label: 'Total yards', home: 219, away: 361 }] },
+  }) })
+  render(<App />)
+  fireEvent.click(await waitForStartReady())
+  const final = await screen.findByRole('region', { name: 'Final' })
+  expect(final).toHaveTextContent(/Alpha Tech.*13.*Beta State.*40/)
+  expect(screen.getByRole('table')).toHaveTextContent(/Total yards.*219.*361/)
+  expect(screen.queryByTestId('football-field')).toBeNull()
+  expect(screen.queryByTestId('play-area')).toBeNull()
 })

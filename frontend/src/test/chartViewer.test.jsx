@@ -4,7 +4,7 @@ import ChartViewer, { DetachedCharts } from '../components/ChartViewer'
 import * as api from '../api'
 
 vi.mock('../api', () => ({ getCharts: vi.fn() }))
-const table = (key) => ({ key, title: key === 'offense' ? 'Offense' : 'Defense', roll_label: 'Roll', columns: [{ key: '1', label: '1 · Line Plunge' }], rows: [{ label: '10', description: 'Offensive total 10', cells: [{ label: '0', color: 'white', description: 'No change' }] }, { label: '11', description: 'Offensive total 11', cells: [{ label: 'INT 20', color: 'red', description: 'Interception 20 yards downfield' }] }] })
+const table = (key) => ({ key, title: key === 'offense' ? 'Offense' : 'Defense', roll_label: 'Roll', columns: [{ key: '1', label: '1 · Line Plunge' }], rows: [{ label: '10', description: 'Offensive total 10', cells: [{ label: '', color: 'white', description: 'No yardage adjustment' }] }, { label: '11', description: 'Offensive total 11', cells: [{ label: 'INT 20', color: 'red', description: 'Interception 20 yards downfield' }] }] })
 const priority = { note: 'Read the offensive row against the defensive column.', table: { ...table('priority'), title: 'Priority chart', rows: [{ label: '# / B', description: 'Ordinary gain or Breakaway', cells: [{ label: 'ADD', color: 'green', description: 'Add signed yardage' }] }] }, legend: [{ label: 'ADD', description: 'Add signed yardage.' }], notes: ['The approved (B) extension is shown.'] }
 const book = { priority, team: 'Alpha Tech', season: 2026, note: 'Chart reference.', offense: table('offense'), defense: table('defense'), legend: [{ color: 'red', label: 'Red', description: 'Losses and special results; read the cell.' }], symbols: [{ label: 'INT', description: 'Interception at the printed distance.' }] }
 
@@ -25,12 +25,16 @@ it('opens the controlled team chart, renders supplied labels and restores focus 
   expect(api.getCharts).toHaveBeenCalledTimes(2)
   expect(api.getCharts).toHaveBeenCalledWith('game', 'home')
   expect(api.getCharts).toHaveBeenCalledWith('game', 'away')
-  expect(screen.getByRole('cell', { name: /^0 —/ })).toHaveTextContent('0')
+  const blank = screen.getByRole('cell', { name: 'No yardage adjustment' })
+  expect(blank).toHaveClass('chart-cell-white')
+  expect(blank.firstElementChild).toBeEmptyDOMElement()
   expect(screen.getByRole('cell', { name: /INT 20/ })).toHaveClass('chart-cell-red')
   const help = screen.getByText('How to read the charts').closest('details')
   expect(help.open).toBe(false)
   fireEvent.click(screen.getByText('How to read the charts'))
   expect(help.open).toBe(true)
+  expect(screen.getByRole('heading', { name: 'Cell colors' })).toBeVisible()
+  expect(screen.getByRole('heading', { name: 'Result codes' })).toBeVisible()
   expect(screen.getByText('Interception at the printed distance.')).toBeVisible()
   fireEvent.click(screen.getByRole('button', { name: 'Offense', exact: true }))
   expect(screen.getByRole('table', { name: /Offense/ })).toBeVisible()

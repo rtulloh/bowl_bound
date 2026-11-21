@@ -83,6 +83,7 @@ class SpecialTeamsResolution:
     points: tuple[int, int] = (0, 0)
     chooser: Possession | None = None
     choices: tuple[KickChoice, ...] = ()
+    kick_landing_yards_to_goal: int | None = None
 
 
 def kickoff_spot(home_season: int) -> int:
@@ -202,6 +203,8 @@ class SpecialTeamsPlay:
         self,
         chooser: Possession,
         alternatives: list[tuple[str, str, Callable[[], SpecialTeamsResolution]]],
+        *,
+        kick_landing_yards_to_goal: int | None = None,
     ) -> SpecialTeamsResolution:
         self.handlers = {key: handler for key, _, handler in alternatives}
         return SpecialTeamsResolution(
@@ -210,6 +213,7 @@ class SpecialTeamsPlay:
             tuple(self.trace),
             chooser=chooser,
             choices=tuple(KickChoice(key, label) for key, label, _ in alternatives),
+            kick_landing_yards_to_goal=kick_landing_yards_to_goal,
         )
 
     def _roll(self, possession: Possession, column: SpecialTeamsColumn) -> NormalizedCell:
@@ -428,6 +432,7 @@ class SpecialTeamsPlay:
                         lambda: self._return(receiver, landing),
                     ),
                 ],
+                kick_landing_yards_to_goal=landing,
             )
         if not 1 <= landing < GOAL_LINE:
             raise ValueError("kick landing must be within the field or receiving end zone")
@@ -446,6 +451,7 @@ class SpecialTeamsPlay:
                     ),
                     ("kick:return", "Return the punt", lambda: self._return(receiver, landing)),
                 ],
+                kick_landing_yards_to_goal=landing,
             )
         return self._return(receiver, landing)
 

@@ -28,10 +28,10 @@ for (const arrangement of ['named', 'reversed', 'missing']) {
     await expect(page.getByTestId('play-log')).toContainText(text)
     const assertFits = async () => {
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
-      const narration = page.getByTestId("log-entry").last().locator(":scope > div").first()
+      const narration = page.getByTestId("result-description")
       await expect(narration).toBeVisible()
       expect(await narration.evaluate((el) => el.clientWidth)).toBeGreaterThan(0)
-      expect(await narration.textContent()).toBe(body.report.number + ". " + text)
+      expect(await narration.textContent()).toBe(text)
       expect(await narration.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
     }
     await assertFits()

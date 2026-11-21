@@ -354,6 +354,8 @@ def test_punt_action_and_reception_decision_through_api(seasons: Path) -> None:
     data = response.json()
     assert data["view"]["state"] == game["view"]["state"]
     assert data["view"]["pending"]["chooser"] == "Beta State"
+    assert data["view"]["pending"]["kick_landing_from_left"] == 75
+    assert client.get(path).json()["view"]["pending"]["kick_landing_from_left"] == 75
     assert client.post(path + "/kick", json={"action": "field_goal"}).status_code == 409
     assert client.post(path + "/snap", json={"play": "1", "defense": "A"}).status_code == 409
     result = client.post(path + "/decision", json={"choice": "kick:fair_catch"})
@@ -411,6 +413,7 @@ def test_opening_kickoff_end_zone_choice_through_api(seasons: Path) -> None:
         "kick:return",
     ]
     assert result.json()["view"]["state"] == game["view"]["state"]
+    assert result.json()["view"]["pending"]["kick_landing_from_left"] == 105
     final = client.post(path + "/decision", json={"choice": "kick:touchback"})
     assert final.json()["view"]["state"]["yards_to_goal"] == 80
     assert "kickoff" not in [a["key"] for a in final.json()["view"]["actions"]["special"]]

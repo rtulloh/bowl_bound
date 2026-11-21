@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 import { expect, test } from '@playwright/test'
 
 for (const width of [1280, 390]) {
-  test(`complete scoring history is readable without losing older position, width=${width}`, async ({ page }) => {
+  test(`complete scoring history is readable and follows the newest play, width=${width}`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 })
     const save = execFileSync('.venv/bin/python', ['-m', 'tests.history_fixtures',
       process.env.BB_E2E_SEASONS || '/tmp/bowl-bound-e2e-seasons'], { cwd: '..', env: { ...process.env, PYTHONPATH: '.' } })
@@ -22,12 +22,11 @@ for (const width of [1280, 390]) {
     await page.getByTestId('offense-play-1').click()
     await page.getByTestId('defense-play-a').click()
     await expect(page.getByTestId('log-entry')).toHaveCount(44)
-    expect(await region.evaluate((el) => el.scrollTop)).toBeCloseTo(100, 0)
-    await expect(page.getByRole('button', { name: 'Show latest plays' })).toBeVisible()
+    expect(await region.evaluate((el) => el.scrollTop)).toBe(0)
     await page.getByRole('button', { name: 'Show complete history' }).click()
-    expect(await region.evaluate((el) => el.scrollHeight <= el.clientHeight + 1)).toBe(true)
-    for (const [index, entry] of body.view.log.entries()) {
-      await expect(page.getByTestId('log-entry').nth(index)).toContainText(entry.commentary)
+    await expect(page.getByRole('button', { name: 'Close history' })).toBeVisible()
+    for (const [index, entry] of [...body.view.log].reverse().entries()) {
+      await expect(page.getByTestId('log-entry').nth(index + 1)).toContainText(entry.commentary)
     }
     expect(body.view.log.filter((r) => r.outcome.startsWith('pat_')).length).toBe(14)
     expect(body.view.log.filter((r) => r.outcome === 'kickoff_return').length).toBe(15)

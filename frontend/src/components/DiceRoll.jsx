@@ -5,9 +5,9 @@ const colors = {
   red: 'bg-red-800 text-white border-red-950',
   green: 'bg-green-800 text-white border-green-950',
 }
-export default function DiceRoll({ roll }) {
+export default function DiceRoll({ roll, showTotal = true }) {
   if (!roll) return null
-  if (!roll.dice) return <span>{roll.faces.join(' + ')} = {roll.total}</span>
+  if (!roll.dice) return <span>{roll.faces.join(' + ')}{showTotal && ` = ${roll.total}`}</span>
   return (
     <span className="inline-flex flex-wrap items-center gap-2 my-1" role="group" aria-label={roll.dice_label}>
       {roll.dice.map((die) => <span key={die.role} className="inline-flex flex-col items-center gap-1">
@@ -15,7 +15,7 @@ export default function DiceRoll({ roll }) {
           role="img" aria-label={`${die.label}: ${die.face}`} data-die-color={die.color}>{die.face}</span>
         <span className="text-xs">{die.label}</span>
       </span>)}
-      <span className="font-bold">Total {roll.total}</span>
+      {showTotal && <span className="font-bold">Total {roll.total}</span>}
     </span>
   )
 }

@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { coachStep, decide, gameAction, getRules, kick, listTeams, newGame, snap } from './api'
 import FootballField from './components/FootballField'
-import PlayLog from './components/PlayLog'
+import { GamePlayLog } from './components/PlayLog'
 import PlaySelector from './components/PlaySelector'
-import ResultPanel from './components/ResultPanel'
 import Scoreboard from './components/Scoreboard'
 import PenaltyChoices from './components/PenaltyChoices'
 import ScoringLedger from './components/ScoringLedger'
@@ -36,7 +35,7 @@ export default function App() {
   const [computerError, setComputerError] = useState('')
   const [busy, setBusy] = useState(false)
   const [hurryMode, setHurryMode] = useState(false)
-  const [historyExpanded, setHistoryExpanded] = useState(true)
+  const [completeHistory, setCompleteHistory] = useState(false)
   const [revealedToss, setRevealedToss] = useState(null)
   const [control, setControl] = useState('home')
   const gameMenu = useRef(null)
@@ -124,7 +123,7 @@ export default function App() {
     setGame(created)
     setReport(null)
     setHurryMode(false)
-    setHistoryExpanded(true)
+    setCompleteHistory(false)
     setOffense('')
     setDefense('')
     setComputerError('')
@@ -171,7 +170,7 @@ export default function App() {
     automaticCount.current = 0
     setReport(null)
     setHurryMode(false)
-    setHistoryExpanded(true)
+    setCompleteHistory(false)
     setError('')
     setComputerError('')
     setOffense('')
@@ -185,7 +184,7 @@ export default function App() {
     setOffense('')
     setDefense('')
     setHurryMode(false)
-    setHistoryExpanded(true)
+    setCompleteHistory(false)
   }
   const saves = <SaveControls gameId={game?.game_id} humanSide={control} busy={busy} onLoaded={loaded}
     onBusyChange={(value) => { inFlight.current = value; setBusy(value) }} onError={setError} />
@@ -294,7 +293,7 @@ export default function App() {
     {defensePlays.length > 0 && <PlaySelector title={"DEFENSE — " + (view.defense_name || "—")} prefix="defense" actions={defensePlays} selected={defense} onSelect={(key) => selectPlay('defense', key)} disabled={view.finished || blocking || busy} />}
   </div>
   return (
-    <main className={`${view.phase === "opening_choice" ? "max-w-xl" : "max-w-4xl"} mx-auto p-4 space-y-3 text-white`} data-testid={view.phase === "opening_choice" ? "opening-screen" : "playing-screen"}>
+    <main className={`${view.phase === "opening_choice" ? "max-w-xl" : "max-w-7xl"} mx-auto p-4 space-y-3 text-white`} data-testid={view.phase === "opening_choice" ? "opening-screen" : "playing-screen"}>
       <header className="flex items-center justify-between gap-3">
         <h1 className="font-bold">Bowl Bound</h1>
         <div className="flex items-center gap-3">
@@ -324,10 +323,28 @@ export default function App() {
         <p className="text-center font-bold">{view.home} vs {view.away}</p>
         {openingRevealed && <div role="status" className="text-sm" data-testid="session-status">{turn?.status || view.status}</div>}
         <CoinToss pending={pending} winner={view.pending?.chooser} revealed={openingRevealed} rolls={view.toss_dice} onChoose={choose} disabled={busy} />
+      </> : view.finished ? <>
+        <section aria-labelledby="final-heading" className="space-y-3 rounded-lg bg-slate-800 p-4 text-center">
+          <h2 id="final-heading" className="text-xl font-bold">Final</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div><p className="font-semibold">{view.home}</p><p className="text-3xl font-bold text-yellow-400" data-testid="home-score">{view.score?.home ?? '—'}</p></div>
+            <div><p className="font-semibold">{view.away}</p><p className="text-3xl font-bold text-yellow-400" data-testid="away-score">{view.score?.away ?? '—'}</p></div>
+          </div>
+          <p role="status" className="text-sm text-slate-300" data-testid="session-status">{turn?.status || view.status}</p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <button type="button" className="play-button" onClick={resetGame}>New game</button>
+            {view.log.length > 0 && <button type="button" className="play-button"
+              aria-expanded={completeHistory} onClick={() => setCompleteHistory(!completeHistory)}>Show complete history</button>}
+          </div>
+        </section>
+        <TeamStatistics home={view.home} away={view.away} statistics={view.statistics} final />
+        <ScoringLedger events={view.scoring} />
+        {completeHistory && <GamePlayLog entries={view.log} report={report} complete onClose={() => setCompleteHistory(false)} />}
       </> : <>
       <Scoreboard view={view} />
       <div role="status" className={!view.finished && ["scrimmage", "clock_choice"].includes(view.phase) ? "sr-only" : "text-sm"} data-testid="session-status">{turn?.status || view.status}</div>
-      <FootballField state={view.state} home={view.home} away={view.away} />
+      <FootballField state={view.state} home={view.home} away={view.away}
+        kickLanding={view.pending?.kick_landing_from_left} />
       {view.review && (view.review.halftime
         ? <HalftimeReview review={view.review} busy={busy} onContinue={() => special(view.review.action.key, true)} />
         : <section role="region" aria-label={view.review.title} className="board-panel p-3 space-y-2">
@@ -335,11 +352,11 @@ export default function App() {
           {view.review.lines.map((line, i) => <p key={i}>{line}</p>)}
           <button type="button" className="play-button" disabled={busy} onClick={() => special(view.review.action.key, true)}>{view.review.action.label}</button>
         </section>)}
-      <ResultPanel report={report} />
-      <div className="grid gap-3 lg:grid-cols-[minmax(0,2fr)_minmax(16rem,1fr)]" data-testid="play-area">
-      <div className="order-2 space-y-3 lg:order-1">
+      <div className="grid items-start gap-3 lg:items-stretch lg:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(12rem,3fr)]" data-testid="play-area">
+      <div className="order-1 min-w-0 space-y-3 rounded-lg border border-slate-600 bg-slate-800/80 p-3">
+        <h2 className="text-sm font-semibold">Play selection</h2>
       <p className="text-xs text-gray-300">{hurryMode ? "Enabled until you turn it off; used only when the engine offers a legal hurry-up snap for your offense." : turn ? "Choose your play to resolve it. Computer calls stay hidden until resolution." : "Choose both calls to resolve the play. Required decisions come first."}</p>
-      {(view.toss_dice?.length > 0 || view.overtime_toss_dice?.length > 0) && <details className="text-xs"><summary>Toss dice audit</summary>
+      {turn?.human_role !== 'defense' && (view.toss_dice?.length > 0 || view.overtime_toss_dice?.length > 0) && <details className="text-xs"><summary>Toss dice audit</summary>
         <p>Opening toss</p>{view.toss_dice?.map((roll, i) => <DiceRoll key={`opening-${i}`} roll={roll} />)}
         {view.overtime_toss_dice?.length > 0 && <p>Overtime toss</p>}{view.overtime_toss_dice?.map((roll, i) => <DiceRoll key={`ot-${i}`} roll={roll} />)}
       </details>}
@@ -350,9 +367,10 @@ export default function App() {
         </section>}
         {playPanels}
       </div>
-      <aside className="order-1 space-y-3 lg:order-2">
-      <section aria-label="Play modifiers" className="play-modifiers rounded-lg border border-slate-600 bg-slate-800/80 p-3 text-sm space-y-3" data-testid="modifier-card">
-        <h2 className="text-xs font-bold tracking-wide text-slate-300">GAME CONTROLS</h2>
+      <GamePlayLog entries={view.log} report={report} complete={completeHistory} onClose={() => setCompleteHistory(false)} />
+      <aside className="order-2 min-w-0 rounded-lg border border-slate-600 bg-slate-800/80 p-3 lg:order-3">
+      <section aria-label="Play modifiers" className="play-modifiers space-y-3 text-sm" data-testid="modifier-card">
+        <h2 className="text-sm font-semibold">GAME CONTROLS</h2>
         {canSetHurry && <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-slate-600 pt-2">
           <span className="font-bold">Pace</span>
           <label className="inline-flex items-center gap-2">
@@ -360,17 +378,15 @@ export default function App() {
             Enable/Disable Hurry-Up
           </label>
         </div>}
-        {clockChoice ? <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-600 pt-2">
-          <span className="font-bold">Clock</span>
-          {view.clock_timing_label && <span className="text-xs text-gray-300">{view.clock_timing_label}</span>}
-          <ClockChoices pending={pending} modifiers={turn ? view.clock_modifiers?.filter((c) => pending.choices.some((offered) => offered.id === c.id)) : view.clock_modifiers} onChoose={choose} disabled={busy} />
-        </div> : null}
-        {(!clockChoice || timeoutActions.length > 0) && <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-600 pt-2">
-          <span className="font-bold">Clock</span>
-          {timeoutActions.map((action) => <button key={action.key} type="button" className="play-button"
-            disabled={busy || blocking || view.finished} title={action.label} data-testid={'game-play-' + action.key}
-            onClick={() => special(action.key, true)}>{action.label}</button>)}
-          {!timeoutActions.length && <button type="button" className="play-button" disabled title="Available when the engine offers an eligible timeout.">Timeout</button>}
+        {(clockChoice || timeoutActions.length > 0) && <div className="space-y-2 border-t border-slate-600 pt-2">
+          <h3 className="font-bold">Clock</h3>
+          {clockChoice && view.clock_timing_label && <p className="truncate text-xs text-gray-300" title={view.clock_timing_label}>{view.clock_timing_label}</p>}
+          <div className="flex flex-wrap items-center gap-2">
+            {clockChoice && <ClockChoices pending={pending} modifiers={turn ? view.clock_modifiers?.filter((c) => pending.choices.some((offered) => offered.id === c.id)) : view.clock_modifiers} onChoose={choose} disabled={busy} />}
+            {timeoutActions.map((action) => <button key={action.key} type="button" className="play-button px-2 py-1 text-xs"
+              disabled={busy || blocking || view.finished} title={action.label} data-testid={'game-play-' + action.key}
+              onClick={() => special(action.key, true)}>{action.label}</button>)}
+          </div>
         </div>}
         {view.armed_timeout_label && <p role="status">{view.armed_timeout_label}</p>}
         {boundsActions.length > 0 && <div role="group" aria-label="Next-play result instruction" className="border-t border-slate-600 pt-2">
@@ -390,8 +406,9 @@ export default function App() {
           </div>
           <span className="mt-2 block text-xs text-gray-300" data-testid="bounds-status">{boundsStatus}</span>
         </div>}
+        {(report || view.log.length > 0) && <button type="button" className="play-button px-2 py-1 text-xs"
+          aria-expanded={completeHistory} onClick={() => setCompleteHistory(!completeHistory)}>Show complete history</button>}
       </section>
-      <PlayLog entries={view.log} expanded={historyExpanded} onExpandedChange={setHistoryExpanded} />
       </aside>
       </div>
       <ScoringLedger events={view.scoring} />

@@ -50,7 +50,7 @@ def test_semantic_text_colors_and_no_source_evidence() -> None:
     )
     row = chart_book(chart).offense.rows[0]
     assert [(c.label, c.color) for c in row.cells[:4]] == [
-        ("0", "white"),
+        ("", "white"),
         ("[-3]*", "red"),
         ("INC", "black"),
         ("INT 20", "red"),
@@ -83,3 +83,46 @@ def test_no_change_out_of_bounds_marker_is_preserved() -> None:
     )
     chart = replace(chart, offense=tuple(replace(record, cell=cell) for record in chart.offense))
     assert chart_book(chart).offense.rows[0].cells[0].label == "0*"
+
+
+def test_ordinary_zero_is_blank_white_and_priority_zero_stays_visible() -> None:
+    chart = team_chart("Synthetic College")
+    zero = NormalizedCell(ResultKind.YARDS, provenance(), yards=0, chart_color=ChartColor.GREEN)
+    fields = (
+        zero,
+        replace(zero, priority=Priority.PARENTHESIZED),
+        replace(zero, out_of_bounds=True),
+    )
+    chart = replace(
+        chart,
+        defense=tuple(
+            replace(record, cell=fields[record.play.value - 1])
+            if record.play.value <= 3
+            else record
+            for record in chart.defense
+        ),
+    )
+    row = chart_book(chart).defense.rows[0]
+    assert [(c.label, c.color) for c in row.cells[:3]] == [
+        ("", "white"),
+        ("(0)", "green"),
+        ("0*", "green"),
+    ]
+    assert row.cells[0].description == "No yardage adjustment"
+
+
+def test_scrimmage_legend_explains_colors_and_individual_result_codes() -> None:
+    book = chart_book(team_chart("Synthetic College"))
+    colors = {entry.color: entry.description for entry in book.legend}
+    assert "positive yards" in colors["green"]
+    assert "negative yards" in colors["red"]
+    assert "no yardage adjustment" in colors["white"]
+    codes = {entry.label: entry.description for entry in book.symbols}
+    for label, meaning in {
+        "B": "Breakaway",
+        "QR": "Quarterback run",
+        "QT": "Quarterback trapped",
+        "SOP": "Sprint Out",
+        "BLP": "Boot-leg",
+    }.items():
+        assert meaning in codes[label]

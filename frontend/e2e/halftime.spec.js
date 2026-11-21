@@ -117,9 +117,9 @@ for (const openingChoice of ['toss:receive', 'toss:kick']) {
       await expect(page.getByTestId('quarter')).toHaveText('Q3')
       await expect(page.getByTestId('game-clock')).toHaveText('14:50')
       await expect(page.getByTestId('log-entry')).toHaveCount(initial.view.log.length + 1)
-      const recorded = page.getByTestId('log-entry').last()
+      const recorded = page.getByTestId('log-entry').first()
       await expect(recorded).toContainText(kickoff.commentary)
-      await expect(recorded.getByLabel('Recorded dice')).toContainText('kickoff_return')
+      await expect(recorded.getByLabel('Observed play dice')).toContainText('RT')
       await expect(page.getByRole('alert')).toHaveCount(0)
 
       // Reloading after the kickoff must preserve, rather than replay, the kick.

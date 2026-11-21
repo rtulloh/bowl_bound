@@ -4,11 +4,11 @@ const END_ZONE = 8.4
 const YARD = 0.84
 const toPct = (fromLeft) => END_ZONE + fromLeft * YARD
 
-export default function FootballField({ state, home, away }) {
+export default function FootballField({ state, home, away, kickLanding }) {
   if (!state) return <div className="board-panel p-4 text-center" data-testid="football-field-empty">Drive complete</div>
   const attackingRight = state.attacking === 'right'
   const ballStyle = {
-    left: `${toPct(state.ball_from_left)}%`,
+    left: `${toPct(kickLanding ?? state.ball_from_left)}%`,
     transform: attackingRight ? 'translateX(calc(-100% + 2px))' : 'scaleX(-1)',
     transition: 'left 0.6s ease-out',
   }
@@ -28,9 +28,9 @@ export default function FootballField({ state, home, away }) {
           <div className="w-0.5 h-full bg-white" />
         </div>
       ))}
-      <div className="absolute z-20 top-0 bottom-0" style={{ left: `${toPct(state.first_down_from_left)}%` }} data-testid="first-down-marker">
+      {kickLanding == null && <div className="absolute z-20 top-0 bottom-0" style={{ left: `${toPct(state.first_down_from_left)}%` }} data-testid="first-down-marker">
         <div className="absolute left-1/2 -translate-x-1/2 top-2 w-1 h-full bg-yellow-400 rounded-full" />
-      </div>
+      </div>}
       <div className="absolute top-1/2 -translate-y-1/2 z-30" style={ballStyle} data-testid="ball-marker">
         <svg viewBox="0 0 40 24" className="w-10 h-6">
           <ellipse cx="20" cy="12" rx="18" ry="10" fill="#8B4513" />
