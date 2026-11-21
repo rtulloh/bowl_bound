@@ -34,6 +34,11 @@ describe('FootballField', () => {
     expect(screen.getByTestId('ball-marker').style.transform).toBe('scaleX(-1)')
     expect(parseFloat(screen.getByTestId('first-down-marker').style.left)).toBeCloseTo(29.4, 6)
   })
+  it('shows the punt landing spot while the receiving team decides', () => {
+    render(<FootballField state={stateView()} home="A" away="B" kickLanding={75} />)
+    expect(parseFloat(screen.getByTestId('ball-marker').style.left)).toBeCloseTo(71.4, 6)
+    expect(screen.queryByTestId('first-down-marker')).toBeNull()
+  })
   it('renders an empty state when there is no field state', () => {
     render(<FootballField state={null} home="A" away="B" />)
     expect(screen.getByTestId('football-field-empty')).toBeInTheDocument()
@@ -71,9 +76,22 @@ describe('ResultPanel', () => {
   it('shows the engine description and the real dice trace', () => {
     render(<ResultPanel report={report()} />)
     expect(screen.getByTestId('result-description')).toHaveTextContent('gain of 6 yards')
-    expect(screen.getByTestId('trace')).toHaveTextContent('dice 1+2+3 = 15, cell 4')
+    expect(screen.getByText('Offense: Line Plunge · Defense: Formation A')).toBeVisible()
+    expect(screen.getByText('1 + 2 + 3')).toBeVisible()
+    expect(screen.getByTestId('trace')).toBeVisible()
+    expect(screen.queryByText('Detailed dice and chart audit')).not.toBeInTheDocument()
+    expect(screen.getByText(/OFF:15→"4"/)).toBeVisible()
     expect(screen.queryByTestId('unsupported-notice')).toBeNull()
     expect(screen.queryByTestId('resolved-play')).toBeNull()
+  })
+  it('pairs kickoff and return totals with the exact consulted cells', () => {
+    const trace = [
+      { section: 'kickoff', roll: { total: 20, faces: [2, 0, 0] }, cell: '61' },
+      { section: 'kickoff_return', roll: { total: 15, faces: [1, 2, 3] }, cell: '21' },
+    ]
+    render(<ResultPanel report={report({ trace })} />)
+    expect(screen.getByText('(KO:20→"61" | RT:15→"21")')).toBeVisible()
+    expect(screen.queryByText('2 + 0 + 0 = 20')).toBeNull()
   })
   it('says honestly when a result is not supported yet', () => {
     render(<ResultPanel report={report({ supported: false, unsupported_reason: 'interception' })} />)

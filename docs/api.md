@@ -8,6 +8,10 @@ Automatic kneels/spikes, pending, unsupported, penalty and ambiguous-recovery
 reports retain factual wording; clients must not interpret prose to determine
 football results.
 
+When a punt or kickoff awaits a reception decision, `view.pending.kick_landing_from_left`
+supplies the ball marker's temporary field coordinate in yards from the home
+goal line. `view.state` continues to describe the pre-kick state until the
+decision resolves.
 Each report and `view.log` item also includes additive `highlights`, an array of
 engine-classified tags: `interception_pending`, `interception`, `fumble`,
 `touchdown`, `conversion`, `breakaway`, and `touchback`. It is empty when the
@@ -161,6 +165,9 @@ groups and running/Option/passing bands without parsing combined labels.
 Color categories are red/green/white/black/yellow, with `unclassified` for facts
 without a normalized color. The client displays these facts without interpreting
 CSV strings or resolving football. Source provenance and private paths are omitted.
+Ordinary zero-yard and no-adjustment cells on scrimmage charts have an empty
+display label, white color and an accessible description. Priority and bounds
+marks remain visible.
 
 `priority` contains a `table` in the same display format, its explanatory `note`,
 a `legend` of operation labels/descriptions, and ordered exception `notes`.

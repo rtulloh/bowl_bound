@@ -105,29 +105,33 @@ class ChartBook:
 
 
 LEGEND = (
-    ChartLegend("green", "Green", "Gains and results such as B or TD; read the cell."),
-    ChartLegend("red", "Red", "Losses, turnovers and results such as QT; read the cell."),
-    ChartLegend("white", "White", "No change or a named chart reference; read the cell."),
-    ChartLegend("black", "Black", "Incomplete pass (INC)."),
-    ChartLegend("yellow", "Yellow", "Penalty; OFF, DEF or PI identifies the call."),
+    ChartLegend("green", "Green", "A number gives positive yards. B and TD are also green."),
+    ChartLegend("red", "Red", "A number gives negative yards. F, INT and QT are also red."),
+    ChartLegend(
+        "white",
+        "White",
+        "A blank gives no yardage adjustment. QR, SOP and BLP are also white.",
+    ),
+    ChartLegend("black", "Black", "An incomplete pass, shown as INC."),
+    ChartLegend("yellow", "Yellow", "A penalty. Read OFF, DEF or PI for the type."),
 )
 SYMBOLS = (
-    ChartSymbol("0", "No yardage adjustment. A white blank is shown as 0."),
-    ChartSymbol("*", "Out of bounds when the applicable result is used."),
-    ChartSymbol("( ) / [ ]", "Printed priority markers; the engine applies the resolution rules."),
-    ChartSymbol(
-        "B / QR / QT", "Breakaway / quarterback run / quarterback trapped supplemental column."
-    ),
-    ChartSymbol("SOP / BLP", "Resolve using Sprint Out / Boot-leg."),
-    ChartSymbol(
-        "INT / F", "Interception / fumble at the printed distance from the line of scrimmage."
-    ),
+    ChartSymbol("B", "Breakaway. Roll again in the offense’s B column."),
+    ChartSymbol("QR", "Quarterback run. Roll again in the offense’s QR column."),
+    ChartSymbol("QT", "Quarterback trapped. Roll again in the offense’s QT column."),
+    ChartSymbol("SOP", "Sprint Out pass. Option redirects to play 7."),
+    ChartSymbol("BLP", "Boot-leg pass. Option redirects to play 8."),
+    ChartSymbol("INC", "Incomplete pass."),
+    ChartSymbol("TD", "Touchdown."),
+    ChartSymbol("INT", "Interception at the printed distance from the line of scrimmage."),
+    ChartSymbol("F", "Fumble at the printed distance from the line of scrimmage."),
+    ChartSymbol("OFF / DEF / PI", "Offensive penalty, defensive penalty or pass interference."),
+    ChartSymbol("*", "The play ends out of bounds if this result applies."),
+    ChartSymbol("( ) / [ ]", "Priority markers. Open the Priority chart to see which result wins."),
     ChartSymbol(
         "DS / X / T1–T3",
-        "DS sums die faces; X is 40 minus the total. T1–T3 sum one to three fresh totals.",
+        "DS adds the die faces. X is 40 minus the total. T1–T3 add one to three fresh totals.",
     ),
-    ChartSymbol("INC / TD", "Incomplete pass / touchdown."),
-    ChartSymbol("OFF / DEF / PI", "Offensive penalty / defensive penalty / pass interference."),
 )
 _NAMES = {
     ResultKind.NO_GOOD_FIELD_GOAL: "No good",
@@ -139,7 +143,16 @@ _NAMES = {
 }
 
 
-def _cell_view(cell: NormalizedCell) -> ChartCellView:
+def _cell_view(cell: NormalizedCell, *, blank_ordinary_zero: bool = True) -> ChartCellView:
+    if (
+        blank_ordinary_zero
+        and cell.priority is Priority.NORMAL
+        and not cell.out_of_bounds
+        and (
+            cell.kind is ResultKind.NO_CHANGE or (cell.kind is ResultKind.YARDS and cell.yards == 0)
+        )
+    ):
+        return ChartCellView("", "white", "No yardage adjustment")
     label = format_cell(cell)
     if cell.kind is ResultKind.NO_CHANGE:
         label = "0*" if cell.out_of_bounds else "0"
@@ -270,7 +283,7 @@ _SPECIAL_COLUMNS = (
 
 
 def _special_cell_view(cell: NormalizedCell) -> ChartCellView:
-    view = _cell_view(cell)
+    view = _cell_view(cell, blank_ordinary_zero=False)
     if cell.kind is ResultKind.INCOMPLETE:
         return ChartCellView(
             "BLACK", view.color, "Special teams BLACK marker; consult the special-teams procedure."

@@ -1256,6 +1256,7 @@ def _legacy_m19_view_digest(view: SessionView | RegulationView) -> str:
         choice.pop("replay_label", None)
     if data.get("pending") is not None:
         data["pending"].pop("decision_context", None)
+        data["pending"].pop("kick_landing_from_left", None)
         for choice in data["pending"]["choices"]:
             choice.pop("replay_label", None)
     data.pop("review", None)
@@ -1337,6 +1338,7 @@ def _semantic_view_digest(data: dict[str, Any]) -> str:
         "presentation_value",
         "replay_label",
         "decision_context",
+        "kick_landing_from_left",
     }
     legacy_defenses = {
         f"{defense.value} {label}": f"Formation {defense.value}"

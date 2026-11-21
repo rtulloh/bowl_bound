@@ -124,15 +124,28 @@ function ChartPanel({ gameId, initialSide, initialChart, onClose }) {
       <ChartTables table={table} team={priority ? null : book.team} />
       <details key={chart} className="chart-key">
         <summary>{priority ? 'How to read Priority' : 'How to read the charts'}</summary>
-        {!priority && <div className="chart-colors">{legend.map((entry) => <span key={entry.color}><span className={`chart-swatch chart-cell-${entry.color}`} aria-hidden="true" />{entry.label}</span>)}</div>}
-        <div className="chart-legend">
+        {priority ? <>
+          <ChartDefinitions entries={reference.legend} />
+          {reference.notes.map((note) => <p className="chart-rule-note" key={note}>{note}</p>)}
+        </> : <>
+          <h3>Cell colors</h3>
+          <ChartDefinitions entries={legend} />
+          <h3>Result codes</h3>
+          <ChartDefinitions entries={symbols} />
           {chart === 'defense' && <p className="chart-rule-note">For generated teams, formation tradeoffs are experimental Bowl Bound estimates, separate from measured team strength. The source does not identify historical defensive formations.</p>}
-          {(priority ? reference.legend : [...legend, ...symbols]).map((entry) => <p key={entry.label}><strong>{entry.label}:</strong> {entry.description}</p>)}
-          {priority && reference.notes.map((note) => <p className="chart-rule-note" key={note}>{note}</p>)}
-        </div>
+        </>}
       </details>
     </>}
   </div>
+}
+
+function ChartDefinitions({ entries }) {
+  return <dl className="chart-legend">
+    {entries.map((entry) => <div key={entry.label}>
+      <dt>{entry.color && <span className={`chart-swatch chart-cell-${entry.color}`} aria-hidden="true" />}{entry.label}</dt>
+      <dd>{entry.description}</dd>
+    </div>)}
+  </dl>
 }
 
 function ChartTables({ table, team }) {
@@ -178,7 +191,7 @@ function ChartGrid({ table, team, groups = [], title = table.title }) {
               <span className={table.key === 'priority' ? '' : 'chart-die-face'}>{row.dice_label || row.label}</span><span className="sr-only"> — {row.description}</span>
             </th>
             {cells.map((cell, index) => <td key={columns[index].key} className={`chart-cell-${cell.color} ${edges.has(index) ? 'chart-group-end' : ''}`} title={cell.description}>
-              <span>{cell.label}</span><span className="sr-only"> — {cell.description}</span>
+              <span>{cell.label}</span><span className="sr-only">{cell.label ? ' — ' : ''}{cell.description}</span>
             </td>)}
           </tr>
         })}

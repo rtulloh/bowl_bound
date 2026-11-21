@@ -8,7 +8,7 @@ Bowl Bound is a chart-and-dice college-football strategy game, not an animated
 arcade simulation. Choose a team and offensive/defensive calls; the engine
 resolves chart results, supplemental procedures, penalties, clock, scores and
 team statistics. The web interface shows legal choices and their explanations.
-Dice and chart audits let you inspect how a result was reached.
+The play result shows the calls, dice, and chart lookups together.
 
 Alpha 6 includes **116 generated 2007 college teams**, plus **Cedar Valley** and
 **Harbor Tech**, the original fictional samples. Read the
@@ -89,9 +89,13 @@ the rulebook exceptions. The terminal accepts O and I while offered, or
 `action bounds:oob` / `action bounds:ib`. Choosing a kick clears the declaration;
 it never applies to a punt. Modifier controls wrap on smaller screens.
 
-Expand Team statistics, the scoring summary, Play log and Dice and chart audit
-to inspect recorded events. CLI and web share natural engine-generated
-play-by-play, with technical calls and traces kept separate. Commentary player
+The **Final** screen shows the final score, team statistics, and scoring summary.
+Use **Show complete history** to review the plays from the completed game.
+During play, expand Team statistics and the scoring summary to inspect recorded events.
+The **Play log** scrolls within its panel and returns to the newest play after each result.
+Drag the bottom-right corner to adjust the log height in a desktop browser.
+**Show complete history** in Game Controls opens a larger view of the same log.
+CLI and web share natural engine-generated play-by-play. Commentary player
 names are illustrative labels rather than individual-player statistics.
 The included Cedar Valley and Harbor Tech samples have fictional player
 rosters; other teams use generic roles unless optional rosters are installed.
@@ -112,15 +116,21 @@ letters beside their five boxed dice totals. Special Teams includes kicks,
 returns, field goals and extra points. All 30 rows fit together on desktop windows at 1280×1000 or larger.
 Smaller windows and phones allow scrolling, with headings kept visible.
 
-Colors follow the normalized chart categories. Expand **How to read the charts**
-for the color and symbol legend; help starts closed. Read the signed values as
-well: colors alone do not determine a result. A white blank is shown as **0**;
+Expand **How to read the charts** for separate **Cell colors** and **Result codes**
+guides. Green numbers are positive yards, red numbers are negative yards, and
+named results such as **QT** (Quarterback trapped) have their own meanings.
+Ordinary zeros appear as blank white cells. A marked zero, such as **(0)** or
+**0\***, stays visible.
 **INC** identifies an incomplete pass in scrimmage charts. Special Teams keeps
 its **BLACK** procedure marker and has its own legend; extra points show **GOOD**
 or **NG**. Priority markers and out-of-bounds asterisks
 remain visible. These are chart entries; the engine still resolves the combined
 result and any required follow-up decisions. **How to read Priority** explains
 the operations and marked defensive (B) extension.
+
+The play result shows each dice total next to the chart cell it consulted.
+For example, `(KO:20→"61" | RT:15→"21")` shows a kickoff lookup at 20 and a
+return lookup at 15. The offensive call and any defensive formation appear just above the dice.
 
 Use the bordered **Open in new tab** or **Open in separate window** controls to keep charts beside your
 game or on another display. Each view has its own team and chart controls; moving

@@ -330,6 +330,7 @@ class PendingDecisionView:
     decision_outcomes: tuple[DecisionOutcome, ...] = ()
     razzle_context: RazzleDazzleContext | None = None
     decision_context: str | None = None
+    kick_landing_from_left: int | None = None
 
 
 @dataclass(frozen=True)
@@ -763,10 +764,14 @@ class PlaySession:
         if self._special is not None:
             result = self._special[0].result
             if result is not None and result.choices and result.chooser is not None:
+                landing = result.kick_landing_yards_to_goal
+                if landing is not None and result.chooser is Possession.HOME:
+                    landing = GOAL_LINE - landing
                 return PendingDecisionView(
                     self._charts[result.chooser].name,
                     tuple(PenaltyChoice(c.id, c.label, True) for c in result.choices),
                     chooser_side=result.chooser.value,
+                    kick_landing_from_left=landing,
                 )
         if self._razzle_pending is not None:
             return self._razzle_pending.view

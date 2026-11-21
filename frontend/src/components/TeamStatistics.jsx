@@ -1,9 +1,9 @@
 // Labels and values are supplied by the engine, including totals and sack accounting.
-export default function TeamStatistics({ home, away, statistics }) {
+export default function TeamStatistics({ home, away, statistics, final = false }) {
   if (!statistics?.rows?.length) return null
   return (
-    <details className="bg-gray-800 p-3 rounded" data-testid="team-statistics">
-      <summary className="cursor-pointer font-bold">Team statistics</summary>
+    <details open={final || undefined} className="bg-gray-800 p-3 rounded" data-testid="team-statistics">
+      <summary className="cursor-pointer font-bold">{final ? 'Final team statistics' : 'Team statistics'}</summary>
       <table className="w-full text-sm mt-2">
         <thead><tr>
           <th scope="col" className="text-left">Statistic</th>
