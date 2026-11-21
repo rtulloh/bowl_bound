@@ -42,4 +42,4 @@ do not sponsor or endorse these charts.
 [U.S. Copyright Office guidance](https://www.copyright.gov/help/faq/faq-general.html) ·
 [Cedar Valley license](https://github.com/rtulloh/bowl_bound/blob/main/seasons/SAMPLE-LICENSE.md).
 
-These files are staged for release review. Installer inclusion requires a matching release manifest and chart audit.
+The release manifest pins the exact chart, roster and team provenance files selected for the installer.

@@ -58,6 +58,7 @@ PUBLIC_FILES = frozenset(
         "docs/versioning.md",
         "docs/THIRD_PARTY_NOTICES.md",
         "docs/generated-charts.md",
+        "docs/generated-charts-1972.md",
         "docs/generated-chart-audits.md",
         "seasons/GENERATED-LICENSE.md",
     }
@@ -302,17 +303,24 @@ def stage_sources(source: Path, destination: Path) -> None:
         _write_json(working, ".release-inputs.json", {n: _sha(b) for n, b in contents.items()})
 
 
-def audit_staged_charts(source: Path, stage: Path) -> dict[str, Any]:
+def audit_staged_charts(source: Path, stage: Path, *, catalog_only: bool = False) -> dict[str, Any]:
     """Require a fresh semantic audit of staged bytes before native freezing.
 
     Audit expectations are development inputs, copied only while this check runs;
     they are never runtime resources or a trusted saved success report.
     """
-    from .audit_generated_charts import EXPECTATIONS, ChartAuditError, audit_candidate
+    from .audit_generated_charts import (
+        EXPECTATIONS,
+        ChartAuditError,
+        audit_candidate,
+        audit_catalog,
+    )
 
     manifest = _manifest(stage)
     expected = stage / EXPECTATIONS
     try:
+        if catalog_only:
+            return audit_catalog(stage)
         if manifest.get("generated_sha256"):
             expected.write_bytes(_read(source, EXPECTATIONS))
         return audit_candidate(stage)

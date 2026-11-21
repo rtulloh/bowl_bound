@@ -544,16 +544,17 @@ def test_approved_catalog_is_independent_of_observed_archive_or_api(tmp_path: Pa
     )
 
 
-def test_release_source_catalog_contains_exact_approved_173_teams() -> None:
+def test_release_source_catalog_contains_exact_approved_181_teams() -> None:
     manifest = Path(__file__).resolve().parents[1] / "release/manifest.json"
     expected = validator.approved_catalog(manifest)
     samples = set(validator.SAMPLES)
-    assert len(expected) == 173
+    assert len(expected) == 181
     assert samples.issubset(expected)
     generated = expected - samples
     assert len({team for team in generated if team.startswith("2002/")}) == 55
     assert len({team for team in generated if team.startswith("2007/")}) == 116
-    assert all(team.startswith(("2002/", "2007/")) for team in expected)
+    assert len({team for team in generated if team.startswith("1972/")}) == 8
+    assert all(team.startswith(("1972/", "2002/", "2007/")) for team in expected)
 
 
 def test_incomplete_archive_catalog_is_rejected_against_approved_catalog(

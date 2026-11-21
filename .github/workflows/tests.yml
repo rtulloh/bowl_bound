@@ -85,6 +85,17 @@ jobs:
           .venv/bin/python -m pip install -e ".[generator]"
       - name: Verify reviewed generator runtime before regression
         run: '.venv/bin/python -c "from tools.chartgen.refine import engine_identity; engine_identity()"'
+      - name: Verify pinned generated charts load
+        run: |
+          .venv/bin/python -m scripts.audit_generated_charts --catalog-only --report "$RUNNER_TEMP/generated-chart-audit.json"
+      - name: Retain generated-chart catalog evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: generated-chart-audit-${{ github.run_id }}
+          path: ${{ runner.temp }}/generated-chart-audit.json
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Python tests, lint and formatting
         run: |
           .venv/bin/python -m ruff check .
@@ -97,17 +108,6 @@ jobs:
           npm ci --ignore-scripts
           npm test
           npm run build
-      - name: Audit actual generated chart probabilities and tactical policy
-        run: |
-          .venv/bin/python -m scripts.audit_generated_charts --report "$RUNNER_TEMP/generated-chart-audit.json"
-      - name: Retain generated-chart acceptance evidence
-        if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: generated-chart-audit-${{ github.run_id }}
-          path: ${{ runner.temp }}/generated-chart-audit.json
-          if-no-files-found: ignore
-          retention-days: 14
       - name: Real-engine browser regression
         working-directory: frontend
         env:

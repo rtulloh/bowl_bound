@@ -596,13 +596,14 @@ def test_real_manifest_selects_exact_pinned_sample_and_reviewed_roster_pairs() -
     teams = {
         name.removeprefix("seasons/").removesuffix("/team.yaml")
         for name in manifest["generated_sha256"]
-        if name.startswith("seasons/2002/") and name.endswith("/team.yaml")
+        if name.startswith(("seasons/1972/", "seasons/2002/")) and name.endswith("/team.yaml")
     }
-    assert len(teams) == 55
+    assert sum(team.startswith("2002/") for team in teams) == 55
+    assert sum(team.startswith("1972/") for team in teams) == 8
     assert set(reviewed) == {
         f"seasons/{team}/{name}" for team in teams for name in ("roster.json", "roster-sources.md")
     }
-    assert len(reviewed) == 110
+    assert len(reviewed) == 126
     assert selected == samples | set(reviewed)
     assert samples <= manifest["sample_sha256"].keys()
     assert not samples & set(reviewed)

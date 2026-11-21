@@ -1,22 +1,27 @@
 # Generated-chart release audits
 
-Generated charts must pass a fresh audit before a native build. The reusable CI
-test workflow also requires this check, and native build jobs depend on that
-workflow succeeding. A saved successful JSON report is evidence, not an input
-that can bypass recomputation.
+Upstream CI and native builds validate the exact pinned chart and provenance
+files and load every selected team through the runtime chart codec. A fresh
+catalog check runs before the longer CI regression and again on the staged
+installer inputs. It does not use private source qualification records.
+
+```sh
+python -m scripts.audit_generated_charts --catalog-only --report private-data/release-audit/catalog.json
+```
+
+Run the full qualification locally when charts or their model change:
 
 ```sh
 python -m scripts.audit_generated_charts --report private-data/release-audit/charts.json
 ```
 
-The audit reads the exact generated-file pins in `release/manifest.json`, loads
-every selected team through the strict chart/provenance codec, and requires
-`release/generated-chart-audit.json`. The latter is a reviewed development input;
-it is excluded from runtime bundles. Missing, stale, incomplete or unsupported
-inputs fail with a nonzero exit status. Rejections retain a machine-readable
-report when `--report` is supplied.
+The local audit requires reviewed expectations in
+`release/generated-chart-audit.json`. Missing, stale or unsupported
+qualification fails the local audit. A build can compile and package a valid
+catalog while that independent historical and gameplay review is pending.
+Neither audit consumes a prior pass report.
 
-## What the automated gate proves
+## What the local qualification audit proves
 
 - Exact defensive probability mass comes from all 36 physical red/green pairs,
   not equally weighted displayed rows. Different-looking rows can have the same
@@ -46,7 +51,7 @@ report when `--report` is supplied.
   the auditor's source tree; candidate runtime selection and all core bytes must
   match. A foreign imported engine or different candidate core is rejected.
 
-Native builders repeat the audit against their staged bytes before frontend build
+Native builders repeat the catalog check against their staged bytes before frontend build
 and freezing. Each native inventory embeds the compact audit identity and full
 report digest. Audit expectations and detailed reports are not packaged, and the
 release asset count does not expand to include private evidence.
@@ -148,8 +153,7 @@ The gate independently enumerates the finite conditional allocation for all
 28 offensive/defensive passing columns per team. It requires declared support,
 weights and canonical ordering, rejects missing/unknown policies and retains
 zero-budget columns. Generated provenance and metadata are refreshed and pinned
-to the actual ordinary files. Native staging repeats this same schema-three
-audit before freezing.
+to the actual ordinary files. The local audit applies this schema before release acceptance.
 
 Qualifying designed-call/catch-depth observations are absent in this cohort,
 so these conditional shapes are authored assumptions. Neither a passing
@@ -174,6 +178,5 @@ digests alongside the complete candidate/engine identities. Source truth remains
 unverified by public CI. The exporter still produces one cohort's qualification;
 compose the reviewed objects without rewriting earlier review metadata.
 
-Native staging repeats this same combined audit against its actual selected
-bytes before freezing. This envelope adds no historical team, roster or source
+The local audit applies this combined qualification to the actual selected bytes. This envelope adds no historical team, roster or source
 permission by itself and does not expand the runtime manifest.

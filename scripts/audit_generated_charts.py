@@ -240,6 +240,33 @@ def baseline_record(root: Path, key: str) -> dict[str, Any]:
     }
 
 
+def audit_catalog(root: Path) -> dict[str, Any]:
+    """Verify the exact published chart bytes and load every selected team."""
+    inputs = _FrozenInputs()
+    with _candidate_snapshot(root, inputs, expectations=False, runtime=True) as snapshot:
+        pins, teams = _catalog(snapshot)
+        for key in sorted(teams):
+            season, slug = key.split("/")
+            try:
+                load_team(snapshot / "seasons" / season, slug)
+            except (ValueError, OSError) as error:
+                raise ChartAuditError(f"Generated team failed to load: {key}: {error}") from error
+        result = {
+            "schema_version": 1,
+            "passed": True,
+            "generated_teams": len(teams),
+            "candidate_sha256": _digest(pins),
+            "scope": "Pinned chart and provenance integrity and runtime loading",
+            "limits": "Source, model and historical qualification are reviewed locally.",
+            "source_truth_revalidated": False,
+        }
+        if pins:
+            result["engine_sha256"] = _engine_identity(snapshot)
+            result["auditor_sha256"] = _sha(inputs.read(Path(__file__).resolve()))
+        inputs.check()
+        return result
+
+
 def audit_candidate(root: Path) -> dict[str, Any]:
     """Compute from frozen bytes; reject changed originals before accepting."""
     inputs = _FrozenInputs()
@@ -897,6 +924,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--report", type=Path)
+    parser.add_argument(
+        "--catalog-only", action="store_true", help="Check published chart integrity and loading"
+    )
     parser.add_argument("--baseline-root", type=Path)
     parser.add_argument("--qualification", type=Path)
     args = parser.parse_args(argv)
@@ -913,7 +943,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             print("Exported baseline expectations; actual candidate audit still required")
         else:
-            result = audit_candidate(args.root)
+            result = audit_catalog(args.root) if args.catalog_only else audit_candidate(args.root)
             if args.report:
                 args.report.parent.mkdir(parents=True, exist_ok=True)
                 args.report.write_text(

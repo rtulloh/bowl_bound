@@ -334,7 +334,7 @@ def build(source: Path, output: Path, target: str) -> None:
             work = Path(directory)
             stage, runtime = work / "stage", work / "runtime"
             stage_sources(source, stage)
-            chart_audit = audit_staged_charts(source, stage)
+            chart_audit = audit_staged_charts(source, stage, catalog_only=True)
             build_frontend(stage)
             assemble_runtime(stage, runtime)
             write_notices(stage, work / "notices")

@@ -240,8 +240,9 @@ def test_native_freeze_is_blocked_before_frontend_if_chart_audit_fails(
     from scripts import build_standalone as native
     from scripts.release_package import ReleaseError
 
-    root, _, neutral = fixture(tmp_path)
-    write_team(root / "seasons", neutral)
+    root, _, _ = fixture(tmp_path)
+    path = next((root / "seasons").glob("*/*/offense.csv"))
+    path.write_text("invalid chart\n")
     repin(root)
     monkeypatch.setattr(native, "check_target", lambda *args: "BowlBound.exe")
     monkeypatch.setattr(native, "verify_environment", lambda source: None)
@@ -429,3 +430,23 @@ def test_primary_pending_qt_and_fumble_are_not_zero_yard_completions(kind: Resul
     assert numeric_contribution == 0  # Excluded from numeric contribution, not a resolved gain.
     assert sum(actual_classes.values()) == 36
     assert actual_classes != completed_classes
+
+
+def test_catalog_audit_runs_without_private_expectations(tmp_path: Path) -> None:
+    from scripts.audit_generated_charts import audit_catalog
+    from scripts.release_package import audit_staged_charts, stage_sources
+
+    root, _, _ = fixture(tmp_path)
+    (root / "release/generated-chart-audit.json").unlink()
+    report = audit_catalog(root)
+    assert report["generated_teams"] == 1
+    assert report["source_truth_revalidated"] is False
+
+    stage = tmp_path / "catalog-build-stage"
+    stage_sources(root, stage)
+    assert audit_staged_charts(root, stage, catalog_only=True) == report
+
+    path = next((root / "seasons").glob("*/*/offense.csv"))
+    path.write_bytes(path.read_bytes() + b"invalid")
+    with pytest.raises(ChartAuditError, match="Stale generated catalog pin"):
+        audit_catalog(root)
