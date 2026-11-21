@@ -187,3 +187,7 @@ photos, caches, saves and detailed audits stay excluded. The generated 2002
 Ohio State and Miami bundles are independent of the old PDF-imported versions.
 Model and source limitations remain disclosed in the
 [2002 guide](generated-charts.md#generated-2002-cohort).
+
+## 1972 Big Eight charts and commentary rosters
+
+See the [1972 source credits and distribution scope](generated-charts-1972.md).
