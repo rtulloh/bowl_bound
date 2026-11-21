@@ -181,13 +181,15 @@ def smoke_executable(
     check_ui: Callable[[str], None] | None = None,
     log_path: Path | None = None,
     expected_terms_sha256: str | None = None,
+    payload_root: Path | None = None,
 ) -> None:
     """Exercise an extracted or installed binary and require graceful shutdown."""
-    inventory = json.loads((executable.parent / "ARTIFACT-MANIFEST.json").read_text("utf-8"))
+    payload_root = payload_root if payload_root is not None else executable.parent
+    inventory = json.loads((payload_root / "ARTIFACT-MANIFEST.json").read_text("utf-8"))
     expected_teams = catalog_from_inventory(inventory["files"])
     if expected_catalog is not None and expected_teams != expected_catalog:
         raise ValueError("Installed artifact catalog differs from approved release catalog")
-    terms_digest = windows_terms_digest(executable.parent, inventory)
+    terms_digest = windows_terms_digest(payload_root, inventory)
     if expected_terms_sha256 is not None and terms_digest != expected_terms_sha256:
         raise ValueError("Windows runtime terms differ from approved release source")
     if terms_digest and os.name == "nt":

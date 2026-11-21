@@ -142,13 +142,20 @@ def capture(
         app = Path(data["retained_app"])
         if app.is_symlink() or not app.resolve().is_relative_to(work.resolve()):
             raise ValueError("Foreign retained app path in failed smoke evidence")
-        if any(path.is_symlink() for path in app.rglob("*")):
-            raise ValueError("Symlink in retained app evidence")
+        frameworks = app / "Contents/Frameworks"
+        framework_target = Path("Resources/BowlBound/_internal")
+        for path in app.rglob("*"):
+            if path.is_symlink() and (
+                path != frameworks
+                or path.readlink() != framework_target
+                or not (frameworks.parent / framework_target).is_dir()
+            ):
+                raise ValueError("Unexpected symlink in retained app evidence")
         destination = output / f"failure-{index}"
         destination.mkdir()
         shutil.copy2(failure, destination / "failure.json")
         if app.is_dir():
-            shutil.copytree(app, destination / "installed/Bowl Bound.app")
+            shutil.copytree(app, destination / "installed/Bowl Bound.app", symlinks=True)
         files = {
             str(path.relative_to(app)): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sorted(app.rglob("*"))
@@ -170,6 +177,7 @@ def capture(
                 "file_types": observed(
                     (
                         "/usr/bin/file",
+                        str(app / "Contents/MacOS/Bowl-Bound"),
                         str(app / "Contents/MacOS/launch"),
                         str(app / "Contents/Resources/start.command"),
                         str(app / "Contents/Resources/BowlBound/start.sh"),

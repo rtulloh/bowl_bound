@@ -409,12 +409,19 @@ before starting the expensive regression and still runs the complete suite.
 The native builder also composes architecture-specific DMGs from the verified
 portable ZIPs. `python -m scripts.macos_dmg FILE.zip --smoke` validates the input
 inventory, creates a read-only image using system hdiutil, mounts it, copies its
-app, exercises Finder → Terminal → bundled start.command startup, checks owned
-listener health/version and bounded shutdown, then runs the complete payload
+app, exercises Finder startup through the bundled game executable, checks
+owned listener health/version and bounded shutdown, then runs the complete payload
 smoke. Any failure prevents artifact upload. The receipt distinguishes those
 checks from browser-downloaded first launch, which remains separate. No security
-attributes are removed by the app or installer. Wrappers are unsigned and not
-notarized. Run on both supported native Mac architectures.
+attributes are removed by the app or installer. The completed app has an ad-hoc
+signature and is not notarized. Run on both supported native Mac architectures.
+
+For DEV-093, Paydirt's `packaging/macos/create_app.sh` places the real
+executable in `Contents/MacOS`, seals the complete bundle, and checks it
+with strict codesign verification. Bowl Bound uses that entry point layout
+and retains the independently verified portable ZIP and its PyInstaller
+runtime resources. Its PyInstaller onedir bootloader resolves
+`Contents/Frameworks` to the bundled runtime for direct launch.
 
 After publishing a release with DMGs, dispatch post-release-smoke.yml with
 `include_dmg=true` to require both DMG checks as well as the existing ZIP and
