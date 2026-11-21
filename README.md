@@ -31,8 +31,8 @@ python -m bowl_bound --play -d medium --compact
 ```
 
 Run that command from the installed source checkout; see the installation guide.
-The web game is a local service, not Internet multiplayer. Keep its terminal
-window open, save before stopping, and press Ctrl+C to shut down.
+The web game runs locally. Save before stopping and follow the shutdown steps
+for your installer or portable build in the [installation guide](docs/installation.md).
 
 ## License and support
 

@@ -31,8 +31,10 @@ Verify its checksum, mount the DMG, and drag `Bowl Bound.app` into Applications
 or a user-writable folder. Unmount the disk image after copying. For these
 unsigned builds, remove quarantine from **the copied app only** using the
 [manual command below](#macos-gatekeeper-and-quarantine), then double-click it.
-The app opens Terminal and your browser; keep Terminal open and press Ctrl+C
-there to stop. No Python or Node installation is required.
+The direct-launch DMG opens your browser from the app. Save your game before
+stopping, then select the Bowl-Bound process in Activity Monitor and choose
+Stop, then Quit. Releases whose app opens Terminal also support Ctrl+C in
+that Terminal window. No Python or Node installation is required.
 
 The ZIP remains a secondary portable alternative and native-builder input.
 Older v1.1.0 downloads have ZIPs only; DMGs belong to the next patch release.

@@ -21,27 +21,31 @@ from tempfile import TemporaryDirectory, mkdtemp
 from .release_package import ReleaseError
 from .smoke_standalone import extract_verified, request, smoke_executable
 
+DIRECT_EXECUTABLE = "Contents/MacOS/Bowl-Bound"
+PORTABLE_PAYLOAD = "Contents/Resources/BowlBound"
+FRAMEWORKS_LINK = "Contents/Frameworks"
+FRAMEWORKS_TARGET = Path("Resources/BowlBound/_internal")
 
-def compile_launcher(destination: Path, target: str) -> None:
-    """Build the app entrypoint as a target-native executable, never a script."""
-    architecture = {"macos-arm64": "arm64", "macos-x86_64": "x86_64"}[target]
-    subprocess.run(
-        [
-            "clang",
-            "-arch",
-            architecture,
-            "-O2",
-            "-Wall",
-            "-Wextra",
-            "-Werror",
-            str(Path(__file__).with_name("macos_launcher.c")),
-            "-framework",
-            "CoreFoundation",
-            "-o",
-            str(destination),
-        ],
-        check=True,
-    )
+
+def _app_executable(app: Path) -> Path:
+    """Locate the game executable in new images and immutable older releases."""
+    direct = app / DIRECT_EXECUTABLE
+    if direct.is_file():
+        return direct
+    return app / PORTABLE_PAYLOAD / "Bowl-Bound"
+
+
+def _check_bundle_links(app: Path) -> None:
+    """Allow only the relative link to the verified PyInstaller resources."""
+    frameworks = app / FRAMEWORKS_LINK
+    target = app / PORTABLE_PAYLOAD / "_internal"
+    for path in app.rglob("*"):
+        if path.is_symlink() and (
+            path != frameworks or path.readlink() != FRAMEWORKS_TARGET or not target.is_dir()
+        ):
+            raise ReleaseError("Unexpected symlink in macOS app")
+    if (app / DIRECT_EXECUTABLE).is_file() and not frameworks.is_symlink():
+        raise ReleaseError("Direct macOS app has no PyInstaller Frameworks link")
 
 
 def seal_app(app: Path) -> None:
@@ -51,7 +55,7 @@ def seal_app(app: Path) -> None:
 
 
 def assemble_app(payload: Path, destination: Path, version: str, *, target: str) -> Path:
-    """Wrap exact portable resources with an explicit Terminal lifecycle launcher."""
+    """Install the verified portable executable as the Finder entry point."""
     architectures = {"macos-arm64": "arm64", "macos-x86_64": "x86_64"}
     if target not in architectures:
         raise ReleaseError("App requires a supported macOS target")
@@ -59,42 +63,36 @@ def assemble_app(payload: Path, destination: Path, version: str, *, target: str)
         raise ReleaseError("App destination already exists")
     if payload.is_symlink() or any(path.is_symlink() for path in payload.rglob("*")):
         raise ReleaseError("App payload must not contain symlinks")
-    macos = destination / "Contents/MacOS"
-    resources = destination / "Contents/Resources"
-    macos.mkdir(parents=True)
-    resources.mkdir()
-    shutil.copytree(payload, resources / "BowlBound")
+    executable = payload / "Bowl-Bound"
+    if not executable.is_file() or not (payload / "_internal").is_dir():
+        raise ReleaseError("App requires a portable executable and its PyInstaller resources")
+    packaged_payload = destination / PORTABLE_PAYLOAD
+    shutil.copytree(payload, packaged_payload)
+    direct = destination / DIRECT_EXECUTABLE
+    direct.parent.mkdir()
+    (packaged_payload / "Bowl-Bound").rename(direct)
+    direct.chmod(0o755)
+    # PyInstaller looks in Contents/Frameworks for executables in Contents/MacOS.
+    (destination / FRAMEWORKS_LINK).symlink_to(FRAMEWORKS_TARGET, target_is_directory=True)
     info = {
         "CFBundleName": "Bowl Bound",
         "CFBundleDisplayName": "Bowl Bound",
         "CFBundleIdentifier": "org.bowlbound.game",
         "CFBundlePackageType": "APPL",
-        "CFBundleExecutable": "launch",
+        "CFBundleExecutable": "Bowl-Bound",
         "CFBundleVersion": version,
         "CFBundleShortVersionString": version,
-        "LSUIElement": True,
         "LSArchitecturePriority": [architectures[target]],
     }
     (destination / "Contents/Info.plist").write_bytes(plistlib.dumps(info))
-    launch = macos / "launch"
-    compile_launcher(launch, target)
-    command = resources / "start.command"
-    command.write_text(
-        "#!/bin/bash\nset -euo pipefail\n"
-        'APP_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"\n'
-        'exec "$APP_DIR/BowlBound/start.sh" "$@"\n',
-        encoding="utf-8",
-    )
-    launch.chmod(0o755)
-    command.chmod(0o755)
     return destination
 
 
 def smoke_finder_app(app: Path, version: str) -> None:
-    """Launch through Finder/Terminal, verify listener ownership, then stop only it."""
+    """Launch through Launch Services, verify listener ownership, then stop only it."""
     with socket.socket() as listener:
         listener.bind(("127.0.0.1", 8001))
-    executable = app / "Contents/Resources/BowlBound/Bowl-Bound"
+    executable = _app_executable(app)
     subprocess.run(["/usr/bin/open", "-n", str(app)], check=True, timeout=10)
     deadline = time.monotonic() + 60
     pid: int | None = None
@@ -129,7 +127,7 @@ def smoke_finder_app(app: Path, version: str) -> None:
                     raise ReleaseError("Finder application version mismatch")
                 return
             time.sleep(0.2)
-        raise TimeoutError("Finder/Terminal application did not start")
+        raise TimeoutError("Finder application did not start")
     finally:
         if pid is not None:
             os.kill(pid, signal.SIGINT)
@@ -141,7 +139,7 @@ def smoke_finder_app(app: Path, version: str) -> None:
                     break
                 time.sleep(0.2)
             else:
-                raise TimeoutError("Finder application did not stop after Ctrl+C signal")
+                raise TimeoutError("Finder application did not stop after SIGINT")
 
 
 def build_dmg(archive: Path, *, smoke: bool = False) -> Path:
@@ -196,7 +194,8 @@ def build_dmg(archive: Path, *, smoke: bool = False) -> Path:
                 "source_zip_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
                 "dmg_sha256": digest,
                 "mounted_payload_smoke": smoke,
-                "finder_terminal_launch_smoke": smoke,
+                "finder_launch_smoke": smoke,
+                "app_layout": "direct-pyinstaller-entrypoint",
                 "browser_download_first_launch": "pending; local image has no browser quarantine",
                 "signing": "ad-hoc sealed app; not Developer ID signed or notarized",
             },
@@ -238,19 +237,22 @@ def smoke_dmg(
         try:
             app = work / "installed/Bowl Bound.app"
             app.parent.mkdir()
-            shutil.copytree(mounted / "Bowl Bound.app", app)
-            payload = app / "Contents/Resources/BowlBound"
+            mounted_app = mounted / "Bowl Bound.app"
+            _check_bundle_links(mounted_app)
+            shutil.copytree(mounted_app, app, symlinks=True)
+            payload = app / PORTABLE_PAYLOAD
             inventory = json.loads((payload / "ARTIFACT-MANIFEST.json").read_text())
             if inventory["version"] != version or inventory["target"] != target:
                 raise ReleaseError("Mounted application version or target mismatch")
             smoke_finder_app(app, version)
             smoke_executable(
-                payload / "Bowl-Bound",
+                _app_executable(app),
                 version,
                 work,
                 expected_catalog=expected_catalog,
                 check_ui=check_ui,
                 log_path=log_path,
+                payload_root=payload,
             )
         finally:
             subprocess.run(["hdiutil", "detach", str(mounted)], check=True)
@@ -268,7 +270,7 @@ def smoke_dmg(
                 ),
                 "retained_app": str(app),
                 "error": traceback.format_exc(),
-                "instruction": "Stop any Terminal server before removing retained resources.",
+                "instruction": "Stop any running game process before removing retained resources.",
             }
             (work / "failure.json").write_text(json.dumps(failure, indent=2) + "\n")
             print(f"Failed native smoke retained app and evidence: {app}", file=sys.stderr)

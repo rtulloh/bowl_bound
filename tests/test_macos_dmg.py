@@ -11,55 +11,6 @@ import pytest
 from scripts import macos_dmg
 from scripts.release_package import ReleaseError
 
-ORIGINAL_COMPILE = macos_dmg.compile_launcher
-
-
-@pytest.fixture(autouse=True)
-def synthetic_native_launcher(monkeypatch: pytest.MonkeyPatch) -> None:
-    def compile_launcher(destination: Path, target: str) -> None:
-        destination.write_bytes(b"synthetic native launcher")
-
-    monkeypatch.setattr(macos_dmg, "compile_launcher", compile_launcher)
-
-
-@pytest.mark.parametrize(
-    ("target", "architecture"), [("macos-arm64", "arm64"), ("macos-x86_64", "x86_64")]
-)
-def test_native_launcher_compiles_for_target_architecture(
-    tmp_path: Path, target: str, architecture: str
-) -> None:
-    # Preserve the real compiler adapter while assembly tests use synthetic bytes.
-    with patch.object(macos_dmg.subprocess, "run") as run:
-        ORIGINAL_COMPILE(tmp_path / "launch", target)
-    command = run.call_args.args[0]
-    assert command[0:3] == ["clang", "-arch", architecture]
-    assert "CoreFoundation" in command
-    assert command[-2:] == ["-o", str(tmp_path / "launch")]
-    assert run.call_args.kwargs["check"] is True
-
-
-def test_app_preserves_payload_and_finder_opens_terminal(tmp_path: Path) -> None:
-    payload = tmp_path / "portable"
-    payload.mkdir()
-    (payload / "Bowl-Bound").write_text("synthetic executable")
-    (payload / "start.sh").write_text("synthetic launcher")
-    app = macos_dmg.assemble_app(
-        payload, tmp_path / "Bowl Bound.app", "1.1.1", target="macos-arm64"
-    )
-    info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
-    assert info["CFBundleShortVersionString"] == "1.1.1"
-    assert info["CFBundleExecutable"] == "launch"
-    launch = app / "Contents/MacOS/launch"
-    command = app / "Contents/Resources/start.command"
-    assert launch.stat().st_mode & 0o111
-    assert command.stat().st_mode & 0o111
-    assert launch.read_bytes() == b"synthetic native launcher"
-    assert 'exec "$APP_DIR/BowlBound/start.sh" "$@"' in command.read_text()
-    for script in (command,):
-        subprocess.run(["/bin/bash", "-n", str(script)], check=True)
-    assert (app / "Contents/Resources/BowlBound/Bowl-Bound").read_text() == "synthetic executable"
-    assert "xattr" not in command.read_text()
-
 
 @pytest.mark.parametrize(
     ("target", "architecture"), [("macos-arm64", "arm64"), ("macos-x86_64", "x86_64")]
@@ -68,7 +19,8 @@ def test_script_app_selects_its_payload_architecture(
     tmp_path: Path, target: str, architecture: str
 ) -> None:
     payload = tmp_path / "portable"
-    payload.mkdir()
+    (payload / "_internal").mkdir(parents=True)
+    (payload / "Bowl-Bound").write_text("synthetic executable")
     app = macos_dmg.assemble_app(payload, tmp_path / "Bowl Bound.app", "1.1.2", target=target)
     info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
     assert info["LSArchitecturePriority"] == [architecture]
@@ -109,7 +61,9 @@ def test_workflow_builds_smokes_and_uploads_both_mac_images() -> None:
 
 def test_finder_smoke_launches_app_checks_owner_and_sends_ctrl_c(tmp_path: Path) -> None:
     app = tmp_path / "Bowl Bound.app"
-    executable = app / "Contents/Resources/BowlBound/Bowl-Bound"
+    executable = app / "Contents/MacOS/Bowl-Bound"
+    executable.parent.mkdir(parents=True)
+    executable.write_text("synthetic executable")
     with (
         patch.object(macos_dmg.socket, "socket"),
         patch.object(macos_dmg.subprocess, "run", return_value=Mock(stdout="123\n")) as run,
@@ -150,7 +104,9 @@ def test_failed_image_creation_leaves_final_path_free_for_retry(tmp_path: Path) 
     archive.write_bytes(b"synthetic archive")
 
     def extract(_archive: Path, destination: Path) -> dict[str, str]:
-        (destination / "BowlBound").mkdir(parents=True)
+        payload = destination / "BowlBound"
+        (payload / "_internal").mkdir(parents=True)
+        (payload / "Bowl-Bound").write_text("synthetic executable")
         return {"version": "1.1.1", "target": "macos-arm64"}
 
     def fail(command: list[str], **_kwargs: object) -> None:
@@ -252,10 +208,61 @@ def test_data_payload_lives_in_resources_for_completed_bundle_signing(tmp_path: 
     internal = payload / "_internal"
     internal.mkdir(parents=True)
     (internal / "WINDOWS-RUNTIME-TERMS.txt").write_text("synthetic terms")
+    (payload / "Bowl-Bound").write_text("synthetic executable")
     app = macos_dmg.assemble_app(
         payload, tmp_path / "Bowl Bound.app", "1.1.2", target="macos-arm64"
     )
-    assert sorted(p.name for p in (app / "Contents/MacOS").iterdir()) == ["launch"]
+    assert sorted(p.name for p in (app / "Contents/MacOS").iterdir()) == ["Bowl-Bound"]
     assert (
         app / "Contents/Resources/BowlBound/_internal/WINDOWS-RUNTIME-TERMS.txt"
     ).read_text() == "synthetic terms"
+
+
+def test_app_finder_starts_portable_executable_with_bundled_frameworks(tmp_path: Path) -> None:
+    payload = tmp_path / "portable"
+    (payload / "_internal").mkdir(parents=True)
+    executable = payload / "Bowl-Bound"
+    executable.write_bytes(b"synthetic portable executable")
+    executable.chmod(0o755)
+    (payload / "_internal" / "module").write_bytes(b"synthetic module")
+    app = macos_dmg.assemble_app(
+        payload, tmp_path / "Bowl Bound.app", "1.1.2", target="macos-arm64"
+    )
+    info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
+    assert info["CFBundleExecutable"] == "Bowl-Bound"
+    assert "LSUIElement" not in info
+    assert (app / "Contents/MacOS/Bowl-Bound").read_bytes() == executable.read_bytes()
+    assert (app / "Contents/MacOS/Bowl-Bound").stat().st_mode & 0o111
+    assert not (app / "Contents/Resources/start.command").exists()
+    assert (app / "Contents/Frameworks").readlink() == Path("Resources/BowlBound/_internal")
+    assert (app / "Contents/Frameworks/module").read_bytes() == b"synthetic module"
+
+
+def test_smoke_copy_preserves_bundle_frameworks_link(tmp_path: Path) -> None:
+    def mount(command: list[str], **_kwargs: object) -> None:
+        if command[1] == "attach":
+            mounted = Path(command[command.index("-mountpoint") + 1])
+            payload = tmp_path / "portable"
+            (payload / "_internal").mkdir(parents=True)
+            (payload / "Bowl-Bound").write_bytes(b"synthetic executable")
+            (payload / "ARTIFACT-MANIFEST.json").write_text(
+                json.dumps({"version": "1.1.2", "target": "macos-arm64"})
+            )
+            macos_dmg.assemble_app(
+                payload, mounted / "Bowl Bound.app", "1.1.2", target="macos-arm64"
+            )
+
+    def smoke(app: Path, _version: str) -> None:
+        assert (app / "Contents/Frameworks").readlink() == Path("Resources/BowlBound/_internal")
+        assert (app / "Contents/Frameworks").resolve().is_dir()
+
+    with (
+        patch.object(macos_dmg.subprocess, "run", side_effect=mount),
+        patch.object(macos_dmg, "smoke_finder_app", side_effect=smoke),
+        patch.object(macos_dmg, "smoke_executable") as direct,
+    ):
+        macos_dmg.smoke_dmg(tmp_path / "synthetic.dmg", "1.1.2", "macos-arm64")
+    assert direct.call_args.args[0].as_posix().endswith("/Contents/MacOS/Bowl-Bound")
+    assert (
+        direct.call_args.kwargs["payload_root"].as_posix().endswith("/Contents/Resources/BowlBound")
+    )
