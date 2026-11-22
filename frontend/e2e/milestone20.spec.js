@@ -51,7 +51,10 @@ for (const human of ['home', 'away']) {
           for (const body of callsSent) expect(Object.keys(body).sort()).toEqual(['expected_revision', 'human_call', 'human_side'])
           for (const quarter of [1, 2, 3, 4]) expect(view.timing_log.filter((t) => t.quarter === quarter).reduce((sum, t) => sum + t.before - t.after, 0)).toBe(900)
           for (const side of ['home', 'away']) expect(view.score[side]).toBe(view.scoring.filter((e) => e.team === view[side]).reduce((sum, e) => sum + e.points, 0))
-          await page.getByTestId('team-statistics').locator('summary').click()
+          const final = page.getByRole('region', { name: 'Final' })
+          await expect(final.getByTestId('home-score')).toHaveText(String(view.score.home))
+          await expect(final.getByTestId('away-score')).toHaveText(String(view.score.away))
+          await expect(page.getByTestId('team-statistics').getByRole('table')).toBeVisible()
           for (const row of view.statistics.rows) {
             const shown = page.getByTestId('team-statistics').getByRole('row').filter({ has: page.getByRole('rowheader', { name: row.label, exact: true }) })
             await expect(shown.getByRole('cell')).toHaveText([row.home, row.away])

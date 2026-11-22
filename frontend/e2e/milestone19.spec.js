@@ -33,7 +33,7 @@ for (const reverse of [false, true]) {
         await expect(page.getByTestId('opening-screen')).toBeVisible()
         await expect(page.getByTestId('scoreboard')).toHaveCount(0)
         expect(view.clock.remaining).toBe(900)
-      } else {
+      } else if (!view.finished) {
         await expect(page.getByTestId('game-clock')).toHaveText(view.clock.label)
       }
       if (view.review) {
@@ -47,7 +47,10 @@ for (const reverse of [false, true]) {
         expect(phases.has('halftime_choice')).toBe(false)
         expect(view.score.home).toBe(view.scoring.filter((e) => e.team === view.home).reduce((sum, e) => sum + e.points, 0))
         expect(view.score.away).toBe(view.scoring.filter((e) => e.team === view.away).reduce((sum, e) => sum + e.points, 0))
-        await page.getByTestId('team-statistics').locator('summary').click()
+        const final = page.getByRole('region', { name: 'Final' })
+        await expect(final.getByTestId('home-score')).toHaveText(String(view.score.home))
+        await expect(final.getByTestId('away-score')).toHaveText(String(view.score.away))
+        await expect(page.getByTestId('team-statistics').getByRole('table')).toBeVisible()
         for (const row of view.statistics.rows) {
           const shown = page.getByTestId('team-statistics').getByRole('row').filter({ has: page.getByRole('rowheader', { name: row.label, exact: true }) })
           await expect(shown.getByRole('cell')).toHaveText([row.home, row.away])
