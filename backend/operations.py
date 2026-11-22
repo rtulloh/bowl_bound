@@ -1,5 +1,6 @@
 """Framework-independent operations for the HTTP and browser adapters."""
 
+import json
 import secrets
 from collections import OrderedDict
 from collections.abc import Callable
@@ -13,7 +14,6 @@ from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_vali
 
 from bowl_bound import DISPLAY_VERSION, __version__
 from bowl_bound.models import TeamChart
-from bowl_bound.played_season import PlayedSeason, SeasonFixture, SeasonResult, SeasonTeam
 from bowl_bound.regulation import RegulationView
 from bowl_bound.resolution import ChartResolutionError
 from bowl_bound.roster import RosterFormatError
@@ -26,7 +26,6 @@ from bowl_bound.save_game import (
     dumps_game,
     loads_game,
 )
-from bowl_bound.season_templates import list_season_templates
 from bowl_bound.session import (
     InvalidDecisionError,
     PendingDecisionError,
@@ -41,6 +40,9 @@ from bowl_bound.team_catalog import (
     TeamNotFoundError,
 )
 from bowl_bound.team_csv import TeamFileMetadata
+
+from .played_season import PlayedSeason, SeasonFixture, SeasonResult, SeasonTeam
+from .season_templates import list_season_templates
 
 MAX_GAMES = 50
 MAX_COMMAND_BYTES = 16 * 1024
@@ -256,6 +258,7 @@ class RegisteredGame:
 
     session: SavedGame
     human_side: HumanSide | None
+    team_ids: tuple[str, str]
 
 
 def _report_data(
@@ -454,11 +457,13 @@ def create_operations(seasons_root: Path, *, max_games: int = MAX_GAMES) -> list
             session.load_rosters(seasons_root)
         except ValueError as error:
             raise OperationError(status_code=422, detail=str(error)) from error
-        return register(session, human_side)
+        return register(session, human_side, (body.home, body.away))
 
-    def register(session: SavedGame, human_side: HumanSide | None = None) -> dict[str, object]:
+    def register(
+        session: SavedGame, human_side: HumanSide | None, team_ids: tuple[str, str]
+    ) -> dict[str, object]:
         game_id = secrets.token_urlsafe(9)
-        registered = RegisteredGame(session, human_side)
+        registered = RegisteredGame(session, human_side, team_ids)
         with registry_lock:
             games[game_id] = registered
             while len(games) > max_games:
@@ -529,14 +534,14 @@ def create_operations(seasons_root: Path, *, max_games: int = MAX_GAMES) -> list
 
     @operation("POST", "/api/games/{game_id}/season-result")
     def season_result(game_id: str, body: SeasonResultRequest) -> dict[str, object]:
-        session = lookup(game_id).session
-        view = session.view()
+        registered = lookup(game_id)
+        view = registered.session.view()
         if not isinstance(view, RegulationView) or not view.finished:
             raise OperationError(409, "A season cannot record an unfinished regulation game.")
         try:
             season = PlayedSeason.from_dict(body.snapshot)
             fixture = next((item for item in season.fixtures if item.id == body.fixture_id), None)
-            if fixture is None or (fixture.home, fixture.away) != session.team_ids:
+            if fixture is None or (fixture.home, fixture.away) != registered.team_ids:
                 raise ValueError("This game doesn't match the scheduled fixture.")
             season.record(
                 body.fixture_id,
@@ -583,7 +588,8 @@ def create_operations(seasons_root: Path, *, max_games: int = MAX_GAMES) -> list
                     "current game unchanged."
                 ),
             ) from error
-        return register(session, human_side)
+        teams = json.loads(text)["teams"]
+        return register(session, human_side, (teams["home"]["id"], teams["away"]["id"]))
 
     @operation("GET", "/api/games/{game_id}")
     def get_game(game_id: str, human_side: HumanSide | None = None) -> dict[str, object]:

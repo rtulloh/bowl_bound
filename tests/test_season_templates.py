@@ -5,7 +5,7 @@ from collections import Counter
 from itertools import combinations
 from pathlib import Path
 
-from bowl_bound.season_templates import list_season_templates
+from backend.season_templates import list_season_templates
 
 BIG_EIGHT = {
     f"1972/{team}"

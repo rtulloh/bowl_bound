@@ -4,7 +4,7 @@ from dataclasses import replace
 
 import pytest
 
-from bowl_bound.played_season import PlayedSeason, SeasonFixture, SeasonResult, SeasonTeam
+from backend.played_season import PlayedSeason, SeasonFixture, SeasonResult, SeasonTeam
 from bowl_bound.statistics import TeamStatistics
 
 

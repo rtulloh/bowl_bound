@@ -507,11 +507,6 @@ class SavedGame:
     def mode(self) -> str:
         return self._config["mode"]
 
-    @property
-    def team_ids(self) -> tuple[str, str]:
-        """Return the frozen chart edition IDs in home, away order."""
-        return self._teams["home"]["id"], self._teams["away"]["id"]
-
     def charts(self, side: str) -> ChartBook:
         """Inspect the frozen matchup chart without preparing or committing a turn."""
         if side not in {"home", "away"}:

@@ -6,7 +6,7 @@ from datetime import date as calendar_date
 from fractions import Fraction
 from typing import Any
 
-from .statistics import TeamStatistics
+from bowl_bound.statistics import TeamStatistics
 
 SCHEMA_VERSION = 1
 STAT_FIELDS = tuple(item.name for item in fields(TeamStatistics))
