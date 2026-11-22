@@ -1,7 +1,11 @@
 """Synthetic complete-bundle, physical-probability and safety contracts."""
 
+import sys
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from dataclasses import replace
 from pathlib import Path
+from types import CodeType, FrameType
 from typing import Any
 
 import pytest
@@ -17,6 +21,51 @@ from tools.chartgen.generate import (
     offensive_weights,
     write_bundle,
 )
+
+
+@contextmanager
+def _observe_engine_calls(
+    observe: Callable[[FrameType, str, Any], None],
+    *,
+    calls: tuple[CodeType, ...] = (),
+    returns: tuple[CodeType, ...] = (),
+) -> Iterator[None]:
+    """Observe selected functions without altering their attested bindings."""
+    monitoring = getattr(sys, "monitoring", None)
+    if monitoring is None:
+        previous = sys.getprofile()
+        sys.setprofile(observe)
+        try:
+            yield
+        finally:
+            sys.setprofile(previous)
+        return
+
+    def on_call(code: CodeType, offset: int) -> None:
+        observe(sys._getframe(1), "call", None)
+
+    def on_return(code: CodeType, offset: int, value: Any) -> None:
+        observe(sys._getframe(1), "return", value)
+
+    tool_id = 3
+    start = monitoring.events.PY_START
+    finish = monitoring.events.PY_RETURN
+    codes = set(calls) | set(returns)
+    monitoring.use_tool_id(tool_id, "chartgen engine test")
+    try:
+        monitoring.register_callback(tool_id, start, on_call)
+        monitoring.register_callback(tool_id, finish, on_return)
+        for code in codes:
+            monitoring.set_local_events(
+                tool_id, code, (start if code in calls else 0) | (finish if code in returns else 0)
+            )
+        yield
+    finally:
+        for code in codes:
+            monitoring.set_local_events(tool_id, code, 0)
+        monitoring.register_callback(tool_id, start, None)
+        monitoring.register_callback(tool_id, finish, None)
+        monitoring.free_tool_id(tool_id)
 
 
 @pytest.fixture
@@ -765,8 +814,6 @@ def test_centered_tactics_make_formations_distinct_without_changing_offense(
 def test_real_refinement_consumes_complete_phase_readiness(
     tmp_path: Path, events: list[Event]
 ) -> None:
-    import sys
-
     import tools.chartgen.refine as refine
     from tools.chartgen.readiness import refinement_phase_status
 
@@ -776,9 +823,7 @@ def test_real_refinement_consumes_complete_phase_readiness(
         if event == "return" and frame.f_code is refinement_phase_status.__code__:
             observed.append(argument)
 
-    previous = sys.getprofile()
-    sys.setprofile(observe)
-    try:
+    with _observe_engine_calls(observe, returns=(refinement_phase_status.__code__,)):
         report = refine.run_refinement(
             events,
             {"1": "Cedar Valley", "2": "Harbor Tech"},
@@ -787,8 +832,6 @@ def test_real_refinement_consumes_complete_phase_readiness(
             seed_plan=refine.SeedPlan(411, 1, 1),
             iterations=1,
         )
-    finally:
-        sys.setprofile(previous)
     assert observed == [report["qualification"]]
     assert report["mechanics_ready"] == observed[0]["mechanics_ready"]
     assert set(observed[0]["phases"]) == {"training:0", "heldout", "coaching"}
@@ -1582,12 +1625,11 @@ def test_training_selection_is_sealed_before_any_heldout_game(
 
     source, manifest, targets = _prepare_refinement_example(tmp_path, events)
     output = tmp_path / "private-data" / "sealed"
-    import sys
-
+    run_batch = cohort_refinement.run_historical_batch
     observed_boundaries = []
 
-    def observe_boundary(frame: Any, event: str, argument: Any) -> None:
-        if event == "call" and frame.f_code is cohort_refinement.run_historical_batch.__code__:
+    def observe(frame: FrameType, event: str, argument: Any) -> None:
+        if event == "call" and frame.f_code is run_batch.__code__:
             domain = frame.f_locals["domain"]
             if domain in {"heldout", "coaching"}:
                 receipt = json.loads((output / "training-selection.json").read_text())
@@ -1596,9 +1638,7 @@ def test_training_selection_is_sealed_before_any_heldout_game(
                 assert receipt["selected_candidate"] == 0
                 observed_boundaries.append(domain)
 
-    previous = sys.getprofile()
-    sys.setprofile(observe_boundary)
-    try:
+    with _observe_engine_calls(observe, calls=(run_batch.__code__,)):
         result = cohort_refinement.run_cohort_refinement(
             source,
             manifest,
@@ -1611,8 +1651,6 @@ def test_training_selection_is_sealed_before_any_heldout_game(
             iterations=1,
             master_seed=91,
         )
-    finally:
-        sys.setprofile(previous)
     assert observed_boundaries == ["heldout", "coaching"]
     assert (
         result["training_selection"]["semantic_sha256"]
@@ -1687,8 +1725,6 @@ def test_pure_training_plateau_consumer_uses_the_predeclared_limit() -> None:
 def test_real_workflow_claims_before_batching_and_stops_without_qualified_probes(
     tmp_path: Path, events: list[Event]
 ) -> None:
-    import sys
-
     from tools.chartgen import cohort_refinement
     from tools.chartgen.training_selection import claim_training_fingerprint
 
@@ -1701,9 +1737,11 @@ def test_real_workflow_claims_before_batching_and_stops_without_qualified_probes
         if event == "call" and frame.f_code is cohort_refinement.run_historical_batch.__code__:
             observed.append(("batch", frame.f_locals["domain"]))
 
-    previous = sys.getprofile()
-    sys.setprofile(observe)
-    try:
+    with _observe_engine_calls(
+        observe,
+        calls=(cohort_refinement.run_historical_batch.__code__,),
+        returns=(claim_training_fingerprint.__code__,),
+    ):
         result = cohort_refinement.run_cohort_refinement(
             source,
             manifest,
@@ -1716,8 +1754,6 @@ def test_real_workflow_claims_before_batching_and_stops_without_qualified_probes
             iterations=4,
             master_seed=93,
         )
-    finally:
-        sys.setprofile(previous)
     assert observed == [
         ("claimed", True),
         ("batch", "training"),

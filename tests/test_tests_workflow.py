@@ -30,19 +30,34 @@ def test_tests_runs_for_branch_pushes_pull_requests_and_native_gate_calls() -> N
 
 def test_automatic_gate_retains_the_whole_established_regression() -> None:
     data = workflow("tests.yml")
-    assert set(data["jobs"]) == {"test", "windows-terms-dialog"}
+    assert set(data["jobs"]) == {"test", "coverage", "browser", "windows-terms-dialog"}
+    assert "needs" not in data["jobs"]["browser"]
     job = data["jobs"]["test"]
     assert job["runs-on"] == "ubuntu-24.04"
-    assert int(job["timeout-minutes"]) == 240
+    assert int(job["timeout-minutes"]) == 60
     commands = "\n".join(step.get("run", "") for step in job["steps"])
     for required in (
         "python -m venv .venv",
         ".[dev,web,pdf]",
-        ".venv/bin/python -m pytest --cov --cov-report=term-missing "
-        "-n 4 --dist=loadgroup --durations=25 -q",
+        ".venv/bin/python -m pytest -p scripts.pytest_shard --cov --cov-report= "
+        "--cov-fail-under=0 -n 2 --dist=loadgroup --durations=25 -q",
         ".venv/bin/python -m ruff check .",
         ".venv/bin/python -m ruff format --check .",
         ".venv/bin/python -m pip check",
+    ):
+        assert required in commands
+    shard_count = int(data["env"]["BB_TEST_SHARDS"])
+    assert list(map(int, job["strategy"]["matrix"]["shard"])) == list(range(shard_count))
+    assert job["env"]["BB_TEST_SHARD"] == "${{ matrix.shard }}"
+    coverage_job = data["jobs"]["coverage"]
+    assert coverage_job["needs"] == "test"
+    coverage_commands = "\n".join(step.get("run", "") for step in coverage_job["steps"])
+    assert 'test -s "coverage-data/.coverage.$shard"' in coverage_commands
+    assert "coverage combine coverage-data" in coverage_commands
+    assert "coverage report" in coverage_commands
+    browser_job = data["jobs"]["browser"]
+    commands = "\n".join(step.get("run", "") for step in browser_job["steps"])
+    for required in (
         "npm ci --ignore-scripts",
         "npm test",
         "npm run build",
@@ -51,7 +66,9 @@ def test_automatic_gate_retains_the_whole_established_regression() -> None:
     ):
         assert required in commands
     browser = next(
-        step for step in job["steps"] if step.get("name") == "Real-engine browser regression"
+        step
+        for step in browser_job["steps"]
+        if step.get("name") == "Real-engine browser regression"
     )
     assert browser["working-directory"] == "frontend"
     assert "runner.temp" in browser["env"]["BB_E2E_SEASONS"]
@@ -79,7 +96,7 @@ def test_manual_native_workflow_reuses_tests_for_the_same_requested_commit() -> 
         step for step in gate["steps"] if "scripts.verify_source_gate" in step.get("run", "")
     )
     assert verifier["env"]["SOURCE_REF"] == test_checkout["with"]["ref"] == expected
-    assert native["env"] == source["env"]
+    assert native["env"] == {key: source["env"][key] for key in native["env"]}
 
 
 def test_both_workflows_retain_exact_pins_and_propagate_failures_without_publication() -> None:
@@ -188,7 +205,7 @@ def test_reviewed_generator_runtime_is_checked_before_expensive_regression() -> 
     )
     install = next(step for step in steps if step.get("name") == "Install source test dependencies")
     regression = next(
-        step for step in steps if step.get("name") == "Python tests, lint and formatting"
+        step for step in steps if step.get("name") == "Python tests with branch coverage"
     )
     assert steps.index(install) < steps.index(preflight) < steps.index(regression)
     assert (
@@ -256,4 +273,4 @@ def test_failed_macos_launch_captures_workflow_bound_tools_without_changing_payl
 def test_source_format_and_dependency_checks_precede_expensive_regression() -> None:
     text = Path(".github/workflows/tests.yml").read_text()
     for command in ("ruff check .", "ruff format --check .", "pip check"):
-        assert text.index(command) < text.index("-m pytest --cov")
+        assert text.index(command) < text.index("-m pytest -p scripts.pytest_shard --cov")

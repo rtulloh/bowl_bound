@@ -520,3 +520,25 @@ This records runtime identity for the release regression and supplies no new
 historical calibration evidence. Paydirt's release workflow was consulted for
 its exact-source validation before packaging. Bowl Bound retains its existing
 main-push source gate and manual native-build dispatch.
+
+## Source gate timing (DEV-083)
+
+Track the 30-minute upstream target in [GitHub issue #203](https://github.com/rtulloh/bowl_bound/issues/203).
+The successful comparison run [44964372883](https://github.com/rtulloh/bowl_bound/actions/runs/44964372883)
+took 2h 32m 37s, including 2h 25m 35s for 7,117 Python tests. The largest
+individual durations were 56m 57s for coordinate probes and 39m 54s for the
+training seal. Compare workflow wall time and individual job durations, including
+runner queueing and setup. Track the separately dispatched native artifact build
+using its own run timestamps.
+
+Paydirt’s `.github/workflows/test.yml` separates browser games and Python coverage.
+Bowl Bound adapts that job layout with its own browser harness, dependencies,
+and exact-commit source gate. Every pytest node belongs to one of twelve
+shards. Tests sharing an xdist group are placed on the same shard and worker.
+All shard coverage files are required before the combined branch-coverage check
+enforces the project’s 75% minimum. The catalog, Windows source dialog and
+real-engine browser checks remain required for workflow success.
+
+The refinement integration tests use local function events on Python 3.12 and
+newer to observe the same seal, batch and readiness assertions without profiling
+unrelated engine calls. Older Python versions use the standard profile callback.

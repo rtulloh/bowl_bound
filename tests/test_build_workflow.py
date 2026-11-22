@@ -29,7 +29,7 @@ def test_three_native_builds_are_test_gated_and_do_not_publish_releases() -> Non
     )
     assert source["permissions"] == {"contents": "read"}
     assert int(jobs["build"]["timeout-minutes"]) == 45
-    assert int(source["jobs"]["test"]["timeout-minutes"]) == 240
+    assert int(source["jobs"]["test"]["timeout-minutes"]) == 60
     for job in (jobs["build"], *source["jobs"].values()):
         for step in job["steps"]:
             if "uses" in step:
@@ -68,8 +68,8 @@ def test_browser_job_provides_the_interpreter_expected_by_the_harness() -> None:
     commands = "\n".join(step.get("run", "") for step in workflow["jobs"]["test"]["steps"])
     assert "python -m venv .venv" in commands
     assert '.venv/bin/python -m pip install -e ".[dev,web,pdf]"' in commands
-    assert ".venv/bin/python -m pytest --cov" in commands
-    assert "-n 4 --dist=loadgroup --durations=25" in commands
+    assert ".venv/bin/python -m pytest -p scripts.pytest_shard --cov" in commands
+    assert "-n 2 --dist=loadgroup --durations=25" in commands
     pyproject = (ROOT / "pyproject.toml").read_text()
     dev = re.search(r"^dev = \[(.*?)^\]", pyproject, re.MULTILINE | re.DOTALL)
     assert dev is not None and '"pytest-xdist==3.8.0"' in dev.group(1)

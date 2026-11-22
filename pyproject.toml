@@ -62,6 +62,7 @@ select = ["E", "F", "I", "B", "UP"]
 [tool.coverage.run]
 source = ["bowl_bound", "tools", "backend"]
 branch = true
+relative_files = true
 
 [tool.coverage.report]
 # Project floor for the full-suite gate; run with `pytest --cov`.
