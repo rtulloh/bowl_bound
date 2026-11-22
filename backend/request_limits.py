@@ -5,7 +5,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from bowl_bound.save_game import MAX_SAVE_BYTES
 
-MAX_COMMAND_BYTES = 16 * 1024
+from .operations import MAX_COMMAND_BYTES
 
 
 class RequestBodyLimit:

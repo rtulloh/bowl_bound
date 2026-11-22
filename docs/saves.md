@@ -1,5 +1,9 @@
 # Private game saves (schema 1)
 
+For browser-local checkpoints and portable browser exports, see the
+[browser-only save controls](web-game.md#save-and-resume).
+
+
 ## Save and resume in the browser
 
 1. Open the header **Game** menu and click **Save game**, including while an engine decision is pending

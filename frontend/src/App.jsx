@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { coachStep, decide, gameAction, getRules, kick, listTeams, newGame, snap } from './api'
+import { coachStep, decide, gameAction, getRules, kick, listTeams, newGame, saveGame, snap } from './api'
 import FootballField from './components/FootballField'
 import { GamePlayLog } from './components/PlayLog'
 import PlaySelector from './components/PlaySelector'
@@ -9,6 +9,8 @@ import ScoringLedger from './components/ScoringLedger'
 import ClockChoices from './components/ClockChoices'
 import TeamStatistics from './components/TeamStatistics'
 import SaveControls from './components/SaveControls'
+import BrowserSaves from './components/BrowserSaves'
+import { writeSavedGame } from './runtime/gameLibrary'
 import CoinToss from './components/CoinToss'
 import DiceRoll from './components/DiceRoll'
 import HalftimeReview from './components/HalftimeReview'
@@ -16,7 +18,13 @@ import ChartViewer from './components/ChartViewer'
 import MatchupBuilder, { initialSides } from './components/MatchupBuilder'
 import CatalogProblems from './components/CatalogProblems'
 
+const gameName = (game) => game ? `${game.view.home} vs ${game.view.away}`.slice(0, 160) : ''
+
 export default function App() {
+  const browser = import.meta.env.MODE === 'browser'
+  const [saveStatus, setSaveStatus] = useState(null)
+  const savedGame = useRef(null)
+  const saveIdentity = useRef(null)
   const [teams, setTeams] = useState(null)
   const [catalogProblems, setCatalogProblems] = useState([])
   const [home, setHome] = useState({ season: '', teamId: '' })
@@ -64,7 +72,7 @@ export default function App() {
           setAway(sides.away)
         }
       })
-      .catch(() => setError('The Bowl Bound server is not reachable.'))
+      .catch((error) => setError(browser ? error.message : 'The Bowl Bound server is not reachable.'))
   }, [])
 
   useEffect(() => {
@@ -82,7 +90,22 @@ export default function App() {
     return () => { current = false }
   }, [home.season, gameType, rulesAttempt])
 
-  const apply = (result) => {
+  const persist = async (active, humanSide) => {
+    if (!browser) return
+    const identity = saveIdentity.current
+    setSaveStatus(null)
+    try {
+      const checkpoint = await saveGame(active.game_id)
+      const previous = savedGame.current
+      savedGame.current = await writeSavedGame({
+        id: identity.id, name: previous?.name ?? identity.name, checkpoint, humanSide,
+      }, previous?.version)
+      setSaveStatus({ message: 'Game saved locally.' })
+    } catch (error) {
+      setSaveStatus({ error: true, message: `Game could not be saved locally. ${error.message} Export the game to keep your progress.` })
+    }
+  }
+  const apply = async (result) => {
     setOffense('')
     setDefense('')
     setGame((current) => ({
@@ -95,6 +118,7 @@ export default function App() {
     else if (["halftime_choice", "overtime_choice", "final"].includes(result.view.phase)) {
       setReport(null)
     }
+    await persist(game, control)
   }
   // All gameplay requests share one synchronous guard, including automatic turns.
   const run = async (work) => {
@@ -119,6 +143,11 @@ export default function App() {
   const start = () => run(async () => {
     const payload = { home: home.teamId, away: away.teamId, mode: 'regulation', game_type: gameType, difficulty }
     const created = await (control === 'manual' ? newGame(payload) : newGame(payload, control))
+    if (browser) {
+      savedGame.current = null
+      saveIdentity.current = { id: created.game_id, name: gameName(created) }
+      setSaveStatus(null)
+    }
     setRevealedToss(null)
     setGame(created)
     setReport(null)
@@ -128,6 +157,7 @@ export default function App() {
     setDefense('')
     setComputerError('')
     automaticCount.current = 0
+    await persist(created, control)
   })
   const play = (offensiveCall, defensiveCall) => run(async () => {
     setOffense('')
@@ -138,32 +168,38 @@ export default function App() {
     const canHurry = control === 'manual' || game.turn?.human_role === 'offense'
     if (canHurry && hurryMode && game.view.clock_modifiers?.some((c) => c.id === 'clock:hurry' && c.enabled)) {
       const hurried = await manualOrControlled(decide, game.game_id, 'clock:hurry')
-      apply(hurried)
+      await apply(hurried)
       expectedRevision = hurried.revision ?? expectedRevision
     }
-    apply(await (control === 'manual' ? snap(game.game_id, offensiveCall, defensiveCall)
+    await apply(await (control === 'manual' ? snap(game.game_id, offensiveCall, defensiveCall)
       : coachStep(game.game_id, control, expectedRevision, game.turn.human_role === 'offense' ? offensiveCall : defensiveCall)))
   })
   const special = (action, isGameAction = false) => run(async () => {
     automaticCount.current = 0
-    apply(await manualOrControlled(isGameAction ? gameAction : kick, game.game_id, action))
+    await apply(await manualOrControlled(isGameAction ? gameAction : kick, game.game_id, action))
   })
   const choose = (choice) => run(async () => {
     automaticCount.current = 0
-    apply(await manualOrControlled(decide, game.game_id, choice))
+    await apply(await manualOrControlled(decide, game.game_id, choice))
   })
   useEffect(() => {
     if (control === 'manual' || game?.view.review || !game?.turn?.automatic || game.view.finished || busy || error || computerError || (game.view.phase === "opening_choice" && !openingRevealed)) return
     const timer = setTimeout(() => {
       run(async () => {
         if (++automaticCount.current > 12) throw new Error('Computer stopped after 12 consecutive actions. Review the game before retrying.')
-        apply(await coachStep(game.game_id, control, game.revision ?? 0))
+        await apply(await coachStep(game.game_id, control, game.revision ?? 0))
       })
     }, 200)
     return () => clearTimeout(timer)
   }, [game, control, busy, error, computerError, openingRevealed])
 
-  const loaded = async (created) => {
+  const loaded = async (created, humanSide = control, record = null, name = gameName(created)) => {
+    if (browser) {
+      savedGame.current = record
+      saveIdentity.current = { id: record?.id ?? created.game_id, name }
+      setControl(humanSide)
+      setSaveStatus(null)
+    }
     setRevealedToss(null)
     setGame(created)
     if (gameMenu.current) gameMenu.current.open = false
@@ -175,8 +211,11 @@ export default function App() {
     setComputerError('')
     setOffense('')
     setDefense('')
+    if (!record) await persist(created, humanSide)
   }
   const resetGame = () => {
+    if (inFlight.current) return
+    setSaveStatus(null)
     setGame(null)
     setReport(null)
     setError('')
@@ -186,7 +225,11 @@ export default function App() {
     setHurryMode(false)
     setCompleteHistory(false)
   }
-  const saves = <SaveControls gameId={game?.game_id} humanSide={control} busy={busy} onLoaded={loaded}
+  const saves = browser
+    ? <BrowserSaves gameId={game?.game_id} humanSide={control} busy={busy} run={run} onLoaded={loaded}
+        save={() => persist(game, control)} activeRecord={savedGame.current}
+        name={saveIdentity.current?.name ?? gameName(game)} />
+    : <SaveControls gameId={game?.game_id} humanSide={control} busy={busy} onLoaded={loaded}
     onBusyChange={(value) => { inFlight.current = value; setBusy(value) }} onError={setError} />
   const controls = <label className="block text-sm">Control mode
     <select className="block text-black p-1" value={control} disabled={busy || Boolean(game)} onChange={(e) => setControl(e.target.value)}>
@@ -313,6 +356,7 @@ export default function App() {
         </details>
         </div>
       </header>
+      {saveStatus && <p role={saveStatus.error ? 'alert' : 'status'} className="text-sm">{saveStatus.message}</p>}
       {(error || computerError) && <div className="text-red-300" role="alert">{error === 'no such game' ? <>
         The local server was restarted, so this unsaved game is no longer available.
         <button type="button" className="play-button ml-2" disabled={busy} onClick={resetGame}>Start new game</button>

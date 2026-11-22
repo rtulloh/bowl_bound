@@ -49,6 +49,7 @@ PUBLIC_FILES = frozenset(
         "start.bat",
         "docs/README.md",
         "docs/installation.md",
+        "docs/web-game.md",
         "docs/playing.md",
         "docs/startup.md",
         "docs/importing-teams.md",

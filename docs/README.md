@@ -3,6 +3,7 @@
 Start with [installation](installation.md), then [how to play](playing.md).
 
 - [Python and pip setup](python-setup.md) — official Windows/macOS/Homebrew links.
+- [Browser-only game](web-game.md) for local static builds and browser saves.
 - [Starting and stopping](startup.md) — local server, launcher options and version.
 - [Optional team chart import](importing-teams.md) — an advanced, source-installed tool.
 - [Troubleshooting](troubleshooting.md) — downloads, ports, saves and team problems.

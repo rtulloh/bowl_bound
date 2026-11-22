@@ -15,6 +15,7 @@ Cedar Valley and Harbor Tech samples. Select teams across seasons. See the
 ## Get started
 
 - [Install and launch](docs/installation.md): macOS DMG, Windows installer and source instructions.
+- [Build and try the browser-only game](docs/web-game.md).
 - [How to play](docs/playing.md): setup, controls, difficulty, saving and limits.
 - [Optional: import your own team charts](docs/importing-teams.md) (advanced).
 - [Chart generator source and workflow](https://github.com/rtulloh/bowl_bound/blob/main/docs/chart-generation.md) (development).

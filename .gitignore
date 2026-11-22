@@ -68,3 +68,5 @@ node_modules/
 
 # Local agent tooling configuration is not part of the public repository.
 opencode.json
+
+/frontend/dist-browser/

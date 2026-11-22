@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { loadGame, saveGame } from '../api'
+import { downloadGame } from '../runtime/gameExport'
 
 // Saves are opaque engine documents. Never infer a phase or execute a pending choice.
 export default function SaveControls({ gameId, humanSide, busy = false, onLoaded, onBusyChange, onError }) {
@@ -15,18 +16,7 @@ export default function SaveControls({ gameId, humanSide, busy = false, onLoaded
     }
   }
   const save = () => perform(async () => {
-    const data = await saveGame(gameId)
-    const url = URL.createObjectURL(new Blob([data], { type: 'application/json' }))
-    const link = document.createElement('a')
-    try {
-      link.href = url
-      link.download = 'bowl-bound-save.json'
-      document.body.appendChild(link)
-      link.click()
-    } finally {
-      link.remove()
-      URL.revokeObjectURL(url)
-    }
+    downloadGame(await saveGame(gameId))
   })
   const load = (event) => {
     const file = event.target.files?.[0]

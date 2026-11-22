@@ -36,6 +36,12 @@ adapted files there was `c3712a6`.
 | `frontend/src/components/CoinToss.jsx` | `paydirt-web/frontend/src/components/Game/CoinToss.jsx` | local reference checkout | Coin appearance only; removed browser randomness, heads/tails outcome rules, CPU choices and possession calculation; engine winner/choices remain authoritative |
 | `bowl_bound/coaching.py` | `paydirt/computer_ai.py` | `bfaf8410cb586149f06f98bf98ecca572cae360d` | Adapted balanced/situational mixture, independent coaching randomness and legal fallback ideas; independent public-observation implementation, no coupled engine class, NFL restrictions or chart analysis |
 
+Milestone 46 adapts Paydirt's worker bootstrap pattern from
+`paydirt-web/frontend/src/runtime/python.worker.js` at `3ac20be`. Bowl Bound
+uses a self-hosted Pyodide runtime, its own operation registry and save codec,
+and a separate IndexedDB game library. See the
+[milestone notes](dev-notes/milestone-46.md) for the other design references.
+
 The Milestone 20 concealed simultaneous-call flow also follows Paydirt’s
 `paydirt-web/frontend/src/components/Game/PlayingPhase.jsx` design at that checkout:
 only the human role is selectable. Bowl Bound plans privately on the server rather
