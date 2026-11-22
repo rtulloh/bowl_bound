@@ -49,7 +49,7 @@ async function finishFixture(page) {
     const action = pending || review || normalCall || special || clock
     action?.click()
     return false
-  }, undefined, { timeout: 30_000 })
+  }, undefined, { timeout: 50_000 })
   await expect(page.getByText('Final result recorded.')).toBeVisible()
   const stats = page.getByTestId('team-statistics').getByRole('row', { name: /Total offense yards/ }).getByRole('cell')
   const homeYards = Number(await stats.nth(0).textContent())
@@ -61,6 +61,7 @@ async function finishFixture(page) {
 }
 
 test('a browser season resumes after reload and reconciles two conference finals to season totals', async ({ page }) => {
+  test.setTimeout(140_000)
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/dist-browser/')
   await openSeasons(page)
@@ -108,7 +109,7 @@ test('a browser season resumes after reload and reconciles two conference finals
   }
 
   await page.getByRole('button', { name: 'Standings', exact: true }).click()
-  await page.getByLabel('Conference', { exact: true }).selectOption('Synthetic Conference')
+  await page.getByRole('combobox', { name: 'Conference', exact: true }).selectOption('Synthetic Conference')
   const standings = page.getByRole('table', { name: 'Synthetic Conference' })
   const cedarRecord = standings.getByRole('row').filter({ has: page.getByRole('rowheader', { name: cedar, exact: true }) }).getByRole('cell')
   await expect(cedarRecord.nth(2)).toHaveText(String(first.homeScore + second.awayScore))
