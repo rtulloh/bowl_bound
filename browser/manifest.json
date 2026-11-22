@@ -1,0 +1,355 @@
+{
+  "files": [
+    {
+      "bytes": 159590,
+      "mount": "/app",
+      "sha256": "a1f8ad53804ebb02ab7cfe37933a575c9faa3ce5f98398e193117fa7b029ae81",
+      "url": "python.zip"
+    }
+  ],
+  "inventory": [
+    {
+      "bytes": 1064,
+      "path": "LICENSE",
+      "sha256": "356caec7754a1b8a564cbc7f186c80da50ac8d66a2ea7646fe7cc331c9c5f241"
+    },
+    {
+      "bytes": 55,
+      "path": "backend/__init__.py",
+      "sha256": "ee0c8133de2a1b725ed302515ca0594039a0c67af2a69d60b7c49777f7a88b95"
+    },
+    {
+      "bytes": 3912,
+      "path": "backend/browser_bridge.py",
+      "sha256": "455908fa8d0064c12b4dbd0df9373a1acc779490a3e29e9524ed7b892bc5ef82"
+    },
+    {
+      "bytes": 19272,
+      "path": "backend/operations.py",
+      "sha256": "8fcab219d7467ccf35258e23d937fd71f8b115524fbbd902e805a47a1fc95998"
+    },
+    {
+      "bytes": 335,
+      "path": "bowl_bound/__init__.py",
+      "sha256": "cb6e19801891c809eae2a03bbd9804770f802584a0fdeeb38d537d729aa3ab50"
+    },
+    {
+      "bytes": 8400,
+      "path": "bowl_bound/chart_coaching.py",
+      "sha256": "8f971e15ff87f9ccd86d9a9e999a19affca0789ed6cb1992eff953bfd9afdc08"
+    },
+    {
+      "bytes": 17668,
+      "path": "bowl_bound/chart_view.py",
+      "sha256": "dfadf08b4c2726c9d59943b23404efd1eb0182bd54344ac6feb92df72edd3f46"
+    },
+    {
+      "bytes": 12203,
+      "path": "bowl_bound/coaching.py",
+      "sha256": "75a99202eee85433e784b6caf40a7774d346a9081eb284af21969d2472a9e2a9"
+    },
+    {
+      "bytes": 21448,
+      "path": "bowl_bound/coaching_evaluation.py",
+      "sha256": "2b58203b93458f8663faf7dddeec7c178908c9cbf514ddd38dd022fc3c04c67d"
+    },
+    {
+      "bytes": 6853,
+      "path": "bowl_bound/coaching_probabilities.py",
+      "sha256": "4a9bd750181d016bb48090a81f6f3ccf7b846f04508973e8c7695845c7cc14c1"
+    },
+    {
+      "bytes": 8640,
+      "path": "bowl_bound/coaching_profiles.py",
+      "sha256": "3b038ea9cbc40b699a5cca68f6f5165bf6996aebab0fde83c4a0f9e42cdf642f"
+    },
+    {
+      "bytes": 11162,
+      "path": "bowl_bound/coaching_session.py",
+      "sha256": "11ac747f55bbdf1bc0317066ff9f605d402b07d09f6d56bd8d4fff9a5c5b6dfd"
+    },
+    {
+      "bytes": 1321,
+      "path": "bowl_bound/coaching_situations.py",
+      "sha256": "1f8e688d731e66b0efd4dd3a909eb40073bf549152c6fc69312dcdcfe9fda09c"
+    },
+    {
+      "bytes": 12058,
+      "path": "bowl_bound/commentary.py",
+      "sha256": "3fdb4a894a7cdbeee4487ffeafd1e44d4cf624a5bd1aa95a574e13f94aa23f76"
+    },
+    {
+      "bytes": 2402,
+      "path": "bowl_bound/decision_facts.py",
+      "sha256": "24b8ca2c33e7c6b3b108ff6af9a51caac7b2fba04c34a60e8cf3f109270bafae"
+    },
+    {
+      "bytes": 4942,
+      "path": "bowl_bound/dice.py",
+      "sha256": "e757bf5577ff0c1763cfe63be515d5a193d5fbdf6e222d3786c5422abf268465"
+    },
+    {
+      "bytes": 23116,
+      "path": "bowl_bound/difficulty.py",
+      "sha256": "1ec69065052d722178e3ffca188363514a9063dcfaa53776e0b101b748c8a02b"
+    },
+    {
+      "bytes": 5906,
+      "path": "bowl_bound/game_state.py",
+      "sha256": "07ef573c88ca180ee9da5c50c82631b628f421cb53b6e0b384f5ebdc180330aa"
+    },
+    {
+      "bytes": 17927,
+      "path": "bowl_bound/models.py",
+      "sha256": "839ecaf2b5d5e2458e156ae1045d0709ad0c5055640d56170e3bd7706c1dfe9e"
+    },
+    {
+      "bytes": 12026,
+      "path": "bowl_bound/normalization.py",
+      "sha256": "524718bed0b3cee6424c591b54e93b077deb9a3e0b8bb813ec66e4b9d830a9de"
+    },
+    {
+      "bytes": 2479,
+      "path": "bowl_bound/overtime.py",
+      "sha256": "436e4c24ac6854435e5ac790cc700a401c418d557824b0662c7c86c234f75b95"
+    },
+    {
+      "bytes": 11196,
+      "path": "bowl_bound/penalties.py",
+      "sha256": "420dd0e4809d598bcfb5d48d74c5d5f5d28cf28da2ce13baff4b6a57425d46b4"
+    },
+    {
+      "bytes": 14565,
+      "path": "bowl_bound/penalty_yardage.py",
+      "sha256": "e0fb784ac72b703e5a377a0ae1f2e580087daf8a157609672ba2a3e5c29e4b6d"
+    },
+    {
+      "bytes": 7367,
+      "path": "bowl_bound/player_coaching.py",
+      "sha256": "abd4abd8532ccf49bd4a562c3ef657f0d9c4ec86e5195c51ebb039b93ec0b68c"
+    },
+    {
+      "bytes": 46138,
+      "path": "bowl_bound/regulation.py",
+      "sha256": "491ee885df2cb9545fad3487975213adad71281e27fb7b749c3ff04b1e5ef0b5"
+    },
+    {
+      "bytes": 30767,
+      "path": "bowl_bound/resolution.py",
+      "sha256": "8f36e313c696c2c1792786b4d482674610eff0c2e0ff0112376b9700e01e9832"
+    },
+    {
+      "bytes": 2659,
+      "path": "bowl_bound/return_recovery.py",
+      "sha256": "3321e086b9dfe6d266c467f6cac4ab4ae5d318fd81cbc9f659d88bed5b57ef3c"
+    },
+    {
+      "bytes": 6950,
+      "path": "bowl_bound/roster.py",
+      "sha256": "1853b0c3fc50149a863965556f500bcaed3710257c43eb6dc11d68ce647b6c50"
+    },
+    {
+      "bytes": 2375,
+      "path": "bowl_bound/rules_summary.py",
+      "sha256": "4c4ba6be5120ea85dcd52b824ddc5af03259d9d17f02b254eee1cb02c8745716"
+    },
+    {
+      "bytes": 52949,
+      "path": "bowl_bound/save_game.py",
+      "sha256": "a66537c9908460993c9f8b848b8c2d195357cca8285670bd1fcab8b4a29320fb"
+    },
+    {
+      "bytes": 2816,
+      "path": "bowl_bound/scoring.py",
+      "sha256": "ecf47e45a2f78b16c3da4da43d81f6785fcd23fbf24701f10bb34aa994e042b0"
+    },
+    {
+      "bytes": 105530,
+      "path": "bowl_bound/session.py",
+      "sha256": "fdc4a0ae0407d92c0483317186c4f47cf69eb97fa715d97ad8f6111052d101bf"
+    },
+    {
+      "bytes": 31209,
+      "path": "bowl_bound/special_teams.py",
+      "sha256": "56e7ec33fa3f875d14fa4c91280d6ba8d9af3d72917e450aa1936d72270e32bd"
+    },
+    {
+      "bytes": 6733,
+      "path": "bowl_bound/statistics.py",
+      "sha256": "5db622bb087363932e2b937e87842711940d914220f1055c3c2908a169e1c070"
+    },
+    {
+      "bytes": 3658,
+      "path": "bowl_bound/team_catalog.py",
+      "sha256": "c948f6d60b1e821a6f3bbe379698be30bed996c2d081982144934832051627d3"
+    },
+    {
+      "bytes": 30308,
+      "path": "bowl_bound/team_csv.py",
+      "sha256": "2a4c3a78d1d43d007bf5cb0d5975b07ad8c220108086447c35b473d75f1a35b3"
+    },
+    {
+      "bytes": 3557,
+      "path": "bowl_bound/timing.py",
+      "sha256": "ea27dc4907ca59cde7bbf7d470f7bb6c229cb1270c2757d7362ef5ee5c7bab33"
+    },
+    {
+      "bytes": 21242,
+      "path": "bowl_bound/turnovers.py",
+      "sha256": "a844cccc2ededead749b436df52df778656142d7dc503205031fdb64879dd1ce"
+    },
+    {
+      "bytes": 978,
+      "path": "bowl_bound/variable_yardage.py",
+      "sha256": "ee9cc4977237819e1c2f0054377c8024df3f1a38bacef61114d4ba1d8bd34637"
+    },
+    {
+      "bytes": 1058,
+      "path": "seasons/2007/cedar-valley/defense.csv",
+      "sha256": "a203b623f88deb24234bcc3c63e534de873ce03c93fc51eab139d2afb581aa8e"
+    },
+    {
+      "bytes": 1318,
+      "path": "seasons/2007/cedar-valley/offense.csv",
+      "sha256": "817492bb14e883c0d6a7964ae29c8b9331dbe374f812b7f36641c4ae7ea60004"
+    },
+    {
+      "bytes": 767,
+      "path": "seasons/2007/cedar-valley/roster-sources.md",
+      "sha256": "4b8b86c7dd684dd2dfa12dc9156f726c891f592facdd3545f38e0690f55bc570"
+    },
+    {
+      "bytes": 712,
+      "path": "seasons/2007/cedar-valley/roster.json",
+      "sha256": "41b750b98b93744168ae8f77c69567b752902a5c63503b3e2a308bf1c6e2d679"
+    },
+    {
+      "bytes": 716,
+      "path": "seasons/2007/cedar-valley/special.csv",
+      "sha256": "ef55cb6b9d7fec6efcd267832a67aed00a1a811c204b80f3d4d9112b9ade26f3"
+    },
+    {
+      "bytes": 353,
+      "path": "seasons/2007/cedar-valley/team.yaml",
+      "sha256": "9ec93c2ceb5cfca37a72ca3376f0ddb020de910fb53214f024778089e8c30d46"
+    },
+    {
+      "bytes": 1056,
+      "path": "seasons/2007/harbor-tech/defense.csv",
+      "sha256": "803543ebf865d76c39960128bdbe077b15653a9cae41d63c8748513ddde5b2ca"
+    },
+    {
+      "bytes": 1323,
+      "path": "seasons/2007/harbor-tech/offense.csv",
+      "sha256": "250741cc7a8c3c00182f784fe2d67a1ee22fdf0ae88437acf9ac8dc7eb9d2d91"
+    },
+    {
+      "bytes": 767,
+      "path": "seasons/2007/harbor-tech/roster-sources.md",
+      "sha256": "4b8b86c7dd684dd2dfa12dc9156f726c891f592facdd3545f38e0690f55bc570"
+    },
+    {
+      "bytes": 747,
+      "path": "seasons/2007/harbor-tech/roster.json",
+      "sha256": "fed6277bba96d97a41123d633920c6c773115c1a4750b0d68ef853a70c5bf9b2"
+    },
+    {
+      "bytes": 717,
+      "path": "seasons/2007/harbor-tech/special.csv",
+      "sha256": "52078198faed26088d3f1fb8aeb5ae42d73c03156f1795d785c44c71cf13051c"
+    },
+    {
+      "bytes": 351,
+      "path": "seasons/2007/harbor-tech/team.yaml",
+      "sha256": "a85d51f93442860ecef21b83e767eb116a61d1ef45df24dd8f23e9f938ae38c1"
+    },
+    {
+      "bytes": 32818,
+      "path": "seasons/2007/provenance/cedar-valley.csv",
+      "sha256": "37941a5cf8139707a53827f69187963341f4393bbfba5c33693d10a71844f7f8"
+    },
+    {
+      "bytes": 32822,
+      "path": "seasons/2007/provenance/harbor-tech.csv",
+      "sha256": "a5fc899f544890be7a40af8f757269a19826227f900a8ad887fdec9cd25bd6fe"
+    },
+    {
+      "bytes": 889,
+      "path": "seasons/SAMPLE-LICENSE.md",
+      "sha256": "75cb4838502ef53322cd77f97c45e202b6322b24e7f7524c2384ce923894d87a"
+    }
+  ],
+  "pyodide": {
+    "files": [
+      {
+        "bytes": 16725,
+        "path": "LICENSE-pyodide",
+        "sha256": "1f256ecad192880510e84ad60474eab7589218784b9a50bc7ceee34c2b91f1d5"
+      },
+      {
+        "bytes": 13936,
+        "path": "LICENSE-python",
+        "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+      },
+      {
+        "bytes": 10719,
+        "path": "annotated_types-0.6.0-py3-none-any.whl",
+        "sha256": "9733de5d59580defb40ad7bd8a5d53a0fac03de7a13028d95cacc4e81945c97c"
+      },
+      {
+        "bytes": 431426,
+        "path": "pydantic-2.10.5-py3-none-any.whl",
+        "sha256": "dd344e353e3c3a2d972c1198744a4f4ba1e2ce586e903187cca9fdaafb46c63d"
+      },
+      {
+        "bytes": 1390305,
+        "path": "pydantic_core-2.27.2-cp312-cp312-pyodide_2024_0_wasm32.whl",
+        "sha256": "eefd735db79e36e3425e4a821fc9df6cb172d2845f0d4a2a1038eb5f4d5c1d0c"
+      },
+      {
+        "bytes": 112205,
+        "path": "pyodide-lock.json",
+        "sha256": "9c45b916001a750f4102fc287494f3eab215909c7535c626a20db80fd6333e2c"
+      },
+      {
+        "bytes": 1255688,
+        "path": "pyodide.asm.js",
+        "sha256": "6b4c90de5b7172873f04f21884d0e9d2274e305fe32116558fe3e4fbe3618d51"
+      },
+      {
+        "bytes": 10105545,
+        "path": "pyodide.asm.wasm",
+        "sha256": "a50dd1843f805a0b7c45b61037ee0d7b26dfe85efe0e18ef95a34ad24e401f5f"
+      },
+      {
+        "bytes": 13931,
+        "path": "pyodide.mjs",
+        "sha256": "04c052c815abb0bf2981fa38c2dfa58e3120ee5288c956df2b2a15e301782c5f"
+      },
+      {
+        "bytes": 2360737,
+        "path": "python_stdlib.zip",
+        "sha256": "16611534726e5d8ac2bd8f926410b2dcb8d6f49aa24913463533b457a2115c16"
+      },
+      {
+        "bytes": 119989,
+        "path": "pyyaml-6.0.2-cp312-cp312-pyodide_2024_0_wasm32.whl",
+        "sha256": "444d034ede13ca0a2961a1215838fb7d4cf6fa98ba7fe5e2a09e5063180af2bf"
+      },
+      {
+        "bytes": 34698,
+        "path": "typing_extensions-4.11.0-py3-none-any.whl",
+        "sha256": "c3f00b6653202513b1f7813ad3c466510ceecc599a37d665a31dcfb5ac7049b9"
+      }
+    ],
+    "version": "0.27.7"
+  },
+  "scope": "public-fictional-samples",
+  "seasons": {
+    "2007": [
+      "cedar-valley",
+      "harbor-tech"
+    ]
+  },
+  "version": 1
+}
