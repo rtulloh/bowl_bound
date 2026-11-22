@@ -1,9 +1,9 @@
 {
   "files": [
     {
-      "bytes": 159590,
+      "bytes": 1905734,
       "mount": "/app",
-      "sha256": "a1f8ad53804ebb02ab7cfe37933a575c9faa3ce5f98398e193117fa7b029ae81",
+      "sha256": "c4eee824f24ed130156ed8d061b06c3769856c59435bffad18004ea115f111d2",
       "url": "python.zip"
     }
   ],
@@ -204,6 +204,2531 @@
       "sha256": "ee9cc4977237819e1c2f0054377c8024df3f1a38bacef61114d4ba1d8bd34637"
     },
     {
+      "bytes": 941,
+      "path": "seasons/1972/colorado/defense.csv",
+      "sha256": "465b406b4980b88387258d531ebe1356f2e8a613611a742c367825689da6811a"
+    },
+    {
+      "bytes": 1468,
+      "path": "seasons/1972/colorado/offense.csv",
+      "sha256": "adcb3222ec6d69ff694b75873bed1f57cf341662f90639666b3d99c64a9610c6"
+    },
+    {
+      "bytes": 284,
+      "path": "seasons/1972/colorado/roster-sources.md",
+      "sha256": "751ef085cffec8d8bdbd58dd39f241debc9893473dd9db4b8376263a2968abbb"
+    },
+    {
+      "bytes": 724,
+      "path": "seasons/1972/colorado/roster.json",
+      "sha256": "b2cb02d2477267b8a3423069d20cf4304d7dc02be88b917711821dd04d85b7c3"
+    },
+    {
+      "bytes": 716,
+      "path": "seasons/1972/colorado/special.csv",
+      "sha256": "ef55cb6b9d7fec6efcd267832a67aed00a1a811c204b80f3d4d9112b9ade26f3"
+    },
+    {
+      "bytes": 416,
+      "path": "seasons/1972/colorado/team.yaml",
+      "sha256": "e09de355610fb08facc6d732165fb132073aba93816712262eaf1d054657cbcc"
+    },
+    {
+      "bytes": 962,
+      "path": "seasons/1972/iowa-state/defense.csv",
+      "sha256": "e5c4833447f8a3f60721e4f7231e60d691bab0ab0279ec6d7142a6da0b975bd7"
+    },
+    {
+      "bytes": 1481,
+      "path": "seasons/1972/iowa-state/offense.csv",
+      "sha256": "74dd16c66a8c5b05a7932f2d98e23f33952d853b2ad3dcb6dbf378bd020d268f"
+    },
+    {
+      "bytes": 290,
+      "path": "seasons/1972/iowa-state/roster-sources.md",
+      "sha256": "7e75014a824e241ddee0deb9f0ab783a4741e2f4d5b54422525f8cc751aec0dc"
+    },
+    {
+      "bytes": 581,
+      "path": "seasons/1972/iowa-state/roster.json",
+      "sha256": "5d5518319a76c59b5e0d072b9b227ae167eb7b575a10cd4756b1a0dfee335ac1"
+    },
+    {
+      "bytes": 716,
+      "path": "seasons/1972/iowa-state/special.csv",
+      "sha256": "ef55cb6b9d7fec6efcd267832a67aed00a1a811c204b80f3d4d9112b9ade26f3"
+    },
+    {
+      "bytes": 420,
+      "path": "seasons/1972/iowa-state/team.yaml",
+      "sha256": "e7f2ed0086a7a0b61b7ccc281567dd33e828ed1100ef4b8f0cf70f10d8b36600"
+    },
+    {
+      "bytes": 936,
+      "path": "seasons/1972/kansas-state/defense.csv",
+      "sha256": "36d15a38608c4949c097040cb5970bc9792692218b420b5f36f0d26b03640aee"
+    },
+    {
+      "bytes": 1475,
+      "path": "seasons/1972/kansas-state/offense.csv",
+      "sha256": "e394fb615d7bd8df43f54272fa1ba30e9089b41751c0e80a63e2c795ff28fc16"
+    },
+    {
+      "bytes": 274,
+      "path": "seasons/1972/kansas-state/roster-sources.md",
+      "sha256": "d16516ad6ffce653a12c38b4379dc43cb8228a847a293d594bba090f13a55728"
+    },
+    {
+      "bytes": 268,
+      "path": "seasons/1972/kansas-state/roster.json",
+      "sha256": "f4e9b28e57c52672beabe0692ad1376a7862e06037491a38614323ee0447a501"
+    },
+    {
+      "bytes": 716,
+      "path": "seasons/1972/kansas-state/special.csv",
+      "sha256": "ef55cb6b9d7fec6efcd267832a67aed00a1a811c204b80f3d4d9112b9ade26f3"
+    },
+    {
+      "bytes": 424,
+      "path": "seasons/1972/kansas-state/team.yaml",
+      "sha256": "91c7a7dd2f2345aecc724f8468d64e162781bcbdc0193739e089ea919507fa9e"
+    },
+    {
+      "bytes": 936,
+      "path": "seasons/1972/kansas/defense.csv",
+      "sha256": "4f041e066a927f4c681fbc857616bf093222b3addfe7256aed81435a4b10c3ae"
+    },
+    {
+      "bytes": 1448,
+      "path": "seasons/1972/kansas/offense.csv",
+      "sha256": "ac1314753263032454538cdefffcc54175b4e8fd68dcd0166904490e3583c79f"
+    },
+    {
+      "bytes": 265,
+      "path": "seasons/1972/kansas/roster-sources.md",
+      "sha256": "a5b9f46de05beb6cd6cf36276705d73f042b9fe3f98e1b1c901a84cc3e710a86"
+    },
+    {
+      "bytes": 1027,
+      "path": "seasons/1972/kansas/roster.json",
+      "sha256": "f3db05eed0d1037f17a6ffc4856d63289243e737cfa621ecabd1e38891cecc61"
+    },
+    {
+      "bytes": 716,
+      "path": "seasons/1972/kansas/special.csv",
+      "sha256": "ef55cb6b9d7fec6efcd267832a67aed00a1a811c204b80f3d4d9112b9ade26f3"
+    },
+    {
+      "bytes": 412,
+      "path": "seasons/1972/kansas/team.yaml",
+      "sha256": "c525c74f8d085ba7e91c3e406f5e57fa8b20a7912bdf17c94e3391f47b42182a"
+    },
+    {
+      "bytes": 941,
+      "path": "seasons/1972/missouri/defense.csv",
+      "sha256": "67cf12f0b024e8d9f89e5074672a238e7a33b92935a5caf6defe1b8ee8a40379"
+    },
+    {
+      "bytes": 1479,
+      "path": "seasons/1972/missouri/offense.csv",
+      "sha256": "02c9c5c1940d05726ca3dc842af68a9abb7b0f87941b69c2a41abe3ec259e64d"
+    },
+    {
+      "bytes": 288,
+      "path": "seasons/1972/missouri/roster-sources.md",
+      "sha256": "0fc6e1a3d53358be5edff4a646c0fb79aa6cbf30fe895138e0f03e0af68aca91"
+    },
+    {
+      "bytes": 2001,
+      "path": "seasons/1972/missouri/roster.json",
+      "sha256": "e8ece2500af084fda25af14c1ffd021c43d30eb9c883bdb793eb668b8482854c"
+    },
+    {
+      "bytes": 716,
+      "path": "seasons/1972/missouri/special.csv",
+      "sha256": "ef55cb6b9d7fec6efcd267832a67aed00a1a811c204b80f3d4d9112b9ade26f3"
+    },
+    {
+      "bytes": 416,
+      "path": "seasons/1972/missouri/team.yaml",
+      "sha256": "4ee8d841ef4f23c390d4e6b02256915ef0300e88a9b079f76016a1b3003e7cb0"
+    },
+    {
+      "bytes": 1093,
+      "path": "seasons/1972/nebraska/defense.csv",
+      "sha256": "a8c70957fd92c5a8fd0a0469c2a80bd986bf50bc6424f5fd8815ff5b5e250474"
+    },
+    {
+      "bytes": 1460,
+      "path": "seasons/1972/nebraska/offense.csv",
+      "sha256": "c627e4794cb688f0f37b7890100b54613066a9bbb773849afcefd9e3fd2bdab9"
+    },
+    {
+      "bytes": 272,
+      "path": "seasons/1972/nebraska/roster-sources.md",
+      "sha256": "149f1b5571226c0aa8c884688170d5b2a36c7bc65f1af875d00355c01e210664"
+    },
+    {
+      "bytes": 2139,
+      "path": "seasons/1972/nebraska/roster.json",
+      "sha256": "7b58ee6c7df0eea0a1bef91fac238dc99d155c3512e8da27b76528cbbdca585a"
+    },
+    {
+      "bytes": 716,
+      "path": "seasons/1972/nebraska/special.csv",
+      "sha256": "ef55cb6b9d7fec6efcd267832a67aed00a1a811c204b80f3d4d9112b9ade26f3"
+    },
+    {
+      "bytes": 416,
+      "path": "seasons/1972/nebraska/team.yaml",
+      "sha256": "3e252daee8051f82d81c357e88810535680f3ad70b815bf9c8309885729f0b2c"
+    },
+    {
+      "bytes": 973,
+      "path": "seasons/1972/oklahoma-state/defense.csv",
+      "sha256": "40f2d2c38e496d41eb4cbb42e1820f290eb6049827e066c2d956955412ee4e8c"
+    },
+    {
+      "bytes": 1510,
+      "path": "seasons/1972/oklahoma-state/offense.csv",
+      "sha256": "cb70e52482ef47691055dcbbced8afd70c0cf043a8dbacb9f480f80bcf082b1c"
+    },
+    {
+      "bytes": 294,
+      "path": "seasons/1972/oklahoma-state/roster-sources.md",
+      "sha256": "65ef9892a93f0319ef446609dbbc8ce24cd26c117a6cb7655d4c8933bcdddfad"
+    },
+    {
+      "bytes": 413,
+      "path": "seasons/1972/oklahoma-state/roster.json",
+      "sha256": "606af3fec0389500d3337367b5e16742a6f2311a31a0be4321aab1375cb08f63"
+    },
+    {
+      "bytes": 716,
+      "path": "seasons/1972/oklahoma-state/special.csv",
+      "sha256": "ef55cb6b9d7fec6efcd267832a67aed00a1a811c204b80f3d4d9112b9ade26f3"
+    },
+    {
+      "bytes": 428,
+      "path": "seasons/1972/oklahoma-state/team.yaml",
+      "sha256": "e8129304edb199978e9e06b92a0e08af781050317c3add358a7220749b066aa5"
+    },
+    {
+      "bytes": 1046,
+      "path": "seasons/1972/oklahoma/defense.csv",
+      "sha256": "409096fe3a11cac7beaa06995543b73ddbae33a83ddf621bdaa6f291884d9a23"
+    },
+    {
+      "bytes": 1480,
+      "path": "seasons/1972/oklahoma/offense.csv",
+      "sha256": "2c0ef4a7a8bf52a1ea2adb8bba6078541b301ca8e11ca0fa78b176ae24e1c872"
+    },
+    {
+      "bytes": 287,
+      "path": "seasons/1972/oklahoma/roster-sources.md",
+      "sha256": "ea88a82b411ad91d8dcd7739f94b606052a7f3ef1b692cfdbe3555cff74c01de"
+    },
+    {
+      "bytes": 2789,
+      "path": "seasons/1972/oklahoma/roster.json",
+      "sha256": "7428d353dd62a0c444518a587267d3ccc044d9590a4282f258df2137980dad37"
+    },
+    {
+      "bytes": 716,
+      "path": "seasons/1972/oklahoma/special.csv",
+      "sha256": "ef55cb6b9d7fec6efcd267832a67aed00a1a811c204b80f3d4d9112b9ade26f3"
+    },
+    {
+      "bytes": 416,
+      "path": "seasons/1972/oklahoma/team.yaml",
+      "sha256": "0a6eddad2da2c837d0a10c41bd8f9a4a1b6cbbc861db8de80754595c7c58fb41"
+    },
+    {
+      "bytes": 41215,
+      "path": "seasons/1972/provenance/colorado.csv",
+      "sha256": "719afa9f1b2804ca1e0909f141087f5f0cb559d3024387b9e799e7f70d9d11f3"
+    },
+    {
+      "bytes": 41219,
+      "path": "seasons/1972/provenance/iowa-state.csv",
+      "sha256": "5dbbfccfdcbf7b0055626fb72cfd0f8b652a10fd38de50b44ad2de530f712c12"
+    },
+    {
+      "bytes": 41139,
+      "path": "seasons/1972/provenance/kansas-state.csv",
+      "sha256": "92bdf4b58765523634bd231b2c038952d2c3bcc69a204f5ce69411a67879f938"
+    },
+    {
+      "bytes": 41176,
+      "path": "seasons/1972/provenance/kansas.csv",
+      "sha256": "35b06b56460d0242015f53421054c823ec6ca64b9911addc9f756632a96f9811"
+    },
+    {
+      "bytes": 41230,
+      "path": "seasons/1972/provenance/missouri.csv",
+      "sha256": "a13818f697d2efaa7fe59365d62c0723adefefb3c164f3e99b1197ce48596954"
+    },
+    {
+      "bytes": 41297,
+      "path": "seasons/1972/provenance/nebraska.csv",
+      "sha256": "a92c28d6306f2f40e4fc343286c80a2b992e162af0f3fccde9410e6444e8023c"
+    },
+    {
+      "bytes": 41295,
+      "path": "seasons/1972/provenance/oklahoma-state.csv",
+      "sha256": "bbf52394854d9a64b1edaedb577a876d45e4059883cfdac1b01cc784cd9b26a9"
+    },
+    {
+      "bytes": 41316,
+      "path": "seasons/1972/provenance/oklahoma.csv",
+      "sha256": "a08c3d1d7808c432fbd18853e25a099378ad3e032056bd2cf97a64fc7d8095a8"
+    },
+    {
+      "bytes": 1022,
+      "path": "seasons/2002/alabama/defense.csv",
+      "sha256": "69e2b77ef5eb7736e467ea867eab2147cbe2b6158a9a7731a3dc313540fcd599"
+    },
+    {
+      "bytes": 1322,
+      "path": "seasons/2002/alabama/offense.csv",
+      "sha256": "40f121db794c96780f773acac60550dd679bcedfb5c224f441d16c9cf826b8be"
+    },
+    {
+      "bytes": 1924,
+      "path": "seasons/2002/alabama/roster-sources.md",
+      "sha256": "9bb197b730e38e237104c327750bf2c832eeb38c00c1f3c03868b50b510e76af"
+    },
+    {
+      "bytes": 1613,
+      "path": "seasons/2002/alabama/roster.json",
+      "sha256": "f46dde8335dd8df9102538805a540eed911e111da689490f9fddd316f12d24e0"
+    },
+    {
+      "bytes": 710,
+      "path": "seasons/2002/alabama/special.csv",
+      "sha256": "c9652c9bc407a6b513e17ef54aa7b04e74b49d0414920149c7da3e5adafd87dc"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2002/alabama/team.yaml",
+      "sha256": "d067a27daa8d79b8b2efdb27d67b814cef5eb7c32f4653384fef9539facbdc00"
+    },
+    {
+      "bytes": 1076,
+      "path": "seasons/2002/arizona-state/defense.csv",
+      "sha256": "f4760dc79690df0352d1b17c7240582cb6320deea30b743f3b6f88d97da1aefd"
+    },
+    {
+      "bytes": 1365,
+      "path": "seasons/2002/arizona-state/offense.csv",
+      "sha256": "03ed337f68f7ce00fbdf9cfefd62b8faa04037a949a444b4eaae3f38d08a438d"
+    },
+    {
+      "bytes": 1601,
+      "path": "seasons/2002/arizona-state/roster-sources.md",
+      "sha256": "b73e56f2640150a8e2fe0523122dee0dff48cd3217461d19e4dc1c645422e683"
+    },
+    {
+      "bytes": 1701,
+      "path": "seasons/2002/arizona-state/roster.json",
+      "sha256": "d460513417f5105b0183bba38ab2413beb04a10ce9bcb14434b45f5f2d2f66fd"
+    },
+    {
+      "bytes": 719,
+      "path": "seasons/2002/arizona-state/special.csv",
+      "sha256": "550b762287aa478dd3f571aa47390175dc1b0c641c9f08d5bb817ec41f024787"
+    },
+    {
+      "bytes": 471,
+      "path": "seasons/2002/arizona-state/team.yaml",
+      "sha256": "5ac56396b8427743e6791630eeb09020a1cd136f68c08d3aa23b08163f567ffa"
+    },
+    {
+      "bytes": 1016,
+      "path": "seasons/2002/arizona/defense.csv",
+      "sha256": "0560896507129b2ac378bf7502aea520a278779e849474e40b9204f7d5af57b6"
+    },
+    {
+      "bytes": 1329,
+      "path": "seasons/2002/arizona/offense.csv",
+      "sha256": "1fae5925180a96a5bc078354a6421c16f60d022b87716f7bc9b0f3a0d42f0658"
+    },
+    {
+      "bytes": 389,
+      "path": "seasons/2002/arizona/roster-sources.md",
+      "sha256": "a862f8a50a63b325aab30a42541243218dff40d2b975fdc689f3e1350b97365f"
+    },
+    {
+      "bytes": 2233,
+      "path": "seasons/2002/arizona/roster.json",
+      "sha256": "b6159b1ae27e94c3139ad7583b00a06731ddf96eafc7cc8199cfe4e38909e561"
+    },
+    {
+      "bytes": 715,
+      "path": "seasons/2002/arizona/special.csv",
+      "sha256": "c3da2bc975fab4adb31d24492c00cf32842b2300310099893eac55563047b6b6"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2002/arizona/team.yaml",
+      "sha256": "b23e161c09e6b0f5b06eeb5cd8d036ec8f80821fa3da208e2649145603d69131"
+    },
+    {
+      "bytes": 994,
+      "path": "seasons/2002/arkansas/defense.csv",
+      "sha256": "518b89feca2804697af30e0d50e3fc81f29f1e5b81f35805a7864f9a3b4f6b54"
+    },
+    {
+      "bytes": 1365,
+      "path": "seasons/2002/arkansas/offense.csv",
+      "sha256": "56a56d6526026b915f0fc8a974393128d4f055fdebde9bbb117fcfda4d9d18d5"
+    },
+    {
+      "bytes": 1529,
+      "path": "seasons/2002/arkansas/roster-sources.md",
+      "sha256": "aea315e7dbcc30f18aa942d24e5b16f982ead82231281d07072e8529e6c0c2db"
+    },
+    {
+      "bytes": 552,
+      "path": "seasons/2002/arkansas/roster.json",
+      "sha256": "51fd21754fb1804899abe14d42e6aed1839abd6bb11ca84cbc6179ecddfac1e8"
+    },
+    {
+      "bytes": 706,
+      "path": "seasons/2002/arkansas/special.csv",
+      "sha256": "3d9fdf2db6e2ede1aebfa7308c6cab358b0d4bff3e39817f1c2c1b69b54d3145"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2002/arkansas/team.yaml",
+      "sha256": "f50ba1b961c1d51b48b1c5458ce08b333379bd0c71453becd6a0fd20fc4a70ab"
+    },
+    {
+      "bytes": 1048,
+      "path": "seasons/2002/auburn/defense.csv",
+      "sha256": "b7137af92b33a8d1aca90eeb8292217daec7a382f7f5aa4140c02060137826d7"
+    },
+    {
+      "bytes": 1350,
+      "path": "seasons/2002/auburn/offense.csv",
+      "sha256": "e5cb2a271e5c987609c1b04679fef60c46863982cca32e27905922702586626e"
+    },
+    {
+      "bytes": 410,
+      "path": "seasons/2002/auburn/roster-sources.md",
+      "sha256": "4bde4a58934133d6ba3ab681dca7d9ba5f9c328f5fcce3265c949f0538115509"
+    },
+    {
+      "bytes": 2383,
+      "path": "seasons/2002/auburn/roster.json",
+      "sha256": "f6aedf1cb8e1983cb89bf1686f72169f4031457360418bb454288da78ed3dac8"
+    },
+    {
+      "bytes": 703,
+      "path": "seasons/2002/auburn/special.csv",
+      "sha256": "6f1cdad26372fb91a9cc91b634a6f3ffcd0b261c911b96dafa92df632a25684e"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2002/auburn/team.yaml",
+      "sha256": "353f982f945e2b4b8204b8daf6a47321ce34dc3d653e24fee0081294202d42da"
+    },
+    {
+      "bytes": 983,
+      "path": "seasons/2002/baylor/defense.csv",
+      "sha256": "68bb757ae4980d66b1848b4bfab67d5d0943801465d349807c6748039f2dceb7"
+    },
+    {
+      "bytes": 1320,
+      "path": "seasons/2002/baylor/offense.csv",
+      "sha256": "3e9634dc37363aaf89b9d1c72d13c76de2206802f7cf85b967933b29b39587b2"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2002/baylor/roster-sources.md",
+      "sha256": "16d0ce01ca8070ffcefbce7e8c72817e85dbe70c77e1cb5ffe2e99fd9da9078d"
+    },
+    {
+      "bytes": 2910,
+      "path": "seasons/2002/baylor/roster.json",
+      "sha256": "66c5d2ffa1ed7a38d730d8d8f316ab0161d1c558473ebcb7ef9f7e362db7054d"
+    },
+    {
+      "bytes": 712,
+      "path": "seasons/2002/baylor/special.csv",
+      "sha256": "c5233034e74e781afff111dda104b3185b427bb8cf2c98c52a2d44b3657da8e8"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2002/baylor/team.yaml",
+      "sha256": "5acfff64f9fa60a2dc5d75986e8c56e0a2afa3fda3a7dcc1910ac4de3d47bc3b"
+    },
+    {
+      "bytes": 986,
+      "path": "seasons/2002/boston-college/defense.csv",
+      "sha256": "0c96e458f7d95cb6c05b3d1b3fe32f4fa048c065dc36f58cddeb0622f769c527"
+    },
+    {
+      "bytes": 1323,
+      "path": "seasons/2002/boston-college/offense.csv",
+      "sha256": "666512f92d6defa9a271361ff98c4a0aeb1af8d5813a6bcbc7c9cac1d440e120"
+    },
+    {
+      "bytes": 399,
+      "path": "seasons/2002/boston-college/roster-sources.md",
+      "sha256": "fc19165e94f3eb49e65d79b8e8095e3462f68a9953f885e59427427a4a7c2ef6"
+    },
+    {
+      "bytes": 2080,
+      "path": "seasons/2002/boston-college/roster.json",
+      "sha256": "5717c1c7a73b0ad808878e431317599fe7341bd3e8341eafa75b18a3a2fa7644"
+    },
+    {
+      "bytes": 715,
+      "path": "seasons/2002/boston-college/special.csv",
+      "sha256": "7486c7b63fdfe65d861301085cd9480347434b327e4be535a04295a8d4b7fdce"
+    },
+    {
+      "bytes": 473,
+      "path": "seasons/2002/boston-college/team.yaml",
+      "sha256": "3feb822dbc7333aedab0dfcdf5ab573fe3dc9f42ba89a73b0a8be0c6cbefa8a9"
+    },
+    {
+      "bytes": 957,
+      "path": "seasons/2002/california/defense.csv",
+      "sha256": "44186c696bcaa04efd0da3675e40e30f5d0f2401f1dc271e7a3e87aaf35e0476"
+    },
+    {
+      "bytes": 1330,
+      "path": "seasons/2002/california/offense.csv",
+      "sha256": "efd7153516c4e2360a9a1d6981e31b5e83f5c30dd412211b5f992599e49cad75"
+    },
+    {
+      "bytes": 1666,
+      "path": "seasons/2002/california/roster-sources.md",
+      "sha256": "802f3357091086e6f2ee2537b608907bc49d826662cfefd8fc6901b1965b9010"
+    },
+    {
+      "bytes": 2528,
+      "path": "seasons/2002/california/roster.json",
+      "sha256": "f8a30027a724a96989cd3500c618cc71f21fdb8a36b9584d73f2220240696fec"
+    },
+    {
+      "bytes": 717,
+      "path": "seasons/2002/california/special.csv",
+      "sha256": "f39fbe53763971ee66c9964717825d6ac1cbcfdf26b63413b9d630dc077d2266"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2002/california/team.yaml",
+      "sha256": "32cf1f2d9fbb5371faa944b8d2917613e0f0a7c1f354ca839f3793b5db36aa6e"
+    },
+    {
+      "bytes": 972,
+      "path": "seasons/2002/colorado/defense.csv",
+      "sha256": "b71c2979621e0238082ecdd4825ca324cf7319d6cfd7729a486c0938b35d392a"
+    },
+    {
+      "bytes": 1358,
+      "path": "seasons/2002/colorado/offense.csv",
+      "sha256": "198b327d299651cc4741daa55d8e56df36bbdc14cd22a8fc8891b1695539a366"
+    },
+    {
+      "bytes": 382,
+      "path": "seasons/2002/colorado/roster-sources.md",
+      "sha256": "b9414dd5879beebedc38b914c5b3ef70cc7d476d2ce63df8a71651e26da8d37a"
+    },
+    {
+      "bytes": 2522,
+      "path": "seasons/2002/colorado/roster.json",
+      "sha256": "c1273db2f52194cd64a52b655cb5a7a486f48157cf777b50abaa8da9c57af363"
+    },
+    {
+      "bytes": 719,
+      "path": "seasons/2002/colorado/special.csv",
+      "sha256": "b7ea998b89272c8a0ae6e1c9ff08f707aec5cfc87e1fede20452e309b68b4a24"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2002/colorado/team.yaml",
+      "sha256": "320c5f9ce6d3e24b528009293f0389f326209d465c8d13ed57045359099975ad"
+    },
+    {
+      "bytes": 1019,
+      "path": "seasons/2002/duke/defense.csv",
+      "sha256": "8d998f80893b258e2ac39aee7cb9978a2633cca165faf0a4289c6d606f97250c"
+    },
+    {
+      "bytes": 1284,
+      "path": "seasons/2002/duke/offense.csv",
+      "sha256": "f0370d0706a13f6f23b2397467c777ebf3366430265d4c6980d9ee0cd828e211"
+    },
+    {
+      "bytes": 384,
+      "path": "seasons/2002/duke/roster-sources.md",
+      "sha256": "ff467a88a32e983135d16a3b1ce415ebcdd5da184726dac249232b001f46880b"
+    },
+    {
+      "bytes": 1804,
+      "path": "seasons/2002/duke/roster.json",
+      "sha256": "2cf78968d5385318b674e4e286e17f26f1512de6538ae97d1af0c9e1aada8b22"
+    },
+    {
+      "bytes": 699,
+      "path": "seasons/2002/duke/special.csv",
+      "sha256": "377c18638eedf6dd74ca290471bb8b6f92953baaf67fd1428e47ecc75cabebd0"
+    },
+    {
+      "bytes": 453,
+      "path": "seasons/2002/duke/team.yaml",
+      "sha256": "8636c28b72ac937912e4ad0bfbad40e9eed2e19f5ba93b4d15d348508ed456ef"
+    },
+    {
+      "bytes": 1004,
+      "path": "seasons/2002/florida/defense.csv",
+      "sha256": "b0ce660f9d628e26dadc25edf5aab98c7b60f7a3d2a52071bb7676be5d333337"
+    },
+    {
+      "bytes": 1344,
+      "path": "seasons/2002/florida/offense.csv",
+      "sha256": "8f521f3baa3fc21219130536bb700d432fbad82a2038959bf2aea20558ed6fff"
+    },
+    {
+      "bytes": 394,
+      "path": "seasons/2002/florida/roster-sources.md",
+      "sha256": "661a39e8ae2c4b0e83cecdc45aae0126767942c8f22edf82de8ca13a358129f6"
+    },
+    {
+      "bytes": 2620,
+      "path": "seasons/2002/florida/roster.json",
+      "sha256": "7075f5a5e5ddc0fa579fd4495f8b6bf77061b51dd61f5902e3af87f72e55ab5d"
+    },
+    {
+      "bytes": 719,
+      "path": "seasons/2002/florida/special.csv",
+      "sha256": "357720bce4e569f1e099ff8a301e689c48b2191eb20e4698d6bfd9a5015e8310"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2002/florida/team.yaml",
+      "sha256": "387e84873498906de113c0881fdbd98ca7ad4018afc5d18ff98cffb8c2821686"
+    },
+    {
+      "bytes": 997,
+      "path": "seasons/2002/georgia-tech/defense.csv",
+      "sha256": "13463309b87b501b9c0cd967fc9b0d9712edd59ab7fd34d073203a5f0f409229"
+    },
+    {
+      "bytes": 1319,
+      "path": "seasons/2002/georgia-tech/offense.csv",
+      "sha256": "76f24a9e53cbc75cfe30fe95ed743a5bbf7807759093c32609aebc06d9b3d6fe"
+    },
+    {
+      "bytes": 1719,
+      "path": "seasons/2002/georgia-tech/roster-sources.md",
+      "sha256": "f31b208ffbae56fce5bdae33e4646936f6723d66194eb9547f082d80a077132e"
+    },
+    {
+      "bytes": 487,
+      "path": "seasons/2002/georgia-tech/roster.json",
+      "sha256": "77e74fb9e358dbcac9da5d1ba5cd482b8fcdf68808f05f7b9bea1eb05c4b4030"
+    },
+    {
+      "bytes": 697,
+      "path": "seasons/2002/georgia-tech/special.csv",
+      "sha256": "8a8ae617e409a324230bdf42754248ec534a0d8362ab3ac0b0f1e897bc31fc9f"
+    },
+    {
+      "bytes": 469,
+      "path": "seasons/2002/georgia-tech/team.yaml",
+      "sha256": "d6ca63cbb2bf9257b0f02930399d7c22be06936ecd2cce040436ce48158b6e12"
+    },
+    {
+      "bytes": 991,
+      "path": "seasons/2002/georgia/defense.csv",
+      "sha256": "2e8cdbe75e49ca1e8cb10970b63114c72796e7743995f428704b4c3044293f62"
+    },
+    {
+      "bytes": 1334,
+      "path": "seasons/2002/georgia/offense.csv",
+      "sha256": "1d870013888a221f768178785b7ed7fe228f06cb00efceb672767cf117c15b3b"
+    },
+    {
+      "bytes": 2239,
+      "path": "seasons/2002/georgia/roster-sources.md",
+      "sha256": "f585e7a36dcee3fc25caf4254fff4acd41cf2d12baac000a5daa2c9aaa48894a"
+    },
+    {
+      "bytes": 1256,
+      "path": "seasons/2002/georgia/roster.json",
+      "sha256": "3483bc797859142a061128a99a379266a6c718b50ef8514dbdf354e49ff9e5e8"
+    },
+    {
+      "bytes": 713,
+      "path": "seasons/2002/georgia/special.csv",
+      "sha256": "0f2004b43f93514fa49197c72cf8fc9f0dc9404d9094c80ab870c0039dfcc6db"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2002/georgia/team.yaml",
+      "sha256": "9cb87b06d3411b765351d6e66c1618c166a9e60ffc010d40d7529b483011c4c0"
+    },
+    {
+      "bytes": 963,
+      "path": "seasons/2002/illinois/defense.csv",
+      "sha256": "1be5ca03a236962b0d86bde0771a9ec14d4d8e52990e96f69173d1a7295eb2e7"
+    },
+    {
+      "bytes": 1341,
+      "path": "seasons/2002/illinois/offense.csv",
+      "sha256": "80cf596f831762de95fcb4d5c4849e61820a11477c3fa9bcdc4c4fb5b5e4a08d"
+    },
+    {
+      "bytes": 1623,
+      "path": "seasons/2002/illinois/roster-sources.md",
+      "sha256": "76935a531298e987d1a58bbcc3b0df5ed6003dcc8fe546a40a8f5c7cf2a30fa9"
+    },
+    {
+      "bytes": 544,
+      "path": "seasons/2002/illinois/roster.json",
+      "sha256": "38ab7bc66cf03500bea10a1903ef1c6532eb0aab663709373fa6860707cad654"
+    },
+    {
+      "bytes": 711,
+      "path": "seasons/2002/illinois/special.csv",
+      "sha256": "cc695b7ee1749c204f5ab49f408b5f92b9d3b4b1f3810c52f7873c5930fc39af"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2002/illinois/team.yaml",
+      "sha256": "44bba019df3dd54757e9141c94c6299cb4da3252f4e28a52ca29028279f1acb5"
+    },
+    {
+      "bytes": 1041,
+      "path": "seasons/2002/indiana/defense.csv",
+      "sha256": "512ea950b8df4b9814be5c49226a9ffb926cfd137f5aaf297db10e1bf4da6530"
+    },
+    {
+      "bytes": 1331,
+      "path": "seasons/2002/indiana/offense.csv",
+      "sha256": "d93cfa0e6053b4c44425febbce4a25884736b10f51c5247827543372ab898759"
+    },
+    {
+      "bytes": 1704,
+      "path": "seasons/2002/indiana/roster-sources.md",
+      "sha256": "9e186eb1767cd223a9c7aa68b4a0f834b50cce3645905e842cab50393b03a0f0"
+    },
+    {
+      "bytes": 549,
+      "path": "seasons/2002/indiana/roster.json",
+      "sha256": "97712cfcc0e1a7ba01c3e433d40efb9be7f1e76e46c494db3573313e88d495b6"
+    },
+    {
+      "bytes": 717,
+      "path": "seasons/2002/indiana/special.csv",
+      "sha256": "b03875e829a404d2faf446c37b9c625ebb22e823eb662d2d28b83069e82d64c4"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2002/indiana/team.yaml",
+      "sha256": "c9b6fb5144473eccb55516582cda32e26242c641e932dea470db054a72724f10"
+    },
+    {
+      "bytes": 1003,
+      "path": "seasons/2002/iowa-state/defense.csv",
+      "sha256": "784fce60e1beda340c27e90a7d12be8e8b39a07cc9b31b57ac0f4aa7249e9b05"
+    },
+    {
+      "bytes": 1309,
+      "path": "seasons/2002/iowa-state/offense.csv",
+      "sha256": "71744b9e1ea2be32bcf03b3ced6ebd28e97b780c6b61150737c129379ac3d264"
+    },
+    {
+      "bytes": 385,
+      "path": "seasons/2002/iowa-state/roster-sources.md",
+      "sha256": "b000b6af6a47bcc7e5aaa577e2fbebcc41b31ccbc04e50bf81a6b13c9aa152ab"
+    },
+    {
+      "bytes": 2819,
+      "path": "seasons/2002/iowa-state/roster.json",
+      "sha256": "7f274af27f4f481dc8a5af1c2e47b603725491655ac235dd4af82f48551b8b64"
+    },
+    {
+      "bytes": 707,
+      "path": "seasons/2002/iowa-state/special.csv",
+      "sha256": "26f3034e889af6d87dd90603b34839083132d595dd5acd4e3b618f8da49ed3d6"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2002/iowa-state/team.yaml",
+      "sha256": "9345e06f6afd993182f102717ae75fe30eba8301f6f031831bfff11439524cb0"
+    },
+    {
+      "bytes": 1048,
+      "path": "seasons/2002/iowa/defense.csv",
+      "sha256": "ed6ebe23ecb49a141f780920d08eb895e04eb0423c8baacef7d1c840e92d376f"
+    },
+    {
+      "bytes": 1362,
+      "path": "seasons/2002/iowa/offense.csv",
+      "sha256": "f556be34cd449e67c02502b4168d59aa25fb02e1f1f683c3894cf0834817c13f"
+    },
+    {
+      "bytes": 1862,
+      "path": "seasons/2002/iowa/roster-sources.md",
+      "sha256": "97ba94fa67992f71bec7b96c67ddeadd06bdc6d2b953f55474b12d54da288168"
+    },
+    {
+      "bytes": 549,
+      "path": "seasons/2002/iowa/roster.json",
+      "sha256": "48f8b9c80c8e455d98fb50007f28b1cf660d96d3c00860d9e82167800ed86811"
+    },
+    {
+      "bytes": 711,
+      "path": "seasons/2002/iowa/special.csv",
+      "sha256": "391b0573e10c87dda29208e9bd749b4d422eb18f82976c92013d47724775d1e4"
+    },
+    {
+      "bytes": 453,
+      "path": "seasons/2002/iowa/team.yaml",
+      "sha256": "bef11cc85ff3f1b515f7d6e2a1362b792ba1d21efedc597470654e157b6214b4"
+    },
+    {
+      "bytes": 1125,
+      "path": "seasons/2002/kansas-state/defense.csv",
+      "sha256": "a936c8c9b38220ff768cb0e1c1df9c6963b7bd5c99f32708caf6e56a5181308d"
+    },
+    {
+      "bytes": 1395,
+      "path": "seasons/2002/kansas-state/offense.csv",
+      "sha256": "bfb61d957cd44157dc611549c859d930f8b10d34aa07ff95e4628f85197c022f"
+    },
+    {
+      "bytes": 2546,
+      "path": "seasons/2002/kansas-state/roster-sources.md",
+      "sha256": "280e4b22a5b32148ff2fc3dd73b23cc64a7fc8db13f3b7efd44a13819e270cd1"
+    },
+    {
+      "bytes": 1183,
+      "path": "seasons/2002/kansas-state/roster.json",
+      "sha256": "139995e689cdf48666ba8d9d2c98e159f1fcc7e613d53a297819f6a23e2ecc27"
+    },
+    {
+      "bytes": 719,
+      "path": "seasons/2002/kansas-state/special.csv",
+      "sha256": "3757d02facc168285aa6eee90c78efb82e78d185d809e6834f4fc76446b1f165"
+    },
+    {
+      "bytes": 469,
+      "path": "seasons/2002/kansas-state/team.yaml",
+      "sha256": "c38f4f8aea90f980729b763f5abb9ad6d122398625a917d46ac880dedadfa897"
+    },
+    {
+      "bytes": 917,
+      "path": "seasons/2002/kansas/defense.csv",
+      "sha256": "2b8d867f377d2937c39246b2cf70da0afd944f4ae2627b71133073f6553322af"
+    },
+    {
+      "bytes": 1382,
+      "path": "seasons/2002/kansas/offense.csv",
+      "sha256": "27249b8089db7df1c318e54e8ef82ea326c907436cc3c38670ebaaa229928616"
+    },
+    {
+      "bytes": 1773,
+      "path": "seasons/2002/kansas/roster-sources.md",
+      "sha256": "d2305e8618d9d1d990586ce70998a291ae1fc275f516d6411c26c015444ab2e3"
+    },
+    {
+      "bytes": 536,
+      "path": "seasons/2002/kansas/roster.json",
+      "sha256": "a4a7c569fab64a26e9a0d34e56e0d023378f5073ee4368048a967f8898358470"
+    },
+    {
+      "bytes": 688,
+      "path": "seasons/2002/kansas/special.csv",
+      "sha256": "a5bc7bdb9f6211963f4da0567fd6563fae055dfd290da1b5808405ae7aa0450c"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2002/kansas/team.yaml",
+      "sha256": "1676a9a1ab6f2a4feb5fb3235ddfeb6979888b0d37ce5a91a15b9dc65c8454b3"
+    },
+    {
+      "bytes": 1011,
+      "path": "seasons/2002/kentucky/defense.csv",
+      "sha256": "5ce98f0bbd834bd06bb7218f4f3b7f0acadfb5f2eccbfe3549f582a2f2aa5f30"
+    },
+    {
+      "bytes": 1316,
+      "path": "seasons/2002/kentucky/offense.csv",
+      "sha256": "aa1d18fe6d55c73a1251710f1acf64a1ada6132495465ad974f7148524a8f161"
+    },
+    {
+      "bytes": 1715,
+      "path": "seasons/2002/kentucky/roster-sources.md",
+      "sha256": "9c0e94a551922bf094a4f5be9cc81df931a4237e82230011657b9a63e401722a"
+    },
+    {
+      "bytes": 564,
+      "path": "seasons/2002/kentucky/roster.json",
+      "sha256": "a8bbe508ed5a1cdfec41b35b608420ab248fcecdf7cedd704cd94adcec17379a"
+    },
+    {
+      "bytes": 722,
+      "path": "seasons/2002/kentucky/special.csv",
+      "sha256": "61e3f112379faa5309779f0af61fb84571e615d61e0489754669b75c5b16667e"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2002/kentucky/team.yaml",
+      "sha256": "fcc23d73df03637de1239e6fce8a481c5100869c4789785c08e11710d6aa65cb"
+    },
+    {
+      "bytes": 1068,
+      "path": "seasons/2002/lsu/defense.csv",
+      "sha256": "04929b434290253234f1440a233f68fba9b8b517f8f81757e7c2b750ce41c54e"
+    },
+    {
+      "bytes": 1356,
+      "path": "seasons/2002/lsu/offense.csv",
+      "sha256": "26101eda8e28d985c3df106e0305d303d2713942e9e44a59847f67d41750df6d"
+    },
+    {
+      "bytes": 1865,
+      "path": "seasons/2002/lsu/roster-sources.md",
+      "sha256": "36074a2a921a7bf99b95456050b75052e21ce9fc900a461e8eb364fa1d3356a0"
+    },
+    {
+      "bytes": 2698,
+      "path": "seasons/2002/lsu/roster.json",
+      "sha256": "3ec0febf03919daf93859b8e549b176fe27a1da288dbcfce75642e6fca356c1e"
+    },
+    {
+      "bytes": 726,
+      "path": "seasons/2002/lsu/special.csv",
+      "sha256": "de43853517e9358f633afa3cc13f728a38f3b9942c8a4bbd01e26fb90b13932b"
+    },
+    {
+      "bytes": 451,
+      "path": "seasons/2002/lsu/team.yaml",
+      "sha256": "c15e55723d72d197d629d4f78dd206dc6ac192f12f70b94176b8cd538ca689d7"
+    },
+    {
+      "bytes": 1048,
+      "path": "seasons/2002/miami/defense.csv",
+      "sha256": "061be44d249fda59c753e9c4b8098e0aa1c96875ddf15ab7974818878812eba2"
+    },
+    {
+      "bytes": 1343,
+      "path": "seasons/2002/miami/offense.csv",
+      "sha256": "c5bae836e55f69fc1dc0a3b4319b0f564fe8c9f9d55091a5d8f1a367edd1d54a"
+    },
+    {
+      "bytes": 415,
+      "path": "seasons/2002/miami/roster-sources.md",
+      "sha256": "6936bb50f2df442639c7b58bde204a333a3d91fb7929b3b99c6445b9e8235e45"
+    },
+    {
+      "bytes": 1942,
+      "path": "seasons/2002/miami/roster.json",
+      "sha256": "4ad99e3fdec19b8ad24e0e49e11ffb9e990b47dc9e1c43c34ce3e07c645abcc0"
+    },
+    {
+      "bytes": 735,
+      "path": "seasons/2002/miami/special.csv",
+      "sha256": "4fd0ca32c25d2fffcbed36350235aa0dbe729e6d92bd34f3b3a3c8c7ddbf9d69"
+    },
+    {
+      "bytes": 455,
+      "path": "seasons/2002/miami/team.yaml",
+      "sha256": "853204da7d3dacc7a7aae9b26adb4de7ffa38049766254345d4d056b80c646d2"
+    },
+    {
+      "bytes": 1015,
+      "path": "seasons/2002/michigan-state/defense.csv",
+      "sha256": "a8f31ea3f4a42980e64d6e743d70311c874e18b0cc4baaf0d7f288774ca7a7bc"
+    },
+    {
+      "bytes": 1344,
+      "path": "seasons/2002/michigan-state/offense.csv",
+      "sha256": "3fdf676644a9c24e5ad18785d250ab8e5367d36a7080313d3386402e7cd40969"
+    },
+    {
+      "bytes": 605,
+      "path": "seasons/2002/michigan-state/roster-sources.md",
+      "sha256": "1078e152f3cdc6231e75a922027b04596b26b92dddbdfde2ba17659d198e53ba"
+    },
+    {
+      "bytes": 2220,
+      "path": "seasons/2002/michigan-state/roster.json",
+      "sha256": "cc3e0a12b5649d9cfe6e7340c9e77817489dc4aabd7e4ba7130b93e6124d11c7"
+    },
+    {
+      "bytes": 700,
+      "path": "seasons/2002/michigan-state/special.csv",
+      "sha256": "c9af0eab3606f2439b6b49bd345e50337bfbf597cdedea57fe8ad72af7f65400"
+    },
+    {
+      "bytes": 473,
+      "path": "seasons/2002/michigan-state/team.yaml",
+      "sha256": "4068eb75049d3c3e296d824c1341bd6e9ffafa9ba783a894df21051135e18046"
+    },
+    {
+      "bytes": 1006,
+      "path": "seasons/2002/michigan/defense.csv",
+      "sha256": "0191a4eb0ed6072702ec98c45eab46a7fb107aa6145b6e0cb70a445f31f9e0b8"
+    },
+    {
+      "bytes": 1333,
+      "path": "seasons/2002/michigan/offense.csv",
+      "sha256": "c59ad12962ac0c8ebdec39fe88922890c41c506cc6bc302379d4d88731753e54"
+    },
+    {
+      "bytes": 389,
+      "path": "seasons/2002/michigan/roster-sources.md",
+      "sha256": "fb5f98a3c2c689947036023991d8153068ababbb84626a1fbaf22484db3297e7"
+    },
+    {
+      "bytes": 2584,
+      "path": "seasons/2002/michigan/roster.json",
+      "sha256": "5e6451109a3b654b5d908966d81b608e57d4f1c1abac4e9ab539101eb5afe25d"
+    },
+    {
+      "bytes": 704,
+      "path": "seasons/2002/michigan/special.csv",
+      "sha256": "a21a7cd743470d11ce538b81ffe8cef6c3e2917af300f9bf74600d465ae3eebd"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2002/michigan/team.yaml",
+      "sha256": "bebe65db1c77e2a4a625dccdbd48073890908c577c04e72712ce7ef6d7c23c7a"
+    },
+    {
+      "bytes": 944,
+      "path": "seasons/2002/minnesota/defense.csv",
+      "sha256": "131cd3a522c3bc219576e39a1fb7cdc0528f6cd7debdd86bb5c42a878bb39c6b"
+    },
+    {
+      "bytes": 1327,
+      "path": "seasons/2002/minnesota/offense.csv",
+      "sha256": "b60dde29039e317227156b9cb496115d001f0b68c015948bacab19a9d196a7d5"
+    },
+    {
+      "bytes": 404,
+      "path": "seasons/2002/minnesota/roster-sources.md",
+      "sha256": "d5085918c372659af0f23d023921e6ce36d8218de3a5ccbce58fb9cc1bcd9ffe"
+    },
+    {
+      "bytes": 2141,
+      "path": "seasons/2002/minnesota/roster.json",
+      "sha256": "53edd0ffe4e1b50317ae6d72b25c53f69ad21cd01384790878778686951dcac1"
+    },
+    {
+      "bytes": 717,
+      "path": "seasons/2002/minnesota/special.csv",
+      "sha256": "a28237f56b18c570b3885b6c22ea5c7fba27a937b63ef6ddc1e80d5275e1ebf3"
+    },
+    {
+      "bytes": 463,
+      "path": "seasons/2002/minnesota/team.yaml",
+      "sha256": "52d19a08f6218115d1a701a279664c7b79d58d2603fa2f8bc722140e7fa06b7f"
+    },
+    {
+      "bytes": 1047,
+      "path": "seasons/2002/mississippi-state/defense.csv",
+      "sha256": "14abc9eb2989c4c1198d3523d0f231118fdfed9edb026a56327a12bc5ec94d7c"
+    },
+    {
+      "bytes": 1331,
+      "path": "seasons/2002/mississippi-state/offense.csv",
+      "sha256": "84d66e4b979d23e788bc8f3806c7de8d64519186d178aa3056503a9babdfbc12"
+    },
+    {
+      "bytes": 1959,
+      "path": "seasons/2002/mississippi-state/roster-sources.md",
+      "sha256": "872882378f737c5b2329c8174e3f18f2ba3e61e2f3bdee081196cade6fbe5326"
+    },
+    {
+      "bytes": 530,
+      "path": "seasons/2002/mississippi-state/roster.json",
+      "sha256": "e59c49a8174a31b540cf8be34838c8c38f06e81616761068a3808c907453a204"
+    },
+    {
+      "bytes": 705,
+      "path": "seasons/2002/mississippi-state/special.csv",
+      "sha256": "6e76c6995e58827464bc50e7d03b2da58759d4dc376f41e87ad5735eadc2a022"
+    },
+    {
+      "bytes": 479,
+      "path": "seasons/2002/mississippi-state/team.yaml",
+      "sha256": "dd34f7e1a031ec0ff463f1f74bc134103f22e5f21ae4005f72226a325687fdb6"
+    },
+    {
+      "bytes": 1010,
+      "path": "seasons/2002/missouri/defense.csv",
+      "sha256": "46718d497ef305d5f17fa59387182f76b7d37dfc2ac141e64233384e684761da"
+    },
+    {
+      "bytes": 1363,
+      "path": "seasons/2002/missouri/offense.csv",
+      "sha256": "ed116d3bc2d598613789b9f4fdcfff6a8cb00a39d8afed98df0c29463c73d662"
+    },
+    {
+      "bytes": 431,
+      "path": "seasons/2002/missouri/roster-sources.md",
+      "sha256": "74d207b6b9f535c0496c901f0852510e9012031cf4fc7eac47ede220872695da"
+    },
+    {
+      "bytes": 2153,
+      "path": "seasons/2002/missouri/roster.json",
+      "sha256": "e2667a2743514cef9bcb6dd5c6b1a1443e4808a7168cdb99b6dee86cb7861a3d"
+    },
+    {
+      "bytes": 711,
+      "path": "seasons/2002/missouri/special.csv",
+      "sha256": "f065bc4507a768b3ce6ead36c19b043fa662346bd9096f46e2d5dff5192d844c"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2002/missouri/team.yaml",
+      "sha256": "b68bd38ff4974ceb53420b58e36349fdfc8dadf6cb30b623dacfa56ecd6fdc08"
+    },
+    {
+      "bytes": 1024,
+      "path": "seasons/2002/nc-state/defense.csv",
+      "sha256": "16b5aa4b81b72b8dd129b5ba62026dfd6dce487ed95c9fac72ca995aca412fb8"
+    },
+    {
+      "bytes": 1324,
+      "path": "seasons/2002/nc-state/offense.csv",
+      "sha256": "b06b05117b777a045d93a4efe0ebc9b29ee58fa15b3d385bff23c57066fbf636"
+    },
+    {
+      "bytes": 420,
+      "path": "seasons/2002/nc-state/roster-sources.md",
+      "sha256": "a6ae8914594579b387784a49d7ab203249642efae7943f431579ad915a5fb1a1"
+    },
+    {
+      "bytes": 2085,
+      "path": "seasons/2002/nc-state/roster.json",
+      "sha256": "eb4a5ebea30bc6dcfd23cb63091e3b1fa75dbb19f62f19d6249e17d64c5774c0"
+    },
+    {
+      "bytes": 702,
+      "path": "seasons/2002/nc-state/special.csv",
+      "sha256": "c95e780d20768a1836c2377e91621638228208ec78375a6249d0d6cfd4f93e09"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2002/nc-state/team.yaml",
+      "sha256": "1b86c233555242679a9478a265cfe3bb65fa069ab378a55618a37e0dd1cb1d3a"
+    },
+    {
+      "bytes": 1050,
+      "path": "seasons/2002/nebraska/defense.csv",
+      "sha256": "3d8219c948c1a9cd77bedb0ffc2137ad78ce97a7739f8b5d45394df37050e1ea"
+    },
+    {
+      "bytes": 1403,
+      "path": "seasons/2002/nebraska/offense.csv",
+      "sha256": "12ed4b8bc8e8b6e4e55de89105822272c8931cdbe06581da9cc05daf79b84bc5"
+    },
+    {
+      "bytes": 400,
+      "path": "seasons/2002/nebraska/roster-sources.md",
+      "sha256": "c17f7090ef43acf1f7153571bf5f893a62653f092cf097eb531a74e67d63876c"
+    },
+    {
+      "bytes": 3139,
+      "path": "seasons/2002/nebraska/roster.json",
+      "sha256": "f1dd3fd29fb8b1a9b3f1582702824c72892b03118ce9391dc4d5b400c8d93394"
+    },
+    {
+      "bytes": 711,
+      "path": "seasons/2002/nebraska/special.csv",
+      "sha256": "8d8d5db5e4b70a1cc3b9c21bec66a650b8f6c9483b84db3526462e336d7a35cb"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2002/nebraska/team.yaml",
+      "sha256": "5886f805e47a13db9d3f5aa9187ad2dc846926bd88107fb2724d04973b1ae234"
+    },
+    {
+      "bytes": 1024,
+      "path": "seasons/2002/northwestern/defense.csv",
+      "sha256": "9d376ac30ea2f492e1755608552ceeccee779d3be03aac84e762b0f592eeace9"
+    },
+    {
+      "bytes": 1351,
+      "path": "seasons/2002/northwestern/offense.csv",
+      "sha256": "ce355b802c1efbdf4c1143f3eeca14d9e332bfeaf29dcc948d0e24fbc2cd472c"
+    },
+    {
+      "bytes": 1627,
+      "path": "seasons/2002/northwestern/roster-sources.md",
+      "sha256": "55a42dc260c2afb40cdc3e578db897181eb999edd5998a2cb9c915d56fb6c2f2"
+    },
+    {
+      "bytes": 558,
+      "path": "seasons/2002/northwestern/roster.json",
+      "sha256": "fffd2e45b87e2220fdfa7530cf4f18d28f432b29ba673598493d5ad0155a393b"
+    },
+    {
+      "bytes": 692,
+      "path": "seasons/2002/northwestern/special.csv",
+      "sha256": "623428abd69634f90e09f85694cc3723a51f7bf66f67ef11af1069880bb970c6"
+    },
+    {
+      "bytes": 469,
+      "path": "seasons/2002/northwestern/team.yaml",
+      "sha256": "8fe87678981ecbe7ef3ff438e6e4ccdb4f7ac989a2a1a760a5ff12805294fdc7"
+    },
+    {
+      "bytes": 1081,
+      "path": "seasons/2002/notre-dame/defense.csv",
+      "sha256": "5833816339c775433b4331c687fc812212e885f44fbcc24806fb0d112ce14218"
+    },
+    {
+      "bytes": 1363,
+      "path": "seasons/2002/notre-dame/offense.csv",
+      "sha256": "f90745fd4f7621f2072e29f50e5fc4bae9f2aaa3f6641d851f5d578e660a0c63"
+    },
+    {
+      "bytes": 1921,
+      "path": "seasons/2002/notre-dame/roster-sources.md",
+      "sha256": "bcecc2507f906f4d6ce55d0acf8f8435e20efa810ead1af2aa36ffa19bfffa43"
+    },
+    {
+      "bytes": 535,
+      "path": "seasons/2002/notre-dame/roster.json",
+      "sha256": "7b347cdd1b11f147c6c164742d3acd5adfc9444a57d9c9955e9fb41b514f71b6"
+    },
+    {
+      "bytes": 708,
+      "path": "seasons/2002/notre-dame/special.csv",
+      "sha256": "06742a4a5be4f77253cad6dcabca2d4e87454d6765724ac42901546248c0e568"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2002/notre-dame/team.yaml",
+      "sha256": "f4f773cefc8e46ad49a5ae1b229a16da86f44915a10c9c03c71502a7f7d8f68e"
+    },
+    {
+      "bytes": 1056,
+      "path": "seasons/2002/ohio-state/defense.csv",
+      "sha256": "d2b8f5e63ab41405a2e6d5e93bdae7846a39519fba90085a3cc9a93ee71e03b4"
+    },
+    {
+      "bytes": 1312,
+      "path": "seasons/2002/ohio-state/offense.csv",
+      "sha256": "020c869e9692e22af7e585c181dce26bb48f3af2b646dfb88012e70daf986cdc"
+    },
+    {
+      "bytes": 1889,
+      "path": "seasons/2002/ohio-state/roster-sources.md",
+      "sha256": "03d4a34adeb1a26aca0b432e3bb88b6e5cee83fbbba78fa82cae5cdc2015dd8e"
+    },
+    {
+      "bytes": 2439,
+      "path": "seasons/2002/ohio-state/roster.json",
+      "sha256": "551a60920c55fff678236fa45b1c3b686ba91bd2f4dbd245181352e8de99aa89"
+    },
+    {
+      "bytes": 708,
+      "path": "seasons/2002/ohio-state/special.csv",
+      "sha256": "bf3f68f298028ad8ab0e4d4b7a712efa4a08a23fca1179da7d8eac7d916c9b35"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2002/ohio-state/team.yaml",
+      "sha256": "55ba5da81da5e8a000d5259d497ba76548712eace6c9ec687f5b2716a3a140fa"
+    },
+    {
+      "bytes": 987,
+      "path": "seasons/2002/oklahoma-state/defense.csv",
+      "sha256": "be88e5128a8ce3082b8b8938bb21c1558a728e2a52f937f1b7dd56b54158d507"
+    },
+    {
+      "bytes": 1341,
+      "path": "seasons/2002/oklahoma-state/offense.csv",
+      "sha256": "e429d4254c273a5485c0040e0a14fee1fef69d706bc985b49510245826d3e1ba"
+    },
+    {
+      "bytes": 2111,
+      "path": "seasons/2002/oklahoma-state/roster-sources.md",
+      "sha256": "0fe0e7f892b00cd18cf05f83aa6e25fa54521a500ffa0895e81e5d08752972ca"
+    },
+    {
+      "bytes": 2165,
+      "path": "seasons/2002/oklahoma-state/roster.json",
+      "sha256": "c47467d8f394d55ebb6fd24700add7f8f1210250d8375d69bd741585690524ec"
+    },
+    {
+      "bytes": 693,
+      "path": "seasons/2002/oklahoma-state/special.csv",
+      "sha256": "7dae80b1055cd8b843794c8bb1566afd32910b83512565efcb009fc846072bca"
+    },
+    {
+      "bytes": 473,
+      "path": "seasons/2002/oklahoma-state/team.yaml",
+      "sha256": "39279d738cc2375026eb70b20cc51f160badb9a7c76a63314d9d0283531ca9ed"
+    },
+    {
+      "bytes": 1081,
+      "path": "seasons/2002/oklahoma/defense.csv",
+      "sha256": "3e7ef1d27f671cd3532c73e37b63b5ed262b151abaa297a8b5087e87fa683be6"
+    },
+    {
+      "bytes": 1319,
+      "path": "seasons/2002/oklahoma/offense.csv",
+      "sha256": "2d3e2785f1514c9db9abbcd317549419bd1dcc1cb696cdba0d7c6f2c1af17150"
+    },
+    {
+      "bytes": 1790,
+      "path": "seasons/2002/oklahoma/roster-sources.md",
+      "sha256": "5157a7885b1083b5c979ef76cc08c6c47509d9c2cfe851a6859c031f09e89661"
+    },
+    {
+      "bytes": 564,
+      "path": "seasons/2002/oklahoma/roster.json",
+      "sha256": "ebca7612414f0514dd48baab5902c5e01ddfddff0cf0bff787fe4d2685f2e285"
+    },
+    {
+      "bytes": 723,
+      "path": "seasons/2002/oklahoma/special.csv",
+      "sha256": "47c587516c95c42c8a10bbce84ec2000a418cc9437dc78738c0b483f56c5e783"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2002/oklahoma/team.yaml",
+      "sha256": "6f6d4fdfac3964f543b8fb002e45f03c5fd9cfdb316ac22ac7601354d4fa1a13"
+    },
+    {
+      "bytes": 1046,
+      "path": "seasons/2002/ole-miss/defense.csv",
+      "sha256": "3c1740b7d796488ecacf597fdd3be4ba40d21a8dd17354854ac7a5040956db97"
+    },
+    {
+      "bytes": 1314,
+      "path": "seasons/2002/ole-miss/offense.csv",
+      "sha256": "be5d29e2a807da861b330a74fe0b0130440248152df7521edde1c1c073023626"
+    },
+    {
+      "bytes": 2843,
+      "path": "seasons/2002/ole-miss/roster-sources.md",
+      "sha256": "bcec43614d695f7186174e17e4a2bf7b1496f450b81e78daa6cd2e1b9a740441"
+    },
+    {
+      "bytes": 1332,
+      "path": "seasons/2002/ole-miss/roster.json",
+      "sha256": "a0be221533a63666081bfb55ba3f416d8163f305665140daaa2c31422b792780"
+    },
+    {
+      "bytes": 710,
+      "path": "seasons/2002/ole-miss/special.csv",
+      "sha256": "07c7b17f3017e846a2f410e425b74bb1c3f15bf861486255333ff38d4cd6fab9"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2002/ole-miss/team.yaml",
+      "sha256": "df32c54f2053dfdad3385921ad4f25c1a2b576416ab6a6bb90889f08b66832cd"
+    },
+    {
+      "bytes": 1124,
+      "path": "seasons/2002/oregon-state/defense.csv",
+      "sha256": "8967b9e8fd7c799c7c9973a662c442c4d7d5ac4962f16ef7ea1aeeef5d8dd063"
+    },
+    {
+      "bytes": 1382,
+      "path": "seasons/2002/oregon-state/offense.csv",
+      "sha256": "0b380c1d6c3cfae727509bfffd19a5f87d829adca55155f63148eb2eb503e48a"
+    },
+    {
+      "bytes": 518,
+      "path": "seasons/2002/oregon-state/roster-sources.md",
+      "sha256": "7235247f29b5622cd225df9b0a8ecd5e18bfb4363aab5171d5d2416a4086c123"
+    },
+    {
+      "bytes": 1290,
+      "path": "seasons/2002/oregon-state/roster.json",
+      "sha256": "07f2aa51fb61f3633699b8366dc0015d0661b0f5f6f106089abadcca7f45fe14"
+    },
+    {
+      "bytes": 708,
+      "path": "seasons/2002/oregon-state/special.csv",
+      "sha256": "5ac17740d879aafac388e9a9d852d20319d9ed9f518bda0a49b2bdef0a2409bd"
+    },
+    {
+      "bytes": 469,
+      "path": "seasons/2002/oregon-state/team.yaml",
+      "sha256": "36ffb0f9aa12de0477b7bec3d162c70f49c53ce8b588cf63b16448da1f7acea6"
+    },
+    {
+      "bytes": 997,
+      "path": "seasons/2002/oregon/defense.csv",
+      "sha256": "f8ba4aac4e6155885decc1862b173b31fa226e951a744af1a59b8c2e27b4e86f"
+    },
+    {
+      "bytes": 1344,
+      "path": "seasons/2002/oregon/offense.csv",
+      "sha256": "04ce59b0c1614eb3d86d6e6b788beb176d669618059b1b67714488446c18da1e"
+    },
+    {
+      "bytes": 1999,
+      "path": "seasons/2002/oregon/roster-sources.md",
+      "sha256": "dc490dec386eafa15c17f36e04f10bce6d305ea7a16cf8394981bf1639a60a78"
+    },
+    {
+      "bytes": 542,
+      "path": "seasons/2002/oregon/roster.json",
+      "sha256": "72bd1cdab80e67a10324003068a04cecdf7aca79e91756d24617f41453873e26"
+    },
+    {
+      "bytes": 714,
+      "path": "seasons/2002/oregon/special.csv",
+      "sha256": "82a5fe7b4497bb7a3fd5a62ef69d9969f356e30e0427c5b7067d86a0de501f21"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2002/oregon/team.yaml",
+      "sha256": "48964996841d6b5182f47855ca977b4a9e004539b292a73d7831acdc7fa2cef0"
+    },
+    {
+      "bytes": 1121,
+      "path": "seasons/2002/penn-state/defense.csv",
+      "sha256": "259c44374f36faf823f0943ff2548d2e6ad6290b5b1e16e6fee4f7fc6504a42f"
+    },
+    {
+      "bytes": 1307,
+      "path": "seasons/2002/penn-state/offense.csv",
+      "sha256": "fa07220201d6801588de1e355430b63e9d4b26f6d8ab5daf697da89fab438b84"
+    },
+    {
+      "bytes": 1783,
+      "path": "seasons/2002/penn-state/roster-sources.md",
+      "sha256": "042ba1cabdee48d69a5028b339ec109e1f471a6c27b1cdfa9f7bb8cf6bf26212"
+    },
+    {
+      "bytes": 532,
+      "path": "seasons/2002/penn-state/roster.json",
+      "sha256": "6dbd8950c25bfcf468ecc434879ad5f14b6944cdbf1946158a58d04f83654fef"
+    },
+    {
+      "bytes": 720,
+      "path": "seasons/2002/penn-state/special.csv",
+      "sha256": "3ba5ad21a3f9255fed4de72573213b323469d6996ecbcc8e86fb601600999683"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2002/penn-state/team.yaml",
+      "sha256": "1d7638789c2b21495fef591d43500872291d146116aaec7591ceee5443672332"
+    },
+    {
+      "bytes": 1058,
+      "path": "seasons/2002/pittsburgh/defense.csv",
+      "sha256": "e59a6bdb528bb9dbc8b0e4a971251d58fff958e72806d4acc1219cf21f3a7943"
+    },
+    {
+      "bytes": 1334,
+      "path": "seasons/2002/pittsburgh/offense.csv",
+      "sha256": "222d0e6f6660c3349dfdadba71264c40b2d6cf683ed307b87ce07f73042a650a"
+    },
+    {
+      "bytes": 434,
+      "path": "seasons/2002/pittsburgh/roster-sources.md",
+      "sha256": "25db01341034058d93d17ae2b8a2c265817e0b2a88852ad381321168c8bd9a6d"
+    },
+    {
+      "bytes": 1864,
+      "path": "seasons/2002/pittsburgh/roster.json",
+      "sha256": "a516954797857b0e64f2a9f35d567a7325b810b2bbef95ee257f4306b402e017"
+    },
+    {
+      "bytes": 708,
+      "path": "seasons/2002/pittsburgh/special.csv",
+      "sha256": "34e47e86f6ee080b960574b979b483666621256952667bd6eccdf44b14641ea8"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2002/pittsburgh/team.yaml",
+      "sha256": "4723969e7985c0282b5221e4a5c90a4ad748c92b20eb853c409bbee128034b3e"
+    },
+    {
+      "bytes": 41390,
+      "path": "seasons/2002/provenance/alabama.csv",
+      "sha256": "ee8f4a02c5fc7854a177ef99edd2a508642c071f575768cb077ce04d5a0f4458"
+    },
+    {
+      "bytes": 41410,
+      "path": "seasons/2002/provenance/arizona-state.csv",
+      "sha256": "2e50d4575202cc79bc5ae6469c8c4ae95048cb0d78e197c7f0c005319b0fd2bb"
+    },
+    {
+      "bytes": 41413,
+      "path": "seasons/2002/provenance/arizona.csv",
+      "sha256": "6986642651f54b0c13049dabdbb7d05fef00997d111ab0d23f34516063318bc3"
+    },
+    {
+      "bytes": 41368,
+      "path": "seasons/2002/provenance/arkansas.csv",
+      "sha256": "005ae655fe1ad79cef39022b1568eb361ae34d7c0c2ba4c5ec9150465d8967e1"
+    },
+    {
+      "bytes": 41444,
+      "path": "seasons/2002/provenance/auburn.csv",
+      "sha256": "5b7eda2a485770420b46953f06555de28568e25e1eab63bb5cb75ce91af763bb"
+    },
+    {
+      "bytes": 41363,
+      "path": "seasons/2002/provenance/baylor.csv",
+      "sha256": "aa3a47b491a1c2b1340080729b9dbf6478956a9a74f68a5f26b4b943ac13e42c"
+    },
+    {
+      "bytes": 41389,
+      "path": "seasons/2002/provenance/boston-college.csv",
+      "sha256": "9ca21b8060b55eba83b9b1096b2d1b8af05aff9e068ebc36d7ab7576f8479edf"
+    },
+    {
+      "bytes": 41334,
+      "path": "seasons/2002/provenance/california.csv",
+      "sha256": "8b3b076dee0c53941784d366c57c261dc5b193cd6472ff42d8f008bebffb2c1c"
+    },
+    {
+      "bytes": 41367,
+      "path": "seasons/2002/provenance/colorado.csv",
+      "sha256": "59c6e1e0816ae44523a27c7cc4962edc0c643f480efc7adc5280df1526d820e4"
+    },
+    {
+      "bytes": 41323,
+      "path": "seasons/2002/provenance/duke.csv",
+      "sha256": "0dd4becd69336b15793f9d8c4102168b57bf668cf660ec4e78a2d4afe6beea8c"
+    },
+    {
+      "bytes": 41394,
+      "path": "seasons/2002/provenance/florida.csv",
+      "sha256": "0f1b1b0d35728b04887eac65717fb5ff16e6e04e631f3650b1736a955893991e"
+    },
+    {
+      "bytes": 41359,
+      "path": "seasons/2002/provenance/georgia-tech.csv",
+      "sha256": "95265633bfbb5dbcb32836d612dfcb025f3d8439577b5628186c451895b22672"
+    },
+    {
+      "bytes": 41373,
+      "path": "seasons/2002/provenance/georgia.csv",
+      "sha256": "08b8536f7091d42491ade131f1df7a1f342189140702cb0838ac1845e6f42733"
+    },
+    {
+      "bytes": 41382,
+      "path": "seasons/2002/provenance/illinois.csv",
+      "sha256": "1e895c536e5cb06b9bcb915a27aefaeabf46b17de59e52e39c40e69c97edfff8"
+    },
+    {
+      "bytes": 41326,
+      "path": "seasons/2002/provenance/indiana.csv",
+      "sha256": "dbdf7e9a24ee4463f946ae756596d935ea81873eabce6b619c81fc5bd0f377f4"
+    },
+    {
+      "bytes": 41398,
+      "path": "seasons/2002/provenance/iowa-state.csv",
+      "sha256": "7d8b12992ae25384220fef9947836addac8ce29f64a6b40a12979b5a562d4c0c"
+    },
+    {
+      "bytes": 41388,
+      "path": "seasons/2002/provenance/iowa.csv",
+      "sha256": "d9cdd5a85b54fa43165f52a82aa3a5fbc42b4faf4c0b03ac5a82e47dd16d4e6a"
+    },
+    {
+      "bytes": 41447,
+      "path": "seasons/2002/provenance/kansas-state.csv",
+      "sha256": "149f4a3fc1aff60c7c4300c4e886b604bfa9de96b393515219c31be3fd553244"
+    },
+    {
+      "bytes": 41173,
+      "path": "seasons/2002/provenance/kansas.csv",
+      "sha256": "b97386724ed3c14abb476c41e4822ed2e8d541a12b9ed89312e1a413ede6394a"
+    },
+    {
+      "bytes": 41341,
+      "path": "seasons/2002/provenance/kentucky.csv",
+      "sha256": "bada00d17d0fea252f92cbf67d2a221cda094892f18462cc62043f1f4211a577"
+    },
+    {
+      "bytes": 41435,
+      "path": "seasons/2002/provenance/lsu.csv",
+      "sha256": "3c514b9af7aaf1569c55510d1c129ec6e7abca0d18a8df6f8c390d0cb7c19da8"
+    },
+    {
+      "bytes": 41426,
+      "path": "seasons/2002/provenance/miami.csv",
+      "sha256": "8de4087a6177d28071662b5df934bd239b8d2d69e8c9fb79d942c4aa11303d25"
+    },
+    {
+      "bytes": 41339,
+      "path": "seasons/2002/provenance/michigan-state.csv",
+      "sha256": "0084cfd96aefdab9c27df49c20a83cd27a31e90c1afa9a41813df055735b9bc1"
+    },
+    {
+      "bytes": 41324,
+      "path": "seasons/2002/provenance/michigan.csv",
+      "sha256": "88011b53a848afacc83ee961b71cf6cde93273a6a2c88e3ad0fc017fec427aca"
+    },
+    {
+      "bytes": 41350,
+      "path": "seasons/2002/provenance/minnesota.csv",
+      "sha256": "4e52042f4446f275a9cafffb4c521368ca8028a463b0c0741c3651ef6c774773"
+    },
+    {
+      "bytes": 41383,
+      "path": "seasons/2002/provenance/mississippi-state.csv",
+      "sha256": "8d8c77e4cbc3e822c2d551a1699954fec24f8e9cb812e4193e8075924d0df17a"
+    },
+    {
+      "bytes": 41415,
+      "path": "seasons/2002/provenance/missouri.csv",
+      "sha256": "6f9d8eb432180ec2f8d3be89e7a4c7659b731131312be9d6d148fa6fc0407aa8"
+    },
+    {
+      "bytes": 41391,
+      "path": "seasons/2002/provenance/nc-state.csv",
+      "sha256": "c77f16eaade2153fa22fee4781c3ec01855849fb3ba54aaea73df8f3542e8ff3"
+    },
+    {
+      "bytes": 41422,
+      "path": "seasons/2002/provenance/nebraska.csv",
+      "sha256": "598d80457c6b8d68070ff8030d8e1c0007a9e44742b76f8c0bf952264c247113"
+    },
+    {
+      "bytes": 41352,
+      "path": "seasons/2002/provenance/northwestern.csv",
+      "sha256": "d3f81f35c3023f3a51f1b7f3ff564e3190ef325f380fd225904e0c33ed26a23b"
+    },
+    {
+      "bytes": 41420,
+      "path": "seasons/2002/provenance/notre-dame.csv",
+      "sha256": "b5f5a61ea09c024b61215679b6b5a145bba6355539662f45003e3fb3ad5a6dce"
+    },
+    {
+      "bytes": 41343,
+      "path": "seasons/2002/provenance/ohio-state.csv",
+      "sha256": "f8bd4a95efeca7a399de42b5e47b0c9894d87b901e1a7ba5aa6d3f37b4775142"
+    },
+    {
+      "bytes": 41370,
+      "path": "seasons/2002/provenance/oklahoma-state.csv",
+      "sha256": "41c67596a4224c6bce1fb8fe0bdeefe6b6b897740450471fdd7e0b05c0b5db27"
+    },
+    {
+      "bytes": 41425,
+      "path": "seasons/2002/provenance/oklahoma.csv",
+      "sha256": "434f505752187aca66136f466fb9ddd50fb2c619959ec9fd5c95f0d8463db348"
+    },
+    {
+      "bytes": 41358,
+      "path": "seasons/2002/provenance/ole-miss.csv",
+      "sha256": "603765161c44686f45e6d91477820b4eab68ddbd19fa880bc2ec255426a7314d"
+    },
+    {
+      "bytes": 41398,
+      "path": "seasons/2002/provenance/oregon-state.csv",
+      "sha256": "df2292b0dec75ad8d0ba3fe9b7cb267077596397bd8dacce415908aa6faadc6b"
+    },
+    {
+      "bytes": 41374,
+      "path": "seasons/2002/provenance/oregon.csv",
+      "sha256": "22875f2a5d3290b846517f1012a2dde605c79e63af93e0ed1b2d084c41ba3c04"
+    },
+    {
+      "bytes": 41397,
+      "path": "seasons/2002/provenance/penn-state.csv",
+      "sha256": "ddb34c20818e8fc73f9f0ed915afaf7713a627f7ce3d5662d2565ee06314bc7b"
+    },
+    {
+      "bytes": 41349,
+      "path": "seasons/2002/provenance/pittsburgh.csv",
+      "sha256": "7f96b8f1b5685607cda798bb574b8d35ee2ebcbc1e1a9cbaaff1217fe93d985e"
+    },
+    {
+      "bytes": 41386,
+      "path": "seasons/2002/provenance/purdue.csv",
+      "sha256": "38b99976ca4ef12a5862539ae203ddd9fcf28f11d2dd88e04f018e5af334f2ca"
+    },
+    {
+      "bytes": 41275,
+      "path": "seasons/2002/provenance/rutgers.csv",
+      "sha256": "7f1e3c34d8b6cca8d23d999a234d7d098c1630a159dec5c78eea5eb4695b869c"
+    },
+    {
+      "bytes": 41321,
+      "path": "seasons/2002/provenance/stanford.csv",
+      "sha256": "c6124f366cb51ce9a83483c92da74ad7d2bb40fe43f09eafdae0868ce6abe7fd"
+    },
+    {
+      "bytes": 41419,
+      "path": "seasons/2002/provenance/temple.csv",
+      "sha256": "522b117f13462412755b6eba080190d5d7c18c9a84840acc7dc97a80c22781be"
+    },
+    {
+      "bytes": 41368,
+      "path": "seasons/2002/provenance/tennessee.csv",
+      "sha256": "f7c32484c53865e2c49df52280c8a3adc7d1e748762aa6e4120ccc26b78d65c3"
+    },
+    {
+      "bytes": 41360,
+      "path": "seasons/2002/provenance/texas-a-m.csv",
+      "sha256": "2d0b651e024a0cd5049f3b6b08d23778eed2b9f0ee53c0e9b9c6a944abff650f"
+    },
+    {
+      "bytes": 41360,
+      "path": "seasons/2002/provenance/texas-tech.csv",
+      "sha256": "ec30ed72591badd24222bfb8e617581a0bb1b9cf04d9c56c0f66d632fb6183d8"
+    },
+    {
+      "bytes": 41379,
+      "path": "seasons/2002/provenance/texas.csv",
+      "sha256": "ee14fcb839ad6ecfd47e0d23065ae4076cc5e248bc6393fbd113e9775a3442d8"
+    },
+    {
+      "bytes": 41358,
+      "path": "seasons/2002/provenance/ucla.csv",
+      "sha256": "a4f359ac40ec721e92a3c5ddb787ce84a774259dd06a51766fbd3e138d7bf935"
+    },
+    {
+      "bytes": 41340,
+      "path": "seasons/2002/provenance/usc.csv",
+      "sha256": "3e28519f22276624f01ef64372c8aa1694331953e24b3d210064ecd735882a74"
+    },
+    {
+      "bytes": 41419,
+      "path": "seasons/2002/provenance/vanderbilt.csv",
+      "sha256": "837ef2308fa69d9570a8c23240f690e19ad3b0993199821c11a597a071ddfa08"
+    },
+    {
+      "bytes": 41444,
+      "path": "seasons/2002/provenance/virginia-tech.csv",
+      "sha256": "5e8e1812c2efe735f679713644cf9edc06f970a9458a7bf1e08bf878a5a153ef"
+    },
+    {
+      "bytes": 41397,
+      "path": "seasons/2002/provenance/washington-state.csv",
+      "sha256": "4203a94f75fcbaf28c6291e1289b4f16453f7c307bf165d787b82bd9eb83fbb1"
+    },
+    {
+      "bytes": 41353,
+      "path": "seasons/2002/provenance/washington.csv",
+      "sha256": "451a11774562c63b3a6faf4a179a0ebedb8056820529d19536fb7b2e5d6c7112"
+    },
+    {
+      "bytes": 41369,
+      "path": "seasons/2002/provenance/west-virginia.csv",
+      "sha256": "3bf45fa177ff0f1a818a392a5fbae871c449db1f1a5d053aa1eb26a5374acffe"
+    },
+    {
+      "bytes": 41415,
+      "path": "seasons/2002/provenance/wisconsin.csv",
+      "sha256": "732c34c6032d9d86dc1e5543d7340a6ba3249f73381d074a590a124abe770539"
+    },
+    {
+      "bytes": 1079,
+      "path": "seasons/2002/purdue/defense.csv",
+      "sha256": "ac6e55248ee51e323fe8f7ae1856c7ca0124ab806c908179fcda275052ba548f"
+    },
+    {
+      "bytes": 1338,
+      "path": "seasons/2002/purdue/offense.csv",
+      "sha256": "dcbc8033506e00d364721436a925760b5e8df24cef1dbabcb3a6780620f4d99a"
+    },
+    {
+      "bytes": 1703,
+      "path": "seasons/2002/purdue/roster-sources.md",
+      "sha256": "567487458f3f0679cb5ee576044f9d16f8bcccca3ec4d1829c1667612c18be55"
+    },
+    {
+      "bytes": 568,
+      "path": "seasons/2002/purdue/roster.json",
+      "sha256": "dbb0178cfba61f905406b75dbeb2e6d90e2eb2ef9d9e2171d8f549bf8bb763e6"
+    },
+    {
+      "bytes": 713,
+      "path": "seasons/2002/purdue/special.csv",
+      "sha256": "ec90e0a8b027668d1ca923a497abc4a348dd8feb65fe744f424f40aafdc72d09"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2002/purdue/team.yaml",
+      "sha256": "e6c2de5336dbb254c467132684850a0b2529e684eb1a42c6a30b8cefd5a3d695"
+    },
+    {
+      "bytes": 952,
+      "path": "seasons/2002/rutgers/defense.csv",
+      "sha256": "d8c77e919aaff252620b0a2a378b5bb38cb54444ad8bca10b6703754896f05fc"
+    },
+    {
+      "bytes": 1351,
+      "path": "seasons/2002/rutgers/offense.csv",
+      "sha256": "7fa07384f0e03c965141a6d5c6e0a355a56dd0f954edc24b93b474390a2a375f"
+    },
+    {
+      "bytes": 1677,
+      "path": "seasons/2002/rutgers/roster-sources.md",
+      "sha256": "031d99976bdbd8127d0dd88f51f1b8a7575eab9336002e594e9d8d55691ccc7c"
+    },
+    {
+      "bytes": 559,
+      "path": "seasons/2002/rutgers/roster.json",
+      "sha256": "de0cbe44f5c83a6edb83b1e874c5f2ced8b1773df7e985df5f3f1f4999ca03fd"
+    },
+    {
+      "bytes": 704,
+      "path": "seasons/2002/rutgers/special.csv",
+      "sha256": "286eeaf5736160fa33bd688aa6c93f271cca645a7e8c735b7bb98e28626c745d"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2002/rutgers/team.yaml",
+      "sha256": "e501a4d60875e6282bb5f7a6e62f5d113494c574fc8bcc0ef8b761df23f435f4"
+    },
+    {
+      "bytes": 951,
+      "path": "seasons/2002/stanford/defense.csv",
+      "sha256": "0656935e23b87c6f0ca8061888a4639856f2429ea3ecb45d96537b7e4baa15e3"
+    },
+    {
+      "bytes": 1327,
+      "path": "seasons/2002/stanford/offense.csv",
+      "sha256": "154635091b40a21671fa3849318f894b309ecbfef19c9cd49e5fd835d750813a"
+    },
+    {
+      "bytes": 1753,
+      "path": "seasons/2002/stanford/roster-sources.md",
+      "sha256": "f460dd2766c6a9271b0bae961371530bf80e99ea4b9dffd2d5ba4858e30ffccb"
+    },
+    {
+      "bytes": 551,
+      "path": "seasons/2002/stanford/roster.json",
+      "sha256": "a4707f9179e9deb1d43b4e1170e56dd04da2c1f645cadbfa5d18863cd07cca81"
+    },
+    {
+      "bytes": 696,
+      "path": "seasons/2002/stanford/special.csv",
+      "sha256": "3fe827e622ffb77448e11c20567124bab42389d47042e5068471e263b27e39ea"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2002/stanford/team.yaml",
+      "sha256": "1529c448ad240b43f659817182fd0208b66f2c050acf039e51212a802ddcef64"
+    },
+    {
+      "bytes": 1036,
+      "path": "seasons/2002/temple/defense.csv",
+      "sha256": "84fa998251d867f8c471c2e63b37000be5f067e3064870c940bf9832b5ce8df6"
+    },
+    {
+      "bytes": 1332,
+      "path": "seasons/2002/temple/offense.csv",
+      "sha256": "45aed8b57358c3fbbf980cd53d4f2b37d6e6a138ac5057ad41f32a16d7b0aca5"
+    },
+    {
+      "bytes": 1631,
+      "path": "seasons/2002/temple/roster-sources.md",
+      "sha256": "85c622e4cf380cc858449203b57925ab9c9de3bc3e4fc2d2ce01752d0837b8a2"
+    },
+    {
+      "bytes": 1996,
+      "path": "seasons/2002/temple/roster.json",
+      "sha256": "4467b72dea450300bd929e79b1c0ece4a1d55457cae673f9643df4e4a210d3d4"
+    },
+    {
+      "bytes": 724,
+      "path": "seasons/2002/temple/special.csv",
+      "sha256": "5df71eefb856feaa0c6b933a0c7fe26aa49ff8257357737eedc88004f1f624d2"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2002/temple/team.yaml",
+      "sha256": "1556d6d0448648f2af339ce4ebcfb977e067f04133603826152422e80ac6bfec"
+    },
+    {
+      "bytes": 1085,
+      "path": "seasons/2002/tennessee/defense.csv",
+      "sha256": "953b7c0acccdd79d0894a0ac99d0b5dd538bb43c2805412e4379c7b8844eda99"
+    },
+    {
+      "bytes": 1316,
+      "path": "seasons/2002/tennessee/offense.csv",
+      "sha256": "6b9a02b3de54293bd9f462ada8bd0aa732afa7072dfa0d7fe78f10908cc4be9f"
+    },
+    {
+      "bytes": 400,
+      "path": "seasons/2002/tennessee/roster-sources.md",
+      "sha256": "f3d416d74de796197660242da08d5eaad2dd80490f730cf9db956f9ae6b423ea"
+    },
+    {
+      "bytes": 2254,
+      "path": "seasons/2002/tennessee/roster.json",
+      "sha256": "ffcc280fc5dd0a07b6ba652e07934f5e5026651b7b53727bb20eb2944a6d73bd"
+    },
+    {
+      "bytes": 717,
+      "path": "seasons/2002/tennessee/special.csv",
+      "sha256": "610bc77a170acf50ab52317b3f952bd02b87b10f5b712db3b4c971790fe8112a"
+    },
+    {
+      "bytes": 463,
+      "path": "seasons/2002/tennessee/team.yaml",
+      "sha256": "b9919113d2cfd77ecb5b84572d8bd5ed9bbaff3aedee84ad603055a55f202c40"
+    },
+    {
+      "bytes": 1004,
+      "path": "seasons/2002/texas-a-m/defense.csv",
+      "sha256": "2cf6fbb68415d31362806f0748196ef88967945fe300a48f4edfa01729a10b14"
+    },
+    {
+      "bytes": 1356,
+      "path": "seasons/2002/texas-a-m/offense.csv",
+      "sha256": "ac93123a3b137d6a412bdbc1bdcc05c21f9039ac2eb7af2393df3e2730eba6e9"
+    },
+    {
+      "bytes": 390,
+      "path": "seasons/2002/texas-a-m/roster-sources.md",
+      "sha256": "4728eb9ccc5fe533d21f59116ca7b6feb6b956ab078586eea86f7190751a07fb"
+    },
+    {
+      "bytes": 2098,
+      "path": "seasons/2002/texas-a-m/roster.json",
+      "sha256": "05050ddd4921a420943071ed86d7a4f8cc0f8d7c4384e4688a4af4784ef90a49"
+    },
+    {
+      "bytes": 715,
+      "path": "seasons/2002/texas-a-m/special.csv",
+      "sha256": "3115b3b74b0f24c1fdb3ede88e0bcb5884e6510229a9b3b197c4bd24cb90d696"
+    },
+    {
+      "bytes": 463,
+      "path": "seasons/2002/texas-a-m/team.yaml",
+      "sha256": "04af18038daa84cb27ccb5e510cae57a9149838c8467bfefae480d71091e695e"
+    },
+    {
+      "bytes": 920,
+      "path": "seasons/2002/texas-tech/defense.csv",
+      "sha256": "b848413d5dd5a8b689ca9e25bec3ce72e29e940d5067ac3548356deef9014451"
+    },
+    {
+      "bytes": 1314,
+      "path": "seasons/2002/texas-tech/offense.csv",
+      "sha256": "1375893f37e56315394c36e63122dc8200965adb8802e7c051443cecfb155246"
+    },
+    {
+      "bytes": 2033,
+      "path": "seasons/2002/texas-tech/roster-sources.md",
+      "sha256": "825b55adf19c91fc6187adfd91dd11cae592af6c2dc95e719aa07ec25bcd9179"
+    },
+    {
+      "bytes": 2361,
+      "path": "seasons/2002/texas-tech/roster.json",
+      "sha256": "5b75ee9b1d4e4b7739c4029ba7563e2377d6919319e606b733b9c5f55cd14ec6"
+    },
+    {
+      "bytes": 717,
+      "path": "seasons/2002/texas-tech/special.csv",
+      "sha256": "d2f09828f26746647e09fafac6b08f7cc4eca17b91135cdb577ec0a01ec2c246"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2002/texas-tech/team.yaml",
+      "sha256": "5651bb3b7ec6f38f5cc75d51729ee2c9648821775cbed12cc7b9e1302aca7129"
+    },
+    {
+      "bytes": 1069,
+      "path": "seasons/2002/texas/defense.csv",
+      "sha256": "05a137a6b8761a5c7ea44ccf94cc68dfe2f40ac0077bc14d6cbe4872b543023a"
+    },
+    {
+      "bytes": 1313,
+      "path": "seasons/2002/texas/offense.csv",
+      "sha256": "028467874e9642444f8c136b2a3c3808551bd2f9be71b954205bb62836f2b5df"
+    },
+    {
+      "bytes": 397,
+      "path": "seasons/2002/texas/roster-sources.md",
+      "sha256": "d02020e42f9759f44f5ecf63ba784df541b7dc0b449acd69198fbe9d3914da33"
+    },
+    {
+      "bytes": 2544,
+      "path": "seasons/2002/texas/roster.json",
+      "sha256": "e36a09b66aa70cf966fd5d9800729cd1d09aa39b3640e5707cf8d08ae7921890"
+    },
+    {
+      "bytes": 700,
+      "path": "seasons/2002/texas/special.csv",
+      "sha256": "1e1754c62a99be68c787abf3dad17e9f4c1c24fdc76d9f150343500573c8a2bc"
+    },
+    {
+      "bytes": 455,
+      "path": "seasons/2002/texas/team.yaml",
+      "sha256": "5cb705a2e95c3e789f27f4e040de92a5009b2b6eade0c7a00d6a9a6c994ad8b4"
+    },
+    {
+      "bytes": 991,
+      "path": "seasons/2002/ucla/defense.csv",
+      "sha256": "33c90ea97bd9e8a12b79592d6c4f1270949d6a1d81ad679dc1e38e83209031e5"
+    },
+    {
+      "bytes": 1340,
+      "path": "seasons/2002/ucla/offense.csv",
+      "sha256": "b39ffcb6c7bef1ffc5b4ed0b63397b4468bdd67e11e22eb448928fbf27631313"
+    },
+    {
+      "bytes": 1764,
+      "path": "seasons/2002/ucla/roster-sources.md",
+      "sha256": "77f97476d11fcc224c3a86698e867994b7ec14c4c968e788befdb879644380e0"
+    },
+    {
+      "bytes": 2269,
+      "path": "seasons/2002/ucla/roster.json",
+      "sha256": "a031e515fc43b19b130db41d84ab630f1b596ce751566a5baed6b40bb8cbfdac"
+    },
+    {
+      "bytes": 735,
+      "path": "seasons/2002/ucla/special.csv",
+      "sha256": "035870ec4890e4b866efd8792d4dfc81a8d64b4dac2f6f3c94826c279c7a14a3"
+    },
+    {
+      "bytes": 453,
+      "path": "seasons/2002/ucla/team.yaml",
+      "sha256": "cbbccfd42b330ba3014d433da1d1bd4355afdf5ecb09ab5bbbb1932320c4e83d"
+    },
+    {
+      "bytes": 1065,
+      "path": "seasons/2002/usc/defense.csv",
+      "sha256": "a1b1f0094e007fb6a8df24655bf683137d7d2c22e902f3f7d10c70a1832d7af0"
+    },
+    {
+      "bytes": 1328,
+      "path": "seasons/2002/usc/offense.csv",
+      "sha256": "2010e77e924fb37b5ab26ab25365ef2411d99bd60c2b1cc22adb0705a975449d"
+    },
+    {
+      "bytes": 1715,
+      "path": "seasons/2002/usc/roster-sources.md",
+      "sha256": "472f05b7e9e77dee1599095e64fea9b87969a645199bdd50d1aa1968072175f4"
+    },
+    {
+      "bytes": 2400,
+      "path": "seasons/2002/usc/roster.json",
+      "sha256": "12486acfbda47a3debd9bdae1037b53e63cb6c24103c9e29bffeaa870e4caa48"
+    },
+    {
+      "bytes": 722,
+      "path": "seasons/2002/usc/special.csv",
+      "sha256": "46c44252eb2591c8cebe053d4c9ed6f951f1fa99df997ece9657050ba5685c24"
+    },
+    {
+      "bytes": 451,
+      "path": "seasons/2002/usc/team.yaml",
+      "sha256": "431e0e8dc1ded7f592c08622efcaf0562b0a2a39a5c44e57a442c600d67d96d5"
+    },
+    {
+      "bytes": 1014,
+      "path": "seasons/2002/vanderbilt/defense.csv",
+      "sha256": "2dde4aa237525a4e292882376eb98ea5244a6a3d3fc764c8ba60b125e10713e3"
+    },
+    {
+      "bytes": 1371,
+      "path": "seasons/2002/vanderbilt/offense.csv",
+      "sha256": "93a37752dade85993b01e80539f2677ed448b82d727cad16ba32d5e17ca4e2ac"
+    },
+    {
+      "bytes": 1717,
+      "path": "seasons/2002/vanderbilt/roster-sources.md",
+      "sha256": "cf041210d02145026792287586a3d9e4842228e07f8449339941ff400a66fcc7"
+    },
+    {
+      "bytes": 542,
+      "path": "seasons/2002/vanderbilt/roster.json",
+      "sha256": "8f337d1dcae91d1e3145f50f3bf2a1d59b36cfd95c83eb4fd9a3446456899fcd"
+    },
+    {
+      "bytes": 703,
+      "path": "seasons/2002/vanderbilt/special.csv",
+      "sha256": "ee39911ac040c80e4c0c90156b80a91938f14ffad496b1eed899008ba794fd91"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2002/vanderbilt/team.yaml",
+      "sha256": "75407bb31eea5a576197cb80f65dbf3bd2c6015b90b9156b1fd159355465c8ef"
+    },
+    {
+      "bytes": 1047,
+      "path": "seasons/2002/virginia-tech/defense.csv",
+      "sha256": "b34947729466549a71a23f812c612657a65b3d72e8a516b64b82133af1448796"
+    },
+    {
+      "bytes": 1329,
+      "path": "seasons/2002/virginia-tech/offense.csv",
+      "sha256": "e62e3afde6c7ff29f042f1990a13badecea75239ed6d42231a6d038516d702f5"
+    },
+    {
+      "bytes": 1944,
+      "path": "seasons/2002/virginia-tech/roster-sources.md",
+      "sha256": "b76fea25bf1ac369dfeaac59c25f45b237bc7701f480add8228af2af19c8e6a0"
+    },
+    {
+      "bytes": 1637,
+      "path": "seasons/2002/virginia-tech/roster.json",
+      "sha256": "123786c0ab997b695414c0d85e26b6219c3ce9b2708a24c84f545d5564f8b798"
+    },
+    {
+      "bytes": 707,
+      "path": "seasons/2002/virginia-tech/special.csv",
+      "sha256": "007717561d78d0eb34e256b0850bcda9ee3e20bffa15f9234a90cb51c287a8ee"
+    },
+    {
+      "bytes": 471,
+      "path": "seasons/2002/virginia-tech/team.yaml",
+      "sha256": "54a65e54acc3ce1eb8bcc98b5f31779282278f1b95bd11474325a4d0f13bcc94"
+    },
+    {
+      "bytes": 983,
+      "path": "seasons/2002/washington-state/defense.csv",
+      "sha256": "f209658fb7682f79a326bd742f235c1d4d2c2a6637edaebc3af7f5d46a9b8ae6"
+    },
+    {
+      "bytes": 1337,
+      "path": "seasons/2002/washington-state/offense.csv",
+      "sha256": "70f8ab56c2afbfb4eb230e487307e7ef26c0f31e07e2e37cab4085eebdb587ee"
+    },
+    {
+      "bytes": 1861,
+      "path": "seasons/2002/washington-state/roster-sources.md",
+      "sha256": "f5b623b36629853d7d7bac0420abd196b53dcafa1682e453e307625411d051b3"
+    },
+    {
+      "bytes": 555,
+      "path": "seasons/2002/washington-state/roster.json",
+      "sha256": "a0746a2f16a0b2ebf55bb3d03b0691f894e7f8db6f63a054a9f2f979c081ec10"
+    },
+    {
+      "bytes": 703,
+      "path": "seasons/2002/washington-state/special.csv",
+      "sha256": "0d4cfe43ad548a2dfe74c2db840dd1ea924a06493fa166df6344513de320cd7e"
+    },
+    {
+      "bytes": 477,
+      "path": "seasons/2002/washington-state/team.yaml",
+      "sha256": "b39086a184b242720123c1db8fa252ed0e56b331731aedf8ccb6e443756b5c4a"
+    },
+    {
+      "bytes": 980,
+      "path": "seasons/2002/washington/defense.csv",
+      "sha256": "a4bcf71c5e8ec7c634f801e5a57e0723634f482ec7f73f7e4b4664bf607f97e1"
+    },
+    {
+      "bytes": 1342,
+      "path": "seasons/2002/washington/offense.csv",
+      "sha256": "63dc6b259770da657f1e0d744ed830fb7ecafca4722d6e95b41409a5125767d3"
+    },
+    {
+      "bytes": 1676,
+      "path": "seasons/2002/washington/roster-sources.md",
+      "sha256": "12032c1a9f25692e9b7f1eaa9cd58ac931490d3f31e4bf7b825ee303825bf3d5"
+    },
+    {
+      "bytes": 2433,
+      "path": "seasons/2002/washington/roster.json",
+      "sha256": "4d8e77c962eb0aa0b376efb7e1e5644f36aef0af77dffe788594cd09cc566b13"
+    },
+    {
+      "bytes": 712,
+      "path": "seasons/2002/washington/special.csv",
+      "sha256": "7c6e421064d68aa4c3d8ec8f3c7322808a78cb659fd3d52dd2ac9fa193f3e6a8"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2002/washington/team.yaml",
+      "sha256": "93533f58ca872bf79b72d099a9450248ce81dff7c0aeabe7b13f8344b99058d9"
+    },
+    {
+      "bytes": 1026,
+      "path": "seasons/2002/west-virginia/defense.csv",
+      "sha256": "54a434938be8922409d5bb5569dd2f6c25237357f32a78a4dca1ec677f581287"
+    },
+    {
+      "bytes": 1326,
+      "path": "seasons/2002/west-virginia/offense.csv",
+      "sha256": "4cf013e01b5be6f5cccc57e1c99d49dccb4c8a5a7570dc3df24abfe1d5b8af94"
+    },
+    {
+      "bytes": 396,
+      "path": "seasons/2002/west-virginia/roster-sources.md",
+      "sha256": "a6f15c1e0f6e6be662af94eb5221a32ea58b36e6753647aa44a9bbac823b5b10"
+    },
+    {
+      "bytes": 2609,
+      "path": "seasons/2002/west-virginia/roster.json",
+      "sha256": "7bbad6a576f79e6caad4c84087d1e9254563099db553b42617d963d112dc3d3a"
+    },
+    {
+      "bytes": 706,
+      "path": "seasons/2002/west-virginia/special.csv",
+      "sha256": "207df6ce8a593f6ad59bef38b5ea1b743a1d175a815fceec75eedb80ecef758b"
+    },
+    {
+      "bytes": 471,
+      "path": "seasons/2002/west-virginia/team.yaml",
+      "sha256": "4066acb6496255b4a6f31d33b2f0dae73cce8710d8397d78253dd027498ace39"
+    },
+    {
+      "bytes": 1021,
+      "path": "seasons/2002/wisconsin/defense.csv",
+      "sha256": "81c276b05d9bd2844116aa31049159a8b23283f5db96306da49d93d61eef3240"
+    },
+    {
+      "bytes": 1355,
+      "path": "seasons/2002/wisconsin/offense.csv",
+      "sha256": "c7622ad502cc31417f16e356412bde19fe0f03a107d4f5cf8c0a1bb308d452c1"
+    },
+    {
+      "bytes": 1646,
+      "path": "seasons/2002/wisconsin/roster-sources.md",
+      "sha256": "4e3f04303cbfc8d914be1e8aeaecd6a70b2b6f9a1df1c5bc3aa17d005007cf46"
+    },
+    {
+      "bytes": 1943,
+      "path": "seasons/2002/wisconsin/roster.json",
+      "sha256": "dd24f16387c0efec8a8990cf7376f3aac369f892a2711a5cf3f84c1bcc9bb7db"
+    },
+    {
+      "bytes": 711,
+      "path": "seasons/2002/wisconsin/special.csv",
+      "sha256": "d12cf5496ada42e961b40e2292198dde3806437a61dcf71c8bbd9e52d806b0fb"
+    },
+    {
+      "bytes": 463,
+      "path": "seasons/2002/wisconsin/team.yaml",
+      "sha256": "8ead58a784d9bcde37fa4fa974ebde767a497d36af3b97b5c4c4944b84e8d933"
+    },
+    {
+      "bytes": 941,
+      "path": "seasons/2007/air-force/defense.csv",
+      "sha256": "6fce6e44d79b8045944729e6facd153eccde7cc1bf0ded50d2d0cda66ce7ba8d"
+    },
+    {
+      "bytes": 1412,
+      "path": "seasons/2007/air-force/offense.csv",
+      "sha256": "9fcd449d25f5260dcee31fa4839372441809c5aa265a4eded140f615bc0bea1a"
+    },
+    {
+      "bytes": 693,
+      "path": "seasons/2007/air-force/special.csv",
+      "sha256": "cdfb1e8e6df1081465fc6f0ec1f7eae7a4187cafae035371209ce7d02c7a839d"
+    },
+    {
+      "bytes": 463,
+      "path": "seasons/2007/air-force/team.yaml",
+      "sha256": "27acccc0a2f58300402a44b9451caf25b67b6c8ade60f9582dc43acfe7201e03"
+    },
+    {
+      "bytes": 977,
+      "path": "seasons/2007/akron/defense.csv",
+      "sha256": "70dce12fb6f9b256dcca7ce5ef9bd6226679c97eaed7ea2973cf1e20bb15a652"
+    },
+    {
+      "bytes": 1465,
+      "path": "seasons/2007/akron/offense.csv",
+      "sha256": "244171850f0871e01f41f09226800e585e7cc1830978f24c8ad1923b102ac4c5"
+    },
+    {
+      "bytes": 700,
+      "path": "seasons/2007/akron/special.csv",
+      "sha256": "94e2842c49f6dae38b26ada10e0dfc1a0f11d7931146b73b94b2b83dc44b2e38"
+    },
+    {
+      "bytes": 455,
+      "path": "seasons/2007/akron/team.yaml",
+      "sha256": "dc32c7c5274da5a521977841a155b2eba6cc8b1ce266d9468c928314a6c9e6c6"
+    },
+    {
+      "bytes": 1061,
+      "path": "seasons/2007/alabama/defense.csv",
+      "sha256": "8cb4f99a03117f4c8c2cde4ccee0cd7982e07603305ef6663956af949e597116"
+    },
+    {
+      "bytes": 1442,
+      "path": "seasons/2007/alabama/offense.csv",
+      "sha256": "6d57d15b71ff5b2cb0fdcec3cc2b28db2dd9b44bd2e1c9d04d15e7503407a950"
+    },
+    {
+      "bytes": 719,
+      "path": "seasons/2007/alabama/special.csv",
+      "sha256": "e25ac04965c106b2a813b6b671326a24551e7682a8a0c914170515426f8c0c09"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2007/alabama/team.yaml",
+      "sha256": "b117513ac5ffd095afcbd26f3687d7f0a4c7417dbe03391afc288117486fd637"
+    },
+    {
+      "bytes": 1048,
+      "path": "seasons/2007/arizona-state/defense.csv",
+      "sha256": "936e011e7797157b82c970e3c50a584f6293a3f9391a280f99c0011731759721"
+    },
+    {
+      "bytes": 1398,
+      "path": "seasons/2007/arizona-state/offense.csv",
+      "sha256": "63ce2f7d7dc24036cd569b4e5b435e17887a57e49ba63ecaa46171b3f3e91e5d"
+    },
+    {
+      "bytes": 700,
+      "path": "seasons/2007/arizona-state/special.csv",
+      "sha256": "0839a8e9f08469fbc8c36ece582330feb905850428e684d15f4830a616bcc3ea"
+    },
+    {
+      "bytes": 471,
+      "path": "seasons/2007/arizona-state/team.yaml",
+      "sha256": "dded567572dee7b27a69acb45b44af7c367dee421c2b29c8113914e8ea12a107"
+    },
+    {
+      "bytes": 991,
+      "path": "seasons/2007/arizona/defense.csv",
+      "sha256": "4c6d51e62e2645c677afb9778b543f8d14e2122a434d2514b48d7b43ccdd78e5"
+    },
+    {
+      "bytes": 1425,
+      "path": "seasons/2007/arizona/offense.csv",
+      "sha256": "8887f902c0247944cb64e51b0eccd06e0b987716e3f6db9f019a1401c531c1ac"
+    },
+    {
+      "bytes": 729,
+      "path": "seasons/2007/arizona/special.csv",
+      "sha256": "85123485f620051b2470a560b3c5dcfe46dd7dadb9b709055020f6d4a9bdcd71"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2007/arizona/team.yaml",
+      "sha256": "e84e9d5a4eea9c4d7d70c3716883eb859a1ad460631620e6ba61edf3626879f8"
+    },
+    {
+      "bytes": 950,
+      "path": "seasons/2007/arkansas-state/defense.csv",
+      "sha256": "6222d85e3b23ec9b6384dd02e16ee2bfc4631244da22c335a6f623de5692180d"
+    },
+    {
+      "bytes": 1440,
+      "path": "seasons/2007/arkansas-state/offense.csv",
+      "sha256": "73034e90cd94f7bb8a0c844e4bf078a7144209227608c0c4d286e18e9bc2cccc"
+    },
+    {
+      "bytes": 703,
+      "path": "seasons/2007/arkansas-state/special.csv",
+      "sha256": "38eec1033ca3476cb3cf0d1ebbf65e03418565cc404101ff25fc7282fc4dac41"
+    },
+    {
+      "bytes": 473,
+      "path": "seasons/2007/arkansas-state/team.yaml",
+      "sha256": "b3a1e3d76dee671dbee14a6f83cb1fad69e7d01b650a802f463100127aba94d1"
+    },
+    {
+      "bytes": 1016,
+      "path": "seasons/2007/arkansas/defense.csv",
+      "sha256": "f04d53ef8e35ef1df2372bc44b45ae0ce59dd7106809be37fa965402852357a4"
+    },
+    {
+      "bytes": 1397,
+      "path": "seasons/2007/arkansas/offense.csv",
+      "sha256": "cc28094605429538c37f68999272982f2222bf81b9d38f715f112aabf9865383"
+    },
+    {
+      "bytes": 729,
+      "path": "seasons/2007/arkansas/special.csv",
+      "sha256": "b7a3dff35ec742ebbaf91d65feadbbf5d984720ea71302de2d6b822006e4a4c1"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/arkansas/team.yaml",
+      "sha256": "cbb87dca866706286368bb4821d7a3be7ba6517acf9728c0c04ea4285246ec61"
+    },
+    {
+      "bytes": 973,
+      "path": "seasons/2007/army/defense.csv",
+      "sha256": "de6e95c0b0b8b2c113fdeaee4666ac5bd43c01868cf4e6cc5ba1e2de3c011150"
+    },
+    {
+      "bytes": 1469,
+      "path": "seasons/2007/army/offense.csv",
+      "sha256": "ea516970f551227a287626f2b4c56c395fee3a1e3301e13072a1b32ea7e380d0"
+    },
+    {
+      "bytes": 717,
+      "path": "seasons/2007/army/special.csv",
+      "sha256": "1966945dfe95c5eb49ee5a83076accd1b3e20e09e157d59e4113db994b8683bc"
+    },
+    {
+      "bytes": 453,
+      "path": "seasons/2007/army/team.yaml",
+      "sha256": "ff781a6074b7370926d6046eb6906a9a686dfff7b5e2e1993de6729b9b28adce"
+    },
+    {
+      "bytes": 1088,
+      "path": "seasons/2007/auburn/defense.csv",
+      "sha256": "f9456cf466b80068084d13a53385138e3b4c0e22d750fd7c40c201654337579a"
+    },
+    {
+      "bytes": 1440,
+      "path": "seasons/2007/auburn/offense.csv",
+      "sha256": "86f08fdce97e2ce80c54ddbc61dac8eb82270f81a3e6f7861a69ab3122e6522a"
+    },
+    {
+      "bytes": 699,
+      "path": "seasons/2007/auburn/special.csv",
+      "sha256": "c86725e62efcb239b211817b11f6248936d56d1ead1978a33d1817b82491f0e2"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2007/auburn/team.yaml",
+      "sha256": "b756f19856e467bead454a9812b9edfc99f90800f6619a4df50e51779fb606b4"
+    },
+    {
+      "bytes": 1060,
+      "path": "seasons/2007/ball-state/defense.csv",
+      "sha256": "3702a04dcd359e934d8bdb35abb08e5a676301cdcacf9c4e852c642a7864bfbc"
+    },
+    {
+      "bytes": 1406,
+      "path": "seasons/2007/ball-state/offense.csv",
+      "sha256": "43b11556cc529bdd115ddf3f5639b910f706a471f4628cbb048a4a726c96a2da"
+    },
+    {
+      "bytes": 709,
+      "path": "seasons/2007/ball-state/special.csv",
+      "sha256": "ab9f55846584c17549d8409e1049e896c31cf975d6b28e71107d1d1f270b9206"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/ball-state/team.yaml",
+      "sha256": "b7f600417eba922550899a6c58b0290cfa53115e9caf05b71bdede2214d8a675"
+    },
+    {
+      "bytes": 996,
+      "path": "seasons/2007/baylor/defense.csv",
+      "sha256": "5b7b40ef28fc2e80a36f355b3e7a3f4ec01611e0e3091ac17bf3ae5205a33c90"
+    },
+    {
+      "bytes": 1410,
+      "path": "seasons/2007/baylor/offense.csv",
+      "sha256": "8c6b2ebad977d63e64d590a34f0ed0a4197edc754dc56e90e3a4ee600ac646f4"
+    },
+    {
+      "bytes": 706,
+      "path": "seasons/2007/baylor/special.csv",
+      "sha256": "95cc4baadea71e1b80e9d8d699a53ed87674c8c82e44a22de1a9737f936c76ff"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2007/baylor/team.yaml",
+      "sha256": "30aa3ae4804cec2ed203e2760c7186bb17aab34e957c010da3430b2af7836031"
+    },
+    {
+      "bytes": 1020,
+      "path": "seasons/2007/boise-state/defense.csv",
+      "sha256": "fbdf9b202c3a54ccf5c5f0fd0f25af2a47bab35b9c073dc28a912cf3c055a1d9"
+    },
+    {
+      "bytes": 1384,
+      "path": "seasons/2007/boise-state/offense.csv",
+      "sha256": "ddd109c9352eea7c0dbfa0d19c883dce5860be69bf4f8b6371ba74dc66ac5dd2"
+    },
+    {
+      "bytes": 704,
+      "path": "seasons/2007/boise-state/special.csv",
+      "sha256": "4365ef4c08a42b409bfd0fd4f103cc8b0df67b04decdba7b9aac7ac76f6733cf"
+    },
+    {
+      "bytes": 467,
+      "path": "seasons/2007/boise-state/team.yaml",
+      "sha256": "d37b57a83d5032c634460630805c9e629c11f43c952d66cbe6bf41658f3ececc"
+    },
+    {
+      "bytes": 1019,
+      "path": "seasons/2007/boston-college/defense.csv",
+      "sha256": "1147386915d7da5e43f04162657b8dfef707b257d3195f2fa2ec9634974d9c3f"
+    },
+    {
+      "bytes": 1393,
+      "path": "seasons/2007/boston-college/offense.csv",
+      "sha256": "d1cf3d82447245655cc5ee88950ace69ee3dc46fcfd75422ebe38abb1ffe6b92"
+    },
+    {
+      "bytes": 698,
+      "path": "seasons/2007/boston-college/special.csv",
+      "sha256": "f382537bf49d9ab8c3dfecd48c3ec834db977f59e5f619b9f5aa1a8bb5a759e3"
+    },
+    {
+      "bytes": 473,
+      "path": "seasons/2007/boston-college/team.yaml",
+      "sha256": "9b8cc722fcab10fdaeebce511977d43854d718e0c6296074e0a23d6fc968fa44"
+    },
+    {
+      "bytes": 944,
+      "path": "seasons/2007/bowling-green/defense.csv",
+      "sha256": "de0415b0f94aadd60df85d05108fa47192398de0bed256da039e360487d1bf57"
+    },
+    {
+      "bytes": 1437,
+      "path": "seasons/2007/bowling-green/offense.csv",
+      "sha256": "0ebdf227b084003ebb8bc1d9142f8035f8cd6e4d86483c3bb422b2a92c0954f7"
+    },
+    {
+      "bytes": 694,
+      "path": "seasons/2007/bowling-green/special.csv",
+      "sha256": "05c6c3b71db0f1f3a890e7c816d0e55e4e865b66ad9c4f365c7d8757857afaf8"
+    },
+    {
+      "bytes": 471,
+      "path": "seasons/2007/bowling-green/team.yaml",
+      "sha256": "e2af18c37f592f1b8fc118c71cb427347e9b4c8cc455204aa29640e76194461b"
+    },
+    {
+      "bytes": 1040,
+      "path": "seasons/2007/byu/defense.csv",
+      "sha256": "16319d34536e538bb3fb1e9f696ce20833687ef23846d163046995b1a8f667e5"
+    },
+    {
+      "bytes": 1384,
+      "path": "seasons/2007/byu/offense.csv",
+      "sha256": "8051c2738df2ec648a5cd1f8570d3a5bc033ad6b5ea92ce7a5d7bd4ac217f30d"
+    },
+    {
+      "bytes": 713,
+      "path": "seasons/2007/byu/special.csv",
+      "sha256": "77ec25f85902c80b7752a6f7c50a5253b91e1f28555e09678b11415dd2c142d3"
+    },
+    {
+      "bytes": 451,
+      "path": "seasons/2007/byu/team.yaml",
+      "sha256": "53e585e296f8af7d4059852ab561d12b83f975280b286ecc9901c8f7202f63ee"
+    },
+    {
+      "bytes": 1011,
+      "path": "seasons/2007/california/defense.csv",
+      "sha256": "2e8311e401da793a865b5b255d3f5e2eee80998e2447be62226a9ccce9207a71"
+    },
+    {
+      "bytes": 1444,
+      "path": "seasons/2007/california/offense.csv",
+      "sha256": "761bdaeb16a32fc4efc541ededaeb63d0238c0c07d7ed08656e5ea935fa85803"
+    },
+    {
+      "bytes": 713,
+      "path": "seasons/2007/california/special.csv",
+      "sha256": "46aa15ab4e211497dd349c02cbe54667042bc75f82eb8df75eb5a4f622f007d7"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/california/team.yaml",
+      "sha256": "6cca41dc13bec4e8ab58b15b6d0940a7b831f4e742dc3c45d41e7f45e8538209"
+    },
+    {
       "bytes": 1058,
       "path": "seasons/2007/cedar-valley/defense.csv",
       "sha256": "a203b623f88deb24234bcc3c63e534de873ce03c93fc51eab139d2afb581aa8e"
@@ -232,6 +2757,306 @@
       "bytes": 353,
       "path": "seasons/2007/cedar-valley/team.yaml",
       "sha256": "9ec93c2ceb5cfca37a72ca3376f0ddb020de910fb53214f024778089e8c30d46"
+    },
+    {
+      "bytes": 1021,
+      "path": "seasons/2007/central-michigan/defense.csv",
+      "sha256": "9cd656c0f189d010107d19b285a68dca8888c75a99c4904e1d69e8f1e899dda9"
+    },
+    {
+      "bytes": 1410,
+      "path": "seasons/2007/central-michigan/offense.csv",
+      "sha256": "351a99fca693f08f39b0c9f6bd423775f6ae58e8c5b79972d63569f11e0877fc"
+    },
+    {
+      "bytes": 717,
+      "path": "seasons/2007/central-michigan/special.csv",
+      "sha256": "c67dfd5a9b7c515ed764f79de97956c4e7ffc6314071b7eb289326d6303796c6"
+    },
+    {
+      "bytes": 477,
+      "path": "seasons/2007/central-michigan/team.yaml",
+      "sha256": "680c00979169b9fb4ceb302e7630bf2a2c2206b3a99f2ba3a2fb6b131686b3e8"
+    },
+    {
+      "bytes": 1032,
+      "path": "seasons/2007/cincinnati/defense.csv",
+      "sha256": "f94d34bae1312d80de6ce333e557e3c69a8a714daf82f65dd63b70707b7cffa0"
+    },
+    {
+      "bytes": 1440,
+      "path": "seasons/2007/cincinnati/offense.csv",
+      "sha256": "cacca6c66f04aa474cba5e01400a60740e97eeae022d0998bd3469c5e0ca0494"
+    },
+    {
+      "bytes": 710,
+      "path": "seasons/2007/cincinnati/special.csv",
+      "sha256": "1842d67dc5119d59d408078607620b560f25e1e06150f4ecea034ff02372d483"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/cincinnati/team.yaml",
+      "sha256": "ad2c5f75b2e071e7f24e5c4ecbdefd395a0d49e6014ad916e548d24771813c83"
+    },
+    {
+      "bytes": 1035,
+      "path": "seasons/2007/clemson/defense.csv",
+      "sha256": "d946bafed4f6bfea28ed253c7f296b4fdf85747d57be1793d28de70cb2ebe595"
+    },
+    {
+      "bytes": 1401,
+      "path": "seasons/2007/clemson/offense.csv",
+      "sha256": "649da4d743438b05630cc8cab0704605026ef1fd0c8855f6693db158ada8dffc"
+    },
+    {
+      "bytes": 705,
+      "path": "seasons/2007/clemson/special.csv",
+      "sha256": "73088cc09882b0adf625f12c2c281107f2f6985eb82c794723130796ffadb120"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2007/clemson/team.yaml",
+      "sha256": "1890acb72e0f62809f1de0e478b2fa4687277b2957487efeb5d268f01c121f67"
+    },
+    {
+      "bytes": 946,
+      "path": "seasons/2007/colorado-state/defense.csv",
+      "sha256": "5e493de2951b34de2e73393612bf8c363c4d95e7f1bd53dc539cbe5e4953d243"
+    },
+    {
+      "bytes": 1371,
+      "path": "seasons/2007/colorado-state/offense.csv",
+      "sha256": "d7c4c45c14a6162fbe3eb7a09abf307b2032b098fac01ae782f9043b176573a9"
+    },
+    {
+      "bytes": 707,
+      "path": "seasons/2007/colorado-state/special.csv",
+      "sha256": "5075e9188bf2f47a9f618fe00a81eb2894c4ad4e524ee702b9216a840c409d28"
+    },
+    {
+      "bytes": 473,
+      "path": "seasons/2007/colorado-state/team.yaml",
+      "sha256": "f61e3cc7eeca2631411c62891fad678bbc1b747a940f11b4f18435e8be1f6aa6"
+    },
+    {
+      "bytes": 1045,
+      "path": "seasons/2007/colorado/defense.csv",
+      "sha256": "b2a244059f2db1d3035d26667d45cef11d6dc564756c9830d1afc9e613643530"
+    },
+    {
+      "bytes": 1403,
+      "path": "seasons/2007/colorado/offense.csv",
+      "sha256": "96fba211acfa5c6fa76c66c89102ab8c6004adfe59293fb5155e6165396f13c2"
+    },
+    {
+      "bytes": 709,
+      "path": "seasons/2007/colorado/special.csv",
+      "sha256": "5100351ea9ee4b35fb8d9202e7c456a0e215379d7a38bdb7a0611080cd208ad8"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/colorado/team.yaml",
+      "sha256": "c138b3cfedee77197af2b1a3dd8bde64b2ad04465ddc2d4bb445a399eb1caa4f"
+    },
+    {
+      "bytes": 972,
+      "path": "seasons/2007/duke/defense.csv",
+      "sha256": "c5249eb5779778e8ea10df470d47068887e75ec2fba77647437864c8f0d8ab7b"
+    },
+    {
+      "bytes": 1453,
+      "path": "seasons/2007/duke/offense.csv",
+      "sha256": "6adf5d7362adb27f3a7feb88b54f5194ad0b67fc4447041bd61750bf88b8262f"
+    },
+    {
+      "bytes": 688,
+      "path": "seasons/2007/duke/special.csv",
+      "sha256": "c7a14de3281930adf15242346b12c17499c116844c3d8672115601f0d925a7b9"
+    },
+    {
+      "bytes": 453,
+      "path": "seasons/2007/duke/team.yaml",
+      "sha256": "68e2afb1439b9714a75ac97be824bfeb9bed5a062f8a5ca83a8641ec46a42c9e"
+    },
+    {
+      "bytes": 1042,
+      "path": "seasons/2007/east-carolina/defense.csv",
+      "sha256": "dc4d93537f69ae9e6a34086086c19266c8926dfc325cacbde1494befc73ce2bd"
+    },
+    {
+      "bytes": 1376,
+      "path": "seasons/2007/east-carolina/offense.csv",
+      "sha256": "0534ae315a4def68f2782ec1e1db5c9ee11e6efb9a71db8e242cda32c010793a"
+    },
+    {
+      "bytes": 696,
+      "path": "seasons/2007/east-carolina/special.csv",
+      "sha256": "c2d7e68e99bfcf6529e1f036c03c5bd6b44317e924003724d97bae1dfb1c0454"
+    },
+    {
+      "bytes": 471,
+      "path": "seasons/2007/east-carolina/team.yaml",
+      "sha256": "27ced406465bd4491a8c87492d013370f5fa357fe9da76e1d3ef4c983c1b0006"
+    },
+    {
+      "bytes": 950,
+      "path": "seasons/2007/eastern-michigan/defense.csv",
+      "sha256": "f753b59a81318176aeb73dfd39c0d6a73b69e9cb0f417ec894e987c92af48c68"
+    },
+    {
+      "bytes": 1411,
+      "path": "seasons/2007/eastern-michigan/offense.csv",
+      "sha256": "bef10d1b48d3462f1778e3ae1883e7fe530fa2f10bca50bb191e20f4e86aa845"
+    },
+    {
+      "bytes": 683,
+      "path": "seasons/2007/eastern-michigan/special.csv",
+      "sha256": "158afe77c672f63c79d0ed11a1aac8eee2bf5024e36459b5badb2f05afaa459c"
+    },
+    {
+      "bytes": 477,
+      "path": "seasons/2007/eastern-michigan/team.yaml",
+      "sha256": "5da05f3b3008d601a0073788d65cc4868271bb67279d5fd3efdb63c5ef15eacf"
+    },
+    {
+      "bytes": 1045,
+      "path": "seasons/2007/florida-atlantic/defense.csv",
+      "sha256": "b6897425df86f8d037e203d3b312a008bf7bcd4d58a0697c6d61fc80706096ab"
+    },
+    {
+      "bytes": 1351,
+      "path": "seasons/2007/florida-atlantic/offense.csv",
+      "sha256": "b4026643bc86b8f0b00ec1c313f7f69175f3c8f981d09a5afb21c9b9c1af3bf5"
+    },
+    {
+      "bytes": 705,
+      "path": "seasons/2007/florida-atlantic/special.csv",
+      "sha256": "782b9e042fdae4cb95761b5088e20969bf746cd41e4651a6863730c4a081fac1"
+    },
+    {
+      "bytes": 477,
+      "path": "seasons/2007/florida-atlantic/team.yaml",
+      "sha256": "bd87e313034e6c7aa0d2ef43dc5ea74813bb37f4c863881f33c289a71c925e25"
+    },
+    {
+      "bytes": 954,
+      "path": "seasons/2007/florida-international/defense.csv",
+      "sha256": "f2b417ae53dd30081a02bccd4476a6e1cb943551776cb96c62e23b3e6ba10d4e"
+    },
+    {
+      "bytes": 1472,
+      "path": "seasons/2007/florida-international/offense.csv",
+      "sha256": "9aea6cf5699f985b68509bbdd3138559d1b3ea1f9be9f6ca7704d69f751ab2cd"
+    },
+    {
+      "bytes": 715,
+      "path": "seasons/2007/florida-international/special.csv",
+      "sha256": "9de89112db4cf73fec298eafbeea109b6b5f40bfc9768b2d4b93e50ee7485763"
+    },
+    {
+      "bytes": 487,
+      "path": "seasons/2007/florida-international/team.yaml",
+      "sha256": "5d9a775097ed8b0110cd7ce289a7e6b77bec2b542d70458bf353ae07606dfbf4"
+    },
+    {
+      "bytes": 983,
+      "path": "seasons/2007/florida-state/defense.csv",
+      "sha256": "04e18e0caa9d17f4b7192c47087abe56e5ce2edf431d5f5b32ee4099d86adfb0"
+    },
+    {
+      "bytes": 1469,
+      "path": "seasons/2007/florida-state/offense.csv",
+      "sha256": "1c4001289b565971e4e83c24455e806a5f2fe4b769f3266cca2b59ba987cf7d7"
+    },
+    {
+      "bytes": 714,
+      "path": "seasons/2007/florida-state/special.csv",
+      "sha256": "63ab60e4b364268d454d0ff5e15ccf57287862ce05beb7b722705a30baa486c8"
+    },
+    {
+      "bytes": 471,
+      "path": "seasons/2007/florida-state/team.yaml",
+      "sha256": "d26e7213796409830121c7b1d650b6aeeab910b434b049f5e8e2971729e3f7b1"
+    },
+    {
+      "bytes": 1089,
+      "path": "seasons/2007/florida/defense.csv",
+      "sha256": "cccf61e51a872a316d457e888e2fe763b345ddf1d557b6712989613ed8e407a8"
+    },
+    {
+      "bytes": 1421,
+      "path": "seasons/2007/florida/offense.csv",
+      "sha256": "d6092ec7ce74de213530b41c787587239c38a1bd51f37a565cf34fb3ffe1ef6e"
+    },
+    {
+      "bytes": 702,
+      "path": "seasons/2007/florida/special.csv",
+      "sha256": "36a04a3fbdad74244ea220a9eff544ecc3a5e171133fde2dc31a46da0fcfc78f"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2007/florida/team.yaml",
+      "sha256": "61e850a408b406bfa48a883532c73e43b5859fc86723ba4896ef6b221a77f241"
+    },
+    {
+      "bytes": 1030,
+      "path": "seasons/2007/fresno-state/defense.csv",
+      "sha256": "8d8858676fffe35990ae0a3eed436c7b49b9082f55c1aa7412e7d4d6359684fe"
+    },
+    {
+      "bytes": 1411,
+      "path": "seasons/2007/fresno-state/offense.csv",
+      "sha256": "3ddeeb5d0ffb5b05f45ca746fa4bd19a1c845cfa28b2c244efa5f3ae9ae2eeb6"
+    },
+    {
+      "bytes": 715,
+      "path": "seasons/2007/fresno-state/special.csv",
+      "sha256": "33f9589bdc0bdb92ceba438b605ed59630e2a42f2a5630eb89b21c1a28a530c7"
+    },
+    {
+      "bytes": 469,
+      "path": "seasons/2007/fresno-state/team.yaml",
+      "sha256": "6b4e2e93f9f0c29dddeb68375deb57b941833982662851e1d2daf4eb4160ebe8"
+    },
+    {
+      "bytes": 1022,
+      "path": "seasons/2007/georgia-tech/defense.csv",
+      "sha256": "275c5ffaff99f8c470833a45b4150b3a92d9e5b37775a0239cf630ee0a3e95c5"
+    },
+    {
+      "bytes": 1469,
+      "path": "seasons/2007/georgia-tech/offense.csv",
+      "sha256": "08dc6d22310d98fcc0faaf044f4e7399d7fddd37c625031a8f0c765dc02c6da5"
+    },
+    {
+      "bytes": 695,
+      "path": "seasons/2007/georgia-tech/special.csv",
+      "sha256": "0c67fe1eb4a2f05291fed8347f00e51253038b6fa0f25d3a0a58d89a01c5ea21"
+    },
+    {
+      "bytes": 469,
+      "path": "seasons/2007/georgia-tech/team.yaml",
+      "sha256": "079c6d205f83e8abc7f1c2d19db3598de4e3f4c784ef2f9b486b83c0e11cabf9"
+    },
+    {
+      "bytes": 1040,
+      "path": "seasons/2007/georgia/defense.csv",
+      "sha256": "ab1975be28b5cd82b6d7f17da52691635d9507669d3fe3b86a54a151286983df"
+    },
+    {
+      "bytes": 1477,
+      "path": "seasons/2007/georgia/offense.csv",
+      "sha256": "1b7fe93408c9b992ac5ef31fe3a19679f61cf2a8fadb7835eb25754ea6901542"
+    },
+    {
+      "bytes": 708,
+      "path": "seasons/2007/georgia/special.csv",
+      "sha256": "2f7fe41d30e6e4f26cb2a37bc0a4cd562a40ec61f145fbec6993961da93dbc88"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2007/georgia/team.yaml",
+      "sha256": "396ff814587fad638e969a6973194e62450bb7d6725d368cb5806e6706c415ab"
     },
     {
       "bytes": 1056,
@@ -264,14 +3089,2294 @@
       "sha256": "a85d51f93442860ecef21b83e767eb116a61d1ef45df24dd8f23e9f938ae38c1"
     },
     {
+      "bytes": 1022,
+      "path": "seasons/2007/hawai-i/defense.csv",
+      "sha256": "0ef8a38c887542b7629a730508159b381956f699172bb0310bc3b9fa103b5f24"
+    },
+    {
+      "bytes": 1343,
+      "path": "seasons/2007/hawai-i/offense.csv",
+      "sha256": "60795fadfb8fc155800fc9f25948cbebd45811d8fd29e2bb7fda536fbd0dc244"
+    },
+    {
+      "bytes": 713,
+      "path": "seasons/2007/hawai-i/special.csv",
+      "sha256": "09316e1e64ed174effd7d188c1a392f5e532dedf9ad928a006c64a9fa71629a2"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2007/hawai-i/team.yaml",
+      "sha256": "6271f714b59144355b8718c1de2a9e66491d9ae8c46d4655c5b8faa4b1e9d395"
+    },
+    {
+      "bytes": 978,
+      "path": "seasons/2007/houston/defense.csv",
+      "sha256": "6a7e828e2ad52bcec1eb924843915ad85b59fa66d97f2ce0123935feee53a08b"
+    },
+    {
+      "bytes": 1415,
+      "path": "seasons/2007/houston/offense.csv",
+      "sha256": "f84e21ac45c2acbb52b956bbbb9c6d0aca6000772b5e637f60bd0df477776ef8"
+    },
+    {
+      "bytes": 702,
+      "path": "seasons/2007/houston/special.csv",
+      "sha256": "08fb77a7b126671ea79781a27b436b78270bb0fb5c63d6a884114e5deccd26b1"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2007/houston/team.yaml",
+      "sha256": "1b9d406f7feae0ac0d5e4c2c5f4e9eef8940a811ab509d4189a4701e41b2bb40"
+    },
+    {
+      "bytes": 983,
+      "path": "seasons/2007/idaho/defense.csv",
+      "sha256": "ab218b29c9ecb22db84924de6c9d024176ab01d27871d07ff5d818a9f5291517"
+    },
+    {
+      "bytes": 1434,
+      "path": "seasons/2007/idaho/offense.csv",
+      "sha256": "d3c2021a340f0a11552a2070b54774d66e68e111b75ff44b4436fdb061ef7606"
+    },
+    {
+      "bytes": 697,
+      "path": "seasons/2007/idaho/special.csv",
+      "sha256": "c62396e9a5c1e8a251668ee9a5feb52940e6da928aab513a449e0152cea1a706"
+    },
+    {
+      "bytes": 455,
+      "path": "seasons/2007/idaho/team.yaml",
+      "sha256": "7d81431762c500d75a336dfcd40116e9d7532c9ada21adc348b334f346915f75"
+    },
+    {
+      "bytes": 928,
+      "path": "seasons/2007/illinois/defense.csv",
+      "sha256": "8e46feaaf151876b7db19529b1b31b59576a45277b91c97eb4ddcfef1bee6cd6"
+    },
+    {
+      "bytes": 1424,
+      "path": "seasons/2007/illinois/offense.csv",
+      "sha256": "0d84de4ee16b127ea688b5a475683730aa1785ed3a3b181f5c6c8d5ba2f2f509"
+    },
+    {
+      "bytes": 703,
+      "path": "seasons/2007/illinois/special.csv",
+      "sha256": "1ba54dbc4426512752e0da076c78717067e8eee096b7c59009d5391676f9cecf"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/illinois/team.yaml",
+      "sha256": "1e1abc8252a815577a17bdfbf151aa36a26e2c5d5a480d6b8c3b43223710b867"
+    },
+    {
+      "bytes": 978,
+      "path": "seasons/2007/indiana/defense.csv",
+      "sha256": "09260ac9277e3b957dd35d0a79a54186468dd676da21434f9d8fe86b237b575b"
+    },
+    {
+      "bytes": 1434,
+      "path": "seasons/2007/indiana/offense.csv",
+      "sha256": "9bc07d8333ef77525fe5c5ed6d1561534c903a811d60183e28002033ec4099ca"
+    },
+    {
+      "bytes": 718,
+      "path": "seasons/2007/indiana/special.csv",
+      "sha256": "716c786d83cb325fc8c26100a69b2f94850fd2bf794a9c5ae7c60efe23390c23"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2007/indiana/team.yaml",
+      "sha256": "1f8575c1d9d273f46344f2b6d6905e1d37f7ec143803b696bafef8c80c9f1bf2"
+    },
+    {
+      "bytes": 1073,
+      "path": "seasons/2007/iowa-state/defense.csv",
+      "sha256": "75b957dcc934c51724d319a86f6e8d0db5290a38fcd169bbbb1f6f1eab733ded"
+    },
+    {
+      "bytes": 1345,
+      "path": "seasons/2007/iowa-state/offense.csv",
+      "sha256": "610a733c5ddc75f6aa17e47f5a25e0bab6d1db3d12f3a62a6946e86505f247ab"
+    },
+    {
+      "bytes": 698,
+      "path": "seasons/2007/iowa-state/special.csv",
+      "sha256": "f30c029f6a1b99174f93ccd79dbc54c9dd792ad0d69e7c10959a31154c9629da"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/iowa-state/team.yaml",
+      "sha256": "7852b6fd0cb0f0ae41e415ec8a4dfeb91da9bd3c325d66d74f9342ef06b473fe"
+    },
+    {
+      "bytes": 1030,
+      "path": "seasons/2007/iowa/defense.csv",
+      "sha256": "f829c927d42189c848c100f53f4b9bb8c90d66ec0d8b7790f5b42f5e278816ca"
+    },
+    {
+      "bytes": 1383,
+      "path": "seasons/2007/iowa/offense.csv",
+      "sha256": "848d7c9841764841c20d860a155002b74a6022f1e58545b006ac94c31ef7f5ab"
+    },
+    {
+      "bytes": 708,
+      "path": "seasons/2007/iowa/special.csv",
+      "sha256": "ea098983f12024e1bd59c4426a9e60123e4efa86cd8d95763253f0a8163c65f4"
+    },
+    {
+      "bytes": 453,
+      "path": "seasons/2007/iowa/team.yaml",
+      "sha256": "5dab1325a7310bd4fdd6b2302fb356b942ce1b323a7d45fce1fe45041f9f308c"
+    },
+    {
+      "bytes": 946,
+      "path": "seasons/2007/kansas-state/defense.csv",
+      "sha256": "0db9f91639228f7870bfa98181b3f333aacfef63980ed34b38d5819e0cc74d1f"
+    },
+    {
+      "bytes": 1395,
+      "path": "seasons/2007/kansas-state/offense.csv",
+      "sha256": "1ee5859263a1ac71d4dd6847ce7710f986ac72b63782c37cc8718fd28bd334c2"
+    },
+    {
+      "bytes": 712,
+      "path": "seasons/2007/kansas-state/special.csv",
+      "sha256": "78e5b7a0eef80720f5b86ae7364ae1ba8a1d4957b0600101bdb28e0a9a98fbbe"
+    },
+    {
+      "bytes": 469,
+      "path": "seasons/2007/kansas-state/team.yaml",
+      "sha256": "5558a3ef96f907e2c7fa064753179b64d73c7ab4bc73ae507f7e4a63985923b8"
+    },
+    {
+      "bytes": 1051,
+      "path": "seasons/2007/kansas/defense.csv",
+      "sha256": "aa73d91189cefecb5f9d9ff4f8ae98415cc936e183855353e810dfceb4e61479"
+    },
+    {
+      "bytes": 1354,
+      "path": "seasons/2007/kansas/offense.csv",
+      "sha256": "a89179c2d7678fe72dead3853d82060b0433e8e1a8aa3aa889c6c79cb7a594e0"
+    },
+    {
+      "bytes": 704,
+      "path": "seasons/2007/kansas/special.csv",
+      "sha256": "7d11410a07e9d21ce4f3596bfb03b586ee309ec4d001da865ffb17fe5f59d807"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2007/kansas/team.yaml",
+      "sha256": "bdf476f6bceec51092fc047949770dab60a85cec40ae65300a1ef546314f1a89"
+    },
+    {
+      "bytes": 986,
+      "path": "seasons/2007/kent-state/defense.csv",
+      "sha256": "d101121d28e0245f0218d0db31fa950ae7a576686b382b3ee00c129b78252c00"
+    },
+    {
+      "bytes": 1418,
+      "path": "seasons/2007/kent-state/offense.csv",
+      "sha256": "cf20f4a243d1572b13ddaefb97959ea9863729bde1bf94d7218e89320a289275"
+    },
+    {
+      "bytes": 705,
+      "path": "seasons/2007/kent-state/special.csv",
+      "sha256": "56df42cadc8ced6afedec8e50580e1073c352ce26896b69616a04daf31f1f83d"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/kent-state/team.yaml",
+      "sha256": "d47561c00707da6cab3b7978d9ae3fec881119681972def81a2ca336c821749f"
+    },
+    {
+      "bytes": 1027,
+      "path": "seasons/2007/kentucky/defense.csv",
+      "sha256": "101d78548e5b31559e8976e88e04a2118f4de840266e7248e0a02d8281ee921a"
+    },
+    {
+      "bytes": 1416,
+      "path": "seasons/2007/kentucky/offense.csv",
+      "sha256": "6d9ba923684e9f9865481896fd5cddefa118f29ca24ab10c58fb63d1fbf40dc0"
+    },
+    {
+      "bytes": 721,
+      "path": "seasons/2007/kentucky/special.csv",
+      "sha256": "8ced0fb76551ef7f0775286f653b2e4dc6e64afe581d987158533702ec27c419"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/kentucky/team.yaml",
+      "sha256": "2e1d6167cfba796b7ee5fb265d79057865df64ef9a077c2d8a8e7d3e2d760f34"
+    },
+    {
+      "bytes": 1015,
+      "path": "seasons/2007/louisiana-tech/defense.csv",
+      "sha256": "6860fa3b38ea818539ed4f3f1f31fbeae176014a770130848933a19f2fb1f1d8"
+    },
+    {
+      "bytes": 1489,
+      "path": "seasons/2007/louisiana-tech/offense.csv",
+      "sha256": "85dfc5e54fc54f931d360248287a17794d9ccd829c64754e23bbcc36fc84f27b"
+    },
+    {
+      "bytes": 687,
+      "path": "seasons/2007/louisiana-tech/special.csv",
+      "sha256": "8ee224e947bdc67b01ac837c6c738706466c22db2610888da08a6cb9ff3a2fee"
+    },
+    {
+      "bytes": 473,
+      "path": "seasons/2007/louisiana-tech/team.yaml",
+      "sha256": "7e2e86c856612e0fae6ca0f71ebf4a6abca9436feae06c8ad57905942c361577"
+    },
+    {
+      "bytes": 952,
+      "path": "seasons/2007/louisiana/defense.csv",
+      "sha256": "85de6b066c994bd61652d133c663ae23f7a8f539acf3999902f5c7760f284dab"
+    },
+    {
+      "bytes": 1420,
+      "path": "seasons/2007/louisiana/offense.csv",
+      "sha256": "0faf123c9f7a99a42afe0875ff932efa0994c660a8d9839799d1113e6ca62573"
+    },
+    {
+      "bytes": 699,
+      "path": "seasons/2007/louisiana/special.csv",
+      "sha256": "479de53bcb910f6abcbc1c12a6fabc1447de028c51579d8a172bf3c40e98baee"
+    },
+    {
+      "bytes": 463,
+      "path": "seasons/2007/louisiana/team.yaml",
+      "sha256": "f595d63b2d2eeada1ad3acd0b5be128c674be636cb8eae5336ac596f5d78f58e"
+    },
+    {
+      "bytes": 975,
+      "path": "seasons/2007/louisville/defense.csv",
+      "sha256": "0dbd7bc362684915039d8fff3b69d96b4146323008e0da6671db9157e4bd2c19"
+    },
+    {
+      "bytes": 1341,
+      "path": "seasons/2007/louisville/offense.csv",
+      "sha256": "18a993b4b79afd8f9007cd26f7c6803b045db83bf2f1d0d42d653135f7130513"
+    },
+    {
+      "bytes": 699,
+      "path": "seasons/2007/louisville/special.csv",
+      "sha256": "e720f565d37096889f738b505256cff718ba7ca4fa553fc021b75cc34fb402de"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/louisville/team.yaml",
+      "sha256": "8af114aa54dee01d6db686b2e37e9c8428997439bb66cd04465821eca68e092d"
+    },
+    {
+      "bytes": 1115,
+      "path": "seasons/2007/lsu/defense.csv",
+      "sha256": "c43b210149fde5f49229a85e688d3891207a373ff1957154d07ee2df6bd93728"
+    },
+    {
+      "bytes": 1453,
+      "path": "seasons/2007/lsu/offense.csv",
+      "sha256": "961fe0441e29fce1a674b42dba98fa6c240a78d95a94fb54333aa3f47a0ecfbf"
+    },
+    {
+      "bytes": 691,
+      "path": "seasons/2007/lsu/special.csv",
+      "sha256": "89b07334f779bbf98bd63cd4bad7e956713d37a8f04fe1f06ff2d88c2ade50da"
+    },
+    {
+      "bytes": 451,
+      "path": "seasons/2007/lsu/team.yaml",
+      "sha256": "f9afbac9391efd483598d853ca83394b74cf0bd1167e33a9f1190de28b514c9e"
+    },
+    {
+      "bytes": 1008,
+      "path": "seasons/2007/marshall/defense.csv",
+      "sha256": "01b51597a6e8139bd826192287b7df90dedd4b4983c93b7fc6a91be0ea3d9a91"
+    },
+    {
+      "bytes": 1452,
+      "path": "seasons/2007/marshall/offense.csv",
+      "sha256": "16db88557bfea1afc16f61c29c61223b206f5a8105e1e80c3a20a79ec4d83523"
+    },
+    {
+      "bytes": 704,
+      "path": "seasons/2007/marshall/special.csv",
+      "sha256": "dffa8e93611a288fe2ecbab9c928ccfaf9b7e191fab3f36249cf38e84556d414"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/marshall/team.yaml",
+      "sha256": "e5777037bdcda0dd3c68d35ace6ae8396e202022cf6cc42e14d07a3b262c5604"
+    },
+    {
+      "bytes": 952,
+      "path": "seasons/2007/maryland/defense.csv",
+      "sha256": "0e5aaefe2c4c265413c5a05fe5b6bbf836cc54b157974c824b89f95989a30ecb"
+    },
+    {
+      "bytes": 1437,
+      "path": "seasons/2007/maryland/offense.csv",
+      "sha256": "ca91f1f1e79800db04e684502df394e3380a3293c0c6a500a1c6ede28980cf6a"
+    },
+    {
+      "bytes": 694,
+      "path": "seasons/2007/maryland/special.csv",
+      "sha256": "12746a309c068097901fcbf58a9eec643b27f9c57795a3cbc4eb8ff7877bc9c5"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/maryland/team.yaml",
+      "sha256": "6669020fe8e6b648da4b09b6e397dcbb306023c18e8386ef666742d1765e8ffd"
+    },
+    {
+      "bytes": 1017,
+      "path": "seasons/2007/memphis/defense.csv",
+      "sha256": "1cbaa50ecc79463b20d1783612f5dfd6efe382e5652635ac7f497a633e9e3fdc"
+    },
+    {
+      "bytes": 1421,
+      "path": "seasons/2007/memphis/offense.csv",
+      "sha256": "4f6d454ff41b0c2729859776d29213f105f472c1a502d854bea17c42730ba601"
+    },
+    {
+      "bytes": 702,
+      "path": "seasons/2007/memphis/special.csv",
+      "sha256": "9ab54297469c76e5fbcdc0ebab848cf1e9aea3c80970f0529d399bcc7a13681b"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2007/memphis/team.yaml",
+      "sha256": "05cdc2475f1e8ed5b5ee39084e47eb318f24a7890e26aa5ac699fc0dc2fe8ccf"
+    },
+    {
+      "bytes": 940,
+      "path": "seasons/2007/miami-oh/defense.csv",
+      "sha256": "ea96eab51f86a1bdee4c729a33733937a8a441a34d8485a1a06bc607aeee495b"
+    },
+    {
+      "bytes": 1451,
+      "path": "seasons/2007/miami-oh/offense.csv",
+      "sha256": "98264ea70916b384f8f09d20e4725768971243bc842bbf955ff7ab9981aa5da5"
+    },
+    {
+      "bytes": 708,
+      "path": "seasons/2007/miami-oh/special.csv",
+      "sha256": "fcf2fb22fc4e208624bd5222eef9c304369090fd92b6be2930097567bc87075f"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/miami-oh/team.yaml",
+      "sha256": "69e389d8e1e62e7616119c7a8da462689b568454950c161a3c5e06f7342ffa50"
+    },
+    {
+      "bytes": 949,
+      "path": "seasons/2007/miami/defense.csv",
+      "sha256": "ad455c3f7f4500cd4f747e46d924b5a06d7f9f1a15e8e57ed49c962e850711b4"
+    },
+    {
+      "bytes": 1424,
+      "path": "seasons/2007/miami/offense.csv",
+      "sha256": "fa32854b6855a577ead0326d506e59759fe611c8dcd1c7773cb558fa40d7bad1"
+    },
+    {
+      "bytes": 699,
+      "path": "seasons/2007/miami/special.csv",
+      "sha256": "66ecb87130aefb7d2cac60ee2e2470ca7792ddb3099f34b0bd4069e5ea44587a"
+    },
+    {
+      "bytes": 455,
+      "path": "seasons/2007/miami/team.yaml",
+      "sha256": "b141c42d727d5f91b9343f62f530204f480d22760bc5e231149de83bd0a901ce"
+    },
+    {
+      "bytes": 933,
+      "path": "seasons/2007/michigan-state/defense.csv",
+      "sha256": "81cc4ce2bc8b72cf24c23dc5dd19b735cb4809b2df8f68e48f0902a7f7160381"
+    },
+    {
+      "bytes": 1351,
+      "path": "seasons/2007/michigan-state/offense.csv",
+      "sha256": "1383b73c4633fa92ee98ff4ce2d17e99bb665e15f9becf863a32ca93c9dacacb"
+    },
+    {
+      "bytes": 708,
+      "path": "seasons/2007/michigan-state/special.csv",
+      "sha256": "5382ef38681ebad0ab5e22fb3fc182dd4f67ecaf99d061e6dd5a8100a01fb6a9"
+    },
+    {
+      "bytes": 473,
+      "path": "seasons/2007/michigan-state/team.yaml",
+      "sha256": "78626bd88d4d4d71143820b23797a354d0b59842f4c1b32936b66d4822bd8a14"
+    },
+    {
+      "bytes": 1026,
+      "path": "seasons/2007/michigan/defense.csv",
+      "sha256": "f922b94e15db07dd9888d85ccdf1bae80a9b51718f488e0bc8c9f0180d294732"
+    },
+    {
+      "bytes": 1504,
+      "path": "seasons/2007/michigan/offense.csv",
+      "sha256": "426bc1d49b821edd09d413816141ddaf65ff3d52bd761040468e8816fe93da94"
+    },
+    {
+      "bytes": 698,
+      "path": "seasons/2007/michigan/special.csv",
+      "sha256": "73370f50283859c3a004c3958fe10c982f94528f88e2dd68e58a2396ea006d0e"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/michigan/team.yaml",
+      "sha256": "d5a5a77c8d3ec86726ae38e9f3bdbf9514313b8ef836118b85299d63f925efaf"
+    },
+    {
+      "bytes": 954,
+      "path": "seasons/2007/middle-tennessee/defense.csv",
+      "sha256": "92d4d85dd2b059f311e8125f3cadb64aeb3ca5d867c0253d244010132af2e7e1"
+    },
+    {
+      "bytes": 1467,
+      "path": "seasons/2007/middle-tennessee/offense.csv",
+      "sha256": "fa1407e34dd48edb56e2fcc2d396b210576916388bc2d9108f41336b20039fa2"
+    },
+    {
+      "bytes": 723,
+      "path": "seasons/2007/middle-tennessee/special.csv",
+      "sha256": "d7513f03c58b939b48c85079dd2a1974150d9899ce58e4a3f73351e992f8462d"
+    },
+    {
+      "bytes": 477,
+      "path": "seasons/2007/middle-tennessee/team.yaml",
+      "sha256": "41891b736db7b618a832ea4870d935b26366451690a6e2fcc64c3f8b0abbb560"
+    },
+    {
+      "bytes": 1017,
+      "path": "seasons/2007/minnesota/defense.csv",
+      "sha256": "e539f701741de3f78f86d1a56ed2344ff5044ddd561287749281231b395140a5"
+    },
+    {
+      "bytes": 1374,
+      "path": "seasons/2007/minnesota/offense.csv",
+      "sha256": "f0920aaeffed8a26119de810cb1e76a41c8630beb7914edfbe2b0d4abc837677"
+    },
+    {
+      "bytes": 724,
+      "path": "seasons/2007/minnesota/special.csv",
+      "sha256": "8fb4c527fc671bb247d7f18a40ce356c730ca24d35a6058bead373225b9462ba"
+    },
+    {
+      "bytes": 463,
+      "path": "seasons/2007/minnesota/team.yaml",
+      "sha256": "27773e46f20995e626cd46ef5fcb3ad9918c13486a3fc003fbefa929023e3c3c"
+    },
+    {
+      "bytes": 1090,
+      "path": "seasons/2007/mississippi-state/defense.csv",
+      "sha256": "0f3cd3e1822f50cad80a2520a3613df3fba538ab47a87807fe31752be5968388"
+    },
+    {
+      "bytes": 1449,
+      "path": "seasons/2007/mississippi-state/offense.csv",
+      "sha256": "a665e3ec168df3ae35238c6180bef6e6a05f84fd1529a29f556281bde307ecd4"
+    },
+    {
+      "bytes": 704,
+      "path": "seasons/2007/mississippi-state/special.csv",
+      "sha256": "97dddf295d3429eecfc32db73d8007c052c0808c466ce1967b483216e89b05be"
+    },
+    {
+      "bytes": 479,
+      "path": "seasons/2007/mississippi-state/team.yaml",
+      "sha256": "e494fa43051924cf1d1b67e64c233bcd5ab1cc5d8b3a94783af4a97448633dd3"
+    },
+    {
+      "bytes": 995,
+      "path": "seasons/2007/missouri/defense.csv",
+      "sha256": "6d55b48ee680f8adc0ccdf7ba0474d0e4da4b563913a1d6087ccd56dddb88b69"
+    },
+    {
+      "bytes": 1360,
+      "path": "seasons/2007/missouri/offense.csv",
+      "sha256": "f639812068999f95396774f172edf4a43a18662646f5e119210600525e2c6986"
+    },
+    {
+      "bytes": 709,
+      "path": "seasons/2007/missouri/special.csv",
+      "sha256": "2e7ee0e8a7983d7856bf7a1bd044fb1e4e4a3abdc679aed29fa91f686b4fcb9f"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/missouri/team.yaml",
+      "sha256": "fa3a3bdfc69e83ab6f786c04409f0eff9b4f698dd497b4d50004912746d1ca2f"
+    },
+    {
+      "bytes": 984,
+      "path": "seasons/2007/navy/defense.csv",
+      "sha256": "3f5b78d8283f633432d8bb92906d5d566f167e61bbb530cdcaa0be1ea57df8cd"
+    },
+    {
+      "bytes": 1375,
+      "path": "seasons/2007/navy/offense.csv",
+      "sha256": "711cec0d58e8da5ac45bb22972f155ffb2e0bfc07c4807dbb5ab6926363d6174"
+    },
+    {
+      "bytes": 704,
+      "path": "seasons/2007/navy/special.csv",
+      "sha256": "a71cd99fc0d9d6e022b894c06a00121f70766bdb74e75598ea9c8308794aa111"
+    },
+    {
+      "bytes": 453,
+      "path": "seasons/2007/navy/team.yaml",
+      "sha256": "bd999dadb1788e29b29e2592d8ab520a6c50841d409c91f4cca884c4db87f56d"
+    },
+    {
+      "bytes": 1027,
+      "path": "seasons/2007/nc-state/defense.csv",
+      "sha256": "6328c18dec16cb14dc4e208deb3e86528a039ae36f69c13b6577260576fa9553"
+    },
+    {
+      "bytes": 1399,
+      "path": "seasons/2007/nc-state/offense.csv",
+      "sha256": "80ed1697b7d6610d5167ef8e5aa85e22d45d9f82a9ad159202919a8395392d5b"
+    },
+    {
+      "bytes": 708,
+      "path": "seasons/2007/nc-state/special.csv",
+      "sha256": "08bb899e331cc7f2b50f7d26e9391a23d327026a6e45aa0289c9b5e5746aab42"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/nc-state/team.yaml",
+      "sha256": "082589a4f06beae657bc3d23e30e45df95d979a198666e9b7c0d752725f39d38"
+    },
+    {
+      "bytes": 959,
+      "path": "seasons/2007/nebraska/defense.csv",
+      "sha256": "a8509b80f3f7f50de5ea5f4adde6a72b5683a74137a2169d85678b122a1f2983"
+    },
+    {
+      "bytes": 1409,
+      "path": "seasons/2007/nebraska/offense.csv",
+      "sha256": "45d86e9c18101e7fdfefcab5f67b0122d2a613dcb11ce65d6fd24399c5eb850e"
+    },
+    {
+      "bytes": 704,
+      "path": "seasons/2007/nebraska/special.csv",
+      "sha256": "dedabf54bf04f6cf737b74254de1ecb3310b67d0091d418727848ff59bda2ca5"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/nebraska/team.yaml",
+      "sha256": "cb218c7472e13877c1527b60a08dad8b2f2901c64c2c9d587d8faee13054ebaa"
+    },
+    {
+      "bytes": 957,
+      "path": "seasons/2007/nevada/defense.csv",
+      "sha256": "58d8d311b625f705be2a8391ed1fb6a6d308a89f6413aacbacd304b2b5fe81db"
+    },
+    {
+      "bytes": 1456,
+      "path": "seasons/2007/nevada/offense.csv",
+      "sha256": "7d1608ce0e170aff89fd5b86024ba88c6d59c3b242a8789491b001416bc4b505"
+    },
+    {
+      "bytes": 706,
+      "path": "seasons/2007/nevada/special.csv",
+      "sha256": "1150e4443a5ab3effb0d6975082afda0f4a5d6470ee4ba4a87cb4ebda1f254fd"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2007/nevada/team.yaml",
+      "sha256": "df55dd391339b6b5325df30d9d82ad2b07f738bc85646a190d5bb62d1724b7cd"
+    },
+    {
+      "bytes": 958,
+      "path": "seasons/2007/new-mexico-state/defense.csv",
+      "sha256": "9724cdbf41be514d0a0bd8df1d94062454b75caa83b149bad915de0f88b5920f"
+    },
+    {
+      "bytes": 1406,
+      "path": "seasons/2007/new-mexico-state/offense.csv",
+      "sha256": "bbe3d88448b26f3f6f63ebe591c01e5ad86c86a9bbc963f21c5da8acaf56286b"
+    },
+    {
+      "bytes": 733,
+      "path": "seasons/2007/new-mexico-state/special.csv",
+      "sha256": "a6d988bc4af4f8420e1b20757c1700e947df18d91ad0e78b1f82b218d5cd7af8"
+    },
+    {
+      "bytes": 477,
+      "path": "seasons/2007/new-mexico-state/team.yaml",
+      "sha256": "e59d06297cdecc8b166d1cfe395ac59604d03bb61a135d8d1ba0b50b5fe2adcf"
+    },
+    {
+      "bytes": 1081,
+      "path": "seasons/2007/new-mexico/defense.csv",
+      "sha256": "b09a194e848de896a49c63ea128e5fb89a7a37ae608413c9e3c09eb83aba7c03"
+    },
+    {
+      "bytes": 1370,
+      "path": "seasons/2007/new-mexico/offense.csv",
+      "sha256": "e273d12a46557a65f3073fe86a81f24ccb0ce93a261bf02593c97cccb69c99ec"
+    },
+    {
+      "bytes": 703,
+      "path": "seasons/2007/new-mexico/special.csv",
+      "sha256": "b6d13ecc06ad582d98069583330d87e1c60a529fbde0d0837300fe57e92438f7"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/new-mexico/team.yaml",
+      "sha256": "223c460ea59f9bed46e65cf77f6f2b11b69772f3770616c6818ca88d87cb4cfd"
+    },
+    {
+      "bytes": 956,
+      "path": "seasons/2007/north-carolina/defense.csv",
+      "sha256": "2adbce2781f0edc24e2dc6619e7898001f4f821a6b14aeed5f98fd51124e683c"
+    },
+    {
+      "bytes": 1435,
+      "path": "seasons/2007/north-carolina/offense.csv",
+      "sha256": "86304a34af34547232205b92736d1c998d1989c45a6048d7e32a14e3e2210165"
+    },
+    {
+      "bytes": 702,
+      "path": "seasons/2007/north-carolina/special.csv",
+      "sha256": "48e6f136307f148da713920cfc9fb0522b050ccda2e64f2c8fb64ca34d8f6d61"
+    },
+    {
+      "bytes": 473,
+      "path": "seasons/2007/north-carolina/team.yaml",
+      "sha256": "a3221687570803e362c8ad396a32772318ada91700f9ecba8a75ad1698f9325a"
+    },
+    {
+      "bytes": 956,
+      "path": "seasons/2007/north-texas/defense.csv",
+      "sha256": "e3feb667b56db96d3494cdc75a106f95ecadad26e49af8f4fffe885aca680bb4"
+    },
+    {
+      "bytes": 1381,
+      "path": "seasons/2007/north-texas/offense.csv",
+      "sha256": "959ac72704ce20826b28ca699734b5a5affebbcadf5f70a7f356f8dd676d7ff9"
+    },
+    {
+      "bytes": 708,
+      "path": "seasons/2007/north-texas/special.csv",
+      "sha256": "23052ab00d7715d25d72b9499b5f150592e277ab3166a2f340ef0acbd3b97e1a"
+    },
+    {
+      "bytes": 467,
+      "path": "seasons/2007/north-texas/team.yaml",
+      "sha256": "e263455842d4c0f0d8e2d349ef9e038b9ff49af16f5eaa7d18b0520258610a0e"
+    },
+    {
+      "bytes": 967,
+      "path": "seasons/2007/northern-illinois/defense.csv",
+      "sha256": "2ec01d4d6c7fff992684e5ca5447a1918040c854a0d097b7aa2130d1c69214bb"
+    },
+    {
+      "bytes": 1361,
+      "path": "seasons/2007/northern-illinois/offense.csv",
+      "sha256": "46ae53be58e95fc3160a86da27d796542dbafda3cdf44eba465a4363b66f4822"
+    },
+    {
+      "bytes": 718,
+      "path": "seasons/2007/northern-illinois/special.csv",
+      "sha256": "646bb66fba9debfed8642d02fde6aaebb0c143c2f16060315af62a5df51017d0"
+    },
+    {
+      "bytes": 479,
+      "path": "seasons/2007/northern-illinois/team.yaml",
+      "sha256": "56fd9727e0dcc9154a81c834e1ec256b0a773d10d9be1d1de98cc50e0bb01c0d"
+    },
+    {
+      "bytes": 1022,
+      "path": "seasons/2007/northwestern/defense.csv",
+      "sha256": "1660f43ab9063422dbc818d58043e5dcb31cee439861766e59f21e28efd2b103"
+    },
+    {
+      "bytes": 1443,
+      "path": "seasons/2007/northwestern/offense.csv",
+      "sha256": "eab57520c913b5badf1a3c9107cb3be00983a391da7e3833d4887104de8eefcc"
+    },
+    {
+      "bytes": 695,
+      "path": "seasons/2007/northwestern/special.csv",
+      "sha256": "774872a4b24d2d88eb2beca4380833455ba21c3d839fd49e0492ac58f9881081"
+    },
+    {
+      "bytes": 469,
+      "path": "seasons/2007/northwestern/team.yaml",
+      "sha256": "5ca3ed0e4edccd933bb0c8c7933e20ba56cc169b66d12f38af0639f0f8e3c892"
+    },
+    {
+      "bytes": 1063,
+      "path": "seasons/2007/notre-dame/defense.csv",
+      "sha256": "b6f37ff39506bfa11ce3c093894d96766f49b076fe9785096600e21fcaaa5f7b"
+    },
+    {
+      "bytes": 1444,
+      "path": "seasons/2007/notre-dame/offense.csv",
+      "sha256": "73de0b2f67ca0bc8bd60a5d972631806e79e5de8970e8678929a5dbd955f6d5b"
+    },
+    {
+      "bytes": 703,
+      "path": "seasons/2007/notre-dame/special.csv",
+      "sha256": "50f127304ef6aeed8603fd4e50c36c4395083f9a414ab2eab96276d4b43f4973"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/notre-dame/team.yaml",
+      "sha256": "8a7b5da4474599d2e741e26084fb41d2639e52271de9abee95034fbeba23329a"
+    },
+    {
+      "bytes": 1135,
+      "path": "seasons/2007/ohio-state/defense.csv",
+      "sha256": "aa3b7d8ad674094abacfd2a48873845e20d32e263de655ec1d2b470b5d3e68d2"
+    },
+    {
+      "bytes": 1351,
+      "path": "seasons/2007/ohio-state/offense.csv",
+      "sha256": "15aedd364d80808500e811d4e8aa7d45f472ca242f2dfdfd7e75e97a8d68ab98"
+    },
+    {
+      "bytes": 711,
+      "path": "seasons/2007/ohio-state/special.csv",
+      "sha256": "4c144a373446d9458cde57b43f5baae8ac6aa0b2c05c8c7a24058f752ddb96eb"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/ohio-state/team.yaml",
+      "sha256": "72e0d67bfe564f07b262c19a43e1c1c6efbf709e61c74feed8292a4ee30954b9"
+    },
+    {
+      "bytes": 951,
+      "path": "seasons/2007/ohio/defense.csv",
+      "sha256": "c60860a26c1d70cae105e4594acec0cd1955cda7c25a87092e2128219d69c20d"
+    },
+    {
+      "bytes": 1429,
+      "path": "seasons/2007/ohio/offense.csv",
+      "sha256": "cc6801e75a03ecb2314a5a248cb132505d4451c74e5277e92fbe6be6456b1479"
+    },
+    {
+      "bytes": 701,
+      "path": "seasons/2007/ohio/special.csv",
+      "sha256": "1a6216ad479b398278506283e14647e5ca1f8f7ef7f17f512d0859152a9044bd"
+    },
+    {
+      "bytes": 453,
+      "path": "seasons/2007/ohio/team.yaml",
+      "sha256": "b0f78dfa70e51b5cd9940f18699f18b4ce62ef032ddbc1acb860088eff80bc80"
+    },
+    {
+      "bytes": 971,
+      "path": "seasons/2007/oklahoma-state/defense.csv",
+      "sha256": "1800f57f1df36710df76b690d0d2ad37560fe0503ec196c68f96c6744c25a531"
+    },
+    {
+      "bytes": 1453,
+      "path": "seasons/2007/oklahoma-state/offense.csv",
+      "sha256": "57a9103afdebc99ce6258d3cbddb1c7bd4fcfd5d7d4616424f6fba6b115b7099"
+    },
+    {
+      "bytes": 687,
+      "path": "seasons/2007/oklahoma-state/special.csv",
+      "sha256": "ebcc845f84826259899082c1e92c7f8e2afeb672ee2bc94d604c45b6d7176189"
+    },
+    {
+      "bytes": 473,
+      "path": "seasons/2007/oklahoma-state/team.yaml",
+      "sha256": "9fc29a5fbc031fbcd0cc55c0a9f9674c798521c04dde355c6d5374cd8338cb33"
+    },
+    {
+      "bytes": 1003,
+      "path": "seasons/2007/oklahoma/defense.csv",
+      "sha256": "3d70d291d5fa8f2164bafaa201104d3ba70689b905087561ddf821adfa72ff77"
+    },
+    {
+      "bytes": 1414,
+      "path": "seasons/2007/oklahoma/offense.csv",
+      "sha256": "e03287cf77f46d4f12e6683f4902c4deef86ce2d9d1f979643d9469fa593ee5a"
+    },
+    {
+      "bytes": 722,
+      "path": "seasons/2007/oklahoma/special.csv",
+      "sha256": "0912834d66fd51431ef1215341dbd580fc204e0057eda0a8254e23e8bcaf67a5"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/oklahoma/team.yaml",
+      "sha256": "955192ef91e17d3ddb4e554ed9ba7964f7c7e11cd4517a357367ef425a55f2f0"
+    },
+    {
+      "bytes": 966,
+      "path": "seasons/2007/ole-miss/defense.csv",
+      "sha256": "e9ffa1cd97ce8024199861f09e1a8ba0ca56eef66f8a8d30b39dbe5db5ebda0e"
+    },
+    {
+      "bytes": 1418,
+      "path": "seasons/2007/ole-miss/offense.csv",
+      "sha256": "672b81e9a8e69ae43228bd5645d4e03797de10b02b4a078b1227537a32302c84"
+    },
+    {
+      "bytes": 704,
+      "path": "seasons/2007/ole-miss/special.csv",
+      "sha256": "e2ff434384f7d93f94a1038a0609b045ff6001eab267e7bc4e3f7db1c17af83b"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/ole-miss/team.yaml",
+      "sha256": "6330f214dc55b77b5b290a3e35b88d775c44608bc4da15312596c193b2291c13"
+    },
+    {
+      "bytes": 1086,
+      "path": "seasons/2007/oregon-state/defense.csv",
+      "sha256": "27a59eb9edc99dd87914828e9ac5190cfcf75aa8e9be0c76c9003321b7448963"
+    },
+    {
+      "bytes": 1422,
+      "path": "seasons/2007/oregon-state/offense.csv",
+      "sha256": "38ae9177083d79ce47a5317c039fb91d4ddf2f23f1dd1b3c0725f1e79024dc51"
+    },
+    {
+      "bytes": 704,
+      "path": "seasons/2007/oregon-state/special.csv",
+      "sha256": "c68eda006cb7a964098fe039e1e311a771b9e95dc391e7f4097ff229f647986d"
+    },
+    {
+      "bytes": 469,
+      "path": "seasons/2007/oregon-state/team.yaml",
+      "sha256": "44e03d4a877991b88927e63a63a0623a83bb0fb9cd0c06b6e02dbd6f3bca246c"
+    },
+    {
+      "bytes": 1045,
+      "path": "seasons/2007/oregon/defense.csv",
+      "sha256": "5954ccbd2c69a5779d07bc40f1b9a5e3b81b086b022bac7dec1ebde7388dc3a4"
+    },
+    {
+      "bytes": 1393,
+      "path": "seasons/2007/oregon/offense.csv",
+      "sha256": "e6951f7a59e016c7d200d4a39cead8939e7f57b320485e7962179c0b851dae73"
+    },
+    {
+      "bytes": 698,
+      "path": "seasons/2007/oregon/special.csv",
+      "sha256": "309b7970b614d840b4a9410a54cfcdd36773da53fc96f3fc210134efbeae8a2e"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2007/oregon/team.yaml",
+      "sha256": "2250f84607f55114fe659bf772a5c4fb89063bb5a5f551aa4f572e2783441a95"
+    },
+    {
+      "bytes": 996,
+      "path": "seasons/2007/penn-state/defense.csv",
+      "sha256": "595c75c914aa4949c5090aec75fcc6c197d6216cc866fad75b89de945c51c8a5"
+    },
+    {
+      "bytes": 1385,
+      "path": "seasons/2007/penn-state/offense.csv",
+      "sha256": "d2d5ab6c65e147517a4717c8631b8e28ee7e417ebbab9ec9c06acc40d30a4773"
+    },
+    {
+      "bytes": 701,
+      "path": "seasons/2007/penn-state/special.csv",
+      "sha256": "da71c67578254f9d14299d4b8853429460d62ef6e830332bd60457466647472c"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/penn-state/team.yaml",
+      "sha256": "5f088ee3352e645db8886d34dd1fd89760afd93d9e58cb675e5713c747d26eaa"
+    },
+    {
+      "bytes": 1055,
+      "path": "seasons/2007/pittsburgh/defense.csv",
+      "sha256": "e98f12d94a164759447d12894519ae996673a7f80071b1fcae6f198bb4b3c1f7"
+    },
+    {
+      "bytes": 1413,
+      "path": "seasons/2007/pittsburgh/offense.csv",
+      "sha256": "f55275cc594e5e4c0374f67c72f4fd5f697a3c2b5004b544c463a2cd6604e9bf"
+    },
+    {
+      "bytes": 702,
+      "path": "seasons/2007/pittsburgh/special.csv",
+      "sha256": "33a8cedba8dcf3928b47f4ce1ba8dd4ad71299f39579b9d93204e5c485852985"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/pittsburgh/team.yaml",
+      "sha256": "13ca1e869e5ab23808c629eff99fe886a82ee194c58ff37e7dc5a8bd153b8a68"
+    },
+    {
+      "bytes": 41424,
+      "path": "seasons/2007/provenance/air-force.csv",
+      "sha256": "ef599f46a4fb20ce99110fcde207878fe50d77e6da385db0974d61364fea0aeb"
+    },
+    {
+      "bytes": 41491,
+      "path": "seasons/2007/provenance/akron.csv",
+      "sha256": "80712b7fa0de588df9a255b2e1d66d0887c990b43bb854c0e2f0e807a6a29798"
+    },
+    {
+      "bytes": 41526,
+      "path": "seasons/2007/provenance/alabama.csv",
+      "sha256": "5878c9bfd380f09865adf03d90de81ad91988f25cf52720c1d8b114b035440b9"
+    },
+    {
+      "bytes": 41468,
+      "path": "seasons/2007/provenance/arizona-state.csv",
+      "sha256": "bf695e0c8c3b08c72d750c8837b9b93b93155cf59a00565bbe9f3c38eb117a89"
+    },
+    {
+      "bytes": 41545,
+      "path": "seasons/2007/provenance/arizona.csv",
+      "sha256": "15bdf1cc893aa7b322320d952d728115828af503a8c6792ebc1ec0da7f873e56"
+    },
+    {
+      "bytes": 41548,
+      "path": "seasons/2007/provenance/arkansas-state.csv",
+      "sha256": "3f86eb8630ee400eb67206fa63e685fd8520126202b8ea729a8e2a7fd629ee0d"
+    },
+    {
+      "bytes": 41508,
+      "path": "seasons/2007/provenance/arkansas.csv",
+      "sha256": "d4776b42e4aaca4e7d700bca76684856b51447e0837a45d0e4918b85d1ae2cc6"
+    },
+    {
+      "bytes": 41524,
+      "path": "seasons/2007/provenance/army.csv",
+      "sha256": "db2bbd6144a2e8b84ccdce9f1944b79ce9c9d98021c3ff7135c02c25e24926e4"
+    },
+    {
+      "bytes": 41545,
+      "path": "seasons/2007/provenance/auburn.csv",
+      "sha256": "9f555c3cc097123055f6e6496c1ce0c44deda8e20bb08a0e72fc13089955a2c1"
+    },
+    {
+      "bytes": 41522,
+      "path": "seasons/2007/provenance/ball-state.csv",
+      "sha256": "4e0ed937119e8333245bf09a033094a3c8d76e428b291ccddba453c4b3d53729"
+    },
+    {
+      "bytes": 41477,
+      "path": "seasons/2007/provenance/baylor.csv",
+      "sha256": "c2fa72b34be3314d1b1593ed015b1165909a81e8c9b4ddd1a85a3b839529bc36"
+    },
+    {
+      "bytes": 41460,
+      "path": "seasons/2007/provenance/boise-state.csv",
+      "sha256": "263b1e4778ce657ee941d390d5dbe70077711dcfb9264d1a95a27e401037479d"
+    },
+    {
+      "bytes": 41470,
+      "path": "seasons/2007/provenance/boston-college.csv",
+      "sha256": "be938bcbdcab27a7f58f0fd77357f284a5770d633142dd3de532a07ee051dc25"
+    },
+    {
+      "bytes": 41482,
+      "path": "seasons/2007/provenance/bowling-green.csv",
+      "sha256": "ae08b9c23d03dda1564b73dbc49eeb9a41808651fdfdd5f47b995757298dfcd9"
+    },
+    {
+      "bytes": 41459,
+      "path": "seasons/2007/provenance/byu.csv",
+      "sha256": "b667f926ff0af3dc18b777ae09a14e43fd2df4544ca7db5d0e7f5d06b2fadcf8"
+    },
+    {
+      "bytes": 41537,
+      "path": "seasons/2007/provenance/california.csv",
+      "sha256": "0422f23433f33cced5674a34b66baee5db4f3571280c30dc7fb2983873ed8ac5"
+    },
+    {
       "bytes": 32818,
       "path": "seasons/2007/provenance/cedar-valley.csv",
       "sha256": "37941a5cf8139707a53827f69187963341f4393bbfba5c33693d10a71844f7f8"
     },
     {
+      "bytes": 41517,
+      "path": "seasons/2007/provenance/central-michigan.csv",
+      "sha256": "52aafb22deb1e8fd503407965e5333e9addeff7f820b31f941f1c502ed844560"
+    },
+    {
+      "bytes": 41542,
+      "path": "seasons/2007/provenance/cincinnati.csv",
+      "sha256": "53b2f449b1c4ac2e30fa490590fbd5fe437f443be8e6d93397dd26e31d936d67"
+    },
+    {
+      "bytes": 41487,
+      "path": "seasons/2007/provenance/clemson.csv",
+      "sha256": "7096c1b4e0d05e62c6d238d7e0f4fae44af4caf385e0c71b313119aa5be3d841"
+    },
+    {
+      "bytes": 41391,
+      "path": "seasons/2007/provenance/colorado-state.csv",
+      "sha256": "5157a115d4b2dd975148c02493e6b31b6299967e32a8f9fe6b19c7171d7b24a7"
+    },
+    {
+      "bytes": 41451,
+      "path": "seasons/2007/provenance/colorado.csv",
+      "sha256": "1370f8c1d26d2aeaf8726cf66c172d7842e75ba70375c74c96ad67dae009d66a"
+    },
+    {
+      "bytes": 41512,
+      "path": "seasons/2007/provenance/duke.csv",
+      "sha256": "76032fc3d1749ef648678d1b4b8e06f29a4307ecfc2905c52ea9d7d88b85af4a"
+    },
+    {
+      "bytes": 41473,
+      "path": "seasons/2007/provenance/east-carolina.csv",
+      "sha256": "4b8322b795fad5310374b1a3f80bb099e3eac6592ee7a6202af8146a1e2591ef"
+    },
+    {
+      "bytes": 41363,
+      "path": "seasons/2007/provenance/eastern-michigan.csv",
+      "sha256": "105552dd4bb4a9a4422104f5894bbe01383d786d990b760bb59921ad3c66fd89"
+    },
+    {
+      "bytes": 41482,
+      "path": "seasons/2007/provenance/florida-atlantic.csv",
+      "sha256": "c27d6458269d26a6f590e2c2ece862b4feff7e3484757be497bc6febea149b8f"
+    },
+    {
+      "bytes": 41500,
+      "path": "seasons/2007/provenance/florida-international.csv",
+      "sha256": "77d560751bd13118e53954ee8177231f8c4aa304901d043329c1c19ca6ce5d00"
+    },
+    {
+      "bytes": 41527,
+      "path": "seasons/2007/provenance/florida-state.csv",
+      "sha256": "a20cb39c3829b63f7831d402354651832258840910cb3a1235002e3863f6b479"
+    },
+    {
+      "bytes": 41499,
+      "path": "seasons/2007/provenance/florida.csv",
+      "sha256": "d589042f651bba1eec43ee8a99a04ff1863d7bc8c3ae04918d9ceec044f725bf"
+    },
+    {
+      "bytes": 41507,
+      "path": "seasons/2007/provenance/fresno-state.csv",
+      "sha256": "9e08022a53919d8c56e419bf75e9f4c77e6fb5c6b52cc7b8fc6c97d6912d072e"
+    },
+    {
+      "bytes": 41502,
+      "path": "seasons/2007/provenance/georgia-tech.csv",
+      "sha256": "bbf776670c88d927dac53a6c4c4d5a941df812a541632807673b1995d8e6a152"
+    },
+    {
+      "bytes": 41586,
+      "path": "seasons/2007/provenance/georgia.csv",
+      "sha256": "c848a49aa8433a6e4f85083f15dd6d123a103a83418f5ff085e0f69e3b56142d"
+    },
+    {
       "bytes": 32822,
       "path": "seasons/2007/provenance/harbor-tech.csv",
       "sha256": "a5fc899f544890be7a40af8f757269a19826227f900a8ad887fdec9cd25bd6fe"
+    },
+    {
+      "bytes": 41424,
+      "path": "seasons/2007/provenance/hawai-i.csv",
+      "sha256": "5d99049a64f9b09051d3f0aa5b02f0503d0719fe6887e51ed9cfbf1668a6e094"
+    },
+    {
+      "bytes": 41412,
+      "path": "seasons/2007/provenance/houston.csv",
+      "sha256": "e704956a2981261afdf43aae3f183964a63e1f68bc0a41332c059dffab4d52e6"
+    },
+    {
+      "bytes": 41447,
+      "path": "seasons/2007/provenance/idaho.csv",
+      "sha256": "247c2b9c52144f3cdd1a9761e5ac11fec7928603c0ecf848db109d9b85fd3c37"
+    },
+    {
+      "bytes": 41476,
+      "path": "seasons/2007/provenance/illinois.csv",
+      "sha256": "a17023e4accc8d597c02a4e86dc61c5a16104b9cfe4c8498deb24c1f0188a3b5"
+    },
+    {
+      "bytes": 41545,
+      "path": "seasons/2007/provenance/indiana.csv",
+      "sha256": "2ae75d5bbc46c34f6441d86f1c870e26b795d1f5dbdd15840b1f3f34e3fe190a"
+    },
+    {
+      "bytes": 41451,
+      "path": "seasons/2007/provenance/iowa-state.csv",
+      "sha256": "3387766c9a3dd113dc6ca5ca7e8560519d8f997e6e1db87e1b7362f56d6c85ca"
+    },
+    {
+      "bytes": 41416,
+      "path": "seasons/2007/provenance/iowa.csv",
+      "sha256": "14dd8639cdb935cb0935fbec114b336a4bb3a91d98c22b8ae3ac59fd605b50ec"
+    },
+    {
+      "bytes": 41442,
+      "path": "seasons/2007/provenance/kansas-state.csv",
+      "sha256": "b8e34ba09ab7ec893293150d3629bcfd2712b526d60355a02492f2f0a7ff4328"
+    },
+    {
+      "bytes": 41400,
+      "path": "seasons/2007/provenance/kansas.csv",
+      "sha256": "81536f488495d7f292d3a4c0b6ef6acd5f31d545a878838ddebd773606a61e3c"
+    },
+    {
+      "bytes": 41443,
+      "path": "seasons/2007/provenance/kent-state.csv",
+      "sha256": "f17d50db65834d5403346ffa7bcd07c096254425e12bb8557c14e854210b8d60"
+    },
+    {
+      "bytes": 41518,
+      "path": "seasons/2007/provenance/kentucky.csv",
+      "sha256": "63cfd0f1ee68ab45cea11b697c0a5273e6c73b2270824ebdc8659a77716bfa62"
+    },
+    {
+      "bytes": 41517,
+      "path": "seasons/2007/provenance/louisiana-tech.csv",
+      "sha256": "f4888ff132451e7be99f5017534b2a2d33cea86d71f450d728a1566577edb697"
+    },
+    {
+      "bytes": 41478,
+      "path": "seasons/2007/provenance/louisiana.csv",
+      "sha256": "fe2d809481d4adbdb0d03f3fea87c6e8982fde922a1d88dd42988b8ba8b92a49"
+    },
+    {
+      "bytes": 41386,
+      "path": "seasons/2007/provenance/louisville.csv",
+      "sha256": "ab5827aec90828cd86ba05186df83945faf026ebf816da7e80337bf936c9f5d9"
+    },
+    {
+      "bytes": 41578,
+      "path": "seasons/2007/provenance/lsu.csv",
+      "sha256": "aabcb39ad6326e35b89eba5e318a1f906d5165f6d25987253b63d5da2b6eb8f9"
+    },
+    {
+      "bytes": 41545,
+      "path": "seasons/2007/provenance/marshall.csv",
+      "sha256": "a6f1138a3df97e4a6780d49910329e84657296d925a2c03d2c4b7308a613c962"
+    },
+    {
+      "bytes": 41549,
+      "path": "seasons/2007/provenance/maryland.csv",
+      "sha256": "872114b800867e38a61aa31c2dc26c16225e88b0f7ea9d34994a77da2e80b73a"
+    },
+    {
+      "bytes": 41435,
+      "path": "seasons/2007/provenance/memphis.csv",
+      "sha256": "7fa51cd48679b9fa081ef5d26b0d59ead5e44345966e68bb79ffa5a22e5955f4"
+    },
+    {
+      "bytes": 41500,
+      "path": "seasons/2007/provenance/miami-oh.csv",
+      "sha256": "dc7dfa15addcd6e407452a400f0d142f39e96692d17a7c274b2da378f0ed021d"
+    },
+    {
+      "bytes": 41419,
+      "path": "seasons/2007/provenance/miami.csv",
+      "sha256": "94eedb755e7230d217a61a17698c5770317e2144fe9ad7d6c67c5f14887a2f82"
+    },
+    {
+      "bytes": 41363,
+      "path": "seasons/2007/provenance/michigan-state.csv",
+      "sha256": "2f398a59eec309229f39613d84dc4a4ae2fcd650321cea32edc43d2b7cec3029"
+    },
+    {
+      "bytes": 41564,
+      "path": "seasons/2007/provenance/michigan.csv",
+      "sha256": "63af89455c448f2dfecfbc63047241895b38a5e2235e61551930071a02a86313"
+    },
+    {
+      "bytes": 41478,
+      "path": "seasons/2007/provenance/middle-tennessee.csv",
+      "sha256": "8203369809c3815d51e9ed05ab56b67aef5b89508f399a2648f8c5f2c42d1b50"
+    },
+    {
+      "bytes": 41364,
+      "path": "seasons/2007/provenance/minnesota.csv",
+      "sha256": "43fe3d330199c3a7ceaf3527533380d0b9f8b7242ceaf5dea7e1fa81f5fcaee1"
+    },
+    {
+      "bytes": 41514,
+      "path": "seasons/2007/provenance/mississippi-state.csv",
+      "sha256": "f3f54cc2f2415be6c4460122c1a6f1f6c753d7ff422d81250a72147674f91d89"
+    },
+    {
+      "bytes": 41433,
+      "path": "seasons/2007/provenance/missouri.csv",
+      "sha256": "16963fc840a8a264924ae36bef34987cc01b33e94ca76b1dc72ef484a898dea8"
+    },
+    {
+      "bytes": 41398,
+      "path": "seasons/2007/provenance/navy.csv",
+      "sha256": "9f5bddda824175bb2fd4f5c04a88c41b72d587a80c324fd518ff39dfec36d4d8"
+    },
+    {
+      "bytes": 41500,
+      "path": "seasons/2007/provenance/nc-state.csv",
+      "sha256": "6403de90759dcf60d319db686ed74ed11caceb74a9a59a3838e56b6f7236e794"
+    },
+    {
+      "bytes": 41413,
+      "path": "seasons/2007/provenance/nebraska.csv",
+      "sha256": "1d2cb19dbfadc4431e1d8a471957b23129f82c194e35d778047efc34699066f5"
+    },
+    {
+      "bytes": 41405,
+      "path": "seasons/2007/provenance/nevada.csv",
+      "sha256": "cbe9e48b403c834a5ca1a9f3ddf2c0ef93ad5ca16315c3508c3ce11d9a0f96fe"
+    },
+    {
+      "bytes": 41379,
+      "path": "seasons/2007/provenance/new-mexico-state.csv",
+      "sha256": "56e0d5d0a8c464b3254875a8b11106caeb37d28186c8d4dc261ee8c76c0e51e0"
+    },
+    {
+      "bytes": 41418,
+      "path": "seasons/2007/provenance/new-mexico.csv",
+      "sha256": "4e9a8b0a726669cc9fc2a0887e4e2e1ceb61b2b04f8e6e20b1c93e2ebae25e7e"
+    },
+    {
+      "bytes": 41510,
+      "path": "seasons/2007/provenance/north-carolina.csv",
+      "sha256": "55bebd97ab57389b47d978820a4af6221664ba5a109d9c79dee646c04a04300e"
+    },
+    {
+      "bytes": 41370,
+      "path": "seasons/2007/provenance/north-texas.csv",
+      "sha256": "eee7a0d5769aba29fdb565040584b2f8fd6c80d24d04bdf0ad3145116dfee665"
+    },
+    {
+      "bytes": 41403,
+      "path": "seasons/2007/provenance/northern-illinois.csv",
+      "sha256": "466c76140bc3d846bafba9f6756780d4cb428a495d5fc9f842e50231a1a1a675"
+    },
+    {
+      "bytes": 41589,
+      "path": "seasons/2007/provenance/northwestern.csv",
+      "sha256": "7dc35b376e583845865e1e976da3f03835240c60588d5585dad9d626411679da"
+    },
+    {
+      "bytes": 41534,
+      "path": "seasons/2007/provenance/notre-dame.csv",
+      "sha256": "a60d90fe773cfdfd1d0b0bcedbcbe2ed65363828dfc5f16a6ccb2830d04f0ad7"
+    },
+    {
+      "bytes": 41402,
+      "path": "seasons/2007/provenance/ohio-state.csv",
+      "sha256": "24bcc5b310e3f19711c1fb0568ef4e0c57152d09dbf18431426faa592dfbd8de"
+    },
+    {
+      "bytes": 41464,
+      "path": "seasons/2007/provenance/ohio.csv",
+      "sha256": "694d7147ff76e1e766ad1605077f9ac927bf5bad28ca123d1815caa44c5720a9"
+    },
+    {
+      "bytes": 41534,
+      "path": "seasons/2007/provenance/oklahoma-state.csv",
+      "sha256": "51a7d2c71a5e4edc0681d3ccb11b384b2c16e33943d05ee14435d31d2e285acf"
+    },
+    {
+      "bytes": 41524,
+      "path": "seasons/2007/provenance/oklahoma.csv",
+      "sha256": "edc754005796262a66fce8037cc97ef5dc46ae7147d496b0265946c3ba3fd4ee"
+    },
+    {
+      "bytes": 41473,
+      "path": "seasons/2007/provenance/ole-miss.csv",
+      "sha256": "a7d1af562fd6d4b6da0e0b6e3603250294fc12e7f76c495b77b62138d0edcc99"
+    },
+    {
+      "bytes": 41448,
+      "path": "seasons/2007/provenance/oregon-state.csv",
+      "sha256": "78c550f3dd65bff2b05223d8fa7a04d0389db5bdd425a5637c3dffd5c147788f"
+    },
+    {
+      "bytes": 41410,
+      "path": "seasons/2007/provenance/oregon.csv",
+      "sha256": "e4b03fa6f3fd8ca12310da90ad8860c3bfd2c92ab1135ff59247446572bf0a1c"
+    },
+    {
+      "bytes": 41408,
+      "path": "seasons/2007/provenance/penn-state.csv",
+      "sha256": "9350b31fe49659a990e43335e1e53d8d6b9e803978860002e24b48260717c9e2"
+    },
+    {
+      "bytes": 41516,
+      "path": "seasons/2007/provenance/pittsburgh.csv",
+      "sha256": "02e99634a4e35e3fa6dbdb2802317907ac7b3865f67709e707f79d08e8c7cc86"
+    },
+    {
+      "bytes": 41516,
+      "path": "seasons/2007/provenance/purdue.csv",
+      "sha256": "23b2e56ff81bbc27451d5c12ec1d04b993d0f10643b56d1789d7f9585256af20"
+    },
+    {
+      "bytes": 41342,
+      "path": "seasons/2007/provenance/rice.csv",
+      "sha256": "41a1733a62a0a6ed3690bb30b83f60a4f9082ba3ba15570539b898c364939c97"
+    },
+    {
+      "bytes": 41464,
+      "path": "seasons/2007/provenance/rutgers.csv",
+      "sha256": "fb9327946b84bcb7d50910f6b92c7935188e5047539556a748c02d865d3ec362"
+    },
+    {
+      "bytes": 41531,
+      "path": "seasons/2007/provenance/san-diego-state.csv",
+      "sha256": "75a47e0ea2e80fd631694af18b85b86687ae7f3acba8959e9fd106a85a79de11"
+    },
+    {
+      "bytes": 41430,
+      "path": "seasons/2007/provenance/san-jose-state.csv",
+      "sha256": "a72d26ec2df668990b3f7222b8cb8e9cff3310189bc85259414ba41ab232fe6a"
+    },
+    {
+      "bytes": 41578,
+      "path": "seasons/2007/provenance/smu.csv",
+      "sha256": "2ccbfca206a850ed55592daa898ce9f58a97211a40ceac8f422bdfe63901d51e"
+    },
+    {
+      "bytes": 41550,
+      "path": "seasons/2007/provenance/south-carolina.csv",
+      "sha256": "03473bc72c455887247552f5ffc9ef4ccaddd99b6add360c31b74b8a3cb93baf"
+    },
+    {
+      "bytes": 41562,
+      "path": "seasons/2007/provenance/south-florida.csv",
+      "sha256": "96044f8e77914a2a9ba263068a3e22c0d71bb62c4748b5cd595243523ff84cdd"
+    },
+    {
+      "bytes": 41460,
+      "path": "seasons/2007/provenance/southern-miss.csv",
+      "sha256": "23e73b143cd861932b9ce9d41d570d4e30675aa806df93df66efcec0955bda3f"
+    },
+    {
+      "bytes": 41460,
+      "path": "seasons/2007/provenance/stanford.csv",
+      "sha256": "1df7e3e645a9ec7da9892ed20e2aef232f45f90ad2891e72b070c0b67d5aaa4f"
+    },
+    {
+      "bytes": 41619,
+      "path": "seasons/2007/provenance/syracuse.csv",
+      "sha256": "d8a8a7aabd289e390d6cc6556ee22ba4bbffc9c0f8edea1dae79f55267d2fcd1"
+    },
+    {
+      "bytes": 41454,
+      "path": "seasons/2007/provenance/tcu.csv",
+      "sha256": "6d9c03294e88f37507f2f398b4a426c203338cc1fb3640490d54c11f067dc74a"
+    },
+    {
+      "bytes": 41568,
+      "path": "seasons/2007/provenance/temple.csv",
+      "sha256": "6095538899b5d73e4aa0d76abfdca5bd039fada9e4dd428230899a8239e82f14"
+    },
+    {
+      "bytes": 41485,
+      "path": "seasons/2007/provenance/tennessee.csv",
+      "sha256": "3d7a4654d065cef9a1f824ae2ff6b2f342cc48cd838e890ee22f6940e3265f3f"
+    },
+    {
+      "bytes": 41520,
+      "path": "seasons/2007/provenance/texas-a-m.csv",
+      "sha256": "8ccf4e003d547abc9612877cc25ff8e9debd73006d06842e517f3667a4ec0732"
+    },
+    {
+      "bytes": 41547,
+      "path": "seasons/2007/provenance/texas-tech.csv",
+      "sha256": "891582f516ca8d83a9e0567f1c6c2365f21638cca5f13f0c75d00f4f6295c811"
+    },
+    {
+      "bytes": 41470,
+      "path": "seasons/2007/provenance/texas.csv",
+      "sha256": "9eba4cd7d02e1ffa49df3b5292980b73024afee8f3ed78cd23e01c0a4af96117"
+    },
+    {
+      "bytes": 41349,
+      "path": "seasons/2007/provenance/toledo.csv",
+      "sha256": "eec55fddaa299b0edab1380e539988422672647b8b43ff923ff2c0171480b5eb"
+    },
+    {
+      "bytes": 41440,
+      "path": "seasons/2007/provenance/troy.csv",
+      "sha256": "f30fe544bc2837d7ed4bbf254b09dd9f49875cf9213144b9b6b40615ae1092c1"
+    },
+    {
+      "bytes": 41584,
+      "path": "seasons/2007/provenance/tulane.csv",
+      "sha256": "01232711f0d3b509b2bee2e18332ff5ca361b373710eb8d44dc0edd552f18db2"
+    },
+    {
+      "bytes": 41495,
+      "path": "seasons/2007/provenance/tulsa.csv",
+      "sha256": "599eb17d11e571a1cec2982b326425514f744ca2fffc4a70864bc897b378c47d"
+    },
+    {
+      "bytes": 41508,
+      "path": "seasons/2007/provenance/ucf.csv",
+      "sha256": "025e94cef3faaa704f81d87377c2683ab9e3810ee9b3b536f8e2a5b1dfa82de1"
+    },
+    {
+      "bytes": 41464,
+      "path": "seasons/2007/provenance/ucla.csv",
+      "sha256": "dad8df26be0feaf4bf7ed6d0d147d5bc12c28b21d1211b426abc8619309aed6f"
+    },
+    {
+      "bytes": 41448,
+      "path": "seasons/2007/provenance/uconn.csv",
+      "sha256": "5caee7dcc6ff4215716aaecce2a81aa0bce77bc55b5390fe0180ab150b739ea6"
+    },
+    {
+      "bytes": 41510,
+      "path": "seasons/2007/provenance/ul-monroe.csv",
+      "sha256": "a06e5c0939ee14ef1db03b0ffb534055398d4f2924ffd8946738e8a7b66a2859"
+    },
+    {
+      "bytes": 41436,
+      "path": "seasons/2007/provenance/unlv.csv",
+      "sha256": "ab3604ed58619620a1730ee52ed3c9a72762c023bf876b3ed9341ee199581904"
+    },
+    {
+      "bytes": 41499,
+      "path": "seasons/2007/provenance/usc.csv",
+      "sha256": "61fc41b8a8b84d558e69dff733ab185536164a2faaf02588df7d70ebf3d9c2cb"
+    },
+    {
+      "bytes": 41445,
+      "path": "seasons/2007/provenance/utah-state.csv",
+      "sha256": "57a9651b582a3cd62967eb3dfa8b153d1d8e5d7be7579c0380c5c55c7ba432df"
+    },
+    {
+      "bytes": 41452,
+      "path": "seasons/2007/provenance/utah.csv",
+      "sha256": "b3d1f110f197bd078dcdacc1744d881d05d790fea2e89426b365629b24923a97"
+    },
+    {
+      "bytes": 41515,
+      "path": "seasons/2007/provenance/vanderbilt.csv",
+      "sha256": "e1d4dce7ce0048b38b1d5cee01d60f0bc8961673296b0977411f14445f041938"
+    },
+    {
+      "bytes": 41465,
+      "path": "seasons/2007/provenance/virginia-tech.csv",
+      "sha256": "a4c51e64bff5134cd9c46f027cac4cc07a09a603038a54a00dc89537b084c6d6"
+    },
+    {
+      "bytes": 41488,
+      "path": "seasons/2007/provenance/virginia.csv",
+      "sha256": "f4bfee188883a2696601242e6c56a32efe04a16266e84015d153887b6e1a66fb"
+    },
+    {
+      "bytes": 41431,
+      "path": "seasons/2007/provenance/wake-forest.csv",
+      "sha256": "9d276340a6bd5ffa88a2de8244915f781a047c53617885cd3923231400f66cbb"
+    },
+    {
+      "bytes": 41566,
+      "path": "seasons/2007/provenance/washington-state.csv",
+      "sha256": "97d13ba1e7e6a473c2480806e354eb72fa60934d5b35e58fe6655fb83ef6a537"
+    },
+    {
+      "bytes": 41425,
+      "path": "seasons/2007/provenance/washington.csv",
+      "sha256": "1ab48877a0edda163b2ad3d5be12066b9c04c5fede25b4afa7912ce387800972"
+    },
+    {
+      "bytes": 41541,
+      "path": "seasons/2007/provenance/west-virginia.csv",
+      "sha256": "88472dedc84b369ee0f04dba40ae10a7a51b605ee4bd36fe4622fdffc731619e"
+    },
+    {
+      "bytes": 41363,
+      "path": "seasons/2007/provenance/western-michigan.csv",
+      "sha256": "0d0569cbffd78fe275e5239a5144005e72a1feb5189ffb8fe4277c767255a7e1"
+    },
+    {
+      "bytes": 41458,
+      "path": "seasons/2007/provenance/wisconsin.csv",
+      "sha256": "ecb9aa08efae190107059ec091d3a356c8d3774257e25f8f3b1e6d53ae18479f"
+    },
+    {
+      "bytes": 41510,
+      "path": "seasons/2007/provenance/wyoming.csv",
+      "sha256": "adbbc8d4fa5b92a105a2374a52812daeb2747fc8c0e58ca92ebcb03580712a47"
+    },
+    {
+      "bytes": 982,
+      "path": "seasons/2007/purdue/defense.csv",
+      "sha256": "75357905d3c5ec63f5533552e3f1cab3bd886c053bfecf12cf3573196c3d872b"
+    },
+    {
+      "bytes": 1431,
+      "path": "seasons/2007/purdue/offense.csv",
+      "sha256": "1c4f804bcd3cf14e9d154063849b56df56650c59d70cb44b8c46ea4c7828f5d6"
+    },
+    {
+      "bytes": 711,
+      "path": "seasons/2007/purdue/special.csv",
+      "sha256": "b3256f9f116c842ab4486c0aef0417331902d973f62118c0255dc0e58fb72f60"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2007/purdue/team.yaml",
+      "sha256": "d78b3a86d0896794be055bfcc16c53e2943c25bfe7039e50515ae926a015c2dc"
+    },
+    {
+      "bytes": 916,
+      "path": "seasons/2007/rice/defense.csv",
+      "sha256": "1190160264ba442cc86f445621769729d8f20eb9212fbfc03664d5c2d3271749"
+    },
+    {
+      "bytes": 1442,
+      "path": "seasons/2007/rice/offense.csv",
+      "sha256": "2ee375a39b56f8e7506c5fce7e1fc6ec4bc4ca7d0dd25fa3f18da40a7e27a71a"
+    },
+    {
+      "bytes": 685,
+      "path": "seasons/2007/rice/special.csv",
+      "sha256": "e445cce7f118b26c0c9aed28e46f33efff7b02a9e524b9144b1eaf4c2df93911"
+    },
+    {
+      "bytes": 453,
+      "path": "seasons/2007/rice/team.yaml",
+      "sha256": "432a3f55026fa0c5fdbcad03462c704e2953c664cf99486b1f844999b07deaf6"
+    },
+    {
+      "bytes": 991,
+      "path": "seasons/2007/rutgers/defense.csv",
+      "sha256": "2a8ef717f3c69e74083c9a7e0fda9ea6cd431e3e50f555800fff79695dbca5bb"
+    },
+    {
+      "bytes": 1429,
+      "path": "seasons/2007/rutgers/offense.csv",
+      "sha256": "073ec0b691409d057ab7e653991132890dfb62a40fdec1b854517b9a4aea2445"
+    },
+    {
+      "bytes": 694,
+      "path": "seasons/2007/rutgers/special.csv",
+      "sha256": "d4abeaa5ee7113c32157ff419201ecffe31c07f66d48e9a4fd2d4e1476b89816"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2007/rutgers/team.yaml",
+      "sha256": "d9c6e5483f688a484f35889faf9b14701f62e94f3a31317f998ec2f1f54e7c2e"
+    },
+    {
+      "bytes": 1031,
+      "path": "seasons/2007/san-diego-state/defense.csv",
+      "sha256": "28be5fe73165f0829ac283caea43a7f98b81138b012e0a6778a2d7fb5e47bb12"
+    },
+    {
+      "bytes": 1446,
+      "path": "seasons/2007/san-diego-state/offense.csv",
+      "sha256": "fc8128c67a3a248b69e6feae56d93284fb99ede643fb3d87daeff2e9947ad680"
+    },
+    {
+      "bytes": 703,
+      "path": "seasons/2007/san-diego-state/special.csv",
+      "sha256": "8b5ad986034121d4bc4616290384324960bfe3740192b7b862e06942453aad9a"
+    },
+    {
+      "bytes": 475,
+      "path": "seasons/2007/san-diego-state/team.yaml",
+      "sha256": "1e3e547a0e1c50fd76b4fea6866db3aad3161c58ca69f88cb74ea9c5702f16dd"
+    },
+    {
+      "bytes": 995,
+      "path": "seasons/2007/san-jose-state/defense.csv",
+      "sha256": "3edc9c5bb29853d685a54f1e68d1e9c3013b20619cda57e2e865bd51a3b0e782"
+    },
+    {
+      "bytes": 1403,
+      "path": "seasons/2007/san-jose-state/offense.csv",
+      "sha256": "5843d6c10667717f0fef9bb50d583c3f781ac15e1019529ea9098f420f377e80"
+    },
+    {
+      "bytes": 692,
+      "path": "seasons/2007/san-jose-state/special.csv",
+      "sha256": "2b98c766d03e30431b525bcad2d2c6dc3d2ad9bec8bb851fae96597c9be0e0f3"
+    },
+    {
+      "bytes": 475,
+      "path": "seasons/2007/san-jose-state/team.yaml",
+      "sha256": "f8c72a9b2f48ceeaa0cfce6dcfefa1c75026b86735a80abf3fb4154e914293ae"
+    },
+    {
+      "bytes": 933,
+      "path": "seasons/2007/smu/defense.csv",
+      "sha256": "0689f0e5c9da61bb9cbe2510969921da0a5c47ace191be0a9e6b60bee63c1ebd"
+    },
+    {
+      "bytes": 1501,
+      "path": "seasons/2007/smu/offense.csv",
+      "sha256": "d931b5d7ced318664b5d6b2cea6e9b389d816311ce9457e9da28dda6ec116282"
+    },
+    {
+      "bytes": 710,
+      "path": "seasons/2007/smu/special.csv",
+      "sha256": "4ef1b64a4a4975a3b880973660c8bd6e741a0d39e247b9b01abf2eb18fdcd54c"
+    },
+    {
+      "bytes": 451,
+      "path": "seasons/2007/smu/team.yaml",
+      "sha256": "be3af74d851f1dbf35a23ac45bf33bbfeb3f06e6d4b54c4d605e7878aea68469"
+    },
+    {
+      "bytes": 1034,
+      "path": "seasons/2007/south-carolina/defense.csv",
+      "sha256": "e4cbc9adef40cba0ef5ea3bf5d068a9700ef50579beb53ea2f9b17a783b72ee1"
+    },
+    {
+      "bytes": 1449,
+      "path": "seasons/2007/south-carolina/offense.csv",
+      "sha256": "470af0be0ae47011798d5ad00a857c963ffb5a003e467dc8a6b66bcf2eff8c6f"
+    },
+    {
+      "bytes": 715,
+      "path": "seasons/2007/south-carolina/special.csv",
+      "sha256": "a234c7fa711ebf84416570a6eead8116835f87e81edb95e624f4feeeb52d21fb"
+    },
+    {
+      "bytes": 473,
+      "path": "seasons/2007/south-carolina/team.yaml",
+      "sha256": "de0137e08017b54722b82b247b8ced68c9202792791aa1e426a525375f9c7f7e"
+    },
+    {
+      "bytes": 1065,
+      "path": "seasons/2007/south-florida/defense.csv",
+      "sha256": "29006d36653423c240d885ab9ab1ff81367fbbeb75a7d32ca79593e34ebed82d"
+    },
+    {
+      "bytes": 1435,
+      "path": "seasons/2007/south-florida/offense.csv",
+      "sha256": "294e1a07a6355190a2b41c8f1b1373d5ce8526e697d698a29f1386e58be00c39"
+    },
+    {
+      "bytes": 698,
+      "path": "seasons/2007/south-florida/special.csv",
+      "sha256": "72e09fede184d39648976258c0414d70c209fea6ba9eb27731af1715beb5884b"
+    },
+    {
+      "bytes": 471,
+      "path": "seasons/2007/south-florida/team.yaml",
+      "sha256": "c1e7392deeb5a53c2e5ffc34e1fcd237beed4613c8df3ff0fa622d65acd7a216"
+    },
+    {
+      "bytes": 946,
+      "path": "seasons/2007/southern-miss/defense.csv",
+      "sha256": "5553ca1206d06f15863c30eda18838ae74986fd5213892f6d6afec7e4be36697"
+    },
+    {
+      "bytes": 1409,
+      "path": "seasons/2007/southern-miss/offense.csv",
+      "sha256": "4d2a6fc0a3881ed7f683fcc25ba968c99ea31574892f811ab3321cb76ccf375c"
+    },
+    {
+      "bytes": 711,
+      "path": "seasons/2007/southern-miss/special.csv",
+      "sha256": "36b997cdb3a78fc9b481eb773a151ac9e271936d08f8175fd79a162a96def027"
+    },
+    {
+      "bytes": 471,
+      "path": "seasons/2007/southern-miss/team.yaml",
+      "sha256": "c26a39f1148d048f6d1bae1cb932224135d8e0c47b0d061ff8d9beeca0f6f45a"
+    },
+    {
+      "bytes": 916,
+      "path": "seasons/2007/stanford/defense.csv",
+      "sha256": "5091e09e48a7bd7acd45b15b22d55ccbdb8919cd01f8d3517d4b3fa36443b287"
+    },
+    {
+      "bytes": 1451,
+      "path": "seasons/2007/stanford/offense.csv",
+      "sha256": "9242da2cefa54fa1d3df4c883312d9f64f9baaed7b35e200d1727efa3b733afb"
+    },
+    {
+      "bytes": 698,
+      "path": "seasons/2007/stanford/special.csv",
+      "sha256": "8de08b57c9312034b8c579e42ab509625ac45db52795f301665d740afae3059a"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/stanford/team.yaml",
+      "sha256": "9ba4f911a0590c134371d09c4b226e0a586588395e39f6ea46429de316e862fb"
+    },
+    {
+      "bytes": 981,
+      "path": "seasons/2007/syracuse/defense.csv",
+      "sha256": "8f9e5c2be9da680c8ddcd453145bda076fad480284f030ec6803aa583c5faa08"
+    },
+    {
+      "bytes": 1472,
+      "path": "seasons/2007/syracuse/offense.csv",
+      "sha256": "68a804a41889e39ed8b0dd98388cb378c8f480a7155952d6ab6681be216592a8"
+    },
+    {
+      "bytes": 715,
+      "path": "seasons/2007/syracuse/special.csv",
+      "sha256": "efc4dd751bce37b3351630db6be24825f7b74683bdd448ea635d0bac35c0cd78"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/syracuse/team.yaml",
+      "sha256": "ad430e9c76b98d9691eea3c3d3ed6095f45e07fb945cb8721093695212c26e1c"
+    },
+    {
+      "bytes": 1065,
+      "path": "seasons/2007/tcu/defense.csv",
+      "sha256": "a762f0aa4cbbe9212d7151ad167efac9209f47e9d9d838111a2ca5861999c2e0"
+    },
+    {
+      "bytes": 1395,
+      "path": "seasons/2007/tcu/offense.csv",
+      "sha256": "19b7041d8844e5c431ba0412dfa76ac71b76cdcd72e5a8de230b9fdf0098a4a5"
+    },
+    {
+      "bytes": 704,
+      "path": "seasons/2007/tcu/special.csv",
+      "sha256": "1883704c7460c12dee1675fa3153606dea0498484d2a115fc77cff18b150b9d3"
+    },
+    {
+      "bytes": 451,
+      "path": "seasons/2007/tcu/team.yaml",
+      "sha256": "5be45ff1ff9f5c72894beac4048c070be31d661e53b6bfb9428f549f5b45febd"
+    },
+    {
+      "bytes": 948,
+      "path": "seasons/2007/temple/defense.csv",
+      "sha256": "0b96180484b1929ac5fdee6147ce378248b54387a493340225d94f201592b48e"
+    },
+    {
+      "bytes": 1467,
+      "path": "seasons/2007/temple/offense.csv",
+      "sha256": "50d1fdf5543dfd5c5fa228fbd4276be9e5f0c55b7ade30a358f7cecea0768959"
+    },
+    {
+      "bytes": 692,
+      "path": "seasons/2007/temple/special.csv",
+      "sha256": "b6ca98073281416ea5a1a9dc126784d4cdb3976ab9371e87c6a46b44dd45373b"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2007/temple/team.yaml",
+      "sha256": "d692b269dbde8ad4668889290944406414d9369b701ebc049c10e0f14e08c061"
+    },
+    {
+      "bytes": 989,
+      "path": "seasons/2007/tennessee/defense.csv",
+      "sha256": "5c8270da3118e789120c97496a3d41f6ea9c3ffed72fb2589757bb70e693ef4a"
+    },
+    {
+      "bytes": 1402,
+      "path": "seasons/2007/tennessee/offense.csv",
+      "sha256": "0cdf8ee5fbf82fe7a2da7005f7c6287ad545dfb78f2161a2c01d6a3e2c408cc0"
+    },
+    {
+      "bytes": 721,
+      "path": "seasons/2007/tennessee/special.csv",
+      "sha256": "c03d175d5f542c04bfa1e103ef03f0ff40d7bf192683ce9cefc8e89931134649"
+    },
+    {
+      "bytes": 463,
+      "path": "seasons/2007/tennessee/team.yaml",
+      "sha256": "22f02f0ac40c85d550417a0510f7873c5d84827eebad48825ff31f53c99b9243"
+    },
+    {
+      "bytes": 940,
+      "path": "seasons/2007/texas-a-m/defense.csv",
+      "sha256": "c970772b11b930b3734f697c5b3167515d3585f746a1aa187001c467ebab2d72"
+    },
+    {
+      "bytes": 1459,
+      "path": "seasons/2007/texas-a-m/offense.csv",
+      "sha256": "ab4d63294d5c151a57e91bddb0e8ad77d996581427d4115fa27d5340c49c7353"
+    },
+    {
+      "bytes": 696,
+      "path": "seasons/2007/texas-a-m/special.csv",
+      "sha256": "1de703bc3df94c206117c0ea1ec32ca133c4709fc190474c0806635fc40e5e3f"
+    },
+    {
+      "bytes": 463,
+      "path": "seasons/2007/texas-a-m/team.yaml",
+      "sha256": "82eac6458c8dae411010a910e8fb2bea46f44642eb91810e65edfdd604449abc"
+    },
+    {
+      "bytes": 1050,
+      "path": "seasons/2007/texas-tech/defense.csv",
+      "sha256": "58c6e710f5b6ad7bda9cad33df33629e375823ad77736372e749c107398b6e79"
+    },
+    {
+      "bytes": 1418,
+      "path": "seasons/2007/texas-tech/offense.csv",
+      "sha256": "beb79efdae74487e18772f8630bca1f23b369a985e22d3939910af74adec93da"
+    },
+    {
+      "bytes": 701,
+      "path": "seasons/2007/texas-tech/special.csv",
+      "sha256": "b80c52d3f9d58ec098ec7db849db6aa9f92fb839479e92a21160c3206b4d5815"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/texas-tech/team.yaml",
+      "sha256": "744372fb8bd971be67046d4d780a35a6c8b05d16f45140eb07e6d8a3e152dd51"
+    },
+    {
+      "bytes": 1001,
+      "path": "seasons/2007/texas/defense.csv",
+      "sha256": "2e7c57328ec93b6c255c086c0a8cf9d78b7367de07b3e2c6521e0ce6666a566c"
+    },
+    {
+      "bytes": 1381,
+      "path": "seasons/2007/texas/offense.csv",
+      "sha256": "4dc15a7dcfe140bd46371d5ea748db80c16016abe44f986ee296133464737f35"
+    },
+    {
+      "bytes": 691,
+      "path": "seasons/2007/texas/special.csv",
+      "sha256": "22f8d63620346bac9d5d8b5f62d8667762387c6bdc21478ca116df72e750fb55"
+    },
+    {
+      "bytes": 455,
+      "path": "seasons/2007/texas/team.yaml",
+      "sha256": "420aac984e2094a9db60a37b55b005a8354f90fe722b65ae4d21a9b69d53241e"
+    },
+    {
+      "bytes": 916,
+      "path": "seasons/2007/toledo/defense.csv",
+      "sha256": "f78083c798d89a84c04816160d81015828a81aafc68ffaeff57bd4d3847cd440"
+    },
+    {
+      "bytes": 1430,
+      "path": "seasons/2007/toledo/offense.csv",
+      "sha256": "56c4716e99740529059263fd70af6fa6a51c8e17a866388a7d2bb53e4c1e9a60"
+    },
+    {
+      "bytes": 712,
+      "path": "seasons/2007/toledo/special.csv",
+      "sha256": "9456ac951e126c2b0dfb303f027e030147602121fdd98af9e149132f12422b66"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2007/toledo/team.yaml",
+      "sha256": "624e8283135ab578b5116c4db9bda877f12ccdded3f82540e7928c0d741fd2af"
+    },
+    {
+      "bytes": 1006,
+      "path": "seasons/2007/troy/defense.csv",
+      "sha256": "35f5a6af64218e724c8e79607ba5c64e2a76dfdfc21a6f24fdb500643947deb3"
+    },
+    {
+      "bytes": 1408,
+      "path": "seasons/2007/troy/offense.csv",
+      "sha256": "b889c4782a8bc10d27c2d910405166bc7ea3f0cf8e5301b9abe788f2118e3224"
+    },
+    {
+      "bytes": 711,
+      "path": "seasons/2007/troy/special.csv",
+      "sha256": "3aa8da1590feb57089f087c297a0c0ac5213b5b7c535246e59907ff586b69fa2"
+    },
+    {
+      "bytes": 453,
+      "path": "seasons/2007/troy/team.yaml",
+      "sha256": "06df61749fa77d1beaef54140cbee30c8afe5f522a9fc593f9c20bd7e4b4dad4"
+    },
+    {
+      "bytes": 1021,
+      "path": "seasons/2007/tulane/defense.csv",
+      "sha256": "c3eda87355691a68c213b0a205860051f703e3fb05f00308001267f46498c75f"
+    },
+    {
+      "bytes": 1469,
+      "path": "seasons/2007/tulane/offense.csv",
+      "sha256": "ec526a3ffe34eaf4854259d5c8ad6c60e5d5c81b9472cedd6b97af766d3990e6"
+    },
+    {
+      "bytes": 681,
+      "path": "seasons/2007/tulane/special.csv",
+      "sha256": "6051df6ea66e11cee290d87035d3c01b306de45f1eca134ab0a2804dfa8f58ff"
+    },
+    {
+      "bytes": 457,
+      "path": "seasons/2007/tulane/team.yaml",
+      "sha256": "4e715a9f64a8d67425b441e113424e129e945b8ee8b0b93dabe935bbee263780"
+    },
+    {
+      "bytes": 946,
+      "path": "seasons/2007/tulsa/defense.csv",
+      "sha256": "e62053fe6d0131d47b693eabdefb89d53c789f73e8f0e39f0f4a8595c07049e4"
+    },
+    {
+      "bytes": 1433,
+      "path": "seasons/2007/tulsa/offense.csv",
+      "sha256": "23ddfcc0ed20879850418befaadf6842a3ec8d00f1d0e3a151982614e3078ba1"
+    },
+    {
+      "bytes": 677,
+      "path": "seasons/2007/tulsa/special.csv",
+      "sha256": "b7669ffc693e9138fd86ccc551b2995d3a621b45e145d04d22725317bbbe7ebc"
+    },
+    {
+      "bytes": 455,
+      "path": "seasons/2007/tulsa/team.yaml",
+      "sha256": "321f5742a02afd99c1cc46a0e3373e73d4a05e1bc50e51b75363ee4b991ef14a"
+    },
+    {
+      "bytes": 1014,
+      "path": "seasons/2007/ucf/defense.csv",
+      "sha256": "4e3425c6d28f8f6aa702772d17769910d2fa8aaece5e0114abafa25910a25d91"
+    },
+    {
+      "bytes": 1439,
+      "path": "seasons/2007/ucf/offense.csv",
+      "sha256": "709bda31bb43831d45ccaa3da93d47d3ff79e39b8d1926bfea0a33b33e6d3d08"
+    },
+    {
+      "bytes": 704,
+      "path": "seasons/2007/ucf/special.csv",
+      "sha256": "b102dd8535d0c4365e7a69ecbb8613faba1410cacc31731ae6952de698edb82f"
+    },
+    {
+      "bytes": 451,
+      "path": "seasons/2007/ucf/team.yaml",
+      "sha256": "ee7a7982d489b64e1b3160b2491a503f8e961fa47159fd5e5b8cb7aa00bc400b"
+    },
+    {
+      "bytes": 1078,
+      "path": "seasons/2007/ucla/defense.csv",
+      "sha256": "8f5d5c0e0af1cc66b95424a1bb099a90697554bc369c5dfbc0168197b0852d83"
+    },
+    {
+      "bytes": 1422,
+      "path": "seasons/2007/ucla/offense.csv",
+      "sha256": "e82634792e7f667476c5ba1f04bc875f779bf9dada59685f8d069974b6471dc6"
+    },
+    {
+      "bytes": 710,
+      "path": "seasons/2007/ucla/special.csv",
+      "sha256": "8ef94d2917cdbaddc918ea17d6f0f1fc6d48a3a8218cda0182974ad4a6834cf1"
+    },
+    {
+      "bytes": 453,
+      "path": "seasons/2007/ucla/team.yaml",
+      "sha256": "f0bd8683258930c172e5195872933d0096c6182100f7813475f88e56afe3e72b"
+    },
+    {
+      "bytes": 1025,
+      "path": "seasons/2007/uconn/defense.csv",
+      "sha256": "477ff0ed3b4813e9df1079c1737e0b354fb2933d20a0b6b4f050440574c3a481"
+    },
+    {
+      "bytes": 1387,
+      "path": "seasons/2007/uconn/offense.csv",
+      "sha256": "f8e5aa90ab9a7b8e5ec06d38e1cae3e35d751937b0f1de9b2f3a8b006ad37dbb"
+    },
+    {
+      "bytes": 710,
+      "path": "seasons/2007/uconn/special.csv",
+      "sha256": "bd35e3d18dde99f7bd9dca05953fc0da1402df4310d66120646794a079146223"
+    },
+    {
+      "bytes": 455,
+      "path": "seasons/2007/uconn/team.yaml",
+      "sha256": "93b81fa77d26e8f960ff0d4cedc9d2482a4d3c4ed028a44e79b4a56403677e62"
+    },
+    {
+      "bytes": 951,
+      "path": "seasons/2007/ul-monroe/defense.csv",
+      "sha256": "3c9b98d28543bce7f776c7271ad17cb8a8c51184802f611f912018128cf56ac2"
+    },
+    {
+      "bytes": 1461,
+      "path": "seasons/2007/ul-monroe/offense.csv",
+      "sha256": "fb7476eeec5dac66eafac8a319e489c00cecd319976dd025d6baacf9e7c3679b"
+    },
+    {
+      "bytes": 691,
+      "path": "seasons/2007/ul-monroe/special.csv",
+      "sha256": "ab989f82464f88add4df33127395ed624a38acfcec8ad7b795c116f47eb4e019"
+    },
+    {
+      "bytes": 463,
+      "path": "seasons/2007/ul-monroe/team.yaml",
+      "sha256": "ba07965428d4aedd5260ddcaab67c792ad309d6efb50faef9209d71785e68094"
+    },
+    {
+      "bytes": 915,
+      "path": "seasons/2007/unlv/defense.csv",
+      "sha256": "f95968cd776d8e4da37849e63bebc496251135dab7502e29383e570e27454caf"
+    },
+    {
+      "bytes": 1429,
+      "path": "seasons/2007/unlv/offense.csv",
+      "sha256": "bfb5437ce89a4000ebe7b25758db9d96591886fc53000170fa11a902e7b54f6d"
+    },
+    {
+      "bytes": 694,
+      "path": "seasons/2007/unlv/special.csv",
+      "sha256": "7a35b17fad4c95be1a4931824a36b6e351e067c37eac33896e725a133d543602"
+    },
+    {
+      "bytes": 453,
+      "path": "seasons/2007/unlv/team.yaml",
+      "sha256": "ab9cac8a67ddea76bdd42903ae5a64c5d84d7f8794c70f105675a7509bbbdb40"
+    },
+    {
+      "bytes": 1113,
+      "path": "seasons/2007/usc/defense.csv",
+      "sha256": "bc77ec128d181561abf70971f41b400eb475b1d6498c40f4c2f4f36f8ed74d39"
+    },
+    {
+      "bytes": 1418,
+      "path": "seasons/2007/usc/offense.csv",
+      "sha256": "cfc0f2f5b9afc4bdebc7388cee6be81e190eb7ff659d3aca37ab4f4170bfcf53"
+    },
+    {
+      "bytes": 715,
+      "path": "seasons/2007/usc/special.csv",
+      "sha256": "e3f1d7a2012cb48dc0fd4176cb7a0f48967baf0b92e28b7e691bf077ed8b8e38"
+    },
+    {
+      "bytes": 451,
+      "path": "seasons/2007/usc/team.yaml",
+      "sha256": "c5a6e0330cb86ecdf3f12a0960d130b8e44e8d24e1e1eb1d323dae66395435f2"
+    },
+    {
+      "bytes": 1010,
+      "path": "seasons/2007/utah-state/defense.csv",
+      "sha256": "9d73f7476951031657ba89c4a1bfad44cda929af39d1c19e14179e94b0c93561"
+    },
+    {
+      "bytes": 1343,
+      "path": "seasons/2007/utah-state/offense.csv",
+      "sha256": "4cb43cfab09df60b2b31e30e367f6988a9c9a5fe908b869d372daa3dbcf012cb"
+    },
+    {
+      "bytes": 715,
+      "path": "seasons/2007/utah-state/special.csv",
+      "sha256": "a4aa3376decc579da2e1fc3147865bf9419b8c65f3cb1fa4a07687324564f204"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/utah-state/team.yaml",
+      "sha256": "2704cb67d7f3a7f0553c677afc7cbcf64560de9bc8db0e7ee3d4b2687243972a"
+    },
+    {
+      "bytes": 1009,
+      "path": "seasons/2007/utah/defense.csv",
+      "sha256": "392a2002d0bc4f7f28b3d2d3b38dc1dcbc17076802b1d16d2753a1aabb897d9c"
+    },
+    {
+      "bytes": 1395,
+      "path": "seasons/2007/utah/offense.csv",
+      "sha256": "ddcdc4bfb38feef793f3fad6759615b60af191b7d1a79e33ec4ba82bbaa280e6"
+    },
+    {
+      "bytes": 693,
+      "path": "seasons/2007/utah/special.csv",
+      "sha256": "7bdfe009dfd4da416ca89c5a50c66304edd62cd7359a53150569a111027aa07b"
+    },
+    {
+      "bytes": 453,
+      "path": "seasons/2007/utah/team.yaml",
+      "sha256": "bd9d819f925820fd4a64a127f1f9b2c52de5961aba1b2b7487caeb5c1fd62627"
+    },
+    {
+      "bytes": 998,
+      "path": "seasons/2007/vanderbilt/defense.csv",
+      "sha256": "33f2cd3c3cb3f587724ec044284fac289c13123f7ef3770d8db7ef43c8f81bbb"
+    },
+    {
+      "bytes": 1437,
+      "path": "seasons/2007/vanderbilt/offense.csv",
+      "sha256": "f4b4050d78db53069c99ad5d05894ea09ad1b1aa90a790c03ba4edf218a13b05"
+    },
+    {
+      "bytes": 690,
+      "path": "seasons/2007/vanderbilt/special.csv",
+      "sha256": "dad98152eaf8cb848a90d7a0dc9be4d82b209f1cb77f53ef97b8e210588716da"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/vanderbilt/team.yaml",
+      "sha256": "ff5e2e6743e533d0441bfc46ecbaa921c53e1888640a8d9288128c6173f94c0f"
+    },
+    {
+      "bytes": 1084,
+      "path": "seasons/2007/virginia-tech/defense.csv",
+      "sha256": "6d8bb7658915cab2ab457fde2dc426b5033fd6d6c9d067ab8c1d9d133089bace"
+    },
+    {
+      "bytes": 1412,
+      "path": "seasons/2007/virginia-tech/offense.csv",
+      "sha256": "0b03e5d16645ff891cbc661a0b79e0bf54b05ff10f2fe28ab65ecc9c0cab832d"
+    },
+    {
+      "bytes": 697,
+      "path": "seasons/2007/virginia-tech/special.csv",
+      "sha256": "375512a04568c503efabaf952260791155defe2442b644dec3a455f86962a2e1"
+    },
+    {
+      "bytes": 471,
+      "path": "seasons/2007/virginia-tech/team.yaml",
+      "sha256": "7d33096c92a4b9e0f1da58b76af975645308ea6da2da19aa03d605b54a516125"
+    },
+    {
+      "bytes": 1031,
+      "path": "seasons/2007/virginia/defense.csv",
+      "sha256": "3869e5b270ca9f8a3cf8893a849abd8394fdd5ef65efe465510aeb962c97019c"
+    },
+    {
+      "bytes": 1411,
+      "path": "seasons/2007/virginia/offense.csv",
+      "sha256": "6de8dea331db29b2850c3c86f4662e5b31e5b08c6ec55ec3ca9134e18067ed13"
+    },
+    {
+      "bytes": 715,
+      "path": "seasons/2007/virginia/special.csv",
+      "sha256": "796d1eb65c63d4914c0a81d56c533f8a369254af115c93d78580d5a9fe1c7096"
+    },
+    {
+      "bytes": 461,
+      "path": "seasons/2007/virginia/team.yaml",
+      "sha256": "774370f47edb1b25a19529d7ef3e53971522992c76528e5d2259bb719a95a6e5"
+    },
+    {
+      "bytes": 1095,
+      "path": "seasons/2007/wake-forest/defense.csv",
+      "sha256": "cfb3d02795dfae8d6efde8ec8fbbb080b9aac4165fa5e05a9d463a243c5ae6da"
+    },
+    {
+      "bytes": 1339,
+      "path": "seasons/2007/wake-forest/offense.csv",
+      "sha256": "b602a428a20050938737c4004bdf5deba623540cec3661407f883cb4265f1d6b"
+    },
+    {
+      "bytes": 695,
+      "path": "seasons/2007/wake-forest/special.csv",
+      "sha256": "d59ee8d4116bc6fd6728b26a34d7b80cdcd8100c760c17015d213f847a833600"
+    },
+    {
+      "bytes": 467,
+      "path": "seasons/2007/wake-forest/team.yaml",
+      "sha256": "b617e2493125a3bb1c274254bbe76e5e426bd2cb24dbb025c55ea8c1f6f22d17"
+    },
+    {
+      "bytes": 1001,
+      "path": "seasons/2007/washington-state/defense.csv",
+      "sha256": "7f0cc0df8ab33048a9714bae133bc7033333d41607d8b592933b83d4d7fada2e"
+    },
+    {
+      "bytes": 1458,
+      "path": "seasons/2007/washington-state/offense.csv",
+      "sha256": "1ebac6997679cc23161dd28b5f36db3b31d846446da0cf74708c5d7743f8a3fd"
+    },
+    {
+      "bytes": 699,
+      "path": "seasons/2007/washington-state/special.csv",
+      "sha256": "e8caaf31171e7372518c5aa114ebe41197177650da75258a58105a211a7159ec"
+    },
+    {
+      "bytes": 477,
+      "path": "seasons/2007/washington-state/team.yaml",
+      "sha256": "bdbaa540012f1c2aa8cdb4c57d5bbd626cca0f6a8d795f5ad4230f6504bebea2"
+    },
+    {
+      "bytes": 963,
+      "path": "seasons/2007/washington/defense.csv",
+      "sha256": "265c78d314c280727b6bf00bb7d998e79cb6f38721b0045b92c6a4d21c180d2d"
+    },
+    {
+      "bytes": 1458,
+      "path": "seasons/2007/washington/offense.csv",
+      "sha256": "a733c1ae4426b411ea5b11ab40ff8deedbba7fc17526490d63a24f6690beb71e"
+    },
+    {
+      "bytes": 709,
+      "path": "seasons/2007/washington/special.csv",
+      "sha256": "24c1b0d4f86fc8db42d776b12eb8a98e3f770d0961d0c0454213db7f87ac713a"
+    },
+    {
+      "bytes": 465,
+      "path": "seasons/2007/washington/team.yaml",
+      "sha256": "1772d9a2e7a4af35703ab947ad3e561c1d94d00673d840d03cf856982ecc5232"
+    },
+    {
+      "bytes": 1050,
+      "path": "seasons/2007/west-virginia/defense.csv",
+      "sha256": "19dd0746661521a097f6463ff204584284f55554ba03d29b8680d096f8bd41b0"
+    },
+    {
+      "bytes": 1434,
+      "path": "seasons/2007/west-virginia/offense.csv",
+      "sha256": "cd5daf1d586b9f021f76dc57ec0bb680fd2df5b937af88b9377802fb70b96626"
+    },
+    {
+      "bytes": 717,
+      "path": "seasons/2007/west-virginia/special.csv",
+      "sha256": "ab36752775324d5a33e4f8bf1004bea936c9dbbdf897df819e1f056962e0d282"
+    },
+    {
+      "bytes": 471,
+      "path": "seasons/2007/west-virginia/team.yaml",
+      "sha256": "aa22df94e0a31296b8e66149ba5f6d6c752b66ed77f628c042ec58fc7e074ed8"
+    },
+    {
+      "bytes": 1019,
+      "path": "seasons/2007/western-michigan/defense.csv",
+      "sha256": "e4730058b1f4a16434f1f76bdcce3e21ca7a9bab6538ee338d647280ad145d85"
+    },
+    {
+      "bytes": 1357,
+      "path": "seasons/2007/western-michigan/offense.csv",
+      "sha256": "20173a6ab05a0dd24cf1780bbc20479b2082f36b34c5b3209908bba992f8fa7b"
+    },
+    {
+      "bytes": 733,
+      "path": "seasons/2007/western-michigan/special.csv",
+      "sha256": "3ed3685f774c88522763c416991e35e2218a169cb813e952aeaa7b2c9d043371"
+    },
+    {
+      "bytes": 477,
+      "path": "seasons/2007/western-michigan/team.yaml",
+      "sha256": "f8fccfcfaea4ec56913f9eba809753fd93d681844b2cd30444d531a7436e3766"
+    },
+    {
+      "bytes": 980,
+      "path": "seasons/2007/wisconsin/defense.csv",
+      "sha256": "ce0463656f3273516a6f505b69268ba4343af862649922d2c0b762c40e0441fe"
+    },
+    {
+      "bytes": 1395,
+      "path": "seasons/2007/wisconsin/offense.csv",
+      "sha256": "b7931a708b4827b7a43b620d9aa79208f391fa8e17d42a6c578a1b3a7e3b164e"
+    },
+    {
+      "bytes": 718,
+      "path": "seasons/2007/wisconsin/special.csv",
+      "sha256": "035d1e68caa5125f03b4fedf94f5aeab243bd3ad00a4d0ec0159909e8e727c10"
+    },
+    {
+      "bytes": 463,
+      "path": "seasons/2007/wisconsin/team.yaml",
+      "sha256": "45f41879744a5f7dd70ea5fa2f034f8b18e3343f2f0c968e82dda196d99aa955"
+    },
+    {
+      "bytes": 1026,
+      "path": "seasons/2007/wyoming/defense.csv",
+      "sha256": "effb5a84a3a4b4f27722cc2fcab37e39abfa6322d8ef43f6cb0df07ea685275c"
+    },
+    {
+      "bytes": 1447,
+      "path": "seasons/2007/wyoming/offense.csv",
+      "sha256": "140de21bce729b93984ffd8fec8fcb9ecad1920758c0dce826c8e15fb29df6f8"
+    },
+    {
+      "bytes": 705,
+      "path": "seasons/2007/wyoming/special.csv",
+      "sha256": "af9bf835b59c7db573f9d0d31ebe769055c83c56c88707a7f8eac5630d4532e4"
+    },
+    {
+      "bytes": 459,
+      "path": "seasons/2007/wyoming/team.yaml",
+      "sha256": "416049731e22193450b339900d898875dda975fa6873d8799ceb0701bb5f803b"
     },
     {
       "bytes": 889,
@@ -344,11 +5449,194 @@
     ],
     "version": "0.27.7"
   },
-  "scope": "public-fictional-samples",
+  "scope": "release-catalog",
   "seasons": {
+    "1972": [
+      "colorado",
+      "iowa-state",
+      "kansas-state",
+      "kansas",
+      "missouri",
+      "nebraska",
+      "oklahoma-state",
+      "oklahoma"
+    ],
+    "2002": [
+      "alabama",
+      "arizona-state",
+      "arizona",
+      "arkansas",
+      "auburn",
+      "baylor",
+      "boston-college",
+      "california",
+      "colorado",
+      "duke",
+      "florida",
+      "georgia-tech",
+      "georgia",
+      "illinois",
+      "indiana",
+      "iowa-state",
+      "iowa",
+      "kansas-state",
+      "kansas",
+      "kentucky",
+      "lsu",
+      "miami",
+      "michigan-state",
+      "michigan",
+      "minnesota",
+      "mississippi-state",
+      "missouri",
+      "nc-state",
+      "nebraska",
+      "northwestern",
+      "notre-dame",
+      "ohio-state",
+      "oklahoma-state",
+      "oklahoma",
+      "ole-miss",
+      "oregon-state",
+      "oregon",
+      "penn-state",
+      "pittsburgh",
+      "purdue",
+      "rutgers",
+      "stanford",
+      "temple",
+      "tennessee",
+      "texas-a-m",
+      "texas-tech",
+      "texas",
+      "ucla",
+      "usc",
+      "vanderbilt",
+      "virginia-tech",
+      "washington-state",
+      "washington",
+      "west-virginia",
+      "wisconsin"
+    ],
     "2007": [
+      "air-force",
+      "akron",
+      "alabama",
+      "arizona-state",
+      "arizona",
+      "arkansas-state",
+      "arkansas",
+      "army",
+      "auburn",
+      "ball-state",
+      "baylor",
+      "boise-state",
+      "boston-college",
+      "bowling-green",
+      "byu",
+      "california",
       "cedar-valley",
-      "harbor-tech"
+      "central-michigan",
+      "cincinnati",
+      "clemson",
+      "colorado-state",
+      "colorado",
+      "duke",
+      "east-carolina",
+      "eastern-michigan",
+      "florida-atlantic",
+      "florida-international",
+      "florida-state",
+      "florida",
+      "fresno-state",
+      "georgia-tech",
+      "georgia",
+      "harbor-tech",
+      "hawai-i",
+      "houston",
+      "idaho",
+      "illinois",
+      "indiana",
+      "iowa-state",
+      "iowa",
+      "kansas-state",
+      "kansas",
+      "kent-state",
+      "kentucky",
+      "louisiana-tech",
+      "louisiana",
+      "louisville",
+      "lsu",
+      "marshall",
+      "maryland",
+      "memphis",
+      "miami-oh",
+      "miami",
+      "michigan-state",
+      "michigan",
+      "middle-tennessee",
+      "minnesota",
+      "mississippi-state",
+      "missouri",
+      "navy",
+      "nc-state",
+      "nebraska",
+      "nevada",
+      "new-mexico-state",
+      "new-mexico",
+      "north-carolina",
+      "north-texas",
+      "northern-illinois",
+      "northwestern",
+      "notre-dame",
+      "ohio-state",
+      "ohio",
+      "oklahoma-state",
+      "oklahoma",
+      "ole-miss",
+      "oregon-state",
+      "oregon",
+      "penn-state",
+      "pittsburgh",
+      "purdue",
+      "rice",
+      "rutgers",
+      "san-diego-state",
+      "san-jose-state",
+      "smu",
+      "south-carolina",
+      "south-florida",
+      "southern-miss",
+      "stanford",
+      "syracuse",
+      "tcu",
+      "temple",
+      "tennessee",
+      "texas-a-m",
+      "texas-tech",
+      "texas",
+      "toledo",
+      "troy",
+      "tulane",
+      "tulsa",
+      "ucf",
+      "ucla",
+      "uconn",
+      "ul-monroe",
+      "unlv",
+      "usc",
+      "utah-state",
+      "utah",
+      "vanderbilt",
+      "virginia-tech",
+      "virginia",
+      "wake-forest",
+      "washington-state",
+      "washington",
+      "west-virginia",
+      "western-michigan",
+      "wisconsin",
+      "wyoming"
     ]
   },
   "version": 1
