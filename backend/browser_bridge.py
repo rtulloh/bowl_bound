@@ -10,9 +10,7 @@ from urllib.parse import parse_qs, unquote, urlsplit
 
 from pydantic import TypeAdapter, ValidationError
 
-from bowl_bound.save_game import MAX_SAVE_BYTES
-
-from .operations import MAX_COMMAND_BYTES, Operation, OperationError, create_operations
+from .operations import Operation, OperationError, create_operations, operation_body_limit
 
 _LOAD_PATH = "/api/games/load"
 _JSON_RESPONSE = TypeAdapter(object)
@@ -53,7 +51,7 @@ class BrowserBridge:
         route_path = unquote(target.path)
         method = method.upper()
         if method == "POST" and body is not None:
-            limit = MAX_SAVE_BYTES if route_path == _LOAD_PATH else MAX_COMMAND_BYTES
+            limit = operation_body_limit(route_path)
             if len(body.encode("utf-8")) > limit:
                 raise OperationError(413, "Request body exceeds the size limit.")
 

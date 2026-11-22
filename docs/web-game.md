@@ -2,8 +2,9 @@
 
 The static build runs the Bowl Bound Python engine in a Pyodide worker. A host
 serves the assets over HTTPS or localhost. Players open the site and choose
-Cedar Valley and Harbor Tech, the two fictional 2007 teams included in this
-build. Serve the whole output directory, including `browser/`, and preserve
+Cedar Valley and Harbor Tech in the default sample build. A build staged
+with `--include-release-teams` also includes exactly the generated charts and
+reviewed rosters pinned in the release manifest. Serve the whole output directory, including `browser/`, and preserve
 its directory structure when deploying under a subpath.
 
 ## Build and test locally
@@ -41,4 +42,26 @@ can remove them. Keep an export as a backup, especially if the browser reports
 a storage error. Pause and reload to recover the last confirmed checkpoint if
 the engine stops responding.
 
-This build covers individual games. Season management is deferred.
+## Play a season
+
+Select **Seasons** from the opening screen. Give the campaign a name and choose
+a historical schedule or **Custom schedule**. Historical choices depend on the
+installed chart catalog. The [schedule coverage](season-schedules.md) lists the
+games and teams included in each template. For a custom league, choose chart
+editions, assign conferences as needed, and enter the week and home and away
+teams for each matchup. Mark games that count toward the conference record.
+
+Choose a control mode and select **Play game**. Use **Return to seasons** in the
+game menu to leave a fixture and **Resume game** to continue it. Finished games
+automatically update **Standings**, **Team statistics**, and **Rankings**.
+Only fixtures explicitly marked as conference games count in conference records.
+The ranking uses two-thirds overall winning percentage and one-third opponents'
+winning percentage. It weights opponents by completed meetings, excludes their
+games against the team being ranked, and uses .500 when an opponent has no
+other results. Ties count as half a win.
+
+The browser stores each fixture checkpoint and its accepted final result together
+in its local season library. **Remove result** reopens a completed fixture and
+recomputes the season totals. **Discard progress** removes an unfinished checkpoint.
+If a fixture save fails, use **Retry fixture save** before continuing. Campaigns
+belong to the current browser profile and site origin.

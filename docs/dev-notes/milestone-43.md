@@ -1,7 +1,7 @@
 # Milestone 43 — Persistent player-season team statistics
 
-Status: backlog, planning only, 2026-11-07.
-Ticket: [DATA-065](issues/DATA/DATA-065.md), Medium priority.
+Status: browser play-test candidate.
+Ticket: [DATA-065 / #118](https://github.com/rtulloh/bowl_bound/issues/118), Medium priority.
 
 The owner wants to watch teams' performance accumulate over a season. Deliver a
 persistent played-season record with completed game history, team records,
@@ -9,28 +9,31 @@ points for/against, supported cumulative engine statistics and per-game averages
 Players can resume a campaign after restarting and compare teams as games finish.
 Keep separate campaigns using the same historical year independent.
 
-Use finalized engine scoring/statistics and stable game/team identities. Backend
-aggregation and exactly-once completion must prevent duplicate totals after
-save/load, retries, replay or UI refresh. Define correction/removal and unfinished
-game behavior, and keep season storage private by default. Initial UI/CLI scope
-and links to any existing season runner should be determined during implementation
-planning; a complete new schedule/postseason simulator is not implied by this
-request.
+Use finalized engine scoring and statistics with stable campaign, fixture and
+game identities. Keep scheduled, in-progress and completed fixtures distinct.
+Store each completed engine box once and derive totals and standings from stored
+boxes so a correction can recompute them. Store player data locally.
+
+The browser season manager supports NCAA schedule templates where the chart
+catalog covers the fixtures, and player-defined leagues with custom teams,
+conferences and fixtures. Show overall and conference records and a league
+ranking informed by record and strength of schedule. Document any missing
+historical opponents and the ranking calculation before play-test publication.
 
 ## Paydirt consultation
 
-Reviewed local Paydirt docs/historical-seasons.md, especially the distinction
-between development diagnostics and a played season, retained final boxes,
-team records and source/runtime/chart identities. Adapt structured final-result
-accounting and clear campaign identity. The document does not establish a
-ready-made persistent player-season UI, so do not claim it can be copied.
-Do not inherit NFL schedules, postseason/tiebreak rules, private data or a
-Paydirt runtime dependency.
+Reviewed Paydirt's `docs/historical-seasons.md`,
+`docs/saved-games-and-standings.md`, `docs/dev-notes/season-ui-design.md`,
+`docs/dev-notes/season-ui-acceptance.md`, and its fixture and standings layout.
+Adapt its season desk, stable fixture identities, resumable engine checkpoints
+and retained final boxes. Bowl Bound uses contemporaneous NCAA conference
+affiliation and Bowl Bound rules. NFL divisions, playoff seeding, tiebreakers,
+and Paydirt data stay outside this milestone.
 
-Reviewed Bowl Bound bowl_bound/statistics.py: TeamStatistics already provides
-rushing/passing totals, touchdowns, interceptions thrown and sacks, with
-college sacks counted in rushing attempts/yards. Use those engine facts;
-do not recalculate football credit in the browser.
+Bowl Bound's `bowl_bound/statistics.py` already provides rushing and passing
+totals, touchdowns, interceptions thrown and sacks, with college sacks counted
+in rushing attempts and yards. Aggregate those facts in the Python domain and
+display the returned totals in the browser.
 
 ## Acceptance and validation
 
@@ -40,12 +43,17 @@ completion, correction, unfinished games, persistence, overtime and exact box
 reconciliation. Finish applicable API/UI/persistence regressions, documentation
 and multi-game save/resume play testing before closure.
 
-This is future feature scope, outside the active Milestone 42 / 1.0.0 correction
-release. This documentation change implements no season storage or gameplay.
 
-## Backlog-record validation
+The preview is staged for GitHub Pages under `/bowl_bound/season-playtest/`. It
+uses a dedicated browser database name so play-test campaigns and saves are
+independent of the existing Pages game. The validated release manifest supplies
+the chart catalog. See [historical schedule coverage](../season-schedules.md)
+and [player controls and ranking formula](../web-game.md#play-a-season).
 
-Regenerated the issue index with `.venv/bin/python scripts/build_issue_index.py`.
-Ran `.venv/bin/python -m pytest tests/test_issue_tracker.py tests/test_create_issue.py tests/test_priority_docs.py tests/test_release_player_docs.py -q`: 38 passed.
-`git diff --check` passed. These checks validate the ticket/documentation only;
-feature acceptance remains pending implementation.
+Targeted validation covered the browser bridge, season domain, actual
+historical template creation against the staged catalog, packaging privacy,
+API save and request bounds, and the season React and opening-screen tests.
+The real-engine browser test played two fixtures with reversed home and away
+roles, reloaded and resumed the first, then reconciled saved final scores,
+games played, and cumulative offense with the two boxes. Upstream runs the
+full regression on the feature branch.

@@ -6,23 +6,27 @@ from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from threading import RLock
-from typing import Annotated, Literal
+from typing import Annotated, Any, Literal
+from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
 
 from bowl_bound import DISPLAY_VERSION, __version__
 from bowl_bound.models import TeamChart
+from bowl_bound.played_season import PlayedSeason, SeasonFixture, SeasonResult, SeasonTeam
 from bowl_bound.regulation import RegulationView
 from bowl_bound.resolution import ChartResolutionError
 from bowl_bound.roster import RosterFormatError
 from bowl_bound.rules_summary import rules_summary
 from bowl_bound.save_game import (
+    MAX_SAVE_BYTES,
     GameRevisionConflict,
     SavedGame,
     SaveFormatError,
     dumps_game,
     loads_game,
 )
+from bowl_bound.season_templates import list_season_templates
 from bowl_bound.session import (
     InvalidDecisionError,
     PendingDecisionError,
@@ -44,6 +48,17 @@ TeamId = Annotated[str, StringConstraints(max_length=TEAM_ID_MAX_LENGTH)]
 HumanSide = Literal["home", "away"]
 
 
+def operation_body_limit(path: str) -> int:
+    """Allow complete season ledgers and game checkpoints through either adapter."""
+    if (
+        path == "/api/games/load"
+        or path.startswith("/api/seasons")
+        or path.endswith("/season-result")
+    ):
+        return MAX_SAVE_BYTES
+    return MAX_COMMAND_BYTES
+
+
 class OperationError(Exception):
     """An operation failure safe to present to the caller."""
 
@@ -60,6 +75,43 @@ class Operation:
     method: str
     path: str
     handler: Callable[..., object]
+
+
+class SeasonTeamInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    id: TeamId
+    conference: str = Field(default="", max_length=100)
+
+
+class SeasonFixtureInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    week: int = Field(ge=1, le=1000, strict=True)
+    away: TeamId
+    home: TeamId
+    conference_game: bool = Field(default=False, strict=True)
+    date: str | None = Field(default=None, max_length=10)
+
+
+class NewSeason(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    name: str = Field(min_length=1, max_length=160)
+    template_id: str | None = Field(default=None, max_length=40)
+    teams: list[SeasonTeamInput] = Field(default_factory=list, max_length=250)
+    fixtures: list[SeasonFixtureInput] = Field(default_factory=list, max_length=2000)
+
+
+class SeasonSnapshot(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    snapshot: dict[str, Any]
+
+
+class SeasonResultRequest(SeasonSnapshot):
+    fixture_id: str = Field(min_length=1, max_length=100)
+    game_id: str = Field(min_length=1, max_length=100)
+
+
+def _season_view(season: PlayedSeason) -> dict[str, object]:
+    return {"snapshot": season.to_dict(), "summary": season.summary()}
 
 
 class NewGame(BaseModel):
@@ -286,6 +338,90 @@ def create_operations(seasons_root: Path, *, max_games: int = MAX_GAMES) -> list
         ]
         return {"teams": found, "problems": problems}
 
+    @operation("GET", "/api/seasons/templates")
+    def season_templates() -> dict[str, object]:
+        entries = TeamCatalog(seasons_root).teams()
+        templates = list_season_templates([team.key for team in entries])
+        return {
+            "templates": [
+                {key: template[key] for key in ("id", "name", "source_year", "coverage")}
+                for template in templates
+            ],
+            "conferences": {
+                team["team_id"]: team["conference"]
+                for template in templates
+                for team in template["teams"]
+            },
+        }
+
+    @operation("POST", "/api/seasons")
+    def new_season(body: NewSeason) -> dict[str, object]:
+        catalog = {team.key: team for team in TeamCatalog(seasons_root).teams()}
+        try:
+            source_year = None
+            selected = body.teams
+            fixtures = body.fixtures
+            if body.template_id is not None:
+                if selected or fixtures:
+                    raise ValueError(
+                        "A historical schedule already defines its teams and fixtures."
+                    )
+                template = next(
+                    (
+                        item
+                        for item in list_season_templates(catalog)
+                        if item["id"] == body.template_id
+                    ),
+                    None,
+                )
+                if template is None:
+                    raise ValueError("This historical schedule is unavailable.")
+                source_year = template["source_year"]
+                selected = [
+                    SeasonTeamInput(id=item["team_id"], conference=item["conference"] or "")
+                    for item in template["teams"]
+                ]
+                fixtures = [
+                    SeasonFixtureInput(
+                        week=item["week"],
+                        away=item["away_team_id"],
+                        home=item["home_team_id"],
+                        conference_game=item["conference_game"],
+                        date=item["date"],
+                    )
+                    for item in template["fixtures"]
+                ]
+            season = PlayedSeason(
+                id=uuid4().hex,
+                name=body.name.strip(),
+                source_year=source_year,
+                teams=tuple(
+                    SeasonTeam(
+                        team.id,
+                        catalog[team.id].name,
+                        catalog[team.id].season,
+                        team.conference.strip() or None,
+                    )
+                    for team in selected
+                ),
+                fixtures=tuple(
+                    SeasonFixture(id=str(index), **fixture.model_dump())
+                    for index, fixture in enumerate(fixtures, start=1)
+                ),
+            )
+        except KeyError as error:
+            raise OperationError(422, "A selected team is unavailable.") from error
+        except ValueError as error:
+            raise OperationError(422, str(error)) from error
+        return _season_view(season)
+
+    @operation("POST", "/api/seasons/summary")
+    def season_summary(body: SeasonSnapshot) -> dict[str, object]:
+        try:
+            return _season_view(PlayedSeason.from_dict(body.snapshot))
+        except ValueError as error:
+            raise OperationError(422, str(error)) from error
+
     @operation("GET", "/api/rules")
     def rules(season: int, game_type: str = "regular") -> dict[str, object]:
         """Summarize the engine's home-season rules without exposing chart data."""
@@ -377,6 +513,53 @@ def create_operations(seasons_root: Path, *, max_games: int = MAX_GAMES) -> list
             "turn": asdict(turn),
             "revision": session.revision,
         }
+
+    @operation("GET", "/api/games/{game_id}/final-box")
+    def final_box(game_id: str) -> dict[str, object]:
+        session = lookup(game_id).session
+        view = session.view()
+        if not isinstance(view, RegulationView) or not view.finished:
+            raise OperationError(409, "A season cannot record an unfinished regulation game.")
+        return {
+            "away_score": view.score.away,
+            "home_score": view.score.home,
+            "away_statistics": asdict(view.statistics.away),
+            "home_statistics": asdict(view.statistics.home),
+        }
+
+    @operation("POST", "/api/games/{game_id}/season-result")
+    def season_result(game_id: str, body: SeasonResultRequest) -> dict[str, object]:
+        session = lookup(game_id).session
+        view = session.view()
+        if not isinstance(view, RegulationView) or not view.finished:
+            raise OperationError(409, "A season cannot record an unfinished regulation game.")
+        try:
+            season = PlayedSeason.from_dict(body.snapshot)
+            fixture = next((item for item in season.fixtures if item.id == body.fixture_id), None)
+            if fixture is None or (fixture.home, fixture.away) != session.team_ids:
+                raise ValueError("This game doesn't match the scheduled fixture.")
+            season.record(
+                body.fixture_id,
+                SeasonResult(
+                    body.game_id,
+                    view.score.away,
+                    view.score.home,
+                    view.statistics.away,
+                    view.statistics.home,
+                ),
+            )
+        except ValueError as error:
+            raise OperationError(422, str(error)) from error
+        return _season_view(season)
+
+    @operation("POST", "/api/seasons/remove-result")
+    def remove_season_result(body: SeasonResultRequest) -> dict[str, object]:
+        try:
+            season = PlayedSeason.from_dict(body.snapshot)
+            season.remove_result(body.fixture_id, body.game_id)
+        except ValueError as error:
+            raise OperationError(422, str(error)) from error
+        return _season_view(season)
 
     @operation("GET", "/api/games/{game_id}/save")
     def save_game(game_id: str) -> str:

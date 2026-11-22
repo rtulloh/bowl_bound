@@ -184,3 +184,25 @@ show recovery controls rather than creating a replacement match.
 
 Reads do not alter revision, pending decisions, coaching state, dice, clock,
 statistics or the save journal, and do not reveal a selected computer call.
+
+
+## Season manager
+
+`GET /api/seasons/templates` lists historical schedules playable with the team
+catalog and supplies contemporary conference memberships. `POST /api/seasons`
+creates a versioned snapshot from a historical template ID or a custom team
+list and fixtures. Each custom team uses its normal catalog ID. Each fixture
+specifies the week, home and away IDs, and whether the meeting counts toward a
+conference record.
+
+`POST /api/seasons/summary` accepts a snapshot and reconstructs standings,
+rankings, and aggregate statistics. The browser keeps snapshots and fixture
+checkpoints in its local IndexedDB. The engine registry remains in memory.
+
+`POST /api/games/{game_id}/season-result` accepts the snapshot, fixture ID, and
+the durable local game ID. The URL identifies the live engine session. The
+engine checks that the game is finalized and the chart editions match the
+fixture, then records its scores and statistics. Repeating this operation with
+the same result returns the same totals. `POST /api/seasons/remove-result`
+takes the same ledger identifiers and removes the accepted result so the
+fixture can be played again.

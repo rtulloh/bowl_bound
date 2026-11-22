@@ -3,9 +3,7 @@
 from starlette.responses import JSONResponse
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
-from bowl_bound.save_game import MAX_SAVE_BYTES
-
-from .operations import MAX_COMMAND_BYTES
+from .operations import operation_body_limit
 
 
 class RequestBodyLimit:
@@ -18,7 +16,7 @@ class RequestBodyLimit:
         if scope["type"] != "http" or scope["method"] != "POST":
             await self.app(scope, receive, send)
             return
-        limit = MAX_SAVE_BYTES if scope["path"] == "/api/games/load" else MAX_COMMAND_BYTES
+        limit = operation_body_limit(scope["path"])
         buffered = bytearray()
         size = 0
         while True:

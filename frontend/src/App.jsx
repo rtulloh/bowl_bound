@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { coachStep, decide, gameAction, getRules, kick, listTeams, newGame, saveGame, snap } from './api'
+import { createSeason, listSeasonTemplates, loadGame, recordSeasonResult, removeSeasonResult, summarizeSeason } from './api'
+import SeasonManager from './components/SeasonManager'
 import FootballField from './components/FootballField'
 import { GamePlayLog } from './components/PlayLog'
 import PlaySelector from './components/PlaySelector'
@@ -10,7 +12,7 @@ import ClockChoices from './components/ClockChoices'
 import TeamStatistics from './components/TeamStatistics'
 import SaveControls from './components/SaveControls'
 import BrowserSaves from './components/BrowserSaves'
-import { writeSavedGame } from './runtime/gameLibrary'
+import { listSavedSeasons, writeSavedGame, writeSavedSeason } from './runtime/gameLibrary'
 import CoinToss from './components/CoinToss'
 import DiceRoll from './components/DiceRoll'
 import HalftimeReview from './components/HalftimeReview'
@@ -22,6 +24,11 @@ const gameName = (game) => game ? `${game.view.home} vs ${game.view.away}`.slice
 
 export default function App() {
   const browser = import.meta.env.MODE === 'browser'
+  const [showSeasons, setShowSeasons] = useState(false)
+  const [seasonRecords, setSeasonRecords] = useState([])
+  const [seasonTemplates, setSeasonTemplates] = useState([])
+  const [conferences, setConferences] = useState({})
+  const linkedFixture = useRef(null)
   const [saveStatus, setSaveStatus] = useState(null)
   const savedGame = useRef(null)
   const saveIdentity = useRef(null)
@@ -91,18 +98,39 @@ export default function App() {
   }, [home.season, gameType, rulesAttempt])
 
   const persist = async (active, humanSide) => {
-    if (!browser) return
+    const link = linkedFixture.current
+    if (!browser && !link) return
     const identity = saveIdentity.current
     setSaveStatus(null)
     try {
       const checkpoint = await saveGame(active.game_id)
+      if (link) {
+        const finished = active.view.finished
+        const payload = {
+          snapshot: link.season.snapshot,
+          fixture_id: link.fixture.id,
+          game_id: link.gameId,
+        }
+        const updated = finished ? await recordSeasonResult(active.game_id, payload) : {}
+        const saved = await saveSeason({
+          ...link.season,
+          ...updated,
+          games: {
+            ...link.season.games,
+            [link.fixture.id]: { checkpoint, humanSide, status: finished ? 'final' : 'in_progress', id: link.gameId },
+          },
+        })
+        link.season = saved
+        setSaveStatus({ message: finished ? 'Final result recorded.' : 'Game saved locally.' })
+        return
+      }
       const previous = savedGame.current
       savedGame.current = await writeSavedGame({
         id: identity.id, name: previous?.name ?? identity.name, checkpoint, humanSide,
       }, previous?.version)
       setSaveStatus({ message: 'Game saved locally.' })
     } catch (error) {
-      setSaveStatus({ error: true, message: `Game could not be saved locally. ${error.message} Export the game to keep your progress.` })
+      setSaveStatus({ error: true, message: `Game could not be saved locally. ${error.message} ${link ? 'Retry saving before continuing.' : 'Export the game to keep your progress.'}` })
     }
   }
   const apply = async (result) => {
@@ -118,7 +146,7 @@ export default function App() {
     else if (["halftime_choice", "overtime_choice", "final"].includes(result.view.phase)) {
       setReport(null)
     }
-    await persist(game, control)
+    await persist({ ...game, view: result.view }, control)
   }
   // All gameplay requests share one synchronous guard, including automatic turns.
   const run = async (work) => {
@@ -126,7 +154,7 @@ export default function App() {
     inFlight.current = true
     setBusy(true)
     setError('')
-    try { await work() } catch (e) {
+    try { return await work() } catch (e) {
       setError(e.message)
       if (game?.turn?.automatic) setComputerError(e.message)
     } finally {
@@ -160,6 +188,7 @@ export default function App() {
     await persist(created, control)
   })
   const play = (offensiveCall, defensiveCall) => run(async () => {
+    if (linkedFixture.current && saveStatus?.error) return
     setOffense('')
     setDefense('')
     automaticCount.current = 0
@@ -175,14 +204,17 @@ export default function App() {
       : coachStep(game.game_id, control, expectedRevision, game.turn.human_role === 'offense' ? offensiveCall : defensiveCall)))
   })
   const special = (action, isGameAction = false) => run(async () => {
+    if (linkedFixture.current && saveStatus?.error) return
     automaticCount.current = 0
     await apply(await manualOrControlled(isGameAction ? gameAction : kick, game.game_id, action))
   })
   const choose = (choice) => run(async () => {
+    if (linkedFixture.current && saveStatus?.error) return
     automaticCount.current = 0
     await apply(await manualOrControlled(decide, game.game_id, choice))
   })
   useEffect(() => {
+    if (saveStatus?.error && linkedFixture.current) return
     if (control === 'manual' || game?.view.review || !game?.turn?.automatic || game.view.finished || busy || error || computerError || (game.view.phase === "opening_choice" && !openingRevealed)) return
     const timer = setTimeout(() => {
       run(async () => {
@@ -191,10 +223,10 @@ export default function App() {
       })
     }, 200)
     return () => clearTimeout(timer)
-  }, [game, control, busy, error, computerError, openingRevealed])
+  }, [game, control, busy, error, computerError, openingRevealed, saveStatus?.error])
 
   const loaded = async (created, humanSide = control, record = null, name = gameName(created)) => {
-    if (browser) {
+    if (browser || linkedFixture.current) {
       savedGame.current = record
       saveIdentity.current = { id: record?.id ?? created.game_id, name }
       setControl(humanSide)
@@ -211,10 +243,11 @@ export default function App() {
     setComputerError('')
     setOffense('')
     setDefense('')
-    if (!record) await persist(created, humanSide)
+    if (!record && !linkedFixture.current) await persist(created, humanSide)
   }
   const resetGame = () => {
     if (inFlight.current) return
+    linkedFixture.current = null
     setSaveStatus(null)
     setGame(null)
     setReport(null)
@@ -225,7 +258,44 @@ export default function App() {
     setHurryMode(false)
     setCompleteHistory(false)
   }
-  const saves = browser
+  const saveSeason = async (season) => {
+    const saved = await writeSavedSeason({ ...season, id: season.snapshot.id }, season.version)
+    setSeasonRecords((records) => [saved, ...records.filter((record) => record.id !== saved.id)])
+    return saved
+  }
+  const openSeasons = () => run(async () => {
+    const [catalog, records] = await Promise.all([listSeasonTemplates(), listSavedSeasons()])
+    const seasons = await Promise.all(records.map(async (record) => ({
+      ...record, ...await summarizeSeason(record.snapshot),
+    })))
+    setSeasonTemplates(catalog.templates)
+    setConferences(catalog.conferences)
+    setSeasonRecords(seasons)
+    setShowSeasons(true)
+  })
+  const playFixture = (season, fixture, humanSide) => run(async () => {
+    const checkpoint = season.games[fixture.id]
+    const side = checkpoint?.humanSide ?? humanSide
+    const created = checkpoint
+      ? await loadGame(checkpoint.checkpoint, side)
+      : await newGame({ home: fixture.home, away: fixture.away, mode: 'regulation', difficulty }, side)
+    linkedFixture.current = { season, fixture, gameId: checkpoint?.id ?? created.game_id }
+    await loaded(created, side)
+    if (!checkpoint) await persist(created, side)
+  })
+  const resetFixture = (season, fixture) => run(async () => {
+    const games = { ...season.games }
+    delete games[fixture.id]
+    const result = season.snapshot.results[fixture.id]
+    const updated = result ? await removeSeasonResult({
+      snapshot: season.snapshot, fixture_id: fixture.id, game_id: result.game_id,
+    }) : {}
+    await saveSeason({ ...season, ...updated, games })
+  })
+  const saves = linkedFixture.current
+    ? <button type="button" className="play-button" disabled={busy}
+        onClick={() => run(() => persist(game, control))}>Save game</button>
+    : browser
     ? <BrowserSaves gameId={game?.game_id} humanSide={control} busy={busy} run={run} onLoaded={loaded}
         save={() => persist(game, control)} activeRecord={savedGame.current}
         name={saveIdentity.current?.name ?? gameName(game)} />
@@ -239,11 +309,32 @@ export default function App() {
     </select>
   </label>
 
+  if (!game && showSeasons) {
+    return (
+      <main className="max-w-6xl mx-auto p-6 text-white space-y-4">
+        <button type="button" className="play-button" disabled={busy} onClick={() => setShowSeasons(false)}>Exhibition</button>
+        {error && <p role="alert">{error}</p>}
+        <SeasonManager
+          teams={(teams ?? []).map((team) => ({ ...team, conference: conferences[team.id] }))}
+          templates={seasonTemplates}
+          seasons={seasonRecords}
+          busy={busy}
+          onCreate={(payload) => run(async () => saveSeason({ ...await createSeason(payload), games: {} }))}
+          onPlay={playFixture}
+          onReset={resetFixture}
+          onRemoveResult={resetFixture}
+        />
+      </main>
+    )
+  }
+
   if (!game) {
     return (
       <main className="max-w-xl mx-auto p-6 text-white" data-testid="team-select">
         <h1 className="text-3xl font-bold mb-4">Bowl Bound</h1>
         <p className="mb-4 text-sm">Play both sides manually or coach either team against the computer at your chosen difficulty. Simultaneous calls stay hidden until the play resolves.</p>
+        <button type="button" className="play-button mb-4" disabled={busy || !teams?.length}
+          onClick={openSeasons}>Seasons</button>
         {controls}
         {error && <div className="text-red-300 mb-3" role="alert">{error}</div>}
         {teams && teams.length === 0 && <div role="status">No teams were found in the seasons folder.</div>}
@@ -349,7 +440,7 @@ export default function App() {
         }}>
           <summary className="cursor-pointer text-sm rounded px-3 py-1 bg-gray-800">Game</summary>
           <div className="absolute right-0 top-full mt-2 z-50 w-72 max-w-[calc(100vw-2rem)] rounded-lg border border-gray-500 bg-gray-900 p-3 shadow-xl space-y-3">
-            <button type="button" className="play-button text-black" disabled={busy} onClick={resetGame} data-testid="new-drive">New game</button>
+            <button type="button" className="play-button text-black" disabled={busy} onClick={resetGame} data-testid="new-drive">{linkedFixture.current ? 'Return to seasons' : 'New game'}</button>
             {saves}
             <div className="text-xs text-gray-400">Seed {game.seed}</div>
           </div>
@@ -357,6 +448,8 @@ export default function App() {
         </div>
       </header>
       {saveStatus && <p role={saveStatus.error ? 'alert' : 'status'} className="text-sm">{saveStatus.message}</p>}
+      {saveStatus?.error && linkedFixture.current && <button type="button" className="play-button"
+        disabled={busy} onClick={() => run(() => persist(game, control))}>Retry fixture save</button>}
       {(error || computerError) && <div className="text-red-300" role="alert">{error === 'no such game' ? <>
         The local server was restarted, so this unsaved game is no longer available.
         <button type="button" className="play-button ml-2" disabled={busy} onClick={resetGame}>Start new game</button>
@@ -376,7 +469,7 @@ export default function App() {
           </div>
           <p role="status" className="text-sm text-slate-300" data-testid="session-status">{turn?.status || view.status}</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <button type="button" className="play-button" onClick={resetGame}>New game</button>
+            <button type="button" className="play-button" disabled={busy} onClick={resetGame}>{linkedFixture.current ? 'Return to seasons' : 'New game'}</button>
             {view.log.length > 0 && <button type="button" className="play-button"
               aria-expanded={completeHistory} onClick={() => setCompleteHistory(!completeHistory)}>Show complete history</button>}
           </div>

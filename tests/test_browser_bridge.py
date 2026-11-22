@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from fastapi.testclient import TestClient
+from pytest import MonkeyPatch
 
 from backend.app import create_app
 from backend.browser_bridge import BrowserBridge
@@ -72,3 +73,117 @@ def test_browser_validation_preserves_live_session_and_limits_requests(tmp_path:
     assert restored["status"] == 200
     assert json.loads(restored["body"])["seed"] == 9223372036854775807
     assert browser.request("GET", path + "?human_side=home") == current
+
+
+def test_campaign_final_box_rejects_an_unfinished_game(tmp_path: Path) -> None:
+    for team in default_teams():
+        write_team(tmp_path, team)
+    browser = BrowserBridge(tmp_path)
+    created = json.loads(
+        browser.request(
+            "POST",
+            "/api/games",
+            '{"home":"2026/alpha-tech","away":"2026/beta-state","seed":1}',
+        )
+    )
+    game_id = json.loads(created["body"])["game_id"]
+    response = json.loads(browser.request("GET", f"/api/games/{game_id}/final-box"))
+    assert response["status"] == 409
+    assert "unfinished" in response["body"]
+
+
+def test_browser_creates_and_restores_a_custom_season(tmp_path: Path) -> None:
+    for team in default_teams():
+        write_team(tmp_path, team)
+    browser = BrowserBridge(tmp_path)
+    body = {
+        "name": "Synthetic league",
+        "teams": [
+            {"id": "2026/alpha-tech", "conference": "North"},
+            {"id": "2026/beta-state", "conference": "North"},
+        ],
+        "fixtures": [
+            {
+                "week": 1,
+                "away": "2026/beta-state",
+                "home": "2026/alpha-tech",
+                "conference_game": True,
+            }
+        ],
+    }
+    created = json.loads(browser.request("POST", "/api/seasons", json.dumps(body)))
+    assert created["status"] == 200
+    season = json.loads(created["body"])
+    assert season["summary"]["conferences"][0]["name"] == "North"
+    assert season["snapshot"]["fixtures"][0]["conference_game"] is True
+    restored = json.loads(
+        BrowserBridge(tmp_path).request(
+            "POST", "/api/seasons/summary", json.dumps({"snapshot": season["snapshot"]})
+        )
+    )
+    assert restored["status"] == 200
+    assert json.loads(restored["body"]) == season
+
+    game = json.loads(
+        browser.request(
+            "POST",
+            "/api/games",
+            '{"home":"2026/alpha-tech","away":"2026/beta-state","seed":1}',
+        )
+    )
+    recording = {
+        "snapshot": season["snapshot"],
+        "fixture_id": "1",
+        "game_id": "local-checkpoint-id",
+    }
+    game_path = "/api/games/" + json.loads(game["body"])["game_id"]
+    rejected = json.loads(
+        browser.request("POST", game_path + "/season-result", json.dumps(recording))
+    )
+    assert rejected["status"] == 409
+    assert "unfinished" in rejected["body"]
+
+
+def test_browser_catalog_without_historical_teams_exposes_no_templates(tmp_path: Path) -> None:
+    for team in default_teams():
+        write_team(tmp_path, team)
+    browser = BrowserBridge(tmp_path)
+    response = json.loads(browser.request("GET", "/api/seasons/templates"))
+    assert response["status"] == 200
+    assert json.loads(response["body"]) == {"templates": [], "conferences": {}}
+
+
+def test_historical_fixture_date_survives_campaign_creation(
+    tmp_path: Path, monkeypatch: MonkeyPatch
+) -> None:
+    for team in default_teams():
+        write_team(tmp_path, team)
+    template = {
+        "id": "synthetic",
+        "name": "Synthetic archive",
+        "source_year": 2026,
+        "coverage": "One fixture",
+        "teams": [
+            {"team_id": "2026/alpha-tech", "conference": None},
+            {"team_id": "2026/beta-state", "conference": None},
+        ],
+        "fixtures": [
+            {
+                "week": 1,
+                "away_team_id": "2026/beta-state",
+                "home_team_id": "2026/alpha-tech",
+                "conference_game": False,
+                "date": "2026-09-05",
+                "source_id": "synthetic-1",
+            }
+        ],
+    }
+    monkeypatch.setattr("backend.operations.list_season_templates", lambda _: [template])
+    response = json.loads(
+        BrowserBridge(tmp_path).request(
+            "POST", "/api/seasons", '{"name":"Test","template_id":"synthetic"}'
+        )
+    )
+    assert response["status"] == 200
+    season = json.loads(response["body"])
+    assert season["snapshot"]["fixtures"][0]["date"] == "2026-09-05"

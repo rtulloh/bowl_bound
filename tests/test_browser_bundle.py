@@ -86,3 +86,43 @@ def test_stage_refuses_to_overwrite_existing_output(
     with pytest.raises(ReleaseError, match="already exists"):
         browser.build_bundle(source, output, runtime_dir=runtime)
     assert private.read_text(encoding="utf-8") == "preserve existing content"
+
+
+def test_season_preview_selects_only_pinned_teams(
+    inputs: tuple[Path, Path], tmp_path: Path
+) -> None:
+    source, runtime = inputs
+    release_path = source / "release/manifest.json"
+    release = json.loads(release_path.read_text())
+    generated = {
+        f"seasons/2002/synthetic/{file}": b"generated"
+        for file in ("team.yaml", "offense.csv", "defense.csv", "special.csv")
+    }
+    generated["seasons/2002/provenance/synthetic.csv"] = b"generated provenance"
+    notices = {
+        name: b"public attribution"
+        for name in (
+            "seasons/GENERATED-LICENSE.md",
+            "docs/generated-charts.md",
+            "docs/generated-charts-1972.md",
+            "docs/season-schedules.md",
+        )
+    }
+    for name, content in {**generated, **notices}.items():
+        path = source / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
+    release.update(
+        frontend=["frontend/src/App.jsx"],
+        generated_sha256={name: _sha(content) for name, content in generated.items()},
+    )
+    release["runtime"] += sorted(generated)
+    release_path.write_text(json.dumps(release))
+    output = tmp_path / "preview"
+    manifest = browser.build_bundle(source, output, runtime_dir=runtime, include_release_teams=True)
+    assert manifest["seasons"] == {"2002": ["synthetic"], "2007": ["cedar-valley", "harbor-tech"]}
+    with ZipFile(output / "python.zip") as archive:
+        assert (
+            set(archive.namelist())
+            == SAMPLES | browser.PYTHON_FILES | generated.keys() | notices.keys()
+        )

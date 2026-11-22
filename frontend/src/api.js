@@ -34,3 +34,9 @@ export const loadGame = (text, humanSide) => request(
 )
 
 export const getCharts = (gameId, side) => request(`/api/games/${gameId}/charts?side=${side}`)
+
+export const listSeasonTemplates = () => request('/api/seasons/templates')
+export const createSeason = (payload) => post('/api/seasons', payload)
+export const summarizeSeason = (snapshot) => post('/api/seasons/summary', { snapshot })
+export const recordSeasonResult = (gameId, payload) => post(`/api/games/${gameId}/season-result`, payload)
+export const removeSeasonResult = (payload) => post('/api/seasons/remove-result', payload)
