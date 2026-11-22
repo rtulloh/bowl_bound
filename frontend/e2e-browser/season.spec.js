@@ -105,7 +105,8 @@ test('a browser season resumes after reload and reconciles two conference finals
   for (const [name, yards] of [[cedar, first.homeYards + second.awayYards], [harbor, first.awayYards + second.homeYards]]) {
     const cells = teamRows.getByRole('row').filter({ has: page.getByRole('rowheader', { name, exact: true }) }).getByRole('cell')
     await expect(cells.nth(0)).toHaveText('2')
-    await expect(cells.nth(1)).toHaveText(String(yards))
+    await expect(cells.nth(1)).toHaveText(yards.toLocaleString('en-US'))
+    await expect(cells.nth(2)).toHaveText((yards / 2).toLocaleString('en-US', { minimumFractionDigits: 1 }))
   }
 
   await page.getByRole('button', { name: 'Standings', exact: true }).click()

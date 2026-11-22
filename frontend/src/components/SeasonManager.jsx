@@ -274,27 +274,37 @@ function Standings({ summary, teams }) {
   )
 }
 
-const statistics = [
-  ['total_yards', 'Total yards'],
-  ['rushing_yards', 'Rush yards'],
-  ['passing_yards', 'Pass yards'],
-  ['rushing_touchdowns', 'Rush TD'],
-  ['passing_touchdowns', 'Pass TD'],
-  ['rushing_attempts', 'Rush attempts'],
-  ['passing_attempts', 'Pass attempts'],
-  ['completions', 'Completions'],
-  ['interceptions', 'Interceptions'],
-  ['sacks_taken', 'Sacks'],
-  ['sack_yards_lost', 'Sack yards lost'],
-  ['total_plays', 'Plays'],
+const totalsGroups = [
+  ['Total', 'total_yards', 'Total yards'],
+  ['Passing', 'passing_yards', 'Passing yards'],
+  ['Rushing', 'rushing_yards', 'Rushing yards'],
+  ['Points', 'points', 'Points'],
 ]
-
-const statGroups = {
-  'All statistics': statistics.map(([key]) => key),
-  'Total yards': ['total_yards', 'total_plays', 'rushing_yards', 'passing_yards'],
-  Passing: ['passing_yards', 'passing_attempts', 'completions', 'passing_touchdowns', 'interceptions', 'sacks_taken', 'sack_yards_lost'],
-  Rushing: ['rushing_yards', 'rushing_attempts', 'rushing_touchdowns'],
+const rate = (key, label, unit = 'YDS/G') => [key + '_per_game', unit, label + ' per game']
+const detailColumns = {
+  Passing: [
+    ['completions', 'CMP', 'Completions'],
+    ['passing_attempts', 'ATT', 'Pass attempts'],
+    ['passing_yards', 'YDS', 'Passing yards'],
+    rate('passing_yards', 'Passing yards'),
+    ['passing_touchdowns', 'TD', 'Passing touchdowns'],
+    ['interceptions', 'INT', 'Interceptions'],
+    ['sacks_taken', 'SACK', 'Sacks'],
+    ['sack_yards_lost', 'SYL', 'Sack yards lost'],
+  ],
+  Rushing: [
+    ['rushing_attempts', 'ATT', 'Rush attempts'],
+    ['rushing_yards', 'YDS', 'Rush yards'],
+    rate('rushing_yards', 'Rush yards'),
+    ['rushing_touchdowns', 'TD', 'Rushing touchdowns'],
+  ],
 }
+const overallColumns = totalsGroups.flatMap(([group, key, label]) => [
+  [key, group === 'Points' ? 'PTS' : 'YDS', label],
+  rate(key, label, group === 'Points' ? 'PTS/G' : 'YDS/G'),
+])
+const statNumber = new Intl.NumberFormat('en-US')
+const statAverage = new Intl.NumberFormat('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
 
 const leaderCategories = [
   ['Total offense', 'YDS/G', (team) => team.per_game?.total_yards],
@@ -335,94 +345,105 @@ function SeasonLeaders({ teams }) {
 }
 
 function SeasonStatistics({ summary }) {
-  const [view, setView] = useState('totals')
   const [side, setSide] = useState('Offense')
-  const [group, setGroup] = useState('All statistics')
-  const [sort, setSort] = useState({ key: 'total_yards', direction: 'descending' })
+  const [group, setGroup] = useState('Total')
+  const [conference, setConference] = useState('')
+  const [sort, setSort] = useState({ key: 'total_yards_per_game', direction: 'descending' })
   const select = (nextSide, nextGroup) => {
     setSide(nextSide)
     setGroup(nextGroup)
-    setSort({ key: statGroups[nextGroup][0], direction: nextSide === 'Defense' ? 'ascending' : 'descending' })
+    const yardage = { Total: 'total', Passing: 'passing', Rushing: 'rushing' }[nextGroup]
+    setSort({ key: `${yardage}_yards_per_game`, direction: nextSide === 'Defense' ? 'ascending' : 'descending' })
   }
-  const mode = side === 'Defense' ? `allowed_${view}` : view
-  const columns = statGroups[group].map((key) => statistics.find(([field]) => field === key))
+  const total = group === 'Total'
+  const columns = total ? overallColumns : detailColumns[group]
+  const defense = side === 'Defense'
   const value = (team, key) => {
     if (key === 'games_played') return team.games_played
     if (!team.games_played) return null
-    if (key === 'points') {
-      const points = side === 'Defense' ? team.points_against : team.points_for
-      return view === 'per_game' ? points / team.games_played : points
+    const perGame = key.endsWith('_per_game')
+    const stat = key.replace(/_per_game$/, '')
+    if (stat === 'points') {
+      const points = defense ? team.points_against : team.points_for
+      return perGame ? points / team.games_played : points
     }
-    return team[mode]?.[key]
+    const view = perGame ? 'per_game' : 'totals'
+    return team[defense ? `allowed_${view}` : view]?.[stat]
   }
-  const ordered = [...summary.teams].sort((left, right) => {
+  const ordered = summary.teams.filter((team) => !conference || team.conference === conference).sort((left, right) => {
     const a = value(left, sort.key)
     const b = value(right, sort.key)
     if (a == null || b == null) return Number(a == null) - Number(b == null) || left.name.localeCompare(right.name)
     return (sort.direction === 'ascending' ? a - b : b - a) || left.name.localeCompare(right.name)
   })
-  const header = (key, label) => (
-    <th scope="col" className="p-2" key={key} aria-sort={sort.key === key ? sort.direction : undefined}>
-      <button type="button" onClick={() => setSort({
-        key, direction: sort.key === key && sort.direction === 'descending' ? 'ascending' : 'descending',
-      })}>{label} <span aria-hidden="true">{sort.key !== key ? '↕' : sort.direction === 'ascending' ? '↑' : '↓'}</span></button>
-    </th>
-  )
+  const highlight = (key) => sort.key === key ? 'bg-sky-900/50' : ''
+  const header = (key, short, label, rowSpan = 1) => {
+    const description = defense ? label.replace(/^Points/, 'Points allowed') : label
+    return (
+      <th scope="col" rowSpan={rowSpan} className={`px-2 py-1.5 text-right ${highlight(key)}`}
+        key={key} aria-sort={sort.key === key ? sort.direction : undefined}>
+        <button type="button" aria-label={description} title={description} className="underline decoration-slate-500 underline-offset-2"
+          onClick={() => setSort({
+            key, direction: sort.key === key && sort.direction === 'descending' ? 'ascending' : 'descending',
+          })}>{short}{sort.key === key && <span aria-hidden="true">{sort.direction === 'ascending' ? ' ↑' : ' ↓'}</span>}</button>
+      </th>
+    )
+  }
   return (
-    <section className="space-y-6 rounded-xl border border-slate-600 bg-slate-900 p-4" aria-label="Team statistics">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <h3 className="text-xl font-bold">Team statistics</h3>
-        <div className="flex flex-wrap items-end gap-2">
-          <label>View
-            <select className={inputClass} value={view} onChange={(event) => setView(event.target.value)}>
-              <option value="totals">Totals</option>
-              <option value="per_game">Per game</option>
-            </select>
-          </label>
-          {['Offense', 'Defense'].map((label) => (
-            <button key={label} type="button" aria-pressed={side === label}
-              className={side === label ? 'rounded bg-amber-300 px-4 py-2 text-slate-900' : 'play-button'}
-              onClick={() => select(label, 'All statistics')}>{label}</button>
-          ))}
-        </div>
-      </div>
-      <SeasonLeaders teams={summary.teams} />
-      <div className="grid gap-4 sm:grid-cols-2">
+    <section className="space-y-4 rounded-xl border border-slate-600 bg-slate-900 p-4" aria-label="Team statistics">
+      <h3 className="text-xl font-bold">{side} statistics</h3>
+      <div className="grid grid-cols-2 border-b border-slate-600">
         {['Offense', 'Defense'].map((label) => (
-          <section className="border-t-2 border-slate-500" key={label}>
-            <h4 className="p-2 font-semibold">{label}</h4>
-            {Object.keys(statGroups).slice(1).map((detail) => (
-              <button type="button" key={detail} aria-label={`${detail} ${label.toLowerCase()}`}
-                aria-pressed={side === label && group === detail}
-                className="block w-full border-t border-slate-700 px-2 py-2 text-left even:bg-slate-800 aria-pressed:text-amber-300"
-                onClick={() => select(label, detail)}>{detail === 'Total yards' && label === 'Defense' ? 'Yards allowed' : detail}</button>
-            ))}
-          </section>
+          <button key={label} type="button" aria-pressed={side === label}
+            className={`border-b-2 py-2 font-semibold ${side === label ? 'border-amber-300 text-amber-300' : 'border-transparent text-slate-300'}`}
+            onClick={() => select(label, 'Total')}>{label}</button>
         ))}
       </div>
-      <div className="space-y-2">
-        <h4 className="text-lg font-semibold">{side} statistics{group !== 'All statistics' && ` · ${group}`}</h4>
-        <div className="max-w-full overflow-x-auto">
-          <table aria-label="Season team statistics" className="w-full whitespace-nowrap text-left">
-            <thead className="border-b border-slate-500">
-              <tr><th className="p-2" scope="col">Team</th>{header('games_played', 'Games')}
-                {columns.map(([key, label]) => header(key, label))}{header('points', side === 'Defense' ? 'Points allowed' : 'Points')}</tr>
-            </thead>
-            <tbody className="divide-y divide-slate-700">
-              {ordered.map((team) => {
-                const keys = [...columns.map(([key]) => key), 'points']
-                return <tr key={team.team_id}>
-                  <TeamCell team={team} />
-                  <Cells values={[team.games_played, ...keys.map((key) => {
-                    const number = value(team, key)
-                    return number == null ? '—' : view === 'per_game' ? number.toFixed(1) : number
-                  })]} />
-                </tr>
-              })}
-            </tbody>
-          </table>
-        </div>
+      <div className="flex flex-wrap gap-2">
+        <select className="rounded-full border border-slate-500 bg-slate-800 px-3 py-2 text-sm" aria-label="Statistic category"
+          value={group} onChange={(event) => select(side, event.target.value)}>
+          {['Total', 'Passing', 'Rushing'].map((label) => <option key={label}>{label}</option>)}
+        </select>
+        {summary.conferences.length > 0 && (
+          <select className="rounded-full border border-slate-500 bg-slate-800 px-3 py-2 text-sm" aria-label="Statistics conference"
+            value={conference} onChange={(event) => setConference(event.target.value)}>
+            <option value="">All conferences</option>
+            {summary.conferences.map(({ name }) => <option key={name}>{name}</option>)}
+          </select>
+        )}
       </div>
+      <div className="max-w-full overflow-x-auto">
+        <table aria-label="Season team statistics" className="w-full whitespace-nowrap text-sm tabular-nums">
+          <colgroup span="2" />
+          {total && totalsGroups.map(([label]) => <colgroup key={label} span="2" className="border-l border-slate-700" />)}
+          <thead className="border-y border-slate-600 text-xs uppercase tracking-wide text-slate-200">
+            <tr>
+              <th scope="col" rowSpan={total ? 2 : 1} className="px-2 py-1.5 text-left align-bottom">Team</th>
+              {header('games_played', 'GP', 'Games played', total ? 2 : 1)}
+              {total
+                ? totalsGroups.map(([label]) => <th key={label} scope="colgroup" colSpan="2" className="border-b border-slate-700 px-2 py-1.5">{label}</th>)
+                : columns.map(([key, short, label]) => header(key, short, label))}
+            </tr>
+            {total && <tr>{columns.map(([key, short, label]) => header(key, short, label))}</tr>}
+          </thead>
+          <tbody className="divide-y divide-slate-800">
+            {ordered.map((team) => (
+              <tr key={team.team_id} className="even:bg-slate-800/50">
+                <th scope="row" className="px-2 py-1.5 text-left font-medium">{edition(team)}</th>
+                <td className={`px-2 py-1.5 text-right ${highlight('games_played')}`}>{team.games_played}</td>
+                {columns.map(([key]) => {
+                  const number = value(team, key)
+                  const format = key.endsWith('_per_game') ? statAverage : statNumber
+                  return <td key={key} className={`px-2 py-1.5 text-right ${highlight(key)}`}>
+                    {number == null ? '—' : format.format(number)}
+                  </td>
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {summary.teams.some((team) => team.games_played) && <SeasonLeaders teams={summary.teams} />}
     </section>
   )
 }

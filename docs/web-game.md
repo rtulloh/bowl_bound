@@ -54,9 +54,10 @@ teams for each matchup. Mark games that count toward the conference record.
 Choose a control mode and select **Play game**. Use **Return to seasons** in the
 game menu to leave a fixture and **Resume game** to continue it. Finished games
 automatically update **Standings**, **Team statistics**, and **Rankings**.
-**Team statistics** opens with five per-game leader cards and sortable offense
-and defense tables. Choose totals or per-game figures and narrow the table to
-total yardage, passing, or rushing. The tables use Bowl Bound's team box scores,
+**Team statistics** opens with sortable offense and defense tables. The Total
+view pairs each total with its per-game rate under a shared heading. Choose
+Passing or Rushing for detail, or filter by conference. Leader cards appear
+below the table. The tables use Bowl Bound's team box scores,
 including its college sack accounting.
 
 Only fixtures explicitly marked as conference games count in conference records.

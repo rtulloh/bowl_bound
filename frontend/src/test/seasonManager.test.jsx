@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { expect, it, vi } from 'vitest'
 import SeasonManager from '../components/SeasonManager'
 
@@ -70,7 +70,10 @@ it('resumes a scheduled game and displays backend standings, totals and rankings
   fireEvent.click(screen.getByRole('button', { name: 'Team statistics' }))
   expect(screen.getByRole('table', { name: 'Season team statistics' })).toHaveTextContent('231')
   expect(screen.getByRole('region', { name: 'Season leaders at a glance' })).toBeVisible()
-  fireEvent.click(screen.getByRole('button', { name: 'Passing offense' }))
+  const totals = screen.getByRole('table', { name: 'Season team statistics' })
+  expect(within(totals).getByRole('columnheader', { name: 'Passing', exact: true })).toHaveAttribute('colspan', '2')
+  expect(within(totals).getByRole('button', { name: 'Total yards per game' })).toHaveTextContent('YDS/G')
+  fireEvent.change(screen.getByLabelText('Statistic category'), { target: { value: 'Passing' } })
   expect(screen.queryByRole('columnheader', { name: 'Rush yards' })).not.toBeInTheDocument()
   fireEvent.click(screen.getByRole('button', { name: 'Defense', exact: true }))
   expect(screen.getByRole('button', { name: 'Defense', exact: true })).toHaveAttribute('aria-pressed', 'true')
