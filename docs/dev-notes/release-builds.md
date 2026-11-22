@@ -509,3 +509,14 @@ and the broader native license/provenance audit retain their explicit scope.
 Post-release smoke dispatch defaults `include_dmg=true` so both primary Mac DMGs
 are verified. Only legacy ZIP-only tags should explicitly set it false; v1.1.1
 and later require all six native target/artifact checks.
+
+### 1972 release candidate runtime identity
+
+The release candidate combines the chart cohort, playtest UI and direct macOS
+launcher. Review of the runtime inventory identified changes in chart display,
+session and save views, and special-teams landing metadata. The runtime contract
+pins the combined source commit and retains loaded-definition verification.
+This records runtime identity for the release regression and supplies no new
+historical calibration evidence. Paydirt's release workflow was consulted for
+its exact-source validation before packaging. Bowl Bound retains its existing
+main-push source gate and manual native-build dispatch.
