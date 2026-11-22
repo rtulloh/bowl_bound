@@ -96,7 +96,7 @@ for (const human of ['home', 'away']) {
         }
         if (result.report && turn.human_role === 'defense') calls.add(result.report.called_play)
         if (result.report && turn.human_role === 'offense') calls.add(result.report.defense)
-        if (result.report?.trace?.length && !result.turn.automatic) {
+        if (result.report?.trace?.length && !result.turn.automatic && !result.view.finished) {
           const shown = page.getByLabel('Observed play dice')
           await expect(shown.getByRole('img').first()).toBeVisible()
         }

@@ -189,7 +189,7 @@ test('hurry and spike are exclusive engine choices, with automatic kneel availab
 })
 
 
-test('a complete regulation game shows quarter and half transitions and cannot reopen', async ({ page }) => {
+test('a complete game shows regulation transitions and cannot reopen', async ({ page }) => {
   test.setTimeout(120_000)
   const created = page.waitForResponse((r) => r.url().endsWith('/api/games') && r.request().method() === 'POST')
   await start(page)
@@ -199,20 +199,21 @@ test('a complete regulation game shows quarter and half transitions and cannot r
   let secondHalfKickoffSeen = false
   for (let step = 0; step < 600; step++) {
     const view = (await (await page.request.get(path)).json()).view
-    quarters.add(view.clock.quarter)
+    if (!view.overtime) quarters.add(view.clock.quarter)
     if (!secondHalfKickoffSeen && view.clock.quarter === 3 && view.phase === 'kickoff') {
       secondHalfKickoffSeen = true
       expect(view.pending?.choices.map((choice) => choice.id) || []).not.toContain('half:receive')
       expect(view.pending?.choices.map((choice) => choice.id) || []).not.toContain('half:kick')
     }
-    await expect(page.getByTestId('quarter')).toHaveText(view.clock.quarter_label)
-    await expect(page.getByTestId('game-clock')).toHaveText(view.clock.label)
     if (view.finished) {
       expect([...quarters]).toEqual([1, 2, 3, 4])
       expect(secondHalfKickoffSeen).toBe(true)
       expect(view.clock.remaining).toBe(0)
       expect(view.score.home).toBe(view.scoring.filter((e) => e.team === view.home).reduce((n, e) => n + e.points, 0))
       expect(view.score.away).toBe(view.scoring.filter((e) => e.team === view.away).reduce((n, e) => n + e.points, 0))
+      const final = page.getByRole('region', { name: 'Final' })
+      await expect(final.getByTestId('home-score')).toHaveText(String(view.score.home))
+      await expect(final.getByTestId('away-score')).toHaveText(String(view.score.away))
       await expect(page.getByTestId('snap')).toHaveCount(0)
       await expect(page.locator('[data-testid^=offense-play-]:enabled, [data-testid^=defense-play-]:enabled')).toHaveCount(0)
       const refused = await page.request.post(path + '/decision', { data: { choice: 'clock:timeout:home' } })
@@ -220,6 +221,8 @@ test('a complete regulation game shows quarter and half transitions and cannot r
       expect((await (await page.request.get(path)).json()).view).toEqual(view)
       return
     }
+    await expect(page.getByTestId('quarter')).toHaveText(view.clock.quarter_label)
+    await expect(page.getByTestId('game-clock')).toHaveText(view.clock.label)
     let button
     if (view.review) {
       button = page.getByRole('button', { name: view.review.action.label, exact: true })

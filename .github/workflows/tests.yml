@@ -87,7 +87,6 @@ jobs:
       - name: Verify reviewed generator runtime before regression
         run: '.venv/bin/python -c "from tools.chartgen.refine import engine_identity; engine_identity()"'
       - name: Verify pinned generated charts load
-        if: matrix.shard == 0
         run: |
           .venv/bin/python -m scripts.audit_generated_charts --catalog-only --report "$RUNNER_TEMP/generated-chart-audit.json"
       - name: Retain generated-chart catalog evidence

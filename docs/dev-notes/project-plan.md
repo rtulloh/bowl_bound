@@ -1040,7 +1040,9 @@ This goal is inactive and does not expand 1.0.0 acceptance.
 
 **Commit:** `milestone 45: measure ticket-specific simulation improvements`
 
-### 46. Run the base game in a browser-only build
+<a id="46-run-the-base-game-in-a-browser-only-build"></a>
+
+### 46. Evaluate a browser-only distribution with Pyodide or PyScript
 
 Run the existing Python engine and React interface on a static site. Keep the
 engine authoritative and preserve the existing HTTP transport for native use.
