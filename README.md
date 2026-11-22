@@ -1,39 +1,34 @@
 # Bowl Bound
 
 An independent, unofficial computer adaptation of the Bowl Bound college-football
-board game. Call plays against a computer opponent or control both sides in the
-local web game. Dice, chart results, clock, scoring and statistics are resolved
-by the game engine. No account or Internet connection is needed for local play
-after installation.
+board game. Call plays against a computer opponent or control both teams.
 
-**Bowl Bound 1.1.1.** [Download the latest release](https://github.com/rtulloh/bowl_bound/releases/latest)
-for Windows, Apple Silicon or Intel Mac. Play 55 generated 2002 college teams
-with commentary rosters, 116 generated 2007 teams, and the original fictional
-Cedar Valley and Harbor Tech samples. Select teams across seasons. See the
-[generation notes and testing limits](docs/generated-charts.md).
+## Play in your browser
 
-## Get started
+**[Play Bowl Bound](https://rtulloh.github.io/bowl_bound/)**. Open the game in
+your browser and choose your teams and control mode. No download or account
+is required. The game may take a moment to load the engine and team charts.
 
-- [Install and launch](docs/installation.md): macOS DMG, Windows installer and source instructions.
-- [Build and try the browser-only game](docs/web-game.md).
-- [How to play](docs/playing.md): setup, controls, difficulty, saving and limits.
-- [Optional: import your own team charts](docs/importing-teams.md) (advanced).
-- [Chart generator source and workflow](https://github.com/rtulloh/bowl_bound/blob/main/docs/chart-generation.md) (development).
-- [Troubleshooting](docs/troubleshooting.md) and [report a bug](docs/reporting-bugs.md).
-- [Release notes](RELEASE_NOTES.md) and [all player documentation](docs/README.md).
+Play full games with team statistics, save and resume, and three computer
+coaching difficulties. Medium is the default. Difficulty changes coaching
+decisions without changing the dice odds. Saves are stored in your browser
+profile. Use **Saved games** to export a backup or resume a game.
 
-The web game supports full regulation games, season-appropriate overtime,
-team statistics, save/resume, and Easy/Medium/Hard computer coaching.
-**Medium is the default; difficulty changes decisions, never dice odds.**
-A separate source-installed terminal game is available:
+**[Try the season playtest](https://rtulloh.github.io/bowl_bound/season-playtest/)**.
+Select **Seasons** to create a schedule, play fixtures, and review standings,
+rankings, and team statistics.
 
-```sh
-python -m bowl_bound --play -d medium --compact
-```
+- [How to play](docs/playing.md)
+- [Browser saves and season controls](docs/web-game.md)
+- [Player guide](docs/README.md) and [reporting bugs](docs/reporting-bugs.md)
 
-Run that command from the installed source checkout; see the installation guide.
-The web game runs locally. Save before stopping and follow the shutdown steps
-for your installer or portable build in the [installation guide](docs/installation.md).
+## Optional desktop installation
+
+[Download the latest release](https://github.com/rtulloh/bowl_bound/releases/latest)
+for Windows, Apple Silicon, or Intel Mac. The desktop edition opens the game in
+your browser and supports offline play after installation. See the
+[installation guide](docs/installation.md) for desktop and source setup, including
+the terminal game, and the [release notes](RELEASE_NOTES.md) for version details.
 
 ## License and support
 

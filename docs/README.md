@@ -1,9 +1,17 @@
 # Bowl Bound player guide
 
-Start with [installation](installation.md), then [how to play](playing.md).
+[Play Bowl Bound in your browser](https://rtulloh.github.io/bowl_bound/) without
+installing anything. Start with [how to play](playing.md) or read about
+[browser saves](web-game.md#save-and-resume).
+
+[Try the season playtest](https://rtulloh.github.io/bowl_bound/season-playtest/)
+for schedules, standings, rankings, and team statistics. See
+[how to play a season](web-game.md#play-a-season).
+
+For offline play, see the [desktop installation guide](installation.md).
 
 - [Python and pip setup](python-setup.md) — official Windows/macOS/Homebrew links.
-- [Browser-only game](web-game.md) for local static builds and browser saves.
+- [Browser game development](web-game.md#build-and-test-locally) for local static builds.
 - [Starting and stopping](startup.md) — local server, launcher options and version.
 - [Optional team chart import](importing-teams.md) — an advanced, source-installed tool.
 - [Troubleshooting](troubleshooting.md) — downloads, ports, saves and team problems.
