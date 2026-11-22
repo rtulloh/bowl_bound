@@ -337,7 +337,7 @@ export default function App() {
         {teams === null && (
           catalogError
             ? <p role="alert" className="mb-3 text-red-300">{catalogError}</p>
-            : <p role="status" className="mb-3 text-slate-200">
+            : <p role="status" className="mb-3 text-lg font-semibold text-white">
                 {browser ? 'Starting the game engine and loading teams…' : 'Loading teams…'}
               </p>
         )}
