@@ -67,7 +67,10 @@ Only fixtures explicitly marked as conference games count in conference records.
 The ranking uses two-thirds overall winning percentage and one-third opponents'
 winning percentage. It weights opponents by completed meetings, excludes their
 games against the team being ranked, and uses .500 when an opponent has no
-other results. Ties count as half a win.
+other results. Tied games count as half a win. When rating, record and schedule strength are
+equal, rank by more total offense yards per game, more points scored per game,
+then fewer yards allowed per game. An exact tie uses team name, chart year and
+team ID in order. The poll lists up to 25 teams with consecutive ranks.
 
 The browser stores each fixture checkpoint and its accepted final result together
 in its local season library. **Remove result** reopens a completed fixture and

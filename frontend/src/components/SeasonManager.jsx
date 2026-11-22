@@ -490,7 +490,9 @@ function SeasonStatistics({ summary }) {
 
 function Rankings({ summary, teams }) {
   if (!summary.rankings.length) return <p>Rankings appear after the first completed game.</p>
-  return (
+  return (<section className="space-y-2">
+    <h3 className="text-lg font-semibold">Top 25</h3>
+    <p className="text-sm text-slate-300">Tiebreakers use offense yards, points scored, and yards allowed per game.</p>
     <SeasonTable name="Season rankings" columns={['Team', 'Rank', 'W–L–T', 'Schedule strength', 'Rating']}>
       {summary.rankings.map(({ team_id, rank, strength_of_schedule, rating }) => {
         const team = teams.get(team_id)
@@ -502,7 +504,7 @@ function Rankings({ summary, teams }) {
         )
       })}
     </SeasonTable>
-  )
+  </section>)
 }
 
 const views = ['Schedule', 'Standings', 'Team statistics', 'Rankings']

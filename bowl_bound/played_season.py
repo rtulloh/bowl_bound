@@ -370,21 +370,29 @@ def _rankings(
         rating = (2 * record + schedule) / 3
         ratings.append((rating, record, schedule, team))
 
-    ordered = sorted(ratings, key=lambda item: (-item[0], -item[1], -item[2], team_order[item[3]]))
-    rankings = []
-    previous = None
-    rank = 0
-    for position, (rating, record, schedule, team) in enumerate(ordered, start=1):
-        key = (rating, record, schedule)
-        if key != previous:
-            rank = position
-            previous = key
-        rankings.append(
-            {
-                "team_id": team,
-                "rank": rank,
-                "strength_of_schedule": float(schedule),
-                "rating": float(rating),
-            }
+    def poll_order(
+        item: tuple[Fraction, Fraction, Fraction, str],
+    ) -> tuple[Fraction, Fraction, Fraction, Fraction, Fraction, Fraction, tuple[str, int, str]]:
+        rating, record, schedule, team = item
+        box = totals[team]
+        games = box.record.games
+        return (
+            -rating,
+            -record,
+            -schedule,
+            -Fraction(box.offense["total_yards"], games),
+            -Fraction(box.points_for, games),
+            Fraction(box.defense["total_yards"], games),
+            team_order[team],
         )
-    return rankings
+
+    ordered = sorted(ratings, key=poll_order)[:25]
+    return [
+        {
+            "team_id": team,
+            "rank": rank,
+            "strength_of_schedule": float(schedule),
+            "rating": float(rating),
+        }
+        for rank, (rating, _, schedule, team) in enumerate(ordered, start=1)
+    ]

@@ -126,3 +126,32 @@ def test_incomplete_or_inconsistent_box_cannot_be_imported() -> None:
     del ledger["results"]["one"]["home_statistics"]["passing_yards"]
     with pytest.raises(ValueError, match="complete"):
         PlayedSeason.from_dict(ledger)
+
+
+def test_top_25_uses_yards_scoring_and_defense_to_break_rating_ties() -> None:
+    teams = tuple(SeasonTeam(f"team-{i}", f"Team {i:02}", 2007) for i in range(60))
+    fixtures = tuple(SeasonFixture(str(i), 1, teams[i].id, teams[i + 30].id) for i in range(30))
+    season = PlayedSeason("poll", "Poll", teams, fixtures)
+    for i, fixture in enumerate(fixtures):
+        season.record(
+            fixture.id,
+            SeasonResult(
+                f"game-{i}",
+                14 if i >= 27 else 7,
+                0,
+                TeamStatistics(rushing_yards=200 if i >= 26 else 100),
+                TeamStatistics(passing_yards=50 if i == 29 else 75),
+            ),
+        )
+    rankings = season.summary()["rankings"]
+    assert [row["rank"] for row in rankings] == list(range(1, 26))
+    assert len({row["team_id"] for row in rankings}) == 25
+    assert [row["team_id"] for row in rankings[:6]] == [
+        "team-29",
+        "team-27",
+        "team-28",
+        "team-26",
+        "team-0",
+        "team-1",
+    ]
+    assert rankings[-1]["team_id"] == "team-20"
