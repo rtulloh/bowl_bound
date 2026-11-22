@@ -130,3 +130,21 @@ it.each(['decision', 'computer'])('animates before revealing the recorded toss w
   expect(api.decide).not.toHaveBeenCalled()
   expect(api.snap).not.toHaveBeenCalled()
 })
+
+it('shows catalog loading until team selection is ready', async () => {
+  let finishLoading
+  api.listTeams.mockReturnValue(new Promise((resolve) => { finishLoading = resolve }))
+  render(<App />)
+  expect(screen.getByRole('status')).toHaveTextContent('Loading teams')
+  expect(screen.getByRole('button', { name: 'Seasons' })).toBeDisabled()
+  await act(async () => finishLoading({ teams: [{ id: 'a', name: 'Alpha', season: 2007 }] }))
+  expect(screen.queryByText(/loading teams/i)).not.toBeInTheDocument()
+  expect(screen.getByRole('button', { name: 'Seasons' })).toBeEnabled()
+})
+
+it('replaces catalog loading with the startup error when it fails', async () => {
+  api.listTeams.mockRejectedValue(new Error('Catalog unavailable'))
+  render(<App />)
+  expect(await screen.findByRole('alert')).toHaveTextContent('The Bowl Bound server is not reachable.')
+  expect(screen.queryByText(/loading teams/i)).not.toBeInTheDocument()
+})

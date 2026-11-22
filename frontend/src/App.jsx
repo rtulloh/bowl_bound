@@ -33,6 +33,7 @@ export default function App() {
   const savedGame = useRef(null)
   const saveIdentity = useRef(null)
   const [teams, setTeams] = useState(null)
+  const [catalogError, setCatalogError] = useState(null)
   const [catalogProblems, setCatalogProblems] = useState([])
   const [home, setHome] = useState({ season: '', teamId: '' })
   const [away, setAway] = useState({ season: '', teamId: '' })
@@ -79,7 +80,7 @@ export default function App() {
           setAway(sides.away)
         }
       })
-      .catch((error) => setError(browser ? error.message : 'The Bowl Bound server is not reachable.'))
+      .catch((error) => setCatalogError(browser ? error.message : 'The Bowl Bound server is not reachable.'))
   }, [])
 
   useEffect(() => {
@@ -333,6 +334,13 @@ export default function App() {
       <main className="max-w-xl mx-auto p-6 text-white" data-testid="team-select">
         <h1 className="text-3xl font-bold mb-4">Bowl Bound</h1>
         <p className="mb-4 text-sm">Play both sides manually or coach either team against the computer at your chosen difficulty. Simultaneous calls stay hidden until the play resolves.</p>
+        {teams === null && (
+          catalogError
+            ? <p role="alert" className="mb-3 text-red-300">{catalogError}</p>
+            : <p role="status" className="mb-3 text-slate-200">
+                {browser ? 'Starting the game engine and loading teams…' : 'Loading teams…'}
+              </p>
+        )}
         <button type="button" className="play-button mb-4" disabled={busy || !teams?.length}
           onClick={openSeasons}>Seasons</button>
         {controls}
