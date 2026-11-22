@@ -57,3 +57,7 @@ The real-engine browser test played two fixtures with reversed home and away
 roles, reloaded and resumed the first, then reconciled saved final scores,
 games played, and cumulative offense with the two boxes. Upstream runs the
 full regression on the feature branch.
+
+The statistics layout follow-up adapts the leader cards, category navigation,
+and sortable tables in Paydirt’s `SeasonDesk.jsx`. Bowl Bound uses its existing
+team box-score fields for the offense and defense views.

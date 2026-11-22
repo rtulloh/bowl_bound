@@ -289,41 +289,140 @@ const statistics = [
   ['total_plays', 'Plays'],
 ]
 
-function SeasonStatistics({ summary }) {
-  const [mode, setMode] = useState('totals')
-  const [sort, setSort] = useState('total_yards')
-  const ordered = [...summary.teams].sort((left, right) => (
-    (right[mode]?.[sort] ?? -Infinity) - (left[mode]?.[sort] ?? -Infinity)
-    || left.name.localeCompare(right.name)
-  ))
+const statGroups = {
+  'All statistics': statistics.map(([key]) => key),
+  'Total yards': ['total_yards', 'total_plays', 'rushing_yards', 'passing_yards'],
+  Passing: ['passing_yards', 'passing_attempts', 'completions', 'passing_touchdowns', 'interceptions', 'sacks_taken', 'sack_yards_lost'],
+  Rushing: ['rushing_yards', 'rushing_attempts', 'rushing_touchdowns'],
+}
+
+const leaderCategories = [
+  ['Total offense', 'YDS/G', (team) => team.per_game?.total_yards],
+  ['Passing', 'YDS/G', (team) => team.per_game?.passing_yards],
+  ['Rushing', 'YDS/G', (team) => team.per_game?.rushing_yards],
+  ['Scoring', 'PTS/G', (team) => team.points_for / team.games_played],
+  ['Total defense', 'YDS/G allowed', (team) => team.allowed_per_game?.total_yards, true],
+]
+
+function SeasonLeaders({ teams }) {
   return (
-    <section className="space-y-2" aria-label="Team statistics">
-      <div className="grid gap-2 sm:grid-cols-2">
-        <label>Statistics
-          <select className={inputClass} value={mode} onChange={(event) => setMode(event.target.value)}>
-            <option value="totals">Offense totals</option>
-            <option value="per_game">Offense per game</option>
-            <option value="allowed_totals">Defense allowed totals</option>
-            <option value="allowed_per_game">Defense allowed per game</option>
-          </select>
-        </label>
-        <label>Sort by
-          <select className={inputClass} value={sort} onChange={(event) => setSort(event.target.value)}>
-            {statistics.map(([key, label]) => <option key={key} value={key}>{label}</option>)}
-          </select>
-        </label>
+    <section aria-label="Season leaders at a glance" className="space-y-3">
+      <h3 className="text-lg font-semibold">Season leaders at a glance</h3>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        {leaderCategories.map(([label, unit, measure, ascending]) => {
+          const leaders = teams.filter((team) => team.games_played && Number.isFinite(measure(team)))
+            .sort((left, right) => (ascending ? 1 : -1) * (measure(left) - measure(right))
+              || left.name.localeCompare(right.name)).slice(0, 5)
+          return (
+            <section key={label} className="rounded-lg border border-slate-600 bg-slate-800 p-3">
+              <h4 className="font-semibold text-amber-300">{label}</h4>
+              <p className="text-xs text-slate-300">{unit}</p>
+              {leaders.length ? <ol className="mt-2 divide-y divide-slate-600">
+                {leaders.map((team, index) => (
+                  <li className="flex items-baseline gap-2 py-2 text-sm" key={team.team_id}>
+                    <span className="text-slate-300">{index + 1}</span>
+                    <span className="flex-1">{edition(team)}</span>
+                    <strong className="tabular-nums">{measure(team).toFixed(1)}</strong>
+                  </li>
+                ))}
+              </ol> : <p className="mt-2 text-sm text-slate-300">No completed games</p>}
+            </section>
+          )
+        })}
       </div>
-      <SeasonTable name="Season team statistics" columns={['Team', 'Games', ...statistics.map(([, label]) => label)]}>
-        {ordered.map((team) => (
-          <tr key={team.team_id}>
-            <TeamCell team={team} />
-            <Cells values={[team.games_played, ...statistics.map(([key]) => {
-              const value = team[mode]?.[key]
-              return value == null ? '—' : mode.endsWith('per_game') ? value.toFixed(1) : value
-            })]} />
-          </tr>
+    </section>
+  )
+}
+
+function SeasonStatistics({ summary }) {
+  const [view, setView] = useState('totals')
+  const [side, setSide] = useState('Offense')
+  const [group, setGroup] = useState('All statistics')
+  const [sort, setSort] = useState({ key: 'total_yards', direction: 'descending' })
+  const select = (nextSide, nextGroup) => {
+    setSide(nextSide)
+    setGroup(nextGroup)
+    setSort({ key: statGroups[nextGroup][0], direction: nextSide === 'Defense' ? 'ascending' : 'descending' })
+  }
+  const mode = side === 'Defense' ? `allowed_${view}` : view
+  const columns = statGroups[group].map((key) => statistics.find(([field]) => field === key))
+  const value = (team, key) => {
+    if (key === 'games_played') return team.games_played
+    if (!team.games_played) return null
+    if (key === 'points') {
+      const points = side === 'Defense' ? team.points_against : team.points_for
+      return view === 'per_game' ? points / team.games_played : points
+    }
+    return team[mode]?.[key]
+  }
+  const ordered = [...summary.teams].sort((left, right) => {
+    const a = value(left, sort.key)
+    const b = value(right, sort.key)
+    if (a == null || b == null) return Number(a == null) - Number(b == null) || left.name.localeCompare(right.name)
+    return (sort.direction === 'ascending' ? a - b : b - a) || left.name.localeCompare(right.name)
+  })
+  const header = (key, label) => (
+    <th scope="col" className="p-2" key={key} aria-sort={sort.key === key ? sort.direction : undefined}>
+      <button type="button" onClick={() => setSort({
+        key, direction: sort.key === key && sort.direction === 'descending' ? 'ascending' : 'descending',
+      })}>{label} <span aria-hidden="true">{sort.key !== key ? '↕' : sort.direction === 'ascending' ? '↑' : '↓'}</span></button>
+    </th>
+  )
+  return (
+    <section className="space-y-6 rounded-xl border border-slate-600 bg-slate-900 p-4" aria-label="Team statistics">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <h3 className="text-xl font-bold">Team statistics</h3>
+        <div className="flex flex-wrap items-end gap-2">
+          <label>View
+            <select className={inputClass} value={view} onChange={(event) => setView(event.target.value)}>
+              <option value="totals">Totals</option>
+              <option value="per_game">Per game</option>
+            </select>
+          </label>
+          {['Offense', 'Defense'].map((label) => (
+            <button key={label} type="button" aria-pressed={side === label}
+              className={side === label ? 'rounded bg-amber-300 px-4 py-2 text-slate-900' : 'play-button'}
+              onClick={() => select(label, 'All statistics')}>{label}</button>
+          ))}
+        </div>
+      </div>
+      <SeasonLeaders teams={summary.teams} />
+      <div className="grid gap-4 sm:grid-cols-2">
+        {['Offense', 'Defense'].map((label) => (
+          <section className="border-t-2 border-slate-500" key={label}>
+            <h4 className="p-2 font-semibold">{label}</h4>
+            {Object.keys(statGroups).slice(1).map((detail) => (
+              <button type="button" key={detail} aria-label={`${detail} ${label.toLowerCase()}`}
+                aria-pressed={side === label && group === detail}
+                className="block w-full border-t border-slate-700 px-2 py-2 text-left even:bg-slate-800 aria-pressed:text-amber-300"
+                onClick={() => select(label, detail)}>{detail === 'Total yards' && label === 'Defense' ? 'Yards allowed' : detail}</button>
+            ))}
+          </section>
         ))}
-      </SeasonTable>
+      </div>
+      <div className="space-y-2">
+        <h4 className="text-lg font-semibold">{side} statistics{group !== 'All statistics' && ` · ${group}`}</h4>
+        <div className="max-w-full overflow-x-auto">
+          <table aria-label="Season team statistics" className="w-full whitespace-nowrap text-left">
+            <thead className="border-b border-slate-500">
+              <tr><th className="p-2" scope="col">Team</th>{header('games_played', 'Games')}
+                {columns.map(([key, label]) => header(key, label))}{header('points', side === 'Defense' ? 'Points allowed' : 'Points')}</tr>
+            </thead>
+            <tbody className="divide-y divide-slate-700">
+              {ordered.map((team) => {
+                const keys = [...columns.map(([key]) => key), 'points']
+                return <tr key={team.team_id}>
+                  <TeamCell team={team} />
+                  <Cells values={[team.games_played, ...keys.map((key) => {
+                    const number = value(team, key)
+                    return number == null ? '—' : view === 'per_game' ? number.toFixed(1) : number
+                  })]} />
+                </tr>
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </section>
   )
 }
