@@ -121,7 +121,7 @@ function CreateSeason({ teams, templates, busy, onCreate }) {
                 <legend>Game {index + 1}</legend>
                 <label>Game {index + 1} week
                   <input className={inputClass} type="number" required min="1" max="1000" value={game.week}
-                    onChange={(event) => changeFixture(game.key, { week: event.target.value === '' ? '' : Number(event.target.value) })} />
+                    onChange={(event) => changeFixture(game.key, { week: event.target.value === '' ? '' : event.target.valueAsNumber })} />
                 </label>
                 <FixtureTeam label={`Game ${index + 1} away team`} value={game.away} teams={participants}
                   onChange={(away) => changeFixture(game.key, { away })} />
@@ -398,7 +398,9 @@ function SeasonStatistics({ summary }) {
   const ordered = summary.teams.filter((team) => !conference || team.conference === conference).sort((left, right) => {
     const a = value(left, sort.key)
     const b = value(right, sort.key)
-    if (a == null || b == null) return Number(a == null) - Number(b == null) || left.name.localeCompare(right.name)
+    if (a == null && b != null) return 1
+    if (a != null && b == null) return -1
+    if (a == null) return left.name.localeCompare(right.name)
     return (sort.direction === 'ascending' ? a - b : b - a) || left.name.localeCompare(right.name)
   })
   const highlight = (key) => sort.key === key ? 'bg-sky-900/50' : ''
