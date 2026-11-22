@@ -236,7 +236,6 @@ function TeamCell({ team }) {
 }
 
 const record = (wins, losses, ties) => `${wins}–${losses}–${ties}`
-const percentage = (number) => number == null ? '—' : `${(100 * number).toFixed(1)}%`
 
 function Standings({ summary, teams }) {
   const [group, setGroup] = useState('')
@@ -493,13 +492,13 @@ function Rankings({ summary, teams }) {
   return (<section className="space-y-2">
     <h3 className="text-lg font-semibold">Top 25</h3>
     <p className="text-sm text-slate-300">Tiebreakers use offense yards, points scored, and yards allowed per game.</p>
-    <SeasonTable name="Season rankings" columns={['Team', 'Rank', 'W–L–T', 'Schedule strength', 'Rating']}>
-      {summary.rankings.map(({ team_id, rank, strength_of_schedule, rating }) => {
+    <SeasonTable name="Season rankings" columns={['Team', 'Rank', 'W–L–T']}>
+      {summary.rankings.map(({ team_id, rank }) => {
         const team = teams.get(team_id)
         return (
           <tr key={team_id}>
             <TeamCell team={team} />
-            <Cells values={[rank, record(team.wins, team.losses, team.ties), percentage(strength_of_schedule), percentage(rating)]} />
+            <Cells values={[rank, record(team.wins, team.losses, team.ties)]} />
           </tr>
         )
       })}

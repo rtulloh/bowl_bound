@@ -119,7 +119,9 @@ test('a browser season resumes after reload and reconciles two conference finals
   await page.getByRole('button', { name: 'Rankings', exact: true }).click()
   const ranks = page.getByRole('table', { name: 'Season rankings' }).locator('tbody tr')
   await expect(ranks).toHaveCount(2)
-  for (const rank of await ranks.all()) {
-    await expect(rank.getByRole('cell').nth(2)).toHaveText('50.0%')
+  const poll = page.getByRole('table', { name: 'Season rankings' })
+  await expect(poll.getByRole('columnheader')).toHaveText(['Team', 'Rank', 'W–L–T'])
+  for (const [index, row] of (await ranks.all()).entries()) {
+    await expect(row.getByRole('cell').first()).toHaveText(String(index + 1))
   }
 })

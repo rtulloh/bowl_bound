@@ -85,7 +85,8 @@ it('resumes a scheduled game and displays backend standings, totals and rankings
   fireEvent.click(within(categories).getByRole('button', { name: 'Special teams: Punting' }))
   expect(screen.getByText('Season box scores do not include punting statistics.')).toBeVisible()
   fireEvent.click(screen.getByRole('button', { name: 'Rankings' }))
-  expect(screen.getByRole('table', { name: 'Season rankings' })).toHaveTextContent('50.0%')
+  const poll = screen.getByRole('table', { name: 'Season rankings' })
+  expect(within(poll).getAllByRole('columnheader').map((cell) => cell.textContent)).toEqual(['Team', 'Rank', 'W–L–T'])
 })
 
 it('requires explicit confirmation to remove a completed result', () => {
