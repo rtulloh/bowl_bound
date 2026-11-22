@@ -1,7 +1,7 @@
 # Bowl Bound 1.1.2 release notes
 
-Release candidate. The full source regression passed, and native packaging is
-blocked by [#347](https://github.com/rtulloh/bowl_bound/issues/347).
+Release candidate. The full source regression passed before the initial native
+packaging attempt, which failed as tracked in [#347](https://github.com/rtulloh/bowl_bound/issues/347).
 
 ## What's new
 
@@ -29,6 +29,9 @@ blocked by [#347](https://github.com/rtulloh/bowl_bound/issues/347).
   and Windows. Packaging stopped on all three targets when the asset validator
   rejected the generated engine worker filename.
   [Release build](https://github.com/rtulloh/bowl_bound/actions/runs/44987079254)
+- The packaging fix isolates the browser worker from the native build. Release
+  qualification requires a fresh source regression and native build.
+  [Packaging issue](https://github.com/rtulloh/bowl_bound/issues/347)
 - Published-download smoke tests and first-launch checks remain pending.
   [Release validation requirements](release-builds.md)
 
@@ -36,4 +39,7 @@ For release documentation, Paydirt's
 `docs/dev-notes/release-1.12.2-readiness.md` provided the pattern of tying
 validation to a source commit and recording first-launch status separately.
 Bowl Bound uses its own browser catalog, deployment instructions, and native
-validation results.
+validation results. For the packaging fix, Paydirt’s
+`scripts/audit_browser_spike_runtime.mjs` also demonstrated a dedicated browser
+output directory. Bowl Bound keeps the existing native asset validation and
+limits worker compilation to browser mode.

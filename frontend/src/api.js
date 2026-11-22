@@ -1,21 +1,9 @@
-import { createWorkerClient } from './runtime/workerClient'
-
-let workerRequest
-
-async function browserRequest(path, options, rawText) {
-  workerRequest ??= createWorkerClient(
-    new Worker(new URL('./runtime/engine.worker.js', import.meta.url), { type: 'module' }),
-    new URL(`${import.meta.env.BASE_URL}browser/manifest.json`, document.baseURI).href,
-  )
-  const { status, body } = await workerRequest(options?.method ?? 'GET', path, options?.body)
-  if (status >= 200 && status < 300) return rawText ? body : JSON.parse(body)
-  const detail = JSON.parse(body).detail
-  throw new Error(typeof detail === 'string' ? detail : 'Request failed')
-}
-
 // Thin client: it sends selections and returns what the engine said.
 async function request(path, options, rawText = false) {
-  if (import.meta.env.MODE === 'browser') return browserRequest(path, options, rawText)
+  if (import.meta.env.MODE === 'browser') {
+    const { browserRequest } = await import('./runtime/browserRequest')
+    return browserRequest(path, options, rawText)
+  }
   const response = await fetch(path, options)
   if (response.ok && rawText) return response.text()
   const body = await response.json().catch(() => ({}))

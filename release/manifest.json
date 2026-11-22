@@ -25,6 +25,7 @@
     "frontend/src/components/ResultPanel.jsx",
     "frontend/src/components/SaveControls.jsx",
     "frontend/src/components/BrowserSaves.jsx",
+    "frontend/src/runtime/browserRequest.js",
     "frontend/src/runtime/workerClient.js",
     "frontend/src/runtime/engine.worker.js",
     "frontend/src/runtime/gameLibrary.js",
