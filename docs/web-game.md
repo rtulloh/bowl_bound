@@ -56,7 +56,10 @@ game menu to leave a fixture and **Resume game** to continue it. Finished games
 automatically update **Standings**, **Team statistics**, and **Rankings**.
 **Team statistics** opens with sortable offense and defense tables. The Total
 view pairs each total with its per-game rate under a shared heading. Choose
-Passing or Rushing for detail, or filter by conference. Leader cards appear
+a category from the Offense, Defense, or Special teams directory, or filter
+by conference. Receiving uses team completion and passing totals. Defensive
+turnovers show interceptions. Downs, fumble recoveries, and special teams
+categories show their data limits because season boxes lack those counters. Leader cards appear
 below the table. The tables use Bowl Bound's team box scores,
 including its college sack accounting.
 

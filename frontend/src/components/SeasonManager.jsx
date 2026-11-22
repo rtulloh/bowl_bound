@@ -281,7 +281,26 @@ const totalsGroups = [
   ['Points', 'points', 'Points'],
 ]
 const rate = (key, label, unit = 'YDS/G') => [key + '_per_game', unit, label + ' per game']
+const seasonStatCategories = {
+  Offense: [['Total', 'Total yards'], ['Passing'], ['Rushing'], ['Receiving'], ['Downs']],
+  Defense: [['Total', 'Yards allowed'], ['Points', 'Points allowed'], ['Turnovers'], ['Passing'], ['Rushing'], ['Receiving'], ['Downs']],
+  'Special teams': [['Returning'], ['Kicking'], ['Punting']],
+}
+const unavailableCategory = {
+  Downs: 'down and conversion statistics',
+  Returning: 'return statistics',
+  Kicking: 'kicking statistics',
+  Punting: 'punting statistics',
+}
 const detailColumns = {
+  Points: [['points', 'PTS', 'Points'], rate('points', 'Points', 'PTS/G')],
+  Turnovers: [['interceptions', 'INT', 'Interceptions made']],
+  Receiving: [
+    ['completions', 'REC', 'Receptions'],
+    ['passing_yards', 'YDS', 'Receiving yards'],
+    rate('passing_yards', 'Receiving yards'),
+    ['passing_touchdowns', 'TD', 'Receiving touchdowns'],
+  ],
   Passing: [
     ['completions', 'CMP', 'Completions'],
     ['passing_attempts', 'ATT', 'Pass attempts'],
@@ -352,8 +371,15 @@ function SeasonStatistics({ summary }) {
   const select = (nextSide, nextGroup) => {
     setSide(nextSide)
     setGroup(nextGroup)
-    const yardage = { Total: 'total', Passing: 'passing', Rushing: 'rushing' }[nextGroup]
-    setSort({ key: `${yardage}_yards_per_game`, direction: nextSide === 'Defense' ? 'ascending' : 'descending' })
+    const key = {
+      Total: 'total_yards_per_game',
+      Passing: 'passing_yards_per_game',
+      Rushing: 'rushing_yards_per_game',
+      Receiving: 'passing_yards_per_game',
+      Points: 'points_per_game',
+      Turnovers: 'interceptions',
+    }[nextGroup] ?? 'games_played'
+    setSort({ key, direction: nextSide === 'Defense' && nextGroup !== 'Turnovers' ? 'ascending' : 'descending' })
   }
   const total = group === 'Total'
   const columns = total ? overallColumns : detailColumns[group]
@@ -392,17 +418,30 @@ function SeasonStatistics({ summary }) {
   return (
     <section className="space-y-4 rounded-xl border border-slate-600 bg-slate-900 p-4" aria-label="Team statistics">
       <h3 className="text-xl font-bold">{side} statistics</h3>
-      <div className="grid grid-cols-2 border-b border-slate-600">
-        {['Offense', 'Defense'].map((label) => (
+      <nav aria-label="Team statistics categories" className="grid gap-4 sm:grid-cols-3">
+        {Object.entries(seasonStatCategories).map(([label, categories]) => (
+          <div key={label} className="border-t-2 border-slate-500">
+            <h4 className="px-2 py-2 font-semibold">{label}</h4>
+            {categories.map(([category, title = category]) => (
+              <button key={category} type="button" aria-label={`${label}: ${title}`}
+                aria-pressed={label === side && category === group}
+                className="block w-full border-t border-slate-700 px-2 py-2 text-left even:bg-slate-800 aria-pressed:text-amber-300"
+                onClick={() => select(label, category)}>{title}</button>
+            ))}
+          </div>
+        ))}
+      </nav>
+      <div className="grid grid-cols-3 border-b border-slate-600">
+        {Object.keys(seasonStatCategories).map((label) => (
           <button key={label} type="button" aria-pressed={side === label}
             className={`border-b-2 py-2 font-semibold ${side === label ? 'border-amber-300 text-amber-300' : 'border-transparent text-slate-300'}`}
-            onClick={() => select(label, 'Total')}>{label}</button>
+            onClick={() => select(label, seasonStatCategories[label][0][0])}>{label}</button>
         ))}
       </div>
       <div className="flex flex-wrap gap-2">
         <select className="rounded-full border border-slate-500 bg-slate-800 px-3 py-2 text-sm" aria-label="Statistic category"
           value={group} onChange={(event) => select(side, event.target.value)}>
-          {['Total', 'Passing', 'Rushing'].map((label) => <option key={label}>{label}</option>)}
+          {seasonStatCategories[side].map(([category, title = category]) => <option key={category} value={category}>{title}</option>)}
         </select>
         {summary.conferences.length > 0 && (
           <select className="rounded-full border border-slate-500 bg-slate-800 px-3 py-2 text-sm" aria-label="Statistics conference"
@@ -412,7 +451,8 @@ function SeasonStatistics({ summary }) {
           </select>
         )}
       </div>
-      <div className="max-w-full overflow-x-auto">
+      {group === 'Turnovers' && <p className="text-sm text-slate-300">Season box scores include interceptions. Fumble recoveries are unavailable.</p>}
+      {columns ? <div className="max-w-full overflow-x-auto">
         <table aria-label="Season team statistics" className="w-full whitespace-nowrap text-sm tabular-nums">
           <colgroup span="2" />
           {total && totalsGroups.map(([label]) => <colgroup key={label} span="2" className="border-l border-slate-700" />)}
@@ -442,7 +482,7 @@ function SeasonStatistics({ summary }) {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> : <p className="text-sm text-slate-300">Season box scores do not include {unavailableCategory[group]}.</p>}
       {summary.teams.some((team) => team.games_played) && <SeasonLeaders teams={summary.teams} />}
     </section>
   )
