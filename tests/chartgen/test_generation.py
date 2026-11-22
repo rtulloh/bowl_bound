@@ -1,5 +1,6 @@
 """Synthetic complete-bundle, physical-probability and safety contracts."""
 
+import os
 import sys
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
@@ -1845,9 +1846,13 @@ def test_qualified_historical_source_reaches_real_engine_selection(
     assert result["total_completed_engine_runs"] == 18
 
 
+@pytest.mark.ci_shard_group("coordinate-reproducibility")
+@pytest.mark.parametrize("replica", ["first", "repeat"])
 def test_actual_engine_coordinate_probes_freeze_opponents_and_only_combine_local_benefits(
-    tmp_path: Path, events: list[Event]
+    tmp_path: Path, tmp_path_factory: pytest.TempPathFactory, events: list[Event], replica: str
 ) -> None:
+    import json
+
     from tools.chartgen.cohort_refinement import run_cohort_refinement
 
     source, manifest, targets = _prepare_qualified_refinement_example(tmp_path, events, copies=3)
@@ -1898,16 +1903,16 @@ def test_actual_engine_coordinate_probes_freeze_opponents_and_only_combine_local
         ]
         is True
     )
-    repeated = run_cohort_refinement(
-        source,
-        manifest,
-        targets,
-        tmp_path / "private-data" / "isolated-coordinates-repeat",
-        reviewed_manifest_sha256=manifest["manifest_sha256"],
-        training_repetitions=1,
-        validation_repetitions=1,
-        coaching_repetitions=1,
-        iterations=4,
-        master_seed=95,
-    )
-    assert repeated == result
+    # Workers have separate temp directories beneath a shared pytest run directory.
+    run_directory = tmp_path_factory.getbasetemp()
+    if os.environ.get("PYTEST_XDIST_WORKER"):
+        run_directory = run_directory.parent
+    snapshot = run_directory / f"coordinate-{replica}.json"
+    staged = snapshot.with_suffix(".tmp")
+    staged.write_text(json.dumps(result, sort_keys=True), encoding="utf-8")
+    staged.replace(snapshot)
+    other_replica = "repeat" if replica == "first" else "first"
+    other = run_directory / f"coordinate-{other_replica}.json"
+    # The last writer always sees the other complete snapshot.
+    if other.exists():
+        assert snapshot.read_bytes() == other.read_bytes()

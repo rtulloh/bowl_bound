@@ -535,6 +535,9 @@ Paydirt’s `.github/workflows/test.yml` separates browser games and Python cove
 Bowl Bound adapts that job layout with its own browser harness, dependencies,
 and exact-commit source gate. Every pytest node belongs to one of twelve
 shards. Tests sharing an xdist group are placed on the same shard and worker.
+The coordinate reproducibility cases share a shard and run on separate
+workers. Each generates its own charts and engine evidence, and the last
+finisher compares their complete results.
 All shard coverage files are required before the combined branch-coverage check
 enforces the project’s 75% minimum. The catalog, Windows source dialog and
 real-engine browser checks remain required for workflow success.

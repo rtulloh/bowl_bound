@@ -16,10 +16,15 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
     selected = []
     deselected = []
     for item in items:
-        groups = sorted(marker.args[0] for marker in item.iter_markers("xdist_group"))
+        groups = sorted(
+            marker.args[0]
+            for name in ("ci_shard_group", "xdist_group")
+            for marker in item.iter_markers(name)
+        )
         key = "|".join(groups) if groups else item.nodeid
         digest = hashlib.sha256(key.encode()).digest()
         bucket = int.from_bytes(digest[:8], "big") % count
         (selected if bucket == index else deselected).append(item)
     config.hook.pytest_deselected(items=deselected)
-    items[:] = selected
+    # Start the paired real-engine cases together on the first two workers.
+    items[:] = sorted(selected, key=lambda item: item.get_closest_marker("ci_shard_group") is None)
