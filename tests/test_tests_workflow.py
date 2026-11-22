@@ -58,6 +58,7 @@ def test_automatic_gate_retains_the_whole_established_regression() -> None:
     browser_job = data["jobs"]["browser"]
     commands = "\n".join(step.get("run", "") for step in browser_job["steps"])
     for required in (
+        '.venv/bin/python -m pip install -e ".[dev,web]"',
         "npm ci --ignore-scripts",
         "npm test",
         "npm run build",

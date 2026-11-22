@@ -167,10 +167,10 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           package-manager-cache: false
-      - name: Install browser backend dependencies
+      - name: Install browser and Python fixture dependencies
         run: |
           python -m venv .venv
-          .venv/bin/python -m pip install -e ".[web]"
+          .venv/bin/python -m pip install -e ".[dev,web]"
       - name: Frontend tests and build
         working-directory: frontend
         run: |
