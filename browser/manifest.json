@@ -1,9 +1,9 @@
 {
   "files": [
     {
-      "bytes": 1905734,
+      "bytes": 1933995,
       "mount": "/app",
-      "sha256": "c4eee824f24ed130156ed8d061b06c3769856c59435bffad18004ea115f111d2",
+      "sha256": "746ae269e4c2bc5ff2a2f8e976cabee4aa991db74ffa17b1c30bfe0ef235df1f",
       "url": "python.zip"
     }
   ],
@@ -19,14 +19,29 @@
       "sha256": "ee0c8133de2a1b725ed302515ca0594039a0c67af2a69d60b7c49777f7a88b95"
     },
     {
-      "bytes": 3912,
+      "bytes": 3833,
       "path": "backend/browser_bridge.py",
-      "sha256": "455908fa8d0064c12b4dbd0df9373a1acc779490a3e29e9524ed7b892bc5ef82"
+      "sha256": "c8186717c098d74c2078c21076c26b2d4b6f84a45e413b9bf0dbe94904fdbdb3"
     },
     {
-      "bytes": 19272,
+      "bytes": 26764,
       "path": "backend/operations.py",
-      "sha256": "8fcab219d7467ccf35258e23d937fd71f8b115524fbbd902e805a47a1fc95998"
+      "sha256": "efdef8e57a712793c953e3dd13324d8493f225b4e397076d3bcb6ffd093c9225"
+    },
+    {
+      "bytes": 16223,
+      "path": "backend/played_season.py",
+      "sha256": "4cb26450eea5e5ec53cfbbce2ef6d30ff547652aba3d352982a314cfe2b2fd0e"
+    },
+    {
+      "bytes": 44446,
+      "path": "backend/season_template_data.py",
+      "sha256": "01d7e2775eba063b01fa1cdc23bbc6a2c38afb2c7851050ddae09d55ab60b0ce"
+    },
+    {
+      "bytes": 2906,
+      "path": "backend/season_templates.py",
+      "sha256": "e474a126b45ad1d9afd59140a004ddbe8fbff9b5f15b3dee62357e4f85eadcb6"
     },
     {
       "bytes": 335,
@@ -202,6 +217,21 @@
       "bytes": 978,
       "path": "bowl_bound/variable_yardage.py",
       "sha256": "ee9cc4977237819e1c2f0054377c8024df3f1a38bacef61114d4ba1d8bd34637"
+    },
+    {
+      "bytes": 3778,
+      "path": "docs/generated-charts-1972.md",
+      "sha256": "97681648c208f3d096aae47d51f1611266b01c0ba19f72e31a3720d75301d715"
+    },
+    {
+      "bytes": 13393,
+      "path": "docs/generated-charts.md",
+      "sha256": "7693eba041a96dea10515bae6f44215cfca3ce9cb3bf3ddd921830741bab8c8f"
+    },
+    {
+      "bytes": 3907,
+      "path": "docs/season-schedules.md",
+      "sha256": "35610d4178ee132bc266b8400176056fed230520e1b071b07ff957f58d9a9b78"
     },
     {
       "bytes": 941,
@@ -5379,6 +5409,11 @@
       "sha256": "416049731e22193450b339900d898875dda975fa6873d8799ceb0701bb5f803b"
     },
     {
+      "bytes": 3436,
+      "path": "seasons/GENERATED-LICENSE.md",
+      "sha256": "9f6bd532a9b9d22413a94c059152c5d1ba25b0bf3de11cbc5803f9c5d6540f65"
+    },
+    {
       "bytes": 889,
       "path": "seasons/SAMPLE-LICENSE.md",
       "sha256": "75cb4838502ef53322cd77f97c45e202b6322b24e7f7524c2384ce923894d87a"
@@ -5449,7 +5484,7 @@
     ],
     "version": "0.27.7"
   },
-  "scope": "release-catalog",
+  "scope": "public-release-teams",
   "seasons": {
     "1972": [
       "colorado",

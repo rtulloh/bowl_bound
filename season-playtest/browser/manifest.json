@@ -1,9 +1,9 @@
 {
   "files": [
     {
-      "bytes": 1933941,
+      "bytes": 1933995,
       "mount": "/app",
-      "sha256": "1f9dafe7d1e96c90d6b250867cc10e719c6a328a89d0f9b9cef08319f2d5f3e5",
+      "sha256": "746ae269e4c2bc5ff2a2f8e976cabee4aa991db74ffa17b1c30bfe0ef235df1f",
       "url": "python.zip"
     }
   ],
@@ -24,9 +24,24 @@
       "sha256": "c8186717c098d74c2078c21076c26b2d4b6f84a45e413b9bf0dbe94904fdbdb3"
     },
     {
-      "bytes": 26578,
+      "bytes": 26764,
       "path": "backend/operations.py",
-      "sha256": "2bc0d055ed28f8b6abafb87d00127caad7f4dc4963b25dfd609fd635e81e761d"
+      "sha256": "efdef8e57a712793c953e3dd13324d8493f225b4e397076d3bcb6ffd093c9225"
+    },
+    {
+      "bytes": 16223,
+      "path": "backend/played_season.py",
+      "sha256": "4cb26450eea5e5ec53cfbbce2ef6d30ff547652aba3d352982a314cfe2b2fd0e"
+    },
+    {
+      "bytes": 44446,
+      "path": "backend/season_template_data.py",
+      "sha256": "01d7e2775eba063b01fa1cdc23bbc6a2c38afb2c7851050ddae09d55ab60b0ce"
+    },
+    {
+      "bytes": 2906,
+      "path": "backend/season_templates.py",
+      "sha256": "e474a126b45ad1d9afd59140a004ddbe8fbff9b5f15b3dee62357e4f85eadcb6"
     },
     {
       "bytes": 335,
@@ -124,11 +139,6 @@
       "sha256": "e0fb784ac72b703e5a377a0ae1f2e580087daf8a157609672ba2a3e5c29e4b6d"
     },
     {
-      "bytes": 16213,
-      "path": "bowl_bound/played_season.py",
-      "sha256": "44af19d2fc38bf4e65ce05afd6d2e7ecd59719a0dcd827b229e70afa54d06049"
-    },
-    {
       "bytes": 7367,
       "path": "bowl_bound/player_coaching.py",
       "sha256": "abd4abd8532ccf49bd4a562c3ef657f0d9c4ec86e5195c51ebb039b93ec0b68c"
@@ -159,24 +169,14 @@
       "sha256": "4c4ba6be5120ea85dcd52b824ddc5af03259d9d17f02b254eee1cb02c8745716"
     },
     {
-      "bytes": 53146,
+      "bytes": 52949,
       "path": "bowl_bound/save_game.py",
-      "sha256": "8aacd9f62a77bb8038c7ba78fc4e04e1675c43e684dc7d0a74c933b42bdbb04e"
+      "sha256": "a66537c9908460993c9f8b848b8c2d195357cca8285670bd1fcab8b4a29320fb"
     },
     {
       "bytes": 2816,
       "path": "bowl_bound/scoring.py",
       "sha256": "ecf47e45a2f78b16c3da4da43d81f6785fcd23fbf24701f10bb34aa994e042b0"
-    },
-    {
-      "bytes": 44446,
-      "path": "bowl_bound/season_template_data.py",
-      "sha256": "01d7e2775eba063b01fa1cdc23bbc6a2c38afb2c7851050ddae09d55ab60b0ce"
-    },
-    {
-      "bytes": 2906,
-      "path": "bowl_bound/season_templates.py",
-      "sha256": "e474a126b45ad1d9afd59140a004ddbe8fbff9b5f15b3dee62357e4f85eadcb6"
     },
     {
       "bytes": 105530,
@@ -224,9 +224,9 @@
       "sha256": "97681648c208f3d096aae47d51f1611266b01c0ba19f72e31a3720d75301d715"
     },
     {
-      "bytes": 13307,
+      "bytes": 13393,
       "path": "docs/generated-charts.md",
-      "sha256": "8413dd596170c63e77f19398ba9c7208bf3c032012e557798907d95c1791e65e"
+      "sha256": "7693eba041a96dea10515bae6f44215cfca3ce9cb3bf3ddd921830741bab8c8f"
     },
     {
       "bytes": 3907,
