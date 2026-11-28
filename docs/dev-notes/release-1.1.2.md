@@ -1,6 +1,6 @@
 # Bowl Bound 1.1.2 release notes
 
-Release notes for the immutable `v1.1.2` tag. An earlier packaging candidate
+Release record for the immutable `v1.1.2` tag. The earlier packaging candidate
 failed as tracked in [#347](https://github.com/rtulloh/bowl_bound/issues/347);
 the published tag shows only bytes that passed the final gates.
 
@@ -29,20 +29,41 @@ the published tag shows only bytes that passed the final gates.
   fresh browser download is tracked separately from automated validation.
   [macOS repair history](release-1.1.1-macos-repair.md)
 
-## Build and validation status
+## Publication and validation status
 
-- The full upstream regression, including the real-engine browser job, passed
-  for `3a00fc1531059b3ddec1272b95264a56011311e9`.
-  [Upstream regression](https://github.com/rtulloh/bowl_bound/actions/runs/44984997318)
-- Vite built the native app's frontend on Intel macOS, Apple Silicon macOS,
-  and Windows. Packaging stopped on all three targets when the asset validator
-  rejected the generated engine worker filename.
-  [Release build](https://github.com/rtulloh/bowl_bound/actions/runs/44987079254)
-- The packaging fix isolates the browser worker from the native build. Release
-  qualification requires a fresh source regression and native build.
-  [Packaging issue](https://github.com/rtulloh/bowl_bound/issues/347)
-- Published-download smoke tests and first-launch checks remain pending.
-  [Release validation requirements](release-builds.md)
+- The immutable tag `v1.1.2` resolves to
+  `e612ffdab405f80b70d271792b2935bf27586e7e`. Tests run
+  [46110473484](https://github.com/rtulloh/bowl_bound/actions/runs/46110473484)
+  passed all 12 Python shards, combined coverage, the real-engine browser job,
+  the Windows source dialog and formatting/lint/dependency checks on that exact
+  main-push commit. Dependency audit `46110473591` passed separately.
+- Native build run
+  [46112425675](https://github.com/rtulloh/bowl_bound/actions/runs/46112425675)
+  passed the exact-SHA source verifier and all three targets. Downloaded
+  artifact checksums, version/target manifests, the 181-team catalog
+  (8 1972, 55 2002, 118 2007) and both DMG receipts matched; each receipt
+  records mounted-payload and Finder-launch smoke as true.
+- The release is published as regular Latest with 15 explicit assets. Published
+  smoke run
+  [46155228650](https://github.com/rtulloh/bowl_bound/actions/runs/46155228650)
+  passed all six jobs: both Mac DMGs, both Mac ZIPs, Windows portable and the
+  Windows installer, with no skipped targets. Each checked its published
+  digest, exact API/rendered catalog, real-engine game/save behavior and clean
+  shutdown.
+- Pages `gh-pages` commit `ef2f4cf3faefc64a75eac81da48da9a58f7e2ab2` deploys
+  the browser game and season playtest built from the tag. Both live manifests
+  report the same 181-team catalog, every Python/Pyodide hash matched locally,
+  and the playtest retains the `bowl-bound-118-playtest` library.
+- The owner opened the hosted browser edition on a desktop and reported it
+  working. This is a useful hosted-site confirmation, not a native fresh-
+  download first-launch check.
+
+Fresh browser-downloaded native first launch, default-browser/security prompts
+and macOS 26 Intel compatibility remain unverified. The Mac apps are ad-hoc
+sealed, unsigned and not notarized; Windows retains SmartScreen and
+unknown-publisher limits. DEV-093 stays open for those gaps. The generated
+charts remain statistical estimates, and their historical fit remains
+incomplete.
 
 For release documentation, Paydirt's
 `docs/dev-notes/release-1.12.2-readiness.md` provided the pattern of tying
