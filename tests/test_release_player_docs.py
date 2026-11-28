@@ -68,3 +68,24 @@ def test_player_docs_present_browser_before_offline_installation() -> None:
     assert readme.index(browser) < readme.index("## Optional offline downloads")
     assert installation.index(browser) < installation.index("## Standalone downloads")
     assert playing.index(browser) < playing.index("local game](startup.md)")
+
+
+def test_player_documents_state_manifest_catalog_counts() -> None:
+    """Player catalog totals must match the pinned release manifest."""
+    manifest = json.loads((ROOT / "release/manifest.json").read_text(encoding="utf-8"))
+
+    def teams(section: str) -> set[str]:
+        return {
+            "/".join(name.split("/")[1:3])
+            for name in manifest[section]
+            if name.startswith("seasons/") and name.endswith("/team.yaml")
+        }
+
+    generated = teams("generated_sha256")
+    playable = generated | teams("sample_sha256")
+    assert (len(generated), len(playable)) == (179, 181)
+
+    for name in ("RELEASE_NOTES.md", "docs/generated-charts.md", "docs/installation.md"):
+        text = " ".join((ROOT / name).read_text(encoding="utf-8").split())
+        assert f"{len(generated)} generated teams" in text, name
+        assert f"{len(playable)} playable teams" in text, name

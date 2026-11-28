@@ -12,8 +12,9 @@ self-contained local edition or need offline play after installation.
 Select a standalone release from the project release page. Choose your
 operating system and processor, and do not confuse a GitHub source ZIP with a
 standalone app.
-Standalone archives include Python, the built web interface, 182 generated teams
-across 1972, 2002 and 2007 and two fictional samples; players do not need Python or Node.js installed.
+Standalone archives include Python, the built web interface, 179 generated teams
+across 1972, 2002 and 2007 and two fictional samples, for 181 playable teams;
+players do not need Python or Node.js installed.
 An Internet connection is needed to download, not for ordinary local play.
 
 For Windows, the **installer** is
@@ -207,7 +208,7 @@ For shell-based Mac app launchers, the bundle architecture preference must match
 the selected download (Apple Silicon or Intel). Version 1.1.1 has an Apple
 Silicon first-launch stall reported by the owner that appeared to clear after a
 macOS restart; this owner observation is not yet an independently verified repair
-of the downloaded artifact. Version 1.1.2 is the prospective packaging repair
-and requires its own published-artifact and fresh-download validation. If an
+of the downloaded artifact. Version 1.1.2 includes the packaging change and is
+validated separately on the published downloads. If an
 offline app still does not launch, use the hosted browser edition while reporting
 the version, processor and any macOS security message.

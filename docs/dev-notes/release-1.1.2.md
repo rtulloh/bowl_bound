@@ -1,24 +1,28 @@
 # Bowl Bound 1.1.2 release notes
 
-Release candidate. The full source regression passed before the initial native
-packaging attempt, which failed as tracked in [#347](https://github.com/rtulloh/bowl_bound/issues/347).
+Release notes for the immutable `v1.1.2` tag. An earlier packaging candidate
+failed as tracked in [#347](https://github.com/rtulloh/bowl_bound/issues/347);
+the published tag shows only bytes that passed the final gates.
 
 ## What's new
 
-- The standalone game candidate adds eight generated 1972 Big Eight teams with
-  commentary rosters, for 182 generated teams across 1972, 2002 and 2007. It
+- The release adds eight generated 1972 Big Eight teams with commentary
+  rosters, for 179 generated teams across 1972, 2002 and 2007 plus the two
+  original fictional samples, for 181 playable teams. It
   also incorporates recalibrated 2002 and 2007 charts.
   The 1972 charts passed the matched playtest comparison against their
   predecessor across all eight teams. Historical fit remains incomplete.
   [1972 charts and sources](../generated-charts-1972.md)
-- The source tree adds a separate static browser edition for individual games
-  with fictional Cedar Valley and Harbor Tech. It runs the Python engine in a
-  browser worker and supports saving, resuming, and transferring games by file.
-  The native build workflow does not produce a static-site artifact.
+- The hosted browser edition becomes the recommended way to play. It runs the
+  Python engine in a browser worker, supports saving, resuming and transferring
+  games by file, and includes the full release catalog when staged with
+  `--include-release-teams`. The season playtest is published at
+  https://rtulloh.github.io/bowl_bound/season-playtest/. The native build
+  workflow does not produce a static-site artifact.
   [Browser build and save instructions](../web-game.md)
-- The macOS installer candidate can launch the app directly. The packaged app
-  uses a native entry point and a completed ad-hoc bundle seal. First launch
-  from a fresh browser download still needs verification.
+- The macOS installer can launch the app directly. The packaged app uses a
+  native entry point and a completed ad-hoc bundle seal. First launch from a
+  fresh browser download is tracked separately from automated validation.
   [macOS repair history](release-1.1.1-macos-repair.md)
 
 ## Build and validation status
