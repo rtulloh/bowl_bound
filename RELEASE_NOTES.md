@@ -10,6 +10,17 @@ samples, for 181 playable teams. This release adds eight generated 1972 Big
 Eight teams. A locally built static browser bundle includes the full release
 catalog only when staged with `--include-release-teams`.
 
+The browser edition adds season play. Choose a historical schedule or build a
+custom conference league, play and resume fixtures, and review standings,
+rankings and team statistics. Campaigns and their saves stay in the current
+browser profile and site origin. [Try the season playtest](https://rtulloh.github.io/bowl_bound/season-playtest/)
+and see [season controls](docs/web-game.md#play-a-season).
+
+The 2002 and 2007 generated charts were recalibrated for this release. Charts
+remain statistical estimates with documented source and fit limits; they are not
+certified historical reproductions. The eight new 1972 teams came through the
+matched playtest comparison, and historical fit remains incomplete.
+
 The macOS app bundle declares the architecture matching its packaged payload,
 avoiding Launch Services defaulting the shell launcher to Rosetta on Apple
 Silicon. A target-native launcher retains Terminal output and Ctrl+C; the
@@ -17,7 +28,9 @@ completed app is ad-hoc sealed and strictly verified. Manual quarantine
 instructions remain. An owner-reported Apple Silicon first-launch stall appeared
 to clear after a macOS restart; that observation is not an independent repair of
 the downloaded artifact, so first launch from a fresh browser download is
-reported separately from automated validation.
+reported separately from automated validation. Applications remain unsigned and
+not notarized. Keep earlier versions and saves when upgrading; generated chart
+changes give saves new chart identities.
 
 ## 1.1.1 — macOS app disk images
 

@@ -8,15 +8,19 @@ the published tag shows only bytes that passed the final gates.
 
 - The release adds eight generated 1972 Big Eight teams with commentary
   rosters, for 179 generated teams across 1972, 2002 and 2007 plus the two
-  original fictional samples, for 181 playable teams. It
-  also incorporates recalibrated 2002 and 2007 charts.
+  original fictional samples, for 181 playable teams. It also incorporates
+  recalibrated 2002 and 2007 charts, so generated saves have new chart
+  identities.
   The 1972 charts passed the matched playtest comparison against their
   predecessor across all eight teams. Historical fit remains incomplete.
   [1972 charts and sources](../generated-charts-1972.md)
 - The hosted browser edition becomes the recommended way to play. It runs the
   Python engine in a browser worker, supports saving, resuming and transferring
-  games by file, and includes the full release catalog when staged with
-  `--include-release-teams`. The season playtest is published at
+  individual games by file, and includes the full release catalog when staged
+  with `--include-release-teams`. It adds season play: historical schedules or
+  custom conference leagues, fixture resume, standings, rankings and team
+  statistics. Campaigns and saves stay in the current browser profile and site
+  origin. The season playtest is published at
   https://rtulloh.github.io/bowl_bound/season-playtest/. The native build
   workflow does not produce a static-site artifact.
   [Browser build and save instructions](../web-game.md)
