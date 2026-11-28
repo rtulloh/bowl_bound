@@ -1,7 +1,7 @@
 # Version information
 
-The current release candidate is **1.1.0**. Python packaging and public display
-versions both use **1.1.0**. Its planned immutable Git tag is `v1.1.0`.
+The current release is **1.1.2**. Python packaging and public display versions
+both use **1.1.2**. Its immutable Git tag is `v1.1.2`.
 
 `bowl_bound.__version__`, project metadata and API OpenAPI metadata use the
 Python form. Frontend package/lock metadata and `bowl_bound.DISPLAY_VERSION`
@@ -14,7 +14,7 @@ same public identity.
 Application version numbers are not save compatibility profiles. The release retains
 `bowl-bound-m33-v1` and the existing save schema. Generated charts have changed
 content identities; older saves may require the original chart catalog. Keep
-copies of saves and the earlier version before upgrading. Version 1.1.0 does not
+copies of saves and the earlier version before upgrading. Version 1.1.2 does not
 certify historical chart accuracy. Never delete/reuse an already published tag.
 
 Release packaging accepts stable `MAJOR.MINOR.PATCH` identifiers and the existing

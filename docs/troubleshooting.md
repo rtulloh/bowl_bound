@@ -2,9 +2,17 @@
 
 [Player guide](README.md) · [Report a bug](reporting-bugs.md)
 
+- **Prefer no installation:** use the
+  [hosted browser edition](https://rtulloh.github.io/bowl_bound/). It is the
+  recommended way to play and avoids the download and first-launch steps below.
 - **Blocked or unknown publisher:** verify the release/checksum, then follow the
-  platform-specific [download instructions](installation.md). Do not disable
-  antivirus or organization policy. `xattr` applies only to macOS.
+  platform-specific [offline download instructions](installation.md). Do not
+  disable antivirus or organization policy. `xattr` applies only to macOS.
+- **Mac app stalls immediately after a downloaded install:** restart macOS and
+  try the copied app again. The owner reported that this cleared a v1.1.1 Apple
+  Silicon stall, but the observation is not a verified universal repair. If it
+  persists, use the hosted browser edition and report the app version, processor,
+  macOS version and any security message.
 - **Window closes immediately on Windows:** open PowerShell in the extracted
   folder and run `.\BowlBound.exe --no-browser` so you can read the message.
 - **Browser does not open:** enter the printed local address manually. Keep the

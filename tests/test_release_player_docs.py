@@ -50,3 +50,21 @@ def test_bug_report_contact_and_download_security_guidance() -> None:
     assert "Unblock" in installation and "SmartScreen" in installation
     assert "xattr -dr com.apple.quarantine" in installation
     assert "macOS-only" in installation
+
+
+def test_player_docs_present_browser_before_offline_installation() -> None:
+    """The hosted browser edition is the recommended way to play."""
+    browser = "https://rtulloh.github.io/bowl_bound/"
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    player_guide = (ROOT / "docs/README.md").read_text(encoding="utf-8")
+    installation = (ROOT / "docs/installation.md").read_text(encoding="utf-8")
+    playing = (ROOT / "docs/playing.md").read_text(encoding="utf-8")
+    startup = (ROOT / "docs/startup.md").read_text(encoding="utf-8")
+
+    for text in (readme, player_guide, installation, playing, startup):
+        assert browser in text
+        assert "recommended" in text.lower()
+
+    assert readme.index(browser) < readme.index("## Optional offline downloads")
+    assert installation.index(browser) < installation.index("## Standalone downloads")
+    assert playing.index(browser) < playing.index("local game](startup.md)")

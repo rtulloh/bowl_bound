@@ -1,4 +1,9 @@
-# Starting and stopping the local web game
+# Starting and stopping the game
+
+The recommended way to play is the hosted
+[**browser edition**](https://rtulloh.github.io/bowl_bound/), with no local
+server to manage. This page covers the optional offline desktop edition and
+source installs.
 
 From an extracted standalone folder, run `Bowl-Bound` (`BowlBound.exe` on
 Windows), or use `start.sh` / `start.bat`. Keep the complete extracted folder

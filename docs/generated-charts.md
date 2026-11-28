@@ -1,9 +1,9 @@
 # Generated teams
 
-The upcoming v1.1.0 catalog adds [55 generated 2002 teams](#generated-2002-cohort)
-and their reviewed commentary rosters, for **173 playable teams** across the two
-seasons and original fictional samples. The published 2007 chart files are
-unchanged.
+The v1.1.2 catalog adds [55 generated 2002 teams](#generated-2002-cohort) and
+eight generated 1972 Big Eight teams, with reviewed commentary rosters, for
+**184 playable teams** across the three seasons and original fictional samples.
+The published 2007 chart files are unchanged.
 
 ## Published 2007 cohort
 
@@ -171,9 +171,10 @@ this bounded review, and no source or coefficient was changed to clear it.
 The owner approves the selected 55-team statistical cohort and reviewed
 commentary rosters for tracking and upstream publication on 2026-11-17.
 The exact release manifest adds 275 generated chart/provenance files and 110
-roster/source-note files. The combined catalog has 171 generated teams plus
-the two original fictional samples. This is a selected cohort, not the whole
-2002 college schedule. A fresh checkout discovers both seasons normally.
+roster/source-note files. The combined catalog has 182 generated teams across
+1972, 2002 and 2007 plus the two original fictional samples. This is a selected
+cohort, not the whole 2002 college schedule. A fresh checkout discovers all
+three seasons normally.
 
 For example, from a source checkout:
 

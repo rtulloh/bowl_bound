@@ -1,18 +1,23 @@
-# Installation
+# Offline installation
 
 [Player guide](README.md) · Next: [How to play](playing.md)
+
+The recommended way to play is the hosted
+[**browser edition**](https://rtulloh.github.io/bowl_bound/), which needs no
+installation. Use the standalone downloads below only when you prefer a
+self-contained local edition or need offline play after installation.
 
 ## Standalone downloads
 
 Select a standalone release from the project release page. Choose your
 operating system and processor, and do not confuse a GitHub source ZIP with a
 standalone app.
-Standalone archives include Python, the built web interface, 171 generated teams
-across 2002 and 2007 and two fictional samples; players do not need Python or Node.js installed.
+Standalone archives include Python, the built web interface, 182 generated teams
+across 1972, 2002 and 2007 and two fictional samples; players do not need Python or Node.js installed.
 An Internet connection is needed to download, not for ordinary local play.
 
 For Windows, the **installer** is
-`BowlBoundSetup-1.1.1-windows-x64.exe`. Verify its checksum first, then
+`BowlBoundSetup-VERSION-windows-x64.exe`. Verify its checksum first, then
 run it and follow the setup wizard. It installs `BowlBound.exe` for the current
 user under `%LOCALAPPDATA%\Programs\BowlBound`, without administrator access,
 and creates Start menu and desktop shortcuts. Uninstall through Windows
@@ -20,9 +25,10 @@ Settings → Apps → Installed apps → Bowl Bound. Close the game first; unins
 before installing a replacement version. The installer requires an empty
 destination. Personal saves and external team libraries are not removed.
 
-The **DMG is the primary macOS download**. Choose the disk image for your Mac:
+The **DMG is the preferred offline macOS download**. Choose the disk image for
+your Mac:
 
-| Mac processor | Primary download |
+| Mac processor | Preferred offline download |
 | --- | --- |
 | Apple Silicon (M1 or later) | `BowlBound-VERSION-macos-arm64.dmg` |
 | Intel (64-bit x86_64) | `BowlBound-VERSION-macos-x86_64.dmg` |
@@ -37,8 +43,8 @@ Stop, then Quit. Releases whose app opens Terminal also support Ctrl+C in
 that Terminal window. No Python or Node installation is required.
 
 The ZIP remains a secondary portable alternative and native-builder input.
-Older v1.1.0 downloads have ZIPs only; DMGs belong to the next patch release.
-They do not bypass Gatekeeper and are not Developer ID signed or notarized.
+Older v1.1.0 downloads have ZIPs only; DMGs belong to v1.1.1 and later. They do
+not bypass Gatekeeper and are not Developer ID signed or notarized.
 
 ### Portable ZIP alternative
 
@@ -68,12 +74,12 @@ organization security policy.
 
 ```powershell
 # Windows PowerShell: replace the filename with your download.
-Get-FileHash .\BowlBoundSetup-1.1.1-windows-x64.exe -Algorithm SHA256
+Get-FileHash .\BowlBoundSetup-VERSION-windows-x64.exe -Algorithm SHA256
 # Or check the portable ZIP instead.
-Get-FileHash .\BowlBound-1.1.1-windows-x64.zip -Algorithm SHA256
+Get-FileHash .\BowlBound-VERSION-windows-x64.zip -Algorithm SHA256
 ```
 
-On macOS use `shasum -a 256 FILE.dmg` for the primary download, or
+On macOS use `shasum -a 256 FILE.dmg` for the preferred offline download, or
 `shasum -a 256 FILE.zip` for the portable alternative.
 
 ### Windows: downloaded-file blocking and SmartScreen
@@ -198,6 +204,10 @@ error. Re-extract missing or changed app resources; keep acceptance records in
 your own account's writable application-data folder.
 
 For shell-based Mac app launchers, the bundle architecture preference must match
-the selected download (Apple Silicon or Intel). Version 1.1.1 has a reported
-Apple Silicon first-launch failure under investigation; 1.1.2 is the prospective
-repair and requires its own published-artifact validation.
+the selected download (Apple Silicon or Intel). Version 1.1.1 has an Apple
+Silicon first-launch stall reported by the owner that appeared to clear after a
+macOS restart; this owner observation is not yet an independently verified repair
+of the downloaded artifact. Version 1.1.2 is the prospective packaging repair
+and requires its own published-artifact and fresh-download validation. If an
+offline app still does not launch, use the hosted browser edition while reporting
+the version, processor and any macOS security message.

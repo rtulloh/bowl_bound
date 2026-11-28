@@ -10,14 +10,21 @@ resolves chart results, supplemental procedures, penalties, clock, scores and
 team statistics. The web interface shows legal choices and their explanations.
 The play result shows the calls, dice, and chart lookups together.
 
-Alpha 6 includes **116 generated 2007 college teams**, plus **Cedar Valley** and
-**Harbor Tech**, the original fictional samples. Read the
+The current catalog includes 55 generated 2002 teams, 116 generated 2007 teams,
+eight generated 1972 Big Eight teams, plus **Cedar Valley** and **Harbor Tech**,
+the original fictional samples. Read the
 [generation notes and limits](generated-charts.md) before comparing team strength.
 You can optionally [import your own authorized charts](importing-teams.md) separately.
 
+The hosted browser edition is recommended for normal play. The desktop and
+source editions below run the same interface from a local server when you need
+offline play or local chart imports.
+
 ## Start a web game
 
-1. [Launch the local game](startup.md); leave its terminal window open.
+1. Open [Bowl Bound in your browser](https://rtulloh.github.io/bowl_bound/), the
+   recommended edition. If you chose an offline download instead, [start its
+   local game](startup.md) and leave the terminal window open.
 2. Pick a **Season** and **Team** for each side. The sides are independent, so
    you can play across years or pick the same school from two different years.
    Changing one side's season does not clear the other. Swap exchanges both

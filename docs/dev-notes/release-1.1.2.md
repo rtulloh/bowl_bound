@@ -6,7 +6,8 @@ packaging attempt, which failed as tracked in [#347](https://github.com/rtulloh/
 ## What's new
 
 - The standalone game candidate adds eight generated 1972 Big Eight teams with
-  commentary rosters. It also incorporates recalibrated 2002 and 2007 charts.
+  commentary rosters, for 182 generated teams across 1972, 2002 and 2007. It
+  also incorporates recalibrated 2002 and 2007 charts.
   The 1972 charts passed the matched playtest comparison against their
   predecessor across all eight teams. Historical fit remains incomplete.
   [1972 charts and sources](../generated-charts-1972.md)

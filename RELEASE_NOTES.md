@@ -1,13 +1,23 @@
 # Bowl Bound release notes
 
-## 1.1.2 — native Mac launcher architecture (candidate)
+## 1.1.2 — browser-first play and optional offline downloads (candidate)
 
-The app bundle declares the architecture matching its packaged payload, avoiding
-Launch Services defaulting the shell launcher to Rosetta on Apple Silicon.
-A target-native launcher retains Terminal output and Ctrl+C; the completed app
-is ad-hoc sealed and strictly verified. Manual quarantine instructions remain.
-This candidate
-requires upstream source and native validation before publication.
+The hosted [browser edition](https://rtulloh.github.io/bowl_bound/) is the
+recommended way to play going forward and requires no installation. Native
+downloads remain optional for offline play. The hosted catalog includes 182
+generated teams across 1972, 2002 and 2007 plus the two original fictional
+samples. This release adds eight generated 1972 Big Eight teams. A locally
+built static browser bundle includes the full release catalog only when staged
+with `--include-release-teams`.
+
+The macOS app bundle declares the architecture matching its packaged payload,
+avoiding Launch Services defaulting the shell launcher to Rosetta on Apple
+Silicon. A target-native launcher retains Terminal output and Ctrl+C; the
+completed app is ad-hoc sealed and strictly verified. Manual quarantine
+instructions remain. An owner-reported Apple Silicon first-launch stall appeared
+to clear after a macOS restart; that observation is not a substitute for
+fresh-download validation. This candidate requires upstream source, native,
+published-artifact and browser-deployment validation before publication.
 
 ## 1.1.1 — macOS app disk images
 
